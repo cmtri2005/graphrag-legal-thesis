@@ -18,8 +18,8 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from typing import Any
 
-from .models import Edge
-from .reference_types import ReferenceTypeMap
+from ..models import Edge
+from ..vocab.reference_types import ReferenceTypeMap
 
 JsonDict = dict[str, Any]
 FetchDocument = Callable[[str], JsonDict]

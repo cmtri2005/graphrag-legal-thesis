@@ -28,7 +28,7 @@ dạng dữ liệu* mà Stage 6 sẽ đọc. Biết sớm thì thiết kế B kh
 
 **Kết quả**: `data/eff_status_map.json` (13 mã, đều verified) +
 `src/legal_crawler/status_codes.py` (loader fail-loud) +
-`scripts/collect_status_codes.py` + 6 test. `verify_pipeline.py` có thêm kiểm
+`scripts/explore/collect_status_codes.py` + 6 test. `verify_pipeline.py` có thêm kiểm
 tra "mọi mã trong `data/history/` đều nằm trong bảng". Tổng 38 test PASS.
 
 **Mục tiêu ban đầu**: mọi mã trong `history[].content` đều có nghĩa được xác
@@ -114,7 +114,7 @@ và chọn cách xử lý không phụ thuộc vào phần chưa biết.
 ## B. Stage 5b — ghép text vào cây điều khoản — ✅ ĐÃ XONG
 
 **Kết quả**: `src/legal_crawler/provision_text.py` +
-`scripts/attach_provision_text.py` + `data/provisions/{id}.json` + 6 test.
+`scripts/pipeline/attach_provision_text.py` + `data/provisions/{id}.json` + 6 test.
 `verify_pipeline.py` có thêm 4 kiểm tra Stage 5b.
 
 ### Điều bất ngờ: bài toán dễ hơn plan tưởng rất nhiều
@@ -182,7 +182,7 @@ không dịch toàn bộ phần còn lại — một lỗi lệch không đượ
 
 ## C. Delta crawl — ✅ ĐÃ XONG
 
-**Kết quả**: `scripts/delta_crawl.py` + 6 test + `data/delta_runs.jsonl`.
+**Kết quả**: `scripts/pipeline/delta_crawl.py` + 6 test + `data/delta_runs.jsonl`.
 
 ### Ý chính: không crawl lại, chỉ **xoá cache của phần đã cũ**
 

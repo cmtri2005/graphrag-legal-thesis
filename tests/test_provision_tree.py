@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from legal_crawler.provision_tree import (
+from legal_crawler.provisions.tree import (
     MissingPayloadRowError,
     count_by_level,
     parse_flight_payload,

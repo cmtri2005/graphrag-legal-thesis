@@ -20,8 +20,8 @@ diagram is only used for DISCOVERY, edges still come from references[].
 Resumable: existing diagram/raw files are the checkpoint. Safe to interrupt.
 
 Usage:
-    python scripts/expand_reverse.py
-    python scripts/expand_reverse.py --max-new 3000
+    python scripts/pipeline/expand_reverse.py
+    python scripts/pipeline/expand_reverse.py --max-new 3000
 """
 from __future__ import annotations
 
@@ -33,14 +33,14 @@ from datetime import datetime, timezone
 from hashlib import sha256
 from pathlib import Path
 
-from legal_crawler.api_client import ApiClient, DocumentNotFoundError
-from legal_crawler.diagram import (
+from legal_crawler.sources.api_client import ApiClient, DocumentNotFoundError
+from legal_crawler.graph.diagram import (
     REVERSE_EXPANDABLE,
     expandable_targets,
     parse_reverse_edges,
 )
-from legal_crawler.manifest import CrawlManifest
-from legal_crawler.store import read_json
+from legal_crawler.storage.manifest import CrawlManifest
+from legal_crawler.storage.documents import read_json
 
 
 def fetch_diagram_cached(client: ApiClient, out_dir: Path, doc_id: str) -> dict | None:
@@ -155,11 +155,11 @@ def main() -> None:
     print("\ninbound relations followed:")
     for code, count in inbound_by_code.most_common():
         print(f"  code {code:>2}: {count:>7,}")
-    print("inbound relations recorded but NOT followed (see diagram.py):")
+    print("inbound relations recorded but NOT followed (see graph/diagram.py):")
     for code, count in skipped_by_code.most_common():
         print(f"  code {code:>2}: {count:>7,}")
     print(
-        "\nNext: python scripts/build_graph.py --max-documents 40000 "
+        "\nNext: python scripts/pipeline/build_graph.py --max-documents 40000 "
         f"--extra-seeds {args.seeds_out}\n  (regenerates edges.jsonl including the new documents)"
     )
 

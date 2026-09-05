@@ -11,9 +11,9 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
-from .store import read_json
+from ..storage.documents import REPO_DATA_DIR, read_json
 
-DEFAULT_MAP_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "reference_type_map.json"
+DEFAULT_MAP_PATH = REPO_DATA_DIR / "reference_type_map.json"
 
 
 class EdgeGroup(Enum):
@@ -77,7 +77,7 @@ class ReferenceTypeMap:
         except KeyError:
             raise UnknownReferenceTypeError(
                 f"referenceType={reference_type} has no verified entry in "
-                f"{DEFAULT_MAP_PATH.name}; add it via scripts/collect_reference_types.py "
+                f"{DEFAULT_MAP_PATH.name}; add it via scripts/explore/collect_reference_types.py "
                 "and manual verification before running the graph builder."
             ) from None
 

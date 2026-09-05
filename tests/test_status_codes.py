@@ -1,6 +1,6 @@
 import pytest
 
-from legal_crawler.status_codes import (
+from legal_crawler.vocab.status_codes import (
     StatusCodeMap,
     UnknownStatusCodeError,
     is_legal_date,

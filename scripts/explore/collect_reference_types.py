@@ -7,8 +7,8 @@ sets `verified` or `label_vi`/`group`. Those must be filled in by hand after
 checking the real vbpl.vn UI (see docs/crawling-plan.md §3b).
 
 Usage:
-    python scripts/collect_reference_types.py 177815 142881 19419 1 100000 178536
-    python scripts/collect_reference_types.py --seeds data/seeds.json --sample 30
+    python scripts/explore/collect_reference_types.py 177815 142881 19419 1 100000 178536
+    python scripts/explore/collect_reference_types.py --seeds data/seeds.json --sample 30
 """
 from __future__ import annotations
 
@@ -21,9 +21,9 @@ from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from legal_crawler.api_client import ApiClient, ApiClientError
-from legal_crawler.reference_types import DEFAULT_MAP_PATH
-from legal_crawler.store import read_json
+from legal_crawler.sources.api_client import ApiClient, ApiClientError
+from legal_crawler.vocab.reference_types import DEFAULT_MAP_PATH
+from legal_crawler.storage.documents import read_json
 
 MAX_EXAMPLES_PER_CODE = 5
 

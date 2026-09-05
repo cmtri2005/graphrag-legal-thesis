@@ -1,7 +1,7 @@
 """Ground-truth mapping for `history[].content` (docs/execution-plan.md §A).
 
 Loads and enforces `data/eff_status_map.json`; it never invents a label, the
-same rule `reference_types.py` follows. Read that JSON's `_readme` for how
+same rule `vocab/reference_types.py` follows. Read that JSON's `_readme` for how
 each entry was established and what is still unknown about the numeric
 suffixes.
 
@@ -20,9 +20,9 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from .store import read_json
+from ..storage.documents import REPO_DATA_DIR, read_json
 
-DEFAULT_MAP_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "eff_status_map.json"
+DEFAULT_MAP_PATH = REPO_DATA_DIR / "eff_status_map.json"
 
 # Free-text rows the data-entry system writes instead of a code. Both halves
 # appear as either a code ("CHL") or a Vietnamese label ("Còn hiệu lực"),
@@ -86,7 +86,7 @@ class StatusCodeMap:
         except KeyError:
             raise UnknownStatusCodeError(
                 f"content={code!r} has no verified entry in {DEFAULT_MAP_PATH.name}; "
-                "run scripts/collect_status_codes.py and establish its meaning "
+                "run scripts/explore/collect_status_codes.py and establish its meaning "
                 "before letting Stage 6 read it."
             ) from None
 

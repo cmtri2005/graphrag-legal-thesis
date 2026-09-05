@@ -9,13 +9,13 @@ candidate list is kept (the tag that flagged it was noise, not a real
 domain mismatch; see field_filter_map.json's note).
 
 Usage:
-    python scripts/apply_field_review.py
+    python scripts/review/apply_field_review.py
 """
 from __future__ import annotations
 
 from pathlib import Path
 
-from legal_crawler.store import read_json
+from legal_crawler.storage.documents import read_json
 
 REVIEW_PATH = Path("data/field_filter_review.txt")
 OUT_PATH = Path("data/excluded_ids.txt")

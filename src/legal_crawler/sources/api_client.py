@@ -6,7 +6,7 @@ from typing import Any
 
 import requests
 
-from .config import API_BASE, REQUEST_HEADERS
+from ..config import API_BASE, REQUEST_HEADERS
 
 JsonDict = dict[str, Any]
 
@@ -46,13 +46,13 @@ class ApiClient:
         """Effective-date timeline — the core input for Stage 6 (point-in-time).
 
         Deliberately not part of the Stage 2-3 crawl, which persists /doc/{id}
-        only. `scripts/fetch_histories.py` backfills this separately so a slow
+        only. `scripts/pipeline/fetch_histories.py` backfills this separately so a slow
         second pass can be interrupted without risking the main fetch.
         """
         return self._get(f"/qtdc/public/doc/{doc_id}/history")
 
     def get_diagram(self, doc_id: str) -> JsonDict:
-        """Relations in BOTH directions — see diagram.py for why this matters.
+        """Relations in BOTH directions — see graph/diagram.py for why this matters.
 
         `references[]` on /doc/{id} only records relations pointing *outward*.
         This endpoint's `documentNamesBySource` is the only place the inbound

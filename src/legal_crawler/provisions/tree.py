@@ -82,7 +82,7 @@ class MissingPayloadRowError(RuntimeError):
     Never treated as "this document has no articles": that would write empty
     trees over documents that really do have a structure. The caller tells the
     two causes apart by counting consecutive occurrences (see
-    scripts/fetch_provision_trees.py) — a run of them means cause 2.
+    scripts/pipeline/fetch_provision_trees.py) — a run of them means cause 2.
     """
 
 
@@ -91,7 +91,7 @@ def make_session() -> requests.Session:
 
     urllib3's Retry already does backoff correctly, so there's no hand-rolled
     retry loop here. 4xx is deliberately absent from `status_forcelist` —
-    same rule as `api_client.py`: client errors are permanent, retrying them
+    same rule as `sources/api_client.py`: client errors are permanent, retrying them
     just triples the request count.
     """
     session = requests.Session()

@@ -3,7 +3,7 @@
 persist raw JSON + edges + the crawl manifest (docs/crawling-plan.md).
 
 Usage:
-    python scripts/build_graph.py --seeds data/seeds.json --out data/raw
+    python scripts/pipeline/build_graph.py --seeds data/seeds.json --out data/raw
 """
 from __future__ import annotations
 
@@ -16,12 +16,12 @@ from pathlib import Path
 
 import requests
 
-from legal_crawler.api_client import ApiClient
-from legal_crawler.graph_expand import expand
-from legal_crawler.manifest import CrawlManifest
-from legal_crawler.reference_types import DEFAULT_MAP_PATH, ReferenceTypeMap
-from legal_crawler.sitemap import fetch_central_entries
-from legal_crawler.store import read_json, write_json
+from legal_crawler.sources.api_client import ApiClient
+from legal_crawler.graph.expand import expand
+from legal_crawler.storage.manifest import CrawlManifest
+from legal_crawler.vocab.reference_types import DEFAULT_MAP_PATH, ReferenceTypeMap
+from legal_crawler.sources.sitemap import fetch_central_entries
+from legal_crawler.storage.documents import read_json, write_json
 
 
 def load_seed_ids(seeds_path: Path, extra_seeds_path: Path | None = None) -> list[str]:

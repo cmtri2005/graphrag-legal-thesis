@@ -1,4 +1,4 @@
-from legal_crawler.provision_text import align, align_by_marker, flatten, parse_paragraphs
+from legal_crawler.provisions.text import align, align_by_marker, flatten, parse_paragraphs
 
 # Shape of a modern record: the server tags each paragraph with the tree node's
 # own uuid, so the join is exact rather than inferred.

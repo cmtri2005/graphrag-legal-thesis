@@ -29,9 +29,9 @@ This README is the orientation map and the how-to-run.
 | 5a. Provision trees | done, 99%+ | `data/trees/*.json` |
 | 5b. Text → tree mapping | done, 98.9% of matchable nodes | `data/provisions/*.json` |
 | 6. Temporal graph build | **not started** | — |
-| 6b. Delta/incremental crawl | done | `scripts/delta_crawl.py`, `data/delta_runs.jsonl` |
+| 6b. Delta/incremental crawl | done | `scripts/pipeline/delta_crawl.py`, `data/delta_runs.jsonl` |
 | — history backfill (Stage 6 input) | done | `data/history/*.json` |
-| — verification | `scripts/verify_pipeline.py`, all passing | — |
+| — verification | `scripts/check/verify_pipeline.py`, all passing | — |
 
 Current corpus: **20,749 documents**, **148,505 edges**, **1.19M provision
 nodes** (239k Điều / 513k Khoản / 380k Điểm).
@@ -73,36 +73,53 @@ check whether Stage 4's postmortem already tells you not to.
 
 ```
 src/legal_crawler/
-  config.py          per-domain seed keywords, API base URL, sitemap shard range
-  sitemap.py          fetch + parse vbpl.vn sitemap shards, slug keyword matching
-  api_client.py        thin HTTP client for the doc gateway (retry/backoff, pacing)
-  reference_types.py   loads data/reference_type_map.json, classifies edges
-  graph_expand.py       Stage 2 BFS: expands through genealogy edges only
-  diagram.py            Stage 2b: inbound ("who amended me") relations
-  provision_tree.py     Stage 5a: Chương/Điều/Khoản/Điểm tree via Next.js action
-  provision_text.py     Stage 5b: attaches body text to those tree nodes
-  status_codes.py       effectivity codes in history[].content, fail-loud loader
-  field_filter.py       Stage 4: flags documents for human review by major/field
-  manifest.py            SQLite crawl manifest (delta/incremental support, §6b)
-  store.py               where data/ lives on disk; the only JSON read/write path
-  models.py               Edge dataclass
+  config.py       per-domain seed keywords, API base URL, sitemap shard range
+  models.py       Edge and SitemapEntry dataclasses
+
+  sources/        everything that talks to vbpl.vn
+    api_client.py   the JSON gateway (retry/backoff, pacing)
+    sitemap.py      fetch + parse sitemap shards, slug keyword matching
+
+  storage/        what is on disk and what we know about it
+    documents.py    the data/ layout; the only JSON read/write path
+    manifest.py     SQLite side-table that makes delta crawling possible
+
+  vocab/          verified code tables, all fail-loud on an unknown code
+    reference_types.py  referenceType -> label + GENEALOGY/OPEN_CITATION
+    status_codes.py     effectivity codes in history[].content
+    field_filter.py     majors/fields used to flag docs for human review
+
+  graph/          building the document graph
+    expand.py       Stage 2 BFS, through genealogy edges only
+    diagram.py      Stage 2b, the inbound "who amended me" relations
+
+  provisions/     structure inside a document
+    tree.py         Stage 5a: Chương/Điều/Khoản/Điểm via a Next.js action
+    text.py         Stage 5b: attaches body text to those tree nodes
 
 scripts/
-  collect_seeds.py             Stage 1 — sitemap -> data/seeds.json
-  collect_reference_types.py   Stage 3b step 1 — scan raw docs, union referenceType codes
-  scrape_luoc_do.py            Stage 3b step 2 — headless-browser ground truth for each code
-  build_graph.py                Stage 2+3 — BFS expand + fetch + persist (resumable)
-  expand_reverse.py             Stage 2b — close the graph over inbound relations
-  fetch_provision_trees.py      Stage 5a — provision tree per document
-  fetch_histories.py            history backfill — Stage 6's input
-  attach_provision_text.py      Stage 5b — text per provision node
-  collect_status_codes.py       scans history/ for unmapped effectivity codes
-  delta_crawl.py                §6b — works out what changed, drops those caches
-  filter_by_field.py           Stage 4 — flag off-domain seed docs for review
-  apply_field_review.py         records the human decision on the Stage 4 review list
-  verify_pipeline.py            consistency gate over everything above
-  measure_recall.py             estimates what the crawl missed (§5e)
-  inspect_references.py        ad-hoc: inspect a document's reference edges
+  pipeline/       the normal run order, top to bottom
+    collect_seeds.py           Stage 1 — sitemap -> data/seeds.json
+    build_graph.py             Stage 2+3 — BFS expand + fetch + persist (resumable)
+    expand_reverse.py          Stage 2b — close the graph over inbound relations
+    fetch_provision_trees.py   Stage 5a — provision tree per document
+    fetch_histories.py         history backfill — Stage 6's input
+    attach_provision_text.py   Stage 5b — text per provision node (offline)
+    delta_crawl.py             §6b — works out what changed, drops those caches
+
+  review/         the human-in-the-loop pair
+    filter_by_field.py         Stage 4 — flag off-domain seed docs for review
+    apply_field_review.py      records the human decision on that list
+
+  check/          run these before trusting the corpus
+    verify_pipeline.py         consistency gate over every stage
+    measure_recall.py          estimates what the crawl missed (§5e)
+
+  explore/        one-off investigation, not part of a run
+    collect_reference_types.py  scan raw docs, union referenceType codes
+    scrape_luoc_do.py           headless-browser ground truth for each code
+    collect_status_codes.py     scan history/ for unmapped effectivity codes
+    inspect_references.py       inspect one document's reference edges
 ```
 
 Data flow: `seeds.json` (Stage 1) → `build_graph.py` BFS-expands and fetches
@@ -141,7 +158,7 @@ Run from the repo root with the venv active.
 
 ```bash
 # Stage 1 — rebuild seed list from the live sitemap (cheap, ~1.5MB x 12 shards)
-python3 scripts/collect_seeds.py
+python3 scripts/pipeline/collect_seeds.py
 
 # Stage 2+3 — BFS-expand through genealogy edges, fetch every doc, persist.
 # --max-documents is a circuit breaker, NOT a scope limit (see docs/crawling-plan.md).
@@ -149,33 +166,33 @@ python3 scripts/collect_seeds.py
 # resumed run will truncate edges.jsonl to the breaker value — see Gotchas.
 # --extra-seeds keeps Stage 2b's finds in the graph; drop it and they vanish
 # from edges.jsonl even though their JSON is still on disk.
-python3 scripts/build_graph.py --max-documents 40000 \
+python3 scripts/pipeline/build_graph.py --max-documents 40000 \
     --extra-seeds data/reverse_seeds.json
 
 # Stage 2b — pull in the documents that amended/repealed/replaced the corpus.
 # Forward BFS cannot find these: references[] only points outward.
-python3 scripts/expand_reverse.py
+python3 scripts/pipeline/expand_reverse.py
 # -> then re-run build_graph.py above so edges.jsonl includes them
 
 # Stage 4 — flag seed docs whose ministry/topic tag looks off-domain
-python3 scripts/filter_by_field.py
+python3 scripts/review/filter_by_field.py
 # -> inspect data/field_filter_review.txt by hand, then encode your decisions
-#    in scripts/apply_field_review.py's CONFIRMED_EXCLUSIONS dict and run it
-python3 scripts/apply_field_review.py
+#    in scripts/review/apply_field_review.py's CONFIRMED_EXCLUSIONS dict and run it
+python3 scripts/review/apply_field_review.py
 
 # Stage 5a + history backfill — independent, different hosts, safe in parallel
-python3 scripts/fetch_provision_trees.py
-python3 scripts/fetch_histories.py
+python3 scripts/pipeline/fetch_provision_trees.py
+python3 scripts/pipeline/fetch_histories.py
 
 # Stage 5b — offline, no network; ~40 min for the whole corpus
-python3 scripts/attach_provision_text.py
+python3 scripts/pipeline/attach_provision_text.py
 
 # Keeping the corpus current (§6b). --dry-run reports without touching anything;
 # without it, stale caches are deleted and the commands to refill them printed.
-python3 scripts/delta_crawl.py --dry-run
+python3 scripts/pipeline/delta_crawl.py --dry-run
 
 # Always finish here
-python3 scripts/verify_pipeline.py
+python3 scripts/check/verify_pipeline.py
 ```
 
 Adding a domain, or widening an existing one: edit `KEYWORDS_BY_DOMAIN` in
@@ -225,7 +242,7 @@ Run tests with `pytest` (or `python3 -m pytest`) from the repo root.
 2. **4xx from the API is not transient.** `/doc/{id}` returns HTTP 400 with
    `messageCode: invalid.document.entity.not.found` for a dangling reference
    — a real, permanent condition (the target was removed from vbpl.vn but
-   another document still cites it). `api_client.py` does not retry these;
+   another document still cites it). `sources/api_client.py` does not retry these;
    only network errors and 5xx get the retry/backoff. If you see 4xx being
    retried again, that's a regression — the whole point of `DocumentNotFoundError`
    is to fail fast on it.
@@ -234,7 +251,7 @@ Run tests with `pytest` (or `python3 -m pytest`) from the repo root.
    worse — a *Personal Income Tax Law implementing decree* was found tagged
    solely under `Lao động - Thương binh và Xã hội` (Labor ministry), and a
    VAT enforcement directive was tagged `Công an` (Police) alongside
-   `Tài chính`. `field_filter.py` treats a document as off-topic only when
+   `Tài chính`. `vocab/field_filter.py` treats a document as off-topic only when
    **every** major/field it has is on the blocklist, and even then the
    result is a review candidate, never an auto-delete. If you're tempted to
    skip the human-review step "just this once," don't — re-read the exclude

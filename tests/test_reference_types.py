@@ -6,7 +6,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from legal_crawler.reference_types import EdgeGroup, ReferenceTypeMap, UnknownReferenceTypeError
+from legal_crawler.vocab.reference_types import EdgeGroup, ReferenceTypeMap, UnknownReferenceTypeError
 
 MAP_JSON = {
     "codes": {

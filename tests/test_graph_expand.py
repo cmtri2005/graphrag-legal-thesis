@@ -6,9 +6,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from legal_crawler.graph_expand import expand
+from legal_crawler.graph.expand import expand
 from legal_crawler.models import Edge
-from legal_crawler.reference_types import ReferenceTypeMap, UnknownReferenceTypeError
+from legal_crawler.vocab.reference_types import ReferenceTypeMap, UnknownReferenceTypeError
 
 MAP_JSON = {
     "codes": {

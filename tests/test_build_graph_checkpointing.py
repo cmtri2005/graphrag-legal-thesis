@@ -1,15 +1,12 @@
 """Covers the resumability guarantee: a doc already persisted on disk must
 be served from cache (no network call), and a fresh fetch must be persisted
-immediately — not only after the whole BFS finishes (see scripts/build_graph.py).
+immediately — not only after the whole BFS finishes (see scripts/pipeline/build_graph.py).
 """
-import sys
+
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-
-from build_graph import make_checkpointing_fetcher  # noqa: E402
-from legal_crawler.manifest import CrawlManifest  # noqa: E402
+from build_graph import make_checkpointing_fetcher
+from legal_crawler.storage.manifest import CrawlManifest
 
 
 class FakeApiClient:

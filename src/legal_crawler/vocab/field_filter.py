@@ -25,10 +25,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from .store import read_json
+from ..storage.documents import REPO_DATA_DIR, read_json
 from typing import Any
 
-DEFAULT_MAP_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "field_filter_map.json"
+DEFAULT_MAP_PATH = REPO_DATA_DIR / "field_filter_map.json"
 
 JsonDict = dict[str, Any]
 

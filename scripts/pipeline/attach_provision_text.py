@@ -14,8 +14,8 @@ unnumbered ("Phần", "Điều", five nodes all titled "Khoản 1") while the bo
 than guessed at (§3b).
 
 Usage:
-    python scripts/attach_provision_text.py            # whole corpus
-    python scripts/attach_provision_text.py --limit 200
+    python scripts/pipeline/attach_provision_text.py            # whole corpus
+    python scripts/pipeline/attach_provision_text.py --limit 200
 """
 from __future__ import annotations
 
@@ -23,8 +23,8 @@ import argparse
 from collections import Counter
 from pathlib import Path
 
-from legal_crawler.provision_text import align, flatten
-from legal_crawler.store import DocumentStore
+from legal_crawler.provisions.text import align, flatten
+from legal_crawler.storage.documents import DocumentStore
 
 
 def main() -> None:

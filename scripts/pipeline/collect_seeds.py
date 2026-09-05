@@ -2,7 +2,7 @@
 """Stage 1: filter the central-government sitemap into per-domain seed lists.
 
 Usage:
-    python scripts/collect_seeds.py [-o data/seeds.json]
+    python scripts/pipeline/collect_seeds.py [-o data/seeds.json]
 """
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from pathlib import Path
 import requests
 
 from legal_crawler.config import KEYWORDS_BY_DOMAIN
-from legal_crawler.sitemap import fetch_central_entries, matches_any_keyword
+from legal_crawler.sources.sitemap import fetch_central_entries, matches_any_keyword
 
 
 def collect_seeds() -> dict[str, list[dict[str, str]]]:

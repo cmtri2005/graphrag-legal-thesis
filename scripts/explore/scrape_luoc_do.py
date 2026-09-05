@@ -6,7 +6,7 @@ ground-truth referenceType mapping (docs/crawling-plan.md §3b).
 Requires: pip install playwright && playwright install chromium
 
 Usage:
-    python scripts/scrape_luoc_do.py 177815 19419 118930
+    python scripts/explore/scrape_luoc_do.py 177815 19419 118930
 """
 from __future__ import annotations
 

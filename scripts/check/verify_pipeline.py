@@ -14,7 +14,7 @@ can never apply.
 Exit code is 1 if any check fails, so it can gate a pipeline run.
 
 Usage:
-    python scripts/verify_pipeline.py
+    python scripts/check/verify_pipeline.py
 """
 from __future__ import annotations
 
@@ -23,15 +23,15 @@ import json
 from pathlib import Path
 
 from legal_crawler.config import KEYWORDS_BY_DOMAIN
-from legal_crawler.manifest import CrawlManifest
-from legal_crawler.reference_types import (
+from legal_crawler.storage.manifest import CrawlManifest
+from legal_crawler.vocab.reference_types import (
     DEFAULT_MAP_PATH,
     EdgeGroup,
     ReferenceTypeMap,
 )
-from legal_crawler.sitemap import matches_any_keyword
-from legal_crawler.status_codes import StatusCodeMap, parse_transition
-from legal_crawler.store import DocumentStore, read_json
+from legal_crawler.sources.sitemap import matches_any_keyword
+from legal_crawler.vocab.status_codes import StatusCodeMap, parse_transition
+from legal_crawler.storage.documents import DocumentStore, read_json
 
 failures: list[str] = []
 

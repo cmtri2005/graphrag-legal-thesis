@@ -3,7 +3,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from legal_crawler.sitemap import matches_any_keyword, parse_document_entries, parse_shard_urls
+from legal_crawler.sources.sitemap import matches_any_keyword, parse_document_entries, parse_shard_urls
 
 SHARD_INDEX_XML = """<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

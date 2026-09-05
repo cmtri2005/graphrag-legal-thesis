@@ -13,15 +13,15 @@ field_filter_map.json's note). Read the flagged ids before wiring them into
 Stage 5/6 as a skip-list.
 
 Usage:
-    python scripts/filter_by_field.py --seeds data/seeds.json --raw data/raw
+    python scripts/review/filter_by_field.py --seeds data/seeds.json --raw data/raw
 """
 from __future__ import annotations
 
 import argparse
 from pathlib import Path
 
-from legal_crawler.field_filter import DEFAULT_MAP_PATH, FieldFilterMap
-from legal_crawler.store import read_json
+from legal_crawler.vocab.field_filter import DEFAULT_MAP_PATH, FieldFilterMap
+from legal_crawler.storage.documents import read_json
 
 
 def load_seed_ids_by_domain(seeds_path: Path) -> dict[str, str]:

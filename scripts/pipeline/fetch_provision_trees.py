@@ -18,9 +18,9 @@ stale-build-id abort below, since a run of nothing but known-bad documents looks
 exactly like a rotated NEXT_ACTION_ID. Use `--retry-failures` to try anyway.
 
 Usage:
-    python scripts/fetch_provision_trees.py
-    python scripts/fetch_provision_trees.py --limit 50   # try a slice first
-    python scripts/fetch_provision_trees.py --retry-failures
+    python scripts/pipeline/fetch_provision_trees.py
+    python scripts/pipeline/fetch_provision_trees.py --limit 50   # try a slice first
+    python scripts/pipeline/fetch_provision_trees.py --retry-failures
 """
 from __future__ import annotations
 
@@ -30,13 +30,13 @@ import sys
 import time
 from pathlib import Path
 
-from legal_crawler.provision_tree import (
+from legal_crawler.provisions.tree import (
     MissingPayloadRowError,
     count_by_level,
     fetch_tree,
     make_session,
 )
-from legal_crawler.store import load_permanent_failures
+from legal_crawler.storage.documents import load_permanent_failures
 
 # Consecutive payload-less responses before we stop blaming individual
 # documents and conclude NEXT_ACTION_ID itself rotated.
@@ -101,7 +101,7 @@ def main() -> None:
             if consecutive_stale >= STALE_ABORT_THRESHOLD:
                 print(
                     f"\nABORT: {consecutive_stale} documents in a row returned no payload row.\n"
-                    "NEXT_ACTION_ID is stale — refresh it (see provision_tree.py) and re-run;\n"
+                    "NEXT_ACTION_ID is stale — refresh it (see provisions/tree.py) and re-run;\n"
                     f"the {done} trees already written will be skipped.",
                     file=sys.stderr,
                 )

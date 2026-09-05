@@ -11,7 +11,7 @@ separately — they are data, not codes to be mapped, and they happen to be the
 cross-check that confirms what several codes mean.
 
 Usage:
-    python scripts/collect_status_codes.py
+    python scripts/explore/collect_status_codes.py
 """
 from __future__ import annotations
 
@@ -20,8 +20,8 @@ import collections
 import re
 from pathlib import Path
 
-from legal_crawler.status_codes import FREE_TEXT_PATTERN, StatusCodeMap
-from legal_crawler.store import read_json
+from legal_crawler.vocab.status_codes import FREE_TEXT_PATTERN, StatusCodeMap
+from legal_crawler.storage.documents import read_json
 
 
 def main() -> None:

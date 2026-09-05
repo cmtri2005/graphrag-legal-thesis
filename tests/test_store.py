@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from legal_crawler.store import (
+from legal_crawler.storage.documents import (
     PER_DOCUMENT_DIRS,
     DocumentStore,
     load_permanent_failures,

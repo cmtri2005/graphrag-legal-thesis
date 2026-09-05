@@ -3,7 +3,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from legal_crawler.manifest import CrawlManifest
+from legal_crawler.storage.manifest import CrawlManifest
 
 
 def make_manifest(tmp_path: Path) -> CrawlManifest:

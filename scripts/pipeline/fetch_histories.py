@@ -19,8 +19,8 @@ Resumable with no checkpoint file: an existing output file is the checkpoint.
 Pacing and retry/backoff come from ApiClient, so there's no sleep here.
 
 Usage:
-    python scripts/fetch_histories.py
-    python scripts/fetch_histories.py --limit 50
+    python scripts/pipeline/fetch_histories.py
+    python scripts/pipeline/fetch_histories.py --limit 50
 """
 from __future__ import annotations
 
@@ -29,8 +29,8 @@ import collections
 import json
 from pathlib import Path
 
-from legal_crawler.api_client import ApiClient, DocumentNotFoundError
-from legal_crawler.store import load_permanent_failures
+from legal_crawler.sources.api_client import ApiClient, DocumentNotFoundError
+from legal_crawler.storage.documents import load_permanent_failures
 
 
 def main() -> None:

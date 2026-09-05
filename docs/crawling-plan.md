@@ -154,7 +154,7 @@ nằm trong `REVERSE_EXPANDABLE` nên các văn bản đó đã được tải v
 → **Đừng chỉ nhìn code 10 khi truy nguyên "ai làm tôi hết hiệu lực một phần"** —
 phải xét cả nhóm 1, 5, 6, 10, 11, 12.
 
-**Quy trình chạy** (`scripts/expand_reverse.py`, resume được):
+**Quy trình chạy** (`scripts/pipeline/expand_reverse.py`, resume được):
 1. Tải `/diagram` cho mọi văn bản đang có → `data/diagrams/{id}.json`.
 2. Đọc chiều vào, tìm văn bản "ra tay" mà ta chưa có → tải về `data/raw/`.
 3. Văn bản mới cũng được đưa vào hàng đợi lấy diagram → lặp tới khi hội tụ
@@ -242,7 +242,7 @@ Vì vậy quy trình đã chốt (đang chạy trong `src/legal_crawler/field_fi
 2. Kết quả chỉ là **danh sách chờ người duyệt** (`data/field_filter_review.txt`).
    Máy không bao giờ tự xoá gì cả.
 3. Người đọc danh sách đó, quyết định, rồi ghi quyết định vào
-   `CONFIRMED_EXCLUSIONS` trong `scripts/apply_field_review.py`; chạy script này
+   `CONFIRMED_EXCLUSIONS` trong `scripts/review/apply_field_review.py`; chạy script này
    mới sinh ra `data/excluded_ids.txt`.
 4. **"Loại bỏ" ở đây = bỏ qua lúc đọc, KHÔNG xoá file.** Không bước nào trong
    pipeline được phép xoá `data/raw/`. Muốn nhận lại một văn bản đã loại thì chỉ
@@ -346,7 +346,7 @@ body    ["{id}"]
 
 Phản hồi là React Flight (không phải JSON thuần); cây nằm ở dòng bắt đầu bằng
 `1:`. Code: `src/legal_crawler/provision_tree.py`,
-chạy bằng `scripts/fetch_provision_trees.py` → `data/trees/{id}.json`.
+chạy bằng `scripts/pipeline/fetch_provision_trees.py` → `data/trees/{id}.json`.
 
 Bốn điều đã kiểm chứng, cần nhớ:
 
@@ -372,9 +372,9 @@ parser sai ngay, không cần ngồi soát tay.
 Lưu ý cây chỉ có tiêu đề (`"Điều 1"`, `"Khoản 2"`) và id, **không có nội dung
 text** — ghép text vào vẫn là việc của Stage 5b.
 
-## 5c. Kiểm chứng pipeline — `scripts/verify_pipeline.py`
+## 5c. Kiểm chứng pipeline — `scripts/check/verify_pipeline.py`
 
-Chạy `python scripts/verify_pipeline.py` (chỉ đọc file local, không gọi mạng,
+Chạy `python scripts/check/verify_pipeline.py` (chỉ đọc file local, không gọi mạng,
 chạy lại thoải mái). Thoát với mã 1 nếu có kiểm tra nào fail, nên dùng làm cổng
 chặn trước khi tin dữ liệu cho bước sau.
 
@@ -529,7 +529,7 @@ Bốn văn bản Luật rỗng (để tra khi cần): `139882`, `101890` (sửa 
 GTGT/TTĐB — đúng lĩnh vực đề tài), `187763` (sửa đổi Luật Quản lý nợ công, còn
 hiệu lực), `139878`.
 
-## 5e. Đo recall — bỏ sót bao nhiêu? (`scripts/measure_recall.py`)
+## 5e. Đo recall — bỏ sót bao nhiêu? (`scripts/check/measure_recall.py`)
 
 **Đây là điểm mù mà không kiểm tra cục bộ nào chạm tới được.** `verify_pipeline.py`
 chỉ suy luận được trên văn bản đã có; văn bản chưa bao giờ phát hiện thì không
@@ -655,7 +655,7 @@ tức chúng xuất hiện trên sitemap **sau** ngày crawl (24/08 → 04/09, 1
   `public`.
 
 - **Lỗi 4xx KHÔNG BAO GIỜ được retry.** Đây là quy tắc quan trọng, đã cài trong
-  `api_client.py` (`DocumentNotFoundError`):
+  `sources/api_client.py` (`DocumentNotFoundError`):
   - `/doc/{id}` trả **HTTP 400** kèm `invalid.document.entity.not.found` khi
     văn bản đó đã bị gỡ khỏi vbpl.vn nhưng vẫn còn văn bản khác trỏ tới nó
     (gọi là *dangling reference* — trích dẫn treo). Chuyện này xảy ra bình
@@ -803,11 +803,11 @@ lạ. Đoán nghĩa `HHL1P3` là đúng kiểu sai lầm mà §3b tồn tại đ
 
 ### Đã xong ✅
 
-- [x] **Stage 1 — Seed discovery.** `scripts/collect_seeds.py` → `data/seeds.json`.
+- [x] **Stage 1 — Seed discovery.** `scripts/pipeline/collect_seeds.py` → `data/seeds.json`.
       4 lĩnh vực: đất đai 438 seed, thuế 3.404, doanh nghiệp/đầu tư 3.679,
       giao thông 2.396.
 - [x] **Stage 2+3 — BFS mở rộng + tải chi tiết.** Gộp chung trong
-      `scripts/build_graph.py` (chạy lại được, ngắt giữa chừng không sao).
+      `scripts/pipeline/build_graph.py` (chạy lại được, ngắt giữa chừng không sao).
       Kết quả: **13.863 văn bản** trong `data/raw/`, **87.587 cạnh** trong
       `data/edges.jsonl`, manifest trong `data/manifest.sqlite`.
 - [x] **Stage 3b — Bảng mapping `referenceType`.** 13 mã, xác minh thủ công,
@@ -818,14 +818,14 @@ lạ. Đoán nghĩa `HHL1P3` là đúng kiểu sai lầm mà §3b tồn tại đ
 
 ### Chưa xong ⬜
 
-- [~] **Stage 5a — Tải cây điều khoản** (`scripts/fetch_provision_trees.py` →
+- [~] **Stage 5a — Tải cây điều khoản** (`scripts/pipeline/fetch_provision_trees.py` →
       `data/trees/`). **Đang chạy** trên toàn bộ 13.863 văn bản, ~1.7 giờ.
       Chạy lại được, ngắt giữa chừng không sao (file đã có = đã xong).
 - [ ] **Stage 5b — Map text vào cây.** Ghép nội dung trong
       `documentContent.content` vào đúng node của cây đã tải ở 5a, rồi dùng
       chính cây làm bộ kiểm chứng. **Nhẹ hơn hẳn so với kế hoạch cũ** (viết
       parser đoán cấu trúc) — xem §5b. Stage 6 phải chờ bước này xong.
-- [~] **Backfill `/doc/{id}/history`** (`scripts/fetch_histories.py` →
+- [~] **Backfill `/doc/{id}/history`** (`scripts/pipeline/fetch_histories.py` →
       `data/history/`). **Đang chạy.** Đây từng là lỗ hổng: kế hoạch §5 ghi
       Stage 3 tải cả `/doc/{id}` **và** `/doc/{id}/history`, nhưng
       `build_graph.py` thực tế chỉ gọi `get_document()` — chưa từng gọi

@@ -11,8 +11,8 @@ from xml.etree import ElementTree as ET
 
 import requests
 
-from .config import CENTRAL_SHARD_RANGE, REQUEST_HEADERS, SITEMAP_INDEX_URL
-from .models import SitemapEntry
+from ..config import CENTRAL_SHARD_RANGE, REQUEST_HEADERS, SITEMAP_INDEX_URL
+from ..models import SitemapEntry
 
 _NS = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
 _DETAIL_PATH = "/van-ban/chi-tiet/"

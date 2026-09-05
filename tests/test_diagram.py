@@ -1,4 +1,4 @@
-from legal_crawler.diagram import (
+from legal_crawler.graph.diagram import (
     REVERSE_EXPANDABLE,
     expandable_targets,
     parse_reverse_edges,
@@ -44,7 +44,7 @@ def test_documents_already_held_are_not_refetched():
 
 def test_implementing_documents_are_never_followed():
     # Inbound code 9 means "everything implementing me" — following it would
-    # drag the crawl across the whole database (see diagram.py).
+    # drag the crawl across the whole database (see graph/diagram.py).
     assert 9 not in REVERSE_EXPANDABLE
     assert 7 not in REVERSE_EXPANDABLE
 

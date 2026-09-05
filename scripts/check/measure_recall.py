@@ -23,8 +23,8 @@ Step 2's wider list is deliberately generous: it over-counts rather than
 under-counts, so the answer is an upper bound on what we're missing.
 
 Usage:
-    python scripts/measure_recall.py
-    python scripts/measure_recall.py --samples 40
+    python scripts/check/measure_recall.py
+    python scripts/check/measure_recall.py --samples 40
 """
 from __future__ import annotations
 
@@ -36,8 +36,8 @@ import requests
 
 
 from legal_crawler.config import KEYWORDS_BY_DOMAIN
-from legal_crawler.sitemap import fetch_central_entries, matches_any_keyword
-from legal_crawler.store import read_json
+from legal_crawler.sources.sitemap import fetch_central_entries, matches_any_keyword
+from legal_crawler.storage.documents import read_json
 
 # Wider than config.KEYWORDS_BY_DOMAIN on purpose — this is a measuring stick,
 # not a crawl filter. Terms a domain expert would accept as in-scope but which

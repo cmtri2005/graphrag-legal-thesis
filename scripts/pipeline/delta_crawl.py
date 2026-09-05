@@ -34,8 +34,8 @@ were fetched on different days is a corpus that quietly lies about "as of when",
 so the timestamp is written whether anything changed or not.
 
 Usage:
-    python scripts/delta_crawl.py --dry-run     # report only, touch nothing
-    python scripts/delta_crawl.py               # stage the delta, print next steps
+    python scripts/pipeline/delta_crawl.py --dry-run     # report only, touch nothing
+    python scripts/pipeline/delta_crawl.py               # stage the delta, print next steps
 """
 from __future__ import annotations
 
@@ -47,9 +47,9 @@ from pathlib import Path
 import requests
 
 from legal_crawler.config import KEYWORDS_BY_DOMAIN
-from legal_crawler.manifest import CrawlManifest
-from legal_crawler.sitemap import fetch_central_entries, matches_any_keyword
-from legal_crawler.store import DocumentStore
+from legal_crawler.storage.manifest import CrawlManifest
+from legal_crawler.sources.sitemap import fetch_central_entries, matches_any_keyword
+from legal_crawler.storage.documents import DocumentStore
 
 
 def domain_of(slug: str) -> str | None:
@@ -172,14 +172,14 @@ def main() -> None:
 
     print("\nNow re-run the pipeline; each step refills only what was dropped:")
     extra = f" --extra-seeds {seeds_path}" if new_count else ""
-    print(f"  python scripts/build_graph.py --max-documents 40000 --extra-seeds data/reverse_seeds.json")
+    print("  python scripts/pipeline/build_graph.py --max-documents 40000 --extra-seeds data/reverse_seeds.json")
     if new_count:
         print(f"    (and again with{extra} to pull the {new_count} new in-domain document(s))")
-    print("  python scripts/expand_reverse.py")
-    print("  python scripts/fetch_provision_trees.py")
-    print("  python scripts/fetch_histories.py")
-    print("  python scripts/attach_provision_text.py")
-    print("  python scripts/verify_pipeline.py")
+    print("  python scripts/pipeline/expand_reverse.py")
+    print("  python scripts/pipeline/fetch_provision_trees.py")
+    print("  python scripts/pipeline/fetch_histories.py")
+    print("  python scripts/pipeline/attach_provision_text.py")
+    print("  python scripts/check/verify_pipeline.py")
 
 
 if __name__ == "__main__":

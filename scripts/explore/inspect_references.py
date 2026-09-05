@@ -7,7 +7,7 @@ open the page, Ctrl+F for that title, and read off which heading/tab it sits
 under. No DevTools/JSON reading required.
 
 Usage:
-    python scripts/inspect_references.py 177815
+    python scripts/explore/inspect_references.py 177815
 """
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-from legal_crawler.api_client import ApiClient
+from legal_crawler.sources.api_client import ApiClient
 
 DETAIL_URL = "https://vbpl.vn/van-ban/chi-tiet/van-ban--{doc_id}"
 

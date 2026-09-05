@@ -30,7 +30,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .models import Edge
+from ..models import Edge
 
 JsonDict = dict[str, Any]
 
