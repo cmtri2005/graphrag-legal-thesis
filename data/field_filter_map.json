@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "note": "Stage 4 (docs/crawling-plan.md §3). This is an ADVISORY review-candidate list, not an auto-exclusion filter — spot-checking the initial version turned up hard false positives (a Personal Income Tax Law decree tagged solely 'Lao động - Thương binh và Xã hội'; a VAT enforcement directive tagged 'Công an' alongside 'Tài chính'), proving vbpl.vn's own major/field tags are too noisy to delete documents on unattended. 'Lao động - Thương binh và Xã hội' was removed entirely after that finding. A document is only flagged when ALL of its majors/fields are on this list (see field_filter.classify) — one on-topic major among several is enough to keep it. Deliberately conservative beyond that too: ambiguous economic-adjacent majors (Giao thông Vận tải, Nông nghiệp, Xây dựng, Khoa học và công nghệ, Tài nguyên và Môi trường) are left OUT on purpose. 'Chưa phân loại' / empty is never treated as foreign (56% of the corpus has no classification at all). Human review of scripts/filter_by_field.py's output is required before excluding anything from Stage 5/6 — see docs/crawling-plan.md §3b's own precedent of not trusting unverified heuristics.",
+  "foreign_majors": [
+    "Giáo dục và đào tạo",
+    "Y tế",
+    "Y  tế",
+    "Văn hóa Thể thao và Du lịch",
+    "Văn hóa - Thông tin",
+    "Quốc phòng",
+    "Quốc phòng, an ninh và trật tự an toàn xã hội",
+    "Công an",
+    "An ninh quốc gia",
+    "Ngoại giao",
+    "Dân tộc",
+    "Dân tộc và Miền núi",
+    "Tòa án",
+    "Kiểm sát",
+    "Thông tin và Truyền thông",
+    "Mặt trận Tổ quốc Việt Nam",
+    "Bí mật nhà nước"
+  ],
+  "foreign_fields": [
+    "Hộ tịch, quốc tịch, chứng thực",
+    "Thi hành án dân sự",
+    "Hình sự - hành chính",
+    "Bổ trợ tư pháp",
+    "Tiêu chuẩn đo lường chất lượng",
+    "Tổ chức- Biên chế",
+    "Tổ chức cán bộ",
+    "Công chức, viên chức"
+  ]
+}

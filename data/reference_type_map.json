@@ -1,0 +1,84 @@
+{
+  "_readme": "See docs/crawling-plan.md §3b. Verified against the real vbpl.vn 'Lược đồ' tab (rc-tabs-0-panel-luoc-do) via scripts/scrape_luoc_do.py. Each verified:true entry was confirmed by an exact match (same count, same titles) between a code's references[] targets and one UI heading, on at least one sample document. group: 'genealogy' = Stage 2 BFS expands through it (finite amendment lineage); 'open_citation' = recorded as an edge but never expanded through (unbounded citation graph). Full corpus scan (7116 docs, 2026-08-24) found exactly these 13 codes; no others exist in the sample.",
+  "codes": {
+    "1": {
+      "label_vi": "Văn bản bị bãi bỏ",
+      "group": "genealogy",
+      "verified": true,
+      "example_doc_ids": ["177815", "118930", "185593"]
+    },
+    "3": {
+      "label_vi": "Căn cứ ban hành",
+      "group": "open_citation",
+      "verified": true,
+      "example_doc_ids": ["177815", "118930", "25347", "107573", "123806"]
+    },
+    "4": {
+      "label_vi": "Văn bản được dẫn chiếu",
+      "group": "open_citation",
+      "verified": true,
+      "example_doc_ids": ["118930", "10315"]
+    },
+    "5": {
+      "label_vi": "Văn bản bị đình chỉ thi hành",
+      "group": "genealogy",
+      "verified": true,
+      "example_doc_ids": ["123806"]
+    },
+    "6": {
+      "label_vi": "Văn bản được đính chính",
+      "group": "genealogy",
+      "verified": true,
+      "example_doc_ids": ["107573"]
+    },
+    "7": {
+      "label_vi": "Văn bản được hợp nhất",
+      "group": "genealogy",
+      "verified": true,
+      "example_doc_ids": ["102001"]
+    },
+    "8": {
+      "label_vi": "Văn bản được hướng dẫn áp dụng",
+      "group": "open_citation",
+      "verified": true,
+      "example_doc_ids": ["10315"]
+    },
+    "9": {
+      "label_vi": "Văn bản được quy định chi tiết, hướng dẫn thi hành",
+      "group": "genealogy",
+      "verified": true,
+      "example_doc_ids": ["25347", "107573", "27228"]
+    },
+    "10": {
+      "label_vi": "Văn bản được sửa đổi bổ sung",
+      "group": "genealogy",
+      "verified": true,
+      "example_doc_ids": ["177815", "142881", "19419", "25347", "123806"]
+    },
+    "11": {
+      "label_vi": "Văn bản bị tạm ngưng hiệu lực",
+      "group": "genealogy",
+      "verified": true,
+      "example_doc_ids": ["108788"]
+    },
+    "12": {
+      "label_vi": "Văn bản được thay thế",
+      "group": "genealogy",
+      "verified": true,
+      "example_doc_ids": ["177815", "142881", "19419", "178536"]
+    },
+    "14": {
+      "label_vi": "Văn bản được giải thích",
+      "group": "open_citation",
+      "verified": true,
+      "example_doc_ids": ["60233980-8b03-11f1-a5f3-ad4ead3c13c0"]
+    },
+    "2": {
+      "label_vi": "Văn bản được công bố",
+      "group": "open_citation",
+      "verified": true,
+      "verification_method": "elimination, not direct visual match — see docs/crawling-plan.md §3b. This is the one remaining unmatched code among the 13 codes found in the full corpus scan, and 'Văn bản được công bố' is the one remaining unmatched heading on the Lược đồ tab (the other 12 codes/headings all matched directly). Direct visual confirmation was attempted on >2500 sample documents; every occurrence of code 2 had a targetDocument title colliding with another code's target in the same document, and the UI appears to dedupe/hide a heading whose only entries collide with an already-shown heading — so no document was found where code 2 rendered as its own visible section. User (thesis author) reviewed this reasoning and accepted it as verified on 2026-08-24.",
+      "example_doc_ids": ["184173", "185593", "27228"]
+    }
+  }
+}

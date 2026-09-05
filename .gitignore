@@ -1,0 +1,67 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+
+# Local config / secrets
+.env
+.env.*
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Run output
+*.log
+
+# ---------------------------------------------------------------- crawl data
+# Everything under data/ is ignored BY DEFAULT, then whitelisted file by file.
+#
+# Deliberately a whitelist, not a blacklist: the crawl grew data/trees/,
+# data/history/ and data/diagrams/ one at a time, each 80-300 MB, and a
+# blacklist would have let the next one slip in. Total today is ~2 GB across
+# ~78,000 files — that must never enter git.
+#
+# See README's "Data files" table for what each file is.
+data/*
+
+# Hand-verified mappings — expensive to rebuild, encode manual verification
+!data/reference_type_map.json
+!data/eff_status_map.json
+!data/field_filter_map.json
+
+# Human decisions — losing these means redoing the review by hand
+!data/excluded_ids.txt
+
+# Needed at runtime: build_graph.py --extra-seeds reads this, and it only
+# exists as the output of a ~2h reverse-closure crawl
+!data/reverse_seeds.json
+
+# Corpus definition at a point in time. Cheap to regenerate, but the sitemap
+# changes underneath (12 new in-domain documents appeared in 11 days), so
+# regenerating gives a DIFFERENT list. Pin it.
+!data/seeds.json
+
+# Measurement evidence + review queues, cited in the docs
+!data/recall_candidates.txt
+!data/tree_content_mismatch.txt
+!data/field_filter_review.txt
+
+# Named accounts of what did NOT work — the point of keeping them is that an
+# unexplained gap and a known-bad document must never look alike.
+!data/fetch_failures.txt
+!data/provision_review.txt
+
+# Provenance: when each delta run happened and what it moved. A point-in-time
+# corpus without this is a corpus that can't say "as of when".
+!data/delta_runs.jsonl

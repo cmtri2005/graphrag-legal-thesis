@@ -1,0 +1,27 @@
+37932	thue	Thông tin và Truyền thông
+124269	thue	Y tế
+124270	thue	Y tế
+124271	thue	Y tế
+59cf7800-985f-11f1-a7b9-e38443dbc2e1	doanh_nghiep_dau_tu	An ninh quốc gia
+60233980-8b03-11f1-a5f3-ad4ead3c13c0	doanh_nghiep_dau_tu	An ninh quốc gia
+63a891b0-7c47-11f1-8eaf-41d23454bd62	doanh_nghiep_dau_tu	An ninh quốc gia
+9d0906c0-7ac0-11f1-941d-db6d817211f9	doanh_nghiep_dau_tu	An ninh quốc gia
+baeb1b00-5299-11f1-a9a3-1522f60a5dc7	doanh_nghiep_dau_tu	An ninh quốc gia
+fa058c70-4c23-11f1-89aa-39e28af66afb	doanh_nghiep_dau_tu	An ninh quốc gia
+67923	doanh_nghiep_dau_tu	Thông tin và Truyền thông
+158390	doanh_nghiep_dau_tu	Y tế
+181891	doanh_nghiep_dau_tu	Y tế
+181986	doanh_nghiep_dau_tu	Y tế
+153960	doanh_nghiep_dau_tu	Quốc phòng
+25723ae0-8cd2-11f1-9c1c-f5f02cab2721	giao_thong	An ninh quốc gia
+07b5f650-84a2-11f1-8697-9b2ec910d716	giao_thong	An ninh quốc gia
+75564d60-84a0-11f1-84e2-a729d70b3baf	giao_thong	An ninh quốc gia
+90a535b0-803e-11f1-a6e0-2dafb4ca1110	giao_thong	An ninh quốc gia
+cc529cf0-7ff4-11f1-ba62-eb7a9ce1404a	giao_thong	An ninh quốc gia
+ad0b3790-7ff3-11f1-ad8d-1bdb6fe6ae0f	giao_thong	An ninh quốc gia
+224b21d0-7d9e-11f1-bb7a-69f7cf2f90db	giao_thong	An ninh quốc gia
+55f29b20-7d04-11f1-a5a9-e19df80f2c89	giao_thong	An ninh quốc gia
+b6d12ed0-49fa-11f1-b5ba-e7f6e1dcc41b	giao_thong	An ninh quốc gia
+96720	giao_thong	Thông tin và Truyền thông
+183751	giao_thong	Y tế
+144830	giao_thong	Y tế

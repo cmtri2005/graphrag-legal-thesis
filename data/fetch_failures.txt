@@ -1,0 +1,25 @@
+# Documents the crawl could not complete. Kept as a named list so they
+# are accounted for rather than surviving only in a run log — verify_pipeline
+# treats an unexplained gap and a known-bad document very differently.
+#
+# stage	doc_id	title
+tree	121053	Thông tư số 28/2017/TT-BTC Sửa đổi, bổ sung một số điều của Thông tư số 45/2013/TT-BTC ngày 25 tháng 4 năm 201
+tree	132279	Thông tư số 16/2018/TT-BNNPTNT sửa đổi, bổ sung một số điều của Thông tư số 48/2013/TT-BNNPTNT ngày 12/11/2013
+tree	132713	Nghị định số 165/2018/NĐ-CP Về giao dịch điện tử trong hoạt động tài chính
+tree	142709	Thông tư số 17/2020/TT-BTC Bãỉ bỏ một số văn bản quy phạm pháp luật do Bộ trưởng Bộ Tàỉ chính ban hành và liên
+tree	142847	Luật Doanh nghiệp số 59/2020/QH14
+tree	143616	Thông tư số 65/2020/TT-BTC Sửa đổi, bổ sung một số điều của Thông tư số 302/2016/TT-BTC ngày 15 tháng 11 năm 2
+tree	146272	Thông tư số 81/2020/TT-BTC Sửa đổi, bổ sung một số điều của Thông tư sổ 110/2018/TT-BTC ngày 15 tháng 11 năm 2
+tree	163739	Thông tư số 62/2023/TT-BTC Sửa đổi, bổ sung một số điều của Thông tư số 25/2021/TT-BTC ngày 07 tháng 4 năm 202
+tree	164950	Thông tư số 01/2019/TT-BTC Sửa đổi, bổ sung một số điều của Thông tư số 50/2017/TT-BTC ngày 15 tháng 5 năm 201
+tree	165041	Thông tư số 79/2023/TT-BTC Quy định chi tiết thi hành một số điều của Luật Thi đua, khen thưởng trong lĩnh vực
+tree	172400	Thông tư số 94/2024/TT-BQP quy định chi tiết một số điều của Luật Nhà ở trong Quân đội nhân dân Việt Nam
+tree	174423	Thông tư số 28/2024/TT-BGDĐT Quy định nội dung thanh tra chuyên ngành trong lĩnh vực giáo dục và thanh tra nội
+tree	177441	Nghị định số 100/2025/NĐ-CP Sửa đổi, bổ sung Nghị định số 56/2025/NĐ-CP ngày 03 tháng 3 năm 2025 của Chính phủ
+tree	177762	Nghị quyết số 70/2025/UBTVQH15 Quy định về nguyên tắc, tiêu chí và định mức phân bổ vốn đầu tưcông nguồn ngân 
+tree	181593	Thông tư số 16/2020/TT-BCT Sửa đổi, bổ sung một số điều của Thông tư số 44/2015/TT-BCT ngày 09 tháng 12 năm 20
+tree	18477	Thông tư số 08/2005/TT-BTC Hướng dẫn  Chế độ tài chính áp dụng đối với Khu Thương mại và Công nghiệp thuộc Khu
+tree	187283	Thông tư số 04/2026/TT-BKHCN Sửa đổi, bổ sung, bãi bỏ một số điều của các văn bản quy phạm pháp luật của Bộ tr
+tree	27346	Thông tư số 11/2012/TT-BTC Hướng dẫn miễn thuế xuất khẩu đối với hàng hóa là vật liệu xây dựng đưa từ thị trườ
+history	121053	Thông tư số 28/2017/TT-BTC Sửa đổi, bổ sung một số điều của Thông tư số 45/2013/TT-BTC ngày 25 tháng 4 năm 201
+history	142847	Luật Doanh nghiệp số 59/2020/QH14

@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "verified_on": "2026-09-04",
+  "_readme": "Mapping for history[].content (docs/execution-plan.md §A). Same discipline as reference_type_map.json: nothing here is a guess. `source` says how each entry was established. Loader: src/legal_crawler/status_codes.py — fail-loud on anything absent.",
+  "_how_the_base_codes_were_established": "The API states them itself. /doc/{id}'s effStatus object carries BOTH `code` and `name` (e.g. {code: 'HHL1P', name: 'Hết hiệu lực một phần'}), tallied across all 20,749 crawled documents. No UI scraping was needed, unlike referenceType. Cross-checked against the free-text history rows, which spell out the same transitions in words: 'CHL → HHL1P' appears alongside 'Hết hiệu lực một phần → Hết hiệu lực toàn bộ'.",
+  "_on_the_numeric_suffixes": "HHL1P1/2/3/4 and TNHL1P are NOT resolved, and are deliberately not guessed. What is known: (1) vbpl.vn's own frontend never renders these codes — the string 'HHL1P' appears nowhere in its JS bundle, so there is no displayed label to verify against; (2) 100% of suffixed rows have sourceDocumentName=null and createdBy=Admin, while bare HHL1P is 79% sourced and usually written by Job; (3) statistically HHL1P1 co-occurs with inbound 'bãi bỏ' edges (75%) and HHL1P3 with 'sửa đổi bổ sung' (85%) — correlation only, on documents having exactly one affecting relation; (4) the suffix does not encode provision level: all variants mix Khoản/Điều/Điểm alike. The frontend does draw a partial-vs-total distinction, but from a DIFFERENT field, `effectAllType`, on relation objects (ABROGATES with effectAllType in [1,3] renders as 'Bãi bỏ một phần', in [0,2,null] as 'Bãi bỏ toàn bộ'; REPLACES inverts the null case). That field is not exposed by any endpoint reachable without auth — not in references[], not in /diagram, not in any of the 7 server actions probed. CONSEQUENCE FOR STAGE 6: rely on the prefix, which is unambiguous, and keep the raw code verbatim. Do not attach legal meaning to the digit.",
+  "codes": {
+    "CHL": {
+      "label_vi": "Còn hiệu lực",
+      "kind": "status",
+      "effect": "in_force",
+      "verified": true,
+      "source": "api_effStatus",
+      "note": "7,102 documents carry this as their current effStatus."
+    },
+    "HHL": {
+      "label_vi": "Hết hiệu lực toàn bộ",
+      "kind": "status",
+      "effect": "expired_total",
+      "verified": true,
+      "source": "api_effStatus",
+      "note": "11,214 documents."
+    },
+    "HHL1P": {
+      "label_vi": "Hết hiệu lực một phần",
+      "kind": "status",
+      "effect": "expired_partial",
+      "verified": true,
+      "source": "api_effStatus",
+      "note": "1,899 documents. Bare form is usually written by Job and names its source document."
+    },
+    "HHL1P1": {
+      "label_vi": "Hết hiệu lực một phần",
+      "kind": "status",
+      "effect": "expired_partial",
+      "verified": true,
+      "source": "prefix_of_verified_code",
+      "note": "Prefix verified; suffix meaning unknown — see _on_the_numeric_suffixes. Correlates with inbound 'bãi bỏ' edges (75%), NOT treated as evidence."
+    },
+    "HHL1P2": {
+      "label_vi": "Hết hiệu lực một phần",
+      "kind": "status",
+      "effect": "expired_partial",
+      "verified": true,
+      "source": "prefix_of_verified_code",
+      "note": "Prefix verified; suffix meaning unknown. Rare (17 documents)."
+    },
+    "HHL1P3": {
+      "label_vi": "Hết hiệu lực một phần",
+      "kind": "status",
+      "effect": "expired_partial",
+      "verified": true,
+      "source": "prefix_of_verified_code",
+      "note": "Prefix verified; suffix meaning unknown. Most common suffixed form. Correlates with inbound 'sửa đổi bổ sung' edges (85%), NOT treated as evidence."
+    },
+    "HHL1P4": {
+      "label_vi": "Hết hiệu lực một phần",
+      "kind": "status",
+      "effect": "expired_partial",
+      "verified": true,
+      "source": "prefix_of_verified_code",
+      "note": "Prefix verified; suffix meaning unknown. Rare (67 documents)."
+    },
+    "TNHL": {
+      "label_vi": "Ngưng hiệu lực",
+      "kind": "status",
+      "effect": "suspended",
+      "verified": true,
+      "source": "api_effStatus",
+      "note": "29 documents."
+    },
+    "TNHL1P": {
+      "label_vi": "Ngưng hiệu lực một phần",
+      "kind": "status",
+      "effect": "suspended_partial",
+      "verified": true,
+      "source": "prefix_of_verified_code",
+      "note": "TNHL verified from the API; '1P' reads as một phần by the same construction as HHL1P, and the frontend's status-colour switch does list 'ngưng hiệu lực một phần' as a rendered state."
+    },
+    "CCHL": {
+      "label_vi": "Chưa có hiệu lực",
+      "kind": "status",
+      "effect": "not_yet_in_force",
+      "verified": true,
+      "source": "api_effStatus",
+      "note": "27 documents."
+    },
+    "KCPH": {
+      "label_vi": "Không còn phù hợp",
+      "kind": "status",
+      "effect": "obsolete",
+      "verified": true,
+      "source": "api_effStatus",
+      "note": "20 documents."
+    },
+    "DATE_BH": {
+      "label_vi": "Ngày ban hành",
+      "kind": "date",
+      "effect": "issued",
+      "verified": true,
+      "source": "cross_check_issueDate",
+      "note": "On Job-written rows the createdDate matches the document's own issueDate. Admin-written DATE_BH rows carry the data-entry timestamp instead and must be ignored — see is_legal_date."
+    },
+    "DATE_HL": {
+      "label_vi": "Ngày có hiệu lực",
+      "kind": "date",
+      "effect": "effective_from",
+      "verified": true,
+      "source": "cross_check_effFrom",
+      "note": "Job-written rows match the document's effFrom (occasionally off by one day; history is the event, effFrom the summary)."
+    },
+    "DATE_HHL": {
+      "label_vi": "Ngày hết hiệu lực",
+      "kind": "date",
+      "effect": "effective_to",
+      "verified": true,
+      "source": "cross_check_effTo",
+      "note": "Job-written rows match the document's effTo."
+    }
+  }
+}

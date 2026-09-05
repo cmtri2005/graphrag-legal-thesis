@@ -1,0 +1,8 @@
+37932	thue	chuẩn kỹ thuật truyền hình cáp, không liên quan thuế
+59cf7800-985f-11f1-a7b9-e38443dbc2e1	doanh_nghiep_dau_tu	quản lý đầu tư xây dựng nội bộ Bộ Công an, không phải luật đầu tư chung
+60233980-8b03-11f1-a5f3-ad4ead3c13c0	doanh_nghiep_dau_tu	hạ tầng dùng chung cho quốc phòng/an ninh, không phải luật doanh nghiệp
+63a891b0-7c47-11f1-8eaf-41d23454bd62	doanh_nghiep_dau_tu	đầu tư xây dựng công trình an ninh nội bộ
+9d0906c0-7ac0-11f1-941d-db6d817211f9	doanh_nghiep_dau_tu	đầu tư, mua sắm nội bộ Công an nhân dân
+baeb1b00-5299-11f1-a9a3-1522f60a5dc7	doanh_nghiep_dau_tu	quyết toán đầu tư nội bộ Công an nhân dân
+158390	doanh_nghiep_dau_tu	chương trình hỗ trợ dược liệu dân tộc thiểu số, không phải luật đầu tư
+96720	giao_thong	chuẩn kỹ thuật thiết bị radio hàng hải, ít giá trị temporal-legal
