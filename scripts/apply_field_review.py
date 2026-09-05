@@ -15,6 +15,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from legal_crawler.store import read_json
+
 REVIEW_PATH = Path("data/field_filter_review.txt")
 OUT_PATH = Path("data/excluded_ids.txt")
 
@@ -33,13 +35,12 @@ CONFIRMED_EXCLUSIONS = {
 
 
 def main() -> None:
-    import json
 
     lines = REVIEW_PATH.read_text(encoding="utf-8").splitlines()
     excluded = []
     for line in lines:
         doc_id, domain, matched = line.split("\t")
-        doc_num = json.loads(Path(f"data/raw/{doc_id}.json").read_text(encoding="utf-8")).get(
+        doc_num = read_json(Path(f"data/raw/{doc_id}.json")).get(
             "docNum", ""
         )
         if doc_num in CONFIRMED_EXCLUSIONS:

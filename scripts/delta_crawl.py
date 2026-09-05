@@ -41,21 +41,15 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
+import requests
 
-import requests  # noqa: E402
-
-from legal_crawler.config import KEYWORDS_BY_DOMAIN  # noqa: E402
-from legal_crawler.manifest import CrawlManifest  # noqa: E402
-from legal_crawler.sitemap import fetch_central_entries, matches_any_keyword  # noqa: E402
-
-# Per-document caches keyed by doc_id. Dropping a document's entry from each of
-# these is what makes the ordinary scripts re-fetch it.
-CACHE_DIRS = ("raw", "trees", "history", "diagrams", "provisions")
+from legal_crawler.config import KEYWORDS_BY_DOMAIN
+from legal_crawler.manifest import CrawlManifest
+from legal_crawler.sitemap import fetch_central_entries, matches_any_keyword
+from legal_crawler.store import DocumentStore
 
 
 def domain_of(slug: str) -> str | None:
@@ -63,19 +57,6 @@ def domain_of(slug: str) -> str | None:
         if matches_any_keyword(slug, keywords):
             return domain
     return None
-
-
-def load_manifest_rows(manifest_path: Path) -> dict[str, tuple[str, str]]:
-    """doc_id -> (sitemap_lastmod, last_crawled_at), read in one pass."""
-    import sqlite3
-
-    with sqlite3.connect(manifest_path) as conn:
-        return {
-            row[0]: (row[1] or "", row[2] or "")
-            for row in conn.execute(
-                "SELECT doc_id, sitemap_lastmod, last_crawled_at FROM documents"
-            )
-        }
 
 
 def is_stale(record: tuple[str, str] | None, sitemap_lastmod: str) -> bool:
@@ -97,43 +78,21 @@ def is_stale(record: tuple[str, str] | None, sitemap_lastmod: str) -> bool:
     return True
 
 
-def silently_expired(manifest_path: Path, *, all_active: bool, today: str) -> list[str]:
-    """Documents whose recorded status can no longer be true.
-
-    Effect status is the one field that changes without anyone editing the page,
-    so it cannot be delta-detected from the sitemap at all.
-    """
-    import sqlite3
-
-    with sqlite3.connect(manifest_path) as conn:
-        if all_active:
-            sql = "SELECT doc_id FROM documents WHERE removed_at IS NULL AND eff_status = 'Còn hiệu lực'"
-            rows = conn.execute(sql).fetchall()
-        else:
-            rows = conn.execute(
-                "SELECT doc_id FROM documents "
-                "WHERE removed_at IS NULL AND eff_status = 'Còn hiệu lực' "
-                "AND eff_to IS NOT NULL AND eff_to != '' AND substr(eff_to, 1, 10) <= ?",
-                (today,),
-            ).fetchall()
-    return [r[0] for r in rows]
-
-
 def main() -> None:
-    ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--data", type=Path, default=Path("data"))
-    ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument(
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--data", type=Path, default=Path("data"))
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
         "--recheck-all-active",
         action="store_true",
         help="re-fetch every 'Còn hiệu lực' document, not just those past their effTo",
     )
-    args = ap.parse_args()
+    args = parser.parse_args()
 
+    store = DocumentStore(args.data)
     d = args.data
-    manifest_path = d / "manifest.sqlite"
-    manifest = CrawlManifest(manifest_path)
-    held = {p.stem for p in (d / "raw").glob("*.json")}
+    manifest = CrawlManifest(d / "manifest.sqlite")
+    held = store.ids("raw")
     today = date.today().isoformat()
     now = datetime.now(timezone.utc).isoformat()
 
@@ -142,7 +101,7 @@ def main() -> None:
         entries = list(fetch_central_entries(session))
     print(f"  {len(entries):,} document entries on the sitemap")
 
-    known = load_manifest_rows(manifest_path)
+    known = manifest.freshness()
 
     stale: set[str] = set()
     new_seeds: dict[str, list[str]] = {domain: [] for domain in KEYWORDS_BY_DOMAIN}
@@ -155,7 +114,11 @@ def main() -> None:
         elif (domain := domain_of(entry.slug)) is not None:
             new_seeds[domain].append(entry.doc_id)
 
-    expired = [i for i in silently_expired(manifest_path, all_active=args.recheck_all_active, today=today) if i in held]
+    expired = [
+        doc_id
+        for doc_id in manifest.expired_but_still_active(today, all_active=args.recheck_all_active)
+        if doc_id in held
+    ]
     stale.update(expired)
     # Never on a central shard in the first place => absence proves nothing.
     vanished = sorted(i for i in held - seen if (known.get(i) or ("", ""))[0])
@@ -169,13 +132,7 @@ def main() -> None:
         print("\n--dry-run: nothing written")
         return
 
-    dropped = 0
-    for doc_id in stale:
-        for sub in CACHE_DIRS:
-            path = d / sub / f"{doc_id}.json"
-            if path.exists():
-                path.unlink()
-                dropped += 1
+    dropped = sum(store.drop(doc_id) for doc_id in stale)
     if vanished:
         manifest.mark_removed(vanished, now)
 

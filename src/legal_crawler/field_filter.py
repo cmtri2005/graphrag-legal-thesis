@@ -22,10 +22,10 @@ review candidate list, not something to delete on: run it past a human
 before excluding anything from later stages.
 """
 from __future__ import annotations
-
-import json
 from dataclasses import dataclass
 from pathlib import Path
+
+from .store import read_json
 from typing import Any
 
 DEFAULT_MAP_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "field_filter_map.json"
@@ -48,7 +48,7 @@ class FieldFilterMap:
 
     @classmethod
     def load(cls, path: Path = DEFAULT_MAP_PATH) -> "FieldFilterMap":
-        raw = json.loads(path.read_text(encoding="utf-8"))
+        raw = read_json(path)
         return cls(
             foreign_majors=set(raw.get("foreign_majors", [])),
             foreign_fields=set(raw.get("foreign_fields", [])),

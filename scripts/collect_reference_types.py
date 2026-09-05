@@ -21,17 +21,16 @@ from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-
 from legal_crawler.api_client import ApiClient, ApiClientError
 from legal_crawler.reference_types import DEFAULT_MAP_PATH
+from legal_crawler.store import read_json
 
 MAX_EXAMPLES_PER_CODE = 5
 
 
 def ids_from_seeds(seeds_path: Path, sample_size: int | None) -> list[str]:
     """All unique ids across every domain, optionally down-sampled."""
-    seeds = json.loads(seeds_path.read_text(encoding="utf-8"))
+    seeds = read_json(seeds_path)
     unique_ids = sorted({entry["doc_id"] for entries in seeds.values() for entry in entries})
     if sample_size is None or sample_size >= len(unique_ids):
         return unique_ids
@@ -79,7 +78,7 @@ def collect(doc_ids: list[str], concurrency: int) -> dict[int, list[str]]:
 
 def merge_into_map_file(observed: dict[int, list[str]], map_path: Path) -> list[int]:
     """Merges observed codes/examples in-place; returns newly-seen codes."""
-    data = json.loads(map_path.read_text(encoding="utf-8")) if map_path.exists() else {"codes": {}}
+    data = read_json(map_path) if map_path.exists() else {"codes": {}}
     codes = data.setdefault("codes", {})
     new_codes: list[int] = []
 

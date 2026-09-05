@@ -30,32 +30,17 @@ import sys
 import time
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-
-from legal_crawler.provision_tree import (  # noqa: E402
+from legal_crawler.provision_tree import (
     MissingPayloadRowError,
     count_by_level,
     fetch_tree,
     make_session,
 )
+from legal_crawler.store import load_permanent_failures
 
 # Consecutive payload-less responses before we stop blaming individual
 # documents and conclude NEXT_ACTION_ID itself rotated.
 STALE_ABORT_THRESHOLD = 5
-
-
-def load_known_bad(path: Path, stage: str = "tree") -> set[str]:
-    """doc_ids recorded as permanently unfetchable for this stage."""
-    if not path.exists():
-        return set()
-    ids = set()
-    for line in path.read_text(encoding="utf-8").splitlines():
-        if line.startswith("#") or not line.strip():
-            continue
-        parts = line.split("\t")
-        if len(parts) >= 2 and parts[0] == stage:
-            ids.add(parts[1])
-    return ids
 
 
 def main() -> None:
@@ -80,7 +65,7 @@ def main() -> None:
 
     args.out.mkdir(parents=True, exist_ok=True)
     doc_ids = sorted(p.stem for p in args.raw.glob("*.json"))
-    known_bad = load_known_bad(args.failures) if not args.retry_failures else set()
+    known_bad = set() if args.retry_failures else load_permanent_failures(args.failures, "tree")
     pending = [
         d for d in doc_ids
         if not (args.out / f"{d}.json").exists() and d not in known_bad

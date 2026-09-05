@@ -7,11 +7,11 @@ builder runs. This module only loads and enforces that hand-built table; it
 never guesses a label itself.
 """
 from __future__ import annotations
-
-import json
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
+
+from .store import read_json
 
 DEFAULT_MAP_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "reference_type_map.json"
 
@@ -53,7 +53,7 @@ class ReferenceTypeMap:
 
     @classmethod
     def load(cls, path: Path = DEFAULT_MAP_PATH) -> "ReferenceTypeMap":
-        raw = json.loads(path.read_text(encoding="utf-8"))
+        raw = read_json(path)
         entries = {}
         for code_str, info in raw.get("codes", {}).items():
             if not info.get("verified"):

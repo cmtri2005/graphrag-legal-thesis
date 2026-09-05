@@ -14,8 +14,6 @@ from datetime import datetime, timezone
 from hashlib import sha256
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-
 import requests
 
 from legal_crawler.api_client import ApiClient
@@ -23,17 +21,18 @@ from legal_crawler.graph_expand import expand
 from legal_crawler.manifest import CrawlManifest
 from legal_crawler.reference_types import DEFAULT_MAP_PATH, ReferenceTypeMap
 from legal_crawler.sitemap import fetch_central_entries
+from legal_crawler.store import read_json, write_json
 
 
 def load_seed_ids(seeds_path: Path, extra_seeds_path: Path | None = None) -> list[str]:
-    seeds = json.loads(seeds_path.read_text(encoding="utf-8"))
+    seeds = read_json(seeds_path)
     ids = {entry["doc_id"] for entries in seeds.values() for entry in entries}
     if extra_seeds_path:
         # Stage 2b's finds (data/reverse_seeds.json): documents that acted on
         # the corpus and so were unreachable by forward-only BFS. They must
         # enter as seeds or their own references[] never reach edges.jsonl,
         # even though their JSON is already on disk.
-        ids |= set(json.loads(extra_seeds_path.read_text(encoding="utf-8")))
+        ids |= set(read_json(extra_seeds_path))
     return sorted(ids)
 
 
@@ -48,9 +47,9 @@ def build_lastmod_index() -> dict[str, str]:
 
 
 def persist_document(out_dir: Path, doc_id: str, document: dict) -> str:
-    raw = json.dumps(document, ensure_ascii=False)
-    (out_dir / f"{doc_id}.json").write_text(raw, encoding="utf-8")
-    return sha256(raw.encode("utf-8")).hexdigest()
+    """Write the document and return the hash of exactly what landed on disk."""
+    written = write_json(out_dir / f"{doc_id}.json", document)
+    return sha256(written.encode("utf-8")).hexdigest()
 
 
 def make_checkpointing_fetcher(
@@ -69,7 +68,7 @@ def make_checkpointing_fetcher(
         nonlocal fetched_count
         cache_path = out_dir / f"{doc_id}.json"
         if cache_path.exists():
-            return json.loads(cache_path.read_text(encoding="utf-8"))
+            return read_json(cache_path)
 
         document = client.get_document(doc_id)
         content_hash = persist_document(out_dir, doc_id, document)

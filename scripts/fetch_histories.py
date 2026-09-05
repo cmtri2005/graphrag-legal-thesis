@@ -27,12 +27,10 @@ from __future__ import annotations
 import argparse
 import collections
 import json
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-
-from legal_crawler.api_client import ApiClient, DocumentNotFoundError  # noqa: E402
+from legal_crawler.api_client import ApiClient, DocumentNotFoundError
+from legal_crawler.store import load_permanent_failures
 
 
 def main() -> None:
@@ -40,14 +38,25 @@ def main() -> None:
     parser.add_argument("--raw", type=Path, default=Path("data/raw"))
     parser.add_argument("--out", type=Path, default=Path("data/history"))
     parser.add_argument("--limit", type=int, default=0, help="stop after N fetches (0 = no limit)")
+    parser.add_argument(
+        "--failures",
+        type=Path,
+        default=Path("data/fetch_failures.txt"),
+        help="known-permanent failures to skip",
+    )
+    parser.add_argument("--retry-failures", action="store_true", help="do not skip them")
     args = parser.parse_args()
 
     args.out.mkdir(parents=True, exist_ok=True)
     doc_ids = sorted(p.stem for p in args.raw.glob("*.json"))
-    pending = [d for d in doc_ids if not (args.out / f"{d}.json").exists()]
+    known_bad = set() if args.retry_failures else load_permanent_failures(args.failures, "history")
+    have = {d for d in doc_ids if (args.out / f"{d}.json").exists()}
+    pending = [d for d in doc_ids if d not in have and d not in known_bad]
 
     print(f"crawled documents: {len(doc_ids)}")
-    print(f"histories already fetched: {len(doc_ids) - len(pending)}")
+    print(f"histories already fetched: {len(have)}")
+    if known_bad:
+        print(f"known-permanent failures skipped: {len(known_bad)} (--retry-failures to include)")
     print(f"to fetch now: {len(pending)}" + (f" (limited to {args.limit})" if args.limit else ""))
     if not pending:
         return

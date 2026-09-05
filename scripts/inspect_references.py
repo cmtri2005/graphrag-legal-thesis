@@ -15,8 +15,6 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-
 from legal_crawler.api_client import ApiClient
 
 DETAIL_URL = "https://vbpl.vn/van-ban/chi-tiet/van-ban--{doc_id}"

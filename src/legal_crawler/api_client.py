@@ -45,9 +45,9 @@ class ApiClient:
     def get_history(self, doc_id: str) -> JsonDict:
         """Effective-date timeline — the core input for Stage 6 (point-in-time).
 
-        NOT wired into build_graph.py yet: the Stage 2-3 crawl only persisted
-        /doc/{id}. Stage 6 needs this for every document, so it still has to be
-        backfilled — see docs/crawling-plan.md §7.
+        Deliberately not part of the Stage 2-3 crawl, which persists /doc/{id}
+        only. `scripts/fetch_histories.py` backfills this separately so a slow
+        second pass can be interrupted without risking the main fetch.
         """
         return self._get(f"/qtdc/public/doc/{doc_id}/history")
 

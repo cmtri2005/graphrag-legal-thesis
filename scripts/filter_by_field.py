@@ -18,18 +18,15 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import json
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-
 from legal_crawler.field_filter import DEFAULT_MAP_PATH, FieldFilterMap
+from legal_crawler.store import read_json
 
 
 def load_seed_ids_by_domain(seeds_path: Path) -> dict[str, str]:
     """doc_id -> domain name (dat_dai / thue / doanh_nghiep_dau_tu)."""
-    seeds = json.loads(seeds_path.read_text(encoding="utf-8"))
+    seeds = read_json(seeds_path)
     doc_id_to_domain: dict[str, str] = {}
     for domain, entries in seeds.items():
         for entry in entries:
@@ -55,7 +52,7 @@ def main() -> None:
         if not raw_path.exists():
             missing += 1
             continue
-        document = json.loads(raw_path.read_text(encoding="utf-8"))
+        document = read_json(raw_path)
         verdict = field_filter.classify(document)
         if verdict.is_foreign:
             excluded.append((doc_id, domain, ", ".join(verdict.matched_names)))

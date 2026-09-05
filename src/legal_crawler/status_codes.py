@@ -16,11 +16,11 @@ Two things about `history` rows that will silently corrupt Stage 6 if missed:
    corroboration and must not be fed to `classify` as codes.
 """
 from __future__ import annotations
-
-import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
+
+from .store import read_json
 
 DEFAULT_MAP_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "eff_status_map.json"
 
@@ -59,7 +59,7 @@ class StatusCodeMap:
 
     @classmethod
     def load(cls, path: Path = DEFAULT_MAP_PATH) -> "StatusCodeMap":
-        raw = json.loads(path.read_text(encoding="utf-8"))
+        raw = read_json(path)
         entries = {
             code: StatusCodeInfo(
                 code=code,

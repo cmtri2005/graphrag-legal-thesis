@@ -20,20 +20,18 @@ from __future__ import annotations
 
 import argparse
 import json
-import sqlite3
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-
-from legal_crawler.config import KEYWORDS_BY_DOMAIN  # noqa: E402
-from legal_crawler.reference_types import (  # noqa: E402
+from legal_crawler.config import KEYWORDS_BY_DOMAIN
+from legal_crawler.manifest import CrawlManifest
+from legal_crawler.reference_types import (
     DEFAULT_MAP_PATH,
     EdgeGroup,
     ReferenceTypeMap,
 )
-from legal_crawler.sitemap import matches_any_keyword  # noqa: E402
-from legal_crawler.status_codes import StatusCodeMap, parse_transition  # noqa: E402
+from legal_crawler.sitemap import matches_any_keyword
+from legal_crawler.status_codes import StatusCodeMap, parse_transition
+from legal_crawler.store import DocumentStore, read_json
 
 failures: list[str] = []
 
@@ -44,19 +42,15 @@ def check(name: str, ok: bool, detail: str = "") -> None:
         failures.append(name)
 
 
-def load_raw_ids(raw_dir: Path) -> set[str]:
-    return {p.stem for p in raw_dir.glob("*.json")}
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=Path("data"))
     args = parser.parse_args()
     d = args.data
 
-    raw_dir = d / "raw"
-    raw_ids = load_raw_ids(raw_dir)
-    print(f"corpus: {len(raw_ids)} documents in {raw_dir}\n")
+    store = DocumentStore(d)
+    raw_ids = store.ids("raw")
+    print(f"corpus: {len(raw_ids)} documents in {store.dir('raw')}\n")
 
     # ---------------------------------------------------------------- Stage 3
     print("Stage 3 — raw documents")
@@ -64,7 +58,7 @@ def main() -> None:
     seen_codes: set[int] = set()
     for doc_id in raw_ids:
         try:
-            doc = json.loads((raw_dir / f"{doc_id}.json").read_text(encoding="utf-8"))
+            doc = store.load("raw", doc_id)
         except Exception:  # noqa: BLE001
             bad_json.append(doc_id)
             continue
@@ -107,10 +101,7 @@ def main() -> None:
     accounted: set[str] = set()
     manifest_path = d / "manifest.sqlite"
     if manifest_path.exists():
-        with sqlite3.connect(manifest_path) as conn:
-            accounted |= {
-                r[0] for r in conn.execute("SELECT doc_id FROM documents WHERE removed_at IS NOT NULL")
-            }
+        accounted |= CrawlManifest(manifest_path).removed_ids()
     failed_path = d / "failed_ids.txt"
     if failed_path.exists():
         accounted |= {
@@ -139,7 +130,7 @@ def main() -> None:
 
     # ---------------------------------------------------------------- Stage 1
     print("\nStage 1 — seeds")
-    seeds = json.loads((d / "seeds.json").read_text(encoding="utf-8"))
+    seeds = read_json(d / "seeds.json")
     seed_ids = {e["doc_id"] for entries in seeds.values() for e in entries}
     check("seed domains match config", set(seeds) == set(KEYWORDS_BY_DOMAIN), f"{sorted(seeds)}")
     check(
@@ -173,25 +164,24 @@ def main() -> None:
     # --------------------------------------------------------------- manifest
     print("\nManifest")
     if manifest_path.exists():
-        with sqlite3.connect(manifest_path) as conn:
-            rows = conn.execute("SELECT COUNT(*), COUNT(DISTINCT doc_id) FROM documents").fetchone()
-        check("manifest has no duplicate ids", rows[0] == rows[1], f"{rows[0]:,} rows")
+        total, distinct = CrawlManifest(manifest_path).row_counts()
+        check("manifest has no duplicate ids", total == distinct, f"{total:,} rows")
         check(
             "manifest covers every held document",
-            rows[1] >= len(raw_ids),
-            f"{rows[1]:,} manifest vs {len(raw_ids):,} raw",
+            distinct >= len(raw_ids),
+            f"{distinct:,} manifest vs {len(raw_ids):,} raw",
         )
 
     # --------------------------------------------------------------- Stage 5a
     print("\nStage 5a — provision trees (may still be running)")
     trees_dir = d / "trees"
     if trees_dir.exists():
-        tree_ids = {p.stem for p in trees_dir.glob("*.json")}
+        tree_ids = store.ids("trees")
         check("no tree file without its document", not (tree_ids - raw_ids), f"{len(tree_ids):,} trees")
         print(f"  coverage: {len(tree_ids)}/{len(raw_ids)} ({len(tree_ids)/len(raw_ids)*100:.0f}%)")
     history_dir = d / "history"
     if history_dir.exists():
-        hist_ids = {p.stem for p in history_dir.glob("*.json")}
+        hist_ids = store.ids("history")
         check("no history file without its document", not (hist_ids - raw_ids), f"{len(hist_ids):,} histories")
         print(f"  coverage: {len(hist_ids)}/{len(raw_ids)} ({len(hist_ids)/len(raw_ids)*100:.0f}%)")
 
@@ -201,7 +191,7 @@ def main() -> None:
         status_map = StatusCodeMap.load()
         seen_status: set[str] = set()
         for path in history_dir.glob("*.json"):
-            for row in json.loads(path.read_text(encoding="utf-8")).get("history") or []:
+            for row in read_json(path).get("history") or []:
                 content = str(row.get("content") or "")
                 if parse_transition(content) is None:
                     seen_status.add(content)
@@ -217,8 +207,7 @@ def main() -> None:
     prov_dir = d / "provisions"
     if prov_dir.exists():
         prov_paths = list(prov_dir.glob("*.json"))
-        tree_ids = {p.stem for p in (d / "trees").glob("*.json")}
-        stray = {p.stem for p in prov_paths} - tree_ids
+        stray = store.ids("provisions") - store.ids("trees")
         check("no provision file without its tree", not stray, f"{len(stray)} stray")
 
         # The tree is the yardstick: a node with text must be a node the server
@@ -227,7 +216,7 @@ def main() -> None:
         overshoot, with_text, total_nodes, low = [], 0, 0, 0
         queued_text = queued_nodes = 0
         for path in prov_paths:
-            rec = json.loads(path.read_text(encoding="utf-8"))
+            rec = read_json(path)
             with_text += len(rec["nodes"])
             total_nodes += rec["total_nodes"]
             if len(rec["nodes"]) > rec["total_nodes"]:

@@ -20,28 +20,26 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import json
-import sys
 from collections import Counter
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-
-from legal_crawler.provision_text import align, flatten  # noqa: E402
+from legal_crawler.provision_text import align, flatten
+from legal_crawler.store import DocumentStore
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--data", type=Path, default=Path("data"))
-    ap.add_argument("--limit", type=int)
-    ap.add_argument("--review-threshold", type=float, default=0.5)
-    ap.add_argument("--force", action="store_true", help="rewrite existing outputs")
-    args = ap.parse_args()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--data", type=Path, default=Path("data"))
+    parser.add_argument("--limit", type=int)
+    parser.add_argument("--review-threshold", type=float, default=0.5)
+    parser.add_argument("--force", action="store_true", help="rewrite existing outputs")
+    args = parser.parse_args()
 
-    out_dir = args.data / "provisions"
+    store = DocumentStore(args.data)
+    out_dir = store.dir("provisions")
     out_dir.mkdir(exist_ok=True)
 
-    tree_paths = sorted((args.data / "trees").glob("*.json"))
+    tree_paths = sorted(store.dir("trees").glob("*.json"))
     if args.limit:
         tree_paths = tree_paths[: args.limit]
 
@@ -56,11 +54,11 @@ def main() -> None:
             stats["skipped"] += 1
             continue
 
-        tree = json.loads(tree_path.read_text(encoding="utf-8"))
+        tree = store.load("trees", doc_id)
         if not tree:
             stats["empty_tree"] += 1
             continue
-        raw = json.loads((args.data / "raw" / f"{doc_id}.json").read_text(encoding="utf-8"))
+        raw = store.load("raw", doc_id)
         html = (raw.get("documentContent") or {}).get("content") or ""
         if not html:
             stats["no_content"] += 1
@@ -68,27 +66,25 @@ def main() -> None:
 
         result = align(tree, html)
         by_id = {n["id"]: n for n in flatten(tree)}
-        out_path.write_text(
-            json.dumps(
-                {
-                    "doc_id": doc_id,
-                    "method": result.method,
-                    "coverage": round(result.coverage, 4),
-                    "total_nodes": result.total_nodes,
-                    "nodes": {
-                        nid: {
-                            "level": by_id[nid].get("level"),
-                            "title": by_id[nid].get("title"),
-                            "order_index": by_id[nid].get("orderIndex"),
-                            "parent_id": by_id[nid].get("parent_id"),
-                            "text": text,
-                        }
-                        for nid, text in result.texts.items()
-                    },
+        store.save(
+            "provisions",
+            doc_id,
+            {
+                "doc_id": doc_id,
+                "method": result.method,
+                "coverage": round(result.coverage, 4),
+                "total_nodes": result.total_nodes,
+                "nodes": {
+                    nid: {
+                        "level": by_id[nid].get("level"),
+                        "title": by_id[nid].get("title"),
+                        "order_index": by_id[nid].get("orderIndex"),
+                        "parent_id": by_id[nid].get("parent_id"),
+                        "text": text,
+                    }
+                    for nid, text in result.texts.items()
                 },
-                ensure_ascii=False,
-            ),
-            encoding="utf-8",
+            },
         )
         stats[result.method] += 1
         matched_nodes += len(result.texts)

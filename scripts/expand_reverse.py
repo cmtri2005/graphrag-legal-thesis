@@ -33,22 +33,21 @@ from datetime import datetime, timezone
 from hashlib import sha256
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-
-from legal_crawler.api_client import ApiClient, DocumentNotFoundError  # noqa: E402
-from legal_crawler.diagram import (  # noqa: E402
+from legal_crawler.api_client import ApiClient, DocumentNotFoundError
+from legal_crawler.diagram import (
     REVERSE_EXPANDABLE,
     expandable_targets,
     parse_reverse_edges,
 )
-from legal_crawler.manifest import CrawlManifest  # noqa: E402
+from legal_crawler.manifest import CrawlManifest
+from legal_crawler.store import read_json
 
 
 def fetch_diagram_cached(client: ApiClient, out_dir: Path, doc_id: str) -> dict | None:
     """Diagram for one document, served from disk when already fetched."""
     path = out_dir / f"{doc_id}.json"
     if path.exists():
-        return json.loads(path.read_text(encoding="utf-8"))
+        return read_json(path)
     try:
         payload = client.get_diagram(doc_id)
     except DocumentNotFoundError:

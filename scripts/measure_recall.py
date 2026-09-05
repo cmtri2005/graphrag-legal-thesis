@@ -30,15 +30,14 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
 from pathlib import Path
 
 import requests
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from legal_crawler.config import KEYWORDS_BY_DOMAIN  # noqa: E402
-from legal_crawler.sitemap import fetch_central_entries, matches_any_keyword  # noqa: E402
+from legal_crawler.config import KEYWORDS_BY_DOMAIN
+from legal_crawler.sitemap import fetch_central_entries, matches_any_keyword
+from legal_crawler.store import read_json
 
 # Wider than config.KEYWORDS_BY_DOMAIN on purpose — this is a measuring stick,
 # not a crawl filter. Terms a domain expert would accept as in-scope but which
@@ -75,7 +74,7 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.cache.exists():
-        entries = json.loads(args.cache.read_text(encoding="utf-8"))
+        entries = read_json(args.cache)
         print(f"central sitemap: {len(entries):,} entries (cached)")
     else:
         print("fetching central sitemap shards...")

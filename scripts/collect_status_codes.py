@@ -17,14 +17,11 @@ from __future__ import annotations
 
 import argparse
 import collections
-import json
 import re
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-
-from legal_crawler.status_codes import FREE_TEXT_PATTERN, StatusCodeMap  # noqa: E402
+from legal_crawler.status_codes import FREE_TEXT_PATTERN, StatusCodeMap
+from legal_crawler.store import read_json
 
 
 def main() -> None:
@@ -40,7 +37,7 @@ def main() -> None:
 
     for path in args.history.glob("*.json"):
         files += 1
-        for row in json.loads(path.read_text(encoding="utf-8")).get("history") or []:
+        for row in read_json(path).get("history") or []:
             content = str(row.get("content") or "")
             by_author[str(row.get("createdBy"))] += 1
             match = re.match(FREE_TEXT_PATTERN, content)

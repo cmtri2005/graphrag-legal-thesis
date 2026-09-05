@@ -84,6 +84,7 @@ src/legal_crawler/
   status_codes.py       effectivity codes in history[].content, fail-loud loader
   field_filter.py       Stage 4: flags documents for human review by major/field
   manifest.py            SQLite crawl manifest (delta/incremental support, §6b)
+  store.py               where data/ lives on disk; the only JSON read/write path
   models.py               Edge dataclass
 
 scripts/

@@ -68,6 +68,55 @@ class CrawlManifest:
             ).fetchall()
         return [row[0] for row in rows]
 
+    def freshness(self) -> dict[str, tuple[str, str]]:
+        """doc_id -> (sitemap_lastmod, last_crawled_at), in one pass.
+
+        Delta runs compare both fields for every document at once, so reading
+        them row by row through `get` would be tens of thousands of queries.
+        """
+        with closing(self._connect()) as conn:
+            return {
+                row[0]: (row[1] or "", row[2] or "")
+                for row in conn.execute(
+                    "SELECT doc_id, sitemap_lastmod, last_crawled_at FROM documents"
+                )
+            }
+
+    def expired_but_still_active(self, today: str, *, all_active: bool = False) -> list[str]:
+        """Documents the manifest still calls 'Còn hiệu lực' past their `effTo`.
+
+        Effect status is the one field that changes with nobody editing the
+        page, so the sitemap's `lastmod` cannot detect it — a law reaching its
+        own expiry date leaves no trace to compare against. `all_active` widens
+        this to every active document, for an occasional deep pass.
+        """
+        active = "removed_at IS NULL AND eff_status = 'Còn hiệu lực'"
+        with closing(self._connect()) as conn:
+            if all_active:
+                rows = conn.execute(f"SELECT doc_id FROM documents WHERE {active}").fetchall()
+            else:
+                rows = conn.execute(
+                    f"SELECT doc_id FROM documents WHERE {active} "
+                    "AND eff_to IS NOT NULL AND eff_to != '' AND substr(eff_to, 1, 10) <= ?",
+                    (today,),
+                ).fetchall()
+        return [row[0] for row in rows]
+
+    def row_counts(self) -> tuple[int, int]:
+        """(rows, distinct doc_ids) — equal unless the upsert key has broken."""
+        with closing(self._connect()) as conn:
+            return conn.execute(
+                "SELECT COUNT(*), COUNT(DISTINCT doc_id) FROM documents"
+            ).fetchone()
+
+    def removed_ids(self) -> set[str]:
+        """Documents known to be gone — accounted for, not merely absent."""
+        with closing(self._connect()) as conn:
+            return {
+                row[0]
+                for row in conn.execute("SELECT doc_id FROM documents WHERE removed_at IS NOT NULL")
+            }
+
     def upsert(
         self,
         doc_id: str,
