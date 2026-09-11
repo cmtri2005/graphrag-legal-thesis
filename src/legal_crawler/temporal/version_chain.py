@@ -121,7 +121,12 @@ class VersionChain:
             None,
         )
 
-    def close_current(self, effective_on: date) -> ProvisionVersion:
+    def close_current(
+        self,
+        effective_on: date,
+        *,
+        ended_by_event_id: str | None = None,
+    ) -> ProvisionVersion:
         """End the open version at ``effective_on`` and return its new value."""
         current = self.current()
         if current is None:
@@ -134,6 +139,7 @@ class VersionChain:
         closed = replace(
             current,
             validity=TemporalInterval(current.validity.start, effective_on),
+            ended_by_event_id=ended_by_event_id,
         )
         index = self._versions.index(current)
         self._versions[index] = closed

@@ -4,10 +4,10 @@ The thesis needs explicit domain concepts before anything is written to Neo4j
 or a vector store: a stable legal unit, its successive versions, the event that
 created a change, and the evidence behind that interpretation.
 
-These classes are therefore the storage-independent source of truth for Stage
-6.  They intentionally use only the standard library, matching the crawler's
-dependency-light design.  Database adapters may flatten them later, but should
-not redefine their temporal semantics.
+These classes are therefore the storage-independent source of truth for the
+temporal domain. They intentionally use only the standard library, matching
+the crawler's dependency-light design. Database adapters may flatten them
+later, but should not redefine their temporal semantics.
 
 All validity intervals are half-open: ``[start, end)``.  A missing ``end``
 means the interval is open-ended.  This is the convention in formula (2) of the
@@ -174,6 +174,7 @@ class Provision:
     title: str
     parent_id: str | None
     order_index: int | None = None
+    inserted_after_id: str | None = None
 
     @property
     def kind(self) -> NodeKind:
@@ -184,6 +185,8 @@ class Provision:
             raise ValueError("provision id and document_id must not be empty")
         if self.parent_id == self.id:
             raise ValueError("a provision cannot be its own parent")
+        if self.inserted_after_id == self.id:
+            raise ValueError("a provision cannot be inserted after itself")
         if self.order_index is not None and self.order_index < 0:
             raise ValueError("provision order_index must not be negative")
 
@@ -198,6 +201,7 @@ class ProvisionVersion:
     text: str
     validity: TemporalInterval
     created_by_event_id: str | None = None
+    ended_by_event_id: str | None = None
     provenance: tuple[Provenance, ...] = ()
 
     @property
@@ -212,6 +216,52 @@ class ProvisionVersion:
 
     def is_valid_at(self, at: date) -> bool:
         return self.validity.contains(at)
+
+
+@dataclass(frozen=True, slots=True)
+class TextUpdate:
+    """The complete resulting text for one existing legal provision.
+
+    ``new_text`` is the consolidated content after the operation, not a text
+    fragment to append blindly. Phrase-level substitutions will be resolved
+    into this form before they reach the event applier.
+    """
+
+    target_provision_id: str
+    new_text: str
+
+    def __post_init__(self) -> None:
+        if not self.target_provision_id:
+            raise ValueError("text update target_provision_id must not be empty")
+        if not self.new_text.strip():
+            raise ValueError("text update new_text must not be empty")
+
+
+@dataclass(frozen=True, slots=True)
+class ProvisionInsertion:
+    """A new legal unit introduced at a precise place in the provision tree."""
+
+    provision_id: str
+    level: ProvisionLevel
+    title: str
+    text: str
+    parent_id: str | None
+    after_provision_id: str | None = None
+    order_index: int | None = None
+
+    def __post_init__(self) -> None:
+        if not self.provision_id:
+            raise ValueError("insertion provision_id must not be empty")
+        if not self.title.strip():
+            raise ValueError("insertion title must not be empty")
+        if not self.text.strip():
+            raise ValueError("insertion text must not be empty")
+        if self.parent_id == self.provision_id:
+            raise ValueError("an inserted provision cannot be its own parent")
+        if self.after_provision_id == self.provision_id:
+            raise ValueError("an inserted provision cannot be placed after itself")
+        if self.order_index is not None and self.order_index < 0:
+            raise ValueError("insertion order_index must not be negative")
 
 
 @dataclass(frozen=True, slots=True)
@@ -231,6 +281,8 @@ class LegalEvent:
     effective_on: date | None
     target_provision_ids: tuple[str, ...] = ()
     new_text: str | None = None
+    text_updates: tuple[TextUpdate, ...] = ()
+    insertions: tuple[ProvisionInsertion, ...] = ()
     status: EventStatus = EventStatus.NEEDS_REVIEW
     provenance: tuple[Provenance, ...] = ()
 
@@ -244,18 +296,36 @@ class LegalEvent:
         return (
             self.status in {EventStatus.VERIFIED, EventStatus.AUTO_ACCEPTED}
             and self.effective_on is not None
-            and bool(self.target_provision_ids)
+            and bool(self.resolved_target_ids)
         )
+
+    @property
+    def resolved_target_ids(self) -> tuple[str, ...]:
+        """All existing and newly introduced provisions affected by the event."""
+        ordered = (
+            *self.target_provision_ids,
+            *(update.target_provision_id for update in self.text_updates),
+            *(insertion.provision_id for insertion in self.insertions),
+        )
+        return tuple(dict.fromkeys(ordered))
 
     def __post_init__(self) -> None:
         if not self.id or not self.source_document_id or not self.target_document_id:
             raise ValueError("event ids and document ids must not be empty")
         if len(set(self.target_provision_ids)) != len(self.target_provision_ids):
             raise ValueError("target_provision_ids must not contain duplicates")
+        if self.new_text is not None and not self.new_text.strip():
+            raise ValueError("event new_text must not be empty")
+        update_targets = [update.target_provision_id for update in self.text_updates]
+        if len(set(update_targets)) != len(update_targets):
+            raise ValueError("text_updates must not contain duplicate targets")
+        insertion_ids = [insertion.provision_id for insertion in self.insertions]
+        if len(set(insertion_ids)) != len(insertion_ids):
+            raise ValueError("insertions must not contain duplicate provision ids")
         if self.status in {EventStatus.VERIFIED, EventStatus.AUTO_ACCEPTED}:
             if self.effective_on is None:
                 raise ValueError("an accepted event requires effective_on")
-            if not self.target_provision_ids:
+            if not self.resolved_target_ids:
                 raise ValueError("an accepted event requires at least one resolved target")
 
 

@@ -85,3 +85,16 @@ def test_provenance_confidence_is_bounded():
             confidence=1.1,
         )
 
+
+def test_event_rejects_blank_legacy_replacement_text():
+    with pytest.raises(ValueError, match="new_text must not be empty"):
+        LegalEvent(
+            id="event-blank-text",
+            operation=LegalOperation.AMEND,
+            source_document_id="amending-document",
+            target_document_id="original-document",
+            effective_on=date(2025, 1, 1),
+            target_provision_ids=("article-1",),
+            new_text="   ",
+            status=EventStatus.VERIFIED,
+        )

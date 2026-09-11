@@ -41,9 +41,9 @@ khả năng:
 | F02 | Deterministic identifiers | Hoàn thành bước đầu | F01 |
 | F03 | Serialization | Chưa thực hiện | F01, F02 |
 | F04 | Version chain | Hoàn thành bước đầu | F01, F02 |
-| F05 | Event applier | Chưa thực hiện | F04 |
-| F06 | Validity propagation | Chưa thực hiện | F04, F05 |
-| F07 | Snapshot service | Chưa thực hiện | F04, F06 |
+| F05 | Event applier | Hoàn thành phần lõi | F04 |
+| F06 | Validity propagation | Hoàn thành phần lõi | F04, F05 |
+| F07 | Snapshot service | Hoàn thành phần lõi | F04, F06 |
 | F08 | VBPL adapters | Chưa thực hiện | F01, F03 |
 | F09 | Amendment extraction models | Chưa thực hiện | F01 |
 | F10 | Target resolver | Chưa thực hiện | F08, F09 |
@@ -65,6 +65,8 @@ khả năng:
 - [x] `ProvisionVersion`.
 - [x] `TemporalInterval`.
 - [x] `LegalEvent`.
+- [x] `TextUpdate` cho nội dung hợp nhất riêng của từng target.
+- [x] `ProvisionInsertion` cho node mới và vị trí chèn trong cây.
 - [x] `Provenance`.
 - [x] `GraphEdge`.
 - [x] Enum cho loại node.
@@ -80,7 +82,8 @@ khả năng:
 Cần rà soát khi các module sau được xây dựng:
 
 - [ ] Xác nhận model có đủ dữ liệu cho tạm ngưng rồi khôi phục hiệu lực.
-- [ ] Xác nhận cách biểu diễn node mới được bổ sung giữa các node hiện hữu.
+- [x] Biểu diễn node mới cùng vị trí chèn bằng `ProvisionInsertion` và
+  `inserted_after_id`.
 - [ ] Xác nhận có cần model riêng cho văn bản hợp nhất.
 - [ ] Xác nhận có cần phân biệt hiệu lực pháp lý và thời gian ghi nhận dữ liệu.
 - [ ] Chốt chính sách bất biến hoặc mutable cho `details` và `properties`.
@@ -176,22 +179,34 @@ Checklist:
 
 **File dự kiến:** `src/legal_crawler/temporal/event_applier.py`.
 
+**Trạng thái:** hoàn thành phần lõi ngày 11/09/2026. Bốn thao tác chính trong
+phạm vi đề cương (`AMEND`, `SUPPLEMENT`, `REPEAL`, `REPLACE`) đã có executable
+domain logic; `CORRECT` dùng chung quy tắc tạo version mới. Tạm ngưng và khôi
+phục được giữ lại trong vocabulary nhưng chưa tự suy diễn khi chưa chốt mô hình
+dữ liệu.
+
 Checklist:
 
-- [ ] `AMEND`: đóng version cũ và tạo version mới.
-- [ ] `REPLACE`: thay toàn bộ nội dung node đích.
-- [ ] `SUPPLEMENT`: bổ sung nội dung hoặc node mới.
-- [ ] `REPEAL`: đóng hiệu lực mà không tạo text version mới.
-- [ ] `CORRECT`: tạo phiên bản có provenance từ văn bản đính chính.
+- [x] `AMEND`: đóng version cũ và tạo version mới.
+- [x] `REPLACE`: thay toàn bộ nội dung node đích.
+- [x] `SUPPLEMENT`: bổ sung nội dung hoặc node mới.
+- [x] `REPEAL`: đóng hiệu lực mà không tạo text version mới.
+- [x] `CORRECT`: tạo phiên bản có provenance từ văn bản đính chính.
 - [ ] `SUSPEND`: ghi khoảng tạm ngưng.
 - [ ] `RESUME`: kết thúc khoảng tạm ngưng.
-- [ ] Từ chối áp dụng event `needs_review` hoặc `rejected`.
-- [ ] Từ chối event thiếu `effective_on`.
-- [ ] Từ chối event chưa resolve target.
-- [ ] Áp dụng cùng event hai lần không tạo version trùng.
-- [ ] Lưu liên kết từ version mới về event tạo ra nó.
-- [ ] Test nhiều event có cùng ngày hiệu lực.
-- [ ] Chốt quy tắc thứ tự khi nhiều event tác động cùng node.
+- [x] Từ chối áp dụng event `needs_review` hoặc `rejected`.
+- [x] Từ chối event thiếu `effective_on`.
+- [x] Từ chối event chưa resolve target.
+- [x] Áp dụng cùng event hai lần không tạo version trùng.
+- [x] Lưu liên kết hai chiều nghiệp vụ: version mới biết event tạo ra, version
+  cũ biết event kết thúc nó.
+- [x] Test nhiều event có cùng ngày hiệu lực.
+- [x] Chốt quy tắc ban đầu: nhiều event cùng ngày trên các node khác nhau được
+  phép; cùng ngày trên một node phải được hợp nhất trước, nếu không sẽ bị từ
+  chối để tránh version có độ dài bằng không.
+- [x] Áp dụng atomic: nếu một target hoặc insertion sai thì không công bố bất kỳ
+  thay đổi nào của event.
+- [x] Văn bản nguồn và văn bản đích của event phải tồn tại trong state.
 
 ## 9. F06 — Validity propagation
 
@@ -199,6 +214,10 @@ Checklist:
 các node tổ tiên.
 
 **File dự kiến:** `src/legal_crawler/temporal/validity.py`.
+
+**Trạng thái:** hoàn thành phần lõi ngày 11/09/2026 cho hiệu lực document,
+version, bãi bỏ và lan truyền theo tổ tiên. Trạng thái tạm ngưng sẽ được bổ sung
+sau khi F05 có quy tắc `SUSPEND`/`RESUME` chính thức.
 
 API dự kiến:
 
@@ -210,22 +229,27 @@ valid_descendants(provision_id, at)
 
 Checklist:
 
-- [ ] Node chỉ hợp lệ khi document chứa nó hợp lệ.
-- [ ] Node chỉ hợp lệ khi toàn bộ tổ tiên hợp lệ.
-- [ ] Bãi bỏ Chương làm vô hiệu toàn bộ cây con.
-- [ ] Bãi bỏ Điều làm vô hiệu các Khoản và Điểm con.
-- [ ] Bãi bỏ Khoản không làm Điều cha vô hiệu.
+- [x] Node chỉ hợp lệ khi document chứa nó hợp lệ.
+- [x] Node chỉ hợp lệ khi toàn bộ tổ tiên hợp lệ.
+- [x] Bãi bỏ Chương làm vô hiệu toàn bộ cây con.
+- [x] Bãi bỏ Điều làm vô hiệu các Khoản và Điểm con.
+- [x] Bãi bỏ Khoản không làm Điều cha vô hiệu.
 - [ ] Tạm ngưng node cha ảnh hưởng đúng cây con.
-- [ ] Phân biệt `not_yet_effective`, `repealed`, `suspended` và `parent_invalid`.
-- [ ] Phát hiện cycle trong cấu trúc parent-child.
-- [ ] Test cây có độ sâu không cố định.
-- [ ] Test node gốc không có `parent_id`.
+- [ ] Phân biệt thêm trạng thái `suspended`; các trạng thái
+  `not_yet_effective`, `repealed`, `inactive_gap` và `parent_invalid` đã có.
+- [x] Phát hiện cycle trong cấu trúc parent-child.
+- [x] Test cây có độ sâu không cố định.
+- [x] Test node gốc không có `parent_id`.
+- [x] Trả lý do có kiểu rõ ràng, ancestor gây mất hiệu lực và event nguyên nhân.
 
 ## 10. F07 — Snapshot service
 
 **Mục tiêu:** cung cấp API point-in-time thống nhất cho các tầng phía sau.
 
 **File dự kiến:** `src/legal_crawler/temporal/snapshot.py`.
+
+**Trạng thái:** hoàn thành phần lõi ngày 11/09/2026. Việc đối chiếu 100 truy vấn
+với corpus thật được giữ lại cho giai đoạn dữ liệu sau khi nhóm hoàn tất re-check.
 
 API dự kiến:
 
@@ -247,12 +271,14 @@ Kết quả snapshot dự kiến chứa:
 
 Checklist:
 
-- [ ] Kết quả snapshot có model riêng.
-- [ ] Kết quả tất định với cùng input.
-- [ ] Không trả version nếu tổ tiên không hợp lệ.
-- [ ] Snapshot document giữ đúng thứ tự node.
-- [ ] Cho phép lọc theo cấp Article/Clause/Point.
-- [ ] Cảnh báo khi dữ liệu nguồn chưa đủ để kết luận.
+- [x] Kết quả snapshot có model riêng.
+- [x] Kết quả tất định với cùng input.
+- [x] Không trả version/text nếu tổ tiên không hợp lệ.
+- [x] Snapshot document giữ đúng thứ tự node, kể cả node được chèn sau một
+  sibling xác định.
+- [x] Cho phép lọc theo cấp Article/Clause/Point.
+- [x] Cảnh báo khi version hợp lệ chưa có provenance.
+- [x] Trả event tạo/kết thúc version để phục vụ giải thích và kiểm toán.
 - [ ] Test tối thiểu 100 truy vấn đối chiếu thủ công khi có corpus đầy đủ.
 
 ## 11. F08 — VBPL adapters
@@ -458,11 +484,15 @@ F14 Storage adapters
 
 Ưu tiên gần nhất:
 
-1. F02 — deterministic identifiers.
-2. F04 — version chain.
-3. F05 — event applier.
-4. F06 — validity propagation.
-5. F07 — snapshot service.
+1. F03 — serialization có version schema.
+2. F09 — amendment extraction models.
+3. F11 — repository ports.
+4. F12 — in-memory repositories và contract test.
+5. F13 — query/evidence models.
+
+Sau khi corpus hoàn tất re-check: thực hiện F08 để ánh xạ dữ liệu thật, rồi F10
+để resolve target trên fixture đã xác minh. Không để sự chậm trễ của corpus chặn
+các hợp đồng dữ liệu và repository độc lập nguồn ở trên.
 
 F03 có thể thực hiện song song sau khi F02 ổn định. Không nên bắt đầu storage
 adapter trước khi hoàn thành và kiểm thử F04–F07.
@@ -490,6 +520,9 @@ Một thành phần chỉ chuyển sang “Hoàn thành” khi:
 | 11/09/2026 | F01 | Tạo domain models và các enum nền tảng | Unit test model; toàn bộ 64 test pass | Cần rà soát thêm khi triển khai versioning |
 | 11/09/2026 | F02 | Thêm deterministic ID cho document, provision, version, event và edge | Unit test tính ổn định, canonicalization và input khác nhau | Event/edge dùng SHA-256 rút gọn 24 ký tự |
 | 11/09/2026 | F04 | Thêm in-memory `VersionChain` và fixture chuỗi A → B → C | Test lookup, overlap, idempotency và transition boundary; toàn bộ 82 test pass | Cho phép gap giữa version để hỗ trợ tạm ngưng về sau |
+| 11/09/2026 | F05 | Thêm `TemporalState`, event applier atomic và payload có cấu trúc cho update/insertion | Test bốn thao tác lõi, multi-target, cùng ngày, rollback và idempotency | Chưa áp dụng `SUSPEND`/`RESUME`; cùng node/cùng ngày phải hợp nhất trước |
+| 11/09/2026 | F06 | Thêm validity theo document, local version và toàn bộ chuỗi tổ tiên | Test bãi bỏ Chương/Khoản, cây sâu, gap, cycle và typed reason | Descendant mất hiệu lực gián tiếp, không bị đóng version hàng loạt |
+| 11/09/2026 | F07 | Thêm snapshot provision/document, level filter, provenance warning và event audit | 112 test toàn repository pass | Còn đối chiếu 100 truy vấn khi corpus đã re-check |
 
 ## 21. Quyết định kiến trúc
 
@@ -524,4 +557,28 @@ Ghi các quyết định ảnh hưởng dài hạn tại đây để tránh thay
   không làm thay đổi version chain.
 - **Lý do:** lỗi bỏ sót có thể quan sát và sửa; áp dụng nhầm sẽ âm thầm làm sai
   mọi snapshot phía sau.
+- **Trạng thái:** chấp nhận.
+
+### ADR-005 — Áp dụng event theo giao dịch atomic
+
+- **Quyết định:** event được áp dụng trên working copy; chỉ thay state chính khi
+  toàn bộ target, version và insertion đều hợp lệ.
+- **Lý do:** một event nhiều target không được để lại trạng thái cập nhật một
+  phần khi target sau bị lỗi.
+- **Trạng thái:** chấp nhận.
+
+### ADR-006 — Bãi bỏ node cha không đóng version của toàn bộ cây con
+
+- **Quyết định:** chỉ đóng version của node được nêu trực tiếp trong event; hiệu
+  lực của descendant được tính động từ chuỗi tổ tiên.
+- **Lý do:** giữ đúng sự khác nhau giữa tác động trực tiếp và mất hiệu lực do
+  cấu trúc, đồng thời vẫn truy được nguyên nhân gốc.
+- **Trạng thái:** chấp nhận.
+
+### ADR-007 — Event cùng node và cùng ngày phải được hợp nhất trước
+
+- **Quyết định:** từ chối event thứ hai có cùng ngày hiệu lực trên cùng một
+  provision; bước extraction/resolution phải tạo ra kết quả hợp nhất cuối ngày.
+- **Lý do:** khoảng `[start, end)` không cho phép version có `start == end`, còn
+  tự chọn thứ tự event khi thiếu căn cứ sẽ tạo snapshot sai nhưng khó phát hiện.
 - **Trạng thái:** chấp nhận.
