@@ -47,6 +47,18 @@ from .event_applier import (
 )
 from .validity import InvalidityReason, ValidityResult, ValidityService
 from .snapshot import SnapshotResult, SnapshotService
+from .serialization import (
+    SCHEMA_VERSION,
+    DomainModel,
+    InvalidRecordError,
+    SerializationError,
+    UnknownRecordTypeError,
+    UnsupportedSchemaVersionError,
+    dumps,
+    from_record,
+    loads,
+    to_record,
+)
 
 __all__ = [
     "EventStatus",
@@ -86,4 +98,14 @@ __all__ = [
     "UnsupportedEventError",
     "ValidityResult",
     "ValidityService",
+    "DomainModel",
+    "InvalidRecordError",
+    "SCHEMA_VERSION",
+    "SerializationError",
+    "UnknownRecordTypeError",
+    "UnsupportedSchemaVersionError",
+    "dumps",
+    "from_record",
+    "loads",
+    "to_record",
 ]

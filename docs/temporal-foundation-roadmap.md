@@ -39,7 +39,7 @@ khả năng:
 |---|---|---|---|
 | F01 | Domain models | Hoàn thành bước đầu | — |
 | F02 | Deterministic identifiers | Hoàn thành bước đầu | F01 |
-| F03 | Serialization | Chưa thực hiện | F01, F02 |
+| F03 | Serialization | Hoàn thành phần lõi | F01, F02 |
 | F04 | Version chain | Hoàn thành bước đầu | F01, F02 |
 | F05 | Event applier | Hoàn thành phần lõi | F04 |
 | F06 | Validity propagation | Hoàn thành phần lõi | F04, F05 |
@@ -125,18 +125,25 @@ Checklist:
 **Mục tiêu:** chuyển domain object sang JSON và đọc ngược lại mà không mất kiểu
 dữ liệu hoặc provenance.
 
-**File dự kiến:** `src/legal_crawler/temporal/serialization.py`.
+**Vị trí:** `src/legal_crawler/temporal/serialization.py`.
+
+**Trạng thái:** hoàn thành phần lõi ngày 11/09/2026. Record dùng envelope có
+`schema_version`, model type và data; decoder strict để dữ liệu sai hoặc schema
+mới không bị đọc theo cách âm thầm làm mất ngữ nghĩa.
 
 Checklist:
 
-- [ ] `date` được ghi theo ISO 8601.
-- [ ] Enum được ghi bằng value ổn định.
-- [ ] Tuple và nested model được round-trip chính xác.
-- [ ] Có `schema_version` ở record đầu ra.
-- [ ] Giữ nguyên raw status code và dữ liệu chưa biết.
-- [ ] Báo lỗi rõ ràng khi gặp schema version không hỗ trợ.
-- [ ] Test round-trip cho mọi domain model.
-- [ ] Test Unicode tiếng Việt không bị thay đổi.
+- [x] `date` được ghi theo ISO 8601 dạng canonical `YYYY-MM-DD`.
+- [x] Enum được ghi bằng value ổn định.
+- [x] Tuple và nested model được round-trip chính xác.
+- [x] Có `schema_version` ở record đầu ra.
+- [x] Giữ nguyên raw status code và dữ liệu mở rộng trong `details`/`properties`.
+- [x] Báo lỗi rõ ràng khi gặp schema version không hỗ trợ.
+- [x] Test round-trip cho mọi domain model.
+- [x] Test Unicode tiếng Việt không bị thay đổi.
+- [x] Từ chối field lạ, field bắt buộc bị thiếu và type không đúng.
+- [x] Từ chối duplicate JSON key, `NaN`, infinity và metadata không tương thích
+  JSON.
 
 ## 7. F04 — Version chain
 
@@ -484,18 +491,18 @@ F14 Storage adapters
 
 Ưu tiên gần nhất:
 
-1. F03 — serialization có version schema.
-2. F09 — amendment extraction models.
-3. F11 — repository ports.
-4. F12 — in-memory repositories và contract test.
-5. F13 — query/evidence models.
+1. F09 — amendment extraction models.
+2. F11 — repository ports.
+3. F12 — in-memory repositories và contract test.
+4. F13 — query/evidence models.
 
 Sau khi corpus hoàn tất re-check: thực hiện F08 để ánh xạ dữ liệu thật, rồi F10
 để resolve target trên fixture đã xác minh. Không để sự chậm trễ của corpus chặn
 các hợp đồng dữ liệu và repository độc lập nguồn ở trên.
 
-F03 có thể thực hiện song song sau khi F02 ổn định. Không nên bắt đầu storage
-adapter trước khi hoàn thành và kiểm thử F04–F07.
+F03 và F04–F07 đã có domain logic cùng unit test. Chưa nên bắt đầu storage
+adapter trước khi chốt repository contract và kiểm chứng adapter đầu vào trên
+fixture từ corpus đã re-check.
 
 ## 19. Definition of Done chung
 
@@ -523,6 +530,7 @@ Một thành phần chỉ chuyển sang “Hoàn thành” khi:
 | 11/09/2026 | F05 | Thêm `TemporalState`, event applier atomic và payload có cấu trúc cho update/insertion | Test bốn thao tác lõi, multi-target, cùng ngày, rollback và idempotency | Chưa áp dụng `SUSPEND`/`RESUME`; cùng node/cùng ngày phải hợp nhất trước |
 | 11/09/2026 | F06 | Thêm validity theo document, local version và toàn bộ chuỗi tổ tiên | Test bãi bỏ Chương/Khoản, cây sâu, gap, cycle và typed reason | Descendant mất hiệu lực gián tiếp, không bị đóng version hàng loạt |
 | 11/09/2026 | F07 | Thêm snapshot provision/document, level filter, provenance warning và event audit | 112 test toàn repository pass | Còn đối chiếu 100 truy vấn khi corpus đã re-check |
+| 11/09/2026 | F03 | Thêm JSON serialization có schema version cho toàn bộ temporal domain model | 24 test serialization; toàn bộ 136 test pass | Decoder strict; metadata mở rộng chỉ nhận kiểu tương thích JSON |
 
 ## 21. Quyết định kiến trúc
 
@@ -581,4 +589,12 @@ Ghi các quyết định ảnh hưởng dài hạn tại đây để tránh thay
   provision; bước extraction/resolution phải tạo ra kết quả hợp nhất cuối ngày.
 - **Lý do:** khoảng `[start, end)` không cho phép version có `start == end`, còn
   tự chọn thứ tự event khi thiếu căn cứ sẽ tạo snapshot sai nhưng khó phát hiện.
+- **Trạng thái:** chấp nhận.
+
+### ADR-008 — Serialization dùng versioned envelope và strict decoder
+
+- **Quyết định:** mỗi record có `schema_version`, `type`, `data`; decoder từ
+  chối field lạ, duplicate key, kiểu sai và schema chưa hỗ trợ.
+- **Lý do:** không để thay đổi schema hoặc record hỏng âm thầm làm mất ngày,
+  provenance hay ý nghĩa của một event pháp lý.
 - **Trạng thái:** chấp nhận.
