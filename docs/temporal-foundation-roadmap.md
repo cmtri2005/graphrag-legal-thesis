@@ -47,7 +47,7 @@ khả năng:
 | F08 | VBPL adapters | Chưa thực hiện | F01, F03 |
 | F09 | Amendment extraction models | Hoàn thành phần lõi | F01 |
 | F10 | Target resolver | Chưa thực hiện | F08, F09 |
-| F11 | Repository ports | Chưa thực hiện | F01, F07 |
+| F11 | Repository ports | Hoàn thành contract | F01, F07 |
 | F12 | In-memory repositories | Chưa thực hiện | F11 |
 | F13 | Query and evidence models | Chưa thực hiện | F01, F07 |
 | F14 | Storage adapters | Chưa thực hiện | F11, F12 |
@@ -395,7 +395,11 @@ Checklist:
 
 **Mục tiêu:** định nghĩa interface nghiệp vụ trước khi chọn cách lưu trữ.
 
-**Thư mục dự kiến:** `src/legal_crawler/ports/`.
+**Vị trí:** `src/legal_crawler/ports/`.
+
+**Trạng thái:** hoàn thành contract ngày 11/09/2026. Đã định nghĩa boundary cho
+repository nghiệp vụ, temporal read, provenance, vector version và transaction;
+implementation in-memory thuộc F12.
 
 Interface dự kiến:
 
@@ -409,13 +413,18 @@ Interface dự kiến:
 
 Checklist:
 
-- [ ] Dùng `Protocol` hoặc abstract base class nhất quán.
-- [ ] Không import Neo4j/Milvus trong port.
-- [ ] Có batch API cho corpus lớn.
-- [ ] Có upsert/idempotency contract.
-- [ ] Có API lấy provenance.
-- [ ] Có API lọc theo khoảng thời gian.
-- [ ] Có fake/in-memory implementation cho test.
+- [x] Dùng `Protocol` nhất quán và hỗ trợ runtime structural check.
+- [x] Không import Neo4j/Milvus trong port.
+- [x] Có batch API cho corpus lớn.
+- [x] Có contract ghi idempotent: `CREATED`, `UNCHANGED`, conflict có exception.
+- [x] Có exception hierarchy độc lập backend.
+- [x] Có API lấy provenance.
+- [x] Có API lọc theo khoảng thời gian hoặc point-in-time.
+- [x] Có transaction boundary cho việc áp dụng event atomic.
+- [x] Embedding bắt buộc gắn version, provision, document, validity và model.
+- [x] `SnapshotService` hiện tại thỏa `SnapshotRepository` protocol.
+- [ ] Có in-memory implementation và behavioral contract test dùng lại cho
+  database adapter — thực hiện tại F12.
 
 ## 15. F12 — In-memory repositories
 
@@ -511,9 +520,8 @@ F14 Storage adapters
 
 Ưu tiên gần nhất:
 
-1. F11 — repository ports.
-2. F12 — in-memory repositories và contract test.
-3. F13 — query/evidence models.
+1. F12 — in-memory repositories và contract test.
+2. F13 — query/evidence models.
 
 Sau khi corpus hoàn tất re-check: thực hiện F08 để ánh xạ dữ liệu thật, rồi F10
 để resolve target trên fixture đã xác minh. Không để sự chậm trễ của corpus chặn
@@ -551,6 +559,7 @@ Một thành phần chỉ chuyển sang “Hoàn thành” khi:
 | 11/09/2026 | F07 | Thêm snapshot provision/document, level filter, provenance warning và event audit | 112 test toàn repository pass | Còn đối chiếu 100 truy vấn khi corpus đã re-check |
 | 11/09/2026 | F03 | Thêm JSON serialization có schema version cho toàn bộ temporal domain model | 24 test serialization; toàn bộ 136 test pass | Decoder strict; metadata mở rộng chỉ nhận kiểu tương thích JSON |
 | 11/09/2026 | F09 | Thêm typed contract từ raw amendment mention đến `LegalEvent` | 31 test extraction model; toàn bộ 167 test pass | Candidate mơ hồ chỉ được giữ để review; chưa implement parser/resolver |
+| 11/09/2026 | F11 | Thêm repository protocols, write outcomes, transaction và version-aware vector port | 24 test port contract; toàn bộ 191 test pass | In-memory behavior để F12; vector record là dữ liệu dẫn xuất ngoài authoritative transaction |
 
 ## 21. Quyết định kiến trúc
 
@@ -633,4 +642,21 @@ Ghi các quyết định ảnh hưởng dài hạn tại đây để tránh thay
   hoặc thay thế chỉ materialize khi mọi target có `TextUpdate` hoàn chỉnh.
 - **Lý do:** Event Applier cần trạng thái nội dung sau tác động, không được nối
   hoặc tìm/thay chuỗi một cách mù quáng.
+- **Trạng thái:** chấp nhận.
+
+### ADR-011 — Repository dùng structural Protocol và domain model
+
+- **Quyết định:** service phụ thuộc `Protocol` trả typed domain object, không
+  phụ thuộc driver session, internal database ID hoặc query language.
+- **Lý do:** memory, graph và vector adapter có thể thay thế mà không định nghĩa
+  lại temporal semantics.
+- **Trạng thái:** chấp nhận.
+
+### ADR-012 — Event transaction chỉ bao phủ authoritative temporal state
+
+- **Quyết định:** document, provision, version, event và graph thay đổi trong
+  cùng `TemporalUnitOfWork`; vector embedding là dữ liệu dẫn xuất và không nằm
+  trong distributed transaction này.
+- **Lý do:** không giả định khả năng transaction nguyên tử xuyên Neo4j và vector
+  store. Embedding có thể rebuild từ version đã commit bằng deterministic ID.
 - **Trạng thái:** chấp nhận.
