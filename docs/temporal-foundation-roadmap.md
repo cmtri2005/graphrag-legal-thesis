@@ -48,7 +48,7 @@ khả năng:
 | F09 | Amendment extraction models | Hoàn thành phần lõi | F01 |
 | F10 | Target resolver | Chưa thực hiện | F08, F09 |
 | F11 | Repository ports | Hoàn thành contract | F01, F07 |
-| F12 | In-memory repositories | Chưa thực hiện | F11 |
+| F12 | In-memory repositories | Hoàn thành phần lõi | F11 |
 | F13 | Query and evidence models | Chưa thực hiện | F01, F07 |
 | F14 | Storage adapters | Chưa thực hiện | F11, F12 |
 
@@ -423,8 +423,8 @@ Checklist:
 - [x] Có transaction boundary cho việc áp dụng event atomic.
 - [x] Embedding bắt buộc gắn version, provision, document, validity và model.
 - [x] `SnapshotService` hiện tại thỏa `SnapshotRepository` protocol.
-- [ ] Có in-memory implementation và behavioral contract test dùng lại cho
-  database adapter — thực hiện tại F12.
+- [x] Có in-memory implementation và behavioral contract test dùng lại cho
+  database adapter.
 
 ## 15. F12 — In-memory repositories
 
@@ -433,15 +433,24 @@ Docker hoặc dịch vụ bên ngoài.
 
 **Thư mục dự kiến:** `src/legal_crawler/adapters/memory/`.
 
+**Trạng thái:** hoàn thành phần lõi ngày 11/09/2026. Các repository dùng chung
+một authoritative store, hỗ trợ rollback tại chỗ và snapshot luôn nhìn thấy
+trạng thái đã commit. Vector repository được tách riêng vì embedding là dữ liệu
+dẫn xuất.
+
 Checklist:
 
-- [ ] Lưu document theo ID.
-- [ ] Lưu provision và index parent-child.
-- [ ] Lưu version theo provision và thời gian.
-- [ ] Lưu event theo source/target.
-- [ ] Upsert không tạo bản trùng.
-- [ ] Truy vấn snapshot đủ nhanh cho fixture kiểm thử.
-- [ ] Contract test dùng lại được cho database adapter sau này.
+- [x] Lưu document theo ID và lọc hiệu lực `[start, end)`.
+- [x] Lưu provision, kiểm tra parent/anchor và giữ legal document order.
+- [x] Lưu version theo provision và thời gian, từ chối overlap/ordinal conflict.
+- [x] Lưu event theo source/target/provision và trạng thái đã áp dụng.
+- [x] Lưu temporal graph edge và truy vấn theo hướng, relation, thời gian.
+- [x] Truy xuất provenance từ version, event, edge và provision.
+- [x] Upsert idempotent; ID trùng nhưng nội dung khác phải báo conflict.
+- [x] Batch write atomic và transaction rollback toàn authoritative state.
+- [x] Snapshot là live read model trên cùng state.
+- [x] Vector search tách theo embedding model, lọc thời gian trước khi chấm điểm.
+- [x] Contract test tham số hóa để dùng lại cho database adapter sau này.
 
 ## 16. F13 — Query and evidence models
 
@@ -520,8 +529,8 @@ F14 Storage adapters
 
 Ưu tiên gần nhất:
 
-1. F12 — in-memory repositories và contract test.
-2. F13 — query/evidence models.
+1. F13 — query/evidence models.
+2. Chuẩn bị fixture adapter F08 trong khi chờ corpus hoàn tất re-check.
 
 Sau khi corpus hoàn tất re-check: thực hiện F08 để ánh xạ dữ liệu thật, rồi F10
 để resolve target trên fixture đã xác minh. Không để sự chậm trễ của corpus chặn
@@ -560,6 +569,7 @@ Một thành phần chỉ chuyển sang “Hoàn thành” khi:
 | 11/09/2026 | F03 | Thêm JSON serialization có schema version cho toàn bộ temporal domain model | 24 test serialization; toàn bộ 136 test pass | Decoder strict; metadata mở rộng chỉ nhận kiểu tương thích JSON |
 | 11/09/2026 | F09 | Thêm typed contract từ raw amendment mention đến `LegalEvent` | 31 test extraction model; toàn bộ 167 test pass | Candidate mơ hồ chỉ được giữ để review; chưa implement parser/resolver |
 | 11/09/2026 | F11 | Thêm repository protocols, write outcomes, transaction và version-aware vector port | 24 test port contract; toàn bộ 191 test pass | In-memory behavior để F12; vector record là dữ liệu dẫn xuất ngoài authoritative transaction |
+| 11/09/2026 | F12 | Thêm authoritative in-memory repositories, unit of work, live snapshot và temporal vector search | Behavioral, rollback, hierarchy, boundary và vector tests; toàn bộ 216 test pass | Contract suite có thể mở rộng bằng cách thêm factory adapter; vector nằm ngoài authoritative transaction |
 
 ## 21. Quyết định kiến trúc
 

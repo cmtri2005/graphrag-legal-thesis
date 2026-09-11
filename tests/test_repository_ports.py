@@ -237,6 +237,7 @@ def test_version_embedding_is_bound_to_version_time_level_and_provenance():
     "vector",
     (
         (),
+        (0.0, 0.0),
         (True,),
         (float("nan"),),
         (float("inf"),),
@@ -263,6 +264,7 @@ def test_vector_search_requires_point_in_time_and_valid_filters():
     query = VectorSearchQuery(
         vector=(0.1, 0.2, 0.3),
         at=date(2024, 7, 1),
+        model="model-a",
         limit=5,
         document_ids=("document:law-1",),
         levels=frozenset({ProvisionLevel.ARTICLE, ProvisionLevel.CLAUSE}),
@@ -272,13 +274,14 @@ def test_vector_search_requires_point_in_time_and_valid_filters():
     assert query.limit == 5
 
     with pytest.raises(ValueError, match="must be positive"):
-        VectorSearchQuery((0.1,), date(2024, 7, 1), limit=0)
+        VectorSearchQuery((0.1,), date(2024, 7, 1), "model-a", limit=0)
     with pytest.raises(ValueError, match="must be a date"):
-        VectorSearchQuery((0.1,), "2024-07-01")
+        VectorSearchQuery((0.1,), "2024-07-01", "model-a")
     with pytest.raises(ValueError, match="duplicates"):
         VectorSearchQuery(
             (0.1,),
             date(2024, 7, 1),
+            "model-a",
             document_ids=("document:1", "document:1"),
         )
 

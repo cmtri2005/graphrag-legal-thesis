@@ -29,6 +29,25 @@ class TemporalState:
     def applied_event_ids(self) -> frozenset[str]:
         return frozenset(self._applied_event_ids)
 
+    @property
+    def documents(self) -> tuple[LegalDocument, ...]:
+        """All documents as an immutable view for storage adapters."""
+        return tuple(self._documents.values())
+
+    @property
+    def provisions(self) -> tuple[Provision, ...]:
+        """All stable provision identities as an immutable view."""
+        return tuple(self._provisions.values())
+
+    @property
+    def versions(self) -> tuple[ProvisionVersion, ...]:
+        """All textual versions, grouped by insertion order of provision."""
+        return tuple(
+            version
+            for chain in self._chains.values()
+            for version in chain.versions
+        )
+
     def add_document(self, document: LegalDocument) -> bool:
         existing = self._documents.get(document.id)
         if existing is not None:
@@ -92,6 +111,12 @@ class TemporalState:
 
     def chain(self, provision_id: str) -> VersionChain | None:
         return self._chains.get(provision_id)
+
+    def version(self, version_id: str) -> ProvisionVersion | None:
+        return next(
+            (version for version in self.versions if version.id == version_id),
+            None,
+        )
 
     def event(self, event_id: str | None) -> LegalEvent | None:
         return self._events.get(event_id) if event_id else None

@@ -63,6 +63,7 @@ class VectorSearchQuery:
 
     vector: tuple[float, ...]
     at: date
+    model: str
     limit: int = 10
     document_ids: tuple[str, ...] = ()
     levels: frozenset[ProvisionLevel] = frozenset()
@@ -71,6 +72,7 @@ class VectorSearchQuery:
         _vector(self.vector, "query vector")
         if type(self.at) is not date:
             raise ValueError("vector query at must be a date")
+        _required(self.model, "vector query model")
         if isinstance(self.limit, bool) or not isinstance(self.limit, int):
             raise ValueError("vector query limit must be an integer")
         if self.limit < 1:
@@ -143,4 +145,5 @@ def _vector(value: Any, name: str) -> None:
             raise ValueError(f"{name} components must be numbers")
         if not math.isfinite(float(component)):
             raise ValueError(f"{name} components must be finite")
-
+    if not any(float(component) != 0.0 for component in value):
+        raise ValueError(f"{name} must not be a zero vector")
