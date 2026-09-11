@@ -1,0 +1,527 @@
+# Temporal Legal Foundation Roadmap
+
+> Tài liệu theo dõi các thành phần nền tảng cần xây dựng trước khi triển khai
+> hệ thống truy xuất và hỏi đáp hoàn chỉnh. Cập nhật trạng thái bằng checkbox,
+> ngày hoàn thành và ghi chú quyết định ngay trong file này.
+>
+> Cập nhật gần nhất: 11/09/2026.
+
+## 1. Mục tiêu
+
+Xây dựng một lõi nghiệp vụ độc lập với Neo4j, Milvus và mô hình ngôn ngữ, có
+khả năng:
+
+- biểu diễn văn bản, đơn vị pháp lý và chuỗi phiên bản;
+- chuẩn hóa và áp dụng các sự kiện sửa đổi;
+- xác định hiệu lực của từng đơn vị tại một mốc thời gian;
+- lan truyền hiệu lực theo cây cấu trúc;
+- giữ đầy đủ nguồn gốc và bằng chứng của mọi kết quả;
+- cung cấp interface ổn định cho graph storage, retrieval và verifier.
+
+## 2. Nguyên tắc thiết kế
+
+- Khoảng hiệu lực luôn là khoảng nửa mở `[start, end)`.
+- Định danh đơn vị pháp lý ổn định, không thay đổi theo phiên bản nội dung.
+- Logic nghiệp vụ không phụ thuộc trực tiếp vào Neo4j hoặc Milvus.
+- Dữ liệu chưa chắc chắn được giữ lại để review, không tự động suy đoán.
+- Sự kiện chưa xác định ngày hoặc node đích không được áp dụng vào version
+  chain.
+- Mọi phiên bản và sự kiện phải truy ngược được về văn bản nguồn.
+- Các thao tác phải idempotent: chạy lại không tạo node, event hoặc version
+  trùng lặp.
+- Hiệu lực cấp văn bản không được dùng thay cho hiệu lực cấp điều khoản.
+- Ưu tiên test logic thời gian bằng in-memory implementation trước khi viết
+  database adapter.
+
+## 3. Tổng quan tiến độ
+
+| Mã | Thành phần | Trạng thái | Phụ thuộc |
+|---|---|---|---|
+| F01 | Domain models | Hoàn thành bước đầu | — |
+| F02 | Deterministic identifiers | Hoàn thành bước đầu | F01 |
+| F03 | Serialization | Chưa thực hiện | F01, F02 |
+| F04 | Version chain | Hoàn thành bước đầu | F01, F02 |
+| F05 | Event applier | Chưa thực hiện | F04 |
+| F06 | Validity propagation | Chưa thực hiện | F04, F05 |
+| F07 | Snapshot service | Chưa thực hiện | F04, F06 |
+| F08 | VBPL adapters | Chưa thực hiện | F01, F03 |
+| F09 | Amendment extraction models | Chưa thực hiện | F01 |
+| F10 | Target resolver | Chưa thực hiện | F08, F09 |
+| F11 | Repository ports | Chưa thực hiện | F01, F07 |
+| F12 | In-memory repositories | Chưa thực hiện | F11 |
+| F13 | Query and evidence models | Chưa thực hiện | F01, F07 |
+| F14 | Storage adapters | Chưa thực hiện | F11, F12 |
+
+## 4. F01 — Domain models
+
+**Trạng thái:** bước đầu hoàn thành ngày 11/09/2026.
+
+**Vị trí:** `src/legal_crawler/temporal/models.py`.
+
+Đã có:
+
+- [x] `LegalDocument`.
+- [x] `Provision`.
+- [x] `ProvisionVersion`.
+- [x] `TemporalInterval`.
+- [x] `LegalEvent`.
+- [x] `Provenance`.
+- [x] `GraphEdge`.
+- [x] Enum cho loại node.
+- [x] Enum cho cấp điều khoản.
+- [x] Enum cho thao tác pháp lý.
+- [x] Enum cho quan hệ graph.
+- [x] Enum cho phương pháp trích xuất.
+- [x] Enum cho trạng thái kiểm duyệt event.
+- [x] Kiểm tra bất biến cơ bản trong `__post_init__`.
+- [x] Test ranh giới khoảng hiệu lực nửa mở.
+- [x] Test event chưa giải quyết và event đã xác minh.
+
+Cần rà soát khi các module sau được xây dựng:
+
+- [ ] Xác nhận model có đủ dữ liệu cho tạm ngưng rồi khôi phục hiệu lực.
+- [ ] Xác nhận cách biểu diễn node mới được bổ sung giữa các node hiện hữu.
+- [ ] Xác nhận có cần model riêng cho văn bản hợp nhất.
+- [ ] Xác nhận có cần phân biệt hiệu lực pháp lý và thời gian ghi nhận dữ liệu.
+- [ ] Chốt chính sách bất biến hoặc mutable cho `details` và `properties`.
+
+## 5. F02 — Deterministic identifiers
+
+**Mục tiêu:** mọi entity có ID tất định, tái tạo được và không phụ thuộc ID nội
+bộ của database.
+
+**Trạng thái:** bước đầu hoàn thành ngày 11/09/2026.
+
+**Vị trí:** `src/legal_crawler/temporal/ids.py`.
+
+Quy ước dự kiến:
+
+```text
+document:{document_id}
+provision:{tree_node_uuid}
+version:{provision_id}:{ordinal}
+event:{source_document_id}:{event_fingerprint}
+edge:{source_id}:{relation}:{target_id}:{valid_from}
+```
+
+Checklist:
+
+- [x] Hàm tạo ID cho document.
+- [x] Hàm tạo ID cho provision.
+- [x] Hàm tạo ID cho version.
+- [x] Hàm tạo ID/fingerprint cho legal event.
+- [x] Hàm tạo ID cho graph edge.
+- [x] Canonicalization đầu vào trước khi hash.
+- [x] ID không đổi khi thứ tự xử lý thay đổi.
+- [x] Cùng dữ liệu nguồn luôn sinh cùng ID.
+- [x] Các event khác nhau trong fixture kiểm thử sinh ID khác nhau.
+- [x] Test với cả ID số và UUID của `vbpl.vn`.
+
+## 6. F03 — Serialization
+
+**Mục tiêu:** chuyển domain object sang JSON và đọc ngược lại mà không mất kiểu
+dữ liệu hoặc provenance.
+
+**File dự kiến:** `src/legal_crawler/temporal/serialization.py`.
+
+Checklist:
+
+- [ ] `date` được ghi theo ISO 8601.
+- [ ] Enum được ghi bằng value ổn định.
+- [ ] Tuple và nested model được round-trip chính xác.
+- [ ] Có `schema_version` ở record đầu ra.
+- [ ] Giữ nguyên raw status code và dữ liệu chưa biết.
+- [ ] Báo lỗi rõ ràng khi gặp schema version không hỗ trợ.
+- [ ] Test round-trip cho mọi domain model.
+- [ ] Test Unicode tiếng Việt không bị thay đổi.
+
+## 7. F04 — Version chain
+
+**Mục tiêu:** quản lý các phiên bản liên tiếp của một `Provision` và trả đúng
+phiên bản tại thời điểm truy vấn.
+
+**Trạng thái:** bước đầu hoàn thành ngày 11/09/2026.
+
+**Vị trí:** `src/legal_crawler/temporal/version_chain.py`.
+
+API dự kiến:
+
+```python
+chain.add(version)
+chain.current()
+chain.at(query_date)
+chain.close_current(effective_on)
+chain.assert_consistent()
+```
+
+Checklist:
+
+- [x] Sắp xếp version theo thời gian và ordinal.
+- [x] Không cho phép hai khoảng hiệu lực chồng nhau.
+- [x] Không cho phép hai version cùng ID hoặc ordinal.
+- [x] Truy vấn đúng tại `start`.
+- [x] Không trả bản cũ tại đúng `end`.
+- [x] Hỗ trợ version cuối có `end=None`.
+- [x] Trả `None` khi provision chưa tồn tại tại mốc hỏi.
+- [x] Trả `None` khi provision đã bị bãi bỏ/đóng hiệu lực.
+- [x] Kiểm tra chuỗi A → B → C bằng fixture.
+- [x] Test ngày chuyển tiếp giữa hai version.
+- [x] Thêm cùng một version chính xác là thao tác idempotent.
+- [x] Cho phép khoảng trống giữa các version để không khóa thiết kế tạm ngưng.
+
+## 8. F05 — Event applier
+
+**Mục tiêu:** áp dụng `LegalEvent` hợp lệ lên version chain theo quy tắc tất
+định.
+
+**File dự kiến:** `src/legal_crawler/temporal/event_applier.py`.
+
+Checklist:
+
+- [ ] `AMEND`: đóng version cũ và tạo version mới.
+- [ ] `REPLACE`: thay toàn bộ nội dung node đích.
+- [ ] `SUPPLEMENT`: bổ sung nội dung hoặc node mới.
+- [ ] `REPEAL`: đóng hiệu lực mà không tạo text version mới.
+- [ ] `CORRECT`: tạo phiên bản có provenance từ văn bản đính chính.
+- [ ] `SUSPEND`: ghi khoảng tạm ngưng.
+- [ ] `RESUME`: kết thúc khoảng tạm ngưng.
+- [ ] Từ chối áp dụng event `needs_review` hoặc `rejected`.
+- [ ] Từ chối event thiếu `effective_on`.
+- [ ] Từ chối event chưa resolve target.
+- [ ] Áp dụng cùng event hai lần không tạo version trùng.
+- [ ] Lưu liên kết từ version mới về event tạo ra nó.
+- [ ] Test nhiều event có cùng ngày hiệu lực.
+- [ ] Chốt quy tắc thứ tự khi nhiều event tác động cùng node.
+
+## 9. F06 — Validity propagation
+
+**Mục tiêu:** tính hiệu lực cấp điều khoản dựa trên trạng thái của chính node và
+các node tổ tiên.
+
+**File dự kiến:** `src/legal_crawler/temporal/validity.py`.
+
+API dự kiến:
+
+```python
+is_valid(provision_id, at)
+invalidity_reason(provision_id, at)
+valid_descendants(provision_id, at)
+```
+
+Checklist:
+
+- [ ] Node chỉ hợp lệ khi document chứa nó hợp lệ.
+- [ ] Node chỉ hợp lệ khi toàn bộ tổ tiên hợp lệ.
+- [ ] Bãi bỏ Chương làm vô hiệu toàn bộ cây con.
+- [ ] Bãi bỏ Điều làm vô hiệu các Khoản và Điểm con.
+- [ ] Bãi bỏ Khoản không làm Điều cha vô hiệu.
+- [ ] Tạm ngưng node cha ảnh hưởng đúng cây con.
+- [ ] Phân biệt `not_yet_effective`, `repealed`, `suspended` và `parent_invalid`.
+- [ ] Phát hiện cycle trong cấu trúc parent-child.
+- [ ] Test cây có độ sâu không cố định.
+- [ ] Test node gốc không có `parent_id`.
+
+## 10. F07 — Snapshot service
+
+**Mục tiêu:** cung cấp API point-in-time thống nhất cho các tầng phía sau.
+
+**File dự kiến:** `src/legal_crawler/temporal/snapshot.py`.
+
+API dự kiến:
+
+```python
+snapshot(provision_id, at)
+snapshot_document(document_id, at)
+valid_provisions(document_id, at)
+```
+
+Kết quả snapshot dự kiến chứa:
+
+- provision ổn định;
+- version được chọn;
+- thời điểm truy vấn;
+- trạng thái hợp lệ;
+- lý do không hợp lệ nếu có;
+- event tạo/kết thúc version;
+- provenance và cảnh báo dữ liệu.
+
+Checklist:
+
+- [ ] Kết quả snapshot có model riêng.
+- [ ] Kết quả tất định với cùng input.
+- [ ] Không trả version nếu tổ tiên không hợp lệ.
+- [ ] Snapshot document giữ đúng thứ tự node.
+- [ ] Cho phép lọc theo cấp Article/Clause/Point.
+- [ ] Cảnh báo khi dữ liệu nguồn chưa đủ để kết luận.
+- [ ] Test tối thiểu 100 truy vấn đối chiếu thủ công khi có corpus đầy đủ.
+
+## 11. F08 — VBPL adapters
+
+**Mục tiêu:** chuyển dữ liệu crawler thành domain object mà không để chi tiết
+định dạng nguồn rò rỉ vào lõi nghiệp vụ.
+
+**Thư mục dự kiến:** `src/legal_crawler/adapters/vbpl/`.
+
+Nguồn ánh xạ:
+
+```text
+data/raw/*.json         → LegalDocument
+data/trees/*.json       → Provision
+data/provisions/*.json  → ProvisionVersion ban đầu
+data/history/*.json     → sự kiện hiệu lực sơ bộ
+data/edges.jsonl        → GraphEdge
+```
+
+Checklist:
+
+- [ ] Adapter document metadata.
+- [ ] Adapter cây điều khoản với UUID và `parent_id`.
+- [ ] Adapter nội dung provision.
+- [ ] Adapter history, chỉ dùng ngày hợp pháp.
+- [ ] Adapter reference edge theo bảng mã đã xác minh.
+- [ ] Không tự diễn giải numeric suffix chưa rõ nghĩa.
+- [ ] Không dùng metadata cấp văn bản để ghi đè hiệu lực cấp điều khoản.
+- [ ] Ghi warning hoặc review item cho record thiếu dữ liệu.
+- [ ] Fixture từ dữ liệu thật đã ẩn thông tin không cần thiết.
+- [ ] Test cho văn bản hiện đại và văn bản cũ.
+
+## 12. F09 — Amendment extraction models
+
+**Mục tiêu:** tạo hợp đồng dữ liệu rõ ràng giữa bước tìm câu sửa đổi, bước
+resolve target và bước áp dụng event.
+
+**File dự kiến:** `src/legal_crawler/extraction/models.py`.
+
+Model dự kiến:
+
+- `RawAmendmentMention`.
+- `TargetReference`.
+- `ResolvedTarget`.
+- `ExtractionResult`.
+- `ExtractionWarning`.
+
+`TargetReference` cần biểu diễn được:
+
+- một Điều/Khoản/Điểm;
+- nhiều Điều không liên tiếp;
+- cả Chương hoặc cây con;
+- vị trí chèn “sau điểm d”;
+- thay cụm từ tại nhiều đơn vị;
+- tham chiếu “Luật này” hoặc một văn bản được nêu tên.
+
+Checklist:
+
+- [ ] Lưu nguyên văn mention nguồn.
+- [ ] Lưu span/offset nếu xác định được.
+- [ ] Phân biệt target document và target provision.
+- [ ] Cho phép nhiều target trong một event.
+- [ ] Có confidence riêng cho extraction và resolution.
+- [ ] Có danh sách warning thay vì boolean thành công đơn giản.
+
+## 13. F10 — Target resolver
+
+**Mục tiêu:** ánh xạ mô tả pháp lý sang đúng UUID node trong cây của đúng văn
+bản.
+
+**File dự kiến:** `src/legal_crawler/extraction/target_resolver.py`.
+
+Checklist:
+
+- [ ] Resolve Điều theo document và số điều.
+- [ ] Resolve Khoản trong đúng Điều.
+- [ ] Resolve Điểm trong đúng Khoản.
+- [ ] Resolve nhiều target trong cùng câu.
+- [ ] Resolve toàn bộ cây con khi target là Chương/Mục/Điều.
+- [ ] Xử lý tiêu đề node bất thường hoặc không đánh số.
+- [ ] Không chọn tùy tiện khi có nhiều candidate.
+- [ ] Trả `needs_review` khi không resolve duy nhất.
+- [ ] Ghi lại candidate và lý do chọn/bỏ.
+- [ ] Test các mẫu sửa đổi T3 và T6.
+
+## 14. F11 — Repository ports
+
+**Mục tiêu:** định nghĩa interface nghiệp vụ trước khi chọn cách lưu trữ.
+
+**Thư mục dự kiến:** `src/legal_crawler/ports/`.
+
+Interface dự kiến:
+
+- `DocumentRepository`.
+- `ProvisionRepository`.
+- `VersionRepository`.
+- `EventRepository`.
+- `TemporalGraphRepository`.
+- `SnapshotRepository`.
+- `VectorRepository`.
+
+Checklist:
+
+- [ ] Dùng `Protocol` hoặc abstract base class nhất quán.
+- [ ] Không import Neo4j/Milvus trong port.
+- [ ] Có batch API cho corpus lớn.
+- [ ] Có upsert/idempotency contract.
+- [ ] Có API lấy provenance.
+- [ ] Có API lọc theo khoảng thời gian.
+- [ ] Có fake/in-memory implementation cho test.
+
+## 15. F12 — In-memory repositories
+
+**Mục tiêu:** chạy toàn bộ logic versioning và snapshot trong test mà không cần
+Docker hoặc dịch vụ bên ngoài.
+
+**Thư mục dự kiến:** `src/legal_crawler/adapters/memory/`.
+
+Checklist:
+
+- [ ] Lưu document theo ID.
+- [ ] Lưu provision và index parent-child.
+- [ ] Lưu version theo provision và thời gian.
+- [ ] Lưu event theo source/target.
+- [ ] Upsert không tạo bản trùng.
+- [ ] Truy vấn snapshot đủ nhanh cho fixture kiểm thử.
+- [ ] Contract test dùng lại được cho database adapter sau này.
+
+## 16. F13 — Query and evidence models
+
+**Mục tiêu:** tạo hợp đồng dữ liệu cho temporal retrieval và citation verifier.
+
+**File dự kiến:** `src/legal_crawler/query/models.py`.
+
+Model dự kiến:
+
+```text
+TemporalQuery(text, at)
+RetrievedEvidence
+Citation
+VerificationIssue
+VerificationResult
+AnswerResult
+```
+
+Checklist:
+
+- [ ] `TemporalQuery` bắt buộc có mốc thời gian hoặc trạng thái suy luận mốc.
+- [ ] Evidence luôn gắn provision version cụ thể.
+- [ ] Evidence luôn có validity và provenance.
+- [ ] Citation phân biệt document/article/clause/point.
+- [ ] Verification result ghi lỗi sai văn bản, sai node và sai phiên bản.
+- [ ] Model đủ dữ liệu để tính TVER, VCR và TCS.
+
+## 17. F14 — Storage adapters
+
+**Mục tiêu:** lưu domain model vào graph/vector store mà không thay đổi ngữ nghĩa
+đã kiểm thử ở lõi.
+
+Chỉ bắt đầu sau khi version chain, validity và snapshot đã ổn định.
+
+Checklist Neo4j:
+
+- [ ] Constraint cho ID của mọi node chính.
+- [ ] Index cho document ID, provision ID và khoảng hiệu lực.
+- [ ] `CONTAINS`, `VERSION_OF`, `CAUSED_BY` và quan hệ pháp lý.
+- [ ] Upsert theo deterministic ID.
+- [ ] Truy vấn snapshot hoặc subgraph tại `t`.
+- [ ] Không dùng internal Neo4j ID làm domain ID.
+
+Checklist vector store:
+
+- [ ] Embedding gắn với `ProvisionVersion`, không chỉ `Provision`.
+- [ ] Metadata có `eff_from`, `eff_to`, document và provision ID.
+- [ ] Lọc thời gian trước hoặc trong truy xuất.
+- [ ] Hỗ trợ dense, lexical/sparse và reranking.
+- [ ] Xóa/cập nhật đúng version khi delta crawl thay đổi dữ liệu.
+- [ ] Đo recall trước và sau temporal filtering.
+
+## 18. Thứ tự triển khai đề xuất
+
+```text
+F01 Domain models
+  ↓
+F02 Deterministic IDs ──→ F03 Serialization ──→ F08 VBPL adapters
+  ↓                                             ↓
+F04 Version chain                         F09 Extraction models
+  ↓                                             ↓
+F05 Event applier ←────────────────────── F10 Target resolver
+  ↓
+F06 Validity propagation
+  ↓
+F07 Snapshot service
+  ↓
+F11 Repository ports
+  ↓
+F12 In-memory repositories
+  ↓
+F13 Query/evidence models
+  ↓
+F14 Storage adapters
+```
+
+Ưu tiên gần nhất:
+
+1. F02 — deterministic identifiers.
+2. F04 — version chain.
+3. F05 — event applier.
+4. F06 — validity propagation.
+5. F07 — snapshot service.
+
+F03 có thể thực hiện song song sau khi F02 ổn định. Không nên bắt đầu storage
+adapter trước khi hoàn thành và kiểm thử F04–F07.
+
+## 19. Definition of Done chung
+
+Một thành phần chỉ chuyển sang “Hoàn thành” khi:
+
+- [ ] API và trách nhiệm module được mô tả rõ.
+- [ ] Không phụ thuộc ngoài phạm vi cần thiết.
+- [ ] Có unit test cho luồng bình thường.
+- [ ] Có test cho ranh giới thời gian.
+- [ ] Có test cho dữ liệu thiếu hoặc mâu thuẫn.
+- [ ] Không bỏ qua lỗi bằng exception handler quá rộng.
+- [ ] Không tự động suy đoán dữ liệu pháp lý chưa chắc chắn.
+- [ ] Kết quả giữ được provenance.
+- [ ] Chạy lại không tạo dữ liệu trùng.
+- [ ] Toàn bộ test của repository vẫn pass.
+- [ ] Tài liệu tiến độ này được cập nhật.
+
+## 20. Nhật ký tiến độ
+
+| Ngày | Thành phần | Thay đổi | Kiểm chứng | Ghi chú |
+|---|---|---|---|---|
+| 11/09/2026 | F01 | Tạo domain models và các enum nền tảng | Unit test model; toàn bộ 64 test pass | Cần rà soát thêm khi triển khai versioning |
+| 11/09/2026 | F02 | Thêm deterministic ID cho document, provision, version, event và edge | Unit test tính ổn định, canonicalization và input khác nhau | Event/edge dùng SHA-256 rút gọn 24 ký tự |
+| 11/09/2026 | F04 | Thêm in-memory `VersionChain` và fixture chuỗi A → B → C | Test lookup, overlap, idempotency và transition boundary; toàn bộ 82 test pass | Cho phép gap giữa version để hỗ trợ tạm ngưng về sau |
+
+## 21. Quyết định kiến trúc
+
+Ghi các quyết định ảnh hưởng dài hạn tại đây để tránh thay đổi ngầm về sau.
+
+### ADR-001 — Khoảng hiệu lực nửa mở
+
+- **Quyết định:** dùng `[start, end)` cho mọi version và cạnh có hiệu lực.
+- **Lý do:** tại đúng ngày chuyển phiên bản chỉ phiên bản mới hợp lệ, tránh hai
+  phiên bản cùng đúng.
+- **Trạng thái:** chấp nhận.
+
+### ADR-002 — Tách provision identity khỏi provision version
+
+- **Quyết định:** `Provision` giữ định danh ổn định; nội dung thay đổi nằm trong
+  `ProvisionVersion`.
+- **Lý do:** cùng một Điều/Khoản/Điểm phải truy vấn được xuyên suốt nhiều lần
+  sửa đổi.
+- **Trạng thái:** chấp nhận.
+
+### ADR-003 — Lõi nghiệp vụ độc lập storage
+
+- **Quyết định:** logic versioning, validity và snapshot không viết trực tiếp
+  bằng Cypher hoặc API của vector database.
+- **Lý do:** có thể kiểm thử chính xác và thay đổi backend mà không thay đổi
+  ngữ nghĩa pháp lý.
+- **Trạng thái:** chấp nhận.
+
+### ADR-004 — Event chưa chắc chắn không được áp dụng
+
+- **Quyết định:** event thiếu ngày hoặc target duy nhất được lưu để review nhưng
+  không làm thay đổi version chain.
+- **Lý do:** lỗi bỏ sót có thể quan sát và sửa; áp dụng nhầm sẽ âm thầm làm sai
+  mọi snapshot phía sau.
+- **Trạng thái:** chấp nhận.

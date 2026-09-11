@@ -1,0 +1,36 @@
+{
+  "provision_id": "provision:article-6",
+  "versions": [
+    {
+      "id": "version:provision%3Aarticle-6:1",
+      "ordinal": 1,
+      "text": "Nội dung ban đầu của Điều 6.",
+      "start": "2020-01-01",
+      "end": "2024-01-01"
+    },
+    {
+      "id": "version:provision%3Aarticle-6:2",
+      "ordinal": 2,
+      "text": "Nội dung Điều 6 sau lần sửa đổi thứ nhất.",
+      "start": "2024-01-01",
+      "end": "2025-01-01",
+      "created_by_event_id": "event:document-b:first-amendment"
+    },
+    {
+      "id": "version:provision%3Aarticle-6:3",
+      "ordinal": 3,
+      "text": "Nội dung Điều 6 sau lần sửa đổi thứ hai.",
+      "start": "2025-01-01",
+      "end": null,
+      "created_by_event_id": "event:document-c:second-amendment"
+    }
+  ],
+  "queries": [
+    {"at": "2019-12-31", "expected_ordinal": null},
+    {"at": "2020-01-01", "expected_ordinal": 1},
+    {"at": "2023-12-31", "expected_ordinal": 1},
+    {"at": "2024-01-01", "expected_ordinal": 2},
+    {"at": "2025-01-01", "expected_ordinal": 3}
+  ]
+}
+

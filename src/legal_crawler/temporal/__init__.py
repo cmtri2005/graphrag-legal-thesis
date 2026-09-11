@@ -21,6 +21,21 @@ from .models import (
     RelationType,
     TemporalInterval,
 )
+from .ids import (
+    make_document_id,
+    make_edge_id,
+    make_event_id,
+    make_provision_id,
+    make_version_id,
+)
+from .version_chain import (
+    DuplicateVersionError,
+    NoCurrentVersionError,
+    OverlappingVersionError,
+    ProvisionMismatchError,
+    VersionChain,
+    VersionChainError,
+)
 
 __all__ = [
     "EventStatus",
@@ -36,5 +51,16 @@ __all__ = [
     "ProvisionVersion",
     "RelationType",
     "TemporalInterval",
+    "DuplicateVersionError",
+    "NoCurrentVersionError",
+    "OverlappingVersionError",
+    "ProvisionMismatchError",
+    "VersionChain",
+    "VersionChainError",
+    "make_document_id",
+    "make_edge_id",
+    "make_event_id",
+    "make_provision_id",
+    "make_version_id",
 ]
 
