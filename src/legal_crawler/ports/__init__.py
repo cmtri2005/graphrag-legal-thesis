@@ -14,6 +14,7 @@ from .repositories import (
     TemporalGraphRepository,
     TemporalUnitOfWork,
     TransactionError,
+    VersionTransitionResult,
     VersionRepository,
     WriteDisposition,
     WriteResult,
@@ -39,6 +40,7 @@ __all__ = [
     "TemporalGraphRepository",
     "TemporalUnitOfWork",
     "TransactionError",
+    "VersionTransitionResult",
     "VectorMatch",
     "VectorRepository",
     "VectorSearchQuery",
@@ -47,4 +49,3 @@ __all__ = [
     "WriteDisposition",
     "WriteResult",
 ]
-

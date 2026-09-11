@@ -97,3 +97,23 @@ def test_contract_exception_rolls_back_every_write(uow):
 
     assert uow.documents.get("document:law") is None
     assert uow.provisions.get("provision:article-1") is None
+
+
+def test_contract_version_closure_is_optimistic_and_idempotent(uow):
+    with uow.transaction():
+        uow.documents.put(law())
+        uow.provisions.put(article())
+        before = initial_version()
+        uow.versions.put(before)
+
+    closed = replace(
+        before,
+        validity=TemporalInterval(date(2020, 1, 1), date(2024, 1, 1)),
+        ended_by_event_id="event:amend",
+    )
+    first = uow.versions.replace_closed(before, closed)
+    replay = uow.versions.replace_closed(before, closed)
+
+    assert first.changed
+    assert not replay.changed
+    assert uow.versions.get(before.id) == closed

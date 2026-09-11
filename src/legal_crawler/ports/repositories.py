@@ -7,7 +7,7 @@ the temporal and idempotency rules documented by these protocols.
 from __future__ import annotations
 
 from contextlib import AbstractContextManager
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date
 from enum import Enum
 from typing import Iterable, Mapping, Protocol, Sequence, runtime_checkable
@@ -94,6 +94,43 @@ class BatchWriteResult:
     @property
     def unchanged_ids(self) -> tuple[str, ...]:
         return tuple(item.entity_id for item in self.results if not item.created)
+
+
+@dataclass(frozen=True, slots=True)
+class VersionTransitionResult:
+    """Outcome of atomically replacing one open version by its closed form."""
+
+    before: ProvisionVersion
+    after: ProvisionVersion
+    changed: bool
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.before, ProvisionVersion) or not isinstance(
+            self.after, ProvisionVersion
+        ):
+            raise ValueError("version transition requires ProvisionVersion values")
+        if not isinstance(self.changed, bool):
+            raise ValueError("version transition changed must be boolean")
+        if self.before.id != self.after.id:
+            raise ValueError("version transition must preserve the version ID")
+        if self.before.validity.end is not None:
+            raise ValueError("version transition before value must be open-ended")
+        if self.after.validity.end is None:
+            raise ValueError("version transition after value must be closed")
+        if not self.after.ended_by_event_id:
+            raise ValueError("version transition requires ended_by_event_id")
+        expected_after = replace(
+            self.before,
+            validity=TemporalInterval(
+                self.before.validity.start,
+                self.after.validity.end,
+            ),
+            ended_by_event_id=self.after.ended_by_event_id,
+        )
+        if expected_after != self.after:
+            raise ValueError(
+                "version transition may only close validity and record its event"
+            )
 
 
 @runtime_checkable
@@ -186,6 +223,19 @@ class VersionRepository(Protocol):
         ...
 
     def put_many(self, versions: Iterable[ProvisionVersion]) -> BatchWriteResult:
+        ...
+
+    def replace_closed(
+        self,
+        expected: ProvisionVersion,
+        closed: ProvisionVersion,
+    ) -> VersionTransitionResult:
+        """Publish the closed form of an expected open version atomically.
+
+        An exact replay of ``closed`` returns ``changed=False``. Any persisted
+        value other than ``expected`` or ``closed`` is an optimistic conflict.
+        Implementations must reject changes unrelated to closing validity.
+        """
         ...
 
 

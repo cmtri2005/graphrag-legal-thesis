@@ -47,8 +47,8 @@ khả năng:
 | F08 | VBPL adapters | Chưa thực hiện | F01, F03 |
 | F09 | Amendment extraction models | Hoàn thành phần lõi | F01 |
 | F10 | Target resolver | Chưa thực hiện | F08, F09 |
-| F11 | Repository ports | Hoàn thành contract | F01, F07 |
-| F12 | In-memory repositories | Hoàn thành phần lõi | F11 |
+| F11 | Repository ports | Hoàn thành contract và version transition | F01, F07 |
+| F12 | In-memory repositories | Hoàn thành phần lõi và application boundary | F11 |
 | F13 | Query and evidence models | Hoàn thành contract và serialization | F01, F07 |
 | F14 | Storage adapters | Chưa thực hiện | F11, F12 |
 
@@ -425,6 +425,7 @@ Checklist:
 - [x] `SnapshotService` hiện tại thỏa `SnapshotRepository` protocol.
 - [x] Có in-memory implementation và behavioral contract test dùng lại cho
   database adapter.
+- [x] Có optimistic closure transition; không cho update version tùy ý.
 
 ## 15. F12 — In-memory repositories
 
@@ -451,6 +452,13 @@ Checklist:
 - [x] Snapshot là live read model trên cùng state.
 - [x] Vector search tách theo embedding model, lọc thời gian trước khi chấm điểm.
 - [x] Contract test tham số hóa để dùng lại cho database adapter sau này.
+- [x] Application service dựng target aggregate, chạy domain applier và persist
+  delta trong cùng unit-of-work transaction.
+- [x] Đóng version theo compare-and-swap, hỗ trợ exact replay và từ chối stale
+  hoặc unrelated update.
+- [x] Persist provision/version/event/application marker/graph edge nguyên tử.
+- [x] Rollback cả event registration và version transition khi lỗi xảy ra muộn.
+- [x] Sinh `CONTAINS`, `VERSION_OF`, `CAUSED_BY` và operation edge tất định.
 
 ## 16. F13 — Query and evidence models
 
@@ -545,6 +553,8 @@ F12 In-memory repositories
   ↓
 F13 Query/evidence models
   ↓
+Repository-backed event application
+  ↓
 F14 Storage adapters
 ```
 
@@ -593,6 +603,7 @@ Một thành phần chỉ chuyển sang “Hoàn thành” khi:
 | 11/09/2026 | F11 | Thêm repository protocols, write outcomes, transaction và version-aware vector port | 24 test port contract; toàn bộ 191 test pass | In-memory behavior để F12; vector record là dữ liệu dẫn xuất ngoài authoritative transaction |
 | 11/09/2026 | F12 | Thêm authoritative in-memory repositories, unit of work, live snapshot và temporal vector search | Behavioral, rollback, hierarchy, boundary và vector tests; toàn bộ 216 test pass | Contract suite có thể mở rộng bằng cách thêm factory adapter; vector nằm ngoài authoritative transaction |
 | 11/09/2026 | F13 | Thêm temporal query, exact-snapshot evidence, citation, claim, verifier, answer contract và versioned serialization | 70 test model/serialization; toàn bộ 286 test pass | Query schema độc lập temporal schema; chưa triển khai retrieval/verifier algorithm hoặc công thức metric |
+| 11/09/2026 | F11/F12 | Thêm closure-only version transition và application service persist event delta qua unit of work | Port, behavioral, optimistic closure, rollback và graph tests; toàn bộ 303 test pass | Event edge dùng event ID để nhiều event cùng ngày không xung đột; vector vẫn ở ngoài transaction |
 
 ## 21. Quyết định kiến trúc
 
@@ -708,4 +719,22 @@ Ghi các quyết định ảnh hưởng dài hạn tại đây để tránh thay
   event và provenance lồng bên trong vẫn giữ temporal envelope riêng.
 - **Lý do:** hai nhóm model có vòng đời khác nhau; migration query không được
   âm thầm thay đổi ngữ nghĩa dữ liệu pháp lý đã lưu.
+- **Trạng thái:** chấp nhận.
+
+### ADR-015 — Version đã persist chỉ được chuyển từ open sang closed
+
+- **Quyết định:** repository không có generic update. `replace_closed` dùng
+  expected open version và closed form cùng ID; exact replay là idempotent,
+  stale value hoặc thay đổi text/provenance bị từ chối.
+- **Lý do:** áp dụng sửa đổi cần đóng version hiện hành nhưng không được mở cửa
+  cho việc ghi đè lịch sử pháp lý ngoài transaction.
+- **Trạng thái:** chấp nhận.
+
+### ADR-016 — Event application persist validated delta trong một transaction
+
+- **Quyết định:** application service dựng aggregate của văn bản đích, dùng
+  `EventApplier` tính next state rồi persist provision, version closure/version
+  mới, event marker và graph edge trong cùng unit of work.
+- **Lý do:** giữ domain semantics độc lập storage và ngăn trạng thái cập nhật
+  một phần nếu lỗi xảy ra sau khi version cũ đã đóng.
 - **Trạng thái:** chấp nhận.

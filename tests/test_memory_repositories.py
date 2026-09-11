@@ -256,6 +256,36 @@ def test_version_repository_rejects_overlap_and_returns_detached_chain():
     assert uow.versions.current_for(current.provision_id) == current
 
 
+def test_version_closure_rejects_missing_conflicting_or_unrelated_changes():
+    uow = seeded_uow()
+    current = version(
+        "version:article-1:1", "provision:article-1", 1, date(2020, 1, 1)
+    )
+    uow.versions.put(current)
+    valid_closed = replace(
+        current,
+        validity=TemporalInterval(date(2020, 1, 1), date(2022, 1, 1)),
+        ended_by_event_id="event:amend",
+    )
+
+    with pytest.raises(RepositoryIntegrityError, match="only close"):
+        uow.versions.replace_closed(
+            current, replace(valid_closed, text="Nội dung bị sửa trái phép")
+        )
+    with pytest.raises(EntityNotFoundError):
+        uow.versions.replace_closed(
+            replace(current, id="version:missing"),
+            replace(valid_closed, id="version:missing"),
+        )
+
+    uow.versions.replace_closed(current, valid_closed)
+    with pytest.raises(RepositoryConflictError, match="changed since"):
+        uow.versions.replace_closed(
+            replace(current, text="Giá trị stale"),
+            replace(valid_closed, text="Giá trị stale"),
+        )
+
+
 def test_event_repository_indexes_events_and_applied_state():
     uow = seeded_uow()
     first = event("event:first", effective_on=date(2021, 1, 1))

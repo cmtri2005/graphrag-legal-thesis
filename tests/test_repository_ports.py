@@ -23,6 +23,7 @@ from legal_crawler.ports import (
     VectorSearchQuery,
     VersionEmbedding,
     VersionRepository,
+    VersionTransitionResult,
     WriteDisposition,
     WriteResult,
 )
@@ -30,6 +31,7 @@ from legal_crawler.temporal import (
     ExtractionMethod,
     Provenance,
     ProvisionLevel,
+    ProvisionVersion,
     SnapshotService,
     TemporalInterval,
     TemporalState,
@@ -142,6 +144,7 @@ def test_repository_errors_share_one_backend_neutral_base():
                 "current_for",
                 "put",
                 "put_many",
+                "replace_closed",
             ),
         ),
         (
@@ -206,6 +209,54 @@ def test_unit_of_work_requires_all_authoritative_repositories_and_transaction():
 
     assert isinstance(complete, TemporalUnitOfWork)
     assert not isinstance(incomplete, TemporalUnitOfWork)
+
+
+def test_version_transition_result_preserves_identity_and_change_state():
+    before = ProvisionVersion(
+        "version:1",
+        "provision:1",
+        1,
+        "Nội dung",
+        TemporalInterval(date(2020, 1, 1)),
+    )
+    after = ProvisionVersion(
+        "version:1",
+        "provision:1",
+        1,
+        "Nội dung",
+        TemporalInterval(date(2020, 1, 1), date(2024, 1, 1)),
+        ended_by_event_id="event:1",
+    )
+
+    result = VersionTransitionResult(before, after, changed=True)
+
+    assert result.changed
+    assert result.before.id == result.after.id
+
+
+def test_version_transition_result_rejects_different_ids_and_untyped_flag():
+    before = ProvisionVersion(
+        "version:1",
+        "provision:1",
+        1,
+        "Nội dung",
+        TemporalInterval(date(2020, 1, 1)),
+    )
+    different = ProvisionVersion(
+        "version:2",
+        "provision:1",
+        1,
+        "Nội dung",
+        TemporalInterval(date(2020, 1, 1), date(2024, 1, 1)),
+        ended_by_event_id="event:1",
+    )
+
+    with pytest.raises(ValueError, match="version ID"):
+        VersionTransitionResult(before, different, changed=True)
+    with pytest.raises(ValueError, match="boolean"):
+        VersionTransitionResult(before, before, changed=1)
+    with pytest.raises(ValueError, match="must be closed"):
+        VersionTransitionResult(before, before, changed=True)
 
 
 def test_existing_snapshot_service_satisfies_snapshot_read_port():

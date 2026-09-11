@@ -12,6 +12,7 @@ from legal_crawler.ports.repositories import (
     RepositoryIntegrityError,
     WriteDisposition,
     WriteResult,
+    VersionTransitionResult,
 )
 from legal_crawler.temporal.ids import make_edge_id
 from legal_crawler.temporal.models import (
@@ -201,6 +202,37 @@ class MemoryVersionRepository:
             self._store.restore(snapshot)
             raise
         return BatchWriteResult(tuple(results[item.id] for item in items))
+
+    def replace_closed(
+        self,
+        expected: ProvisionVersion,
+        closed: ProvisionVersion,
+    ) -> VersionTransitionResult:
+        _validate_closed_transition(expected, closed)
+        existing = self.get(expected.id)
+        if existing is None:
+            raise EntityNotFoundError(f"version does not exist: {expected.id}")
+        if existing == closed:
+            return VersionTransitionResult(expected, closed, changed=False)
+        if existing != expected:
+            raise RepositoryConflictError(
+                f"version {expected.id} changed since it was read"
+            )
+        chain = self._store.state.chain(expected.provision_id)
+        if chain is None or chain.current() != expected:
+            raise RepositoryConflictError(
+                f"version {expected.id} is no longer the current open version"
+            )
+        assert closed.validity.end is not None
+        actual = chain.close_current(
+            closed.validity.end,
+            ended_by_event_id=closed.ended_by_event_id,
+        )
+        if actual != closed:
+            raise RepositoryIntegrityError(
+                "closed version does not match the repository transition"
+            )
+        return VersionTransitionResult(expected, closed, changed=True)
 
 
 class MemoryEventRepository:
@@ -477,3 +509,19 @@ def _atomic_batch(
 def _require_date(value: object, name: str) -> None:
     if type(value) is not date:
         raise ValueError(f"{name} must be a date")
+
+
+def _validate_closed_transition(
+    expected: ProvisionVersion,
+    closed: ProvisionVersion,
+) -> None:
+    if not isinstance(expected, ProvisionVersion) or not isinstance(
+        closed, ProvisionVersion
+    ):
+        raise RepositoryIntegrityError(
+            "version closure requires ProvisionVersion values"
+        )
+    try:
+        VersionTransitionResult(expected, closed, changed=False)
+    except ValueError as exc:
+        raise RepositoryIntegrityError(str(exc)) from exc
