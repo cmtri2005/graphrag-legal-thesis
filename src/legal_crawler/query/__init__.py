@@ -20,6 +20,18 @@ from .models import (
     VerificationSeverity,
     citation_level_for,
 )
+from .serialization import (
+    QUERY_SCHEMA_VERSION,
+    InvalidQueryRecordError,
+    QueryArtifact,
+    QuerySerializationError,
+    UnknownQueryRecordTypeError,
+    UnsupportedQuerySchemaVersionError,
+    dumps,
+    from_record,
+    loads,
+    to_record,
+)
 
 __all__ = [
     "AnswerClaim",
@@ -28,7 +40,11 @@ __all__ = [
     "Citation",
     "CitationLevel",
     "GraphTraversalStep",
+    "InvalidQueryRecordError",
+    "QUERY_SCHEMA_VERSION",
+    "QueryArtifact",
     "QueryModelError",
+    "QuerySerializationError",
     "RetrievedEvidence",
     "RetrievalMethod",
     "RetrievalSignal",
@@ -39,5 +55,11 @@ __all__ = [
     "VerificationIssueCode",
     "VerificationResult",
     "VerificationSeverity",
+    "UnknownQueryRecordTypeError",
+    "UnsupportedQuerySchemaVersionError",
     "citation_level_for",
+    "dumps",
+    "from_record",
+    "loads",
+    "to_record",
 ]

@@ -49,7 +49,7 @@ khả năng:
 | F10 | Target resolver | Chưa thực hiện | F08, F09 |
 | F11 | Repository ports | Hoàn thành contract | F01, F07 |
 | F12 | In-memory repositories | Hoàn thành phần lõi | F11 |
-| F13 | Query and evidence models | Hoàn thành contract | F01, F07 |
+| F13 | Query and evidence models | Hoàn thành contract và serialization | F01, F07 |
 | F14 | Storage adapters | Chưa thực hiện | F11, F12 |
 
 ## 4. F01 — Domain models
@@ -456,11 +456,13 @@ Checklist:
 
 **Mục tiêu:** tạo hợp đồng dữ liệu cho temporal retrieval và citation verifier.
 
-**Vị trí:** `src/legal_crawler/query/models.py`.
+**Vị trí:** `src/legal_crawler/query/models.py` và
+`src/legal_crawler/query/serialization.py`.
 
-**Trạng thái:** hoàn thành contract ngày 11/09/2026. Model giữ riêng temporal
-interpretation, retrieval signals, evidence từ snapshot, citation claims và
-verifier outcome. Thuật toán retrieval, verifier và metric chưa thuộc F13.
+**Trạng thái:** hoàn thành contract và versioned serialization ngày 11/09/2026.
+Model giữ riêng temporal interpretation, retrieval signals, evidence từ
+snapshot, citation claims và verifier outcome. Thuật toán retrieval, verifier
+và metric chưa thuộc F13.
 
 Model dự kiến:
 
@@ -491,6 +493,11 @@ Checklist:
 - [x] Không cho trạng thái `ANSWERED` che giấu verifier fail hoặc citation chưa
   được xác minh.
 - [x] Model giữ đủ dữ liệu đầu vào để tầng đánh giá tính TVER, VCR và TCS.
+- [x] Versioned query envelope độc lập với temporal domain schema.
+- [x] Round-trip mọi query artifact và nested snapshot/domain record.
+- [x] Decoder từ chối schema/type/field/date/enum/container sai, duplicate JSON
+  key, duplicate filter và số không hữu hạn.
+- [x] JSON tất định, giữ Unicode và thứ tự evidence/citation/claim/issue.
 
 ## 17. F14 — Storage adapters
 
@@ -545,7 +552,7 @@ F14 Storage adapters
 
 1. Chuẩn bị fixture adapter F08 nhỏ và đã xác minh trong khi chờ corpus hoàn tất
    re-check.
-2. Bổ sung serialization cho F13 sau khi ổn định schema query/evidence.
+2. Khi fixture sẵn sàng, implement từng mapper F08 độc lập và fail-loud.
 
 Sau khi corpus hoàn tất re-check: thực hiện F08 để ánh xạ dữ liệu thật, rồi F10
 để resolve target trên fixture đã xác minh. Không để sự chậm trễ của corpus chặn
@@ -585,7 +592,7 @@ Một thành phần chỉ chuyển sang “Hoàn thành” khi:
 | 11/09/2026 | F09 | Thêm typed contract từ raw amendment mention đến `LegalEvent` | 31 test extraction model; toàn bộ 167 test pass | Candidate mơ hồ chỉ được giữ để review; chưa implement parser/resolver |
 | 11/09/2026 | F11 | Thêm repository protocols, write outcomes, transaction và version-aware vector port | 24 test port contract; toàn bộ 191 test pass | In-memory behavior để F12; vector record là dữ liệu dẫn xuất ngoài authoritative transaction |
 | 11/09/2026 | F12 | Thêm authoritative in-memory repositories, unit of work, live snapshot và temporal vector search | Behavioral, rollback, hierarchy, boundary và vector tests; toàn bộ 216 test pass | Contract suite có thể mở rộng bằng cách thêm factory adapter; vector nằm ngoài authoritative transaction |
-| 11/09/2026 | F13 | Thêm temporal query, exact-snapshot evidence, citation, claim, verifier và answer contracts | 33 test query model; toàn bộ 249 test pass | Chưa triển khai retrieval/verifier algorithm hoặc công thức metric |
+| 11/09/2026 | F13 | Thêm temporal query, exact-snapshot evidence, citation, claim, verifier, answer contract và versioned serialization | 70 test model/serialization; toàn bộ 286 test pass | Query schema độc lập temporal schema; chưa triển khai retrieval/verifier algorithm hoặc công thức metric |
 
 ## 21. Quyết định kiến trúc
 
@@ -693,4 +700,12 @@ Ghi các quyết định ảnh hưởng dài hạn tại đây để tránh thay
   riêng các ID và text có thể không đồng bộ.
 - **Lý do:** ngăn retrieval ghép nhầm text, provision, version hoặc mốc thời
   gian; đồng thời giữ provenance và invalidity propagation từ F07.
+- **Trạng thái:** chấp nhận.
+
+### ADR-014 — Query artifact và temporal domain dùng schema version độc lập
+
+- **Quyết định:** query record có `QUERY_SCHEMA_VERSION`; provision, version,
+  event và provenance lồng bên trong vẫn giữ temporal envelope riêng.
+- **Lý do:** hai nhóm model có vòng đời khác nhau; migration query không được
+  âm thầm thay đổi ngữ nghĩa dữ liệu pháp lý đã lưu.
 - **Trạng thái:** chấp nhận.

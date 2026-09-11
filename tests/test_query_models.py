@@ -53,7 +53,9 @@ def temporal_query(
         at,
         resolution,
         temporal_expression="ngày 01/06/2023",
-        temporal_confidence=(0.9 if resolution is TemporalResolution.INFERRED else None),
+        temporal_confidence=(
+            0.9 if resolution is TemporalResolution.INFERRED else None
+        ),
         document_ids=("document:law",),
         levels=frozenset({ProvisionLevel.CLAUSE}),
     )
@@ -526,7 +528,27 @@ def test_wrong_claimed_version_can_be_retained_with_a_verifier_issue():
     )
 
     assert result.citations[0].version_id == "version:clause-1:old"
-    assert result.verification.issues[0].code is VerificationIssueCode.CITATION_VERSION_MISMATCH
+    assert (
+        result.verification.issues[0].code
+        is VerificationIssueCode.CITATION_VERSION_MISMATCH
+    )
+
+
+@pytest.mark.parametrize(
+    ("changes", "message"),
+    (
+        ({"document_id": "document:wrong"}, "document"),
+        ({"provision_id": "provision:wrong"}, "provision"),
+        ({"version_id": "version:wrong"}, "version"),
+        ({"level": CitationLevel.ARTICLE}, "level"),
+        ({"supporting_text": "Đoạn không có trong bằng chứng."}, "text"),
+    ),
+)
+def test_passed_answer_rejects_citation_claims_that_disagree_with_evidence(
+    changes, message
+):
+    with pytest.raises(QueryModelError, match=message):
+        answered_result(citations=(replace(citation(), **changes),))
 
 
 def test_unresolved_query_can_only_produce_an_auditable_review_result():
@@ -559,7 +581,10 @@ def test_unresolved_query_can_only_produce_an_auditable_review_result():
     )
 
     assert not result.query.temporal_ready
-    assert result.verification.issues[0].code is VerificationIssueCode.QUERY_TIME_UNRESOLVED
+    assert (
+        result.verification.issues[0].code
+        is VerificationIssueCode.QUERY_TIME_UNRESOLVED
+    )
 
 
 def test_answer_rejects_unknown_verification_references():

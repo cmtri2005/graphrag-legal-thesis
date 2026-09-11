@@ -508,6 +508,32 @@ class AnswerResult:
                 raise QueryModelError(
                     "every cited evidence item must be verified"
                 )
+            for item in self.citations:
+                source = evidence_by_id[item.evidence_id]
+                if item.document_id != source.document_id:
+                    raise QueryModelError(
+                        "a verified citation must match its evidence document"
+                    )
+                if item.level is not CitationLevel.DOCUMENT:
+                    if item.provision_id != source.provision_id:
+                        raise QueryModelError(
+                            "a verified citation must match its evidence provision"
+                        )
+                    if item.version_id != source.version_id:
+                        raise QueryModelError(
+                            "a verified citation must match its evidence version"
+                        )
+                    if item.level is not citation_level_for(source.level):
+                        raise QueryModelError(
+                            "a verified citation must match its evidence level"
+                        )
+                if (
+                    item.supporting_text is not None
+                    and item.supporting_text not in source.text
+                ):
+                    raise QueryModelError(
+                        "verified citation text must occur in its evidence"
+                    )
         elif self.status is AnswerStatus.INSUFFICIENT_EVIDENCE:
             if self.verification.decision is VerificationDecision.PASSED:
                 raise QueryModelError(
