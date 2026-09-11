@@ -45,7 +45,7 @@ khả năng:
 | F06 | Validity propagation | Hoàn thành phần lõi | F04, F05 |
 | F07 | Snapshot service | Hoàn thành phần lõi | F04, F06 |
 | F08 | VBPL adapters | Chưa thực hiện | F01, F03 |
-| F09 | Amendment extraction models | Chưa thực hiện | F01 |
+| F09 | Amendment extraction models | Hoàn thành phần lõi | F01 |
 | F10 | Target resolver | Chưa thực hiện | F08, F09 |
 | F11 | Repository ports | Chưa thực hiện | F01, F07 |
 | F12 | In-memory repositories | Chưa thực hiện | F11 |
@@ -323,7 +323,11 @@ Checklist:
 **Mục tiêu:** tạo hợp đồng dữ liệu rõ ràng giữa bước tìm câu sửa đổi, bước
 resolve target và bước áp dụng event.
 
-**File dự kiến:** `src/legal_crawler/extraction/models.py`.
+**Vị trí:** `src/legal_crawler/extraction/models.py`.
+
+**Trạng thái:** hoàn thành phần lõi ngày 11/09/2026. Đã có contract tách biệt
+mention nguyên văn, reference dạng pháp lý, kết quả resolve và event đủ điều
+kiện áp dụng. Parser và target-resolution algorithm không thuộc phạm vi F09.
 
 Model dự kiến:
 
@@ -332,6 +336,8 @@ Model dự kiến:
 - `ResolvedTarget`.
 - `ExtractionResult`.
 - `ExtractionWarning`.
+- `SourceSpan`, `ProvisionLocator`, `ProvisionReferencePart`.
+- `PhraseReplacement` cho chỉ dẫn tìm/thay chưa được consolidation.
 
 `TargetReference` cần biểu diễn được:
 
@@ -344,12 +350,26 @@ Model dự kiến:
 
 Checklist:
 
-- [ ] Lưu nguyên văn mention nguồn.
-- [ ] Lưu span/offset nếu xác định được.
-- [ ] Phân biệt target document và target provision.
-- [ ] Cho phép nhiều target trong một event.
-- [ ] Có confidence riêng cho extraction và resolution.
-- [ ] Có danh sách warning thay vì boolean thành công đơn giản.
+- [x] Lưu nguyên văn mention nguồn và provenance.
+- [x] Lưu span/offset nửa mở `[start, end)` nếu xác định được.
+- [x] Phân biệt target document và target provision.
+- [x] Cho phép nhiều target không liên tiếp trong một event.
+- [x] Biểu diễn exact target, toàn subtree và document scope.
+- [x] Tách root bị tác động trực tiếp khỏi tập descendant bị ảnh hưởng của
+  subtree để không đóng version con như target trực tiếp.
+- [x] Biểu diễn locator ngoài-vào-trong như Điều → Khoản → Điểm.
+- [x] Biểu diễn vị trí chèn sau một provision khác.
+- [x] Liên kết node bổ sung với parent/anchor đã resolve và kiểm tra payload
+  insertion khớp vị trí đó.
+- [x] Giữ candidate khi mơ hồ mà không chọn target tạm thời.
+- [x] Có confidence riêng cho extraction và resolution.
+- [x] Có danh sách warning với code, severity và review context.
+- [x] Phrase replacement không được coi là complete resulting text.
+- [x] Chỉ materialize thành `LegalEvent` khi ngày, operation, target và payload
+  đều đầy đủ, không có error warning.
+- [x] Việc chấp nhận event phải truyền `VERIFIED` hoặc `AUTO_ACCEPTED` rõ ràng.
+- [x] Test bốn thao tác lõi, multi-target, subtree, insertion anchor và dữ liệu
+  mơ hồ.
 
 ## 13. F10 — Target resolver
 
@@ -491,10 +511,9 @@ F14 Storage adapters
 
 Ưu tiên gần nhất:
 
-1. F09 — amendment extraction models.
-2. F11 — repository ports.
-3. F12 — in-memory repositories và contract test.
-4. F13 — query/evidence models.
+1. F11 — repository ports.
+2. F12 — in-memory repositories và contract test.
+3. F13 — query/evidence models.
 
 Sau khi corpus hoàn tất re-check: thực hiện F08 để ánh xạ dữ liệu thật, rồi F10
 để resolve target trên fixture đã xác minh. Không để sự chậm trễ của corpus chặn
@@ -531,6 +550,7 @@ Một thành phần chỉ chuyển sang “Hoàn thành” khi:
 | 11/09/2026 | F06 | Thêm validity theo document, local version và toàn bộ chuỗi tổ tiên | Test bãi bỏ Chương/Khoản, cây sâu, gap, cycle và typed reason | Descendant mất hiệu lực gián tiếp, không bị đóng version hàng loạt |
 | 11/09/2026 | F07 | Thêm snapshot provision/document, level filter, provenance warning và event audit | 112 test toàn repository pass | Còn đối chiếu 100 truy vấn khi corpus đã re-check |
 | 11/09/2026 | F03 | Thêm JSON serialization có schema version cho toàn bộ temporal domain model | 24 test serialization; toàn bộ 136 test pass | Decoder strict; metadata mở rộng chỉ nhận kiểu tương thích JSON |
+| 11/09/2026 | F09 | Thêm typed contract từ raw amendment mention đến `LegalEvent` | 31 test extraction model; toàn bộ 167 test pass | Candidate mơ hồ chỉ được giữ để review; chưa implement parser/resolver |
 
 ## 21. Quyết định kiến trúc
 
@@ -597,4 +617,20 @@ Ghi các quyết định ảnh hưởng dài hạn tại đây để tránh thay
   chối field lạ, duplicate key, kiểu sai và schema chưa hỗ trợ.
 - **Lý do:** không để thay đổi schema hoặc record hỏng âm thầm làm mất ngày,
   provenance hay ý nghĩa của một event pháp lý.
+- **Trạng thái:** chấp nhận.
+
+### ADR-009 — Reference mơ hồ không có tentative final target
+
+- **Quyết định:** resolution chưa được chấp nhận chỉ lưu candidate IDs;
+  `target_document_id` và `target_provision_ids` cuối cùng phải để trống.
+- **Lý do:** ngăn target có confidence thấp vô tình đi vào event applier như một
+  kết luận đã xác minh.
+- **Trạng thái:** chấp nhận.
+
+### ADR-010 — Phrase replacement phải được consolidation trước Event Applier
+
+- **Quyết định:** giữ riêng `PhraseReplacement` làm chỉ dẫn nguồn; thao tác sửa
+  hoặc thay thế chỉ materialize khi mọi target có `TextUpdate` hoàn chỉnh.
+- **Lý do:** Event Applier cần trạng thái nội dung sau tác động, không được nối
+  hoặc tìm/thay chuỗi một cách mù quáng.
 - **Trạng thái:** chấp nhận.
