@@ -19,6 +19,14 @@ from .repositories import (
     WriteDisposition,
     WriteResult,
 )
+from .retrieval import (
+    EvidenceReranker,
+    LexicalMatch,
+    LexicalRecord,
+    LexicalRepository,
+    LexicalSearchQuery,
+    QueryEncoder,
+)
 from .vector import (
     VectorMatch,
     VectorRepository,
@@ -31,11 +39,17 @@ __all__ = [
     "DocumentRepository",
     "EntityNotFoundError",
     "EventRepository",
+    "EvidenceReranker",
+    "LexicalMatch",
+    "LexicalRecord",
+    "LexicalRepository",
+    "LexicalSearchQuery",
     "ProvenanceRepository",
     "ProvisionRepository",
     "RepositoryConflictError",
     "RepositoryError",
     "RepositoryIntegrityError",
+    "QueryEncoder",
     "SnapshotRepository",
     "TemporalGraphRepository",
     "TemporalUnitOfWork",

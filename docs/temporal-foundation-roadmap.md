@@ -51,6 +51,9 @@ khả năng:
 | F12 | In-memory repositories | Hoàn thành phần lõi và application boundary | F11 |
 | F13 | Query and evidence models | Hoàn thành contract và serialization | F01, F07 |
 | F14 | Storage adapters | Hoàn thành code-level Neo4j và Milvus dense | F11, F12 |
+| F15 | Temporal hybrid retrieval | Hoàn thành code-level độc lập dữ liệu | F12, F13, F14 |
+| F16 | Temporal verifier | Hoàn thành code-level độc lập dữ liệu | F13, F15 |
+| F17 | Evaluation metrics | Hoàn thành thuật toán và contract | F13, F16 |
 
 ## 4. F01 — Domain models
 
@@ -549,13 +552,83 @@ Checklist vector store:
 - [x] Metadata có `eff_from`, `eff_to`, document và provision ID.
 - [x] Lọc thời gian trong truy xuất bằng khoảng nửa mở.
 - [x] Dense search dùng COSINE và collection riêng theo model/dimension.
-- [ ] Lexical/sparse fusion và reranking ở tầng retrieval.
+- [x] Lexical/BM25, dense fusion và reranking ở tầng retrieval.
 - [x] Xóa/rebuild đúng embedding ID khi version thay đổi.
 - [ ] Đo recall trước và sau temporal filtering.
 - [x] Chạy CRUD/filter/lifecycle integration test với Milvus Lite.
 - [ ] Chạy smoke/load test với Milvus server của môi trường triển khai.
 
-## 18. Thứ tự triển khai đề xuất
+## 18. F15 — Temporal hybrid retrieval
+
+**Mục tiêu:** hiện thực L4 của đề cương trên tập đơn vị hợp lệ tại mốc truy vấn,
+đồng thời giữ riêng từng tín hiệu để chạy B2–B4 và các ablation.
+
+**Vị trí:** `src/legal_crawler/retrieval/`,
+`src/legal_crawler/ports/retrieval.py` và
+`src/legal_crawler/adapters/memory/lexical.py`.
+
+**Trạng thái:** hoàn thành code-level độc lập dữ liệu ngày 12/09/2026.
+
+Checklist:
+
+- [x] Port cho lexical repository, query encoder và reranker.
+- [x] BM25 in-memory tất định để kiểm thử và chạy baseline nhỏ.
+- [x] Lexical record gắn exact provision version và khoảng hiệu lực.
+- [x] Lọc thời gian, document và cấp điều khoản trước khi chấm điểm.
+- [x] Hợp nhất lexical/dense bằng weighted reciprocal-rank fusion.
+- [x] Giữ riêng raw score và rank của lexical, dense, graph và reranker.
+- [x] Revalidate mọi derived hit bằng authoritative point-in-time snapshot.
+- [x] Loại record stale hoặc thiếu provenance và trả warning có kiểu.
+- [x] Mở rộng nhiều bước theo `AMENDS` và `REFERS_TO`, giữ graph path.
+- [x] Chỉ đi qua graph target hợp lệ trong không gian tìm kiếm tại `t`.
+- [x] Reranker thay thế được và kiểm tra đủ số score, type và tính hữu hạn.
+- [x] ID evidence, thứ tự hòa điểm và kết quả đều tất định.
+- [x] Config đủ để tắt graph/reranker và chạy các baseline/ablation.
+- [ ] Tinh chỉnh trọng số và `k` trên development set thật.
+
+## 19. F16 — Temporal verifier
+
+**Mục tiêu:** hiện thực kiểm chứng L5 trước khi một câu trả lời được phép mang
+trạng thái đã trả lời.
+
+**Vị trí:** `src/legal_crawler/query/verifier.py`.
+
+**Trạng thái:** hoàn thành code-level độc lập dữ liệu ngày 12/09/2026.
+
+Checklist:
+
+- [x] Từ chối truy vấn chưa resolve mốc thời gian.
+- [x] Kiểm tra evidence thuộc đúng query và snapshot tại đúng `t`.
+- [x] Kiểm tra document, provision, version và cấp trích dẫn.
+- [x] Kiểm tra supporting text nằm trong nội dung exact version sau chuẩn hóa.
+- [x] Kiểm tra provenance và xung đột nhiều version của cùng provision.
+- [x] Phát hiện citation thiếu evidence, claim thiếu citation hoặc ID bị thiếu.
+- [x] Trả typed issue, verified/rejected ID và decision tất định.
+- [x] Không tự sửa citation sai hoặc tự chọn một mốc thời gian.
+- [ ] Hiệu chuẩn chính sách cảnh báo bằng answer corpus thật.
+
+## 20. F17 — Evaluation metrics
+
+**Mục tiêu:** đóng băng phép tính có thể kiểm toán cho khung đánh giá trong đề
+cương trước khi chạy thực nghiệm.
+
+**Vị trí:** `src/legal_crawler/evaluation/metrics.py`.
+
+**Trạng thái:** hoàn thành thuật toán và contract ngày 12/09/2026.
+
+Checklist:
+
+- [x] Recall@k, reciprocal rank và MRR.
+- [x] Temporally-Valid Recall@k trên giao của nhãn liên quan và hợp lệ tại `t`.
+- [x] TVER theo tỷ lệ answer có ít nhất một citation sai hiệu lực.
+- [x] VCR theo tỷ lệ sai version trong các citation đã trỏ đúng provision.
+- [x] TCS yêu cầu đúng cả hai thành viên của từng cặp tương phản T2.
+- [x] Accuracy, normalized exact match và token F1.
+- [x] Cohen kappa cho kiểm định chéo annotation.
+- [x] Từ chối input trùng, mâu thuẫn hoặc mẫu số không xác định.
+- [ ] Tính điểm thực tế và khoảng tin cậy khi ViLexTime sẵn sàng.
+
+## 21. Thứ tự triển khai đề xuất
 
 ```text
 F01 Domain models
@@ -579,15 +652,22 @@ F13 Query/evidence models
 Repository-backed event application
   ↓
 F14 Storage adapters
+  ↓
+F15 Temporal hybrid retrieval
+  ↓
+F16 Temporal verifier
+  ↓
+F17 Evaluation metrics
 ```
 
-Ưu tiên gần nhất:
+Phần base code-level không phụ thuộc dữ liệu thật đã hoàn thành. Không tiếp tục
+tự động sang pipeline dữ liệu hoặc thực nghiệm. Khi corpus hoàn tất re-check:
 
-1. Implement retrieval orchestration: lexical/dense fusion, graph expansion và
-   reranking trên contract F13.
-2. Chuẩn bị fixture adapter F08 nhỏ và đã xác minh khi corpus hoàn tất re-check.
-3. Khi có database runtime, chạy integration test cho Neo4j và Milvus.
-4. Khi fixture thật sẵn sàng, implement từng mapper F08 độc lập và fail-loud.
+1. Chuẩn bị fixture adapter F08 nhỏ và đã xác minh.
+2. Implement từng mapper F08 độc lập và fail-loud.
+3. Đối chiếu target resolver và tối thiểu 100 snapshot với corpus thật.
+4. Tinh chỉnh retrieval trên development set và chạy B1–B7/A1–A7.
+5. Khi có database runtime, chạy integration/smoke/load test còn lại.
 
 Sau khi corpus hoàn tất re-check: thực hiện F08 để ánh xạ dữ liệu thật, rồi đối
 chiếu F10 trên fixture đã xác minh. Không để sự chậm trễ của corpus chặn các hợp
@@ -597,7 +677,7 @@ F03 và F04–F07 đã có domain logic cùng unit test. Có thể hoàn thành 
 fixture tổng hợp, nhưng chưa đưa nó vào pipeline chính trước khi kiểm chứng đầu
 vào trên fixture từ corpus đã re-check.
 
-## 19. Definition of Done chung
+## 22. Definition of Done chung
 
 Một thành phần chỉ chuyển sang “Hoàn thành” khi:
 
@@ -613,7 +693,7 @@ Một thành phần chỉ chuyển sang “Hoàn thành” khi:
 - [ ] Toàn bộ test của repository vẫn pass.
 - [ ] Tài liệu tiến độ này được cập nhật.
 
-## 20. Nhật ký tiến độ
+## 23. Nhật ký tiến độ
 
 | Ngày | Thành phần | Thay đổi | Kiểm chứng | Ghi chú |
 |---|---|---|---|---|
@@ -633,8 +713,9 @@ Một thành phần chỉ chuyển sang “Hoàn thành” khi:
 | 12/09/2026 | F14 | Thêm Neo4j schema, strict domain codec và transaction executor | Codec, schema, transaction commit/rollback và validation tests; toàn bộ 339 test pass | Chưa có concrete Neo4j repositories hoặc integration test với server |
 | 12/09/2026 | F14 | Thêm concrete Neo4j repository, unit of work, temporal snapshot và graph query | Repository behavior, atomic rollback, version closure và application service tests; toàn bộ 349 test pass | Cypher được kiểm tra qua driver giả lập; integration test với server thật còn chờ hạ tầng |
 | 12/09/2026 | F14 | Thêm Milvus dense adapter theo version và khoảng hiệu lực | 373 unit/contract test pass và 1 Milvus Lite integration test pass | Sửa tương thích raw-vector read, boolean filter và flush tombstone dựa trên test runtime; sparse fusion/reranker để ở retrieval layer |
+| 12/09/2026 | F15–F17 | Thêm BM25/hybrid temporal retrieval, graph expansion, reranker, verifier và metric evaluation | 411 test pass, 1 Milvus Lite integration test skip mặc định | Base code-level không phụ thuộc corpus đã hoàn thành; trọng số và điểm thực tế chờ development/test data |
 
-## 21. Quyết định kiến trúc
+## 24. Quyết định kiến trúc
 
 Ghi các quyết định ảnh hưởng dài hạn tại đây để tránh thay đổi ngầm về sau.
 
@@ -784,4 +865,29 @@ Ghi các quyết định ảnh hưởng dài hạn tại đây để tránh thay
   projection phục vụ index và truy vấn.
 - **Lý do:** tránh việc schema Neo4j vô tình định nghĩa lại temporal semantics;
   decoder luôn kiểm tra ID, kind, endpoint và relation với payload gốc.
+- **Trạng thái:** chấp nhận.
+
+### ADR-019 — Derived retrieval hit phải được revalidate
+
+- **Quyết định:** lexical và vector index chỉ sinh candidate. Trước khi thành
+  evidence, mọi hit phải khớp exact version, document, level, interval và
+  authoritative snapshot tại mốc hỏi.
+- **Lý do:** index có thể stale sau rebuild hoặc cập nhật version; không được
+  phép dùng metadata dẫn xuất để thay cho ngữ nghĩa pháp lý authoritative.
+- **Trạng thái:** chấp nhận.
+
+### ADR-020 — Fusion giữ raw signal độc lập
+
+- **Quyết định:** weighted reciprocal-rank fusion tạo điểm hợp nhất nhưng raw
+  score/rank của lexical, dense, graph và reranker vẫn nằm trong evidence.
+- **Lý do:** phục vụ B2–B4, ablation A1–A3 và phân tích đóng góp mà không phải
+  chạy lại retrieval chỉ để khôi phục tín hiệu trung gian.
+- **Trạng thái:** chấp nhận.
+
+### ADR-021 — Metric có mẫu số không xác định phải fail-loud
+
+- **Quyết định:** TVER, VCR, TCS, recall, accuracy và kappa báo lỗi nếu không có
+  mẫu hợp lệ cho mẫu số thay vì mặc định trả `0`.
+- **Lý do:** `0` trong trường hợp không có dữ liệu dễ bị hiểu nhầm là hệ thống
+  không có lỗi hoặc có hiệu năng bằng không trong báo cáo thực nghiệm.
 - **Trạng thái:** chấp nhận.

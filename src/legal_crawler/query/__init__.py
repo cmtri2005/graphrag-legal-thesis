@@ -32,6 +32,7 @@ from .serialization import (
     loads,
     to_record,
 )
+from .verifier import TemporalVerifier
 
 __all__ = [
     "AnswerClaim",
@@ -50,6 +51,7 @@ __all__ = [
     "RetrievalSignal",
     "TemporalQuery",
     "TemporalResolution",
+    "TemporalVerifier",
     "VerificationDecision",
     "VerificationIssue",
     "VerificationIssueCode",

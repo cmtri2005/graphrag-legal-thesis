@@ -1,5 +1,6 @@
 """In-memory repository implementations for tests and local validation."""
 
+from .lexical import MemoryLexicalRepository
 from .repositories import (
     MemoryDocumentRepository,
     MemoryEventRepository,
@@ -16,6 +17,7 @@ from .vector import MemoryVectorRepository
 __all__ = [
     "MemoryDocumentRepository",
     "MemoryEventRepository",
+    "MemoryLexicalRepository",
     "MemoryProvenanceRepository",
     "MemoryProvisionRepository",
     "MemorySnapshotRepository",
@@ -26,4 +28,3 @@ __all__ = [
     "MemoryVectorRepository",
     "MemoryVersionRepository",
 ]
-
