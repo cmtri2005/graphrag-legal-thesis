@@ -10,6 +10,12 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=7.4"]
 neo4j = ["neo4j>=6.0,<7"]
+milvus = ["pymilvus>=2.6,<2.7"]
+milvus-lite = [
+    "pymilvus>=2.6,<2.7",
+    "milvus-lite>=2.5,<2.6",
+    "setuptools<81",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

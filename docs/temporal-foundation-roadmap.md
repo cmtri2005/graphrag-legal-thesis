@@ -50,7 +50,7 @@ khả năng:
 | F11 | Repository ports | Hoàn thành contract và version transition | F01, F07 |
 | F12 | In-memory repositories | Hoàn thành phần lõi và application boundary | F11 |
 | F13 | Query and evidence models | Hoàn thành contract và serialization | F01, F07 |
-| F14 | Storage adapters | Đang thực hiện: Neo4j authoritative adapter | F11, F12 |
+| F14 | Storage adapters | Hoàn thành code-level Neo4j và Milvus dense | F11, F12 |
 
 ## 4. F01 — Domain models
 
@@ -521,10 +521,10 @@ Checklist:
 
 Chỉ bắt đầu sau khi version chain, validity và snapshot đã ổn định.
 
-**Trạng thái:** đã hoàn thành phần authoritative Neo4j độc lập dữ liệu ngày
-12/09/2026 gồm codec, schema, transaction executor, concrete repository và
-point-in-time snapshot. Adapter vector vẫn chưa thực hiện; kiểm thử tích hợp
-với server thật chờ môi trường Neo4j.
+**Trạng thái:** đã hoàn thành phần code-level độc lập dữ liệu cho Neo4j và
+Milvus dense ngày 12/09/2026. Milvus đã vượt integration test bằng Milvus Lite;
+Neo4j server integration còn chờ hạ tầng. Lexical/sparse fusion và reranker
+thuộc tầng retrieval.
 
 Checklist Neo4j:
 
@@ -545,12 +545,15 @@ Checklist Neo4j:
 
 Checklist vector store:
 
-- [ ] Embedding gắn với `ProvisionVersion`, không chỉ `Provision`.
-- [ ] Metadata có `eff_from`, `eff_to`, document và provision ID.
-- [ ] Lọc thời gian trước hoặc trong truy xuất.
-- [ ] Hỗ trợ dense, lexical/sparse và reranking.
-- [ ] Xóa/cập nhật đúng version khi delta crawl thay đổi dữ liệu.
+- [x] Embedding gắn với `ProvisionVersion`, không chỉ `Provision`.
+- [x] Metadata có `eff_from`, `eff_to`, document và provision ID.
+- [x] Lọc thời gian trong truy xuất bằng khoảng nửa mở.
+- [x] Dense search dùng COSINE và collection riêng theo model/dimension.
+- [ ] Lexical/sparse fusion và reranking ở tầng retrieval.
+- [x] Xóa/rebuild đúng embedding ID khi version thay đổi.
 - [ ] Đo recall trước và sau temporal filtering.
+- [x] Chạy CRUD/filter/lifecycle integration test với Milvus Lite.
+- [ ] Chạy smoke/load test với Milvus server của môi trường triển khai.
 
 ## 18. Thứ tự triển khai đề xuất
 
@@ -580,9 +583,10 @@ F14 Storage adapters
 
 Ưu tiên gần nhất:
 
-1. Implement vector-store adapter theo version và khoảng hiệu lực trong F14.
+1. Implement retrieval orchestration: lexical/dense fusion, graph expansion và
+   reranking trên contract F13.
 2. Chuẩn bị fixture adapter F08 nhỏ và đã xác minh khi corpus hoàn tất re-check.
-3. Khi có Neo4j server, chạy integration test cho schema và Cypher repository.
+3. Khi có database runtime, chạy integration test cho Neo4j và Milvus.
 4. Khi fixture thật sẵn sàng, implement từng mapper F08 độc lập và fail-loud.
 
 Sau khi corpus hoàn tất re-check: thực hiện F08 để ánh xạ dữ liệu thật, rồi đối
@@ -628,6 +632,7 @@ Một thành phần chỉ chuyển sang “Hoàn thành” khi:
 | 12/09/2026 | F10 | Thêm deterministic target resolver trên repository port | Exact/subtree/document/insertion, ambiguity và fail-safe tests; toàn bộ 318 test pass | Fixture tổng hợp; còn kiểm chứng T3/T6 và tiêu đề bất thường trên corpus thật |
 | 12/09/2026 | F14 | Thêm Neo4j schema, strict domain codec và transaction executor | Codec, schema, transaction commit/rollback và validation tests; toàn bộ 339 test pass | Chưa có concrete Neo4j repositories hoặc integration test với server |
 | 12/09/2026 | F14 | Thêm concrete Neo4j repository, unit of work, temporal snapshot và graph query | Repository behavior, atomic rollback, version closure và application service tests; toàn bộ 349 test pass | Cypher được kiểm tra qua driver giả lập; integration test với server thật còn chờ hạ tầng |
+| 12/09/2026 | F14 | Thêm Milvus dense adapter theo version và khoảng hiệu lực | 373 unit/contract test pass và 1 Milvus Lite integration test pass | Sửa tương thích raw-vector read, boolean filter và flush tombstone dựa trên test runtime; sparse fusion/reranker để ở retrieval layer |
 
 ## 21. Quyết định kiến trúc
 
