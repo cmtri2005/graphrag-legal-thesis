@@ -50,7 +50,7 @@ khả năng:
 | F11 | Repository ports | Hoàn thành contract và version transition | F01, F07 |
 | F12 | In-memory repositories | Hoàn thành phần lõi và application boundary | F11 |
 | F13 | Query and evidence models | Hoàn thành contract và serialization | F01, F07 |
-| F14 | Storage adapters | Chưa thực hiện | F11, F12 |
+| F14 | Storage adapters | Đang thực hiện: Neo4j foundation | F11, F12 |
 
 ## 4. F01 — Domain models
 
@@ -521,14 +521,23 @@ Checklist:
 
 Chỉ bắt đầu sau khi version chain, validity và snapshot đã ổn định.
 
+**Trạng thái:** đã hoàn thành phần nền Neo4j ngày 12/09/2026 gồm strict domain
+codec, schema initialization và explicit transaction executor. Các repository
+Neo4j và adapter vector vẫn chưa thực hiện.
+
 Checklist Neo4j:
 
-- [ ] Constraint cho ID của mọi node chính.
-- [ ] Index cho document ID, provision ID và khoảng hiệu lực.
+- [x] Constraint duy nhất cho deterministic domain ID.
+- [x] Index cho document ID, provision ID, loại node và khoảng hiệu lực.
+- [x] Constraint ID riêng cho mọi relationship type đã định nghĩa.
+- [x] Codec giữ versioned domain payload làm nguồn dữ liệu authoritative.
+- [x] Indexed projection không được dùng để tái dựng ngữ nghĩa domain.
+- [x] Explicit transaction executor hỗ trợ commit, rollback và chống nested.
+- [ ] Repository implementation cho document/provision/version/event/graph.
 - [ ] `CONTAINS`, `VERSION_OF`, `CAUSED_BY` và quan hệ pháp lý.
 - [ ] Upsert theo deterministic ID.
 - [ ] Truy vấn snapshot hoặc subgraph tại `t`.
-- [ ] Không dùng internal Neo4j ID làm domain ID.
+- [x] Không dùng internal Neo4j ID làm domain ID.
 
 Checklist vector store:
 
@@ -567,17 +576,17 @@ F14 Storage adapters
 
 Ưu tiên gần nhất:
 
-1. Dựng storage adapter trên contract đã ổn định bằng fixture tổng hợp.
+1. Implement Neo4j repositories trên schema/codec/transaction foundation.
 2. Chuẩn bị fixture adapter F08 nhỏ và đã xác minh khi corpus hoàn tất re-check.
 3. Khi fixture thật sẵn sàng, implement từng mapper F08 độc lập và fail-loud.
 
-Sau khi corpus hoàn tất re-check: thực hiện F08 để ánh xạ dữ liệu thật, rồi F10
-để resolve target trên fixture đã xác minh. Không để sự chậm trễ của corpus chặn
-các hợp đồng dữ liệu và repository độc lập nguồn ở trên.
+Sau khi corpus hoàn tất re-check: thực hiện F08 để ánh xạ dữ liệu thật, rồi đối
+chiếu F10 trên fixture đã xác minh. Không để sự chậm trễ của corpus chặn các hợp
+đồng dữ liệu và repository độc lập nguồn ở trên.
 
-F03 và F04–F07 đã có domain logic cùng unit test. Chưa nên bắt đầu storage
-adapter trước khi chốt repository contract và kiểm chứng adapter đầu vào trên
-fixture từ corpus đã re-check.
+F03 và F04–F07 đã có domain logic cùng unit test. Có thể hoàn thành adapter bằng
+fixture tổng hợp, nhưng chưa đưa nó vào pipeline chính trước khi kiểm chứng đầu
+vào trên fixture từ corpus đã re-check.
 
 ## 19. Definition of Done chung
 
@@ -612,6 +621,7 @@ Một thành phần chỉ chuyển sang “Hoàn thành” khi:
 | 11/09/2026 | F13 | Thêm temporal query, exact-snapshot evidence, citation, claim, verifier, answer contract và versioned serialization | 70 test model/serialization; toàn bộ 286 test pass | Query schema độc lập temporal schema; chưa triển khai retrieval/verifier algorithm hoặc công thức metric |
 | 11/09/2026 | F11/F12 | Thêm closure-only version transition và application service persist event delta qua unit of work | Port, behavioral, optimistic closure, rollback và graph tests; toàn bộ 303 test pass | Event edge dùng event ID để nhiều event cùng ngày không xung đột; vector vẫn ở ngoài transaction |
 | 12/09/2026 | F10 | Thêm deterministic target resolver trên repository port | Exact/subtree/document/insertion, ambiguity và fail-safe tests; toàn bộ 318 test pass | Fixture tổng hợp; còn kiểm chứng T3/T6 và tiêu đề bất thường trên corpus thật |
+| 12/09/2026 | F14 | Thêm Neo4j schema, strict domain codec và transaction executor | Codec, schema, transaction commit/rollback và validation tests; toàn bộ 339 test pass | Chưa có concrete Neo4j repositories hoặc integration test với server |
 
 ## 21. Quyết định kiến trúc
 
@@ -754,4 +764,13 @@ Ghi các quyết định ảnh hưởng dài hạn tại đây để tránh thay
   provision hoặc một cấu hình insertion anchor.
 - **Lý do:** chọn nhầm UUID tạo event hợp lệ về hình thức nhưng làm sai toàn bộ
   version chain; trường hợp mơ hồ phải giữ candidate và đi qua review.
+- **Trạng thái:** chấp nhận.
+
+### ADR-018 — Neo4j lưu authoritative versioned payload
+
+- **Quyết định:** mỗi node/cạnh giữ JSON domain đã version hóa làm payload nguồn;
+  các property như `document_id`, `provision_id`, `eff_from`, `eff_to` chỉ là
+  projection phục vụ index và truy vấn.
+- **Lý do:** tránh việc schema Neo4j vô tình định nghĩa lại temporal semantics;
+  decoder luôn kiểm tra ID, kind, endpoint và relation với payload gốc.
 - **Trạng thái:** chấp nhận.

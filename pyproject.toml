@@ -9,6 +9,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=7.4"]
+neo4j = ["neo4j>=6.0,<7"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
