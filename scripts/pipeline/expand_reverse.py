@@ -146,12 +146,25 @@ def main() -> None:
                 f"new documents {len(discovered):,}"
             )
 
+    # Accumulate, never replace. This file is not a run log — build_graph.py
+    # reads it as a permanent part of the seed set, and edges.jsonl is rebuilt
+    # from whatever that set reaches. A second run rediscovers only what is new
+    # (everything earlier is already held, so it is no longer "new"), so
+    # overwriting drops every id the first run found and silently shrinks the
+    # graph on the next build.
+    carried = set()
+    if args.seeds_out.exists():
+        carried = {str(i) for i in json.loads(args.seeds_out.read_text(encoding="utf-8"))}
+    combined = sorted(carried | discovered)
     args.seeds_out.write_text(
-        json.dumps(sorted(discovered), ensure_ascii=False, indent=1), encoding="utf-8"
+        json.dumps(combined, ensure_ascii=False, indent=1), encoding="utf-8"
     )
 
     print(f"\ndiagrams fetched: {diagrams_done:,} | gone (4xx): {gone} | fetch failures: {new_failed}")
-    print(f"NEW documents discovered: {len(discovered):,} -> {args.seeds_out}")
+    print(
+        f"NEW documents discovered: {len(discovered):,} "
+        f"({len(combined):,} total carried in {args.seeds_out})"
+    )
     print("\ninbound relations followed:")
     for code, count in inbound_by_code.most_common():
         print(f"  code {code:>2}: {count:>7,}")

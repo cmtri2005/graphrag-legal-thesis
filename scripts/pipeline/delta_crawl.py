@@ -171,10 +171,12 @@ def main() -> None:
         return
 
     print("\nNow re-run the pipeline; each step refills only what was dropped:")
-    extra = f" --extra-seeds {seeds_path}" if new_count else ""
-    print("  python scripts/pipeline/build_graph.py --max-documents 40000 --extra-seeds data/reverse_seeds.json")
-    if new_count:
-        print(f"    (and again with{extra} to pull the {new_count} new in-domain document(s))")
+    # One run, every seed file. edges.jsonl is regenerated from the documents
+    # a single run reaches, so splitting these across two runs leaves it
+    # holding only the second run's reach — which looks like a successful
+    # crawl and is not.
+    extra = "data/reverse_seeds.json" + (f" {seeds_path}" if new_count else "")
+    print(f"  python scripts/pipeline/build_graph.py --max-documents 40000 --extra-seeds {extra}")
     print("  python scripts/pipeline/expand_reverse.py")
     print("  python scripts/pipeline/fetch_provision_trees.py")
     print("  python scripts/pipeline/fetch_histories.py")

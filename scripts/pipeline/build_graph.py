@@ -24,15 +24,31 @@ from legal_crawler.sources.sitemap import fetch_central_entries
 from legal_crawler.storage.documents import read_json, write_json
 
 
-def load_seed_ids(seeds_path: Path, extra_seeds_path: Path | None = None) -> list[str]:
-    seeds = read_json(seeds_path)
-    ids = {entry["doc_id"] for entries in seeds.values() for entry in entries}
-    if extra_seeds_path:
-        # Stage 2b's finds (data/reverse_seeds.json): documents that acted on
-        # the corpus and so were unreachable by forward-only BFS. They must
-        # enter as seeds or their own references[] never reach edges.jsonl,
-        # even though their JSON is already on disk.
-        ids |= set(read_json(extra_seeds_path))
+def seed_ids_in(value: object) -> set[str]:
+    """The doc ids in a seed file, whichever of the two shapes it uses.
+
+    `seeds.json` and `delta_seeds.json` are domain -> [{doc_id, slug}];
+    `reverse_seeds.json` is a bare list of ids. This used to accept only the
+    second, so passing the first silently contributed the *domain names* as
+    seed ids — four ids that fetch as 404 while the real documents never
+    entered the graph at all.
+    """
+    if isinstance(value, dict):
+        return {entry["doc_id"] for entries in value.values() for entry in entries}
+    return {str(item) for item in value}
+
+
+def load_seed_ids(seeds_path: Path, extra_seeds_paths: list[Path] | None = None) -> list[str]:
+    ids = seed_ids_in(read_json(seeds_path))
+    # Stage 2b's finds (data/reverse_seeds.json): documents that acted on
+    # the corpus and so were unreachable by forward-only BFS. They must
+    # enter as seeds or their own references[] never reach edges.jsonl,
+    # even though their JSON is already on disk. Same for a delta run's new
+    # ids — and since edges.jsonl is rebuilt from whatever this run walks,
+    # every extra seed file has to be passed to the *same* run. Two runs with
+    # one file each leaves edges.jsonl holding only the second one's reach.
+    for path in extra_seeds_paths or []:
+        ids |= seed_ids_in(read_json(path))
     return sorted(ids)
 
 
@@ -98,8 +114,11 @@ def main() -> None:
     parser.add_argument(
         "--extra-seeds",
         type=Path,
-        default=None,
-        help="extra seed ids as a JSON list, e.g. data/reverse_seeds.json from Stage 2b",
+        nargs="*",
+        default=[],
+        help="extra seed files, e.g. data/reverse_seeds.json data/delta_seeds.json. "
+        "Pass every one of them to a single run: edges.jsonl is rebuilt from "
+        "this run's reach alone.",
     )
     parser.add_argument("--max-documents", type=int, default=5000)
     args = parser.parse_args()

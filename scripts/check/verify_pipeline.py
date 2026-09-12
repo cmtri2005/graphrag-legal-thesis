@@ -36,6 +36,42 @@ from legal_crawler.storage.documents import DocumentStore, read_json
 failures: list[str] = []
 
 
+def accounted_gone(data: Path) -> set[str]:
+    """Documents we hold a file for but have since marked removed or failed."""
+    ids: set[str] = set()
+    manifest_path = data / "manifest.sqlite"
+    if manifest_path.exists():
+        ids |= CrawlManifest(manifest_path).removed_ids()
+    failed_path = data / "failed_ids.txt"
+    if failed_path.exists():
+        ids |= {
+            line.split("\t", 1)[0]
+            for line in failed_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        }
+    return ids
+
+
+def known_failures(data: Path, stage: str) -> set[str]:
+    """doc_ids that fetch_failures.txt already accounts for, for one stage.
+
+    The file is the repo's record of "we know about this one" — reading it here
+    is what keeps a named, investigated failure from being reported forever as
+    if it were a fresh inconsistency.
+    """
+    path = data / "fetch_failures.txt"
+    if not path.exists():
+        return set()
+    ids = set()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("#") or not line.strip():
+            continue
+        parts = line.split("\t")
+        if len(parts) >= 2 and parts[0].strip() == stage:
+            ids.add(parts[1].strip())
+    return ids
+
+
 def check(name: str, ok: bool, detail: str = "") -> None:
     print(f"  [{'PASS' if ok else 'FAIL'}] {name}" + (f" — {detail}" if detail else ""))
     if not ok:
@@ -91,6 +127,31 @@ def main() -> None:
 
     orphan_sources = {e["source_id"] for e in edges} - raw_ids
     check("every edge source is a document we hold", not orphan_sources, f"{len(orphan_sources)} orphaned")
+
+    # The opposite direction, and the one the file's own regeneration makes
+    # easy to miss: edges.jsonl is rebuilt from whatever a run walked, so a run
+    # started with the wrong --max-documents or a missing --extra-seeds file
+    # rewrites it covering fewer documents than we hold. Nothing about that
+    # looks like an error — the file is smaller and entirely valid — which is
+    # why it needs a check rather than a reader's attention.
+    # Measured over documents that actually declare references: ~6% of the
+    # corpus is genuinely edgeless (standalone Chỉ thị, Công văn and the like
+    # that cite nothing and are cited by nothing), so counting those would put
+    # a permanent 1,400-document floor under the number and hide a real drop.
+    documents_in_edges = {e["source_id"] for e in edges} | {e["target_id"] for e in edges}
+    gone = accounted_gone(d)
+    with_refs = {
+        doc_id for doc_id in raw_ids
+        if doc_id not in gone and (store.load("raw", doc_id).get("references") or [])
+    }
+    uncovered = with_refs - documents_in_edges
+    check(
+        "edges.jsonl covers every referencing document",
+        len(uncovered) <= len(with_refs) * 0.01,
+        f"{len(uncovered):,} of {len(with_refs):,} documents with references appear in no edge",
+    )
+    if uncovered:
+        print(f"        examples: {sorted(uncovered)[:5]}")
 
     stale_labels = [
         e for e in edges if e["label_vi"] != ref_map.classify(e["reference_type"]).label_vi
@@ -209,6 +270,24 @@ def main() -> None:
         prov_paths = list(prov_dir.glob("*.json"))
         stray = store.ids("provisions") - store.ids("trees")
         check("no provision file without its tree", not stray, f"{len(stray)} stray")
+
+        # And the other direction, which is the one that can hide a real gap: a
+        # document with a populated tree and no provision file. The bulk cause
+        # is benign (no body text came back, so there was nothing to align),
+        # but benign and unexplained have to look different — otherwise a crawl
+        # that half-failed reads exactly like a corpus that is complete.
+        accounted = known_failures(d, "text")
+        textless = []
+        for doc_id in store.ids("trees") - store.ids("provisions"):
+            if doc_id in accounted or not store.load("trees", doc_id):
+                continue
+            textless.append(doc_id)
+        check(
+            "every tree without provision text is accounted for",
+            not textless,
+            f"{len(textless)} unexplained" if textless
+            else f"{len(accounted)} known textless documents",
+        )
 
         # The tree is the yardstick: a node with text must be a node the server
         # actually declared. Anything else means the alignment invented a node,

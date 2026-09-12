@@ -65,3 +65,7 @@ data/*
 # Provenance: when each delta run happened and what it moved. A point-in-time
 # corpus without this is a corpus that can't say "as of when".
 !data/delta_runs.jsonl
+
+# Harness core maintenance binary
+scripts/bin/harness
+scripts/bin/harness.exe
