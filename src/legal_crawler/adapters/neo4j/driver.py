@@ -1,6 +1,7 @@
 """Small synchronous Neo4j driver boundary with explicit transactions."""
 from __future__ import annotations
 
+import sys
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from typing import Any, Protocol, runtime_checkable
@@ -123,7 +124,10 @@ class Neo4jExecutor:
             transaction = session.begin_transaction()
         except Exception as exc:
             if session is not None:
-                session.close()
+                try:
+                    session.close()
+                except Exception:
+                    pass
             raise TransactionError("could not begin Neo4j transaction") from exc
         self._session = session
         self._transaction = transaction
@@ -145,7 +149,7 @@ class Neo4jExecutor:
         finally:
             self._transaction = None
             self._session = None
-            session.close()
+            _close_session(session)
 
     def close(self) -> None:
         if self.in_transaction:
@@ -165,18 +169,31 @@ class Neo4jExecutor:
             raise TypeError("parameters must be a mapping")
         params = dict(parameters)
         if self._transaction is not None:
-            return _consume(self._transaction.run(query, params))
+            try:
+                return _consume(self._transaction.run(query, params))
+            except TransactionError:
+                raise
+            except Exception as exc:
+                raise TransactionError("Neo4j query failed") from exc
 
-        session = self._driver.session(database=self._database)
+        try:
+            session = self._driver.session(database=self._database)
+        except Exception as exc:
+            raise TransactionError("could not open Neo4j session") from exc
         try:
             callback = lambda transaction: _consume(
                 transaction.run(query, params)
             )
-            if write:
-                return session.execute_write(callback)
-            return session.execute_read(callback)
+            try:
+                if write:
+                    return session.execute_write(callback)
+                return session.execute_read(callback)
+            except TransactionError:
+                raise
+            except Exception as exc:
+                raise TransactionError("Neo4j query failed") from exc
         finally:
-            session.close()
+            _close_session(session)
 
 
 def _consume(result: Neo4jResult) -> tuple[dict[str, Any], ...]:
@@ -184,3 +201,13 @@ def _consume(result: Neo4jResult) -> tuple[dict[str, Any], ...]:
     if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
         raise TransactionError("Neo4j result.data() must return a list of records")
     return tuple(dict(row) for row in rows)
+
+
+def _close_session(session: Neo4jSession) -> None:
+    """Translate close failures without hiding an active application error."""
+    active_error = sys.exc_info()[0] is not None
+    try:
+        session.close()
+    except Exception as exc:
+        if not active_error:
+            raise TransactionError("could not close Neo4j session") from exc

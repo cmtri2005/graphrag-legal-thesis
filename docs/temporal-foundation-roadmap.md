@@ -50,7 +50,7 @@ khả năng:
 | F11 | Repository ports | Hoàn thành contract và version transition | F01, F07 |
 | F12 | In-memory repositories | Hoàn thành phần lõi và application boundary | F11 |
 | F13 | Query and evidence models | Hoàn thành contract và serialization | F01, F07 |
-| F14 | Storage adapters | Đang thực hiện: Neo4j foundation | F11, F12 |
+| F14 | Storage adapters | Đang thực hiện: Neo4j authoritative adapter | F11, F12 |
 
 ## 4. F01 — Domain models
 
@@ -521,9 +521,10 @@ Checklist:
 
 Chỉ bắt đầu sau khi version chain, validity và snapshot đã ổn định.
 
-**Trạng thái:** đã hoàn thành phần nền Neo4j ngày 12/09/2026 gồm strict domain
-codec, schema initialization và explicit transaction executor. Các repository
-Neo4j và adapter vector vẫn chưa thực hiện.
+**Trạng thái:** đã hoàn thành phần authoritative Neo4j độc lập dữ liệu ngày
+12/09/2026 gồm codec, schema, transaction executor, concrete repository và
+point-in-time snapshot. Adapter vector vẫn chưa thực hiện; kiểm thử tích hợp
+với server thật chờ môi trường Neo4j.
 
 Checklist Neo4j:
 
@@ -533,11 +534,14 @@ Checklist Neo4j:
 - [x] Codec giữ versioned domain payload làm nguồn dữ liệu authoritative.
 - [x] Indexed projection không được dùng để tái dựng ngữ nghĩa domain.
 - [x] Explicit transaction executor hỗ trợ commit, rollback và chống nested.
-- [ ] Repository implementation cho document/provision/version/event/graph.
-- [ ] `CONTAINS`, `VERSION_OF`, `CAUSED_BY` và quan hệ pháp lý.
-- [ ] Upsert theo deterministic ID.
-- [ ] Truy vấn snapshot hoặc subgraph tại `t`.
+- [x] Repository implementation cho document/provision/version/event/graph.
+- [x] `CONTAINS`, `VERSION_OF`, `CAUSED_BY` và quan hệ pháp lý.
+- [x] Upsert theo deterministic ID.
+- [x] Truy vấn snapshot hoặc subgraph tại `t`.
 - [x] Không dùng internal Neo4j ID làm domain ID.
+- [x] Batch và event application chạy trong một transaction atomic.
+- [x] Version closure dùng optimistic comparison và khóa theo provision chain.
+- [ ] Chạy integration test với Neo4j server thật.
 
 Checklist vector store:
 
@@ -576,9 +580,10 @@ F14 Storage adapters
 
 Ưu tiên gần nhất:
 
-1. Implement Neo4j repositories trên schema/codec/transaction foundation.
+1. Implement vector-store adapter theo version và khoảng hiệu lực trong F14.
 2. Chuẩn bị fixture adapter F08 nhỏ và đã xác minh khi corpus hoàn tất re-check.
-3. Khi fixture thật sẵn sàng, implement từng mapper F08 độc lập và fail-loud.
+3. Khi có Neo4j server, chạy integration test cho schema và Cypher repository.
+4. Khi fixture thật sẵn sàng, implement từng mapper F08 độc lập và fail-loud.
 
 Sau khi corpus hoàn tất re-check: thực hiện F08 để ánh xạ dữ liệu thật, rồi đối
 chiếu F10 trên fixture đã xác minh. Không để sự chậm trễ của corpus chặn các hợp
@@ -622,6 +627,7 @@ Một thành phần chỉ chuyển sang “Hoàn thành” khi:
 | 11/09/2026 | F11/F12 | Thêm closure-only version transition và application service persist event delta qua unit of work | Port, behavioral, optimistic closure, rollback và graph tests; toàn bộ 303 test pass | Event edge dùng event ID để nhiều event cùng ngày không xung đột; vector vẫn ở ngoài transaction |
 | 12/09/2026 | F10 | Thêm deterministic target resolver trên repository port | Exact/subtree/document/insertion, ambiguity và fail-safe tests; toàn bộ 318 test pass | Fixture tổng hợp; còn kiểm chứng T3/T6 và tiêu đề bất thường trên corpus thật |
 | 12/09/2026 | F14 | Thêm Neo4j schema, strict domain codec và transaction executor | Codec, schema, transaction commit/rollback và validation tests; toàn bộ 339 test pass | Chưa có concrete Neo4j repositories hoặc integration test với server |
+| 12/09/2026 | F14 | Thêm concrete Neo4j repository, unit of work, temporal snapshot và graph query | Repository behavior, atomic rollback, version closure và application service tests; toàn bộ 349 test pass | Cypher được kiểm tra qua driver giả lập; integration test với server thật còn chờ hạ tầng |
 
 ## 21. Quyết định kiến trúc
 

@@ -203,6 +203,44 @@ def test_executor_close_delegates_to_driver():
     assert driver.closed
 
 
+def test_executor_translates_session_and_query_failures():
+    class BrokenDriver(FakeDriver):
+        def session(self, *, database):
+            raise RuntimeError("offline")
+
+    executor = Neo4jExecutor(BrokenDriver())
+    with pytest.raises(TransactionError, match="open Neo4j session"):
+        executor.read("RETURN 1")
+
+    class BrokenTransaction(FakeTransaction):
+        def run(self, query, parameters=None):
+            raise RuntimeError("query failed")
+
+    executor = Neo4jExecutor(FakeDriver((FakeSession(BrokenTransaction()),)))
+    with pytest.raises(TransactionError, match="Neo4j query failed"):
+        executor.write("RETURN 1")
+
+
+def test_close_failure_is_translated_without_masking_an_active_query_error():
+    class CloseFailureSession(FakeSession):
+        def close(self):
+            raise RuntimeError("close failed")
+
+    executor = Neo4jExecutor(FakeDriver((CloseFailureSession(),)))
+    with pytest.raises(TransactionError, match="close Neo4j session"):
+        executor.read("RETURN 1")
+
+    class QueryAndCloseFailure(FakeTransaction):
+        def run(self, query, parameters=None):
+            raise RuntimeError("primary query failure")
+
+    session = CloseFailureSession(QueryAndCloseFailure())
+    executor = Neo4jExecutor(FakeDriver((session,)))
+    with pytest.raises(TransactionError, match="Neo4j query failed") as caught:
+        executor.read("RETURN 1")
+    assert "primary query failure" in str(caught.value.__cause__)
+
+
 def test_schema_contains_domain_constraints_temporal_indexes_and_every_relation():
     statements = schema_statements()
     combined = "\n".join(statements)
