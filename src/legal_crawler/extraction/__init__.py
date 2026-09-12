@@ -18,6 +18,12 @@ from .models import (
     WarningCode,
     WarningSeverity,
 )
+from .target_resolver import (
+    TargetResolution,
+    TargetResolutionCode,
+    TargetResolutionError,
+    TargetResolver,
+)
 
 __all__ = [
     "EventMaterializationError",
@@ -33,8 +39,11 @@ __all__ = [
     "ResolvedTarget",
     "SourceSpan",
     "TargetReference",
+    "TargetResolution",
+    "TargetResolutionCode",
+    "TargetResolutionError",
+    "TargetResolver",
     "TargetScope",
     "WarningCode",
     "WarningSeverity",
 ]
-

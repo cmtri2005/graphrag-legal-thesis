@@ -4,7 +4,7 @@
 > hệ thống truy xuất và hỏi đáp hoàn chỉnh. Cập nhật trạng thái bằng checkbox,
 > ngày hoàn thành và ghi chú quyết định ngay trong file này.
 >
-> Cập nhật gần nhất: 11/09/2026.
+> Cập nhật gần nhất: 12/09/2026.
 
 ## 1. Mục tiêu
 
@@ -46,7 +46,7 @@ khả năng:
 | F07 | Snapshot service | Hoàn thành phần lõi | F04, F06 |
 | F08 | VBPL adapters | Chưa thực hiện | F01, F03 |
 | F09 | Amendment extraction models | Hoàn thành phần lõi | F01 |
-| F10 | Target resolver | Chưa thực hiện | F08, F09 |
+| F10 | Target resolver | Hoàn thành lõi độc lập dữ liệu | F09; F08 để kiểm chứng dữ liệu thật |
 | F11 | Repository ports | Hoàn thành contract và version transition | F01, F07 |
 | F12 | In-memory repositories | Hoàn thành phần lõi và application boundary | F11 |
 | F13 | Query and evidence models | Hoàn thành contract và serialization | F01, F07 |
@@ -189,8 +189,8 @@ Checklist:
 **Trạng thái:** hoàn thành phần lõi ngày 11/09/2026. Bốn thao tác chính trong
 phạm vi đề cương (`AMEND`, `SUPPLEMENT`, `REPEAL`, `REPLACE`) đã có executable
 domain logic; `CORRECT` dùng chung quy tắc tạo version mới. Tạm ngưng và khôi
-phục được giữ lại trong vocabulary nhưng chưa tự suy diễn khi chưa chốt mô hình
-dữ liệu.
+phục được giữ lại trong vocabulary như phần mở rộng nhưng không thuộc tập thao
+tác L2 chính thức cần hoàn thành trong đề cương.
 
 Checklist:
 
@@ -199,8 +199,8 @@ Checklist:
 - [x] `SUPPLEMENT`: bổ sung nội dung hoặc node mới.
 - [x] `REPEAL`: đóng hiệu lực mà không tạo text version mới.
 - [x] `CORRECT`: tạo phiên bản có provenance từ văn bản đính chính.
-- [ ] `SUSPEND`: ghi khoảng tạm ngưng.
-- [ ] `RESUME`: kết thúc khoảng tạm ngưng.
+- [ ] `SUSPEND`: phần mở rộng, ghi khoảng tạm ngưng.
+- [ ] `RESUME`: phần mở rộng, kết thúc khoảng tạm ngưng.
 - [x] Từ chối áp dụng event `needs_review` hoặc `rejected`.
 - [x] Từ chối event thiếu `effective_on`.
 - [x] Từ chối event chưa resolve target.
@@ -378,18 +378,25 @@ bản.
 
 **File dự kiến:** `src/legal_crawler/extraction/target_resolver.py`.
 
+**Trạng thái:** hoàn thành lõi độc lập dữ liệu ngày 12/09/2026. Resolver làm
+việc trên repository port và fixture tổng hợp; việc hiệu chỉnh/đối chiếu với
+tiêu đề bất thường trong corpus được giữ lại đến khi dữ liệu hoàn tất re-check.
+
 Checklist:
 
-- [ ] Resolve Điều theo document và số điều.
-- [ ] Resolve Khoản trong đúng Điều.
-- [ ] Resolve Điểm trong đúng Khoản.
-- [ ] Resolve nhiều target trong cùng câu.
-- [ ] Resolve toàn bộ cây con khi target là Chương/Mục/Điều.
-- [ ] Xử lý tiêu đề node bất thường hoặc không đánh số.
-- [ ] Không chọn tùy tiện khi có nhiều candidate.
-- [ ] Trả `needs_review` khi không resolve duy nhất.
-- [ ] Ghi lại candidate và lý do chọn/bỏ.
-- [ ] Test các mẫu sửa đổi T3 và T6.
+- [x] Resolve Điều theo document và số điều.
+- [x] Resolve Khoản trong đúng Điều.
+- [x] Resolve Điểm trong đúng Khoản.
+- [x] Resolve nhiều target trong cùng câu và giữ thứ tự reference.
+- [x] Resolve toàn bộ cây con khi target là Chương/Mục/Điều.
+- [x] Không fuzzy-match hoặc đoán tiêu đề bất thường/không đánh số.
+- [ ] Kiểm chứng quy tắc trên tiêu đề bất thường từ corpus thật.
+- [x] Không chọn tùy tiện khi có nhiều candidate.
+- [x] Trả `needs_review` khi không resolve duy nhất.
+- [x] Ghi lại candidate và mã lý do có kiểu cho mọi outcome.
+- [x] Resolve insertion parent/sibling và từ chối hai anchor không nhất quán.
+- [x] Fixture tổng hợp bao phủ multi-step locator và partial-subtree semantics.
+- [ ] Test trực tiếp các mẫu T3 và T6 từ corpus sau re-check.
 
 ## 14. F11 — Repository ports
 
@@ -560,9 +567,9 @@ F14 Storage adapters
 
 Ưu tiên gần nhất:
 
-1. Chuẩn bị fixture adapter F08 nhỏ và đã xác minh trong khi chờ corpus hoàn tất
-   re-check.
-2. Khi fixture sẵn sàng, implement từng mapper F08 độc lập và fail-loud.
+1. Dựng storage adapter trên contract đã ổn định bằng fixture tổng hợp.
+2. Chuẩn bị fixture adapter F08 nhỏ và đã xác minh khi corpus hoàn tất re-check.
+3. Khi fixture thật sẵn sàng, implement từng mapper F08 độc lập và fail-loud.
 
 Sau khi corpus hoàn tất re-check: thực hiện F08 để ánh xạ dữ liệu thật, rồi F10
 để resolve target trên fixture đã xác minh. Không để sự chậm trễ của corpus chặn
@@ -604,6 +611,7 @@ Một thành phần chỉ chuyển sang “Hoàn thành” khi:
 | 11/09/2026 | F12 | Thêm authoritative in-memory repositories, unit of work, live snapshot và temporal vector search | Behavioral, rollback, hierarchy, boundary và vector tests; toàn bộ 216 test pass | Contract suite có thể mở rộng bằng cách thêm factory adapter; vector nằm ngoài authoritative transaction |
 | 11/09/2026 | F13 | Thêm temporal query, exact-snapshot evidence, citation, claim, verifier, answer contract và versioned serialization | 70 test model/serialization; toàn bộ 286 test pass | Query schema độc lập temporal schema; chưa triển khai retrieval/verifier algorithm hoặc công thức metric |
 | 11/09/2026 | F11/F12 | Thêm closure-only version transition và application service persist event delta qua unit of work | Port, behavioral, optimistic closure, rollback và graph tests; toàn bộ 303 test pass | Event edge dùng event ID để nhiều event cùng ngày không xung đột; vector vẫn ở ngoài transaction |
+| 12/09/2026 | F10 | Thêm deterministic target resolver trên repository port | Exact/subtree/document/insertion, ambiguity và fail-safe tests; toàn bộ 318 test pass | Fixture tổng hợp; còn kiểm chứng T3/T6 và tiêu đề bất thường trên corpus thật |
 
 ## 21. Quyết định kiến trúc
 
@@ -737,4 +745,13 @@ Ghi các quyết định ảnh hưởng dài hạn tại đây để tránh thay
   mới, event marker và graph edge trong cùng unit of work.
 - **Lý do:** giữ domain semantics độc lập storage và ngăn trạng thái cập nhật
   một phần nếu lỗi xảy ra sau khi version cũ đã đóng.
+- **Trạng thái:** chấp nhận.
+
+### ADR-017 — Target resolver chỉ chấp nhận một structural match duy nhất
+
+- **Quyết định:** chuẩn hóa marker Điều/Khoản/Điểm nhưng không fuzzy-match tiêu
+  đề. Chỉ trả `RESOLVED` khi toàn bộ locator và quan hệ tổ tiên cho đúng một
+  provision hoặc một cấu hình insertion anchor.
+- **Lý do:** chọn nhầm UUID tạo event hợp lệ về hình thức nhưng làm sai toàn bộ
+  version chain; trường hợp mơ hồ phải giữ candidate và đi qua review.
 - **Trạng thái:** chấp nhận.
