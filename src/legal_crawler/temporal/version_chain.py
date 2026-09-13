@@ -17,6 +17,10 @@ class VersionChainError(ValueError):
     """Base class for an invalid operation on a provision's version chain."""
 
 
+class UndatedVersionError(VersionChainError):
+    """A version without a validity interval cannot join an ordered chain."""
+
+
 class ProvisionMismatchError(VersionChainError):
     """A version belongs to a different provision."""
 
@@ -82,6 +86,11 @@ class VersionChain:
         return True
 
     def _validate_candidate(self, version: ProvisionVersion) -> bool:
+        if version.validity is None:
+            # A chain is ordered by validity start; an undated version has no
+            # place in it. Such text stays in the store and is never returned
+            # by a point-in-time query.
+            raise UndatedVersionError(f"version {version.id} has no validity interval")
         if version.provision_id != self.provision_id:
             raise ProvisionMismatchError(
                 f"version belongs to {version.provision_id!r}, expected {self.provision_id!r}"

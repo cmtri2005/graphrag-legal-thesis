@@ -28,7 +28,6 @@ class NodeKind(str, Enum):
     PROVISION = "Provision"
     PROVISION_VERSION = "ProvisionVersion"
     LEGAL_EVENT = "LegalEvent"
-    AGENCY = "Agency"
 
 
 class ProvisionLevel(str, Enum):
@@ -56,20 +55,33 @@ class LegalOperation(str, Enum):
 
 
 class RelationType(str, Enum):
-    """Storage-neutral edge vocabulary for structure, lineage and citations."""
+    """Edge vocabulary, named after what vbpl.vn actually publishes.
 
+    The three structural relations are derived by this package. The rest map
+    one-to-one onto a `referenceType` code in `data/reference_type_map.json`;
+    the comment on each is the portal's own Vietnamese label and how many such
+    edges the corpus holds, so an edge type that stops appearing is visible.
+    """
+
+    # derived here, not published by the source
     CONTAINS = "CONTAINS"
     VERSION_OF = "VERSION_OF"
     CAUSED_BY = "CAUSED_BY"
-    ISSUED_BY = "ISSUED_BY"
-    AMENDS = "AMENDS"
-    SUPPLEMENTS = "SUPPLEMENTS"
-    REPEALS = "REPEALS"
-    REPLACES = "REPLACES"
-    CORRECTS = "CORRECTS"
-    SUSPENDS = "SUSPENDS"
-    RESUMES = "RESUMES"
-    REFERS_TO = "REFERS_TO"
+
+    # published as referenceType, ordered by how common they are
+    ISSUED_UNDER = "ISSUED_UNDER"            # 3  Căn cứ ban hành            67,601
+    AMENDS = "AMENDS"                        # 10 Văn bản được sửa đổi bổ sung 29,129
+    DETAILS = "DETAILS"                      # 9  Được quy định chi tiết      19,559
+    REFERS_TO = "REFERS_TO"                  # 4  Văn bản được dẫn chiếu      17,999
+    REPEALS = "REPEALS"                      # 1  Văn bản bị bãi bỏ           12,159
+    REPLACES = "REPLACES"                    # 12 Văn bản được thay thế        9,772
+    CONSOLIDATES = "CONSOLIDATES"            # 7  Văn bản được hợp nhất           874
+    GUIDES = "GUIDES"                        # 8  Được hướng dẫn áp dụng          349
+    CORRECTS = "CORRECTS"                    # 6  Văn bản được đính chính         209
+    SUSPENDS = "SUSPENDS"                    # 11 Bị tạm ngưng hiệu lực            50
+    HALTS_ENFORCEMENT = "HALTS_ENFORCEMENT"  # 5  Bị đình chỉ thi hành             47
+    INTERPRETS = "INTERPRETS"                # 14 Văn bản được giải thích          24
+    ANNOUNCES = "ANNOUNCES"                  # 2  Văn bản được công bố             23
 
 
 class ExtractionMethod(str, Enum):
@@ -199,7 +211,7 @@ class ProvisionVersion:
     provision_id: str
     ordinal: int
     text: str
-    validity: TemporalInterval
+    validity: TemporalInterval | None = None
     created_by_event_id: str | None = None
     ended_by_event_id: str | None = None
     provenance: tuple[Provenance, ...] = ()
@@ -215,7 +227,8 @@ class ProvisionVersion:
             raise ValueError("version ordinal starts at 1")
 
     def is_valid_at(self, at: date) -> bool:
-        return self.validity.contains(at)
+        """Undated text is never in force: an answer must not rest on a guess."""
+        return self.validity is not None and self.validity.contains(at)
 
 
 @dataclass(frozen=True, slots=True)
@@ -276,7 +289,7 @@ class LegalEvent:
 
     id: str
     operation: LegalOperation
-    source_document_id: str
+    source_document_id: str | None
     target_document_id: str
     effective_on: date | None
     target_provision_ids: tuple[str, ...] = ()
@@ -310,8 +323,8 @@ class LegalEvent:
         return tuple(dict.fromkeys(ordered))
 
     def __post_init__(self) -> None:
-        if not self.id or not self.source_document_id or not self.target_document_id:
-            raise ValueError("event ids and document ids must not be empty")
+        if not self.id or not self.target_document_id:
+            raise ValueError("event id and target_document_id must not be empty")
         if len(set(self.target_provision_ids)) != len(self.target_provision_ids):
             raise ValueError("target_provision_ids must not contain duplicates")
         if self.new_text is not None and not self.new_text.strip():

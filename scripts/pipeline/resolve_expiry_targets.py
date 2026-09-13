@@ -1,29 +1,16 @@
 #!/usr/bin/env python3
-"""Resolve `history[].expiryProvisions` onto provision-tree node ids (Stage 6 L3).
+"""Resolve `history[].expiryProvisions` onto provision ids via `TargetResolver`.
 
-Every history entry that changes a document's effectivity carries an
-`expiryProvisions` list saying *which parts* stopped applying — "Khoản 1, Điều
-3, Chương I" — and 30k of those are article- or clause-level rather than the
-whole document. That is the ground truth the thesis argument needs: a document
-flagged "Còn hiệu lực" whose Khoản 2 was repealed three years ago is exactly
-the case document-level metadata cannot express, and the portal already
-publishes the answer.
+The portal publishes *which* provision stopped applying ("Khoản 1, Điều 3,
+Chương I") but not *when* nor *by whom* — see docs/audit_dataset.md §5. This
+script only parses that string into a locator; the matching is
+`extraction.target_resolver`, so the rules and outcome codes are the same ones
+L2 extraction will use, and the 31k real strings here are its test bed.
 
-So this does not extract anything from statutory text. It parses the portal's
-own structured field and joins it to the tree node it names, which makes the
-result auditable — every row points at a node id a human can open.
-
-Matching is deliberately tolerant about intermediate levels: the path is
-matched against a node's ancestor chain, not its immediate parent, because the
-strings routinely skip a level the tree actually has ("Điều 5, Chương II" for a
-document where Điều 5 sits under Mục 1 under Chương II). A path that lands on
-more than one node is reported as ambiguous rather than guessed at.
-
-Writes `data/expiry_targets.jsonl`, one row per (document, expiry provision).
+Reads the index built by `build_store.py`. Writes `data/expiry_targets.jsonl`.
 
 Usage:
     python scripts/pipeline/resolve_expiry_targets.py
-    python scripts/pipeline/resolve_expiry_targets.py --unresolved   # print the misses
 """
 from __future__ import annotations
 
@@ -33,176 +20,87 @@ import json
 import re
 from pathlib import Path
 
+from legal_crawler.extraction import (
+    ProvisionLocator,
+    ProvisionReferencePart,
+    TargetReference,
+    TargetResolver,
+    TargetScope,
+)
+from legal_crawler.index import TemporalIndex
 from legal_crawler.storage.documents import DocumentStore
+from legal_crawler.temporal import ProvisionLevel
 
-# The portal writes the Vietnamese level word; the tree writes an English one.
 LEVELS = {
-    "phần": "Part",
-    "chương": "Chapter",
-    "mục": "Section",
-    "tiểu mục": "Subsection",
-    "điều": "Article",
-    "khoản": "Clause",
-    "điểm": "Point",
+    "phần": ProvisionLevel.PART,
+    "chương": ProvisionLevel.CHAPTER,
+    "mục": ProvisionLevel.SECTION,
+    "tiểu mục": ProvisionLevel.SUBSECTION,
+    "điều": ProvisionLevel.ARTICLE,
+    "khoản": ProvisionLevel.CLAUSE,
+    "điểm": ProvisionLevel.POINT,
 }
 COMPONENT = re.compile(
-    r"(tiểu mục|phần|chương|mục|điều|khoản|điểm)\s*([^\s,]*)",
-    re.IGNORECASE,
+    r"(tiểu mục|phần|chương|mục|điều|khoản|điểm)\s*((?:thứ\s+[^\s,]+)|[^\s,]*)", re.IGNORECASE
 )
 
 
-def parse_path(text: str) -> list[tuple[str, str]] | None:
-    """"Khoản 1, Điều 3, Chương I" -> [(Chapter, i), (Article, 3), (Clause, 1)].
-
-    Returns outermost-first (the source string runs innermost-first), or None
-    when the string names no addressable component at all.
-    """
-    found = [
-        (LEVELS[level.lower()], ordinal.strip(".:").casefold())
-        for level, ordinal in COMPONENT.findall(text)
-    ]
-    # An ordinal is what makes a component addressable: bare "Mục, Phần" says
-    # only that some section somewhere lapsed, which is not a target.
+def locator_for(text: str) -> ProvisionLocator | None:
+    """"Khoản 1, Điều 3, Chương I" -> Chương I / Điều 3 / Khoản 1 (outermost first)."""
+    found = [(level.lower(), ordinal.strip(".:")) for level, ordinal in COMPONENT.findall(text)]
     if not found or any(not ordinal for _, ordinal in found):
-        return None
-    return list(reversed(found))
-
-
-def index_tree(tree: list[dict]) -> list[tuple[dict, list[tuple[str, str]]]]:
-    """Every node paired with its own (level, ordinal) plus its ancestors'."""
-    out: list[tuple[dict, list[tuple[str, str]]]] = []
-
-    def walk(nodes: list[dict], trail: list[tuple[str, str]]) -> None:
-        for node in nodes:
-            title = (node.get("title") or "").split()
-            ordinal = title[-1].casefold() if len(title) > 1 else ""
-            here = trail + [(node.get("level") or "", ordinal)]
-            out.append((node, here))
-            walk(node.get("children") or [], here)
-
-    walk(tree, [])
-    return out
-
-
-def resolve(path: list[tuple[str, str]], indexed) -> list[dict]:
-    """Nodes whose ancestor chain contains every component, innermost last."""
-    target = path[-1]
-    hits = []
-    for node, trail in indexed:
-        if trail[-1] != target:
-            continue
-        if all(component in trail for component in path):
-            hits.append(node)
-    return hits
+        return None  # e.g. bare "Mục, Phần": says a section lapsed, not which
+    return ProvisionLocator(
+        tuple(ProvisionReferencePart(LEVELS[level], ordinal) for level, ordinal in reversed(found))
+    )
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=Path("data"))
-    parser.add_argument("--unresolved", action="store_true", help="list what failed")
+    parser.add_argument("--index", type=Path, default=Path("data/temporal.sqlite"))
     args = parser.parse_args()
-    store = DocumentStore(args.data)
 
-    stats: collections.Counter[str] = collections.Counter()
-    distinct: set[tuple[str, str]] = set()
-    distinct_resolved: set[tuple[str, str]] = set()
-    misses: collections.Counter[str] = collections.Counter()
-    rows: list[dict] = []
-    tree_ids = set(store.ids("trees"))
+    source = DocumentStore(args.data)
+    index = TemporalIndex(args.index)
+    resolver = TargetResolver(index)
 
-    for doc_id in sorted(store.ids("history")):
-        entries = store.load("history", doc_id).get("history") or []
-        provisions = [
-            (entry, text)
-            for entry in entries
-            for text in (entry.get("expiryProvisions") or [])
-        ]
-        if not provisions:
-            continue
-
-        indexed = index_tree(store.load("trees", doc_id)) if doc_id in tree_ids else []
-        for entry, text in provisions:
-            text = text.strip()
-            row = {
-                "doc_id": doc_id,
-                "raw": text,
-                "at": entry.get("createdDate"),
-                "status": entry.get("content"),
-            }
-            if text.casefold().startswith("toàn bộ"):
-                stats["whole_document"] += 1
-                rows.append(row | {"scope": "document", "node_id": None})
-                continue
-
-            path = parse_path(text)
-            if path is None:
-                stats["unparsed"] += 1
-                misses[f"unparsed: {text[:50]}"] += 1
-                continue
-            if not indexed:
-                stats["no_tree"] += 1
-                continue
-
-            # The portal repeats a document's whole expiry list on every later
-            # status edit, so the same provision arrives many times over. Both
-            # numbers matter: the rows are per history event, but "how much of
-            # this corpus is addressable" is a question about distinct targets.
-            distinct.add((doc_id, text))
-            hits = resolve(path, indexed)
-            if len(hits) == 1:
-                distinct_resolved.add((doc_id, text))
-                stats["resolved"] += 1
-                rows.append(
-                    row
-                    | {
-                        "scope": "provision",
-                        "node_id": hits[0]["id"],
-                        "level": hits[0].get("level"),
-                        "title": hits[0].get("title"),
-                        "path": ["%s %s" % c for c in path],
-                    }
-                )
-            elif hits:
-                stats["ambiguous"] += 1
-                misses[f"ambiguous ({len(hits)} nodes): {text[:50]}"] += 1
-            else:
-                stats["not_in_tree"] += 1
-                misses[f"not in tree: {text[:50]}"] += 1
-
+    codes: collections.Counter[str] = collections.Counter()
+    distinct: dict[tuple[str, str], str] = {}
     out = args.data / "expiry_targets.jsonl"
     with out.open("w", encoding="utf-8") as f:
-        for row in rows:
-            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+        for doc_id in sorted(source.ids("history")):
+            entries = source.load("history", doc_id).get("history") or []
+            for entry in entries:
+                for text in entry.get("expiryProvisions") or []:
+                    text = text.strip()
+                    row = {"doc_id": doc_id, "raw": text,
+                           "recorded_at": entry.get("createdDate"), "status": entry.get("content")}
+                    if text.casefold().startswith("toàn bộ"):
+                        code, provision_ids = "whole_document", []
+                    elif not index.exists(doc_id):
+                        code, provision_ids = "document_not_indexed", []
+                    elif (locator := locator_for(text)) is None:
+                        code, provision_ids = "unparsed", []
+                    else:
+                        reference = TargetReference(f"{doc_id}:{text}", text, TargetScope.EXACT,
+                                                    locator=locator)
+                        result = resolver.resolve(reference, (doc_id,))
+                        code = result.code.value
+                        provision_ids = list(result.target.candidate_provision_ids)
+                    codes[code] += 1
+                    distinct[(doc_id, text)] = code
+                    f.write(json.dumps(row | {"code": code, "provision_ids": provision_ids},
+                                       ensure_ascii=False) + "\n")
 
-    addressable = sum(
-        stats[k] for k in ("resolved", "ambiguous", "not_in_tree", "unparsed", "no_tree")
-    )
-    print(f"wrote {len(rows):,} rows to {out}\n")
-    print(f"  whole-document expiries : {stats['whole_document']:,}")
-    print(f"  provision-level entries : {addressable:,}")
-    for key, label in (
-        ("resolved", "resolved to a tree node"),
-        ("ambiguous", "matched more than one node"),
-        ("not_in_tree", "named a node the tree lacks"),
-        ("unparsed", "no addressable component"),
-        ("no_tree", "document has no tree"),
-    ):
-        share = 100 * stats[key] / addressable if addressable else 0
-        print(f"    {stats[key]:>6} ({share:5.1f}%)  {label}")
-
-    if distinct:
-        print(
-            f"\n  distinct (document, provision) pairs: {len(distinct):,} — "
-            f"{len(distinct_resolved):,} resolved "
-            f"({100 * len(distinct_resolved) / len(distinct):.1f}%)"
-        )
-        print("  the gap is dominated by trees that stop at Điều and never "
-              "declare the Khoản/Điểm the expiry names")
-
-    if args.unresolved:
-        print("\n  most common misses:")
-        for text, count in misses.most_common(25):
-            print(f"    {count:>5}  {text}")
+    total = sum(codes.values())
+    print(f"wrote {total:,} rows to {out}\n")
+    for code, count in codes.most_common():
+        print(f"  {count:>7,} ({100 * count / total:5.1f}%)  {code}")
+    provision_level = {k: v for k, v in distinct.items() if v != "whole_document"}
+    resolved = sum(1 for v in provision_level.values() if v.startswith("resolved"))
+    print(f"\n  distinct provision-level pairs: {len(provision_level):,} — "
+          f"{resolved:,} resolved ({100 * resolved / max(len(provision_level), 1):.1f}%)")
 
 
 if __name__ == "__main__":

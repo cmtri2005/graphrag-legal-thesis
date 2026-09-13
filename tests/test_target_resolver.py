@@ -2,7 +2,7 @@ from dataclasses import replace
 
 import pytest
 
-from legal_crawler.adapters.memory import MemoryUnitOfWork
+from legal_crawler.index import TemporalIndex
 from legal_crawler.extraction import (
     ProvisionLocator,
     ProvisionReferencePart,
@@ -43,15 +43,15 @@ def reference(
     )
 
 
-def seeded_resolver() -> tuple[MemoryUnitOfWork, TargetResolver]:
-    uow = MemoryUnitOfWork()
-    uow.documents.put_many(
+def seeded_resolver() -> tuple[TemporalIndex, TargetResolver]:
+    store = TemporalIndex()
+    store.put_documents(
         (
             LegalDocument(LAW_A, "01/2020/QH", "Luật A"),
             LegalDocument(LAW_B, "02/2020/QH", "Luật B"),
         )
     )
-    uow.provisions.put_many(
+    store.put_provisions(
         (
             Provision(
                 "chapter:a:ii",
@@ -135,7 +135,7 @@ def seeded_resolver() -> tuple[MemoryUnitOfWork, TargetResolver]:
             ),
         )
     )
-    return uow, TargetResolver(uow.documents, uow.provisions)
+    return store, TargetResolver(store)
 
 
 def test_resolves_article_clause_point_by_complete_hierarchical_path():
@@ -413,15 +413,13 @@ def test_resolve_many_preserves_order_and_introduced_id_mapping():
     assert results[1].target.introduced_provision_id == "provision:new-point-dd"
 
 
-def test_resolver_rejects_invalid_batch_and_dependency_contracts():
-    uow, resolver = seeded_resolver()
+def test_resolver_rejects_invalid_batch_contracts():
+    _, resolver = seeded_resolver()
     target = reference(
         "article-7",
         locator((ProvisionLevel.ARTICLE, "7")),
     )
 
-    with pytest.raises(TypeError, match="DocumentRepository"):
-        TargetResolver(object(), uow.provisions)
     with pytest.raises(TargetResolutionError, match="duplicates"):
         resolver.resolve(target, (LAW_A, LAW_A))
     with pytest.raises(TargetResolutionError, match="duplicate IDs"):
@@ -454,3 +452,17 @@ def test_resolution_outcome_rejects_code_and_status_mismatch():
             TargetResolutionCode.LOCATOR_NOT_FOUND,
             "inconsistent outcome",
         )
+
+
+def test_part_ordinal_words_match_on_both_sides():
+    store = TemporalIndex()
+    store.put_documents([LegalDocument(LAW_A, "01/2020/QH", "Luật A")])
+    store.put_provisions([
+        Provision("part:2", LAW_A, ProvisionLevel.PART, "Phần Thứ Hai", None, order_index=0),
+        Provision("art:49", LAW_A, ProvisionLevel.ARTICLE, "Điều 49", "part:2", order_index=1),
+    ])
+    result = TargetResolver(store).resolve(
+        reference("r", locator((ProvisionLevel.PART, "Thứ Hai"), (ProvisionLevel.ARTICLE, "49"))),
+        (LAW_A,),
+    )
+    assert result.target.candidate_provision_ids == ("art:49",)
