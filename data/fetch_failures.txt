@@ -23,3 +23,25 @@ tree	187283	Thông tư số 04/2026/TT-BKHCN Sửa đổi, bổ sung, bãi bỏ 
 tree	27346	Thông tư số 11/2012/TT-BTC Hướng dẫn miễn thuế xuất khẩu đối với hàng hóa là vật liệu xây dựng đưa từ thị trườ
 history	121053	Thông tư số 28/2017/TT-BTC Sửa đổi, bổ sung một số điều của Thông tư số 45/2013/TT-BTC ngày 25 tháng 4 năm 201
 history	142847	Luật Doanh nghiệp số 59/2020/QH14
+#
+# stage `text` — Stage 5b could not run: the document has a provision tree
+# but the API returned an empty documentContent.content, so there is no body
+# text to align to it. Re-fetching raw is what would fix these, not re-running
+# attach_provision_text.py.
+text	121272	Thông tư số 343/2016/TT-BTC Hướng dẫn thực hiện công khai ngân sách nhà nước đối với các cấp ngân sách
+text	13902	Thông tư liên tịch số 71/2007/TTLT/BTC-BNV Hướng dẫn sửa đổi Thông tư liên tịch số 03/2006/TTLT-BTC-BNV ngày 1
+text	186996	Thông tư số 06/2026/TT-BCT Quy định về hạn ngạch thuế quan nhập khẩu để thực hiện Bản Thỏa thuận thúc đẩy thươ
+text	187020	Thông tư số 158/2025/TT-BTC Quy định chi tiết một số điều của Nghị định số 360/2025/NĐ-CP ngày 31 tháng 12 năm
+text	187551	Nghị định số 81/2026/NĐ-CP Quy định xử phạt vi phạm hành chính trong lĩnh vực giao thông đường sắt
+text	187685	Thông tư số 05/2026/TT-BNNMT Sửa đổi, bổ sung một số điều của Thông tư số 38/2025/TT-BNNMT ngày 02 tháng 7 năm
+text	187729	Thông tư số 40/2026/TT-BTC Quy định miễn một số khoản phí, lệ phí nhằm hỗ trợ sản xuất, kinh doanh trong lĩnh 
+text	187734	Nghị định số 366/2025/NĐ-CP Về quản lý và đầu tư vốn nhà nước tại doanh nghiệp
+text	187743	Thông tư số 19/2026/TT-BCT Quy định về tạm ứng cho Quỹ bình ổn giá xăng dầu từ nguồn ngân sách nhà nước, trích
+text	187758	Luật Giám định tư pháp số 105/2025/QH15
+text	187763	Luật Sửa đổi, bổ sung một số điều của Luật Quản lý nợ công số 141/2025/QH15
+text	187768	Thông tư số 101/2025/TT-BTC Hướng dẫn nguyên tắc kế toán áp dụng đối với doanh nghiệp môi giới bảo hiểm
+text	187793	Thông tư số 108/2025/TT-BTC Hướng dẫn lập báo cáo tài chính hợp nhất của đơn vị kế toán hành chính, sự nghiệp
+text	187840	Nghị định số 312/2025/NĐ-CP Quy định cơ chế quản lý tài chính dự án đầu tư theo phương thức đối tác công tư và
+text	8653	Thông tư số 12/LĐTBXH-TT Hướng dẫn việc kiến nghị điều chỉnh Danh mục các doanh nghiệp không được đình công
+text	186725	Thông tư số 102/2025/TT-BNNMT Sửa đổi, bổ sung một số điều của Thông tư số 21/2024/TT-BTNMT ngày 21 tháng 12 n
+text	187639	Nghị quyết số 02/2026/NQ-HĐND Quy định chính sách hỗ trợ đối với học sinh đang học bán trú, học sinh thuộc hộ 

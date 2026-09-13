@@ -76,51 +76,23 @@ src/legal_crawler/
   config.py       per-domain seed keywords, API base URL, sitemap shard range
   models.py       Edge and SitemapEntry dataclasses
 
-  sources/        everything that talks to vbpl.vn
-    api_client.py   the JSON gateway (retry/backoff, pacing)
-    sitemap.py      fetch + parse sitemap shards, slug keyword matching
+  -- acquisition: talks to vbpl.vn, writes data/, never interprets --
+  sources/        api_client.py (JSON gateway), sitemap.py (shards, keyword match)
+  storage/        documents.py (the data/ layout), manifest.py (delta side-table)
+  vocab/          verified code tables, fail-loud on unknown codes
+  graph/          expand.py (Stage 2 BFS), diagram.py (Stage 2b inbound relations)
+  provisions/     tree.py (Stage 5a), text.py (Stage 5b)
 
-  storage/        what is on disk and what we know about it
-    documents.py    the data/ layout; the only JSON read/write path
-    manifest.py     SQLite side-table that makes delta crawling possible
-
-  vocab/          verified code tables, all fail-loud on an unknown code
-    reference_types.py  referenceType -> label + GENEALOGY/OPEN_CITATION
-    status_codes.py     effectivity codes in history[].content
-    field_filter.py     majors/fields used to flag docs for human review
-
-  graph/          building the document graph
-    expand.py       Stage 2 BFS, through genealogy edges only
-    diagram.py      Stage 2b, the inbound "who amended me" relations
-
-  provisions/     structure inside a document
-    tree.py         Stage 5a: Chương/Điều/Khoản/Điểm via a Next.js action
-    text.py         Stage 5b: attaches body text to those tree nodes
-
-scripts/
-  pipeline/       the normal run order, top to bottom
-    collect_seeds.py           Stage 1 — sitemap -> data/seeds.json
-    build_graph.py             Stage 2+3 — BFS expand + fetch + persist (resumable)
-    expand_reverse.py          Stage 2b — close the graph over inbound relations
-    fetch_provision_trees.py   Stage 5a — provision tree per document
-    fetch_histories.py         history backfill — Stage 6's input
-    attach_provision_text.py   Stage 5b — text per provision node (offline)
-    delta_crawl.py             §6b — works out what changed, drops those caches
-
-  review/         the human-in-the-loop pair
-    filter_by_field.py         Stage 4 — flag off-domain seed docs for review
-    apply_field_review.py      records the human decision on that list
-
-  check/          run these before trusting the corpus
-    verify_pipeline.py         consistency gate over every stage
-    measure_recall.py          estimates what the crawl missed (§5e)
-
-  explore/        one-off investigation, not part of a run
-    collect_reference_types.py  scan raw docs, union referenceType codes
-    scrape_luoc_do.py           headless-browser ground truth for each code
-    collect_status_codes.py     scan history/ for unmapped effectivity codes
-    inspect_references.py       inspect one document's reference edges
+  -- interpretation: reads data/, never writes it --
+  temporal/       domain model + formula (2)(3): version_chain, validity, snapshot,
+                  event_applier. Storage-free, stdlib only.
+  extraction/     target_resolver.py: locator ("Khoản 1, Điều 3") -> provision id
+  ingest.py       data/ -> temporal objects; the only module that knows both shapes
+  index.py        TemporalIndex: SQLite, derived from data/, delete and rebuild freely
 ```
+
+`data/` is the system of record. `data/temporal.sqlite` is an index over it, so
+there is no migration story: `build_store.py` deletes it and rebuilds whole.
 
 Data flow: `seeds.json` (Stage 1) → `build_graph.py` BFS-expands and fetches
 into `data/raw/*.json` + `data/manifest.sqlite` + `data/edges.jsonl` (Stage
@@ -186,6 +158,10 @@ python3 scripts/pipeline/fetch_histories.py
 
 # Stage 5b — offline, no network; ~40 min for the whole corpus
 python3 scripts/pipeline/attach_provision_text.py
+
+# Stage 6 — derived query index, then resolve expiryProvisions onto it
+python3 scripts/pipeline/build_store.py            # ~5 min, data/temporal.sqlite
+python3 scripts/pipeline/resolve_expiry_targets.py
 
 # Keeping the corpus current (§6b). --dry-run reports without touching anything;
 # without it, stale caches are deleted and the commands to refill them printed.

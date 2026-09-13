@@ -13,7 +13,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from enum import Enum
 
-from legal_crawler.ports import DocumentRepository, ProvisionRepository
+from legal_crawler.index import TemporalIndex
 from legal_crawler.temporal import ExtractionMethod, Provision, ProvisionLevel
 
 from .models import (
@@ -114,15 +114,9 @@ class TargetResolver:
 
     def __init__(
         self,
-        documents: DocumentRepository,
-        provisions: ProvisionRepository,
+        store: TemporalIndex,
     ) -> None:
-        if not isinstance(documents, DocumentRepository):
-            raise TypeError("documents must satisfy DocumentRepository")
-        if not isinstance(provisions, ProvisionRepository):
-            raise TypeError("provisions must satisfy ProvisionRepository")
-        self._documents = documents
-        self._provisions = provisions
+        self._store = store
 
     def resolve(
         self,
@@ -138,7 +132,7 @@ class TargetResolver:
         missing = tuple(
             document_id
             for document_id in candidates
-            if not self._documents.exists(document_id)
+            if not self._store.exists(document_id)
         )
         if missing:
             return self._unaccepted(
@@ -191,7 +185,7 @@ class TargetResolver:
         if reference.scope is TargetScope.SUBTREE:
             affected = (
                 provision.id,
-                *(item.id for item in self._provisions.descendants_of(provision.id)),
+                *(item.id for item in self._store.descendants_of(provision.id)),
             )
             code = TargetResolutionCode.RESOLVED_SUBTREE
         target = ResolvedTarget(
@@ -410,7 +404,7 @@ class TargetResolver:
 
         matches: list[Provision] = []
         for document_id in document_ids:
-            ordered = self._provisions.document_order(document_id)
+            ordered = self._store.document_order(document_id)
             by_id = {item.id: item for item in ordered}
             current: tuple[Provision, ...] = ()
             for index, (level, key) in enumerate(expected):
@@ -465,8 +459,20 @@ def _document_ids(values: Sequence[str]) -> tuple[str, ...]:
     return result
 
 
+# "Phần Thứ Hai" is how both the portal's trees and its expiry strings number
+# parts; the markers only know digits and Roman numerals.
+_ORDINAL_WORDS = re.compile(
+    r"\bthứ (nhất|hai|ba|tư|năm|sáu|bảy|tám|chín|mười)\b"
+)
+_ORDINAL_VALUES = {
+    "nhất": "1", "hai": "2", "ba": "3", "tư": "4", "năm": "5",
+    "sáu": "6", "bảy": "7", "tám": "8", "chín": "9", "mười": "10",
+}
+
+
 def _normalized(value: str) -> str:
-    return _SPACE.sub(" ", unicodedata.normalize("NFC", value).casefold()).strip()
+    text = _SPACE.sub(" ", unicodedata.normalize("NFC", value).casefold()).strip()
+    return _ORDINAL_WORDS.sub(lambda m: _ORDINAL_VALUES[m.group(1)], text)
 
 
 def _reference_label(level: ProvisionLevel, value: str) -> str | None:
