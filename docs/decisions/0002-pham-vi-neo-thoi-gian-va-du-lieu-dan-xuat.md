@@ -48,7 +48,7 @@ Cùng ngày còn xác nhận thêm ba điều:
 6. **Corpus được backfill rồi đóng băng thành snapshot v2** trước mốc M1
    (05/10/2026). Mọi thí nghiệm dùng v2; mỗi văn bản giữ `last_crawled_at`.
 
-### Quy tắc phân loại (chốt ở T2.1, 15/09/2026)
+### Quy tắc phân loại (chốt ở T2.1, 14/09/2026)
 
 Cài đặt tại `src/legal_crawler/vocab/scope.py`. Thứ tự xét:
 
@@ -71,7 +71,7 @@ quyết định cá biệt với quyết định quy phạm.
 Văn bản trong phạm vi nhưng **body rỗng** chỉ vào hàng đợi điền tay khi còn
 hiệu lực hoặc hết hiệu lực một phần, hoặc khi đã hết hiệu lực toàn bộ nhưng vừa
 là seed vừa nằm trên chuỗi phả hệ. Các văn bản body rỗng còn lại bị loại khỏi
-truy xuất và benchmark (quyết định 15/09/2026).
+truy xuất và benchmark (quyết định 14/09/2026).
 
 ## Alternatives Considered
 

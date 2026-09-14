@@ -213,7 +213,7 @@ Run tests with `pytest` (or `python3 -m pytest`) from the repo root.
 1. **`--max-documents` default is 5000.** The corpus is already past that, so
    a run without the flag stops fetching early. It used to also truncate
    `edges.jsonl`, which was rebuilt from whatever one BFS run walked. Since
-   2026-09-15 `edges.jsonl` is rebuilt from every file in `data/raw`
+   2026-09-14 `edges.jsonl` is rebuilt from every file in `data/raw`
    (`build_graph.py --edges-only` does just that, offline), so it can no longer
    shrink — but still pass a `--max-documents` above your `data/raw` count, or
    new genealogy targets are silently left unfetched.

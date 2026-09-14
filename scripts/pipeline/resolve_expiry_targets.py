@@ -59,6 +59,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=Path("data"))
     parser.add_argument("--index", type=Path, default=Path("data/temporal.sqlite"))
+    parser.add_argument("--out", type=Path, default=None, help="default: <data>/expiry_targets.jsonl")
     args = parser.parse_args()
 
     source = DocumentStore(args.data)
@@ -67,7 +68,7 @@ def main() -> None:
 
     codes: collections.Counter[str] = collections.Counter()
     distinct: dict[tuple[str, str], str] = {}
-    out = args.data / "expiry_targets.jsonl"
+    out = args.out or args.data / "expiry_targets.jsonl"
     with out.open("w", encoding="utf-8") as f:
         for doc_id in sorted(source.ids("history")):
             entries = source.load("history", doc_id).get("history") or []

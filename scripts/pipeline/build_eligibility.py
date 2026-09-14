@@ -15,7 +15,7 @@ Per document:
                         1  not fully repealed
                         2  fully repealed, a seed on a genealogy path
                         Any other empty-bodied document is not needed and stays
-                        out of retrieval and benchmark (decision 2026-09-15).
+                        out of retrieval and benchmark (decision 2026-09-14).
                         A body with text but no provisions needs structure, not
                         typing, and is counted separately.
 

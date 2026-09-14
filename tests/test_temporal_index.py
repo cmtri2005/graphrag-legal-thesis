@@ -87,3 +87,20 @@ def test_order_comes_from_the_walk_not_the_overflowing_portal_counter():
     tree = [{"id": "a", "level": "Article", "title": "Điều 1", "orderIndex": 32767,
              "children": [{"id": "b", "level": "Clause", "title": "Khoản 1", "orderIndex": -32768}]}]
     assert [p.order_index for p in walk_tree(tree, "doc")] == [0, 1]
+
+
+def test_derived_subtree_nodes_resolve_under_their_article():
+    from legal_crawler.ingest import subtree_provisions
+    from legal_crawler.index import TemporalIndex
+    from legal_crawler.temporal import Provision, ProvisionLevel
+
+    index = TemporalIndex(":memory:")
+    index.put_provisions([Provision("a1", "D", ProvisionLevel.ARTICLE, "Điều 1", None, 0)])
+    index.put_provisions(subtree_provisions(
+        {"nodes": [
+            {"id": "a1#k1", "parent_id": "a1", "level": "Clause", "title": "Khoản 1"},
+            {"id": "a1#k1#a", "parent_id": "a1#k1", "level": "Point", "title": "Điểm a"},
+        ]},
+        "D",
+    ))
+    assert [p.id for p in index.descendants_of("a1")] == ["a1#k1", "a1#k1#a"]

@@ -133,7 +133,29 @@ def build_versions(
     return versions
 
 
-def ingest(data_dir: Path, store: TemporalIndex, limit: int | None = None) -> IngestReport:
+def subtree_provisions(record: dict, document_id: str) -> list[Provision]:
+    """Khoản/Điểm split from article text (backfill T5), parents already stored."""
+    return [
+        Provision(
+            id=node["id"],
+            document_id=document_id,
+            level=ProvisionLevel(node["level"]),
+            title=node["title"],
+            parent_id=node["parent_id"],
+        )
+        for node in record["nodes"]
+    ]
+
+
+def ingest(
+    data_dir: Path,
+    store: TemporalIndex,
+    limit: int | None = None,
+    with_subtrees: bool = False,
+) -> IngestReport:
+    """`with_subtrees` also stores the derived Khoản/Điểm of backfill T5 as
+    provisions (no versions): for measuring target resolution before those
+    nodes pass their hand check, never for a point-in-time answer."""
     source = DocumentStore(data_dir)
     report = IngestReport()
     doc_ids = sorted(source.ids("raw"))
@@ -142,6 +164,7 @@ def ingest(data_dir: Path, store: TemporalIndex, limit: int | None = None) -> In
 
     tree_ids = set(source.ids("trees"))
     text_ids = set(source.ids("provisions"))
+    subtree_ids = set(source.ids("derived/subtrees")) if with_subtrees else set()
 
     for n, doc_id in enumerate(doc_ids, 1):
         if n % 1000 == 0:
@@ -160,6 +183,10 @@ def ingest(data_dir: Path, store: TemporalIndex, limit: int | None = None) -> In
             continue
         store.put_provisions(provisions)
         report.bump("provisions", len(provisions))
+        if doc_id in subtree_ids:
+            derived = subtree_provisions(source.load("derived/subtrees", doc_id), doc_id)
+            store.put_provisions(derived)
+            report.bump("subtree_provisions", len(derived))
 
         texts = source.load("provisions", doc_id)["nodes"] if doc_id in text_ids else {}
         if not texts:

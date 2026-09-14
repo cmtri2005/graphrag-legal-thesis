@@ -1,6 +1,6 @@
 # Master Plan — Khóa luận Temporal-Aware KG RAG
 
-Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-15
+Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-14
 
 > **Nguồn sự thật về tiến độ dự án.** Timeline bám theo mục "Kế hoạch thực hiện"
 > trong `DeCuongKLTN_23521635_23521643.docx` (01/09/2026 – 01/02/2027).
@@ -87,8 +87,8 @@ lực của cả văn bản (`src/legal_crawler/ingest.py`), tức mới tương
 | P2.4 | Cây Chương/Mục/Điều/Khoản/Điểm | NMT | ✅ | `data/trees/` phủ 99,9% |
 | P2.5 | Gắn nội dung chữ vào từng nút | NMT | ✅ | `data/provisions/` phủ 98,97% nút khớp được; 778 VB trong hàng đợi review |
 | P2.6 | Delta crawl và mốc "as of" | CMT | ✅ | `scripts/pipeline/delta_crawl.py`, `data/delta_runs.jsonl` |
-| P2.7 | Sao lưu snapshot ra ngoài máy | CMT | ✅ | 15/09: `pull_snapshot.sh` tải v1 từ HF, sha256 OK, `verify_pipeline.py` pass trên bản tải về (backfill T0.1) |
-| P2.8 | Quy tắc phạm vi QPPL và cờ `temporal_anchor` | CMT, NMT | ✅ | 15/09: `vocab/scope.py` + `build_eligibility.py`; 20.318 QPPL trung ương, 16.993 đủ điều kiện benchmark; hàng đợi điền tay 308 (backfill T2) |
+| P2.7 | Sao lưu snapshot ra ngoài máy | CMT | ✅ | 14/09: `pull_snapshot.sh` tải v1 từ HF, sha256 OK, `verify_pipeline.py` pass trên bản tải về (backfill T0.1) |
+| P2.8 | Quy tắc phạm vi QPPL và cờ `temporal_anchor` | CMT, NMT | ✅ | 14/09: `vocab/scope.py` + `build_eligibility.py`; 20.318 QPPL trung ương, 16.993 đủ điều kiện benchmark; hàng đợi điền tay 308 (backfill T2) |
 | P2.9 | Sửa gốc pipeline; backfill 1.017 diagram; 19 VB không sinh cạnh | CMT | 🟡 | `edges.jsonl` là hàm thuần của `data/raw`; closure hội tụ (backfill T1, T3.1) |
 | P2.10 | Candidate thời gian cấp văn bản: `effTo` từ văn bản bãi bỏ duy nhất, `issueDate` làm cận dưới | CMT, NMT | ⬜ | Chỉ candidate đã duyệt mới vào truy vấn strict (backfill T4) |
 | P2.11 | Tách Khoản/Điểm từ HTML của Điều | NMT | ⬜ | Đo trên v1: 6.815/7.620 expiry chưa định vị có marker; đạt ngưỡng chính xác T5.2 (backfill T5) |
@@ -303,5 +303,5 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-13 | Refactor sang index SQLite, xóa adapter Neo4j/vector; snapshot lên HF | commit `5b8ee70`, `fa90cb5` |
 | 2026-09-14 | Chốt stack Neo4j + Milvus (ADR 0001); lập master plan; dọn tài liệu cũ | File này |
 | 2026-09-14 | Review bản nháp backfill; chốt phạm vi QPPL, vai trò VBHN, tách Khoản/Điểm, snapshot v2 (ADR 0002). Đo: 6.815/7.620 expiry chưa định vị có marker; ngày history `T00:00` lệch +1 | `backfill-corpus-v2.md` |
-| 2026-09-15 | Backfill T0 (snapshot v1 kiểm chứng) và T1 (edges thuần từ raw, review queue chính xác, `align()` +4.199 node, chuẩn hóa ngày history, `anchor_problem`). Lộ 115 đích phả hệ chưa tải → T3.1 | `backfill-corpus-v2.md` mục Validation |
-| 2026-09-15 | Backfill T2: phạm vi QPPL trung ương (20.318), hàng đợi điền tay 308, phát hiện 1.626 QPPL có chữ nhưng không có cấu trúc | `backfill-corpus-v2.md` |
+| 2026-09-14 | Backfill T0 (snapshot v1 kiểm chứng) và T1 (edges thuần từ raw, review queue chính xác, `align()` +4.199 node, chuẩn hóa ngày history, `anchor_problem`). Lộ 115 đích phả hệ chưa tải → T3.1 | `backfill-corpus-v2.md` mục Validation |
+| 2026-09-14 | Backfill T2: phạm vi QPPL trung ương (20.318), hàng đợi điền tay 308, phát hiện 1.626 QPPL có chữ nhưng không có cấu trúc | `backfill-corpus-v2.md` |

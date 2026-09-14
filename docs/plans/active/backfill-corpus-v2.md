@@ -4,7 +4,7 @@ Date: 2026-09-14
 
 ## Status
 
-Active. Chưa bắt đầu triển khai. Chốt sau buổi review bản nháp
+Active. Đang triển khai: T0–T2 xong, T3.1 đang chạy, code T4/T5 đã có. Chốt sau buổi review bản nháp
 `phuong-an-dien-khuyet-va-backfill-du-lieu.md`.
 
 ## Outcome
@@ -77,7 +77,7 @@ T4 và T5 chạy song song được sau T3.
 | T1.1 | `edges.jsonl` sinh từ **toàn bộ** `data/raw/*`, không từ kết quả BFS (R4) | CMT | Hai lần chạy `build_graph.py` với seed khác nhau cho cùng một file; 19 văn bản thiếu cạnh có cạnh; có test |
 | T1.2 | Review queue tính từ toàn bộ `data/provisions/`; gate so khớp đúng tập ID | NMT | Thiếu hoặc thừa một ID thì `verify_pipeline.py` fail; chạy lại cho kết quả giống hệt |
 | T1.3 | `align()`: chỉ nối theo ID khi `tree_ids ∩ paragraph_ids ≠ ∅`; marker bổ sung node còn thiếu, không ghi đè text lấy theo ID | NMT | Test HTML có ID lạ; chạy thử song song trên 778 văn bản vào thư mục tạm; không văn bản nào có số node text > số node cây; ≥ 4.187 node tăng hoặc giải trình được |
-| T1.4 | Hàm chuẩn hóa ngày history (`T00:00` → trừ 1 ngày; `T07:00` → giữ nguyên) | CMT | Có test; sau chuẩn hóa ≥ 99% dòng `DATE_HL` do `Job` ghi trùng `effFrom`; xác nhận tay trên ≥ 20 văn bản gốc |
+| T1.4 | Hàm chuẩn hóa ngày history theo (mã, giờ ghi): `DATE_HL`/`DATE_HHL` lúc `T00:00` → trừ 1 ngày; lúc `T07:00` và `DATE_BH` → giữ nguyên | CMT | Có test; sau chuẩn hóa ≥ 99% dòng `DATE_HL` do `Job` ghi trùng `effFrom`; xác nhận tay trên ≥ 20 văn bản gốc |
 | T1.5 | Một hàm duy nhất phân loại lỗi khoảng hiệu lực, dùng chung cho `data_status.py`, `ingest.py`, `verify_pipeline.py` | CMT | Tính cả `effTo == effFrom` (74) cùng `effTo < effFrom` (29); ba nơi cho cùng một con số |
 
 ### T2 — Quy tắc phạm vi (21/09 – 23/09) · CMT, NMT
@@ -109,7 +109,7 @@ T4 và T5 chạy song song được sau T3.
 
 | ID | Việc | Tiêu chí xong |
 |---|---|---|
-| T5.1 | Tách tất định: đoạn văn bắt đầu bằng `N.` là Khoản, `x)` là Điểm của Khoản gần nhất; ID `{article_uuid}#k{N}` và `#k{N}.{x}`; lưu ở `data/derived/subtrees/{doc}.json` với `method=RULE` | Test gồm: "1.000 đồng" không phải Khoản; điểm `đ)`; đoạn trích dẫn trong văn bản sửa đổi không bị tách; Điều không có marker thì bỏ qua |
+| T5.1 | Tách tất định: đoạn văn bắt đầu bằng `N.` là Khoản, `x)` là Điểm của Khoản gần nhất; ID `{article_uuid}#k{N}` và `{clause_id}#{x}`; lưu ở `data/derived/subtrees/{doc}.json` với `method=article_text_split` | Test gồm: "1.000 đồng" không phải Khoản; điểm `đ)`; đoạn trích dẫn trong văn bản sửa đổi không bị tách; Điều không có marker thì bỏ qua |
 | T5.2 | Đo độ chính xác trên 100 node tách được, phân tầng theo loại văn bản | Ngưỡng chấp nhận chốt trước khi đo (xem Decisions); ghi kết quả vào file này |
 | T5.3 | `target_resolver` đọc cây nguồn ∪ cây dẫn xuất; chạy lại `resolve_expiry_targets.py` | Resolve ≥ 29.000/31.175 hoặc giải trình được; số `ambiguous_locator` không tăng |
 | T5.4 | Tính lại tập văn bản chỉ có một văn bản tác động và tập bộ ba gold (843 trên v1) | Số mới được cập nhật vào master plan P3.10 |
@@ -133,9 +133,9 @@ T4 và T5 chạy song song được sau T3.
 
 ## Progress
 
-- [x] T0 khóa baseline (15/09)
+- [x] T0 khóa baseline (14/09)
 - [x] T1.1 · [x] T1.2 · [x] T1.3 · [ ] T1.4 (chờ kiểm tay 20 văn bản) · [x] T1.5
-- [x] T2.1 · [x] T2.2 · [x] T2.3 (15/09)
+- [x] T2.1 · [x] T2.2 · [x] T2.3 (14/09)
 - [ ] T3.1 · [ ] T3.2 · [ ] T3.3 (snapshot v2)
 - [ ] T4.1 · [ ] T4.2 · [ ] T4.3 · [ ] T4.4
 - [ ] T5.1 · [ ] T5.2 · [ ] T5.3 · [ ] T5.4
@@ -150,25 +150,25 @@ T4 và T5 chạy song song được sau T3.
   bao giờ bị ghi đè.
 - 2026-09-14: Quy tắc chuẩn hóa ngày history được chấp nhận làm giả thuyết; chỉ
   có hiệu lực sau khi T1.4 xác nhận.
-- 2026-09-15: Ngưỡng T5.2 là **≥ 95% node tách đúng trên 100 node kiểm tay**.
+- 2026-09-14: Ngưỡng T5.2 là **≥ 95% node tách đúng trên 100 node kiểm tay**.
   Không đạt thì không promote cây dẫn xuất.
-- 2026-09-15: T4.3 **duyệt toàn bộ** khoảng 395 candidate `effTo`, không lấy mẫu.
-- 2026-09-15: PDF văn bản gốc **tải được từ vbpl.vn** (người dùng thử trực tiếp).
+- 2026-09-14: T4.3 **duyệt toàn bộ** khoảng 395 candidate `effTo`, không lấy mẫu.
+- 2026-09-14: PDF văn bản gốc **tải được từ vbpl.vn** (người dùng thử trực tiếp).
   Nguồn điền tay theo thứ tự: PDF gốc vbpl → Công báo → Thư Viện Pháp Luật.
-- 2026-09-15: Văn bản QPPL trung ương body rỗng, đã hết hiệu lực và không nằm
+- 2026-09-14: Văn bản QPPL trung ương body rỗng, đã hết hiệu lực và không nằm
   trên chuỗi phả hệ **không được ghi là giới hạn**. Chúng bị **loại khỏi tập
   truy xuất và benchmark** (`in_scope=false`, lý do `no_text_not_needed`) nếu
   không cần cho graph hoặc benchmark. File trên đĩa vẫn giữ nguyên.
-- 2026-09-15: Danh sách điền tay được **sinh bằng script** từ tiêu chí T2, thay
+- 2026-09-14: Danh sách điền tay được **sinh bằng script** từ tiêu chí T2, thay
   cho `danh-sach-van-ban-can-phuc-hoi-text-thu-cong.md`. Tiêu chí mới thêm nhóm
   cây `[]` + body rỗng (850 văn bản VBQPPL trung ương trên v1).
 
 ## Validation
 
-- **T0.1 (15/09):** `scripts/pull_snapshot.sh` tải snapshot v1 từ HF vào thư mục
+- **T0.1 (14/09):** `scripts/pull_snapshot.sh` tải snapshot v1 từ HF vào thư mục
   tạm; sha256 OK; `verify_pipeline.py --data <bản tải về>` pass; số file ở
   mọi tầng khớp máy làm việc; 0 file bị sửa sau `SNAPSHOT.txt`.
-- **T0.2 baseline v1 (15/09, trước T1):**
+- **T0.2 baseline v1 (14/09, trước T1):**
 
   | Đại lượng | Giá trị |
   |---|---:|
@@ -180,7 +180,7 @@ T4 và T5 chạy song song được sau T3.
   | Văn bản / node không neo thời gian (`data_status.py`) | 1.819 / 49.818 (4,4%) |
   | `verify_pipeline.py` | pass (gate cũ) |
 
-- **Sau T1 (15/09):**
+- **Sau T1 (14/09):**
 
   | Việc | Kết quả |
   |---|---|
@@ -190,7 +190,7 @@ T4 và T5 chạy song song được sau T3.
   | T1.4 | Quy tắc chuẩn hóa theo (mã, giờ ghi): `DATE_HL`/`DATE_HHL` lúc `T00:00` trừ 1 ngày, lúc `T07:00` giữ nguyên; `DATE_BH` lúc `T00:00` **không** dịch (đo được: dịch cả `DATE_BH` thì 0% khớp). Khớp sau chuẩn hóa: DATE_HL 99,76% (20.663/20.712), DATE_HHL 99,92%, DATE_BH 99,86%. **Còn thiếu:** kiểm tay 20 văn bản dưới đây bằng PDF gốc |
   | T1.5 | Một hàm `anchor_problem` dùng chung cho `data_status.py` và `ingest.py`; tính cả `effTo == effFrom`. Số mới: **1.893 văn bản / 53.508 node (4,7%)** không neo thời gian; nhóm khoảng rỗng 451 → 3.899 node |
 
-- **Sau T2 (15/09):** `scripts/pipeline/build_eligibility.py` →
+- **Sau T2 (14/09):** `scripts/pipeline/build_eligibility.py` →
   `data/derived/eligibility.jsonl` và `data/derived/manual_text_queue.tsv`.
 
   | Tập trong phạm vi (20.318 QPPL trung ương) | Số văn bản |

@@ -6,7 +6,7 @@ graph — a Công văn can still be the document that repealed something — it 
 just never evidence.
 
 The portal's own `docType.parentCode` is the classification, with two
-corrections measured on 2026-09-15:
+corrections measured on 2026-09-14:
 
 * `organization.orgType` is not trusted for "local": 26 documents issued by
   Chính phủ, Thủ tướng or Quốc hội carry the local value. The issuing agency's
