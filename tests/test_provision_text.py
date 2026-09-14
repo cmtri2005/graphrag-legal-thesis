@@ -155,3 +155,11 @@ def test_low_id_coverage_is_topped_up_by_markers_without_replacing_joined_text()
 
 def test_good_id_coverage_is_left_alone():
     assert align(TREE, TAGGED_HTML).method == "id"
+
+
+def test_visible_text_ignores_shells_and_entities():
+    from legal_crawler.provisions.text import has_visible_text
+
+    assert not has_visible_text("")
+    assert not has_visible_text("<html><head><title>x</title><style>p{}</style></head><body>&nbsp; </body></html>")
+    assert has_visible_text("<body>Điều 1. Có chữ ngoài thẻ khối</body>")

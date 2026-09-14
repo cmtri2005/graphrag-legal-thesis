@@ -135,7 +135,7 @@ T4 và T5 chạy song song được sau T3.
 
 - [x] T0 khóa baseline (15/09)
 - [x] T1.1 · [x] T1.2 · [x] T1.3 · [ ] T1.4 (chờ kiểm tay 20 văn bản) · [x] T1.5
-- [ ] T2.1 · [ ] T2.2 · [ ] T2.3
+- [x] T2.1 · [x] T2.2 · [x] T2.3 (15/09)
 - [ ] T3.1 · [ ] T3.2 · [ ] T3.3 (snapshot v2)
 - [ ] T4.1 · [ ] T4.2 · [ ] T4.3 · [ ] T4.4
 - [ ] T5.1 · [ ] T5.2 · [ ] T5.3 · [ ] T5.4
@@ -189,6 +189,28 @@ T4 và T5 chạy song song được sau T3.
   | T1.3 | Chạy thử song song trên 778 văn bản: 31 văn bản tăng, **+4.199 node**, 0 node mất, 0 text theo ID bị đổi, 0 vượt số node cây. Promote bằng cách xóa 778 file rồi chạy lại: review queue 778 → 752; tổng node có text 1.140.682. Test phát hiện và đã sửa: phần nối tiếp của node theo ID từng nuốt đoạn của Điều kế tiếp |
   | T1.4 | Quy tắc chuẩn hóa theo (mã, giờ ghi): `DATE_HL`/`DATE_HHL` lúc `T00:00` trừ 1 ngày, lúc `T07:00` giữ nguyên; `DATE_BH` lúc `T00:00` **không** dịch (đo được: dịch cả `DATE_BH` thì 0% khớp). Khớp sau chuẩn hóa: DATE_HL 99,76% (20.663/20.712), DATE_HHL 99,92%, DATE_BH 99,86%. **Còn thiếu:** kiểm tay 20 văn bản dưới đây bằng PDF gốc |
   | T1.5 | Một hàm `anchor_problem` dùng chung cho `data_status.py` và `ingest.py`; tính cả `effTo == effFrom`. Số mới: **1.893 văn bản / 53.508 node (4,7%)** không neo thời gian; nhóm khoảng rỗng 451 → 3.899 node |
+
+- **Sau T2 (15/09):** `scripts/pipeline/build_eligibility.py` →
+  `data/derived/eligibility.jsonl` và `data/derived/manual_text_queue.tsv`.
+
+  | Tập trong phạm vi (20.318 QPPL trung ương) | Số văn bản |
+  |---|---:|
+  | Đủ điều kiện benchmark (neo thời gian, có text) | 16.993 |
+  | Body rỗng | 874 |
+  | · vào hàng đợi điền tay: ưu tiên 1 (CHL 95, HHL1P 10, không status 1) | 106 |
+  | · vào hàng đợi điền tay: ưu tiên 2 (HHL, seed, trên chuỗi phả hệ) | 202 |
+  | · loại khỏi truy xuất và benchmark | 566 |
+  | **Có body nhưng không có provision (chưa có cấu trúc)** | **1.626** |
+  | Không neo thời gian: hết hiệu lực toàn bộ thiếu `effTo` / thiếu `effFrom` / khoảng rỗng / thiếu status | 669 / 223 / 102 / 16 |
+
+  Đối chiếu với danh sách tay 152 văn bản: 128 Công văn và 1 văn bản HĐND nằm
+  ngoài phạm vi; 17 vào hàng đợi; 6 QPPL hết hiệu lực toàn bộ không phải seed
+  trên chuỗi phả hệ nên bị loại. 140/308 văn bản trong hàng đợi chỉ có tên PDF
+  chung chung `Template.pdf`, nên chưa chắc có PDF gốc thật.
+
+  **Phát hiện mới cần quyết định:** 1.626 văn bản QPPL trong phạm vi có chữ
+  nhưng không có cây Điều/Khoản, nên hiện không truy xuất được. Chúng cần được
+  dựng cấu trúc (mở rộng T5) hoặc dùng cả văn bản làm một đơn vị.
 
   Mẫu kiểm tay T1.4 — so "có hiệu lực từ ngày" trong PDF gốc với cột `effFrom`:
 

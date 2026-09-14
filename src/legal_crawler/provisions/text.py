@@ -125,6 +125,37 @@ class _Paragraphs(HTMLParser):
         super().close()
 
 
+def has_visible_text(html: str) -> bool:
+    """Whether the body shows any text once markup, head, style and script go.
+
+    `hasContent` is not trusted for this: 287 documents claim content and ship
+    an empty shell or a lone `&nbsp;`.
+    """
+    parser = _Visible()
+    parser.feed(html or "")
+    parser.close()
+    return bool("".join(parser.chunks).replace("\xa0", " ").strip())
+
+
+class _Visible(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.chunks: list[str] = []
+        self._muted = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag in _SKIP_TAGS or tag == "title":
+            self._muted += 1
+
+    def handle_endtag(self, tag):
+        if tag in _SKIP_TAGS or tag == "title":
+            self._muted = max(0, self._muted - 1)
+
+    def handle_data(self, data):
+        if not self._muted:
+            self.chunks.append(data)
+
+
 def parse_paragraphs(html: str) -> list[Paragraph]:
     p = _Paragraphs()
     p.feed(html)

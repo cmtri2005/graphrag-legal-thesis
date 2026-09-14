@@ -48,6 +48,31 @@ Cùng ngày còn xác nhận thêm ba điều:
 6. **Corpus được backfill rồi đóng băng thành snapshot v2** trước mốc M1
    (05/10/2026). Mọi thí nghiệm dùng v2; mỗi văn bản giữ `last_crawled_at`.
 
+### Quy tắc phân loại (chốt ở T2.1, 15/09/2026)
+
+Cài đặt tại `src/legal_crawler/vocab/scope.py`. Thứ tự xét:
+
+1. **Bản dịch** (`isTranslationDoc` hoặc loại "Bản dịch văn bản") → ngoài phạm vi.
+2. **VBHN** (`docType.parentCode = VBHN`) → ngoài phạm vi, chỉ dùng kiểm chứng L3.
+3. **Không phải QPPL**: `parentCode ≠ VBQPPL` và không thuộc 4 loại quy phạm
+   lịch sử (Hiến pháp, Sắc lệnh, Sắc luật, Thông tư liên bộ) → ngoài phạm vi.
+   Gồm Công văn, Chương trình, Thông báo, văn bản hành chính, văn bản hệ
+   thống hóa.
+4. **Địa phương**: tên cơ quan ban hành bắt đầu bằng UBND/HĐND, hoặc (khi không
+   có tên cơ quan) số hiệu chứa HĐND/UBND → ngoài phạm vi. **Không dùng
+   `organization.orgType`**: 26 văn bản của Chính phủ, Thủ tướng, Quốc hội
+   mang giá trị "địa phương".
+5. Còn lại là **QPPL trung ương** → trong phạm vi.
+
+Kết quả trên v1: 20.318 QPPL · 1.243 địa phương · 481 VBHN · 394 không phải QPPL
+· 114 bản dịch. "Quyết định" không được tách thêm: metadata không phân biệt
+quyết định cá biệt với quyết định quy phạm.
+
+Văn bản trong phạm vi nhưng **body rỗng** chỉ vào hàng đợi điền tay khi còn
+hiệu lực hoặc hết hiệu lực một phần, hoặc khi đã hết hiệu lực toàn bộ nhưng vừa
+là seed vừa nằm trên chuỗi phả hệ. Các văn bản body rỗng còn lại bị loại khỏi
+truy xuất và benchmark (quyết định 15/09/2026).
+
 ## Alternatives Considered
 
 1. Điền khuyết cho mọi loại văn bản. Bị loại vì tạo ra hiệu lực không có thật.

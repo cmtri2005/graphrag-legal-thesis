@@ -26,7 +26,7 @@ Active. Hiện ở cuối Giai đoạn 1; Giai đoạn 2–3 đang đi trước 
 | GĐ | Thời gian | Nội dung | Trạng thái | Việc xong | So với kế hoạch |
 |---|---|---|---|---:|---|
 | 1 | 01/09 – 14/09 | Hoàn thiện đề cương | 🟡 | 2/6 | Đến hạn hôm nay |
-| 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | 🟡 | 7/12 | Lõi xong; đang backfill (T0, T1 xong) |
+| 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | 🟡 | 8/12 | Lõi xong; đang backfill (T0–T2 xong) |
 | 3 | 06/10 – 26/10 | Xây dựng đồ thị tri thức (L0–L3) | 🟡 | 4/19 | Bắt đầu sớm; **đường găng** |
 | 4 | 27/10 – 16/11 | Bộ dữ liệu ViLexTime | ⬜ | 0/9 | — |
 | 5 | 17/11 – 30/11 | Cài đặt & đánh giá đường cơ sở | ⬜ | 0/14 | — |
@@ -34,7 +34,7 @@ Active. Hiện ở cuối Giai đoạn 1; Giai đoạn 2–3 đang đi trước 
 | 7 | 22/12 – 04/01 | Thực nghiệm & phân tích | ⬜ | 0/5 | — |
 | 8 | 05/01 – 11/01 | Viết bài báo khoa học | ⬜ | 0/3 | — |
 | 9 | 12/01 – 01/02 | Hoàn thiện khóa luận | ⬜ | 0/5 | — |
-| | | **Tổng** | | **13/80** | |
+| | | **Tổng** | | **14/80** | |
 
 ### Mốc kiểm tra
 
@@ -88,7 +88,7 @@ lực của cả văn bản (`src/legal_crawler/ingest.py`), tức mới tương
 | P2.5 | Gắn nội dung chữ vào từng nút | NMT | ✅ | `data/provisions/` phủ 98,97% nút khớp được; 778 VB trong hàng đợi review |
 | P2.6 | Delta crawl và mốc "as of" | CMT | ✅ | `scripts/pipeline/delta_crawl.py`, `data/delta_runs.jsonl` |
 | P2.7 | Sao lưu snapshot ra ngoài máy | CMT | ✅ | 15/09: `pull_snapshot.sh` tải v1 từ HF, sha256 OK, `verify_pipeline.py` pass trên bản tải về (backfill T0.1) |
-| P2.8 | Quy tắc phạm vi QPPL và cờ `temporal_anchor` | CMT, NMT | ⬜ | ADR 0002; `data/derived/eligibility.jsonl`; skip-list ở tầng đọc (backfill T2) |
+| P2.8 | Quy tắc phạm vi QPPL và cờ `temporal_anchor` | CMT, NMT | ✅ | 15/09: `vocab/scope.py` + `build_eligibility.py`; 20.318 QPPL trung ương, 16.993 đủ điều kiện benchmark; hàng đợi điền tay 308 (backfill T2) |
 | P2.9 | Sửa gốc pipeline; backfill 1.017 diagram; 19 VB không sinh cạnh | CMT | 🟡 | `edges.jsonl` là hàm thuần của `data/raw`; closure hội tụ (backfill T1, T3.1) |
 | P2.10 | Candidate thời gian cấp văn bản: `effTo` từ văn bản bãi bỏ duy nhất, `issueDate` làm cận dưới | CMT, NMT | ⬜ | Chỉ candidate đã duyệt mới vào truy vấn strict (backfill T4) |
 | P2.11 | Tách Khoản/Điểm từ HTML của Điều | NMT | ⬜ | Đo trên v1: 6.815/7.620 expiry chưa định vị có marker; đạt ngưỡng chính xác T5.2 (backfill T5) |
@@ -268,7 +268,7 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | Có dùng H1–H4 không; A4 chỉ là proxy cho H3 | P1.5 | |
 | Chọn embedding model và LLM | P5.1 | |
 | Danh sách loại văn bản QPPL; "Quyết định" lẫn văn bản cá biệt | P2.8 | backfill T2.1 |
-| Ngưỡng chính xác khi tách Khoản/Điểm; cách review candidate `effTo` | P2.10, P2.11 | backfill mục Decisions |
+| 1.626 QPPL có chữ nhưng không có cây Điều/Khoản: dựng cấu trúc hay dùng cả văn bản làm một đơn vị | P2.11, P3.4 | backfill T2 Validation |
 | Hội nghị mục tiêu | P8.3 | |
 
 ## 13. Rủi ro
@@ -304,3 +304,4 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-14 | Chốt stack Neo4j + Milvus (ADR 0001); lập master plan; dọn tài liệu cũ | File này |
 | 2026-09-14 | Review bản nháp backfill; chốt phạm vi QPPL, vai trò VBHN, tách Khoản/Điểm, snapshot v2 (ADR 0002). Đo: 6.815/7.620 expiry chưa định vị có marker; ngày history `T00:00` lệch +1 | `backfill-corpus-v2.md` |
 | 2026-09-15 | Backfill T0 (snapshot v1 kiểm chứng) và T1 (edges thuần từ raw, review queue chính xác, `align()` +4.199 node, chuẩn hóa ngày history, `anchor_problem`). Lộ 115 đích phả hệ chưa tải → T3.1 | `backfill-corpus-v2.md` mục Validation |
+| 2026-09-15 | Backfill T2: phạm vi QPPL trung ương (20.318), hàng đợi điền tay 308, phát hiện 1.626 QPPL có chữ nhưng không có cấu trúc | `backfill-corpus-v2.md` |
