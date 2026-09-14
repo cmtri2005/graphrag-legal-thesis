@@ -32,6 +32,8 @@ decision into `docs/decisions/`; keep task-local choices in the plan.
 
 - [`active/master-plan.md`](active/master-plan.md) — thesis timeline and project
   progress; the source of truth for status.
+- [`active/backfill-corpus-v2.md`](active/backfill-corpus-v2.md) — backfill,
+  scope rules and snapshot v2 before M1 (master plan P2.7–P2.12).
 
 ## Completed Plans
 

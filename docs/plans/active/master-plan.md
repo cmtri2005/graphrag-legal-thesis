@@ -26,7 +26,7 @@ Active. Hiện ở cuối Giai đoạn 1; Giai đoạn 2–3 đang đi trước 
 | GĐ | Thời gian | Nội dung | Trạng thái | Việc xong | So với kế hoạch |
 |---|---|---|---|---:|---|
 | 1 | 01/09 – 14/09 | Hoàn thiện đề cương | 🟡 | 2/6 | Đến hạn hôm nay |
-| 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | 🟡 | 6/10 | Sớm; phần lõi đã xong |
+| 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | 🟡 | 6/12 | Lõi xong; còn backfill và snapshot v2 |
 | 3 | 06/10 – 26/10 | Xây dựng đồ thị tri thức (L0–L3) | 🟡 | 4/19 | Bắt đầu sớm; **đường găng** |
 | 4 | 27/10 – 16/11 | Bộ dữ liệu ViLexTime | ⬜ | 0/9 | — |
 | 5 | 17/11 – 30/11 | Cài đặt & đánh giá đường cơ sở | ⬜ | 0/14 | — |
@@ -34,13 +34,13 @@ Active. Hiện ở cuối Giai đoạn 1; Giai đoạn 2–3 đang đi trước 
 | 7 | 22/12 – 04/01 | Thực nghiệm & phân tích | ⬜ | 0/5 | — |
 | 8 | 05/01 – 11/01 | Viết bài báo khoa học | ⬜ | 0/3 | — |
 | 9 | 12/01 – 01/02 | Hoàn thiện khóa luận | ⬜ | 0/5 | — |
-| | | **Tổng** | | **12/78** | |
+| | | **Tổng** | | **12/80** | |
 
 ### Mốc kiểm tra
 
 | Mốc | Hạn | Điều phải chứng minh được | Trạng thái |
 |---|---|---|---|
-| M1 | 05/10 | Corpus đóng băng; snapshot trên Hugging Face đã tải về kiểm tra được | 🟡 |
+| M1 | 05/10 | **Snapshot v2** đóng băng sau backfill, tải về kiểm tra được ([plan](backfill-corpus-v2.md)) | ⬜ |
 | M2 | 26/10 | Chuỗi phiên bản thật trong Neo4j; `snapshot(u,t)` đúng trên 100 truy vấn đối chiếu tay | ⬜ |
 | M3 | 16/11 | ViLexTime đủ 1.150 câu; Cohen κ ≥ 0,6 trên 300 câu | ⬜ |
 | M4 | 30/11 | **Điểm quyết định B7**: chọn hướng đóng góp phương pháp hay tài nguyên–phân tích | ⬜ |
@@ -87,10 +87,14 @@ lực của cả văn bản (`src/legal_crawler/ingest.py`), tức mới tương
 | P2.4 | Cây Chương/Mục/Điều/Khoản/Điểm | NMT | ✅ | `data/trees/` phủ 99,9% |
 | P2.5 | Gắn nội dung chữ vào từng nút | NMT | ✅ | `data/provisions/` phủ 98,97% nút khớp được; 778 VB trong hàng đợi review |
 | P2.6 | Delta crawl và mốc "as of" | CMT | ✅ | `scripts/pipeline/delta_crawl.py`, `data/delta_runs.jsonl` |
-| P2.7 | Sao lưu snapshot ra ngoài máy | CMT | 🟡 | `data/SNAPSHOT.txt` (13/09). Xong khi `scripts/pull_snapshot.sh` tải về trên máy khác và khớp sha256 |
-| P2.8 | Cờ `temporal_anchor` cho 1.819 VB không neo được thời gian | NMT | ⬜ | Skip-list ở tầng đọc (`docs/audit_dataset.md` §8); đếm được số lần bị chặn |
-| P2.9 | Lấp 1.017 diagram thiếu và 19 VB có references nhưng không sinh cạnh | CMT | ⬜ | `docs/audit_dataset.md` §6 về 0, hoặc có danh sách giải thích |
-| P2.10 | Chốt quy tắc dùng `issueDate` làm cận dưới cho 690 VB thiếu `effFrom` | CMT, NMT | ⬜ | Quyết định được ghi lại; ảnh hưởng trực tiếp `valid(u,t)` |
+| P2.7 | Sao lưu snapshot ra ngoài máy | CMT | 🟡 | `data/SNAPSHOT.txt` (13/09). Xong khi `scripts/pull_snapshot.sh` tải về trên máy khác và khớp sha256 (backfill T0.1) |
+| P2.8 | Quy tắc phạm vi QPPL và cờ `temporal_anchor` | CMT, NMT | ⬜ | ADR 0002; `data/derived/eligibility.jsonl`; skip-list ở tầng đọc (backfill T2) |
+| P2.9 | Sửa gốc pipeline; backfill 1.017 diagram; 19 VB không sinh cạnh | CMT | ⬜ | `edges.jsonl` là hàm thuần của `data/raw`; closure hội tụ (backfill T1, T3.1) |
+| P2.10 | Candidate thời gian cấp văn bản: `effTo` từ văn bản bãi bỏ duy nhất, `issueDate` làm cận dưới | CMT, NMT | ⬜ | Chỉ candidate đã duyệt mới vào truy vấn strict (backfill T4) |
+| P2.11 | Tách Khoản/Điểm từ HTML của Điều | NMT | ⬜ | Đo trên v1: 6.815/7.620 expiry chưa định vị có marker; đạt ngưỡng chính xác T5.2 (backfill T5) |
+| P2.12 | Đóng băng snapshot v2 (M1) | CMT | ⬜ | Backfill T3.3; mọi thí nghiệm dùng v2 |
+
+Chi tiết thực hiện P2.7–P2.12: [`backfill-corpus-v2.md`](backfill-corpus-v2.md).
 
 ## 4. Giai đoạn 3 — Xây dựng đồ thị tri thức L0–L3 (06/10 – 26/10)
 
@@ -226,6 +230,8 @@ lực của cả văn bản (`src/legal_crawler/ingest.py`), tức mới tương
 
 **Stack:** [0001 — Neo4j và Milvus là kho dẫn xuất từ `data/`](../../decisions/0001-neo4j-milvus-la-kho-dan-xuat.md).
 
+**Dữ liệu:** [0002 — Phạm vi neo thời gian, vai trò VBHN và dữ liệu dẫn xuất](../../decisions/0002-pham-vi-neo-thoi-gian-va-du-lieu-dan-xuat.md). Chỉ QPPL được truy xuất theo mốc t; VBHN dùng để kiểm chứng L3; không ghi đè dữ liệu nguồn.
+
 **Nguyên tắc domain** (kế thừa từ roadmap cũ, vẫn đúng với code hiện tại):
 
 | # | Nguyên tắc | Nơi thể hiện |
@@ -261,7 +267,8 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | Câu "metadata giảm đáng kể chi phí gán nhãn": metadata cho biết *khoản nào* hết hiệu lực, không cho biết *khi nào* | P1.2 | `docs/audit_dataset.md` §9 |
 | Có dùng H1–H4 không; A4 chỉ là proxy cho H3 | P1.5 | |
 | Chọn embedding model và LLM | P5.1 | |
-| Quy tắc cận dưới `issueDate` | P2.10 | |
+| Danh sách loại văn bản QPPL; "Quyết định" lẫn văn bản cá biệt | P2.8 | backfill T2.1 |
+| Ngưỡng chính xác khi tách Khoản/Điểm; cách review candidate `effTo` | P2.10, P2.11 | backfill mục Decisions |
 | Hội nghị mục tiêu | P8.3 | |
 
 ## 13. Rủi ro
@@ -295,3 +302,4 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-12 | Audit corpus: 22.550 VB, lỗ hổng thời gian 4,4% | `docs/audit_dataset.md` |
 | 2026-09-13 | Refactor sang index SQLite, xóa adapter Neo4j/vector; snapshot lên HF | commit `5b8ee70`, `fa90cb5` |
 | 2026-09-14 | Chốt stack Neo4j + Milvus (ADR 0001); lập master plan; dọn tài liệu cũ | File này |
+| 2026-09-14 | Review bản nháp backfill; chốt phạm vi QPPL, vai trò VBHN, tách Khoản/Điểm, snapshot v2 (ADR 0002). Đo: 6.815/7.620 expiry chưa định vị có marker; ngày history `T00:00` lệch +1 | `backfill-corpus-v2.md` |
