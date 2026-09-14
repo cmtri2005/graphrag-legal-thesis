@@ -75,15 +75,21 @@ def expand(
             continue
         result.documents[doc_id] = document
 
-        for reference in document.get("references") or []:
-            edge = _parse_edge(doc_id, reference)
-            if edge is None:
-                continue
+        for edge in declared_edges(doc_id, document):
             result.edges.append(edge)
             if edge.target_id not in visited and reference_types.is_expandable(edge.reference_type):
                 queue.append(edge.target_id)
 
     return result
+
+
+def declared_edges(doc_id: str, document: JsonDict) -> list[Edge]:
+    """Every edge `document`'s own `references[]` declares, in source order."""
+    return [
+        edge
+        for reference in document.get("references") or []
+        if (edge := _parse_edge(doc_id, reference)) is not None
+    ]
 
 
 def _parse_edge(source_id: str, reference: JsonDict) -> Edge | None:

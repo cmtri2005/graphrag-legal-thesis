@@ -27,6 +27,10 @@ import unicodedata
 from dataclasses import dataclass, field
 from html.parser import HTMLParser
 
+# Below this share of tree nodes with text, a document goes to the review queue
+# (`data/provision_review.txt`) and the id join is topped up with markers.
+REVIEW_THRESHOLD = 0.5
+
 # Layout noise that must never reach the text.
 _SKIP_TAGS = {"style", "script", "head"}
 
@@ -66,7 +70,7 @@ class Paragraph:
 class Alignment:
     """Result of attaching text to one document's tree."""
 
-    method: str  # "id" | "marker"
+    method: str  # "id" | "marker" | "id+marker"
     texts: dict[str, str] = field(default_factory=dict)
     total_nodes: int = 0
 
@@ -141,19 +145,23 @@ def flatten(tree: list[dict]) -> list[dict]:
     return out
 
 
-def has_node_ids(paragraphs: list[Paragraph]) -> bool:
-    return any(p.node_id for p in paragraphs)
+def align_by_id(
+    nodes: list[dict], paragraphs: list[Paragraph], stops: frozenset[int] = frozenset()
+) -> dict[str, str]:
+    """Exact join. Untagged paragraphs continue the node that precedes them.
 
-
-def align_by_id(nodes: list[dict], paragraphs: list[Paragraph]) -> dict[str, str]:
-    """Exact join. Untagged paragraphs continue the node that precedes them."""
+    `stops` are paragraph indices another method already assigned to a node;
+    a continuation ends there instead of absorbing that node's text.
+    """
     known = {n["id"] for n in nodes}
     texts: dict[str, str] = {}
     current: str | None = None
-    for para in paragraphs:
+    for index, para in enumerate(paragraphs):
         if para.node_id in known:
             current = para.node_id
             texts[current] = para.text
+        elif index in stops:
+            current = None
         elif current and para.text and para.node_id is None:
             texts[current] = f"{texts[current]} {para.text}".strip()
         elif para.node_id is not None:
@@ -169,31 +177,83 @@ def _marker(node: dict) -> re.Pattern[str] | None:
     return re.compile(rf"^{build(match.group(1))}", re.IGNORECASE)
 
 
-def align_by_marker(nodes: list[dict], paragraphs: list[Paragraph]) -> dict[str, str]:
-    """Sequential match for id-less HTML.
+def align_by_marker(
+    nodes: list[dict],
+    paragraphs: list[Paragraph],
+    anchors: dict[str, int] | None = None,
+) -> dict[str, str]:
+    """Sequential match for id-less HTML; see `marker_matches`."""
+    return {nid: paragraphs[i].text for nid, i in marker_matches(nodes, paragraphs, anchors).items()}
+
+
+def marker_matches(
+    nodes: list[dict],
+    paragraphs: list[Paragraph],
+    anchors: dict[str, int] | None = None,
+) -> dict[str, int]:
+    """Node id -> index of the paragraph its marker matched.
 
     Both sides are already in document order, so this only ever scans forward:
     a node whose marker never turns up is skipped, and the search resumes for
     the next node from the same place rather than sliding the whole document.
+
+    `anchors` (node id -> paragraph index) are nodes already placed by an exact
+    id join. They are not re-matched; they move the cursor, and a node between
+    two anchors is only searched for before the next one — so a missing "1."
+    can never be taken from a later article whose paragraphs are tagged.
     """
-    texts: dict[str, str] = {}
+    anchors = anchors or {}
+    limits = [len(paragraphs)] * len(nodes)
+    next_anchor = len(paragraphs)
+    for i in range(len(nodes) - 1, -1, -1):
+        limits[i] = next_anchor
+        if nodes[i]["id"] in anchors:
+            next_anchor = anchors[nodes[i]["id"]]
+
+    matches: dict[str, int] = {}
     cursor = 0
-    for node in nodes:
+    for i, node in enumerate(nodes):
+        if node["id"] in anchors:
+            cursor = anchors[node["id"]] + 1
+            continue
         pattern = _marker(node)
         if pattern is None:
             continue
-        for i in range(cursor, len(paragraphs)):
-            if pattern.match(paragraphs[i].text):
-                texts[node["id"]] = paragraphs[i].text
-                cursor = i + 1
+        for j in range(cursor, limits[i]):
+            if pattern.match(paragraphs[j].text):
+                matches[node["id"]] = j
+                cursor = j + 1
                 break
-    return texts
+    return matches
 
 
 def align(tree: list[dict], html: str) -> Alignment:
-    """Attach `html`'s text to `tree`, picking the method the document allows."""
+    """Attach `html`'s text to `tree`, picking the method the document allows.
+
+    The id join is used only when some paragraph id really is a tree node id:
+    several hundred bodies tag paragraphs with ids of their own, and choosing
+    the join on "any id at all" wrote those out with zero nodes. When the join
+    covers less than `REVIEW_THRESHOLD` of the tree, markers fill the nodes it
+    missed, anchored between the joined ones. A joined node keeps its tagged
+    paragraph; its untagged continuation now stops at a paragraph a marker gave
+    to another node, instead of swallowing the next article whole.
+    """
     nodes = flatten(tree)
     paragraphs = parse_paragraphs(html)
-    if has_node_ids(paragraphs):
-        return Alignment("id", align_by_id(nodes, paragraphs), len(nodes))
-    return Alignment("marker", align_by_marker(nodes, paragraphs), len(nodes))
+    known = {n["id"] for n in nodes}
+    if not any(p.node_id in known for p in paragraphs):
+        return Alignment("marker", align_by_marker(nodes, paragraphs), len(nodes))
+
+    texts = align_by_id(nodes, paragraphs)
+    if len(texts) >= REVIEW_THRESHOLD * len(nodes):
+        return Alignment("id", texts, len(nodes))
+    anchors: dict[str, int] = {}
+    for index, para in enumerate(paragraphs):
+        if para.node_id in texts:
+            anchors.setdefault(para.node_id, index)
+    matches = marker_matches(nodes, paragraphs, anchors)
+    if not matches:
+        return Alignment("id", texts, len(nodes))
+    joined = align_by_id(nodes, paragraphs, stops=frozenset(matches.values()))
+    filled = {nid: paragraphs[i].text for nid, i in matches.items()}
+    return Alignment("id+marker", {**filled, **joined}, len(nodes))

@@ -18,6 +18,7 @@ Two things about `history` rows that will silently corrupt Stage 6 if missed:
 from __future__ import annotations
 import re
 from dataclasses import dataclass
+from datetime import date, timedelta
 from pathlib import Path
 
 from ..storage.documents import REPO_DATA_DIR, read_json
@@ -104,3 +105,69 @@ def is_legal_date(row: dict) -> bool:
     record — not when the law changed.
     """
     return row.get("createdBy") == _LEGAL_DATE_AUTHOR
+
+
+# Effectivity dates on Job rows are a day late when stamped at midnight.
+# Measured 2026-09-14 against the document's own field: `DATE_HL` at T00:00
+# is exactly +1 day on 13,424 rows while every T07:00 row agrees; `DATE_HHL`
+# behaves the same. The document side is the right one — NĐ 100/2019 and
+# NĐ 168/2024 carry their real effective dates, and on the +1 rows `effFrom`
+# falls on the 1st of a month 21% of the time against 3% for the history date.
+# `DATE_BH` is NOT shifted: all 11,033 midnight rows equal `issueDate` as-is,
+# so the offset belongs to the code, not the clock alone. After this table:
+# 99.76% of DATE_HL, 99.92% of DATE_HHL, 100% of DATE_BH agree. Any other
+# (code, clock) pair is not mapped: an unexplained stamp is not a date.
+_LEGAL_DATE_SHIFT = {
+    ("DATE_HL", "00:00:00"): -1,
+    ("DATE_HL", "07:00:00"): 0,
+    ("DATE_HHL", "00:00:00"): -1,
+    ("DATE_HHL", "07:00:00"): 0,
+    ("DATE_BH", "00:00:00"): 0,
+}
+
+
+def legal_date(row: dict) -> date | None:
+    """The legal date a history row records, or None if it records none.
+
+    Only for corroboration: never copy it over a document's own `effFrom`,
+    `effTo` or `issueDate` (ADR 0002).
+    """
+    if not is_legal_date(row):
+        return None
+    stamp = str(row.get("createdDate") or "")
+    shift = _LEGAL_DATE_SHIFT.get((row.get("content"), stamp[11:19]))
+    if shift is None:
+        return None
+    return date.fromisoformat(stamp[:10]) + timedelta(days=shift)
+
+
+# Why a document cannot be placed on the timeline. One definition, shared by
+# `scripts/check/data_status.py` and `ingest.py`, checked in this order.
+NO_EFF_FROM = "no effFrom — cannot place on the timeline at all"
+REPEALED_WITHOUT_EFF_TO = "repealed in full, but no effTo says when"
+EMPTY_INTERVAL = "effTo not after effFrom — portal data error"
+NO_STATUS = "no effStatus"
+IN_FORCE_PAST_EFF_TO = "still marked in force with a past effTo"
+
+
+def anchor_problem(document: dict, today: date) -> str | None:
+    """The first reason `document` cannot be placed in time, else None.
+
+    `effTo == effFrom` counts: the half-open interval [d, d) is empty, so the
+    document is in force on no day at all (74 documents on 2026-09-12, which a
+    strict `<` used to leave out of the count).
+    """
+    eff_from = (document.get("effFrom") or "")[:10]
+    eff_to = (document.get("effTo") or "")[:10]
+    status = (document.get("effStatus") or {}).get("name")
+    if not eff_from:
+        return NO_EFF_FROM
+    if status and status.startswith("Hết hiệu lực toàn bộ") and not eff_to:
+        return REPEALED_WITHOUT_EFF_TO
+    if eff_to and eff_to <= eff_from:
+        return EMPTY_INTERVAL
+    if not status:
+        return NO_STATUS
+    if status == "Còn hiệu lực" and eff_to and eff_to < today.isoformat():
+        return IN_FORCE_PAST_EFF_TO
+    return None

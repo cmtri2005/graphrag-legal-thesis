@@ -17,7 +17,7 @@ from pathlib import Path
 import requests
 
 from legal_crawler.sources.api_client import ApiClient
-from legal_crawler.graph.expand import expand
+from legal_crawler.graph.expand import declared_edges, expand
 from legal_crawler.storage.manifest import CrawlManifest
 from legal_crawler.vocab.reference_types import DEFAULT_MAP_PATH, ReferenceTypeMap
 from legal_crawler.sources.sitemap import fetch_central_entries
@@ -41,12 +41,9 @@ def seed_ids_in(value: object) -> set[str]:
 def load_seed_ids(seeds_path: Path, extra_seeds_paths: list[Path] | None = None) -> list[str]:
     ids = seed_ids_in(read_json(seeds_path))
     # Stage 2b's finds (data/reverse_seeds.json): documents that acted on
-    # the corpus and so were unreachable by forward-only BFS. They must
-    # enter as seeds or their own references[] never reach edges.jsonl,
-    # even though their JSON is already on disk. Same for a delta run's new
-    # ids — and since edges.jsonl is rebuilt from whatever this run walks,
-    # every extra seed file has to be passed to the *same* run. Two runs with
-    # one file each leaves edges.jsonl holding only the second one's reach.
+    # the corpus and so were unreachable by forward-only BFS. They must enter
+    # as seeds for their genealogy targets to be fetched. edges.jsonl no longer
+    # depends on this: it is rebuilt from every file in data/raw (write_edges).
     for path in extra_seeds_paths or []:
         ids |= seed_ids_in(read_json(path))
     return sorted(ids)
@@ -66,6 +63,39 @@ def persist_document(out_dir: Path, doc_id: str, document: dict) -> str:
     """Write the document and return the hash of exactly what landed on disk."""
     written = write_json(out_dir / f"{doc_id}.json", document)
     return sha256(written.encode("utf-8")).hexdigest()
+
+
+def write_edges(raw_dir: Path, edges_out: Path, reference_types: ReferenceTypeMap) -> int:
+    """Rebuild edges.jsonl from every document held in `raw_dir`.
+
+    A pure function of what is on disk, not of what one BFS run walked: the
+    old per-run rebuild shrank the file whenever a run started from fewer
+    seeds or hit the circuit breaker (148,505 -> 90,931 edges once), and left
+    19 documents with references out of it entirely. Rows that repeat the same
+    (source, target, type) differ only in the portal's own reference-row id,
+    which is not written, so they are written once.
+    """
+    rows: dict[tuple[str, str, int], None] = {}
+    for path in sorted(raw_dir.glob("*.json"), key=lambda p: p.stem):
+        for edge in declared_edges(path.stem, read_json(path)):
+            rows[(edge.source_id, edge.target_id, edge.reference_type)] = None
+    with edges_out.open("w", encoding="utf-8") as f:
+        for source_id, target_id, reference_type in rows:
+            info = reference_types.classify(reference_type)
+            f.write(
+                json.dumps(
+                    {
+                        "source_id": source_id,
+                        "target_id": target_id,
+                        "reference_type": reference_type,
+                        "label_vi": info.label_vi,
+                        "group": info.group.value,
+                    },
+                    ensure_ascii=False,
+                )
+                + "\n"
+            )
+    return len(rows)
 
 
 def make_checkpointing_fetcher(
@@ -116,16 +146,24 @@ def main() -> None:
         type=Path,
         nargs="*",
         default=[],
-        help="extra seed files, e.g. data/reverse_seeds.json data/delta_seeds.json. "
-        "Pass every one of them to a single run: edges.jsonl is rebuilt from "
-        "this run's reach alone.",
+        help="extra seed files, e.g. data/reverse_seeds.json data/delta_seeds.json",
     )
     parser.add_argument("--max-documents", type=int, default=5000)
+    parser.add_argument(
+        "--edges-only",
+        action="store_true",
+        help="skip the crawl and just rebuild edges.jsonl from data/raw (offline)",
+    )
     args = parser.parse_args()
 
     args.out.mkdir(parents=True, exist_ok=True)
-    seed_ids = load_seed_ids(args.seeds, args.extra_seeds)
     reference_types = ReferenceTypeMap.load(args.map_path)
+    if args.edges_only:
+        count = write_edges(args.out, args.edges_out, reference_types)
+        print(f"{count:,} distinct edges -> {args.edges_out}")
+        return
+
+    seed_ids = load_seed_ids(args.seeds, args.extra_seeds)
     manifest = CrawlManifest(args.manifest)
     client = ApiClient()
 
@@ -165,27 +203,8 @@ def main() -> None:
             manifest.mark_removed(confirmed_gone, datetime.now(timezone.utc).isoformat())
             print(f"  {len(confirmed_gone)} of those confirmed permanently gone, marked removed in manifest")
 
-    # edges.jsonl is fully regenerated from result.documents every run (cheap,
-    # no network) rather than appended incrementally, so a resumed run can't
-    # end up with duplicate or stale edge rows.
-    with args.edges_out.open("w", encoding="utf-8") as f:
-        for edge in result.edges:
-            info = reference_types.classify(edge.reference_type)
-            f.write(
-                json.dumps(
-                    {
-                        "source_id": edge.source_id,
-                        "target_id": edge.target_id,
-                        "reference_type": edge.reference_type,
-                        "label_vi": info.label_vi,
-                        "group": info.group.value,
-                    },
-                    ensure_ascii=False,
-                )
-                + "\n"
-            )
-
-    print(f"documents: {args.out}/  edges: {args.edges_out}  manifest: {args.manifest}")
+    count = write_edges(args.out, args.edges_out, reference_types)
+    print(f"documents: {args.out}/  edges: {args.edges_out} ({count:,})  manifest: {args.manifest}")
 
 
 if __name__ == "__main__":

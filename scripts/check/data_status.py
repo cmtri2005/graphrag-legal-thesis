@@ -26,6 +26,7 @@ import json
 from pathlib import Path
 
 from legal_crawler.storage.documents import PER_DOCUMENT_DIRS, DocumentStore, read_json
+from legal_crawler.vocab.status_codes import anchor_problem
 
 
 def _mtime_range(directory: Path) -> str:
@@ -158,23 +159,12 @@ def main() -> None:
     # provision nodes rather than documents: one unanchored Luật costs the
     # retrieval space far more than one unanchored Công văn.
     print("\n  temporal coherence — documents that cannot be placed in time:")
-    today = dt.date.today().isoformat()
+    today = dt.date.today()
     broken: dict[str, str] = {}
     for doc_id in raw:
-        doc = store.load("raw", doc_id)
-        eff_from = (doc.get("effFrom") or "")[:10] or None
-        eff_to = (doc.get("effTo") or "")[:10] or None
-        status = (doc.get("effStatus") or {}).get("name")
-        if not eff_from:
-            broken[doc_id] = "no effFrom — cannot place on the timeline at all"
-        elif status and status.startswith("Hết hiệu lực toàn bộ") and not eff_to:
-            broken[doc_id] = "repealed in full, but no effTo says when"
-        elif eff_to and eff_to < eff_from:
-            broken[doc_id] = "effTo precedes effFrom — portal data error"
-        elif not status:
-            broken[doc_id] = "no effStatus"
-        elif status == "Còn hiệu lực" and eff_to and eff_to < today:
-            broken[doc_id] = "still marked in force with a past effTo"
+        problem = anchor_problem(store.load("raw", doc_id), today)
+        if problem:
+            broken[doc_id] = problem
 
     nodes_total = nodes_broken = 0
     by_reason: collections.Counter[str] = collections.Counter()

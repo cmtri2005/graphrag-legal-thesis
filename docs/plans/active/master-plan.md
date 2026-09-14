@@ -1,6 +1,6 @@
 # Master Plan — Khóa luận Temporal-Aware KG RAG
 
-Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-14
+Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-15
 
 > **Nguồn sự thật về tiến độ dự án.** Timeline bám theo mục "Kế hoạch thực hiện"
 > trong `DeCuongKLTN_23521635_23521643.docx` (01/09/2026 – 01/02/2027).
@@ -26,7 +26,7 @@ Active. Hiện ở cuối Giai đoạn 1; Giai đoạn 2–3 đang đi trước 
 | GĐ | Thời gian | Nội dung | Trạng thái | Việc xong | So với kế hoạch |
 |---|---|---|---|---:|---|
 | 1 | 01/09 – 14/09 | Hoàn thiện đề cương | 🟡 | 2/6 | Đến hạn hôm nay |
-| 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | 🟡 | 6/12 | Lõi xong; còn backfill và snapshot v2 |
+| 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | 🟡 | 7/12 | Lõi xong; đang backfill (T0, T1 xong) |
 | 3 | 06/10 – 26/10 | Xây dựng đồ thị tri thức (L0–L3) | 🟡 | 4/19 | Bắt đầu sớm; **đường găng** |
 | 4 | 27/10 – 16/11 | Bộ dữ liệu ViLexTime | ⬜ | 0/9 | — |
 | 5 | 17/11 – 30/11 | Cài đặt & đánh giá đường cơ sở | ⬜ | 0/14 | — |
@@ -34,7 +34,7 @@ Active. Hiện ở cuối Giai đoạn 1; Giai đoạn 2–3 đang đi trước 
 | 7 | 22/12 – 04/01 | Thực nghiệm & phân tích | ⬜ | 0/5 | — |
 | 8 | 05/01 – 11/01 | Viết bài báo khoa học | ⬜ | 0/3 | — |
 | 9 | 12/01 – 01/02 | Hoàn thiện khóa luận | ⬜ | 0/5 | — |
-| | | **Tổng** | | **12/80** | |
+| | | **Tổng** | | **13/80** | |
 
 ### Mốc kiểm tra
 
@@ -87,9 +87,9 @@ lực của cả văn bản (`src/legal_crawler/ingest.py`), tức mới tương
 | P2.4 | Cây Chương/Mục/Điều/Khoản/Điểm | NMT | ✅ | `data/trees/` phủ 99,9% |
 | P2.5 | Gắn nội dung chữ vào từng nút | NMT | ✅ | `data/provisions/` phủ 98,97% nút khớp được; 778 VB trong hàng đợi review |
 | P2.6 | Delta crawl và mốc "as of" | CMT | ✅ | `scripts/pipeline/delta_crawl.py`, `data/delta_runs.jsonl` |
-| P2.7 | Sao lưu snapshot ra ngoài máy | CMT | 🟡 | `data/SNAPSHOT.txt` (13/09). Xong khi `scripts/pull_snapshot.sh` tải về trên máy khác và khớp sha256 (backfill T0.1) |
+| P2.7 | Sao lưu snapshot ra ngoài máy | CMT | ✅ | 15/09: `pull_snapshot.sh` tải v1 từ HF, sha256 OK, `verify_pipeline.py` pass trên bản tải về (backfill T0.1) |
 | P2.8 | Quy tắc phạm vi QPPL và cờ `temporal_anchor` | CMT, NMT | ⬜ | ADR 0002; `data/derived/eligibility.jsonl`; skip-list ở tầng đọc (backfill T2) |
-| P2.9 | Sửa gốc pipeline; backfill 1.017 diagram; 19 VB không sinh cạnh | CMT | ⬜ | `edges.jsonl` là hàm thuần của `data/raw`; closure hội tụ (backfill T1, T3.1) |
+| P2.9 | Sửa gốc pipeline; backfill 1.017 diagram; 19 VB không sinh cạnh | CMT | 🟡 | `edges.jsonl` là hàm thuần của `data/raw`; closure hội tụ (backfill T1, T3.1) |
 | P2.10 | Candidate thời gian cấp văn bản: `effTo` từ văn bản bãi bỏ duy nhất, `issueDate` làm cận dưới | CMT, NMT | ⬜ | Chỉ candidate đã duyệt mới vào truy vấn strict (backfill T4) |
 | P2.11 | Tách Khoản/Điểm từ HTML của Điều | NMT | ⬜ | Đo trên v1: 6.815/7.620 expiry chưa định vị có marker; đạt ngưỡng chính xác T5.2 (backfill T5) |
 | P2.12 | Đóng băng snapshot v2 (M1) | CMT | ⬜ | Backfill T3.3; mọi thí nghiệm dùng v2 |
@@ -303,3 +303,4 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-13 | Refactor sang index SQLite, xóa adapter Neo4j/vector; snapshot lên HF | commit `5b8ee70`, `fa90cb5` |
 | 2026-09-14 | Chốt stack Neo4j + Milvus (ADR 0001); lập master plan; dọn tài liệu cũ | File này |
 | 2026-09-14 | Review bản nháp backfill; chốt phạm vi QPPL, vai trò VBHN, tách Khoản/Điểm, snapshot v2 (ADR 0002). Đo: 6.815/7.620 expiry chưa định vị có marker; ngày history `T00:00` lệch +1 | `backfill-corpus-v2.md` |
+| 2026-09-15 | Backfill T0 (snapshot v1 kiểm chứng) và T1 (edges thuần từ raw, review queue chính xác, `align()` +4.199 node, chuẩn hóa ngày history, `anchor_problem`). Lộ 115 đích phả hệ chưa tải → T3.1 | `backfill-corpus-v2.md` mục Validation |

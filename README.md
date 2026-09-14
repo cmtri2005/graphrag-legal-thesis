@@ -136,10 +136,9 @@ python3 scripts/pipeline/collect_seeds.py
 
 # Stage 2+3 — BFS-expand through genealogy edges, fetch every doc, persist.
 # --max-documents is a circuit breaker, NOT a scope limit (see docs/crawling-plan.md).
-# ALWAYS pass a value comfortably above your current data/raw count, or a
-# resumed run will truncate edges.jsonl to the breaker value — see Gotchas.
-# --extra-seeds keeps Stage 2b's finds in the graph; drop it and they vanish
-# from edges.jsonl even though their JSON is still on disk.
+# ALWAYS pass a value comfortably above your current data/raw count — see Gotchas.
+# --extra-seeds makes Stage 2b's finds seeds, so their genealogy targets get fetched.
+# edges.jsonl is rebuilt from all of data/raw; `--edges-only` rebuilds it offline.
 python3 scripts/pipeline/build_graph.py --max-documents 40000 \
     --extra-seeds data/reverse_seeds.json
 
@@ -211,12 +210,13 @@ Run tests with `pytest` (or `python3 -m pytest`) from the repo root.
 
 ## Gotchas (learned the hard way — read before you crawl)
 
-1. **`--max-documents` default is 5000.** The corpus is already past that.
-   Running `build_graph.py` with no flag once truncated `edges.jsonl` down
-   to 5000 docs and silently overwrote the full file (raw JSON was fine —
-   edges.jsonl is regenerated from *whatever* `result.documents` came back
-   with, truncated or not). Always pass an explicit `--max-documents` above
-   your current `data/raw` count.
+1. **`--max-documents` default is 5000.** The corpus is already past that, so
+   a run without the flag stops fetching early. It used to also truncate
+   `edges.jsonl`, which was rebuilt from whatever one BFS run walked. Since
+   2026-09-15 `edges.jsonl` is rebuilt from every file in `data/raw`
+   (`build_graph.py --edges-only` does just that, offline), so it can no longer
+   shrink — but still pass a `--max-documents` above your `data/raw` count, or
+   new genealogy targets are silently left unfetched.
 2. **4xx from the API is not transient.** `/doc/{id}` returns HTTP 400 with
    `messageCode: invalid.document.entity.not.found` for a dangling reference
    — a real, permanent condition (the target was removed from vbpl.vn but

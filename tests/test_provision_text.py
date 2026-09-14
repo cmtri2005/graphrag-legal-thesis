@@ -104,3 +104,54 @@ def test_unnumbered_nodes_are_left_out_rather_than_guessed():
         {"id": "y", "title": "Phần", "level": "Part"},
     ]
     assert align_by_marker(nodes, parse_paragraphs(UNTAGGED_HTML)) == {}
+
+
+def test_ids_that_are_not_tree_nodes_do_not_force_the_id_join():
+    # Some bodies tag paragraphs with presentation ids of their own. Choosing the
+    # id join on "any id present" used to write these out with zero nodes.
+    html = (
+        "<body><p id='layout-1'>QUYẾT ĐỊNH</p>"
+        "<p id='layout-2'>Điều 1. Phạm vi.</p><p id='layout-3'>1. Khoản một.</p>"
+        "<p id='layout-4'>Điều 2. Hiệu lực.</p></body>"
+    )
+    tree = [
+        {"id": "a1", "title": "Điều 1", "level": "Article",
+         "children": [{"id": "k1", "title": "Khoản 1", "level": "Clause"}]},
+        {"id": "a2", "title": "Điều 2", "level": "Article"},
+    ]
+    result = align(tree, html)
+    assert result.method == "marker"
+    assert set(result.texts) == {"a1", "k1", "a2"}
+
+
+def test_low_id_coverage_is_topped_up_by_markers_without_replacing_joined_text():
+    # Điều 1 and Điều 3 are tagged; Điều 2 and its clause are not. Markers fill
+    # only the gap, and only between the two anchors.
+    html = (
+        "<body><p id='a1'>Điều 1. Có id.</p><p>1. Khoản của Điều 1 không id.</p>"
+        "<p>Điều 2. Không id.</p><p>1. Khoản của Điều 2.</p>"
+        "<p id='a3'>Điều 3. Có id.</p></body>"
+    )
+    tree = [
+        {"id": "a1", "title": "Điều 1", "level": "Article"},
+        {"id": "a2", "title": "Điều 2", "level": "Article",
+         "children": [{"id": "k21", "title": "Khoản 1", "level": "Clause"}]},
+        {"id": "a3", "title": "Điều 3", "level": "Article"},
+        {"id": "a4", "title": "Điều 4", "level": "Article",
+         "children": [{"id": "k41", "title": "Khoản 1", "level": "Clause"}]},
+        {"id": "a5", "title": "Điều 5", "level": "Article"},
+    ]
+    result = align(tree, html)
+    assert result.method == "id+marker"
+    # Joined text (with its untagged continuation) is kept verbatim.
+    assert result.texts["a1"] == "Điều 1. Có id. 1. Khoản của Điều 1 không id."
+    assert result.texts["a2"] == "Điều 2. Không id."
+    # Khoản 1 of Điều 2 comes from Điều 2's paragraphs, not Điều 1's "1.".
+    assert result.texts["k21"] == "1. Khoản của Điều 2."
+    # Nothing past the last anchor matches Điều 4/5, and nothing is invented.
+    assert "a4" not in result.texts and "k41" not in result.texts
+    assert len(result.texts) <= result.total_nodes
+
+
+def test_good_id_coverage_is_left_alone():
+    assert align(TREE, TAGGED_HTML).method == "id"

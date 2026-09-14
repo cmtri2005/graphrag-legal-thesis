@@ -133,8 +133,8 @@ T4 và T5 chạy song song được sau T3.
 
 ## Progress
 
-- [ ] T0 khóa baseline
-- [ ] T1.1 · [ ] T1.2 · [ ] T1.3 · [ ] T1.4 · [ ] T1.5
+- [x] T0 khóa baseline (15/09)
+- [x] T1.1 · [x] T1.2 · [x] T1.3 · [ ] T1.4 (chờ kiểm tay 20 văn bản) · [x] T1.5
 - [ ] T2.1 · [ ] T2.2 · [ ] T2.3
 - [ ] T3.1 · [ ] T3.2 · [ ] T3.3 (snapshot v2)
 - [ ] T4.1 · [ ] T4.2 · [ ] T4.3 · [ ] T4.4
@@ -165,7 +165,55 @@ T4 và T5 chạy song song được sau T3.
 
 ## Validation
 
-- Baseline v1 (điền ở T0.2): _chưa ghi_.
+- **T0.1 (15/09):** `scripts/pull_snapshot.sh` tải snapshot v1 từ HF vào thư mục
+  tạm; sha256 OK; `verify_pipeline.py --data <bản tải về>` pass; số file ở
+  mọi tầng khớp máy làm việc; 0 file bị sửa sau `SNAPSHOT.txt`.
+- **T0.2 baseline v1 (15/09, trước T1):**
+
+  | Đại lượng | Giá trị |
+  |---|---:|
+  | raw / trees / history / diagrams / provisions | 22.550 / 22.532 / 22.548 / 21.533 / 19.279 |
+  | Node có text / node cây | 1.136.483 / 1.262.115 |
+  | Văn bản coverage < 50% | 778 (file review chỉ liệt kê 20) |
+  | Dòng `edges.jsonl` / cạnh phân biệt | 157.795 / 128.289 |
+  | Văn bản có references nhưng không có cạnh | 15 |
+  | Văn bản / node không neo thời gian (`data_status.py`) | 1.819 / 49.818 (4,4%) |
+  | `verify_pipeline.py` | pass (gate cũ) |
+
+- **Sau T1 (15/09):**
+
+  | Việc | Kết quả |
+  |---|---|
+  | T1.1 | `edges.jsonl` = 128.548 cạnh phân biệt (+259 cạnh từ 19 văn bản trước đây không có cạnh). Gate "covers every referencing document" không còn dung sai: FAIL với file cũ (15 văn bản), PASS sau khi dựng lại. **Lộ ra 115 đích phả hệ chưa tải** (256 cạnh, 128 văn bản nguồn) — trước đây bị che vì file cũ phản ánh lượt BFS cũ; xử lý ở T3.1, gate FAIL đến lúc đó |
+  | T1.2 | Review queue sinh từ toàn bộ `data/provisions/`; gate so khớp chính xác tập ID. Xóa 1 dòng → FAIL "1 missing"; khôi phục → PASS |
+  | T1.3 | Chạy thử song song trên 778 văn bản: 31 văn bản tăng, **+4.199 node**, 0 node mất, 0 text theo ID bị đổi, 0 vượt số node cây. Promote bằng cách xóa 778 file rồi chạy lại: review queue 778 → 752; tổng node có text 1.140.682. Test phát hiện và đã sửa: phần nối tiếp của node theo ID từng nuốt đoạn của Điều kế tiếp |
+  | T1.4 | Quy tắc chuẩn hóa theo (mã, giờ ghi): `DATE_HL`/`DATE_HHL` lúc `T00:00` trừ 1 ngày, lúc `T07:00` giữ nguyên; `DATE_BH` lúc `T00:00` **không** dịch (đo được: dịch cả `DATE_BH` thì 0% khớp). Khớp sau chuẩn hóa: DATE_HL 99,76% (20.663/20.712), DATE_HHL 99,92%, DATE_BH 99,86%. **Còn thiếu:** kiểm tay 20 văn bản dưới đây bằng PDF gốc |
+  | T1.5 | Một hàm `anchor_problem` dùng chung cho `data_status.py` và `ingest.py`; tính cả `effTo == effFrom`. Số mới: **1.893 văn bản / 53.508 node (4,7%)** không neo thời gian; nhóm khoảng rỗng 451 → 3.899 node |
+
+  Mẫu kiểm tay T1.4 — so "có hiệu lực từ ngày" trong PDF gốc với cột `effFrom`:
+
+  | ID | Số hiệu | `effFrom` | history `DATE_HL` |
+  |---|---|---|---|
+  | `6252` | 11/2000/TTLT/BLĐTBXH-BTC | 2000-01-01 | `2000-01-02T00:00:00` |
+  | `38260` | 14/2014/TT-BVHTTDL | 2015-01-01 | `2015-01-02T00:00:00` |
+  | `7806` | 28/1998/NĐ-CP | 1999-01-01 | `1999-01-02T00:00:00` |
+  | `113297` | 123/2016/NĐ-CP | 2016-10-15 | `2016-10-16T00:00:00` |
+  | `8395` | 263/QĐ-NH21 | 1997-08-19 | `1997-08-20T00:00:00` |
+  | `15440` | 18/2006/NQ-CP | 2006-09-26 | `2006-09-27T00:00:00` |
+  | `113100` | 106/2015/NĐ-CP | 2015-12-10 | `2015-12-11T00:00:00` |
+  | `21604` | 37/2003/NĐ-CP | 2003-05-20 | `2003-05-21T00:00:00` |
+  | `8159` | 403/1997/QĐ-NHNN2 | 1997-12-20 | `1997-12-21T00:00:00` |
+  | `105707` | 59/2007/QĐ-BNN | 2007-08-29 | `2007-08-30T00:00:00` |
+  | `157077` | 05/2022/TT-BTP | 2022-10-20 | `2022-10-20T07:00:00` |
+  | `144240` | 05/2020/TT-BLĐTBXH | 2020-10-01 | `2020-10-01T07:00:00` |
+  | `127853` | 04/2018/TT-BGTVT | 2018-04-15 | `2018-04-15T07:00:00` |
+  | `176315` | 18/2025/TT-BCT | 2025-05-02 | `2025-05-02T07:00:00` |
+  | `163008` | 13/2023/TT-NHNN | 2023-12-14 | `2023-12-14T07:00:00` |
+  | `47456` | 41/2014/TT-BGDĐT | 2015-01-20 | `2015-01-20T07:00:00` |
+  | `12996` | 32/2007/TTLT-BCA-BGTVT | 2008-01-25 | `2008-01-25T07:00:00` |
+  | `118526` | 219/2016/TT-BTC | 2017-01-01 | `2017-01-01T07:00:00` |
+  | `11925` | 14/2009/TT-BGDĐT | 2009-07-10 | `2009-07-10T07:00:00` |
+  | `125904` | 45/2017/QĐ-TTg | 2018-01-01 | `2018-01-01T07:00:00` |
 - Số đo đã có (14/09, v1):
   - 7.620 chuỗi `locator_not_found`, trong đó 6.815 (89,4%) có marker Khoản/Điểm
     trong HTML (411/446 văn bản).

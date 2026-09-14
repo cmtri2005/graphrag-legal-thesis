@@ -11,8 +11,10 @@ may be papered over — each is a silent wrong answer if it is:
 * 724 documents publish no `effFrom`. Their provisions are stored with no
   validity interval, so a point-in-time query never returns them, rather than
   being dated by guesswork.
-* 29 documents publish an `effTo` earlier than their `effFrom`. The interval is
-  unusable, so the `effTo` is dropped and counted; the text and structure stay.
+* 103 documents publish an `effTo` that is not after their `effFrom` (29
+  earlier, 74 equal — an empty half-open interval). The interval is unusable,
+  so the `effTo` is dropped and counted; the text and structure stay. Same
+  rule as `data_status.py`: `vocab.status_codes.anchor_problem`.
 * 17 documents have a provision tree but no body text. They yield provisions
   and no versions, which is the honest representation of "we know this Điều
   exists and we do not hold its words".
@@ -25,6 +27,7 @@ from pathlib import Path
 
 from .index import TemporalIndex
 from .storage.documents import DocumentStore
+from .vocab.status_codes import EMPTY_INTERVAL, anchor_problem
 from .temporal import (
     LegalDocument,
     Provision,
@@ -50,7 +53,7 @@ class IngestReport(dict):
 def build_document(doc_id: str, raw: dict, report: IngestReport) -> LegalDocument:
     effective_from = _as_date(raw.get("effFrom"))
     effective_to = _as_date(raw.get("effTo"))
-    if effective_from and effective_to and effective_to <= effective_from:
+    if anchor_problem(raw, date.today()) == EMPTY_INTERVAL:
         # The portal's own data contradicts itself here. Keep the document,
         # lose only the field that cannot be true.
         effective_to = None

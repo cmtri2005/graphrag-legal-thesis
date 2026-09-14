@@ -29,27 +29,12 @@ from legal_crawler.vocab.reference_types import (
     EdgeGroup,
     ReferenceTypeMap,
 )
+from legal_crawler.provisions.text import REVIEW_THRESHOLD
 from legal_crawler.sources.sitemap import matches_any_keyword
 from legal_crawler.vocab.status_codes import StatusCodeMap, parse_transition
 from legal_crawler.storage.documents import DocumentStore, read_json
 
 failures: list[str] = []
-
-
-def accounted_gone(data: Path) -> set[str]:
-    """Documents we hold a file for but have since marked removed or failed."""
-    ids: set[str] = set()
-    manifest_path = data / "manifest.sqlite"
-    if manifest_path.exists():
-        ids |= CrawlManifest(manifest_path).removed_ids()
-    failed_path = data / "failed_ids.txt"
-    if failed_path.exists():
-        ids |= {
-            line.split("\t", 1)[0]
-            for line in failed_path.read_text(encoding="utf-8").splitlines()
-            if line.strip()
-        }
-    return ids
 
 
 def known_failures(data: Path, stage: str) -> set[str]:
@@ -128,26 +113,25 @@ def main() -> None:
     orphan_sources = {e["source_id"] for e in edges} - raw_ids
     check("every edge source is a document we hold", not orphan_sources, f"{len(orphan_sources)} orphaned")
 
-    # The opposite direction, and the one the file's own regeneration makes
-    # easy to miss: edges.jsonl is rebuilt from whatever a run walked, so a run
-    # started with the wrong --max-documents or a missing --extra-seeds file
-    # rewrites it covering fewer documents than we hold. Nothing about that
-    # looks like an error — the file is smaller and entirely valid — which is
-    # why it needs a check rather than a reader's attention.
+    # The opposite direction. edges.jsonl used to be rebuilt from whatever one
+    # BFS run walked, so a run with fewer seeds silently shrank it. It is now
+    # rebuilt from every raw file (build_graph.write_edges), so a document that
+    # declares a well-formed reference and appears in no edge means the file
+    # is stale: rebuild with `build_graph.py --edges-only`. No tolerance.
     # Measured over documents that actually declare references: ~6% of the
-    # corpus is genuinely edgeless (standalone Chỉ thị, Công văn and the like
-    # that cite nothing and are cited by nothing), so counting those would put
-    # a permanent 1,400-document floor under the number and hide a real drop.
+    # corpus is genuinely edgeless (standalone Chỉ thị, Công văn and the like).
     documents_in_edges = {e["source_id"] for e in edges} | {e["target_id"] for e in edges}
-    gone = accounted_gone(d)
     with_refs = {
         doc_id for doc_id in raw_ids
-        if doc_id not in gone and (store.load("raw", doc_id).get("references") or [])
+        if any(
+            r.get("referenceType") is not None and (r.get("targetDocument") or {}).get("id")
+            for r in store.load("raw", doc_id).get("references") or []
+        )
     }
     uncovered = with_refs - documents_in_edges
     check(
         "edges.jsonl covers every referencing document",
-        len(uncovered) <= len(with_refs) * 0.01,
+        not uncovered,
         f"{len(uncovered):,} of {len(with_refs):,} documents with references appear in no edge",
     )
     if uncovered:
@@ -292,7 +276,7 @@ def main() -> None:
         # The tree is the yardstick: a node with text must be a node the server
         # actually declared. Anything else means the alignment invented a node,
         # which is the one failure mode that would be invisible downstream.
-        overshoot, with_text, total_nodes, low = [], 0, 0, 0
+        overshoot, with_text, total_nodes, low = [], 0, 0, set()
         queued_text = queued_nodes = 0
         for path in prov_paths:
             rec = read_json(path)
@@ -300,8 +284,8 @@ def main() -> None:
             total_nodes += rec["total_nodes"]
             if len(rec["nodes"]) > rec["total_nodes"]:
                 overshoot.append(rec["doc_id"])
-            if rec["coverage"] < 0.5:
-                low += 1
+            if rec["coverage"] < REVIEW_THRESHOLD:
+                low.add(rec["doc_id"])
                 queued_text += len(rec["nodes"])
                 queued_nodes += rec["total_nodes"]
         check(
@@ -325,11 +309,21 @@ def main() -> None:
             f"{live_text:,}/{live_nodes:,} ({pct:.2f}%) outside the review queue; "
             f"{with_text:,}/{total_nodes:,} ({with_text / total_nodes * 100:.1f}%) overall",
         )
+        # Exact membership, not "the file exists": a resumed run once rewrote
+        # the queue with the 20 documents it had just processed while 778 were
+        # below the threshold, and an existence check passed that.
         review_path = d / "provision_review.txt"
+        queued = {
+            line.split("\t", 1)[0]
+            for line in (review_path.read_text(encoding="utf-8").splitlines() if review_path.exists() else [])
+            if line.strip() and not line.startswith("#")
+        }
         check(
-            "every low-coverage document is in the review queue",
-            low == 0 or review_path.exists(),
-            f"{low:,} below 50% coverage",
+            "the review queue lists exactly the low-coverage documents",
+            queued == low,
+            f"{len(low):,} below {REVIEW_THRESHOLD:.0%}; queue has {len(queued):,} "
+            f"({len(low - queued):,} missing, {len(queued - low):,} stale) — "
+            "rebuild with attach_provision_text.py",
         )
 
     print("\n" + "=" * 60)
