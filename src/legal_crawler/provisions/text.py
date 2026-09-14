@@ -1,4 +1,4 @@
-"""Stage 5b — attach body text to the provision-tree nodes (execution-plan §B).
+"""Stage 5b — attach body text to the provision-tree nodes (docs/plans/completed/2026-09-04-truoc-stage-6.md §B).
 
 The plan assumed this was a text-alignment problem. It mostly is not: for ~60%
 of the corpus the server's own HTML already tags each paragraph with the tree

@@ -30,4 +30,10 @@ decision into `docs/decisions/`; keep task-local choices in the plan.
 
 ## Active Plans
 
-No active execution plans are currently indexed.
+- [`active/master-plan.md`](active/master-plan.md) — thesis timeline and project
+  progress; the source of truth for status.
+
+## Completed Plans
+
+- [`completed/2026-09-04-truoc-stage-6.md`](completed/2026-09-04-truoc-stage-6.md)
+  — status-code table, Stage 5b text attachment, delta crawl.

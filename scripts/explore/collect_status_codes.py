@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Step 1 of the §3b routine, for `history[].content` (docs/execution-plan.md A).
+"""Step 1 of the §3b routine, for `history[].content` (docs/plans/completed/2026-09-04-truoc-stage-6.md §A).
 
 Scans every fetched history payload and reports the full set of `content`
 values, so the mapping table can be built against reality rather than a

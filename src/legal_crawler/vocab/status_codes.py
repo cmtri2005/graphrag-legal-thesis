@@ -1,4 +1,4 @@
-"""Ground-truth mapping for `history[].content` (docs/execution-plan.md §A).
+"""Ground-truth mapping for `history[].content` (docs/plans/completed/2026-09-04-truoc-stage-6.md §A).
 
 Loads and enforces `data/eff_status_map.json`; it never invents a label, the
 same rule `vocab/reference_types.py` follows. Read that JSON's `_readme` for how

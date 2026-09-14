@@ -14,7 +14,8 @@ python scripts/pipeline/resolve_expiry_targets.py --unresolved
 
 ## 1. Quy mô
 
-- **22,550** văn bản · **157,795** cạnh · **1,136,483** node có text (trên 1.26M node cấu trúc)
+- **22,550** văn bản · **128,289** cạnh phân biệt · **1,136,483** node có text (trên 1.26M node cấu trúc)
+- `edges.jsonl` có 157,795 dòng nhưng 29,506 dòng là bản lặp của cùng (nguồn, đích, loại quan hệ) — chỉ ở nhóm phả hệ, có cạnh lặp tới 206 lần; các dòng lặp chỉ khác `id` của chính dòng reference (`referenceProvisions` rỗng ở toàn bộ 158,115 reference), nên không mang thêm thông tin. Mọi thống kê cạnh phải khử trùng lặp
 - 2.7 GB trên đĩa (nén còn ~830 MB)
 - 4 miền: `dat_dai`, `thue`, `doanh_nghiep_dau_tu`, `giao_thong`
 
@@ -98,7 +99,7 @@ Gate mới trong `verify_pipeline.py`, cả hai đã kiểm chứng bắt đúng
 
 ## 8. Quyết định thiết kế: không xoá văn bản bất thường
 
-Xoá 1,819 văn bản bất thường sẽ làm đứt **5,295 cạnh phả hệ (7.4%)**. Nghiêm trọng hơn, các văn bản bất thường nhất chính là **văn bản bãi bỏ**:
+Xoá 1,819 văn bản bất thường sẽ làm đứt **4,646 / 42,303 cạnh phả hệ phân biệt (11.0%)**. Nghiêm trọng hơn, các văn bản bất thường nhất chính là **văn bản bãi bỏ**:
 
 ```
 148 cạnh | thiếu effFrom    | 151/2020/NĐ-CP  Về việc bãi bỏ một số văn bản...

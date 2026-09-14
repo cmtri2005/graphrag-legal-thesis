@@ -5,18 +5,20 @@ sourced from `vbpl.vn` (Bộ Tư pháp's legal document portal). Built to feed a
 Temporal GraphRAG system that can answer "what was the law at time T" style
 questions, not just "what is the law now."
 
-Two docs sit behind this one, and they answer different questions:
+Three docs sit behind this one, and they answer different questions:
 
+- **[docs/plans/active/master-plan.md](docs/plans/active/master-plan.md)** —
+  *where the project stands*: the thesis timeline, every task's status with
+  evidence. This is the source of truth for progress.
 - **[docs/crawling-plan.md](docs/crawling-plan.md)** — *why* the pipeline is
   shaped this way, and every trap the data turned out to hold. Read it before
   touching Stage 1-3.
-- **[docs/execution-plan.md](docs/execution-plan.md)** — *what's next*: the
-  three remaining pieces before Stage 6, in dependency order, with acceptance
-  criteria.
+- **[docs/audit_dataset.md](docs/audit_dataset.md)** — *what the corpus
+  actually holds* as of 2026-09-12, gaps included.
 
 This README is the orientation map and the how-to-run.
 
-## Status (2026-09-04)
+## Crawl status (2026-09-04, historical — current progress lives in the master plan)
 
 | Stage | State | Output |
 |---|---|---|
@@ -287,14 +289,10 @@ Run tests with `pytest` (or `python3 -m pytest`) from the repo root.
 
 ## What's next
 
-**Stage 6 — temporal graph.** Everything it needs is now on disk: classified
-genealogy edges, legal dates separated from data-entry timestamps
-(`status_codes.is_legal_date`), and article-level text (`data/provisions/`).
-
-Open question it still has to answer: provision-level expiry for the 76% of
-partly-repealed documents whose `expiryProvisions` is empty. The fallback is the
-amending document's own text, and after Stage 2b we hold that actor for 97.7% of
-them.
+See [docs/plans/active/master-plan.md](docs/plans/active/master-plan.md). The
+storage stack (Neo4j + Milvus, both derived from `data/`) is fixed by
+[docs/decisions/0001](docs/decisions/0001-neo4j-milvus-la-kho-dan-xuat.md);
+`index.py`/`build_store.py` below are a bridge until the Neo4j loader lands.
 
 **Two known limits, both deliberate:**
 - 748 documents sit in `data/provision_review.txt` — old records whose tree is

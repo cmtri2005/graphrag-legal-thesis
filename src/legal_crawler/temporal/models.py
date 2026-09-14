@@ -68,20 +68,20 @@ class RelationType(str, Enum):
     VERSION_OF = "VERSION_OF"
     CAUSED_BY = "CAUSED_BY"
 
-    # published as referenceType, ordered by how common they are
-    ISSUED_UNDER = "ISSUED_UNDER"            # 3  Căn cứ ban hành            67,601
-    AMENDS = "AMENDS"                        # 10 Văn bản được sửa đổi bổ sung 29,129
-    DETAILS = "DETAILS"                      # 9  Được quy định chi tiết      19,559
-    REFERS_TO = "REFERS_TO"                  # 4  Văn bản được dẫn chiếu      17,999
-    REPEALS = "REPEALS"                      # 1  Văn bản bị bãi bỏ           12,159
-    REPLACES = "REPLACES"                    # 12 Văn bản được thay thế        9,772
-    CONSOLIDATES = "CONSOLIDATES"            # 7  Văn bản được hợp nhất           874
-    GUIDES = "GUIDES"                        # 8  Được hướng dẫn áp dụng          349
-    CORRECTS = "CORRECTS"                    # 6  Văn bản được đính chính         209
-    SUSPENDS = "SUSPENDS"                    # 11 Bị tạm ngưng hiệu lực            50
-    HALTS_ENFORCEMENT = "HALTS_ENFORCEMENT"  # 5  Bị đình chỉ thi hành             47
-    INTERPRETS = "INTERPRETS"                # 14 Văn bản được giải thích          24
-    ANNOUNCES = "ANNOUNCES"                  # 2  Văn bản được công bố             23
+    # published as referenceType; distinct edges in the corpus, most common first
+    ISSUED_UNDER = "ISSUED_UNDER"            # 3  Căn cứ ban hành                 67,601
+    DETAILS = "DETAILS"                      # 9  Được quy định chi tiết           19,559
+    REFERS_TO = "REFERS_TO"                  # 4  Văn bản được dẫn chiếu           17,999
+    REPEALS = "REPEALS"                      # 1  Văn bản bị bãi bỏ                 7,427
+    REPLACES = "REPLACES"                    # 12 Văn bản được thay thế             7,287
+    AMENDS = "AMENDS"                        # 10 Văn bản được sửa đổi bổ sung      6,960
+    CONSOLIDATES = "CONSOLIDATES"            # 7  Văn bản được hợp nhất               874
+    GUIDES = "GUIDES"                        # 8  Được hướng dẫn áp dụng              349
+    CORRECTS = "CORRECTS"                    # 6  Văn bản được đính chính             132
+    HALTS_ENFORCEMENT = "HALTS_ENFORCEMENT"  # 5  Bị đình chỉ thi hành                 33
+    SUSPENDS = "SUSPENDS"                    # 11 Bị tạm ngưng hiệu lực                31
+    ANNOUNCES = "ANNOUNCES"                  # 2  Văn bản được công bố                 23
+    INTERPRETS = "INTERPRETS"                # 14 Văn bản được giải thích              14
 
 
 class ExtractionMethod(str, Enum):
