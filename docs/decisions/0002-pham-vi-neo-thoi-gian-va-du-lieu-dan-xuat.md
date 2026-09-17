@@ -102,4 +102,4 @@ Tradeoffs:
 
 ## Follow-Up
 
-- `docs/plans/active/backfill-corpus-v2.md`.
+- `docs/plans/completed/2026-09-17-backfill-corpus-v2.md`.

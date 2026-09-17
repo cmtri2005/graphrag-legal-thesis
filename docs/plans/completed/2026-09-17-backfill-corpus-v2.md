@@ -4,8 +4,9 @@ Date: 2026-09-14
 
 ## Status
 
-Active. Đang triển khai: T0–T2 xong, T3.1 đang chạy, code T4/T5 đã có. Chốt sau buổi review bản nháp
-`phuong-an-dien-khuyet-va-backfill-du-lieu.md`.
+Done (17/09/2026). T0–T5.4 và T3.3 hoàn tất trước mốc M1; snapshot v2 đã đóng
+băng và đẩy HF. T6 (phục hồi chọn lọc) là tùy chọn, không chặn M1, chưa làm —
+xem Result.
 
 ## Outcome
 
@@ -136,7 +137,7 @@ T4 và T5 chạy song song được sau T3.
 - [x] T0 khóa baseline (14/09)
 - [x] T1.1 · [x] T1.2 · [x] T1.3 · [ ] T1.4 (chờ kiểm tay 20 văn bản) · [x] T1.5
 - [x] T2.1 · [x] T2.2 · [x] T2.3 (14/09)
-- [x] T3.1 (16/09) · [x] T3.2 (16/09) · [ ] T3.3 (snapshot v2 — chưa đóng băng/đẩy HF, cần xác nhận)
+- [x] T3.1 (16/09) · [x] T3.2 (16/09) · [x] T3.3 (17/09 — snapshot v2 đã đóng băng, đẩy HF, tải về kiểm chứng)
 - [x] T4.1 · [x] T4.2 · [x] T4.3 (381/388 quyết định — 367 accept, 14 reject; 7 còn lại không thể xác minh bằng dữ liệu đã crawl) · [x] T4.4
 - [x] T5.1 · [x] T5.2 (100/100 mẫu đúng, phân tầng 9 loại văn bản — xem Validation) · [x] T5.3 · [x] T5.4 (243 văn bản một tác nhân, 919 bộ ba gold — xem Validation)
 - [ ] T6.1 · [ ] T6.2 (tùy chọn)
@@ -259,8 +260,16 @@ T4 và T5 chạy song song được sau T3.
   `text` sẵn có (18 văn bản cùng loại nay). `verify_pipeline.py` **pass toàn bộ**
   (trước đó FAIL 2 gate: genealogy completeness và provision-text-accounted).
   Corpus sau T3.1: **23.139** raw / **23.121** trees / **23.137** history /
-  **128.548** cạnh phân biệt. T3.3 (đóng băng + đẩy HF) **chưa chạy** — cần xác
-  nhận trước khi thực hiện (external, khó hoàn tác).
+  **128.548** cạnh phân biệt.
+- **T3.3 hoàn tất (17/09):** Commit code trước (`7794627`, 13 file — mọi bản
+  vá T4.3/T5.2 hôm nay), rồi `scripts/push_snapshot.sh` lên
+  `tricaominh/temporal_vietnames_law` (commit
+  `7d8ab0cfb19924c9bf74c4980ca7ef924dbd66a6`). `SNAPSHOT.txt`:
+  `as_of=2026-09-12`, `documents=23139`, `code_commit=7794627...` (sạch,
+  không "(uncommitted changes)"). Kiểm chứng: `pull_snapshot.sh` về
+  `/tmp/snapshot-verify`, sha256 khớp, `verify_pipeline.py --data
+  /tmp/snapshot-verify/data` → `all checks passed`. Đạt tiêu chí "tải về ở
+  thư mục khác và dựng lại được".
 - **Sau T4 (16/09):** `build_eligibility.py` rồi `build_temporal_candidates.py`
   trên corpus mới: 20.482 QPPL trung ương trong phạm vi, 17.091 đủ điều kiện
   benchmark. `data/derived/temporal_candidates.jsonl`: 716 bản ghi
@@ -427,4 +436,51 @@ T4 và T5 chạy song song được sau T3.
 
 ## Result
 
-_Điền sau khi snapshot v2 được đóng băng._
+Snapshot v2 đóng băng 17/09/2026, trước mốc M1 (05/10/2026). Đối chiếu 5 tiêu
+chí Outcome:
+
+1. **File dẫn xuất là hàm thuần của `data/`**: `edges.jsonl` (T1.1, T3.1 —
+   closure hội tụ, 0 genealogy target chưa tải), review queue (T1.2),
+   eligibility (T2.2), `verify_temporal_candidates.py` (merge, không ghi đè
+   quyết định người/LLM đã có) — đạt.
+2. **Mọi khoảng trống được phân loại**: `eligibility.jsonl` (T2), 388
+   candidate `effective_to` chia rõ accept/reject/inconclusive kèm lý do
+   (T4.3), 7 trường hợp không xác minh được ghi rõ nguyên nhân (nội dung
+   rỗng / phụ lục chưa crawl) — đạt.
+3. **Expiry cấp Điều/Khoản/Điểm định vị qua cây nguồn + Khoản/Điểm tách**:
+   T5.1–T5.3, tỉ lệ resolve cặp phân biệt 94,5% (từ 73,3% ở v1) — đạt.
+4. **Giá trị suy dẫn có provenance**: mọi bản ghi trong
+   `data/review/temporal_candidates.jsonl` có `method`, `evidence`,
+   `reviewer`, `reviewed_at`; `data/derived/subtrees/*.json` có
+   `method=article_text_split` — đạt.
+5. **Gate pass + báo cáo số liệu trước/sau**: `pytest` 197 passed,
+   `verify_pipeline.py` pass toàn bộ (kể cả trên bản snapshot tải lại từ HF);
+   số liệu trước/sau ghi đầy đủ trong mục Validation — đạt.
+
+**Số liệu tổng kết trước → sau backfill:**
+
+| Đại lượng | v1 (14/09) | v2 (17/09) |
+|---|---:|---:|
+| Văn bản / cạnh phân biệt | 22.550 / 128.289 | 23.139 / 128.548 |
+| Genealogy target chưa tải | 115 | 0 |
+| Node text / node cây | 1.136.483 / 1.262.115 | 1.151.790 / 1.273.593 |
+| Candidate `effective_to` quyết định | 0/395 | 381/388 (367 accept, 14 reject) |
+| Resolve cặp (văn bản, điều khoản) | 73,3% | 94,5% |
+| Node Khoản/Điểm tách + preamble | chưa có | 424.409 + 10.302 preamble |
+| Hand-check độ chính xác tách | chưa đo | 100/100 (100%) |
+| Văn bản một tác nhân / gold triples | 228 / 843 | 243 / 919 |
+
+**Rủi ro còn lại / chưa làm** (không chặn M1):
+
+- T1.4 (chuẩn hóa ngày history) còn thiếu kiểm tay 20 văn bản gốc bằng PDF.
+- T6 (phục hồi thủ công 308 văn bản body rỗng) là tùy chọn, chưa làm.
+- 7 candidate `effective_to` không thể xác minh bằng dữ liệu đã crawl (nội
+  dung rỗng ở nguồn, hoặc trích dẫn nằm trong phụ lục chưa crawl) — cần PDF
+  gốc hoặc trích xuất L2 (master plan P3.11+).
+- 1.089 văn bản có expiry cấp điều khoản nhưng ≥2 văn bản tác động — đúng lý
+  do L2 là bắt buộc (master plan P3.10–P3.13), không giải quyết được bằng
+  metadata.
+
+Master plan P2.7–P2.12 đã cập nhật ✅. Bước tiếp theo: P3.1 (docker-compose
+Neo4j/Milvus) sau khi đo RAM máy (P3.2), rồi P3.4–P3.6 nạp Neo4j từ snapshot
+v2.

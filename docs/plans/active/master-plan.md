@@ -1,6 +1,6 @@
 # Master Plan — Khóa luận Temporal-Aware KG RAG
 
-Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-14
+Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-17
 
 > **Nguồn sự thật về tiến độ dự án.** Timeline bám theo mục "Kế hoạch thực hiện"
 > trong `DeCuongKLTN_23521635_23521643.docx` (01/09/2026 – 01/02/2027).
@@ -26,7 +26,7 @@ Active. Hiện ở cuối Giai đoạn 1; Giai đoạn 2–3 đang đi trước 
 | GĐ | Thời gian | Nội dung | Trạng thái | Việc xong | So với kế hoạch |
 |---|---|---|---|---:|---|
 | 1 | 01/09 – 14/09 | Hoàn thiện đề cương | 🟡 | 2/6 | Đến hạn hôm nay |
-| 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | 🟡 | 8/12 | Lõi xong; đang backfill (T0–T2 xong) |
+| 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | ✅ | 12/12 | Backfill v2 xong, snapshot đóng băng trước M1 |
 | 3 | 06/10 – 26/10 | Xây dựng đồ thị tri thức (L0–L3) | 🟡 | 4/19 | Bắt đầu sớm; **đường găng** |
 | 4 | 27/10 – 16/11 | Bộ dữ liệu ViLexTime | ⬜ | 0/9 | — |
 | 5 | 17/11 – 30/11 | Cài đặt & đánh giá đường cơ sở | ⬜ | 0/14 | — |
@@ -34,13 +34,13 @@ Active. Hiện ở cuối Giai đoạn 1; Giai đoạn 2–3 đang đi trước 
 | 7 | 22/12 – 04/01 | Thực nghiệm & phân tích | ⬜ | 0/5 | — |
 | 8 | 05/01 – 11/01 | Viết bài báo khoa học | ⬜ | 0/3 | — |
 | 9 | 12/01 – 01/02 | Hoàn thiện khóa luận | ⬜ | 0/5 | — |
-| | | **Tổng** | | **14/80** | |
+| | | **Tổng** | | **18/80** | |
 
 ### Mốc kiểm tra
 
 | Mốc | Hạn | Điều phải chứng minh được | Trạng thái |
 |---|---|---|---|
-| M1 | 05/10 | **Snapshot v2** đóng băng sau backfill, tải về kiểm tra được ([plan](backfill-corpus-v2.md)) | ⬜ |
+| M1 | 05/10 | **Snapshot v2** đóng băng sau backfill, tải về kiểm tra được ([plan](../completed/2026-09-17-backfill-corpus-v2.md)) | ✅ (17/09, trước hạn) |
 | M2 | 26/10 | Chuỗi phiên bản thật trong Neo4j; `snapshot(u,t)` đúng trên 100 truy vấn đối chiếu tay | ⬜ |
 | M3 | 16/11 | ViLexTime đủ 1.150 câu; Cohen κ ≥ 0,6 trên 300 câu | ⬜ |
 | M4 | 30/11 | **Điểm quyết định B7**: chọn hướng đóng góp phương pháp hay tài nguyên–phân tích | ⬜ |
@@ -89,12 +89,12 @@ lực của cả văn bản (`src/legal_crawler/ingest.py`), tức mới tương
 | P2.6 | Delta crawl và mốc "as of" | CMT | ✅ | `scripts/pipeline/delta_crawl.py`, `data/delta_runs.jsonl` |
 | P2.7 | Sao lưu snapshot ra ngoài máy | CMT | ✅ | 14/09: `pull_snapshot.sh` tải v1 từ HF, sha256 OK, `verify_pipeline.py` pass trên bản tải về (backfill T0.1) |
 | P2.8 | Quy tắc phạm vi QPPL và cờ `temporal_anchor` | CMT, NMT | ✅ | 14/09: `vocab/scope.py` + `build_eligibility.py`; 20.318 QPPL trung ương, 16.993 đủ điều kiện benchmark; hàng đợi điền tay 308 (backfill T2) |
-| P2.9 | Sửa gốc pipeline; backfill 1.017 diagram; 19 VB không sinh cạnh | CMT | 🟡 | `edges.jsonl` là hàm thuần của `data/raw`; closure hội tụ (backfill T1, T3.1) |
-| P2.10 | Candidate thời gian cấp văn bản: `effTo` từ văn bản bãi bỏ duy nhất, `issueDate` làm cận dưới | CMT, NMT | ⬜ | Chỉ candidate đã duyệt mới vào truy vấn strict (backfill T4) |
-| P2.11 | Tách Khoản/Điểm từ HTML của Điều | NMT | ⬜ | Đo trên v1: 6.815/7.620 expiry chưa định vị có marker; đạt ngưỡng chính xác T5.2 (backfill T5) |
-| P2.12 | Đóng băng snapshot v2 (M1) | CMT | ⬜ | Backfill T3.3; mọi thí nghiệm dùng v2 |
+| P2.9 | Sửa gốc pipeline; backfill 1.017 diagram; 19 VB không sinh cạnh | CMT | ✅ | 17/09: closure hội tụ, 0 genealogy target chưa tải, `edges.jsonl` hàm thuần của `data/raw` (backfill T1, T3.1) |
+| P2.10 | Candidate thời gian cấp văn bản: `effTo` từ văn bản bãi bỏ duy nhất, `issueDate` làm cận dưới | CMT, NMT | ✅ | 17/09: 381/388 candidate quyết định (367 accept, 14 reject) qua đối chiếu văn bản gốc, không chỉ tin referenceType (backfill T4) |
+| P2.11 | Tách Khoản/Điểm từ HTML của Điều | NMT | ✅ | 17/09: 424.409 node + 10.302 preamble; 100/100 mẫu kiểm tay đúng, vượt ngưỡng 95% (backfill T5) |
+| P2.12 | Đóng băng snapshot v2 (M1) | CMT | ✅ | 17/09: đẩy HF (`7d8ab0c`), tải về thư mục khác kiểm chứng `verify_pipeline.py` pass (backfill T3.3) |
 
-Chi tiết thực hiện P2.7–P2.12: [`backfill-corpus-v2.md`](backfill-corpus-v2.md).
+Chi tiết thực hiện P2.7–P2.12: [`2026-09-17-backfill-corpus-v2.md`](../completed/2026-09-17-backfill-corpus-v2.md).
 
 ## 4. Giai đoạn 3 — Xây dựng đồ thị tri thức L0–L3 (06/10 – 26/10)
 
@@ -302,6 +302,11 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-12 | Audit corpus: 22.550 VB, lỗ hổng thời gian 4,4% | `docs/audit_dataset.md` |
 | 2026-09-13 | Refactor sang index SQLite, xóa adapter Neo4j/vector; snapshot lên HF | commit `5b8ee70`, `fa90cb5` |
 | 2026-09-14 | Chốt stack Neo4j + Milvus (ADR 0001); lập master plan; dọn tài liệu cũ | File này |
-| 2026-09-14 | Review bản nháp backfill; chốt phạm vi QPPL, vai trò VBHN, tách Khoản/Điểm, snapshot v2 (ADR 0002). Đo: 6.815/7.620 expiry chưa định vị có marker; ngày history `T00:00` lệch +1 | `backfill-corpus-v2.md` |
-| 2026-09-14 | Backfill T0 (snapshot v1 kiểm chứng) và T1 (edges thuần từ raw, review queue chính xác, `align()` +4.199 node, chuẩn hóa ngày history, `anchor_problem`). Lộ 115 đích phả hệ chưa tải → T3.1 | `backfill-corpus-v2.md` mục Validation |
-| 2026-09-14 | Backfill T2: phạm vi QPPL trung ương (20.318), hàng đợi điền tay 308, phát hiện 1.626 QPPL có chữ nhưng không có cấu trúc | `backfill-corpus-v2.md` |
+| 2026-09-14 | Review bản nháp backfill; chốt phạm vi QPPL, vai trò VBHN, tách Khoản/Điểm, snapshot v2 (ADR 0002). Đo: 6.815/7.620 expiry chưa định vị có marker; ngày history `T00:00` lệch +1 | `../completed/2026-09-17-backfill-corpus-v2.md` |
+| 2026-09-14 | Backfill T0 (snapshot v1 kiểm chứng) và T1 (edges thuần từ raw, review queue chính xác, `align()` +4.199 node, chuẩn hóa ngày history, `anchor_problem`). Lộ 115 đích phả hệ chưa tải → T3.1 | `../completed/2026-09-17-backfill-corpus-v2.md` mục Validation |
+| 2026-09-14 | Backfill T2: phạm vi QPPL trung ương (20.318), hàng đợi điền tay 308, phát hiện 1.626 QPPL có chữ nhưng không có cấu trúc | `../completed/2026-09-17-backfill-corpus-v2.md` |
+| 2026-09-17 | Backfill T3.1: closure genealogy hội tụ (115→40→0 target chưa tải), vá bug `attach_provision_text.py` không ghi nhận `no_content` | `../completed/2026-09-17-backfill-corpus-v2.md` |
+| 2026-09-17 | Backfill T4.3: 381/388 candidate `effective_to` quyết định qua đối chiếu văn bản gốc (không chỉ tin referenceType); sửa 5 lỗi thuật toán so khớp; bắt thêm 2 candidate sai (`3639`, cùng lớp lỗi với `46742`) | `../completed/2026-09-17-backfill-corpus-v2.md` |
+| 2026-09-17 | Backfill T5.2: kiểm tra tính đầy đủ toàn bộ 65.216 Điều/Khoản phát hiện 15% mất câu dẫn nhập (2,57M ký tự) → thêm field `preambles`; 100/100 mẫu kiểm tay đúng | `src/legal_crawler/provisions/subtree.py`, `../completed/2026-09-17-backfill-corpus-v2.md` |
+| 2026-09-17 | Backfill T5.4: tái lập đúng phương pháp v1 — 243 văn bản một tác nhân, 919 bộ ba gold (v1: 228/843) | `../completed/2026-09-17-backfill-corpus-v2.md` |
+| 2026-09-17 | Backfill T3.3: commit code (`7794627`), đóng băng snapshot v2, đẩy HF (`7d8ab0c`), tải về thư mục khác kiểm chứng `verify_pipeline.py` pass — **M1 đạt trước hạn** | `../completed/2026-09-17-backfill-corpus-v2.md` |
