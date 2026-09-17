@@ -42,6 +42,8 @@ data/*
 
 # Human decisions — losing these means redoing the review by hand
 !data/excluded_ids.txt
+!data/review/
+!data/review/temporal_candidates.jsonl
 
 # Needed at runtime: build_graph.py --extra-seeds reads this, and it only
 # exists as the output of a ~2h reverse-closure crawl

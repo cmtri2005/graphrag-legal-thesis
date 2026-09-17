@@ -49,6 +49,16 @@ def _day(value: str | None) -> str | None:
     return value[:10] if value else None
 
 
+def _tsv_cell(value: str | None) -> str:
+    """Collapse embedded tabs/newlines so one record can't span TSV rows.
+
+    Titles scraped from the portal occasionally carry a literal newline; left
+    alone it splits the TSV row across physical lines, silently corrupting
+    every downstream reader (csv module, spreadsheet import, ...).
+    """
+    return " ".join((value or "").split())
+
+
 def effective_to_candidate(target_id: str, target: dict, actors: dict[str, tuple[dict, set[int]]]) -> dict:
     """A candidate record, or a {"skip": reason} marker.
 
@@ -109,7 +119,8 @@ def main() -> None:
             review_rows.append([
                 doc_id, doc.get("docNum"), _day(doc.get("effFrom")), record["value"],
                 actor_id, actor.get("docNum"), ",".join(ENDING_CODES[c] for c in record["evidence_relation_codes"]),
-                URL.format(doc_id), URL.format(actor_id), doc.get("title") or "", actor.get("title") or "",
+                URL.format(doc_id), URL.format(actor_id),
+                _tsv_cell(doc.get("title")), _tsv_cell(actor.get("title")),
             ])
         elif row["anchor_problem"] == NO_EFF_FROM:
             if not doc.get("issueDate"):

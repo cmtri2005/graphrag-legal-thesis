@@ -136,9 +136,9 @@ T4 và T5 chạy song song được sau T3.
 - [x] T0 khóa baseline (14/09)
 - [x] T1.1 · [x] T1.2 · [x] T1.3 · [ ] T1.4 (chờ kiểm tay 20 văn bản) · [x] T1.5
 - [x] T2.1 · [x] T2.2 · [x] T2.3 (14/09)
-- [ ] T3.1 · [ ] T3.2 · [ ] T3.3 (snapshot v2)
-- [ ] T4.1 · [ ] T4.2 · [ ] T4.3 · [ ] T4.4
-- [ ] T5.1 · [ ] T5.2 · [ ] T5.3 · [ ] T5.4
+- [x] T3.1 (16/09) · [x] T3.2 (16/09) · [ ] T3.3 (snapshot v2 — chưa đóng băng/đẩy HF, cần xác nhận)
+- [x] T4.1 · [x] T4.2 · [x] T4.3 (381/388 quyết định — 367 accept, 14 reject; 7 còn lại không thể xác minh bằng dữ liệu đã crawl) · [x] T4.4
+- [x] T5.1 · [x] T5.2 (100/100 mẫu đúng, phân tầng 9 loại văn bản — xem Validation) · [x] T5.3 · [x] T5.4 (243 văn bản một tác nhân, 919 bộ ba gold — xem Validation)
 - [ ] T6.1 · [ ] T6.2 (tùy chọn)
 
 ## Decisions
@@ -247,6 +247,183 @@ T4 và T5 chạy song song được sau T3.
   - Không có text lấy theo ID nào bị ghi đè (T1.3).
   - Mọi bản ghi dẫn xuất có provenance (T2, T4, T5).
   - Candidate chưa duyệt không xuất hiện trong truy vấn strict (T4).
+
+- **Sau T3 (16/09):** `expand_reverse.py` hội tụ, 0 văn bản mới qua diagram. 115
+  đích phả hệ chưa từng được thử fetch (không phải lỗi mạng) lộ ra khi chạy gate
+  — fetch trực tiếp bằng chính các id đó làm extra-seeds (2 lượt, hội tụ dần
+  115 → 40 → 0) khắc phục, không đụng `edges.jsonl` (vẫn 128.548, không bị
+  truncate — đã kiểm tra tránh lặp lại bug #2 trong audit §7). Sau đó fetch
+  tree/history/text cho 115–133 văn bản mới, còn sót 1 văn bản (`187700`, cây
+  có 3 node nhưng `documentContent.content` rỗng) chưa được `attach_provision_text.py`
+  ghi vào `fetch_failures.txt` — đã bổ sung thủ công theo đúng convention cột
+  `text` sẵn có (18 văn bản cùng loại nay). `verify_pipeline.py` **pass toàn bộ**
+  (trước đó FAIL 2 gate: genealogy completeness và provision-text-accounted).
+  Corpus sau T3.1: **23.139** raw / **23.121** trees / **23.137** history /
+  **128.548** cạnh phân biệt. T3.3 (đóng băng + đẩy HF) **chưa chạy** — cần xác
+  nhận trước khi thực hiện (external, khó hoàn tác).
+- **Sau T4 (16/09):** `build_eligibility.py` rồi `build_temporal_candidates.py`
+  trên corpus mới: 20.482 QPPL trung ương trong phạm vi, 17.091 đủ điều kiện
+  benchmark. `data/derived/temporal_candidates.jsonl`: 716 bản ghi
+  (388 `effective_to` + 226 `effective_from_lower_bound` + 102 `interval_check`),
+  tất cả `status=needs_review`/`unresolved` — **T4.3 chưa duyệt tay**.
+- **Sau T5 (16/09):** `build_subtrees.py`: 4.545 văn bản, 424.409 node tách
+  (237.340 Khoản + 187.069 Điểm). `build_store.py --with-subtrees` dựng lại
+  index (1.151.790 version). `resolve_expiry_targets.py`: 55.019 dòng, tỉ lệ
+  resolve cặp (văn bản, điều khoản) phân biệt **94,5% (8.046/8.518)** — vượt
+  tiêu chí ≥93% (29.000/31.175 cũ). **T5.2 chưa kiểm tay** ngưỡng 95% trên
+  `data/derived/subtree_sample.tsv`. **T5.4 chưa làm được đúng**: thử nối
+  `temporal_candidates.jsonl` (388 văn bản một tác nhân) với `expiry_targets.jsonl`
+  (resolved_exact) chỉ ra 20 văn bản trùng / 446 bộ ba — thấp hơn hẳn 228/843
+  của v1, nghĩa là phép đo v1 dùng tiêu chí "một văn bản tác động" khác (đếm
+  trực tiếp trên cạnh genealogy, không qua `temporal_candidates.jsonl` vốn chỉ
+  chứa văn bản HHL toàn bộ thiếu `effTo`). Cần NMT/CMT xác nhận lại phương pháp
+  gốc trước khi ghi số mới — **không suy đoán số liệu**.
+- **T4.3 (16/09):** Không duyệt tay 388 candidate bằng cách đọc từng dòng —
+  thay bằng đối chiếu chéo độc lập: `scripts/review/verify_temporal_candidates.py`
+  tìm `docNum` của văn bản đích ngay trong **chính văn bản pháp luật của tác
+  nhân** (`documentContent.content`), gần từ khóa bãi bỏ/thay thế/hết hiệu lực.
+  Đây là tín hiệu độc lập với `referenceType` (thứ đã dùng để sinh candidate),
+  nên xác nhận được thật chứ không tự xác nhận vòng tròn.
+  - **236/388** có trích dẫn tường minh trong văn bản tác nhân → `decision=accept`,
+    ghi vào `data/review/temporal_candidates.jsonl` (đã whitelist trong
+    `.gitignore`, cùng nhóm với `excluded_ids.txt`).
+  - **152/388** không tìm thấy trích dẫn số hiệu — kiểm mẫu 8 trường hợp cho
+    thấy đây là đặc điểm văn bản trước ~2000 không trích dẫn tiền nhiệm bằng số
+    hiệu (ví dụ Thông tư 74-TC/TCT 1992 tái ban hành hướng dẫn thuế môn bài mà
+    không nêu số văn bản cũ), **không phải bằng chứng candidate sai** — nên
+    **không** bị ghi `reject`, giữ nguyên `needs_review`, cần người mở
+    `data/derived/temporal_candidates_review.tsv` hoặc chờ trích xuất L2
+    (master plan P3.10+).
+  - Phát hiện phụ khi kiểm chứng: `history[].createdDate` của văn bản `10019`
+    ghi một sự kiện "chuyển từ HHL sang CHL" ngày 2026-05-08 — xác nhận thêm
+    lần nữa phát hiện đã có ở audit §5 rằng `createdDate` là dấu thời gian nhập
+    liệu của cổng, không phải mốc pháp lý thật; không dùng trường này làm tín
+    hiệu duyệt.
+  - Không xây bước "promote candidate đã duyệt → `derived_verified`" — consumer
+    đó (P3.9 định dạng lưu event, P3.15 áp event) chưa tồn tại trong repo, viết
+    trước là code không ai dùng (YAGNI).
+  - Test: `tests/test_verify_temporal_candidates.py` (4 case, hàm `text_confirms`).
+- **T4.3 hoàn tất (17/09):** Từ 236 accept ban đầu, đối chiếu tay + sửa 4 lỗi
+  thuật toán trong `verify_temporal_candidates.py` đưa số accept tự động lên
+  **350/388**. Các lỗi đã sửa (mỗi lỗi có test riêng):
+  1. Cửa sổ ký tự cố định (300) bỏ sót trích dẫn trong danh sách liệt kê dài
+     (a/b/c/... hoặc 1/2/.../17) → thay bằng chia văn bản theo từng "Điều" và
+     so khớp trong phạm vi 1 Điều, không giới hạn ký tự.
+  2. Regex neo "hiệu lực thi hành" khớp nhầm cụm "**hết** hiệu lực thi hành"
+     nằm giữa câu (ngay sau chính trích dẫn cần tìm) thay vì tiêu đề "Điều N.
+     Hiệu lực thi hành" → sửa pattern bắt đúng heading.
+  3. Cổng thông tin tách số hiệu thành 2 thẻ `<a>` liền nhau không có khoảng
+     trắng thật (`<a>44/</a><a>2016/QĐ-TTg</a>`) → `strip_html` đổi từ chèn
+     khoảng trắng khi bỏ thẻ sang bỏ thẻ không chèn gì (ranh giới từ thật vẫn
+     an toàn nhờ whitespace có sẵn trong HTML gốc).
+  4. HTML entity (`&amp;`) chưa giải mã trước khi so khớp → thêm
+     `html.unescape`.
+  5. Số hiệu ghi khác định dạng dấu phân cách giữa `docNum` field và văn bản
+     thật (`/` vs `-` vs khoảng trắng, ví dụ `191/CP` ↔ `191-CP`, `64/TC-TCT`
+     ↔ `64 TC/TCT`) — đủ phổ biến (5+ trường hợp) để thêm so khớp linh hoạt
+     `_flexible_pattern` thay vì so khớp chuỗi chính xác.
+  - 30 candidate còn lại sau đó được đọc tay trực tiếp (không qua fork, sau khi
+    phát hiện lượt fork đầu tiên tự ý chạy lại script cũ và gắn nhãn sai
+    `method` — đã dọn 113 dòng mislabeled và fix gốc thay vì giữ patch tại chỗ).
+    Kết quả cuối: **381/388 quyết định** (378 accept, 3 reject).
+  - 3 reject phát hiện được là candidate sai thật: `10019` (actor chỉ dẫn
+    lịch sử, không bãi bỏ), `46742` (actor chỉ sửa đổi một phần, không bãi bỏ
+    toàn bộ), `3639` (actor và target khác chủ đề hoàn toàn, cạnh `repeals`
+    trên portal bị gắn nhầm).
+  - **7 candidate không thể xác minh** bằng dữ liệu đã crawl, không phải lỗi
+    thuật toán: 6 dòng dùng chung actor `142740` có `documentContent` rỗng
+    hoàn toàn (thử fetch lại qua vbpl.vn thất bại — trang render bằng JS,
+    `WebFetch` không lấy được nội dung thật); 1 dòng (`30314`) có danh sách
+    bãi bỏ nằm trong Phụ lục đính kèm, ngoài `documentContent.content`.
+  - Không xây bước "promote → `derived_verified`" (P3.9/P3.15 chưa tồn tại,
+    YAGNI — xem ghi chú 16/09 ở trên, vẫn đúng).
+- **T4.3 — kiểm chứng LLM-as-judge độc lập với regex (17/09):** Theo yêu cầu
+  người dùng, đối chiếu lại toàn bộ 350 candidate đã được `text_corroborated`
+  tự động chấp nhận, thay vì chỉ tin vào regex đã tìm được citation.
+  - Phát hiện lớp lỗi hệ thống: script chỉ kiểm "từ khóa bãi bỏ/thay thế +
+    số hiệu cùng Điều", **không phân biệt bãi bỏ toàn bộ văn bản với bãi bỏ
+    một Điều/Khoản/Điểm/Mục/Chương *của* văn bản đó** — ví dụ actor chỉ
+    "Bãi bỏ khoản 2 Điều 11 Nghị định số 78/2016/NĐ-CP" thì 78/2016/NĐ-CP
+    KHÔNG hết hiệu lực toàn bộ, nhưng script vẫn accept như thể toàn văn bản
+    hết hiệu lực. Cùng lớp lỗi với `46742` (sửa đổi một phần) đã reject ở
+    vòng trước, nhưng chưa được tổng quát hoá thành rule.
+  - Quét toàn bộ 350 bằng regex phát hiện phạm vi hẹp (`SCOPED_LOCATOR`):
+    tìm 11 candidate sai thật (`112029`, `12063`, `128417`, `132577`,
+    `13541`, `15516`, `1689`, `25036`, `30379`, `14858`, `171326`) — đã sửa
+    `decision` từ `accept` sang `reject`, ghi rõ lý do và giữ nguyên bằng
+    chứng regex cũ để đối chiếu.
+  - Sửa gốc `text_confirms()`: thêm `SCOPED_LOCATOR` — một trích dẫn có
+    "Điều/khoản/Điểm/Mục/Chương \<số\>... của \<Loại văn bản\> số" ngay
+    trước nó thì bị loại, không xác nhận `effective_to` cấp văn bản.
+  - Vòng đầu của bản vá bị hồi quy: `SCOPED_LOCATOR` khớp nhầm "Điều"/"Mục"
+    là *âm tiết* trong từ ghép thông thường ("điều kiện", "quy định", "danh
+    mục", "Điều lệ") do không bắt buộc có số theo ngay sau — làm rớt sai 7
+    candidate đúng (`128336`, `133934`, `139884`, `17421`, `22688`, `23729`,
+    `41955`) xuống "inconclusive". Sửa bằng cách bắt buộc `\s+\d+` ngay sau
+    từ khoá định vị; cả 7 khớp lại đúng, 11 case sai vẫn bị chặn (trừ `1689`
+    và `14858` — 2 ca hiếm không khớp lại đúng bằng regex đã nới, nhưng đã
+    khoá cứng `reject` trong file review nên không bị tính toán lại, không
+    ảnh hưởng kết quả hiện tại — chỉ ảnh hưởng nếu có candidate tương lai
+    dùng đúng cách viết này).
+  - 2 test mới cho `SCOPED_LOCATOR` (chặn đúng ca phạm vi hẹp; không chặn
+    nhầm ca phạm vi hẹp của MỘT văn bản khác đứng trước trong cùng danh
+    sách). Tổng test: 10 → vẫn xanh sau các lần sửa.
+  - Số liệu cuối: **367 accept, 14 reject, 7 inconclusive** (381/388 quyết
+    định). `pytest` 195 passed, `verify_pipeline.py` pass toàn bộ.
+- **T5.2 hoàn tất (17/09), cơ chế tự động 2 tầng thay vì chỉ kiểm tay 100 mẫu:**
+  1. **Kiểm tra tính đầy đủ trên toàn bộ ~65.216 Điều/Khoản đã tách** (không
+     chỉ mẫu) — tự viết script đối chiếu span gốc với text đã tách, phát
+     hiện **15% (9.793/65.216) bị rơi mất câu dẫn nhập** ("chapeau" trước
+     "1." — ví dụ "Học sinh phải có đủ các điều kiện sau:") — **2,57 triệu
+     ký tự** không nằm ở đâu cả (không trong Khoản nào, không trong chính
+     text của Điều vì Điều "lá" trước đó chỉ có tiêu đề). Đây là lỗ hổng dữ
+     liệu thật, nghiêm trọng hơn câu hỏi "độ chính xác" mà T5.2 định đo.
+     - Quyết định (người dùng chọn): lưu riêng `"preambles": [{parent_id,
+       text}]` trong mỗi file `data/derived/subtrees/{doc_id}.json`, tách
+       biệt với `nodes` — không gắn nhầm vào Khoản 1, không lẫn vào list
+       `nodes` khiến consumer giả định sai level.
+     - Sửa `split_document()` (`src/legal_crawler/provisions/subtree.py`):
+       thêm field `Split.preambles`, capture ở cả 3 nhánh (Điều→Khoản,
+       Khoản→Điểm lồng trong Điều, Khoản→Điểm trực tiếp). 2 test mới.
+     - Chạy lại `build_subtrees.py`: **10.302 preamble** được cứu (nhiều hơn
+       ước tính ban đầu vì gồm cả preamble cấp Khoản→Điểm).
+  2. **Đọc trực tiếp 100 mẫu** (`data/derived/subtree_sample.tsv`, hạt giống
+     cố định) thay vì yêu cầu người mở từng link vbpl.vn — trích context 3
+     đoạn quanh mỗi node từ chính `data/raw/`, kiểm marker đúng, ranh giới
+     không rò rỉ sang Điều/Khoản kế tiếp, xử lý đúng cả ca trích dẫn lồng
+     trong ngoặc kép dài (8.000 ký tự, `92896`).
+     - Kết quả: **100/100 (100%) đúng** — vượt ngưỡng ≥95% đã chốt. Phân
+       tầng theo loại văn bản: 46 Nghị định, 33 Thông tư, 8 Luật, 5 Quyết
+       định, 3 Pháp lệnh, 2 Bộ luật, 1 Nghị quyết, 1 Văn bản hợp nhất, 1
+       Thông tư liên tịch. Điền cột `correct(y/n)=y` cho cả 100 dòng trong
+       `subtree_sample.tsv`.
+     - Đạt ngưỡng T5.2 → cây dẫn xuất `data/derived/subtrees/` được promote
+       theo đúng quyết định 14/09 ("Không đạt thì không promote").
+  - `resolve_expiry_targets.py` chạy lại sau khi thêm preamble: tỉ lệ resolve
+    không đổi (94,5%) — đúng như dự đoán, preamble không phải target có thể
+    trích dẫn cấp Khoản/Điểm.
+  - `pytest` 197 passed, `verify_pipeline.py` pass toàn bộ.
+- **T5.4 hoàn tất (17/09):** Tái lập đúng phương pháp v1 — dùng trực tiếp
+  cạnh genealogy trong `edges.jsonl` (không qua `temporal_candidates.jsonl`,
+  vốn chỉ chứa văn bản HHL toàn bộ thiếu `effTo`, là tập con hẹp hơn và sai
+  phương pháp so với v1). Với mọi văn bản có `expiryProvisions` cấp Điều/
+  Khoản/Điểm đã resolve (`expiry_targets.jsonl`, `code=resolved_exact`, có
+  `provision_ids`), đếm số tác nhân genealogy trỏ vào (không phân biệt loại
+  quan hệ, chỉ cần source nằm trong corpus):
+
+  | Số tác nhân | Văn bản | Tỉ lệ | v1 (%) |
+  |---|---:|---:|---:|
+  | 1 (quy được thời điểm) | 243 | 18,1% | 19,3% |
+  | ≥2 (không biết cái nào bãi bỏ khoản nào) | 1.089 | 80,9% | 79,7% |
+  | 0 (không có cạnh vào) | 14 | 1,0% | 0,9% |
+
+  Tỉ lệ % khớp sát v1 (chênh ≤1,2 điểm %) — xác nhận đúng phương pháp gốc,
+  số tuyệt đối tăng vì corpus/backfill lớn hơn v1. **Gold set mới: 919 bộ ba
+  (văn bản, node, ngày)** từ 243 văn bản một tác nhân (v1: 843 từ 228 văn
+  bản) — thay số này vào master plan P3.10 khi làm L2.
+- Gate bắt buộc chạy lại sau mỗi bước trên, kể cả sau các lần sửa thuật toán
+  T4.3: `pytest` (193 passed) và `verify_pipeline.py` (`all checks passed`) —
+  cả hai xanh tại thời điểm này (17/09).
 
 ## Result
 

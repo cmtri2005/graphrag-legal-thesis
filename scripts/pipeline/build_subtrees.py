@@ -33,7 +33,7 @@ def main() -> None:
     shutil.rmtree(out, ignore_errors=True)
     out.mkdir(parents=True)
 
-    written = nodes = 0
+    written = nodes = preambles = 0
     levels: collections.Counter[str] = collections.Counter()
     reasons: collections.Counter[str] = collections.Counter()
     pool: list[tuple[str, str, dict]] = []
@@ -51,10 +51,12 @@ def main() -> None:
         if not split.nodes:
             continue
         store.save("derived/subtrees", doc_id, {
-            "doc_id": doc_id, "method": METHOD, "nodes": split.nodes, "skipped": split.skipped,
+            "doc_id": doc_id, "method": METHOD, "nodes": split.nodes,
+            "preambles": split.preambles, "skipped": split.skipped,
         })
         written += 1
         nodes += len(split.nodes)
+        preambles += len(split.preambles)
         for node in split.nodes:
             levels[node["level"]] += 1
             pool.append((doc_id, raw.get("docNum") or "", node))
@@ -65,7 +67,7 @@ def main() -> None:
         for doc_id, doc_num, node in sample:
             f.write(f"{doc_id}\t{doc_num}\t{node['id']}\t{node['title']}\t\t{node['text'][:300]}\t{URL.format(doc_id)}\n")
 
-    print(f"{written:,} documents, {nodes:,} split nodes -> {out}")
+    print(f"{written:,} documents, {nodes:,} split nodes, {preambles:,} preambles recovered -> {out}")
     for level, count in levels.most_common():
         print(f"  {count:>8,}  {level}")
     print("parents refused:")

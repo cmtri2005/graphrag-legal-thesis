@@ -39,6 +39,11 @@ _QUOTES = "“\"'"
 class Split:
     nodes: list[dict] = field(default_factory=list)
     skipped: list[dict] = field(default_factory=list)
+    # Text between a split parent's own heading and its first Khoản/Điểm
+    # marker ("Học sinh phải có đủ các điều kiện sau:") belongs to the parent,
+    # not to Khoản 1 — kept separate from `nodes` so it is never mistaken for
+    # clause/point content by a consumer that only expects those two levels.
+    preambles: list[dict] = field(default_factory=list)
 
 
 def anchors_for(nodes: list[dict], paragraphs: list[Paragraph]) -> dict[str, int]:
@@ -124,13 +129,24 @@ def split_document(tree: list[dict], html: str) -> Split:
             if reason:
                 result.skipped.append({"node_id": node["id"], "reason": reason})
                 continue
+            first_start = clauses[0]["span"][0] if clauses else 0
+            if first_start > 0:
+                preamble = text_of(start, start + first_start, None)
+                if preamble.strip():
+                    result.preambles.append({"parent_id": node["id"], "text": preamble})
             for clause in clauses:
                 c_start, c_end = clause.pop("span")
                 result.nodes.append({**clause, "text": text_of(start + c_start, start + c_end, _POINT)})
-                points, reason = _children(clause["id"], "Point", span[c_start + 1:c_end], flags[c_start + 1:c_end])
+                clause_span, clause_flags = span[c_start + 1:c_end], flags[c_start + 1:c_end]
+                points, reason = _children(clause["id"], "Point", clause_span, clause_flags)
                 if reason:
                     result.skipped.append({"node_id": clause["id"], "reason": reason})
                     continue
+                point_first_start = points[0]["span"][0] if points else 0
+                if point_first_start > 0:
+                    preamble = text_of(start + c_start + 1, start + c_start + 1 + point_first_start, None)
+                    if preamble.strip():
+                        result.preambles.append({"parent_id": clause["id"], "text": preamble})
                 for point in points:
                     p_start, p_end = point.pop("span")
                     first = start + c_start + 1 + p_start
@@ -140,6 +156,11 @@ def split_document(tree: list[dict], html: str) -> Split:
             if reason:
                 result.skipped.append({"node_id": node["id"], "reason": reason})
                 continue
+            first_start = points[0]["span"][0] if points else 0
+            if first_start > 0:
+                preamble = text_of(start, start + first_start, None)
+                if preamble.strip():
+                    result.preambles.append({"parent_id": node["id"], "text": preamble})
             for point in points:
                 p_start, p_end = point.pop("span")
                 result.nodes.append({**point, "text": text_of(start + p_start, start + p_end, None)})

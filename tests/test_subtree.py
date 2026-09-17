@@ -57,6 +57,29 @@ def test_broken_numbering_refuses_instead_of_guessing():
     assert split.skipped[0]["node_id"] == "a1"
 
 
+def test_text_before_the_first_marker_is_a_preamble_not_lost_or_misattributed():
+    html = (
+        "<body><p id='a1'>Điều 1. Điều kiện</p>"
+        "<p>Học sinh phải có đủ các điều kiện sau:</p>"
+        "<p>1. Điều kiện một.</p><p>2. Điều kiện hai.</p>"
+        "<p id='a2'>Điều 2. Hiệu lực</p></body>"
+    )
+    split = split_document(ARTICLE_ONLY_TREE, html)
+    assert split.preambles == [{"parent_id": "a1", "text": "Học sinh phải có đủ các điều kiện sau:"}]
+    # The preamble sentence must not leak into Khoản 1's own text.
+    assert by_title(split)[("a1", "Khoản 1")]["text"] == "1. Điều kiện một."
+
+
+def test_no_preamble_recorded_when_the_marker_comes_first():
+    html = (
+        "<body><p id='a1'>Điều 1. Tên</p>"
+        "<p>1. Khoản một ngay từ đầu.</p>"
+        "<p id='a2'>Điều 2. Khác</p></body>"
+    )
+    split = split_document(ARTICLE_ONLY_TREE, html)
+    assert split.preambles == []
+
+
 def test_declared_children_are_never_second_guessed_and_markers_anchor_old_html():
     tree = [
         {"id": "a1", "title": "Điều 1", "level": "Article",

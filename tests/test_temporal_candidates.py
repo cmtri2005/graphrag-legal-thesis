@@ -1,4 +1,4 @@
-from build_temporal_candidates import effective_to_candidate
+from build_temporal_candidates import _tsv_cell, effective_to_candidate
 
 TARGET = {"effFrom": "2015-01-01T00:00:00", "effTo": None}
 
@@ -23,3 +23,10 @@ def test_no_candidate_without_one_unambiguous_later_actor():
     # An actor effective no later than the target cannot be the moment it ended.
     same_day = {"A": (actor("2015-01-01T00:00:00"), {1})}
     assert effective_to_candidate("T", TARGET, same_day)["skip"] == "actor takes effect before the target"
+
+
+def test_tsv_cell_collapses_embedded_newlines_and_tabs():
+    # An untouched newline/tab would split one record across TSV rows/columns.
+    assert _tsv_cell("Thông tư số 1\nsửa đổi\tĐiều 2") == "Thông tư số 1 sửa đổi Điều 2"
+    assert _tsv_cell(None) == ""
+    assert _tsv_cell("  đã có khoảng trắng thừa  ") == "đã có khoảng trắng thừa"

@@ -44,4 +44,5 @@ text	187793	Thông tư số 108/2025/TT-BTC Hướng dẫn lập báo cáo tài 
 text	187840	Nghị định số 312/2025/NĐ-CP Quy định cơ chế quản lý tài chính dự án đầu tư theo phương thức đối tác công tư và
 text	8653	Thông tư số 12/LĐTBXH-TT Hướng dẫn việc kiến nghị điều chỉnh Danh mục các doanh nghiệp không được đình công
 text	186725	Thông tư số 102/2025/TT-BNNMT Sửa đổi, bổ sung một số điều của Thông tư số 21/2024/TT-BTNMT ngày 21 tháng 12 n
-text	187639	Nghị quyết số 02/2026/NQ-HĐND Quy định chính sách hỗ trợ đối với học sinh đang học bán trú, học sinh thuộc hộ 
+text	187639	Nghị quyết số 02/2026/NQ-HĐND Quy định chính sách hỗ trợ đối với học sinh đang học bán trú, học sinh thuộc hộ
+text	187700	Quyết định số 30/2026/QĐ-UBND Ban hành Quy chế quản lý hoạt động thông tin đối ngoại trên địa bàn tỉnh Cà Mau
