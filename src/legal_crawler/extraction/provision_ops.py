@@ -30,6 +30,7 @@ from dataclasses import dataclass
 from legal_crawler.temporal.models import LegalOperation, ProvisionLevel
 
 from .models import ProvisionLocator, ProvisionReferencePart
+from .wording import wording_blocks
 
 L = ProvisionLevel
 _ORDER = {L.PART: 0, L.CHAPTER: 1, L.SECTION: 2, L.SUBSECTION: 3, L.ARTICLE: 4, L.CLAUSE: 5, L.POINT: 6}
@@ -79,6 +80,10 @@ _PHRASE = re.compile(
 # "Bãi bỏ quy định hướng dẫn thực hiện Điều 41 Nghị định X tại Thông tư Y" acts
 # on Y; X is only what Y implemented. Too tangled to resolve: skipped.
 _GUIDANCE_OF = re.compile(r"(?i:hướng dẫn\s+(?:thực hiện|thi hành))")
+# "khoản 4 Điều 2 Hợp đồng mua bán điện mẫu ban hành kèm theo Thông tư X" or
+# "Mục 5 … tại Phụ lục IV Nghị định X" number a part of an appendix, which the
+# tree does not hold; resolved, they would land on the body's Điều 2 or Mục 5.
+_APPENDIX = re.compile(r"(?<!\w)(?i:phụ lục|mẫu)(?!\w)")
 _QUOTE_LINE = re.compile(r"[«Q»\s.,;:”\"']*")
 # Only "quy định về/liên quan …": "Bãi bỏ một số nội dung của các Thông tư sau:" or
 # "các nội dung quy định tại:" just open a list whose items go whole.
@@ -135,6 +140,7 @@ class Mention:
     document_number: str
     method: str  # explicit | forward | list_forward | intro | article_context | title_context
     evidence: str
+    paragraph: int = -1  # the instruction's paragraph, where `wording_blocks` keys its new wording
 
 
 def parse_locators(segment: str) -> list[dict[ProvisionLevel, str]]:
@@ -220,7 +226,8 @@ def _drop_quotes(text: str) -> str:
             depth -= 1
             if depth == 0:
                 out.append(text[last:start])
-                out.append(f" {_QUOTE_MARK} ")
+                # One NUL per paragraph swallowed, so each line still knows its paragraph.
+                out.append(f" {_QUOTE_MARK} " + "\0" * text.count("\n", start, i))
                 last = i + 1
     out.append(text[last:])
     return "".join(out)
@@ -264,7 +271,8 @@ def _statement(text: str) -> _Stmt:
     else:
         stop = _STOP.search(text, op_end)
         end = min(stop.start() if stop else len(text), passive_m.start() if passive_m else len(text))
-    guidance = bool(cite_m and _GUIDANCE_OF.search(text, op_end, cite_start))
+    guidance = bool(cite_m and _GUIDANCE_OF.search(text, op_end, cite_start)) or bool(
+        _APPENDIX.search(text, op_end, cite_start))
     phrase = None
     for phrase in _PHRASE.finditer(text, op_end):
         pass  # the last one: "thay cụm từ A bằng cụm từ B tại …"
@@ -327,26 +335,29 @@ class _Intro:
 
 def extract_mentions(paragraphs: list[str], title_doc: str | None = None) -> list[Mention]:
     """Mentions in body order; `title_doc` is the number the actor's title amends, if any."""
+    paragraphs = _mask_wording(paragraphs)
     text = "\n".join(paragraphs).replace("Ð", "Đ").replace("ð", "đ")  # "Ðiều" (Latin Eth) is Điều
-    lines = [_PARENTHETICAL.sub(" ", line) for line in _drop_quotes(text).split("\n")]
     mentions: list[Mention] = []
     seen: set[tuple] = set()
     article_doc: str | None = None
     level0: _Intro | None = None   # set by a plain line or article heading ending in ":"
     level1: _Intro | None = None   # set by a numbered/dash item ending in ":"
-    pending: list[tuple[LegalOperation, list[dict], str]] = []  # letter items waiting for a later citation
+    pending: list[tuple[LegalOperation, list[dict], str, int]] = []  # letter items waiting for a later citation
 
-    def emit(op, locs, doc, method, evidence):
+    def emit(op, locs, doc, method, evidence, paragraph):
         if not locs and op not in _WHOLE_DOC_OPS:
             return
         locators = tuple(_locator(p) for p in locs)
         key = (op, normalize_number(doc), tuple(tuple((x.level, x.label) for x in loc.parts) for loc in locators))
         if key not in seen:
             seen.add(key)
-            mentions.append(Mention(op, locators, doc, method, evidence[:400]))
+            mentions.append(Mention(op, locators, doc, method, evidence[:400], paragraph))
 
-    for raw_line in lines:
-        line = raw_line.strip()
+    next_paragraph = 0
+    for raw_line in _drop_quotes(text).split("\n"):
+        paragraph = next_paragraph
+        next_paragraph += 1 + raw_line.count("\0")
+        line = _PARENTHETICAL.sub(" ", raw_line.replace("\0", "")).strip()
         if _QUOTE_LINE.fullmatch(line):
             continue  # a quoted paragraph (and its closing "."), not a new instruction
         head = _ARTICLE_HEAD.match(line)
@@ -404,18 +415,31 @@ def extract_mentions(paragraphs: list[str], title_doc: str | None = None) -> lis
                     article_doc = st.cite
                 if doc is None:
                     if locs and kind == "letter":
-                        pending.append((op, locs, st.text))
+                        pending.append((op, locs, st.text, paragraph))
                     continue
                 if method == "explicit" and pending:
-                    for p_op, p_locs, p_text in pending:
-                        emit(p_op, p_locs, doc, "list_forward", p_text)
+                    for p_op, p_locs, p_text, p_paragraph in pending:
+                        emit(p_op, p_locs, doc, "list_forward", p_text, p_paragraph)
                     pending = []
                 if not locs and (method != "explicit" or st.excepted):
                     continue
-                emit(op, locs, doc, method, st.text)
+                emit(op, locs, doc, method, st.text, paragraph)
         if kind == "num" and not line.rstrip().endswith(":"):
             level1 = None
     return mentions
+
+
+def _mask_wording(paragraphs: list[str]) -> list[str]:
+    """Blank every quoted new wording: its "1. Nguyên tắc …" is text, never an instruction.
+
+    `_drop_quotes` already hides “…”; this also covers straight "…" blocks, whose
+    quotes cannot be balanced one character at a time.
+    """
+    masked = list(paragraphs)
+    for instruction, block in wording_blocks(paragraphs).items():
+        for j in range(block.start, block.end + 1):
+            masked[j] = masked[j][:block.inline_at] if j == instruction and block.inline_at is not None else ""
+    return masked
 
 
 def title_document(title: str) -> str | None:

@@ -13,8 +13,11 @@ Three measurements, none of which trusts the extractor's own output:
    the actor is known without reading any text (backfill T5.4); an event that
    covers such a pair must name that same actor.
 3. Precision by hand. `data/derived/provision_events_sample.tsv` is a fixed-seed
-   stratified sample of resolved events with their evidence, to be judged by a
+   stratified sample of applicable (verified + auto_accepted) events with their evidence, to be judged by a
    reader (column `correct`).
+4. The new wording, by hand. `data/derived/provision_wording_sample.tsv` samples
+   applicable events carrying `text_updates`: is that the provision's text after
+   the act, cut at the right markers?
 
 It also reports the point of the exercise: pairs in documents with several
 actors — undatable from metadata — that now have exactly one actor.
@@ -32,9 +35,10 @@ from pathlib import Path
 
 from legal_crawler.index import TemporalIndex
 
-# 20260918, 20260919 and 20260920 drew the samples the error classes were found on; a precision
-# estimate must come from a sample the fixes never saw.
-SAMPLE_SEED = 20260921
+# 20260918–20 and 20260922 drew the samples the error classes were found on; 20260921
+# measured v4 (56/60, all resolved events). From 20260923 section 3 samples only the
+# applicable events (verified + auto_accepted), the ones P3.15 writes into version chains.
+SAMPLE_SEED = 20260923
 # Every operation that ends the version the portal calls expired. An amended
 # Khoản is "hết hiệu lực một phần" too: its old wording stops applying.
 # Supplement only adds nodes, so it ends nothing.
@@ -92,6 +96,17 @@ def main() -> None:
         print(f"  {n:>7,}  {op:<10} {scope:<4} {code}")
     methods = collections.Counter(ev["method"] for ev in events if ev["code"] == "resolved_subtree")
     print("  resolved provision events by method:", dict(methods.most_common()))
+
+    print("\n== Event store status (applicable: verified + auto_accepted) ==")
+    for (status, reason), n in sorted(collections.Counter(
+            (ev["status"], ev["status_reason"]) for ev in events).items(), key=lambda kv: -kv[1]):
+        print(f"  {n:>7,}  {status:<13} {reason or ''}")
+    by_op = collections.defaultdict(collections.Counter)
+    for ev in events:
+        if ev["code"] == "resolved_subtree":
+            by_op[ev["operation"]][ev["status"] != "needs_review"] += 1
+    for op, c in sorted(by_op.items(), key=lambda kv: -sum(kv[1].values())):
+        print(f"  {op:<10} resolved {sum(c.values()):>6,} | applicable {c[True]:>6,} ({c[True] / sum(c.values()):.1%})")
 
     print("\n== 1. Recall against portal expiryProvisions (resolved pairs) ==")
     table = collections.defaultdict(lambda: collections.Counter())
@@ -161,7 +176,7 @@ def main() -> None:
             titles[doc] = {p.id: p.title for p in index.document_order(doc)}
         return titles[doc].get(pid, "?")
 
-    resolved = [ev for ev in events if ev["code"] == "resolved_subtree"]
+    resolved = [ev for ev in events if ev["code"] == "resolved_subtree" and ev["status"] != "needs_review"]
     strata = collections.defaultdict(list)
     for ev in resolved:
         strata["explicit" if ev["method"] == "explicit" else ("intro" if ev["method"] == "intro" else "other")].append(ev)
@@ -170,13 +185,25 @@ def main() -> None:
     sample = [ev for name, q in quota.items() for ev in rng.sample(strata[name], min(q, len(strata[name])))]
     out = data / "derived" / "provision_events_sample.tsv"
     with out.open("w", encoding="utf-8") as f:
-        f.write("correct\tactor_id\tactor_number\toperation\tmethod\ttarget_number\ttarget_document_id\tlocator\tresolved_title\tevidence\n")
+        f.write("correct\tstatus\tactor_id\tactor_number\toperation\tmethod\ttarget_number\ttarget_document_id\tlocator\tresolved_title\tevidence\n")
         for ev in sample:
             loc = " > ".join(f"{lvl} {lab}" for lvl, lab in ev["locator"])
             evidence = " ".join(ev["evidence"].split())
-            f.write(f"\t{ev['actor_id']}\t{ev['actor_number']}\t{ev['operation']}\t{ev['method']}\t{ev['document_number']}\t"
+            f.write(f"\t{ev['status']}\t{ev['actor_id']}\t{ev['actor_number']}\t{ev['operation']}\t{ev['method']}\t{ev['document_number']}\t"
                     f"{ev['target_document_id']}\t{loc}\t{title_of(ev['target_document_id'], ev['target_provision_id'])}\t{evidence}\n")
     print(f"\n== 3. Hand check: {len(sample)} sampled events -> {out} ==")
+
+    worded = [ev for ev in events if ev["text_updates"] and ev["status"] != "needs_review"]
+    picked = rng.sample(worded, min(args.sample // 2, len(worded)))
+    out = data / "derived" / "provision_wording_sample.tsv"
+    with out.open("w", encoding="utf-8") as f:
+        f.write("correct\tactor_id\tactor_number\toperation\ttarget_document_id\tlocator\tnodes\tinstruction\tnew_text\n")
+        for ev in picked:
+            loc = " > ".join(f"{lvl} {lab}" for lvl, lab in ev["locator"])
+            new = " ‖ ".join(u["new_text"] for u in ev["text_updates"])
+            f.write(f"\t{ev['actor_id']}\t{ev['actor_number']}\t{ev['operation']}\t{ev['target_document_id']}\t{loc}\t"
+                    f"{len(ev['text_updates'])}\t{' '.join(ev['evidence'].split())}\t{' '.join(new.split())[:1500]}\n")
+    print(f"== 4. New wording: {len(picked)} of {len(worded):,} applicable events with text -> {out} ==")
 
 
 if __name__ == "__main__":

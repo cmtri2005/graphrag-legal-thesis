@@ -228,3 +228,12 @@ def test_third_hand_check_error_classes():
         "Thay thế cụm từ “Tổng cục” bằng cụm từ “Ủy ban” tại khoản 2 Điều 7.",
     ])
     assert got == [(Op.AMEND, "23/2013/tt/bkhcn", [(("Article", "7"), ("Clause", "2"))], "intro")]
+
+
+def test_parts_of_an_appendix_are_not_the_bodys_provisions():
+    assert summary(["17. Sửa đổi Khoản 2 Điều 2 Hợp đồng mua bán điện mẫu ban hành kèm theo Thông tư số 56/2014/TT-BCT như sau:"]) == []
+    assert summary(["Bãi bỏ Phụ lục IV - Danh mục hàng hóa tại khoản 4 Điều 2 Thông tư số 22/2016/TT-BCT."]) == []
+    assert summary(["Thay thế Mục 5 Chương trình khung tại Phụ lục IV Nghị định 44/2016/NĐ-CP bằng Mục IV."]) == []
+    # An attached regulation's articles are in the tree: "ban hành kèm theo" alone is fine.
+    assert summary(["Sửa đổi khoản 1 Điều 3 Quy chế ban hành kèm theo Quyết định số 12/2010/QĐ-TTg."]) == [
+        (Op.AMEND, "12/2010/qd/ttg", [(("Article", "3"), ("Clause", "1"))], "explicit")]
