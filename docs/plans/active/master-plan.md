@@ -124,9 +124,9 @@ Chi tiết thực hiện P2.7–P2.12: [`2026-09-17-backfill-corpus-v2.md`](../c
 | P3.8 | Target resolver ("Khoản 1, Điều 3" → id nút) | CMT | ✅ | `extraction/target_resolver.py`; 22.847/31.175 chuỗi expiry map được. Chưa kiểm tiêu đề bất thường |
 | P3.9 | Định dạng lưu event đã duyệt trong `data/` | CMT, NMT | ⬜ | Hệ quả ADR 0001; dựng lại Neo4j từ file cho ra cùng kết quả |
 | P3.10 | Event BÃI BỎ từ 228 VB chỉ có một văn bản tác động (843 bộ ba) | CMT | ⬜ | 843 event `VERIFIED` có provenance |
-| P3.11 | Bộ trích xuất regex: SỬA ĐỔI / BỔ SUNG / BÃI BỎ / THAY THẾ | CMT | ⬜ | Chạy trên văn bản tác động; ca không chắc chắn vào `NEEDS_REVIEW` |
+| P3.11 | Bộ trích xuất regex: SỬA ĐỔI / BỔ SUNG / BÃI BỎ / THAY THẾ | CMT | 🟡 | `extraction/provision_ops.py`, `scripts/pipeline/extract_provision_events.py` → `data/derived/provision_events.jsonl` (12.676 VB tác động; bỏ 768 không phải QPPL trung ương, 84 VB mà cổng trả nhầm thân văn bản). Chưa gắn `NEEDS_REVIEW` (xem hạn chế ở P3.13) |
 | P3.12 | LLM cho ca phức tạp | CMT | ⬜ | Chỉ gọi khi regex bó tay; ghi `method=LLM` |
-| P3.13 | Đo độ chính xác L2 | CMT, NMT | ⬜ | Trên 843 mẫu gold và 200 mẫu kiểm tay; số liệu có trong khóa luận |
+| P3.13 | Đo độ chính xác L2 | CMT, NMT | 🟡 | `scripts/check/measure_provision_events.py` (2026-09-18). Recall theo expiryProvisions của cổng 64,9% (5.223/8.046 cặp); cùng văn bản tác động với gold một-actor 98,3% (456/464); loại thao tác khớp hậu tố trạng thái 89,9% (HHL1P1=bãi bỏ, P2=đính chính, P3=sửa đổi, P4=thay thế); 3.863/7.079 cặp nhiều-actor nay có đúng một actor. Precision kiểm tay trên mẫu chưa dùng để sửa (seed 20260921): 56/60 = 93,3% (Wilson 95%: 84,1–97,4%); ba vòng trước (seed 20260918–20) dùng để tìm lỗi, không tính. Hạn chế còn lại: dòng thường không nhãn thừa kế câu dẫn nên lời văn mới trong ngoặc kép thẳng không đóng / câu "theo quy định tại" bị nhận thành thao tác; BỔ SUNG điểm mới bị resolve vào nút cũ trùng nhãn. Chưa đạt 200 mẫu kiểm tay, NMT chưa kiểm chéo |
 
 ### 3D. L3: hợp nhất phiên bản và lan truyền hiệu lực
 
