@@ -100,6 +100,8 @@ Chi tiết thực hiện P2.7–P2.12: [`2026-09-17-backfill-corpus-v2.md`](../c
 
 Đề cương phân công: CMT làm L0–L2, NMT làm L3 và kiểm chứng snapshot.
 
+Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định Q1–Q6): [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md).
+
 ### 3A. Hạ tầng (phát sinh từ ADR 0001)
 
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
