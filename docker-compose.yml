@@ -1,0 +1,104 @@
+name: graphrag-legal
+
+services:
+  neo4j:
+    image: neo4j:5.24.2-community
+    container_name: legal-kg-neo4j
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:7474:7474" # HTTP browser UI
+      - "127.0.0.1:7687:7687" # Bolt driver
+    environment:
+      NEO4J_AUTH: "neo4j/${NEO4J_PASSWORD:-changeme123}"
+      # Heap = working memory for query execution; page cache = graph held in
+      # RAM for fast traversal. Community edition has no clustering, so both
+      # can be generous on a single 16GB dev machine without starving Milvus.
+      NEO4J_server_memory_heap_initial__size: "1G"
+      NEO4J_server_memory_heap_max__size: "2G"
+      NEO4J_server_memory_pagecache_size: "2G"
+      NEO4J_PLUGINS: '["apoc"]'
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - neo4j_plugins:/plugins
+    mem_limit: 4g
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7474 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.14
+    container_name: legal-kg-etcd
+    restart: unless-stopped
+    environment:
+      ETCD_AUTO_COMPACTION_MODE: revision
+      ETCD_AUTO_COMPACTION_RETENTION: "1000"
+      ETCD_QUOTA_BACKEND_BYTES: "4294967296"
+      ETCD_SNAPSHOT_COUNT: "50000"
+    volumes:
+      - etcd_data:/etcd
+    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  minio:
+    image: minio/minio:RELEASE.2024-08-29T01-40-52Z
+    container_name: legal-kg-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "127.0.0.1:9001:9001" # console, optional
+    volumes:
+      - minio_data:/minio_data
+    command: minio server /minio_data --console-address ":9001"
+    mem_limit: 1g
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  milvus:
+    image: milvusdb/milvus:v2.4.15
+    container_name: legal-kg-milvus
+    restart: unless-stopped
+    command: ["milvus", "run", "standalone"]
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+      # Milvus's own default heap/cache settings scale to the container's
+      # cgroup memory limit; mem_limit below is the actual ceiling.
+    volumes:
+      - milvus_data:/var/lib/milvus
+    ports:
+      - "127.0.0.1:19530:19530" # gRPC (pymilvus connects here)
+      - "127.0.0.1:9091:9091"   # metrics/health
+    depends_on:
+      etcd:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    mem_limit: 4g
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+
+volumes:
+  neo4j_data:
+  neo4j_logs:
+  neo4j_plugins:
+  etcd_data:
+  minio_data:
+  milvus_data:
