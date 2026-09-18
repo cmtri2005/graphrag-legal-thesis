@@ -7,8 +7,8 @@ provision was in force at t", "what hangs under this node" — are an indexed
 lookup and a prefix scan, and stdlib already ships the engine.
 
 Provision ancestry is stored as a materialized path (`/root/child/leaf`), so
-`descendants_of` is one `LIKE 'path/%'` against an index instead of a
-recursive query. That is the whole reason a graph database is not needed here.
+`descendants_of` is one indexed range scan on `path` instead of a recursive
+query. That is the whole reason a graph database is not needed here.
 
 Open with `TemporalIndex(":memory:")` in tests; the schema is identical.
 """
@@ -178,6 +178,19 @@ class TemporalIndex:
             raw_status_code=row["raw_status_code"],
         )
 
+    def documents(self) -> Iterator[LegalDocument]:
+        """Every document, for callers that need to build their own lookup."""
+        rows = self._db.execute("SELECT * FROM documents")
+        for row in rows:
+            yield LegalDocument(
+                id=row["id"], number=row["number"], title=row["title"],
+                issued_on=_as_date(row["issued_on"]),
+                effective_from=_as_date(row["effective_from"]),
+                effective_to=_as_date(row["effective_to"]),
+                issuer=row["issuer"], rank=row["rank"], source_url=row["source_url"],
+                raw_status_code=row["raw_status_code"],
+            )
+
     def document_order(self, document_id: str) -> tuple[Provision, ...]:
         """Every provision of a document, in the order the source declared."""
         rows = self._db.execute(
@@ -193,9 +206,12 @@ class TemporalIndex:
         ).fetchone()
         if row is None:
             return ()
+        # A range, not LIKE: SQLite's LIKE is case-insensitive, so it cannot
+        # use the BINARY path index and scans all ~1.7M rows on every call.
+        # "0" is the character right after "/", so the range is exactly "path/…".
         rows = self._db.execute(
-            "SELECT * FROM provisions WHERE path LIKE ? ORDER BY path",
-            (f"{row['path']}/%",),
+            "SELECT * FROM provisions WHERE path >= ? AND path < ? ORDER BY path",
+            (f"{row['path']}/", f"{row['path']}0"),
         )
         return tuple(_provision(r) for r in rows)
 
