@@ -1,6 +1,6 @@
 # Master Plan — Khóa luận Temporal-Aware KG RAG
 
-Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-17
+Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-18
 
 > **Nguồn sự thật về tiến độ dự án.** Timeline bám theo mục "Kế hoạch thực hiện"
 > trong `DeCuongKLTN_23521635_23521643.docx` (01/09/2026 – 01/02/2027).
@@ -27,14 +27,14 @@ Active. Hiện ở cuối Giai đoạn 1; Giai đoạn 2–3 đang đi trước 
 |---|---|---|---|---:|---|
 | 1 | 01/09 – 14/09 | Hoàn thiện đề cương | 🟡 | 2/6 | Đến hạn hôm nay |
 | 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | ✅ | 12/12 | Backfill v2 xong, snapshot đóng băng trước M1 |
-| 3 | 06/10 – 26/10 | Xây dựng đồ thị tri thức (L0–L3) | 🟡 | 4/19 | Bắt đầu sớm; **đường găng** |
+| 3 | 06/10 – 26/10 | Xây dựng đồ thị tri thức (L0–L3) | 🟡 | 5/19 | Bắt đầu sớm; **đường găng** |
 | 4 | 27/10 – 16/11 | Bộ dữ liệu ViLexTime | ⬜ | 0/9 | — |
 | 5 | 17/11 – 30/11 | Cài đặt & đánh giá đường cơ sở | ⬜ | 0/14 | — |
 | 6 | 01/12 – 21/12 | Hệ thống đề xuất (L4–L5) | ⬜ | 0/7 | — |
 | 7 | 22/12 – 04/01 | Thực nghiệm & phân tích | ⬜ | 0/5 | — |
 | 8 | 05/01 – 11/01 | Viết bài báo khoa học | ⬜ | 0/3 | — |
 | 9 | 12/01 – 01/02 | Hoàn thiện khóa luận | ⬜ | 0/5 | — |
-| | | **Tổng** | | **18/80** | |
+| | | **Tổng** | | **19/80** | |
 
 ### Mốc kiểm tra
 
@@ -100,6 +100,8 @@ Chi tiết thực hiện P2.7–P2.12: [`2026-09-17-backfill-corpus-v2.md`](../c
 
 Đề cương phân công: CMT làm L0–L2, NMT làm L3 và kiểm chứng snapshot.
 
+Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định Q1–Q6): [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md).
+
 ### 3A. Hạ tầng (phát sinh từ ADR 0001)
 
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
@@ -122,11 +124,11 @@ Chi tiết thực hiện P2.7–P2.12: [`2026-09-17-backfill-corpus-v2.md`](../c
 |---|---|---|---|---|
 | P3.7 | Khuôn dữ liệu trích xuất | CMT | ✅ | `extraction/models.py`; test pass |
 | P3.8 | Target resolver ("Khoản 1, Điều 3" → id nút) | CMT | ✅ | `extraction/target_resolver.py`; 22.847/31.175 chuỗi expiry map được. Chưa kiểm tiêu đề bất thường |
-| P3.9 | Định dạng lưu event đã duyệt trong `data/` | CMT, NMT | ⬜ | Hệ quả ADR 0001; dựng lại Neo4j từ file cho ra cùng kết quả |
-| P3.10 | Event BÃI BỎ từ 228 VB chỉ có một văn bản tác động (843 bộ ba) | CMT | ⬜ | 843 event `VERIFIED` có provenance |
-| P3.11 | Bộ trích xuất regex: SỬA ĐỔI / BỔ SUNG / BÃI BỎ / THAY THẾ | CMT | ⬜ | Chạy trên văn bản tác động; ca không chắc chắn vào `NEEDS_REVIEW` |
+| P3.9 | Định dạng lưu event đã duyệt trong `data/` | CMT, NMT | 🟡 | `data/derived/provision_events.jsonl` có `id`, `status` (verified / auto_accepted / needs_review), `text_updates` ([plan](l2-event-store.md)); 16.254/16.804 event áp được chạy qua `EventApplier`. Chưa có loader Neo4j đọc file |
+| P3.10 | Event BÃI BỎ từ 228 VB chỉ có một văn bản tác động (843 bộ ba) | CMT | ✅ | Thay bằng mức `verified`: 2.819 event mà cổng liệt kê đúng nút. Không sinh event chỉ từ metadata, lý do trong [plan](l2-event-store.md) |
+| P3.11 | Bộ trích xuất regex: SỬA ĐỔI / BỔ SUNG / BÃI BỎ / THAY THẾ | CMT | 🟡 | `extraction/provision_ops.py`, `extraction/wording.py`, `scripts/pipeline/extract_provision_events.py` → `data/derived/provision_events.jsonl` (12.676 VB tác động; bỏ 768 không phải QPPL trung ương, 84 VB mà cổng trả nhầm thân văn bản). Ca không chắc chắn ghi `needs_review` kèm lý do. Còn thiếu: lời văn không ngoặc kép, thay đổi cấu trúc, BỔ SUNG nút mới ([plan](l2-event-store.md)) |
 | P3.12 | LLM cho ca phức tạp | CMT | ⬜ | Chỉ gọi khi regex bó tay; ghi `method=LLM` |
-| P3.13 | Đo độ chính xác L2 | CMT, NMT | ⬜ | Trên 843 mẫu gold và 200 mẫu kiểm tay; số liệu có trong khóa luận |
+| P3.13 | Đo độ chính xác L2 | CMT, NMT | 🟡 | `scripts/check/measure_provision_events.py`, `scripts/check/apply_provision_events.py` (2026-09-18). Precision kiểm tay trên 60 event áp được (seed 20260923, chưa dùng để sửa): 58/60 = 96,7% (Wilson 95%: 88,6–99,1%); lời văn mới 30/30 cắt đúng. Các vòng trước: v4 56/60 trên mọi event đã resolve (seed 20260921); seed 20260918–20 và 20260922 dùng để tìm lỗi. Recall theo expiryProvisions 62,2% (5.007/8.046 cặp); cùng actor với gold một-actor 98,2%; loại thao tác khớp hậu tố trạng thái 90,3% (HHL1P1=bãi bỏ, P2=đính chính, P3=sửa đổi, P4=thay thế). Hạn chế: câu hai thao tác ("Bãi bỏ … và sửa đổi …") gán thao tác thứ hai thành bãi bỏ. Chưa đạt 200 mẫu kiểm tay, NMT chưa kiểm chéo |
 
 ### 3D. L3: hợp nhất phiên bản và lan truyền hiệu lực
 
@@ -310,3 +312,4 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-17 | Backfill T5.2: kiểm tra tính đầy đủ toàn bộ 65.216 Điều/Khoản phát hiện 15% mất câu dẫn nhập (2,57M ký tự) → thêm field `preambles`; 100/100 mẫu kiểm tay đúng | `src/legal_crawler/provisions/subtree.py`, `../completed/2026-09-17-backfill-corpus-v2.md` |
 | 2026-09-17 | Backfill T5.4: tái lập đúng phương pháp v1 — 243 văn bản một tác nhân, 919 bộ ba gold (v1: 228/843) | `../completed/2026-09-17-backfill-corpus-v2.md` |
 | 2026-09-17 | Backfill T3.3: commit code (`7794627`), đóng băng snapshot v2, đẩy HF (`7d8ab0c`), tải về thư mục khác kiểm chứng `verify_pipeline.py` pass — **M1 đạt trước hạn** | `../completed/2026-09-17-backfill-corpus-v2.md` |
+| 2026-09-18 | L2: event có `id`/`status`/lời văn mới; 16.804 event áp được (2.819 `verified`), 96,7% chạy qua `EventApplier`; precision 58/60. P3.10 xong qua mức `verified`; P3.9, P3.11, P3.13 🟡 | [`l2-event-store.md`](l2-event-store.md) |
