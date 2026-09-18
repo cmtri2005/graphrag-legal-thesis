@@ -29,7 +29,7 @@ from legal_crawler.extraction import (
 )
 from legal_crawler.index import TemporalIndex
 from legal_crawler.storage.documents import DocumentStore
-from legal_crawler.temporal import ProvisionLevel
+from legal_crawler.temporal import ProvisionLevel, make_document_id
 
 LEVELS = {
     "phần": ProvisionLevel.PART,
@@ -71,6 +71,7 @@ def main() -> None:
     out = args.out or args.data / "expiry_targets.jsonl"
     with out.open("w", encoding="utf-8") as f:
         for doc_id in sorted(source.ids("history")):
+            domain_document_id = make_document_id(doc_id)
             entries = source.load("history", doc_id).get("history") or []
             for entry in entries:
                 for text in entry.get("expiryProvisions") or []:
@@ -79,14 +80,14 @@ def main() -> None:
                            "recorded_at": entry.get("createdDate"), "status": entry.get("content")}
                     if text.casefold().startswith("toàn bộ"):
                         code, provision_ids = "whole_document", []
-                    elif not index.exists(doc_id):
+                    elif not index.exists(domain_document_id):
                         code, provision_ids = "document_not_indexed", []
                     elif (locator := locator_for(text)) is None:
                         code, provision_ids = "unparsed", []
                     else:
                         reference = TargetReference(f"{doc_id}:{text}", text, TargetScope.EXACT,
                                                     locator=locator)
-                        result = resolver.resolve(reference, (doc_id,))
+                        result = resolver.resolve(reference, (domain_document_id,))
                         code = result.code.value
                         provision_ids = list(result.target.candidate_provision_ids)
                     codes[code] += 1

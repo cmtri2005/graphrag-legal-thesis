@@ -8,14 +8,14 @@ run it again.
 Three facts from `docs/audit_dataset.md` shape what it does, and none of them
 may be papered over — each is a silent wrong answer if it is:
 
-* 724 documents publish no `effFrom`. Their provisions are stored with no
+* 727 documents publish no `effFrom`. Their provisions are stored with no
   validity interval, so a point-in-time query never returns them, rather than
   being dated by guesswork.
 * 103 documents publish an `effTo` that is not after their `effFrom` (29
   earlier, 74 equal — an empty half-open interval). The interval is unusable,
   so the `effTo` is dropped and counted; the text and structure stay. Same
   rule as `data_status.py`: `vocab.status_codes.anchor_problem`.
-* 17 documents have a provision tree but no body text. They yield provisions
+* 18 documents have a provision tree but no body text. They yield provisions
   and no versions, which is the honest representation of "we know this Điều
   exists and we do not hold its words".
 """
@@ -34,6 +34,9 @@ from .temporal import (
     ProvisionLevel,
     ProvisionVersion,
     TemporalInterval,
+    make_document_id,
+    make_provision_id,
+    make_version_id,
 )
 
 DOCUMENT_URL = "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID="
@@ -61,7 +64,7 @@ def build_document(doc_id: str, raw: dict, report: IngestReport) -> LegalDocumen
     if not effective_from:
         report.bump("documents_without_effective_from")
     return LegalDocument(
-        id=doc_id,
+        id=make_document_id(doc_id),
         number=str(raw.get("docNum") or ""),
         title=str(raw.get("title") or ""),
         issued_on=_as_date(raw.get("issueDate")),
@@ -84,19 +87,22 @@ def walk_tree(nodes: list[dict], document_id: str) -> Iterator[Provision]:
     """
     position = 0
 
+    domain_document_id = make_document_id(document_id)
+
     def walk(children: list[dict], parent_id: str | None) -> Iterator[Provision]:
         nonlocal position
         for node in children:
+            provision_id = make_provision_id(node["id"])
             yield Provision(
-                id=node["id"],
-                document_id=document_id,
+                id=provision_id,
+                document_id=domain_document_id,
                 level=ProvisionLevel(node["level"]),
                 title=node.get("title") or "",
                 parent_id=parent_id,
                 order_index=position,
             )
             position += 1
-            yield from walk(node.get("children") or [], node["id"])
+            yield from walk(node.get("children") or [], provision_id)
 
     yield from walk(nodes, None)
 
@@ -106,24 +112,23 @@ def build_versions(
 ) -> list[ProvisionVersion]:
     """One version per provision that has text.
 
-    ponytail: the validity comes from the document's own effective window,
-    because the corpus holds only the current consolidated text. Real version
-    chains appear once L2 extracts amendment operations — until then every
-    chain is length 1, and pretending otherwise would invent history.
+    The first local version starts with the document but stays open. Document
+    and ancestor bounds are applied by ``ValidityService``; real local endings
+    appear only when L2 events are materialized.
     """
-    validity = (
-        TemporalInterval(document.effective_from, document.effective_to)
-        if document.effective_from
-        else None
-    )
+    # The local version stays open. Document and ancestor bounds are applied by
+    # ValidityService (formula (3)); copying document.effective_to here would
+    # make later amendment events fail with "no open version".
+    validity = TemporalInterval(document.effective_from) if document.effective_from else None
+    normalized_texts = {make_provision_id(key): value for key, value in texts.items()}
     versions = []
     for provision in provisions:
-        text = (texts.get(provision.id) or {}).get("text")
+        text = (normalized_texts.get(provision.id) or {}).get("text")
         if not text:
             continue
         versions.append(
             ProvisionVersion(
-                id=f"{provision.id}:1",
+                id=make_version_id(provision.id, 1),
                 provision_id=provision.id,
                 ordinal=1,
                 text=text,
@@ -137,11 +142,11 @@ def subtree_provisions(record: dict, document_id: str) -> list[Provision]:
     """Khoản/Điểm split from article text (backfill T5), parents already stored."""
     return [
         Provision(
-            id=node["id"],
-            document_id=document_id,
+            id=make_provision_id(node["id"]),
+            document_id=make_document_id(document_id),
             level=ProvisionLevel(node["level"]),
             title=node["title"],
-            parent_id=node["parent_id"],
+            parent_id=make_provision_id(node["parent_id"]),
         )
         for node in record["nodes"]
     ]
@@ -153,9 +158,7 @@ def ingest(
     limit: int | None = None,
     with_subtrees: bool = False,
 ) -> IngestReport:
-    """`with_subtrees` also stores the derived Khoản/Điểm of backfill T5 as
-    provisions (no versions): for measuring target resolution before those
-    nodes pass their hand check, never for a point-in-time answer."""
+    """Optionally store backfill-T5 Khoản/Điểm and their initial versions."""
     source = DocumentStore(data_dir)
     report = IngestReport()
     doc_ids = sorted(source.ids("raw"))
@@ -183,12 +186,24 @@ def ingest(
             continue
         store.put_provisions(provisions)
         report.bump("provisions", len(provisions))
+        derived_record = None
         if doc_id in subtree_ids:
-            derived = subtree_provisions(source.load("derived/subtrees", doc_id), doc_id)
+            derived_record = source.load("derived/subtrees", doc_id)
+            derived = subtree_provisions(derived_record, doc_id)
             store.put_provisions(derived)
             report.bump("subtree_provisions", len(derived))
+            provisions.extend(derived)
 
         texts = source.load("provisions", doc_id)["nodes"] if doc_id in text_ids else {}
+        if derived_record:
+            texts = {
+                **texts,
+                **{
+                    node["id"]: {"text": node.get("text")}
+                    for node in derived_record["nodes"]
+                    if node.get("text")
+                },
+            }
         if not texts:
             report.bump("documents_without_text")
             continue

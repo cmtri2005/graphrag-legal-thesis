@@ -5,7 +5,8 @@ Date: 2026-09-18
 ## Status
 
 Active. Kế hoạch chi tiết cho mục 4 của [master plan](master-plan.md); trạng
-thái từng việc vẫn cập nhật ở master plan.
+thái từng việc vẫn cập nhật ở master plan. C1–C3 đã hoàn thành ngày 18/09;
+Gói C còn C4–C6.
 
 ## Outcome
 
@@ -20,22 +21,18 @@ Hiện trạng ngày 18/09 (5/19 việc ✅):
 
 | Nhóm | Đã có | Còn thiếu |
 |---|---|---|
-| Hạ tầng | `docker-compose.yml`, `verify_graph_stack.py`, [plan hạ tầng](neo4j-milvus-infra.md) | Chưa chạy trên laptop; chưa đo RAM |
-| L0–L1 | Domain model, ID tất định (`temporal/`), `ingest.py` nạp vào SQLite | Loader Neo4j; cạnh có kiểu |
+| Hạ tầng | Stack 4 dịch vụ healthy; smoke test Neo4j/Milvus PASS; có [plan hạ tầng](neo4j-milvus-infra.md) | Chưa đo RAM full corpus |
+| L0–L1 | Domain model; ID thống nhất trong `ingest.py`, SQLite và event store; 1.700.484 provision | Loader Neo4j; cạnh có kiểu |
 | L2 | 16.804 event áp được (2.819 `verified`), precision 58/60 ([plan L2](l2-event-store.md)) | BỔ SUNG nút mới 0%; sửa đổi có thay đổi cấu trúc; câu hai thao tác; mới 60/200 mẫu kiểm tay |
-| L3 | Version chain, `EventApplier`, `ValidityService`, `SnapshotService` (test trên fixture) | Chạy trên dữ liệu thật; khoảng hiệu lực thực; kiểm chứng 100 snapshot; dẫn chiếu chéo |
+| L3 | Chuỗi offline thật: 1.592.178 version, 15.634 provision có nhiều version; event log đủ 50.700 dòng | Khoảng hiệu lực thực; loader Neo4j; kiểm chứng 100 snapshot; dẫn chiếu chéo |
 
 Những điều đã biết mà plan phải xử lý:
 
-- **ID chưa thống nhất.** `ingest.py` dùng UUID của cổng cho nút và `"<uuid>:1"`
-  cho phiên bản. `EventApplier` tạo phiên bản mới bằng `make_version_id`
-  (`"version:<id>:2"`). `temporal/ids.py` còn định nghĩa tiền tố
-  `provision:`/`document:`. Tiêu chí "ID ổn định" chưa đạt.
-- **Phiên bản 1 phải để mở.** Nếu đóng tại `effTo` của văn bản, mọi event trên
-  văn bản đã hết hiệu lực sẽ lỗi "no open version". Hiệu lực của văn bản đã đi
-  qua công thức (3) (`temporal/validity.py`).
-- **Nút Khoản/Điểm tách từ thân văn bản (backfill T5, 424.409 nút)** chưa có
-  phiên bản trong index. Chúng phải có phiên bản, vì event nhắm vào chúng.
+- **Đã xử lý C1:** `ingest.py`, SQLite và event store dùng chung ID
+  `document:`/`provision:`/`version:`; kiểm tra full index không còn ID thô.
+- **Đã xử lý C2:** phiên bản 1 để mở; hiệu lực văn bản vẫn đi qua công thức (3)
+  trong `temporal/validity.py`.
+- **Đã xử lý C2:** 424.409 Khoản/Điểm backfill T5 có phiên bản trong index.
 - **Áp thử 16.804 event** (`scripts/check/apply_provision_events.py`): 550 lỗi,
   gồm 269 sai thứ tự ngày, 170 nút không có text, 111 nút đã bị đóng trước đó.
 - **Đáp án kiểm tra tự động:** 874 cạnh "Văn bản được hợp nhất" (CONSOLIDATES):
@@ -96,9 +93,9 @@ seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 
 | Bước | Việc | Xong khi |
 |---|---|---|
-| C1 | Thống nhất ID theo `temporal/ids.py` cho `ingest`, applier và loader (Q1) | Một hàm sinh ID cho mỗi loại nút; test |
-| C2 | `scripts/pipeline/build_versions.py`: nâng `apply_provision_events.py` lên toàn corpus. Phiên bản 1 để mở; nút T5 có phiên bản; áp event theo `(effective_on, actor)` | `data/derived/versions.jsonl` và `event_log.jsonl` (mỗi event: đã áp, hoặc bị từ chối kèm lý do) |
-| C3 | Xử lý xung đột (Q2): event sai thứ tự ngày, hoặc tác động lên nút đã đóng, thì không áp và ghi vào hàng đợi review, không sắp xếp lại ngầm | Coverage cộng hàng đợi review = tiêu chí "không áp âm thầm" |
+| C1 ✅ | Thống nhất ID theo `temporal/ids.py` cho `ingest`, applier và loader (Q1) | Full SQLite: 0 Document/Provision/Version dùng ID thô; test |
+| C2 ✅ | `scripts/pipeline/build_versions.py`: nâng `apply_provision_events.py` lên toàn corpus. Phiên bản 1 để mở; nút T5 có phiên bản; áp event theo `(effective_on, actor)` | `versions.jsonl` 1.592.178 dòng; `event_log.jsonl` 50.700 dòng |
+| C3 ✅ | Xử lý xung đột (Q2): event sai thứ tự ngày, hoặc tác động lên nút đã đóng, thì không áp và ghi vào hàng đợi review, không sắp xếp lại ngầm | Mọi event có outcome; 550 event đã chấp nhận nhưng không áp được đều có lý do |
 | C4 | P3.16: tính khoảng hiệu lực thực của mỗi phiên bản (giao với mọi tổ tiên, công thức (3)) và ghi vào `versions.jsonl` | Khớp `ValidityService` trên 1.000 cặp (nút, t) ngẫu nhiên |
 | C5 | P3.17: chỉ còn `ValidityService` trả lời "có hiệu lực tại t"; bỏ `index.version_at` | grep không còn đường tính thứ hai |
 | C6 | Test chuỗi A → B → C trên dữ liệu thật: một nút bị sửa 2 lần, một Điều bị bãi bỏ kéo theo cả cây con | Test pass; chạy hai lần cho ra file giống hệt (so sha256) |
@@ -158,12 +155,13 @@ Song song, ngoài Giai đoạn 3: P1.2 và P1.5 (sửa đề cương) đã quá 
 
 ## Decisions
 
-Các quyết định cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
+Q1–Q2 đã chốt ngày 18/09 khi triển khai C1–C3. Q3–Q6 vẫn là đề xuất và cần
+nhóm xác nhận trước khi phần phụ thuộc bắt đầu.
 
 | # | Câu hỏi | Đề xuất | Chặn |
 |---|---|---|---|
-| Q1 | Một sơ đồ ID cho mọi nút và phiên bản | Theo `temporal/ids.py` (`provision:<uuid>`, `version:<provision>:<n>`). Nút chèn mới: băm từ (id event, nhãn). Làm lúc Neo4j còn rỗng thì không tốn chi phí chuyển đổi | C1, B2, D2 |
-| Q2 | Event sai thứ tự ngày, hoặc tác động lên nút đã đóng | Không áp; ghi `event_log` kèm lý do; đưa vào hàng đợi review | C3 |
+| Q1 | Một sơ đồ ID cho mọi nút và phiên bản | **Đã chốt:** theo `temporal/ids.py` (`provision:<uuid>`, `version:<provision>:<n>`). Nút chèn mới: băm từ (id event, nhãn) | C1, B2, D2 |
+| Q2 | Event sai thứ tự ngày, hoặc tác động lên nút đã đóng | **Đã chốt:** không áp; ghi `event_log` kèm lý do; đưa vào hàng đợi review | C3 |
 | Q3 | "Sửa đổi khoản 3 như sau" mà khối mới không còn điểm c: điểm c có hết hiệu lực không? | Có, cùng ngày, vì cả đơn vị được thay. Hỏi cố vấn luật để xác nhận | B3 |
 | Q4 | 1.626 QPPL có text nhưng không có cây (master plan §12) | Cho M2: chỉ nạp Document, không có Provision. Xét lại khi thiết kế ViLexTime | D4 |
 | Q5 | Ngưỡng đạt của P3.18 | ≥ 95/100, giống ngưỡng đã dùng cho backfill T5 | E2 |
@@ -182,10 +180,16 @@ Các quyết định cần chốt ở tuần 1. Ý kiến đề xuất chưa ph�
 
 ## Progress
 
-- [ ] Chốt Q1–Q6
+- [ ] Chốt Q1–Q6 (đã chốt Q1–Q2; còn Q3–Q6)
 - [ ] Gói A — hạ tầng (P3.1, P3.2)
 - [ ] Gói B — L2 đủ bốn thao tác, 200 mẫu, κ (P3.11, P3.13)
 - [ ] Gói C — chuỗi phiên bản offline (P3.15–P3.17)
+  - [x] C1 — thống nhất ID
+  - [x] C2 — dựng chuỗi toàn corpus
+  - [x] C3 — log đầy đủ event áp dụng/xung đột
+  - [ ] C4 — tính khoảng hiệu lực thực
+  - [ ] C5 — hợp nhất đường tính hiệu lực
+  - [ ] C6 — test chuỗi thật A → B → C và bãi bỏ cây con
 - [ ] Gói D — loader Neo4j (P3.4, P3.5, P3.9)
 - [ ] Gói E — kiểm chứng snapshot (P3.18)
 - [ ] Gói F — dẫn chiếu chéo (P3.19)
@@ -206,4 +210,28 @@ Kiểm tra chung của repository: `python -m pytest -q`.
 
 ## Result
 
-(chưa có)
+### C1–C3 — 18/09/2026
+
+- `ingest.py` chuẩn hóa ID ngay tại ranh giới raw → domain, dùng constructor
+  idempotent để không tạo double-prefix. Full SQLite có 23.139 Document,
+  1.700.484 Provision và 1.576.199 version ban đầu; 0 ID sai prefix và 0 version
+  ban đầu bị đóng tại `Document.effective_to`.
+- 424.409 Khoản/Điểm backfill T5 có version; 30.313 version không có ngày vẫn
+  được lưu nhưng không được đưa vào chuỗi có thể trả lời tại thời điểm `t`.
+- `build_versions.py` xử lý toàn corpus theo từng văn bản, ghi file tạm rồi
+  thay thế atomically, áp event ổn định theo `(effective_on, actor)` và giữ thứ
+  tự nguồn khi hai khóa bằng nhau.
+- `data/derived/versions.jsonl`: 1.592.178 dòng; 15.634 provision có ít nhất
+  hai version; chuỗi dài nhất 4; 15.979 version có `created_by_event_id`.
+- `data/derived/event_log.jsonl`: đủ 50.700/50.700 event input. Có 16.254 event
+  áp thành công và 34.446 event bị từ chối/không đủ điều kiện. Trong 550 event
+  đã được chấp nhận nhưng không áp được: 269 sai thứ tự ngày, 124 target không
+  có version, 111 target không còn version mở, 46 văn bản đích không có
+  `effective_from`. Có 21 dòng event trùng ID được nhận diện là đã áp trước đó.
+- Hai lượt full corpus độc lập cho file giống nhau:
+  - `versions.jsonl`: `3fcf25cb678dc68b86c1388717940e243c75c1555561df3de96e22ccbda96789`
+  - `event_log.jsonl`: `a7f82aec48a974a36f0c8591383da9212f22ccc20075e5c9e9ef383aed2a3591`
+- `resolve_expiry_targets.py`: 8.046/8.518 cặp provision-level resolve được
+  (94,5%); `apply_provision_events.py`: 16.254/16.804 (96,7%).
+- Validation repository: `python -m pytest -q` → 220 passed;
+  `scripts/check/verify_pipeline.py` → all checks passed.

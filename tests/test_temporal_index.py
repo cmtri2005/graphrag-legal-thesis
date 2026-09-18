@@ -4,7 +4,13 @@ import pytest
 
 from legal_crawler.ingest import build_document, build_versions, walk_tree, IngestReport
 from legal_crawler.index import TemporalIndex
-from legal_crawler.temporal import LegalDocument, Provision, ProvisionLevel
+from legal_crawler.temporal import (
+    LegalDocument,
+    Provision,
+    ProvisionLevel,
+    make_document_id,
+    make_provision_id,
+)
 
 
 def _tree():
@@ -25,17 +31,29 @@ def _tree():
 
 def test_walk_tree_yields_parents_before_children():
     items = list(walk_tree(_tree(), "doc1"))
-    assert [p.id for p in items] == ["ch1", "d1", "k1"]
-    assert [p.parent_id for p in items] == [None, "ch1", "d1"]
+    assert [p.id for p in items] == [
+        "provision:ch1",
+        "provision:d1",
+        "provision:k1",
+    ]
+    assert [p.parent_id for p in items] == [
+        None,
+        "provision:ch1",
+        "provision:d1",
+    ]
+    assert {p.document_id for p in items} == {"document:doc1"}
 
 
 def test_descendants_use_materialized_path():
     store = TemporalIndex()
-    store.put_documents([LegalDocument("doc1", "01/2020", "Luật A")])
+    store.put_documents([LegalDocument("document:doc1", "01/2020", "Luật A")])
     store.put_provisions(walk_tree(_tree(), "doc1"))
-    assert [p.id for p in store.descendants_of("ch1")] == ["d1", "k1"]
-    assert [p.id for p in store.descendants_of("k1")] == []
-    assert len(store.document_order("doc1")) == 3
+    assert [p.id for p in store.descendants_of("provision:ch1")] == [
+        "provision:d1",
+        "provision:k1",
+    ]
+    assert [p.id for p in store.descendants_of("provision:k1")] == []
+    assert len(store.document_order("document:doc1")) == 3
 
 
 def test_contradictory_effective_to_is_dropped_not_the_document():
@@ -62,11 +80,11 @@ def test_undated_document_yields_versions_no_query_can_return():
     store.put_documents([document])
     store.put_provisions(provisions)
     store.put_versions(versions)
-    assert store.version_at("d1", date(2020, 1, 1)) is None
-    assert len(store.versions_of("d1")) == 1
+    assert store.version_at("provision:d1", date(2020, 1, 1)) is None
+    assert len(store.versions_of("provision:d1")) == 1
 
 
-def test_version_at_respects_the_half_open_interval():
+def test_initial_version_stays_open_for_later_historical_events():
     report = IngestReport()
     document = build_document(
         "x", {"docNum": "n", "title": "t", "effFrom": "2020-01-01", "effTo": "2025-01-01"},
@@ -77,10 +95,11 @@ def test_version_at_respects_the_half_open_interval():
     store.put_provisions(provisions)
     store.put_versions(build_versions(provisions, {"k1": {"text": "x"}}, document))
 
-    assert store.version_at("k1", date(2019, 12, 31)) is None
-    assert store.version_at("k1", date(2020, 1, 1)) is not None
-    assert store.version_at("k1", date(2024, 12, 31)) is not None
-    assert store.version_at("k1", date(2025, 1, 1)) is None
+    provision_id = "provision:k1"
+    assert store.version_at(provision_id, date(2019, 12, 31)) is None
+    assert store.version_at(provision_id, date(2020, 1, 1)) is not None
+    assert store.version_at(provision_id, date(2024, 12, 31)) is not None
+    assert store.version_at(provision_id, date(2025, 1, 1)) is not None
 
 
 def test_order_comes_from_the_walk_not_the_overflowing_portal_counter():
@@ -95,7 +114,16 @@ def test_derived_subtree_nodes_resolve_under_their_article():
     from legal_crawler.temporal import Provision, ProvisionLevel
 
     index = TemporalIndex(":memory:")
-    index.put_provisions([Provision("a1", "D", ProvisionLevel.ARTICLE, "Điều 1", None, 0)])
+    index.put_provisions([
+        Provision(
+            make_provision_id("a1"),
+            make_document_id("D"),
+            ProvisionLevel.ARTICLE,
+            "Điều 1",
+            None,
+            0,
+        )
+    ])
     index.put_provisions(subtree_provisions(
         {"nodes": [
             {"id": "a1#k1", "parent_id": "a1", "level": "Clause", "title": "Khoản 1"},
@@ -103,4 +131,7 @@ def test_derived_subtree_nodes_resolve_under_their_article():
         ]},
         "D",
     ))
-    assert [p.id for p in index.descendants_of("a1")] == ["a1#k1", "a1#k1#a"]
+    assert [p.id for p in index.descendants_of(make_provision_id("a1"))] == [
+        make_provision_id("a1#k1"),
+        make_provision_id("a1#k1#a"),
+    ]

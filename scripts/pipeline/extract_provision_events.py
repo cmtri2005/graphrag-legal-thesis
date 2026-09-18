@@ -43,7 +43,7 @@ from legal_crawler.extraction.wording import fit, parse_items, wording_blocks
 from legal_crawler.index import TemporalIndex
 from legal_crawler.provisions.text import parse_paragraphs
 from legal_crawler.storage.documents import DocumentStore
-from legal_crawler.temporal.ids import make_event_id
+from legal_crawler.temporal.ids import make_document_id, make_event_id, make_provision_id
 
 # Operations that end the version the portal calls expired (see measure_provision_events.py).
 ENDING = {"repeal", "replace", "amend", "correct", "suspend"}
@@ -59,6 +59,9 @@ def main() -> None:
     store = DocumentStore(data)
     index = TemporalIndex(args.index or data / "temporal.sqlite")
     resolver = TargetResolver(index)
+    source_id_by_domain = {
+        make_document_id(source_id): source_id for source_id in store.ids("raw")
+    }
 
     by_number: dict[str, list[str]] = collections.defaultdict(list)
     for doc in index.documents():
@@ -69,15 +72,16 @@ def main() -> None:
     actors: set[str] = set()
     for line in (data / "edges.jsonl").read_text(encoding="utf-8").splitlines():
         edge = json.loads(line)
-        targets_of[edge["source_id"]].add(edge["target_id"])
-        if edge["group"] == "genealogy":
-            actors.add(edge["source_id"])
+        source_id = make_document_id(edge["source_id"])
+        targets_of[source_id].add(make_document_id(edge["target_id"]))
+        if edge["group"] == "genealogy" and source_id in source_id_by_domain:
+            actors.add(source_id)
 
     # Only a central normative act can amend one (ADR 0002 scope): a provincial
     # resolution or a consolidated text that cites "Điều 4 Nghị định số X" is
     # quoting it, not changing it.
     central = {
-        row["doc_id"] for row in map(json.loads, (data / "derived/eligibility.jsonl").read_text(encoding="utf-8").splitlines())
+        make_document_id(row["doc_id"]) for row in map(json.loads, (data / "derived/eligibility.jsonl").read_text(encoding="utf-8").splitlines())
         if row.get("doc_class") == "qppl"
     }
 
@@ -85,7 +89,10 @@ def main() -> None:
     for line in (data / "expiry_targets.jsonl").read_text(encoding="utf-8").splitlines():
         row = json.loads(line)
         if row.get("code") == "resolved_exact":
-            gold.update((row["doc_id"], pid) for pid in row.get("provision_ids", []))
+            gold.update(
+                (make_document_id(row["doc_id"]), make_provision_id(pid))
+                for pid in row.get("provision_ids", [])
+            )
     tree_cache: dict[str, dict] = {}
 
     def provision(doc_id: str, pid: str):
@@ -104,7 +111,7 @@ def main() -> None:
             if actor_id not in central:
                 stats["actor out of scope"] += 1
                 continue
-            raw = store.load("raw", actor_id)
+            raw = store.load("raw", source_id_by_domain[actor_id])
             html = ((raw or {}).get("documentContent") or {}).get("content") or ""
             if not html:
                 stats["actor without body"] += 1

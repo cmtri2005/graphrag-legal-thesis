@@ -237,6 +237,17 @@ class TemporalIndex:
         )
         return tuple(_version(row) for row in rows)
 
+    def versions_for_document(self, document_id: str) -> tuple[ProvisionVersion, ...]:
+        """All versions belonging to one document in deterministic order."""
+        rows = self._db.execute(
+            "SELECT v.* FROM versions AS v "
+            "JOIN provisions AS p ON p.id = v.provision_id "
+            "WHERE p.document_id = ? "
+            "ORDER BY p.order_index IS NULL, p.order_index, p.path, v.ordinal",
+            (document_id,),
+        )
+        return tuple(_version(row) for row in rows)
+
     def counts(self) -> dict[str, int]:
         return {
             table: self._db.execute(f"SELECT count(*) FROM {table}").fetchone()[0]

@@ -22,6 +22,7 @@ import argparse
 import collections
 import json
 import re
+from dataclasses import replace
 from datetime import date
 from pathlib import Path
 
@@ -37,6 +38,9 @@ from legal_crawler.temporal import (
     ProvisionVersion,
     TemporalInterval,
     TextUpdate,
+    make_document_id,
+    make_provision_id,
+    make_version_id,
 )
 from legal_crawler.temporal.event_applier import EventApplicationError
 from legal_crawler.temporal.state import TemporalState
@@ -50,12 +54,22 @@ def main() -> None:
     index = TemporalIndex(args.data / "temporal.sqlite")
     store = DocumentStore(args.data)
     subtree_ids = set(store.ids("derived/subtrees"))
+    source_id_by_domain = {
+        make_document_id(source_id): source_id for source_id in store.ids("raw")
+    }
+    documents = {
+        make_document_id(document.id): (
+            document.id,
+            replace(document, id=make_document_id(document.id)),
+        )
+        for document in index.documents()
+    }
 
     by_target: dict[str, list[dict]] = collections.defaultdict(list)
     for line in (args.data / "derived/provision_events.jsonl").read_text(encoding="utf-8").splitlines():
         row = json.loads(line)
         if row["status"] in ("verified", "auto_accepted"):
-            by_target[row["target_document_id"]].append(row)
+            by_target[make_document_id(row["target_document_id"])].append(row)
 
     outcome: collections.Counter[str] = collections.Counter()
     applier = EventApplier()
@@ -63,20 +77,42 @@ def main() -> None:
         if args.limit and n >= args.limit:
             break
         state = TemporalState()
-        target = index.document(doc_id)
+        stored_document_id, target = documents[doc_id]
         state.add_document(target)
-        derived = ({node["id"]: node.get("text") for node in store.load("derived/subtrees", doc_id)["nodes"]}
-                   if doc_id in subtree_ids else {})
-        for p in index.document_order(doc_id):
+        source_document_id = source_id_by_domain.get(doc_id)
+        derived = (
+            {
+                make_provision_id(node["id"]): node.get("text")
+                for node in store.load("derived/subtrees", source_document_id)["nodes"]
+            }
+            if source_document_id in subtree_ids
+            else {}
+        )
+        stored_versions = {
+            make_provision_id(version.provision_id): version.text
+            for version in index.versions_for_document(stored_document_id)
+            if version.ordinal == 1
+        }
+        for stored_provision in index.document_order(stored_document_id):
+            p = replace(
+                stored_provision,
+                id=make_provision_id(stored_provision.id),
+                document_id=make_document_id(stored_provision.document_id),
+                parent_id=(
+                    make_provision_id(stored_provision.parent_id)
+                    if stored_provision.parent_id
+                    else None
+                ),
+            )
             state.add_provision(p)
-            stored = index.versions_of(p.id)
-            text = stored[0].text if stored else derived.get(p.id)
+            text = stored_versions.get(p.id) or derived.get(p.id)
             if text and target.effective_from:
-                state.add_version(ProvisionVersion(id=f"{p.id}:1", provision_id=p.id, ordinal=1, text=text,
+                state.add_version(ProvisionVersion(id=make_version_id(p.id, 1), provision_id=p.id, ordinal=1, text=text,
                                                    validity=TemporalInterval(target.effective_from)))
         for row in sorted(rows, key=lambda r: (r["effective_on"], r["actor_id"])):
-            if state.document(row["actor_id"]) is None:
-                state.add_document(index.document(row["actor_id"]))
+            actor_id = make_document_id(row["actor_id"])
+            if state.document(actor_id) is None:
+                state.add_document(documents[actor_id][1])
             try:
                 applier.apply(_event(row), state)
                 outcome["applied"] += 1
@@ -91,17 +127,25 @@ def main() -> None:
 
 
 def _event(row: dict) -> LegalEvent:
-    updates = tuple(TextUpdate(u["target_provision_id"], u["new_text"]) for u in row["text_updates"])
+    updates = tuple(
+        TextUpdate(make_provision_id(u["target_provision_id"]), u["new_text"])
+        for u in row["text_updates"]
+    )
+    actor_id = make_document_id(row["actor_id"])
     return LegalEvent(
         id=row["id"],
         operation=LegalOperation(row["operation"]),
-        source_document_id=row["actor_id"],
-        target_document_id=row["target_document_id"],
+        source_document_id=actor_id,
+        target_document_id=make_document_id(row["target_document_id"]),
         effective_on=date.fromisoformat(row["effective_on"]),
-        target_provision_ids=() if updates else (row["target_provision_id"],),
+        target_provision_ids=(
+            ()
+            if updates
+            else (make_provision_id(row["target_provision_id"]),)
+        ),
         text_updates=updates,
         status=EventStatus(row["status"]),
-        provenance=(Provenance(row["actor_id"], ExtractionMethod.RULE, evidence_text=row["evidence"]),),
+        provenance=(Provenance(actor_id, ExtractionMethod.RULE, evidence_text=row["evidence"]),),
     )
 
 

@@ -60,9 +60,9 @@ P3.1 hạ tầng Docker ─► P3.4 loader Neo4j ─► P3.9 lưu event ─► P
       ─► L4/L5 (M5) ─► ablation (M6)
 ```
 
-Hiện chỉ lõi logic L3 (`src/legal_crawler/temporal/`) đã xong, và mới chạy trên
-fixture tự tạo. Trên dữ liệu thật, mỗi nút chỉ có 1 phiên bản mang khoảng hiệu
-lực của cả văn bản (`src/legal_crawler/ingest.py`), tức mới tương đương B7.
+Lõi logic L3 (`src/legal_crawler/temporal/`) và chuỗi phiên bản offline trên dữ
+liệu thật đã có. Còn thiếu khoảng hiệu lực thực C4, loader Neo4j và kiểm chứng
+snapshot trước khi đạt M2.
 
 ---
 
@@ -106,14 +106,14 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
-| P3.1 | `docker-compose` cho Neo4j và Milvus có giới hạn RAM; runbook bật/tắt | CMT | ⬜ | Hai dịch vụ healthy; runbook theo `docs/templates/application-runbook.md` |
+| P3.1 | `docker-compose` cho Neo4j và Milvus có giới hạn RAM; runbook bật/tắt | CMT | 🟡 | 18/09: 4 container healthy, smoke Neo4j/Milvus PASS; còn ghi bằng chứng vào runbook |
 | P3.2 | Đo RAM thực tế khi nạp đủ corpus | CMT | ⬜ | Số đo được ghi lại; chốt có phải tắt `legal-rag-api` hay không |
 
 ### 3B. L0–L1: cấu trúc và cạnh metadata
 
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
-| P3.3 | Domain model và ID tất định | NMT | ✅ | `temporal/models.py`, `temporal/ids.py`; test pass |
+| P3.3 | Domain model và ID tất định | NMT | ✅ | `temporal/models.py`, `temporal/ids.py`; 18/09 full SQLite có 0 ID thô; test pass |
 | P3.4 | Loader `data/` → Neo4j: Document, Provision, `CONTAINS`, Version | CMT | ⬜ | Tái dùng `ingest.py`; chạy lại không tạo nút trùng; số nút khớp `data/` |
 | P3.5 | Nạp cạnh giữa văn bản thành quan hệ có kiểu (khử trùng lặp 157.795 → 128.289) | CMT | ⬜ | Đếm theo 13 loại khớp `data/representation_benchmark.json` M1 |
 | P3.6 | Chuyển `target_resolver` và `resolve_expiry_targets.py` sang Neo4j; bỏ index SQLite | CMT | ⬜ | Tỷ lệ resolve vẫn là 73,3%; xóa được `index.py`, `build_store.py` |
@@ -135,7 +135,7 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
 | P3.14 | Logic version chain, event applier, validity, snapshot | NMT | ✅ | `temporal/`; test pass (fixture tự tạo) |
-| P3.15 | Áp event lên dữ liệu thật → chuỗi phiên bản trong Neo4j | NMT | ⬜ | Có đơn vị với 2 phiên bản trở lên, `created_by_event_id` khác rỗng |
+| P3.15 | Áp event lên dữ liệu thật → chuỗi phiên bản trong Neo4j | NMT | 🟡 | Offline xong: 1.592.178 version, 15.634 đơn vị có ≥2 version, 15.979 version có `created_by_event_id`; còn nạp Neo4j |
 | P3.16 | Tính trước khoảng hiệu lực thực của mỗi phiên bản (cách A) | NMT | ⬜ | Khớp `ValidityService` trên mẫu ngẫu nhiên |
 | P3.17 | Hợp nhất định nghĩa "có hiệu lực tại t" | NMT | ⬜ | Chỉ còn một đường tính; `index.version_at` bị bỏ |
 | P3.18 | Kiểm chứng snapshot trên 100 truy vấn đối chiếu tay | NMT | ⬜ | Bảng 100 truy vấn, kết quả, người kiểm |
@@ -313,3 +313,4 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-17 | Backfill T5.4: tái lập đúng phương pháp v1 — 243 văn bản một tác nhân, 919 bộ ba gold (v1: 228/843) | `../completed/2026-09-17-backfill-corpus-v2.md` |
 | 2026-09-17 | Backfill T3.3: commit code (`7794627`), đóng băng snapshot v2, đẩy HF (`7d8ab0c`), tải về thư mục khác kiểm chứng `verify_pipeline.py` pass — **M1 đạt trước hạn** | `../completed/2026-09-17-backfill-corpus-v2.md` |
 | 2026-09-18 | L2: event có `id`/`status`/lời văn mới; 16.804 event áp được (2.819 `verified`), 96,7% chạy qua `EventApplier`; precision 58/60. P3.10 xong qua mức `verified`; P3.9, P3.11, P3.13 🟡 | [`l2-event-store.md`](l2-event-store.md) |
+| 2026-09-18 | Phase 3 C1–C3: thống nhất ID; subtree có version; dựng 1.592.178 version thật và audit đủ 50.700 event. Hai lượt full corpus trùng SHA-256; 220 test pass. P3.15 🟡 vì chưa nạp Neo4j | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md) |
