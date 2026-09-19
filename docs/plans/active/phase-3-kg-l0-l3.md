@@ -6,7 +6,7 @@ Date: 2026-09-18
 
 Active. Kế hoạch chi tiết cho mục 4 của [master plan](master-plan.md); trạng
 thái từng việc vẫn cập nhật ở master plan. C1–C3 đã hoàn thành ngày 18/09;
-C4–C6 và D1–D3 hoàn thành ngày 19/09. Gói C xong; Gói D đang triển khai;
+C4–C6 và D1–D3, D5 hoàn thành ngày 19/09. Gói C xong; Gói D đang triển khai;
 Phase 3 tổng thể chưa hoàn thành.
 
 ## Outcome
@@ -109,7 +109,7 @@ seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 | D2 ✅ | `scripts/pipeline/load_neo4j.py`: đọc `data/` + `versions.jsonl` + event, MERGE theo lô (`UNWIND`) | Hai lượt full corpus: toàn bộ 9 số đếm node/cạnh giống nhau, khớp nguồn; chuỗi A→B→C trong Neo4j pass |
 | D3 ✅ | P3.5: nạp 13 loại `RelationType` từ snapshot v2; không dùng số cạnh M1 cũ | 128.548 cạnh nguồn phân biệt = 124.934 cạnh Neo4j + 3.614 unresolved; hai lượt không tăng cạnh/báo cáo; đếm theo từng loại khớp |
 | D4 | 1.626 QPPL có text nhưng không có cây (Q4) | Theo quyết định Q4 |
-| D5 | Truy vấn snapshot bằng Cypher trả cùng kết quả với `SnapshotService` trên mẫu | 200/200 khớp |
+| D5 ✅ | Truy vấn Cypher đọc snapshot từ khoảng hiệu lực thực đã nạp; đối chiếu `valid`/version ID/text với `SnapshotService` | 200/200 cặp khớp trên 32 văn bản có cây; xem bằng chứng dưới đây |
 | D6 | P3.2: đo RAM và thời gian nạp full corpus | Số đo ghi vào plan hạ tầng |
 
 ### Gói E — Kiểm chứng snapshot (NMT, CMT kiểm chéo) · P3.18
@@ -201,7 +201,9 @@ backfill đích sau này mà không làm sai bản sắc văn bản.
   - [x] D1 — schema node ID và hợp đồng cạnh cấu trúc
   - [x] D2 — loader corpus + version + event, chạy lại không trùng
   - [x] D3 — 13 loại cạnh văn bản, audit đích vắng mặt, chạy lại không trùng
-  - [ ] D4–D6 — Q4, snapshot Cypher, RAM
+  - [ ] D4 — Q4 (tạm bỏ qua theo yêu cầu, chưa chốt)
+  - [x] D5 — snapshot Cypher đối chiếu 200 cặp với bản offline
+  - [ ] D6 — đo RAM và thời gian nạp full corpus
 - [ ] Gói E — kiểm chứng snapshot (P3.18)
 - [ ] Gói F — dẫn chiếu chéo (P3.19)
 - [ ] Gói G — P3.6, P3.12 theo quyết định
@@ -437,3 +439,30 @@ Kiểm tra chung của repository: `python -m pytest -q`.
 - D3/P3.5 hoàn thành theo phạm vi văn bản **đã thu thập**. 141 cạnh phả hệ
   thiếu đích cần rà soát/backfill riêng; không được xem 124.934 cạnh Neo4j là
   toàn bộ 128.548 cạnh nguồn. D4–D6 và Phase 3 vẫn đang mở.
+
+### D5 — 19/09/2026
+
+- `graph/neo4j_snapshot.py` truy vấn `Provision` → `ProvisionVersion` bằng Cypher,
+  lọc theo ngày trong `effective_intervals_json` đã tính offline ở C4 và nạp
+  ở D2. Dùng APOC JSON có sẵn trong `docker-compose.yml` để đọc các cửa sổ;
+  không tính lại giao khoảng với tổ tiên trong Cypher, không sửa Neo4j.
+  Khi không có cửa sổ hiệu lực thì không trả text; khoảng `[start, end)` giữ
+  đúng ngày chuyển phiên bản. Reader phân biệt provision vắng mặt với
+  provision có thật nhưng không hiệu lực, và báo lỗi nếu các version được trả
+  về có ID trùng, JSON/count hỏng hoặc nhiều version cùng hiệu lực.
+- `scripts/check/compare_neo4j_snapshots.py` chọn mẫu cố định seed `20260919`
+  từ **32 văn bản có cây**, dựng trạng thái offline từ SQLite +
+  `versions.jsonl` + event nguồn, rồi so `valid`, version ID và nguyên văn text
+  giữa Neo4j với `SnapshotService` cho **200 cặp (provision, ngày) phân biệt**.
+  Các ca bắt buộc gồm chuỗi A → B → C và mốc bãi bỏ Điều + con vào
+  `2026-07-01`. Phân tầng thực chạy: 50 ca ranh giới, 25 cha vô hiệu,
+  40 ranh giới văn bản, 25 bất hoạt, 60 hợp lệ. Kết quả **200/200 khớp**;
+  report từng cặp và SHA-256 text ở
+  `data/derived/neo4j_snapshot_parity_report.json` (file dẫn xuất, không commit).
+- `tests/test_neo4j_snapshot.py` có 8 test dương/âm cho khoảng nửa mở,
+  nhiều cửa sổ rời nhau, provision không tồn tại, khoảng lỗi, version trùng và
+  cùng ngày chồng lấn. Full suite: **257 passed**.
+- Phạm vi D5 là **tính nhất quán của read model** (trạng thái, version và text),
+  không đánh giá đúng/sai pháp lý của text, không đối chiếu đầy đủ reason,
+  event object hay provenance của `SnapshotResult`. E2 vẫn phải có 100 truy
+  vấn kiểm tay; D4 và D6 vẫn mở. Không tính 200 cặp này vào E2.
