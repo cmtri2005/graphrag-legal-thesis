@@ -61,7 +61,8 @@ P3.1 hạ tầng Docker ─► P3.4 loader Neo4j ─► P3.9 lưu event ─► P
 ```
 
 Lõi logic L3 (`src/legal_crawler/temporal/`) và chuỗi phiên bản offline trên dữ
-liệu thật đã có. Còn thiếu khoảng hiệu lực thực C4, loader Neo4j và kiểm chứng
+liệu thật đã có; Gói C (C1–C6) của plan Phase 3 đã hoàn thành, gồm khoảng
+hiệu lực thực và test chuỗi thật. Còn thiếu loader Neo4j và kiểm chứng
 snapshot trước khi đạt M2.
 
 ---
@@ -135,7 +136,7 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
 | P3.14 | Logic version chain, event applier, validity, snapshot | NMT | ✅ | `temporal/`; test pass (fixture tự tạo) |
-| P3.15 | Áp event lên dữ liệu thật → chuỗi phiên bản trong Neo4j | NMT | 🟡 | Offline xong: 1.592.178 version, 15.634 đơn vị có ≥2 version, 15.979 version có `created_by_event_id`; còn nạp Neo4j |
+| P3.15 | Áp event lên dữ liệu thật → chuỗi phiên bản trong Neo4j | NMT | 🟡 | Offline xong: 1.592.178 version, 15.634 đơn vị có ≥2 version, 15.979 version có `created_by_event_id`. C6 (19/09): 2 ca thật A → B → C và bãi bỏ Điều/cây con pass; 2 lượt full build cho cùng SHA-256; 227 test pass. Còn nạp Neo4j (Gói D) |
 | P3.16 | Tính trước khoảng hiệu lực thực của mỗi phiên bản (cách A) | NMT | ✅ | C4 (19/09): `versions.jsonl` có `effective_intervals`; 6.108/6.108 cặp (nút, ngày) trên 1.729 văn bản ngẫu nhiên khớp `ValidityService`; 224 test pass. Xem [plan Phase 3](phase-3-kg-l0-l3.md#c4--19092026) |
 | P3.17 | Hợp nhất định nghĩa "có hiệu lực tại t" | NMT | ✅ | C5 (19/09): bỏ `index.version_at`; tên API khoảng cục bộ tách khỏi hiệu lực pháp lý; `ValidityService` là đường quyết định, 225 test pass. Xem [plan Phase 3](phase-3-kg-l0-l3.md#c5--19092026) |
 | P3.18 | Kiểm chứng snapshot trên 100 truy vấn đối chiếu tay | NMT | ⬜ | Bảng 100 truy vấn, kết quả, người kiểm |
@@ -314,3 +315,4 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-17 | Backfill T3.3: commit code (`7794627`), đóng băng snapshot v2, đẩy HF (`7d8ab0c`), tải về thư mục khác kiểm chứng `verify_pipeline.py` pass — **M1 đạt trước hạn** | `../completed/2026-09-17-backfill-corpus-v2.md` |
 | 2026-09-18 | L2: event có `id`/`status`/lời văn mới; 16.804 event áp được (2.819 `verified`), 96,7% chạy qua `EventApplier`; precision 58/60. P3.10 xong qua mức `verified`; P3.9, P3.11, P3.13 🟡 | [`l2-event-store.md`](l2-event-store.md) |
 | 2026-09-18 | Phase 3 C1–C3: thống nhất ID; subtree có version; dựng 1.592.178 version thật và audit đủ 50.700 event. Hai lượt full corpus trùng SHA-256; 220 test pass. P3.15 🟡 vì chưa nạp Neo4j | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md) |
+| 2026-09-19 | Phase 3 C4–C6: khoảng hiệu lực thực đối chiếu 6.108 cặp với `ValidityService`; hợp nhất đường tính hiệu lực; 2 ca chuỗi thật pass, 2 lượt full build trùng SHA-256; 227 test pass. Gói C xong, P3.15 vẫn 🟡 vì chưa nạp Neo4j | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#c6--19092026) |

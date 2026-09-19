@@ -6,7 +6,7 @@ Date: 2026-09-18
 
 Active. Kế hoạch chi tiết cho mục 4 của [master plan](master-plan.md); trạng
 thái từng việc vẫn cập nhật ở master plan. C1–C3 đã hoàn thành ngày 18/09;
-C4–C5 hoàn thành ngày 19/09; Gói C còn C6.
+C4–C6 hoàn thành ngày 19/09. Gói C xong; Phase 3 tổng thể vẫn đang triển khai.
 
 ## Outcome
 
@@ -98,7 +98,7 @@ seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 | C3 ✅ | Xử lý xung đột (Q2): event sai thứ tự ngày, hoặc tác động lên nút đã đóng, thì không áp và ghi vào hàng đợi review, không sắp xếp lại ngầm | Mọi event có outcome; 550 event đã chấp nhận nhưng không áp được đều có lý do |
 | C4 ✅ | P3.16: tính khoảng hiệu lực thực của mỗi phiên bản (giao với mọi tổ tiên, công thức (3)) và ghi vào `versions.jsonl` | 6.108 cặp (nút, t) trên dữ liệu thật khớp `ValidityService` |
 | C5 ✅ | P3.17: chỉ còn `ValidityService` trả lời "có hiệu lực tại t"; bỏ `index.version_at` | Không còn định nghĩa/lời gọi API cũ; 225 test pass, kể cả local-open nhưng document-expired |
-| C6 | Test chuỗi A → B → C trên dữ liệu thật: một nút bị sửa 2 lần, một Điều bị bãi bỏ kéo theo cả cây con | Test pass; chạy hai lần cho ra file giống hệt (so sha256) |
+| C6 ✅ | Test chuỗi A → B → C trên dữ liệu thật: một nút bị sửa 2 lần, một Điều bị bãi bỏ kéo theo cả cây con | 2 ca snapshot v2 pass; 2 lượt full corpus có SHA-256 của cả hai artifact giống hệt |
 
 ### Gói D — Loader Neo4j (CMT) · P3.4, P3.5, P3.9, P3.2
 
@@ -183,13 +183,13 @@ nhóm xác nhận trước khi phần phụ thuộc bắt đầu.
 - [ ] Chốt Q1–Q6 (đã chốt Q1–Q2; còn Q3–Q6)
 - [ ] Gói A — hạ tầng (P3.1, P3.2)
 - [ ] Gói B — L2 đủ bốn thao tác, 200 mẫu, κ (P3.11, P3.13)
-- [ ] Gói C — chuỗi phiên bản offline (P3.15–P3.17)
+- [x] Gói C — chuỗi phiên bản offline (P3.15–P3.17; phần Neo4j của P3.15 còn ở Gói D)
   - [x] C1 — thống nhất ID
   - [x] C2 — dựng chuỗi toàn corpus
   - [x] C3 — log đầy đủ event áp dụng/xung đột
   - [x] C4 — tính khoảng hiệu lực thực
   - [x] C5 — hợp nhất đường tính hiệu lực
-  - [ ] C6 — test chuỗi thật A → B → C và bãi bỏ cây con
+  - [x] C6 — test chuỗi thật A → B → C và bãi bỏ cây con
 - [ ] Gói D — loader Neo4j (P3.4, P3.5, P3.9)
 - [ ] Gói E — kiểm chứng snapshot (P3.18)
 - [ ] Gói F — dẫn chiếu chéo (P3.19)
@@ -282,3 +282,37 @@ Kiểm tra chung của repository: `python -m pytest -q`.
 - `python -m pytest -q`: 225 passed. Rà `src/`, `scripts/`, `tests/` không còn
   định nghĩa/lời gọi `version_at`, `is_valid_at` hoặc `VersionChain.at`; các
   thao tác khoảng cục bộ được đặt tên rõ. C6 vẫn chưa làm.
+
+### C6 — 19/09/2026
+
+- `tests/test_real_version_chains.py` cố định hai ca trong snapshot v2 bằng ID,
+  ngày, event và SHA-256 text; khi không có `data/raw`, test skip có lý do.
+  Nếu có raw mà thiếu artifact hoặc ca cố định thay đổi, test fail. Test dựng
+  lại **riêng hai văn bản** hai lần từ raw + event và so từng dòng với phần
+  tương ứng trong artifact toàn corpus; không chỉ đọc một file đã dựng sẵn.
+  Khi tái kiểm C6 trên máy có snapshot v2, chạy
+  `python -m pytest -q tests/test_real_version_chains.py` và yêu cầu **2 passed**,
+  không tính kết quả skipped là bằng chứng.
+- **A → B → C:** Khoản 2 Điều 4 Thông tư 03/2014/TT-NHNN
+  (`document:105518`) có ba text khác nhau: từ 15/03/2014, sửa lần 1 ngày
+  01/09/2017 theo Thông tư 06/2017/TT-NHNN, sửa lần 2 ngày 01/01/2020 theo
+  Thông tư 21/2019/TT-NHNN. Test kiểm tra SHA-256 của từng text, liên kết
+  `ended_by_event_id`/`created_by_event_id`, event log `applied`, text mới
+  trong event nguồn, và `ValidityService` + `SnapshotService` đúng ở hai phía
+  các mốc nửa mở.
+- **Bãi bỏ cha → cả cây con:** Điều 14 Nghị định 144/2025/NĐ-CP
+  (`document:178250`) bị bãi bỏ từ 01/07/2026 theo Nghị định
+  209/2026/NĐ-CP. Văn bản gốc chỉ hết hiệu lực 01/03/2027. Cả 5 Khoản/Điểm
+  con vẫn có version cục bộ mở, nhưng khoảng hiệu lực thực đều kết thúc tại
+  01/07/2026; `ValidityService` trả `PARENT_INVALID` với đúng Điều và event,
+  `SnapshotService` không trả text sau mốc đó.
+- Hai lượt **dựng full 23.139 văn bản** độc lập: cùng 1.592.178 version,
+  50.700 outcome; SHA-256 `versions.jsonl` ở cả hai lượt là
+  `f7941a296f2952400784e72a3309aae04dbfea75085d0d1f2810393586b16246`,
+  SHA-256 `event_log.jsonl` là
+  `a7f82aec48a974a36f0c8591383da9212f22ccc20075e5c9e9ef383aed2a3591`.
+  `python -m pytest -q`: 227 passed (bao gồm 2 ca thật).
+- Ba event của hai ca đều là `auto_accepted`, **chưa phải gold kiểm tay**.
+  C6 chứng minh tính nhất quán/tái lập của pipeline trên dữ liệu thật, không
+  thay thế đánh giá pháp lý 100 snapshot ở Gói E. Gói C hoàn thành; loader
+  Neo4j và các gói còn lại của Phase 3 chưa hoàn thành.
