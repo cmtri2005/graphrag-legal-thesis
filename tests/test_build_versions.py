@@ -160,14 +160,15 @@ def test_builds_subtree_versions_and_audits_every_event_deterministically(tmp_pa
 
     versions_path = data / "derived" / "versions.jsonl"
     log_path = data / "derived" / "event_log.jsonl"
-    first = build_version_files(data, index_path, versions_path, log_path)
+    first = build_version_files(data, index_path, versions_path, log_path, verify_pairs=1)
     first_hashes = (_sha256(versions_path), _sha256(log_path))
-    second = build_version_files(data, index_path, versions_path, log_path)
+    second = build_version_files(data, index_path, versions_path, log_path, verify_pairs=1)
 
     assert first == second
     assert first_hashes == (_sha256(versions_path), _sha256(log_path))
     assert first["events_applied"] == 2
     assert first["events_rejected"] == 2
+    assert first["verified_pairs"] >= 1
 
     versions = _jsonl(versions_path)
     by_id = {row["id"]: row for row in versions}
@@ -178,8 +179,15 @@ def test_builds_subtree_versions_and_audits_every_event_deterministically(tmp_pa
     clause_v2 = by_id[make_version_id(clause_id, 2)]
     assert article_v1["valid_to"] == "2023-01-01"
     assert article_v1["ended_by_event_id"] == "event:repeal"
+    assert article_v1["effective_from"] == "2020-01-01"
+    assert article_v1["effective_to"] == "2023-01-01"
     assert clause_v1["valid_to"] == "2022-01-01"
     assert clause_v2["valid_to"] is None
+    assert clause_v2["effective_from"] == "2022-01-01"
+    assert clause_v2["effective_to"] == "2023-01-01"
+    assert clause_v2["effective_intervals"] == [
+        {"start": "2022-01-01", "end": "2023-01-01"}
+    ]
     assert clause_v2["created_by_event_id"] == "event:z-update-first"
 
     logs = {row["event_id"]: row for row in _jsonl(log_path)}

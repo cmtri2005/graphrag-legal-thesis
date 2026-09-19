@@ -11,9 +11,9 @@ This command rebuilds that history from the snapshot plus
   is never silently reordered, repaired or discarded.
 
 Initial versions are deliberately open-ended. Document and ancestor bounds are
-applied separately by ``ValidityService``; closing a local chain at the
-document's ``effective_to`` would prevent later historical events from being
-materialized.
+precomputed into separate effective intervals and remain independently checked
+by ``ValidityService``; closing a local chain at the document's ``effective_to``
+would prevent later historical events from being materialized.
 """
 from __future__ import annotations
 
@@ -21,8 +21,9 @@ import argparse
 import collections
 import hashlib
 import json
+import random
 from dataclasses import dataclass, replace
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -47,7 +48,9 @@ from legal_crawler.temporal import (
     make_version_id,
 )
 from legal_crawler.temporal.event_applier import EventApplicationError
+from legal_crawler.temporal.effective_intervals import effective_intervals_by_version
 from legal_crawler.temporal.state import TemporalState, TemporalStateError
+from legal_crawler.temporal.validity import ValidityService
 
 
 @dataclass(frozen=True, slots=True)
@@ -92,10 +95,13 @@ def build_version_files(
     *,
     limit_documents: int | None = None,
     target_document_ids: Iterable[str] = (),
+    verify_pairs: int = 0,
 ) -> dict[str, int | str]:
     """Build both artifacts atomically and return observable counters."""
     if limit_documents is not None and limit_documents < 1:
         raise ValueError("limit_documents must be at least 1")
+    if verify_pairs < 0:
+        raise ValueError("verify_pairs must not be negative")
 
     requested_documents = tuple(target_document_ids)
     source = DocumentStore(data_dir)
@@ -126,6 +132,9 @@ def build_version_files(
             )
             selected_ids = {item.id for _, item in selected}
             full_run = limit_documents is None and not requested_documents
+            rng = random.Random(20260919)
+            dated_ids = [item.id for _, item in selected if item.effective_from is not None]
+            verify_ids = set(rng.sample(dated_ids, min(len(dated_ids), verify_pairs * 2)))
 
             by_target: dict[str, list[EventEnvelope]] = collections.defaultdict(list)
             for envelope in events:
@@ -154,10 +163,18 @@ def build_version_files(
                         output=version_out,
                         outcomes=outcomes,
                         report=report,
+                        verify=(document.id in verify_ids),
+                        rng=rng,
                     )
                     report["documents"] += 1
                     if position % 500 == 0:
                         print(f"  {position:,}/{len(selected):,} documents", flush=True)
+
+            if report["verified_pairs"] < verify_pairs:
+                raise ValueError(
+                    f"only {report['verified_pairs']} of {verify_pairs} requested "
+                    "(provision, date) comparisons were possible"
+                )
 
             considered = [
                 item
@@ -212,6 +229,8 @@ def _build_document_versions(
     output,
     outcomes: dict[int, dict[str, Any]],
     report: collections.Counter[str],
+    verify: bool,
+    rng: random.Random,
 ) -> None:
     stored_provisions = index.document_order(stored_document_id)
     provisions = tuple(_canonical_provision(item) for item in stored_provisions)
@@ -251,7 +270,7 @@ def _build_document_versions(
 
     if document.effective_from is None:
         for version in initial_versions:
-            _write_json(output, _version_row(version))
+            _write_json(output, _version_row(version, ()))
         report["undated_versions"] += len(initial_versions)
         for envelope in envelopes:
             row = envelope.row
@@ -320,12 +339,20 @@ def _build_document_versions(
             "closed_version_ids": list(result.closed_version_ids),
         }
 
+    effective = effective_intervals_by_version(state, document.id)
+    if verify:
+        _verify_effective_intervals(state, effective, rng, report)
     for version in sorted(
         state.versions,
         key=lambda item: (item.provision_id, item.ordinal, item.id),
     ):
-        _write_json(output, _version_row(version))
+        intervals = effective[version.id]
+        _write_json(output, _version_row(version, intervals))
         report["versions"] += 1
+        if not intervals:
+            report["effective_empty"] += 1
+        elif len(intervals) > 1:
+            report["effective_disjoint"] += 1
 
 
 def _canonical_document(document: LegalDocument) -> LegalDocument:
@@ -393,8 +420,12 @@ def _event_from_row(row: dict[str, Any]) -> LegalEvent:
     )
 
 
-def _version_row(version: ProvisionVersion) -> dict[str, Any]:
+def _version_row(
+    version: ProvisionVersion,
+    effective_intervals: tuple[TemporalInterval, ...],
+) -> dict[str, Any]:
     validity = version.validity
+    single = effective_intervals[0] if len(effective_intervals) == 1 else None
     return {
         "id": version.id,
         "provision_id": version.provision_id,
@@ -402,6 +433,15 @@ def _version_row(version: ProvisionVersion) -> dict[str, Any]:
         "text": version.text,
         "valid_from": validity.start.isoformat() if validity else None,
         "valid_to": validity.end.isoformat() if validity and validity.end else None,
+        # The array is authoritative. Null scalar bounds mean zero OR multiple
+        # windows, never an open interval; inspect effective_interval_count.
+        "effective_interval_count": len(effective_intervals),
+        "effective_intervals": [
+            {"start": item.start.isoformat(), "end": item.end.isoformat() if item.end else None}
+            for item in effective_intervals
+        ],
+        "effective_from": single.start.isoformat() if single else None,
+        "effective_to": single.end.isoformat() if single and single.end else None,
         "created_by_event_id": version.created_by_event_id,
         "ended_by_event_id": version.ended_by_event_id,
         "provenance": [
@@ -417,6 +457,44 @@ def _version_row(version: ProvisionVersion) -> dict[str, Any]:
             for item in version.provenance
         ],
     }
+
+
+def _verify_effective_intervals(
+    state: TemporalState,
+    effective: dict[str, tuple[TemporalInterval, ...]],
+    rng: random.Random,
+    report: collections.Counter[str],
+) -> None:
+    """Compare precomputation against the independent point-in-time oracle."""
+    versions = state.versions
+    if not versions:
+        return
+    version = rng.choice(versions)
+    assert version.validity is not None
+    local = version.validity
+    document = state.document(state.provision(version.provision_id).document_id)
+    dates = {local.start}
+    if local.start > date.min:
+        dates.add(local.start - timedelta(days=1))
+    if local.end is not None:
+        dates.update((local.end - timedelta(days=1), local.end))
+    if document.effective_to is not None:
+        dates.add(document.effective_to)
+    lower = max(date.min.toordinal(), local.start.toordinal() - 365)
+    upper = min(date.max.toordinal(), (local.end or local.start).toordinal() + 365)
+    dates.add(date.fromordinal(rng.randint(lower, upper)))
+    service = ValidityService(state)
+    for at in sorted(dates):
+        expected = any(item.contains(at) for item in effective[version.id])
+        actual = service.check(version.provision_id, at)
+        found = actual.valid and actual.version is not None and actual.version.id == version.id
+        if expected != found:
+            raise AssertionError(
+                f"effective interval mismatch for {version.id} at {at}: "
+                f"precomputed={expected}, ValidityService={found} ({actual.reason})"
+            )
+        report["verified_pairs"] += 1
+    report["verified_documents"] += 1
 
 
 def _read_events(path: Path) -> list[EventEnvelope]:
@@ -495,6 +573,10 @@ def main() -> None:
     parser.add_argument("--event-log", type=Path, default=None)
     parser.add_argument("--limit-documents", type=int, default=None)
     parser.add_argument(
+        "--verify-pairs", type=int, default=0,
+        help="minimum random (provision, date) pairs checked against ValidityService",
+    )
+    parser.add_argument(
         "--target-document",
         action="append",
         default=[],
@@ -511,6 +593,7 @@ def main() -> None:
         event_log_path,
         limit_documents=args.limit_documents,
         target_document_ids=args.target_document,
+        verify_pairs=args.verify_pairs,
     )
     version_count = int(report.get("versions", 0)) + int(report.get("undated_versions", 0))
     event_count = int(report.get("events_applied", 0)) + int(report.get("events_rejected", 0))

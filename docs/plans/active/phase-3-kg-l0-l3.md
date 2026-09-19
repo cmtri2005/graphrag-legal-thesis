@@ -6,7 +6,7 @@ Date: 2026-09-18
 
 Active. Kế hoạch chi tiết cho mục 4 của [master plan](master-plan.md); trạng
 thái từng việc vẫn cập nhật ở master plan. C1–C3 đã hoàn thành ngày 18/09;
-Gói C còn C4–C6.
+C4 hoàn thành ngày 19/09; Gói C còn C5–C6.
 
 ## Outcome
 
@@ -96,7 +96,7 @@ seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 | C1 ✅ | Thống nhất ID theo `temporal/ids.py` cho `ingest`, applier và loader (Q1) | Full SQLite: 0 Document/Provision/Version dùng ID thô; test |
 | C2 ✅ | `scripts/pipeline/build_versions.py`: nâng `apply_provision_events.py` lên toàn corpus. Phiên bản 1 để mở; nút T5 có phiên bản; áp event theo `(effective_on, actor)` | `versions.jsonl` 1.592.178 dòng; `event_log.jsonl` 50.700 dòng |
 | C3 ✅ | Xử lý xung đột (Q2): event sai thứ tự ngày, hoặc tác động lên nút đã đóng, thì không áp và ghi vào hàng đợi review, không sắp xếp lại ngầm | Mọi event có outcome; 550 event đã chấp nhận nhưng không áp được đều có lý do |
-| C4 | P3.16: tính khoảng hiệu lực thực của mỗi phiên bản (giao với mọi tổ tiên, công thức (3)) và ghi vào `versions.jsonl` | Khớp `ValidityService` trên 1.000 cặp (nút, t) ngẫu nhiên |
+| C4 ✅ | P3.16: tính khoảng hiệu lực thực của mỗi phiên bản (giao với mọi tổ tiên, công thức (3)) và ghi vào `versions.jsonl` | 6.108 cặp (nút, t) trên dữ liệu thật khớp `ValidityService` |
 | C5 | P3.17: chỉ còn `ValidityService` trả lời "có hiệu lực tại t"; bỏ `index.version_at` | grep không còn đường tính thứ hai |
 | C6 | Test chuỗi A → B → C trên dữ liệu thật: một nút bị sửa 2 lần, một Điều bị bãi bỏ kéo theo cả cây con | Test pass; chạy hai lần cho ra file giống hệt (so sha256) |
 
@@ -187,7 +187,7 @@ nhóm xác nhận trước khi phần phụ thuộc bắt đầu.
   - [x] C1 — thống nhất ID
   - [x] C2 — dựng chuỗi toàn corpus
   - [x] C3 — log đầy đủ event áp dụng/xung đột
-  - [ ] C4 — tính khoảng hiệu lực thực
+  - [x] C4 — tính khoảng hiệu lực thực
   - [ ] C5 — hợp nhất đường tính hiệu lực
   - [ ] C6 — test chuỗi thật A → B → C và bãi bỏ cây con
 - [ ] Gói D — loader Neo4j (P3.4, P3.5, P3.9)
@@ -235,3 +235,29 @@ Kiểm tra chung của repository: `python -m pytest -q`.
   (94,5%); `apply_provision_events.py`: 16.254/16.804 (96,7%).
 - Validation repository: `python -m pytest -q` → 220 passed;
   `scripts/check/verify_pipeline.py` → all checks passed.
+
+### C4 — 19/09/2026
+
+- `temporal/effective_intervals.py` tính giao khoảng cục bộ của version với
+  khoảng văn bản và **hợp các khoảng có hiệu lực** của toàn bộ tổ tiên. Sửa đổi
+  text của cha liền ngày không cắt hiệu lực của con; bãi bỏ cha hoặc khoảng
+  trống hiệu lực của cha thì có. Không gộp hai khoảng rời nhau thành một.
+- `versions.jsonl` giữ `valid_from`/`valid_to` là khoảng **cục bộ**, bổ sung
+  `effective_intervals` (danh sách khoảng `[start,end)`),
+  `effective_interval_count`, và `effective_from`/`effective_to` chỉ khi có
+  đúng một khoảng. Khi count = 0 hoặc > 1, hai trường scalar bằng `null`;
+  không được hiểu `null` là khoảng mở. Text không có ngày có danh sách rỗng.
+- Full corpus: 1.592.178 version; 30.313 version không có ngày và 71.225
+  version có ngày nhưng không có khoảng hiệu lực thực vì bị chặn bởi hiệu lực
+  văn bản/cây tổ tiên. Còn 1.490.640 version có đúng một khoảng hiệu lực thực;
+  không có version với nhiều khoảng rời nhau trong snapshot hiện tại.
+- Chạy `build_versions.py --verify-pairs 1000`: 6.108/6.108 cặp (nút, ngày)
+  trên 1.729 văn bản ngẫu nhiên khớp `ValidityService`; bao gồm ngày ranh giới
+  và ngày ngẫu nhiên quanh khoảng cục bộ. SHA-256 `versions.jsonl` mới:
+  `f7941a296f2952400784e72a3309aae04dbfea75085d0d1f2810393586b16246`.
+  SHA-256 `event_log.jsonl` vẫn
+  `a7f82aec48a974a36f0c8591383da9212f22ccc20075e5c9e9ef383aed2a3591`.
+- Test hồi quy kiểm tra cha sửa đổi liên tục, cha bãi bỏ, document hết hiệu lực,
+  cha thiếu text, khoảng rời nhau và version không có ngày. `python -m pytest -q`:
+  224 passed; `scripts/check/verify_pipeline.py`: all checks passed. C5 (một
+  đường tính hiệu lực) và C6 (chuỗi thật A → B → C) chưa làm.
