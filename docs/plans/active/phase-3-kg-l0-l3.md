@@ -6,7 +6,7 @@ Date: 2026-09-18
 
 Active. Kế hoạch chi tiết cho mục 4 của [master plan](master-plan.md); trạng
 thái từng việc vẫn cập nhật ở master plan. C1–C3 đã hoàn thành ngày 18/09;
-C4–C6 và D1–D2 hoàn thành ngày 19/09. Gói C xong; Gói D đang triển khai;
+C4–C6 và D1–D3 hoàn thành ngày 19/09. Gói C xong; Gói D đang triển khai;
 Phase 3 tổng thể chưa hoàn thành.
 
 ## Outcome
@@ -23,7 +23,7 @@ Hiện trạng sau D2 (19/09):
 | Nhóm | Đã có | Còn thiếu |
 |---|---|---|
 | Hạ tầng | Stack 4 dịch vụ healthy; smoke test Neo4j/Milvus PASS; có [plan hạ tầng](neo4j-milvus-infra.md) | Chưa đo RAM full corpus |
-| L0–L1 | Domain model, ID thống nhất; Neo4j đã nạp 23.139 Document và 1.700.484 Provision, đủ cạnh `CONTAINS` | Cạnh giữa văn bản có kiểu (D3) |
+| L0–L1 | Domain model, ID thống nhất; Neo4j có 23.139 Document, 1.700.484 Provision, đủ `CONTAINS` và 124.934 cạnh văn bản có kiểu | 3.614 cạnh thiếu đích được audit, không tạo Document giả |
 | L2 | 16.804 event áp được (2.819 `verified`), precision 58/60 ([plan L2](l2-event-store.md)) | BỔ SUNG nút mới 0%; sửa đổi có thay đổi cấu trúc; câu hai thao tác; mới 60/200 mẫu kiểm tay |
 | L3 | Khoảng hiệu lực thực offline; Neo4j có 1.592.178 Version, 50.540 LegalEvent, 37.640 cạnh `CAUSED_BY`; event log đủ 50.700 dòng | Kiểm chứng 100 snapshot; dẫn chiếu chéo |
 
@@ -107,7 +107,7 @@ seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 |---|---|---|
 | D1 ✅ | Schema: ràng buộc unique `id` cho Document, Provision, ProvisionVersion, LegalEvent; cạnh `CONTAINS`, `VERSION_OF`, `CAUSED_BY` | File schema chạy lại được; 2 lượt áp dụng + check-only trên Neo4j thật pass |
 | D2 ✅ | `scripts/pipeline/load_neo4j.py`: đọc `data/` + `versions.jsonl` + event, MERGE theo lô (`UNWIND`) | Hai lượt full corpus: toàn bộ 9 số đếm node/cạnh giống nhau, khớp nguồn; chuỗi A→B→C trong Neo4j pass |
-| D3 | P3.5: cạnh giữa văn bản thành 13 loại `RelationType`, khử trùng 157.795 → 128.289 (mốc M1; snapshot v2 hiện khác) | Đối chiếu `edges.jsonl` v2 với `representation_benchmark.json`, chốt baseline rồi đếm theo loại |
+| D3 ✅ | P3.5: nạp 13 loại `RelationType` từ snapshot v2; không dùng số cạnh M1 cũ | 128.548 cạnh nguồn phân biệt = 124.934 cạnh Neo4j + 3.614 unresolved; hai lượt không tăng cạnh/báo cáo; đếm theo từng loại khớp |
 | D4 | 1.626 QPPL có text nhưng không có cây (Q4) | Theo quyết định Q4 |
 | D5 | Truy vấn snapshot bằng Cypher trả cùng kết quả với `SnapshotService` trên mẫu | 200/200 khớp |
 | D6 | P3.2: đo RAM và thời gian nạp full corpus | Số đo ghi vào plan hạ tầng |
@@ -168,6 +168,12 @@ nhóm xác nhận trước khi phần phụ thuộc bắt đầu.
 | Q5 | Ngưỡng đạt của P3.18 | ≥ 95/100, giống ngưỡng đã dùng cho backfill T5 | E2 |
 | Q6 | Giữ index SQLite cho pipeline offline hay chuyển hết sang Neo4j (ADR 0001 ghi là chuyển) | Giữ SQLite làm index dựng offline; Neo4j chỉ phục vụ truy vấn. Nếu chọn phương án này thì sửa ADR 0001 | Gói G |
 
+Quyết định D3 ngày 19/09: với cạnh có đích không nằm trong `data/raw`, **không
+tạo `Document` giả**. Chỉ nạp khi cả hai đầu có trong corpus; ghi từng cạnh
+thiếu đích vào `data/derived/neo4j_unresolved_references.jsonl` và thống kê
+theo loại. Phương án này giữ đúng tập 23.139 Document đã kiểm ở D2 và cho phép
+backfill đích sau này mà không làm sai bản sắc văn bản.
+
 ## Risks And Recovery
 
 - **L2 thêm tính năng lại làm giảm precision** (vòng 4 từng bị như vậy): mỗi
@@ -194,7 +200,8 @@ nhóm xác nhận trước khi phần phụ thuộc bắt đầu.
 - [ ] Gói D — loader Neo4j (P3.4, P3.5, P3.9)
   - [x] D1 — schema node ID và hợp đồng cạnh cấu trúc
   - [x] D2 — loader corpus + version + event, chạy lại không trùng
-  - [ ] D3–D6 — cạnh văn bản, Q4, snapshot Cypher, RAM
+  - [x] D3 — 13 loại cạnh văn bản, audit đích vắng mặt, chạy lại không trùng
+  - [ ] D4–D6 — Q4, snapshot Cypher, RAM
 - [ ] Gói E — kiểm chứng snapshot (P3.18)
 - [ ] Gói F — dẫn chiếu chéo (P3.19)
 - [ ] Gói G — P3.6, P3.12 theo quyết định
@@ -384,3 +391,49 @@ Kiểm tra chung của repository: `python -m pytest -q`.
   ghi **128.289 cạnh phân biệt** từ snapshot cũ 22.550 văn bản. Phải đối
   chiếu/đóng băng baseline snapshot v2 trước khi dùng ngưỡng 128.289 của D3;
   D2 không nạp hoặc sửa các cạnh này.
+
+### D3 — 19/09/2026
+
+- `neo4j_references.py` ánh xạ cố định 13 `reference_type` đã xác minh sang
+  13 `RelationType`; `load_neo4j_references.py` kiểm tra mã, nhãn tiếng Việt
+  và `group` theo `data/reference_type_map.json` **trước khi ghi Neo4j**.
+  Cạnh được chuẩn hóa theo `(source_id, target_id, reference_type)` và nạp
+  theo batch `UNWIND`/`MERGE` với hai đầu `:Document`. Không có lệnh tạo node
+  trong D3; thiếu endpoint ở Neo4j hoặc quan hệ trùng ngoài dự kiến thì batch
+  rollback. Số Document vẫn **23.139**.
+- Baseline snapshot v2 là `data/edges.jsonl` SHA-256
+  `18d5f36ef0ed4ce31bacf53519aa8c2b4ea9c664335c393e74b241a3a8c756e6`:
+  **128.548 dòng = 128.548 bộ ba phân biệt, 0 trùng**. M1 cũ (128.289 cạnh,
+  22.550 văn bản) không dùng làm ngưỡng của snapshot v2. Hai lượt D3 trên
+  Neo4j (14,4s; 7,9s) cho đúng cùng số cạnh từng loại:
+
+  | `RelationType` | Nguồn v2 | Neo4j | Thiếu đích |
+  |---|---:|---:|---:|
+  | `REPEALS` | 7.498 | 7.468 | 30 |
+  | `ANNOUNCES` | 23 | 22 | 1 |
+  | `ISSUED_UNDER` | 67.644 | 65.835 | 1.809 |
+  | `REFERS_TO` | 18.009 | 16.400 | 1.609 |
+  | `HALTS_ENFORCEMENT` | 33 | 33 | 0 |
+  | `CORRECTS` | 132 | 132 | 0 |
+  | `CONSOLIDATES` | 874 | 874 | 0 |
+  | `GUIDES` | 349 | 297 | 52 |
+  | `DETAILS` | 19.566 | 19.488 | 78 |
+  | `AMENDS` | 6.975 | 6.959 | 16 |
+  | `SUSPENDS` | 31 | 31 | 0 |
+  | `REPLACES` | 7.400 | 7.383 | 17 |
+  | `INTERPRETS` | 14 | 12 | 2 |
+  | **Tổng** | **128.548** | **124.934** | **3.614** |
+
+- `data/derived/neo4j_reference_load_report.json` ghi checksum nguồn và
+  số đếm từng loại; `neo4j_unresolved_references.jsonl` ghi đủ **3.614 cạnh
+  thiếu đích thuộc 1.863 target ID**, gồm 3.473 `open_citation` và **141
+  `genealogy`**. Mỗi file được thay thế atomically sau khi Neo4j pass; hai
+  lượt sinh cùng SHA-256 (`e8e92706df1a8a1f2ee75d40ba84b194dfdd5f49ff4eca32657e7f3941462c3c`
+  và `17d50a0a4ebef8847eef630678537489a1f9f165d44e6344e3caec4360c15f41`).
+- Probe trên cạnh thật: nạp hai lượt trong transaction vẫn có một quan hệ,
+  rollback xong không lưu cạnh thử. Test mới chứng minh mapping 13 loại, khử
+  trùng, audit đích thiếu, từ chối mã/nhãn/sources sai và rollback khi Neo4j
+  thiếu endpoint. `python -m pytest -q`: **249 passed**.
+- D3/P3.5 hoàn thành theo phạm vi văn bản **đã thu thập**. 141 cạnh phả hệ
+  thiếu đích cần rà soát/backfill riêng; không được xem 124.934 cạnh Neo4j là
+  toàn bộ 128.548 cạnh nguồn. D4–D6 và Phase 3 vẫn đang mở.
