@@ -226,8 +226,12 @@ class ProvisionVersion:
         if self.ordinal < 1:
             raise ValueError("version ordinal starts at 1")
 
-    def is_valid_at(self, at: date) -> bool:
-        """Undated text is never in force: an answer must not rest on a guess."""
+    def is_locally_valid_at(self, at: date) -> bool:
+        """Check only this version's interval, without document or ancestors.
+
+        Point-in-time legal answers must use ``ValidityService`` instead.
+        Undated text never satisfies even this local check.
+        """
         return self.validity is not None and self.validity.contains(at)
 
 

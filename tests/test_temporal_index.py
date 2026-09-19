@@ -5,9 +5,12 @@ import pytest
 from legal_crawler.ingest import build_document, build_versions, walk_tree, IngestReport
 from legal_crawler.index import TemporalIndex
 from legal_crawler.temporal import (
+    InvalidityReason,
     LegalDocument,
     Provision,
     ProvisionLevel,
+    TemporalState,
+    ValidityService,
     make_document_id,
     make_provision_id,
 )
@@ -74,17 +77,18 @@ def test_undated_document_yields_versions_no_query_can_return():
 
     assert len(versions) == 1
     assert versions[0].validity is None
-    assert versions[0].is_valid_at(date(2020, 1, 1)) is False
+    assert versions[0].is_locally_valid_at(date(2020, 1, 1)) is False
 
     store = TemporalIndex()
     store.put_documents([document])
     store.put_provisions(provisions)
     store.put_versions(versions)
-    assert store.version_at("provision:d1", date(2020, 1, 1)) is None
-    assert len(store.versions_of("provision:d1")) == 1
+    stored = store.versions_of("provision:d1")
+    assert len(stored) == 1
+    assert stored[0].validity is None
 
 
-def test_initial_version_stays_open_for_later_historical_events():
+def test_initial_version_stays_locally_open_but_document_expiry_is_enforced():
     report = IngestReport()
     document = build_document(
         "x", {"docNum": "n", "title": "t", "effFrom": "2020-01-01", "effTo": "2025-01-01"},
@@ -93,13 +97,37 @@ def test_initial_version_stays_open_for_later_historical_events():
     store = TemporalIndex()
     store.put_documents([document])
     store.put_provisions(provisions)
-    store.put_versions(build_versions(provisions, {"k1": {"text": "x"}}, document))
+    store.put_versions(build_versions(
+        provisions,
+        {"ch1": {"text": "Chương I"}, "d1": {"text": "Điều 1"},
+         "k1": {"text": "Khoản 1"}},
+        document,
+    ))
 
     provision_id = "provision:k1"
-    assert store.version_at(provision_id, date(2019, 12, 31)) is None
-    assert store.version_at(provision_id, date(2020, 1, 1)) is not None
-    assert store.version_at(provision_id, date(2024, 12, 31)) is not None
-    assert store.version_at(provision_id, date(2025, 1, 1)) is not None
+    local = store.versions_of(provision_id)
+    assert len(local) == 1
+    assert local[0].validity.end is None
+    assert local[0].is_locally_valid_at(date(2025, 1, 1))
+
+    state = TemporalState()
+    state.add_document(store.document(document.id))
+    for provision in store.document_order(document.id):
+        state.add_provision(provision)
+    for version in store.versions_for_document(document.id):
+        state.add_version(version)
+    validity = ValidityService(state)
+    assert validity.check(provision_id, date(2019, 12, 31)).reason is (
+        InvalidityReason.DOCUMENT_NOT_YET_EFFECTIVE
+    )
+    assert validity.is_valid(provision_id, date(2024, 12, 31))
+    assert validity.check(provision_id, date(2025, 1, 1)).reason is (
+        InvalidityReason.DOCUMENT_EXPIRED
+    )
+
+
+def test_sqlite_index_does_not_expose_an_incomplete_point_in_time_answer():
+    assert not hasattr(TemporalIndex, "version_at")
 
 
 def test_order_comes_from_the_walk_not_the_overflowing_portal_counter():

@@ -37,8 +37,8 @@ def test_version_delegates_point_in_time_check_to_interval():
         validity=TemporalInterval(date(2020, 7, 1), date(2024, 8, 1)),
     )
 
-    assert version.is_valid_at(date(2020, 7, 1))
-    assert not version.is_valid_at(date(2024, 8, 1))
+    assert version.is_locally_valid_at(date(2020, 7, 1))
+    assert not version.is_locally_valid_at(date(2024, 8, 1))
 
 
 def test_unresolved_event_is_retained_but_not_applicable():

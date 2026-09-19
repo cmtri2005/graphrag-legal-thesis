@@ -89,7 +89,7 @@ class ValidityService:
             )
 
         chain = self._state.chain(provision_id)
-        version = chain.at(at) if chain else None
+        version = chain.local_at(at) if chain else None
         if version is None:
             return self._missing_version_result(provision_id, at, chain)
 

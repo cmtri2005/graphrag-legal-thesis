@@ -6,7 +6,7 @@ Date: 2026-09-18
 
 Active. Kế hoạch chi tiết cho mục 4 của [master plan](master-plan.md); trạng
 thái từng việc vẫn cập nhật ở master plan. C1–C3 đã hoàn thành ngày 18/09;
-C4 hoàn thành ngày 19/09; Gói C còn C5–C6.
+C4–C5 hoàn thành ngày 19/09; Gói C còn C6.
 
 ## Outcome
 
@@ -97,7 +97,7 @@ seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 | C2 ✅ | `scripts/pipeline/build_versions.py`: nâng `apply_provision_events.py` lên toàn corpus. Phiên bản 1 để mở; nút T5 có phiên bản; áp event theo `(effective_on, actor)` | `versions.jsonl` 1.592.178 dòng; `event_log.jsonl` 50.700 dòng |
 | C3 ✅ | Xử lý xung đột (Q2): event sai thứ tự ngày, hoặc tác động lên nút đã đóng, thì không áp và ghi vào hàng đợi review, không sắp xếp lại ngầm | Mọi event có outcome; 550 event đã chấp nhận nhưng không áp được đều có lý do |
 | C4 ✅ | P3.16: tính khoảng hiệu lực thực của mỗi phiên bản (giao với mọi tổ tiên, công thức (3)) và ghi vào `versions.jsonl` | 6.108 cặp (nút, t) trên dữ liệu thật khớp `ValidityService` |
-| C5 | P3.17: chỉ còn `ValidityService` trả lời "có hiệu lực tại t"; bỏ `index.version_at` | grep không còn đường tính thứ hai |
+| C5 ✅ | P3.17: chỉ còn `ValidityService` trả lời "có hiệu lực tại t"; bỏ `index.version_at` | Không còn định nghĩa/lời gọi API cũ; 225 test pass, kể cả local-open nhưng document-expired |
 | C6 | Test chuỗi A → B → C trên dữ liệu thật: một nút bị sửa 2 lần, một Điều bị bãi bỏ kéo theo cả cây con | Test pass; chạy hai lần cho ra file giống hệt (so sha256) |
 
 ### Gói D — Loader Neo4j (CMT) · P3.4, P3.5, P3.9, P3.2
@@ -188,7 +188,7 @@ nhóm xác nhận trước khi phần phụ thuộc bắt đầu.
   - [x] C2 — dựng chuỗi toàn corpus
   - [x] C3 — log đầy đủ event áp dụng/xung đột
   - [x] C4 — tính khoảng hiệu lực thực
-  - [ ] C5 — hợp nhất đường tính hiệu lực
+  - [x] C5 — hợp nhất đường tính hiệu lực
   - [ ] C6 — test chuỗi thật A → B → C và bãi bỏ cây con
 - [ ] Gói D — loader Neo4j (P3.4, P3.5, P3.9)
 - [ ] Gói E — kiểm chứng snapshot (P3.18)
@@ -261,3 +261,24 @@ Kiểm tra chung của repository: `python -m pytest -q`.
   cha thiếu text, khoảng rời nhau và version không có ngày. `python -m pytest -q`:
   224 passed; `scripts/check/verify_pipeline.py`: all checks passed. C5 (một
   đường tính hiệu lực) và C6 (chuỗi thật A → B → C) chưa làm.
+
+### C5 — 19/09/2026
+
+- Xóa `TemporalIndex.version_at()`: truy vấn SQLite cũ chỉ xét
+  `valid_from`/`valid_to` của version, bỏ qua hiệu lực văn bản và mọi tổ tiên.
+  SQLite vẫn giữ `versions_of()`/`versions_for_document()` để đọc **lịch sử
+  cục bộ** khi dựng dữ liệu; các hàm này không kết luận hiệu lực tại `t`.
+- Đổi `ProvisionVersion.is_valid_at()` → `is_locally_valid_at()` và
+  `VersionChain.at()` → `local_at()` để tên API không gợi nhầm hiệu lực pháp lý.
+  `ValidityService.check()` gọi `local_at()` rồi kiểm tra document và tổ tiên;
+  `SnapshotService` tiếp tục dùng `ValidityService`. Khoảng tính trước ở C4 là
+  bộ lọc ứng viên, không phải phán quyết hiệu lực online. Script benchmark
+  flat-index dùng tên `flat_local_interval_match()` và được ghi rõ là phản ví
+  dụ, không phải đường trả lời pháp lý thứ hai.
+- Test SQLite chứng minh version cục bộ vẫn mở tại `2025-01-01` nhưng
+  `ValidityService` trả `DOCUMENT_EXPIRED` đúng ranh giới `[start,end)`; test
+  cấu trúc chặn API `TemporalIndex.version_at` quay lại. Test snapshot bãi bỏ
+  cha vẫn đảm bảo text con bị ẩn.
+- `python -m pytest -q`: 225 passed. Rà `src/`, `scripts/`, `tests/` không còn
+  định nghĩa/lời gọi `version_at`, `is_valid_at` hoặc `VersionChain.at`; các
+  thao tác khoảng cục bộ được đặt tên rõ. C6 vẫn chưa làm.

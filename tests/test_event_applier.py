@@ -135,10 +135,10 @@ def test_text_operation_closes_old_version_and_creates_auditable_version(operati
     assert result.closed_version_ids == ("version:clause-3:1",)
     assert result.created_version_ids == ("version:clause-3:2",)
     assert chain is not None
-    assert chain.at(date(2024, 6, 30)).ended_by_event_id == legal_event.id
-    assert chain.at(date(2024, 7, 1)).text == "Nội dung hợp nhất mới của Khoản 3."
-    assert chain.at(date(2024, 7, 1)).created_by_event_id == legal_event.id
-    assert chain.at(date(2024, 7, 1)).provenance == evidence()
+    assert chain.local_at(date(2024, 6, 30)).ended_by_event_id == legal_event.id
+    assert chain.local_at(date(2024, 7, 1)).text == "Nội dung hợp nhất mới của Khoản 3."
+    assert chain.local_at(date(2024, 7, 1)).created_by_event_id == legal_event.id
+    assert chain.local_at(date(2024, 7, 1)).provenance == evidence()
 
 
 def test_one_event_can_apply_distinct_text_to_multiple_targets():

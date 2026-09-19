@@ -1,16 +1,12 @@
-"""SQLite store for the temporal legal graph.
+"""Derived SQLite read model for offline corpus and provision structure.
 
-`data/` stays the system of record: this file is a derived index, safe to
-delete and rebuild from the crawl at any time. SQLite rather than a graph
-service because the queries the thesis actually runs — "which version of this
-provision was in force at t", "what hangs under this node" — are an indexed
-lookup and a prefix scan, and stdlib already ships the engine.
+``data/`` remains the system of record. This index stores local version chains
+and materialized provision paths for efficient rebuilding and inspection. It
+does not answer legal point-in-time validity: document bounds and ancestor
+status must be checked by ``ValidityService``. Neo4j and Milvus are separate
+derived stores for the later graph/retrieval phases.
 
-Provision ancestry is stored as a materialized path (`/root/child/leaf`), so
-`descendants_of` is one indexed range scan on `path` instead of a recursive
-query. That is the whole reason a graph database is not needed here.
-
-Open with `TemporalIndex(":memory:")` in tests; the schema is identical.
+Open with ``TemporalIndex(":memory:")`` in tests; the schema is identical.
 """
 from __future__ import annotations
 
@@ -215,22 +211,8 @@ class TemporalIndex:
         )
         return tuple(_provision(r) for r in rows)
 
-    def version_at(self, provision_id: str, at: date) -> ProvisionVersion | None:
-        """The version in force at `at`, per the half-open interval [from, to).
-
-        A version with no `valid_from` is undated — 4.4% of the corpus, where
-        the portal never published an effective date — and is deliberately not
-        returned: a point-in-time answer must not rest on a guessed date.
-        """
-        row = self._db.execute(
-            "SELECT * FROM versions WHERE provision_id = ? AND valid_from IS NOT NULL "
-            "AND valid_from <= ? AND (valid_to IS NULL OR valid_to > ?) "
-            "ORDER BY ordinal DESC LIMIT 1",
-            (provision_id, at.isoformat(), at.isoformat()),
-        ).fetchone()
-        return _version(row) if row else None
-
     def versions_of(self, provision_id: str) -> tuple[ProvisionVersion, ...]:
+        """Return stored local history, not a point-in-time validity decision."""
         rows = self._db.execute(
             "SELECT * FROM versions WHERE provision_id = ? ORDER BY ordinal",
             (provision_id,),
