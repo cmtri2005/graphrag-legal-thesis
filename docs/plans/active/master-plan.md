@@ -115,7 +115,7 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
 | P3.3 | Domain model và ID tất định | NMT | ✅ | `temporal/models.py`, `temporal/ids.py`; 18/09 full SQLite có 0 ID thô; test pass |
-| P3.4 | Loader `data/` → Neo4j: Document, Provision, `CONTAINS`, Version | CMT | ⬜ | Tái dùng `ingest.py`; chạy lại không tạo nút trùng; số nút khớp `data/` |
+| P3.4 | Loader `data/` → Neo4j: Document, Provision, `CONTAINS`, Version | CMT | 🟡 | D1 schema 4 unique `id` hoàn thành 19/09, áp dụng 2 lần + check-only trên Neo4j pass; D2 loader chưa làm, chưa nạp corpus/chứng minh số nút khớp `data/` |
 | P3.5 | Nạp cạnh giữa văn bản thành quan hệ có kiểu (khử trùng lặp 157.795 → 128.289) | CMT | ⬜ | Đếm theo 13 loại khớp `data/representation_benchmark.json` M1 |
 | P3.6 | Chuyển `target_resolver` và `resolve_expiry_targets.py` sang Neo4j; bỏ index SQLite | CMT | ⬜ | Tỷ lệ resolve vẫn là 73,3%; xóa được `index.py`, `build_store.py` |
 
@@ -316,3 +316,4 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-18 | L2: event có `id`/`status`/lời văn mới; 16.804 event áp được (2.819 `verified`), 96,7% chạy qua `EventApplier`; precision 58/60. P3.10 xong qua mức `verified`; P3.9, P3.11, P3.13 🟡 | [`l2-event-store.md`](l2-event-store.md) |
 | 2026-09-18 | Phase 3 C1–C3: thống nhất ID; subtree có version; dựng 1.592.178 version thật và audit đủ 50.700 event. Hai lượt full corpus trùng SHA-256; 220 test pass. P3.15 🟡 vì chưa nạp Neo4j | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md) |
 | 2026-09-19 | Phase 3 C4–C6: khoảng hiệu lực thực đối chiếu 6.108 cặp với `ValidityService`; hợp nhất đường tính hiệu lực; 2 ca chuỗi thật pass, 2 lượt full build trùng SHA-256; 227 test pass. Gói C xong, P3.15 vẫn 🟡 vì chưa nạp Neo4j | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#c6--19092026) |
+| 2026-09-19 | Phase 3 D1: tạo và kiểm chứng 4 unique constraint `id` trên Neo4j thật; áp dụng hai lượt, check-only pass, 0 node/cạnh được nạp; 234 test pass. P3.4 🟡 đến khi D2 loader chạy được và đối chiếu corpus | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d1--19092026) |

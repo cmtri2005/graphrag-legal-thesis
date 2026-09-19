@@ -6,7 +6,8 @@ Date: 2026-09-18
 
 Active. Kế hoạch chi tiết cho mục 4 của [master plan](master-plan.md); trạng
 thái từng việc vẫn cập nhật ở master plan. C1–C3 đã hoàn thành ngày 18/09;
-C4–C6 hoàn thành ngày 19/09. Gói C xong; Phase 3 tổng thể vẫn đang triển khai.
+C4–C6 và D1 hoàn thành ngày 19/09. Gói C xong; Gói D đang triển khai;
+Phase 3 tổng thể chưa hoàn thành.
 
 ## Outcome
 
@@ -104,7 +105,7 @@ seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 
 | Bước | Việc | Xong khi |
 |---|---|---|
-| D1 | Schema: ràng buộc unique `id` cho Document, Provision, ProvisionVersion, LegalEvent; cạnh `CONTAINS`, `VERSION_OF`, `CAUSED_BY` | File schema chạy lại được |
+| D1 ✅ | Schema: ràng buộc unique `id` cho Document, Provision, ProvisionVersion, LegalEvent; cạnh `CONTAINS`, `VERSION_OF`, `CAUSED_BY` | File schema chạy lại được; 2 lượt áp dụng + check-only trên Neo4j thật pass |
 | D2 | `scripts/pipeline/load_neo4j.py`: đọc `data/` + `versions.jsonl` + event, MERGE theo lô (`UNWIND`) | Chạy hai lần, số nút và cạnh không đổi; số nút khớp `data/` |
 | D3 | P3.5: cạnh giữa văn bản thành 13 loại `RelationType`, khử trùng 157.795 → 128.289 | Đếm theo loại khớp `representation_benchmark.json` |
 | D4 | 1.626 QPPL có text nhưng không có cây (Q4) | Theo quyết định Q4 |
@@ -191,6 +192,9 @@ nhóm xác nhận trước khi phần phụ thuộc bắt đầu.
   - [x] C5 — hợp nhất đường tính hiệu lực
   - [x] C6 — test chuỗi thật A → B → C và bãi bỏ cây con
 - [ ] Gói D — loader Neo4j (P3.4, P3.5, P3.9)
+  - [x] D1 — schema node ID và hợp đồng cạnh cấu trúc
+  - [ ] D2 — loader corpus + version + event, chạy lại không trùng
+  - [ ] D3–D6 — cạnh văn bản, Q4, snapshot Cypher, RAM
 - [ ] Gói E — kiểm chứng snapshot (P3.18)
 - [ ] Gói F — dẫn chiếu chéo (P3.19)
 - [ ] Gói G — P3.6, P3.12 theo quyết định
@@ -316,3 +320,25 @@ Kiểm tra chung của repository: `python -m pytest -q`.
   C6 chứng minh tính nhất quán/tái lập của pipeline trên dữ liệu thật, không
   thay thế đánh giá pháp lý 100 snapshot ở Gói E. Gói C hoàn thành; loader
   Neo4j và các gói còn lại của Phase 3 chưa hoàn thành.
+
+### D1 — 19/09/2026
+
+- `scripts/pipeline/neo4j_schema.cypher` tạo bốn unique constraint có tên cố
+  định cho `id` của `Document`, `Provision`, `ProvisionVersion`, `LegalEvent`.
+  `IF NOT EXISTS` cho phép chạy lại; `init_neo4j_schema.py` đối chiếu nội dung
+  file với bốn câu lệnh được duyệt rồi đọc `SHOW CONSTRAINTS` để bắt trường hợp
+  trùng tên nhưng sai nhãn/thuộc tính/loại constraint. Có chế độ `--check-only`.
+- `graph/neo4j_schema.py` là hợp đồng nhãn và cạnh cho D2: `Document` →
+  `Provision` và `Provision` → `Provision` qua `CONTAINS`, `ProvisionVersion` →
+  `Provision` qua `VERSION_OF`, `ProvisionVersion` → `LegalEvent` qua
+  `CAUSED_BY`. Neo4j D1 **không** ép kiểu hai đầu cạnh; D2 phải kiểm tra khi nạp.
+  Vai trò event tạo/kết thúc version cũng phải giữ tách biệt ở D2.
+- Neo4j local: áp dụng schema **hai lượt** đều báo 4/4 constraint hợp
+  lệ; `--check-only` pass; sau đó đọc trực tiếp còn **0 node, 0 cạnh**. Không
+  có corpus nào được nạp ở D1. Thử tạo hai `Document` trùng `id` trong một
+  transaction: Neo4j từ chối node thứ hai; rollback xong vẫn có 0 `Document`.
+  Bảy test mới có cả ca đúng, chạy lặp và ca sai schema; toàn suite
+  `python -m pytest -q`: **234 passed**.
+- Unique constraint không buộc `id` phải tồn tại trên mọi node. D2 phải không
+  tạo node thiếu `id`, chạy hai lần không sinh trùng và so số lượng với `data/`.
+  P3.4/Gói D/Phase 3 **chưa xong**; bước kế tiếp là D2.
