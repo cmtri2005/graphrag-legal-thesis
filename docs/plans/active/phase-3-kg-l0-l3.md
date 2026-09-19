@@ -6,7 +6,7 @@ Date: 2026-09-18
 
 Active. Kế hoạch chi tiết cho mục 4 của [master plan](master-plan.md); trạng
 thái từng việc vẫn cập nhật ở master plan. C1–C3 đã hoàn thành ngày 18/09;
-C4–C6 và D1 hoàn thành ngày 19/09. Gói C xong; Gói D đang triển khai;
+C4–C6 và D1–D2 hoàn thành ngày 19/09. Gói C xong; Gói D đang triển khai;
 Phase 3 tổng thể chưa hoàn thành.
 
 ## Outcome
@@ -18,14 +18,14 @@ plan đều có bằng chứng chạy được.
 
 ## Context
 
-Hiện trạng ngày 18/09 (5/19 việc ✅):
+Hiện trạng sau D2 (19/09):
 
 | Nhóm | Đã có | Còn thiếu |
 |---|---|---|
 | Hạ tầng | Stack 4 dịch vụ healthy; smoke test Neo4j/Milvus PASS; có [plan hạ tầng](neo4j-milvus-infra.md) | Chưa đo RAM full corpus |
-| L0–L1 | Domain model; ID thống nhất trong `ingest.py`, SQLite và event store; 1.700.484 provision | Loader Neo4j; cạnh có kiểu |
+| L0–L1 | Domain model, ID thống nhất; Neo4j đã nạp 23.139 Document và 1.700.484 Provision, đủ cạnh `CONTAINS` | Cạnh giữa văn bản có kiểu (D3) |
 | L2 | 16.804 event áp được (2.819 `verified`), precision 58/60 ([plan L2](l2-event-store.md)) | BỔ SUNG nút mới 0%; sửa đổi có thay đổi cấu trúc; câu hai thao tác; mới 60/200 mẫu kiểm tay |
-| L3 | Chuỗi offline thật: 1.592.178 version, 15.634 provision có nhiều version; event log đủ 50.700 dòng | Khoảng hiệu lực thực; loader Neo4j; kiểm chứng 100 snapshot; dẫn chiếu chéo |
+| L3 | Khoảng hiệu lực thực offline; Neo4j có 1.592.178 Version, 50.540 LegalEvent, 37.640 cạnh `CAUSED_BY`; event log đủ 50.700 dòng | Kiểm chứng 100 snapshot; dẫn chiếu chéo |
 
 Những điều đã biết mà plan phải xử lý:
 
@@ -106,8 +106,8 @@ seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 | Bước | Việc | Xong khi |
 |---|---|---|
 | D1 ✅ | Schema: ràng buộc unique `id` cho Document, Provision, ProvisionVersion, LegalEvent; cạnh `CONTAINS`, `VERSION_OF`, `CAUSED_BY` | File schema chạy lại được; 2 lượt áp dụng + check-only trên Neo4j thật pass |
-| D2 | `scripts/pipeline/load_neo4j.py`: đọc `data/` + `versions.jsonl` + event, MERGE theo lô (`UNWIND`) | Chạy hai lần, số nút và cạnh không đổi; số nút khớp `data/` |
-| D3 | P3.5: cạnh giữa văn bản thành 13 loại `RelationType`, khử trùng 157.795 → 128.289 | Đếm theo loại khớp `representation_benchmark.json` |
+| D2 ✅ | `scripts/pipeline/load_neo4j.py`: đọc `data/` + `versions.jsonl` + event, MERGE theo lô (`UNWIND`) | Hai lượt full corpus: toàn bộ 9 số đếm node/cạnh giống nhau, khớp nguồn; chuỗi A→B→C trong Neo4j pass |
+| D3 | P3.5: cạnh giữa văn bản thành 13 loại `RelationType`, khử trùng 157.795 → 128.289 (mốc M1; snapshot v2 hiện khác) | Đối chiếu `edges.jsonl` v2 với `representation_benchmark.json`, chốt baseline rồi đếm theo loại |
 | D4 | 1.626 QPPL có text nhưng không có cây (Q4) | Theo quyết định Q4 |
 | D5 | Truy vấn snapshot bằng Cypher trả cùng kết quả với `SnapshotService` trên mẫu | 200/200 khớp |
 | D6 | P3.2: đo RAM và thời gian nạp full corpus | Số đo ghi vào plan hạ tầng |
@@ -184,7 +184,7 @@ nhóm xác nhận trước khi phần phụ thuộc bắt đầu.
 - [ ] Chốt Q1–Q6 (đã chốt Q1–Q2; còn Q3–Q6)
 - [ ] Gói A — hạ tầng (P3.1, P3.2)
 - [ ] Gói B — L2 đủ bốn thao tác, 200 mẫu, κ (P3.11, P3.13)
-- [x] Gói C — chuỗi phiên bản offline (P3.15–P3.17; phần Neo4j của P3.15 còn ở Gói D)
+- [x] Gói C — chuỗi phiên bản offline (P3.15–P3.17; phần Neo4j của P3.15 đã qua D2)
   - [x] C1 — thống nhất ID
   - [x] C2 — dựng chuỗi toàn corpus
   - [x] C3 — log đầy đủ event áp dụng/xung đột
@@ -193,7 +193,7 @@ nhóm xác nhận trước khi phần phụ thuộc bắt đầu.
   - [x] C6 — test chuỗi thật A → B → C và bãi bỏ cây con
 - [ ] Gói D — loader Neo4j (P3.4, P3.5, P3.9)
   - [x] D1 — schema node ID và hợp đồng cạnh cấu trúc
-  - [ ] D2 — loader corpus + version + event, chạy lại không trùng
+  - [x] D2 — loader corpus + version + event, chạy lại không trùng
   - [ ] D3–D6 — cạnh văn bản, Q4, snapshot Cypher, RAM
 - [ ] Gói E — kiểm chứng snapshot (P3.18)
 - [ ] Gói F — dẫn chiếu chéo (P3.19)
@@ -342,3 +342,45 @@ Kiểm tra chung của repository: `python -m pytest -q`.
 - Unique constraint không buộc `id` phải tồn tại trên mọi node. D2 phải không
   tạo node thiếu `id`, chạy hai lần không sinh trùng và so số lượng với `data/`.
   P3.4/Gói D/Phase 3 **chưa xong**; bước kế tiếp là D2.
+
+### D2 — 19/09/2026
+
+- `scripts/pipeline/load_neo4j.py` đọc `data/temporal.sqlite` (index dẫn xuất
+  bởi `build_store.py --with-subtrees` từ raw/tree/subtree), đối chiếu toàn bộ
+  tập Document ID với `data/raw`, rồi nạp `versions.jsonl`,
+  `provision_events.jsonl` và `event_log.jsonl`. Mọi batch dùng `UNWIND` +
+  `MERGE` theo ID ổn định trong một transaction; thiếu endpoint thì rollback
+  batch với lỗi rõ ràng. Có kiểm tra D1 constraint trước và chín số đếm cuối.
+- LegalEvent được gom theo ID: 50.700 dòng nguồn thành **50.540 node** (160
+  dòng lặp ID). `source_and_audit_json` giữ **từng dòng nguồn và outcome**,
+  kể cả trường hợp các bản lặp khác `status_reason`; không suy ra một event
+  mới từ mỗi dòng lặp. Version giữ text, khoảng cục bộ, số/khoảng hiệu lực
+  thực và provenance; `CAUSED_BY.role` phân biệt `created` và `ended`.
+- Hai lượt full corpus độc lập trên cùng Neo4j (704,0s và 553,9s), đều đạt:
+
+  | Nhóm | Số lượng mỗi lượt |
+  |---|---:|
+  | `Document` | 23.139 |
+  | `Provision` | 1.700.484 |
+  | `ProvisionVersion` | 1.592.178 |
+  | `LegalEvent` | 50.540 |
+  | `Document → CONTAINS → Provision` | 101.063 |
+  | `Provision → CONTAINS → Provision` | 1.599.421 |
+  | `VERSION_OF` | 1.592.178 |
+  | `CAUSED_BY` role `created` | 15.979 |
+  | `CAUSED_BY` role `ended` | 21.661 |
+
+- Trước full load, probe Cypher nạp **hai lượt trong cùng transaction** giữ
+  5 node/4 cạnh rồi rollback sạch. Sau full load, chuỗi thật A→B→C của C6
+  trong Neo4j có đúng ba version, đúng SHA-256 text và đúng các cạnh event
+  tạo/kết thúc. `python -m pytest -q`: **241 passed**, gồm test mới về event
+  ID lặp, audit sai, event thiếu, hai vai trò event và batch thiếu endpoint.
+  `python scripts/check/verify_pipeline.py`: **all checks passed** trên nguồn.
+- D2/P3.4 hoàn thành, phần nạp version/event của P3.15 đã có bằng chứng.
+  **Chưa** nạp 13 loại cạnh văn bản (D3), chưa quyết Q4 (D4), chưa đối chiếu
+  Cypher với `SnapshotService` (D5), chưa đo RAM (D6). Gói D/Phase 3 chưa xong.
+- Lưu ý cho D3: snapshot hiện tại có **128.548 dòng** `data/edges.jsonl`
+  (`verify_pipeline.py` pass), trong khi `representation_benchmark.json` M1
+  ghi **128.289 cạnh phân biệt** từ snapshot cũ 22.550 văn bản. Phải đối
+  chiếu/đóng băng baseline snapshot v2 trước khi dùng ngưỡng 128.289 của D3;
+  D2 không nạp hoặc sửa các cạnh này.

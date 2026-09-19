@@ -62,8 +62,8 @@ P3.1 hạ tầng Docker ─► P3.4 loader Neo4j ─► P3.9 lưu event ─► P
 
 Lõi logic L3 (`src/legal_crawler/temporal/`) và chuỗi phiên bản offline trên dữ
 liệu thật đã có; Gói C (C1–C6) của plan Phase 3 đã hoàn thành, gồm khoảng
-hiệu lực thực và test chuỗi thật. Còn thiếu loader Neo4j và kiểm chứng
-snapshot trước khi đạt M2.
+hiệu lực thực và test chuỗi thật. D1–D2 đã nạp full corpus lên Neo4j hai
+lượt với số đếm ổn định. Còn thiếu D3–D6 và kiểm chứng snapshot để đạt M2.
 
 ---
 
@@ -115,8 +115,8 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
 | P3.3 | Domain model và ID tất định | NMT | ✅ | `temporal/models.py`, `temporal/ids.py`; 18/09 full SQLite có 0 ID thô; test pass |
-| P3.4 | Loader `data/` → Neo4j: Document, Provision, `CONTAINS`, Version | CMT | 🟡 | D1 schema 4 unique `id` hoàn thành 19/09, áp dụng 2 lần + check-only trên Neo4j pass; D2 loader chưa làm, chưa nạp corpus/chứng minh số nút khớp `data/` |
-| P3.5 | Nạp cạnh giữa văn bản thành quan hệ có kiểu (khử trùng lặp 157.795 → 128.289) | CMT | ⬜ | Đếm theo 13 loại khớp `data/representation_benchmark.json` M1 |
+| P3.4 | Loader `data/` → Neo4j: Document, Provision, `CONTAINS`, Version | CMT | ✅ | D2 (19/09): 2 lượt full load cùng 23.139 Document, 1.700.484 Provision, 1.592.178 Version; 1.700.484 cạnh `CONTAINS`, 1.592.178 `VERSION_OF`; đối chiếu source IDs và count pass; [bằng chứng](phase-3-kg-l0-l3.md#d2--19092026) |
+| P3.5 | Nạp cạnh giữa văn bản thành quan hệ có kiểu (khử trùng lặp 157.795 → 128.289 ở M1) | CMT | ⬜ | M1 benchmark là snapshot cũ; `data/edges.jsonl` v2 hiện có 128.548 dòng. D3 phải đối chiếu/chốt baseline v2 trước khi so 13 loại |
 | P3.6 | Chuyển `target_resolver` và `resolve_expiry_targets.py` sang Neo4j; bỏ index SQLite | CMT | ⬜ | Tỷ lệ resolve vẫn là 73,3%; xóa được `index.py`, `build_store.py` |
 
 ### 3C. L2: trích xuất thao tác sửa đổi
@@ -125,7 +125,7 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 |---|---|---|---|---|
 | P3.7 | Khuôn dữ liệu trích xuất | CMT | ✅ | `extraction/models.py`; test pass |
 | P3.8 | Target resolver ("Khoản 1, Điều 3" → id nút) | CMT | ✅ | `extraction/target_resolver.py`; 22.847/31.175 chuỗi expiry map được. Chưa kiểm tiêu đề bất thường |
-| P3.9 | Định dạng lưu event đã duyệt trong `data/` | CMT, NMT | 🟡 | `data/derived/provision_events.jsonl` có `id`, `status` (verified / auto_accepted / needs_review), `text_updates` ([plan](l2-event-store.md)); 16.254/16.804 event áp được chạy qua `EventApplier`. Chưa có loader Neo4j đọc file |
+| P3.9 | Định dạng lưu event đã duyệt trong `data/` | CMT, NMT | ✅ | `data/derived/provision_events.jsonl` + `event_log.jsonl` giữ `id`, status, lời văn và outcome từng dòng; D2 đọc cả hai, nạp 50.540 LegalEvent từ 50.700 dòng (giữ audit dòng lặp); 16.254 event áp được. [Bằng chứng](phase-3-kg-l0-l3.md#d2--19092026) |
 | P3.10 | Event BÃI BỎ từ 228 VB chỉ có một văn bản tác động (843 bộ ba) | CMT | ✅ | Thay bằng mức `verified`: 2.819 event mà cổng liệt kê đúng nút. Không sinh event chỉ từ metadata, lý do trong [plan](l2-event-store.md) |
 | P3.11 | Bộ trích xuất regex: SỬA ĐỔI / BỔ SUNG / BÃI BỎ / THAY THẾ | CMT | 🟡 | `extraction/provision_ops.py`, `extraction/wording.py`, `scripts/pipeline/extract_provision_events.py` → `data/derived/provision_events.jsonl` (12.676 VB tác động; bỏ 768 không phải QPPL trung ương, 84 VB mà cổng trả nhầm thân văn bản). Ca không chắc chắn ghi `needs_review` kèm lý do. Còn thiếu: lời văn không ngoặc kép, thay đổi cấu trúc, BỔ SUNG nút mới ([plan](l2-event-store.md)) |
 | P3.12 | LLM cho ca phức tạp | CMT | ⬜ | Chỉ gọi khi regex bó tay; ghi `method=LLM` |
@@ -136,7 +136,7 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
 | P3.14 | Logic version chain, event applier, validity, snapshot | NMT | ✅ | `temporal/`; test pass (fixture tự tạo) |
-| P3.15 | Áp event lên dữ liệu thật → chuỗi phiên bản trong Neo4j | NMT | 🟡 | Offline xong: 1.592.178 version, 15.634 đơn vị có ≥2 version, 15.979 version có `created_by_event_id`. C6 (19/09): 2 ca thật A → B → C và bãi bỏ Điều/cây con pass; 2 lượt full build cho cùng SHA-256; 227 test pass. Còn nạp Neo4j (Gói D) |
+| P3.15 | Áp event lên dữ liệu thật → chuỗi phiên bản trong Neo4j | NMT | ✅ | D2 nạp 1.592.178 version và 37.640 cạnh version–event, hai lượt full load cùng số đếm; chuỗi A → B → C trong Neo4j đúng 3 text SHA-256 và cạnh event tạo/kết thúc. Đánh giá snapshot 100 mẫu vẫn ở P3.18. [Bằng chứng](phase-3-kg-l0-l3.md#d2--19092026) |
 | P3.16 | Tính trước khoảng hiệu lực thực của mỗi phiên bản (cách A) | NMT | ✅ | C4 (19/09): `versions.jsonl` có `effective_intervals`; 6.108/6.108 cặp (nút, ngày) trên 1.729 văn bản ngẫu nhiên khớp `ValidityService`; 224 test pass. Xem [plan Phase 3](phase-3-kg-l0-l3.md#c4--19092026) |
 | P3.17 | Hợp nhất định nghĩa "có hiệu lực tại t" | NMT | ✅ | C5 (19/09): bỏ `index.version_at`; tên API khoảng cục bộ tách khỏi hiệu lực pháp lý; `ValidityService` là đường quyết định, 225 test pass. Xem [plan Phase 3](phase-3-kg-l0-l3.md#c5--19092026) |
 | P3.18 | Kiểm chứng snapshot trên 100 truy vấn đối chiếu tay | NMT | ⬜ | Bảng 100 truy vấn, kết quả, người kiểm |
@@ -317,3 +317,4 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-18 | Phase 3 C1–C3: thống nhất ID; subtree có version; dựng 1.592.178 version thật và audit đủ 50.700 event. Hai lượt full corpus trùng SHA-256; 220 test pass. P3.15 🟡 vì chưa nạp Neo4j | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md) |
 | 2026-09-19 | Phase 3 C4–C6: khoảng hiệu lực thực đối chiếu 6.108 cặp với `ValidityService`; hợp nhất đường tính hiệu lực; 2 ca chuỗi thật pass, 2 lượt full build trùng SHA-256; 227 test pass. Gói C xong, P3.15 vẫn 🟡 vì chưa nạp Neo4j | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#c6--19092026) |
 | 2026-09-19 | Phase 3 D1: tạo và kiểm chứng 4 unique constraint `id` trên Neo4j thật; áp dụng hai lượt, check-only pass, 0 node/cạnh được nạp; 234 test pass. P3.4 🟡 đến khi D2 loader chạy được và đối chiếu corpus | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d1--19092026) |
+| 2026-09-19 | Phase 3 D2: hai lượt nạp full Neo4j khớp chín nhóm số đếm từ corpus, gồm 23.139 Document, 1.700.484 Provision, 1.592.178 Version, 50.540 LegalEvent; chuỗi thật A→B→C pass; 241 test pass. P3.4, P3.9, P3.15 ✅; D3–D6/P3.18 còn mở | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d2--19092026) |
