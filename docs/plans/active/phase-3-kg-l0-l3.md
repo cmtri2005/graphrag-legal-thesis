@@ -99,7 +99,7 @@ seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 | C1 | Thống nhất ID theo `temporal/ids.py` cho `ingest`, applier và loader (Q1) | Một hàm sinh ID cho mỗi loại nút; test |
 | C2 | `scripts/pipeline/build_versions.py`: nâng `build_versions.py` lên toàn corpus. Phiên bản 1 để mở; nút T5 có phiên bản; áp event theo `(effective_on, actor)` | `data/derived/versions.jsonl` và `event_log.jsonl` (mỗi event: đã áp, hoặc bị từ chối kèm lý do) |
 | C3 | Xử lý xung đột (Q2): event sai thứ tự ngày, hoặc tác động lên nút đã đóng, thì không áp và ghi vào hàng đợi review, không sắp xếp lại ngầm | Coverage cộng hàng đợi review = tiêu chí "không áp âm thầm" |
-| C4 | P3.16: tính khoảng hiệu lực thực của mỗi phiên bản (giao với mọi tổ tiên, công thức (3)) và ghi vào `versions.jsonl` | Khớp `ValidityService` trên 1.000 cặp (nút, t) ngẫu nhiên |
+| C4 | ✅ 20/09 P3.16: tính khoảng hiệu lực thực của mỗi phiên bản (giao với mọi tổ tiên, công thức (3)) và ghi vào `versions.jsonl` | `build_versions.py --verify` khớp `ValidityService` 1.005/1.005 cặp, hỏi ở đúng các mốc biên |
 | C5 | ✅ 20/09 P3.17: chỉ còn `ValidityService` trả lời "có hiệu lực tại t"; bỏ `index.version_at` | grep không còn đường tính thứ hai; hai test chuyển sang `VersionChain` |
 | C6 | Test chuỗi A → B → C trên dữ liệu thật: một nút bị sửa 2 lần, một Điều bị bãi bỏ kéo theo cả cây con | Test pass; chạy hai lần cho ra file giống hệt (so sha256) |
 
@@ -169,6 +169,17 @@ Các quyết định cần chốt ở tuần 1. Ý kiến đề xuất chưa ph�
 | Q5 | Ngưỡng đạt của P3.18 | ≥ 95/100, giống ngưỡng đã dùng cho backfill T5 | E2 |
 | Q6 | Giữ index SQLite cho pipeline offline hay chuyển hết sang Neo4j (ADR 0001 ghi là chuyển) | Giữ SQLite làm index dựng offline; Neo4j chỉ phục vụ truy vấn. Nếu chọn phương án này thì sửa ADR 0001 | Gói G |
 
+## Decisions đã chốt
+
+- 2026-09-20 (CMT): **nút không có phiên bản là trong suốt khi lan truyền hiệu
+  lực.** `ValidityService` trước đó bắt nút cha phải có text thì con mới có
+  hiệu lực, nên 72.049 nút có text (66.008 trong VB đủ điều kiện benchmark,
+  trải trên 1.640 VB) không bao giờ trả về text ở bất kỳ mốc nào: 65.443 do
+  Chương/Phần/Mục vốn không có text, 6.606 do Điều/Khoản cha thiếu text. Nay
+  chỉ tổ tiên bị bãi bỏ, có khoảng trống, hoặc văn bản hết hiệu lực mới chặn;
+  bản thân nút thiếu text vẫn trả lời `NO_VERSION_HELD`. Căn cứ: nguyên tắc
+  §11 "không coi thiếu dữ liệu là dữ liệu nói khác", nay thành D12.
+
 ## Risks And Recovery
 
 - **L2 thêm tính năng lại làm giảm precision** (vòng 4 từng bị như vậy): mỗi
@@ -185,7 +196,7 @@ Các quyết định cần chốt ở tuần 1. Ý kiến đề xuất chưa ph�
 - [ ] Chốt Q1–Q6 (Q1 xong 20/09; Q2–Q6 còn)
 - [ ] Gói A — hạ tầng (P3.1, P3.2)
 - [ ] Gói B — L2 đủ bốn thao tác, 200 mẫu, κ (P3.11, P3.13)
-- [ ] Gói C — chuỗi phiên bản offline (P3.15–P3.17). C1, C2 xong 20/09 (C2: `build_versions.py` toàn corpus, 4 phút 23 giây: 1.592.178 phiên bản, 15.634 nút có ≥ 2 phiên bản, 50.623 event đều có dòng trong `event_log.jsonl` = 16.233 áp + 550 từ chối kèm lý do + 33.840 `needs_review`; chạy hai lần cho sha256 giống hệt; Q2 vẫn là đề xuất, script chưa áp và ghi log, chưa có hàng đợi review = C3). C1: index, `expiry_targets.jsonl` và `provision_events.jsonl` dựng lại với ID miền, ID lồng nhau không lặp tiền tố (`version:<uuid>:1`). Kết quả giống bản cũ (expiry 55.019 dòng; recall 62,2%; cùng ba lớp lỗi khi áp thử). Event: mỗi ID một event, 77 câu lặp y hệt ghi một lần, `document_number` vào dấu vân tay ID → 50.623 event, áp được 16.233/16.783
+- [ ] Gói C — chuỗi phiên bản offline (P3.15–P3.17). C1, C2, **C4, C5** xong 20/09; còn C3 (chờ Q2) và C6 (C2: `build_versions.py` toàn corpus, 4 phút 23 giây: 1.592.178 phiên bản, 15.634 nút có ≥ 2 phiên bản, 50.623 event đều có dòng trong `event_log.jsonl` = 16.233 áp + 550 từ chối kèm lý do + 33.840 `needs_review`; chạy hai lần cho sha256 giống hệt; Q2 vẫn là đề xuất, script chưa áp và ghi log, chưa có hàng đợi review = C3). C1: index, `expiry_targets.jsonl` và `provision_events.jsonl` dựng lại với ID miền, ID lồng nhau không lặp tiền tố (`version:<uuid>:1`). Kết quả giống bản cũ (expiry 55.019 dòng; recall 62,2%; cùng ba lớp lỗi khi áp thử). Event: mỗi ID một event, 77 câu lặp y hệt ghi một lần, `document_number` vào dấu vân tay ID → 50.623 event, áp được 16.233/16.783
 - [ ] Gói D — loader Neo4j (P3.4, P3.5, P3.9)
 - [ ] Gói E — kiểm chứng snapshot (P3.18)
 - [ ] Gói F — dẫn chiếu chéo (P3.19)

@@ -136,7 +136,7 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 |---|---|---|---|---|
 | P3.14 | Logic version chain, event applier, validity, snapshot | NMT | ✅ | `temporal/`; test pass (fixture tự tạo) |
 | P3.15 | Áp event lên dữ liệu thật → chuỗi phiên bản trong Neo4j | NMT | 🟡 | 20/09: `scripts/pipeline/build_versions.py` dựng offline `data/derived/versions.jsonl` (1,59 triệu phiên bản, 15.634 nút có ≥ 2 phiên bản, `created_by_event_id` luôn khác rỗng) và `event_log.jsonl`. Còn thiếu: nạp vào Neo4j (Gói D) |
-| P3.16 | Tính trước khoảng hiệu lực thực của mỗi phiên bản (cách A) | NMT | ⬜ | Khớp `ValidityService` trên mẫu ngẫu nhiên |
+| P3.16 | Tính trước khoảng hiệu lực thực của mỗi phiên bản (cách A) | NMT | ✅ | 20/09: `versions.jsonl` có `effective_from`/`effective_to` (giao với văn bản và mọi tổ tiên). 728.938/1,59 triệu phiên bản bị thu hẹp, 132 chưa từng có hiệu lực. Khớp `ValidityService` 1.005/1.005 cặp (nút, ngày) ở các mốc biên |
 | P3.17 | Hợp nhất định nghĩa "có hiệu lực tại t" | NMT | ✅ | 20/09: `index.version_at` đã xóa, `grep` không còn nơi gọi. Chỉ còn `VersionChain.at` cho một nút và `ValidityService` cho lan truyền trên cây |
 | P3.18 | Kiểm chứng snapshot trên 100 truy vấn đối chiếu tay | NMT | ⬜ | Bảng 100 truy vấn, kết quả, người kiểm |
 | P3.19 | Giải dẫn chiếu chéo có nhận biết thời gian | NMT | ⬜ | "khoản 2 Điều 5 của Luật này" → đúng phiên bản tại t |
@@ -251,6 +251,7 @@ Kế hoạch chi tiết đến M3, bắt đầu sớm từ 21/09 vì 3 tuần kh
 | D9 | "Thay cụm từ" phải chuyển thành toàn văn trước khi áp | `TextUpdate` |
 | D10 | Resolver chỉ nhận đúng một kết quả khớp cấu trúc, không fuzzy | `target_resolver.py` |
 | D11 | Bằng chứng truy xuất phải lấy từ đúng snapshot hợp lệ | Áp dụng khi làm L4 (P6.1) |
+| D12 | Nút không có phiên bản (Chương/Mục, hoặc Điều thiếu text) là **trong suốt** khi lan truyền hiệu lực; chỉ tổ tiên bị bãi bỏ hoặc văn bản hết hiệu lực mới chặn | `ValidityService`; chốt 20/09, xem [plan GĐ3](phase-3-kg-l0-l3.md) |
 
 Các quyết định cũ **đã bị thay thế**: serialization envelope, repository Protocol, query schema riêng (bị xóa ở `5b8ee70`), và "Neo4j là nguồn sự thật" (bị thay bởi 0001).
 

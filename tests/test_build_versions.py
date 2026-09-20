@@ -1,6 +1,6 @@
 from datetime import date
 
-from build_versions import build_document_versions
+from build_versions import build_document_versions, effective_intervals
 from legal_crawler.index import TemporalIndex
 from legal_crawler.ingest import build_versions
 from legal_crawler.temporal import (
@@ -27,7 +27,20 @@ def _row(event_id, operation, on, node="k1", new_text=None):
 
 
 def _build(index, rows):
-    return build_document_versions(index, index.document("T"), {}, rows, EventApplier())
+    versions, outcomes, _, _ = build_document_versions(
+        index, index.document("T"), {}, rows, EventApplier())
+    return versions, outcomes
+
+
+def _windows(index, rows):
+    """{provision_id: (effective_from, effective_to)} of each node's last version."""
+    versions, _, state, provisions = build_document_versions(
+        index, index.document("T"), {}, rows, EventApplier())
+    intervals = effective_intervals(index.document("T"), provisions, state)
+    latest = {}
+    for v in sorted(versions, key=lambda v: v.ordinal):
+        latest[v.provision_id] = intervals.get(v.id)
+    return latest
 
 
 def test_amendment_closes_version_one_and_opens_two():
@@ -50,3 +63,28 @@ def test_document_without_effective_date_keeps_undated_versions_and_rejects_even
     versions, outcomes = _build(_index(None), [_row("e1", "amend", "2024-01-01", new_text="mới")])
     assert len(versions) == 2 and all(v.validity is None for v in versions)
     assert outcomes["e1"] is not None
+
+
+def test_repealing_the_parent_ends_the_child_window_too():
+    """Formula (3): Khoản 1's own version stays open, but Điều 1 ended in 2024."""
+    index = _index(date(2020, 1, 1))
+    windows = _windows(index, [_row("e1", "repeal", "2024-01-01", node="d1")])
+
+    assert windows[P("d1")] == (date(2020, 1, 1), date(2024, 1, 1))
+    assert windows[P("k1")] == (date(2020, 1, 1), date(2024, 1, 1))
+
+
+def test_the_document_window_bounds_every_version():
+    index = TemporalIndex()
+    document = LegalDocument("T", "01/2020", "Luật", effective_from=date(2020, 1, 1),
+                             effective_to=date(2023, 1, 1))
+    index.put_documents([document, LegalDocument("A", "02/2024", "NĐ",
+                                                 effective_from=date(2024, 1, 1))])
+    provisions = [Provision(P("d1"), "T", ProvisionLevel.ARTICLE, "Điều 1", None, 0)]
+    index.put_provisions(provisions)
+    index.put_versions(build_versions(provisions, {"d1": {"text": "x"}}, document))
+    _, _, state, ordered = build_document_versions(index, document, {}, [], EventApplier())
+
+    assert effective_intervals(document, ordered, state) == {
+        list(state.versions)[0].id: (date(2020, 1, 1), date(2023, 1, 1))
+    }
