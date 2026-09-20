@@ -1,6 +1,6 @@
 # Master Plan — Khóa luận Temporal-Aware KG RAG
 
-Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-18
+Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-20
 
 > **Nguồn sự thật về tiến độ dự án.** Timeline bám theo mục "Kế hoạch thực hiện"
 > trong `DeCuongKLTN_23521635_23521643.docx` (01/09/2026 – 01/02/2027).
@@ -128,14 +128,14 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 | P3.10 | Event BÃI BỎ từ 228 VB chỉ có một văn bản tác động (843 bộ ba) | CMT | ✅ | Thay bằng mức `verified`: 2.819 event mà cổng liệt kê đúng nút. Không sinh event chỉ từ metadata, lý do trong [plan](l2-event-store.md) |
 | P3.11 | Bộ trích xuất regex: SỬA ĐỔI / BỔ SUNG / BÃI BỎ / THAY THẾ | CMT | 🟡 | `extraction/provision_ops.py`, `extraction/wording.py`, `scripts/pipeline/extract_provision_events.py` → `data/derived/provision_events.jsonl` (12.676 VB tác động; bỏ 768 không phải QPPL trung ương, 84 VB mà cổng trả nhầm thân văn bản). Ca không chắc chắn ghi `needs_review` kèm lý do. Còn thiếu: lời văn không ngoặc kép, thay đổi cấu trúc, BỔ SUNG nút mới ([plan](l2-event-store.md)) |
 | P3.12 | LLM cho ca phức tạp | CMT | ⬜ | Chỉ gọi khi regex bó tay; ghi `method=LLM` |
-| P3.13 | Đo độ chính xác L2 | CMT, NMT | 🟡 | `scripts/check/measure_provision_events.py`, `scripts/check/apply_provision_events.py` (2026-09-18). Precision kiểm tay trên 60 event áp được (seed 20260923, chưa dùng để sửa): 58/60 = 96,7% (Wilson 95%: 88,6–99,1%); lời văn mới 30/30 cắt đúng. Các vòng trước: v4 56/60 trên mọi event đã resolve (seed 20260921); seed 20260918–20 và 20260922 dùng để tìm lỗi. Recall theo expiryProvisions 62,2% (5.007/8.046 cặp); cùng actor với gold một-actor 98,2%; loại thao tác khớp hậu tố trạng thái 90,3% (HHL1P1=bãi bỏ, P2=đính chính, P3=sửa đổi, P4=thay thế). Hạn chế: câu hai thao tác ("Bãi bỏ … và sửa đổi …") gán thao tác thứ hai thành bãi bỏ. Chưa đạt 200 mẫu kiểm tay, NMT chưa kiểm chéo |
+| P3.13 | Đo độ chính xác L2 | CMT, NMT | 🟡 | `scripts/check/measure_provision_events.py`, `scripts/pipeline/build_versions.py` (2026-09-18). Precision kiểm tay trên 60 event áp được (seed 20260923, chưa dùng để sửa): 58/60 = 96,7% (Wilson 95%: 88,6–99,1%); lời văn mới 30/30 cắt đúng. Các vòng trước: v4 56/60 trên mọi event đã resolve (seed 20260921); seed 20260918–20 và 20260922 dùng để tìm lỗi. Recall theo expiryProvisions 62,2% (5.007/8.046 cặp); cùng actor với gold một-actor 98,2%; loại thao tác khớp hậu tố trạng thái 90,3% (HHL1P1=bãi bỏ, P2=đính chính, P3=sửa đổi, P4=thay thế). Hạn chế: câu hai thao tác ("Bãi bỏ … và sửa đổi …") gán thao tác thứ hai thành bãi bỏ. Chưa đạt 200 mẫu kiểm tay, NMT chưa kiểm chéo |
 
 ### 3D. L3: hợp nhất phiên bản và lan truyền hiệu lực
 
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
 | P3.14 | Logic version chain, event applier, validity, snapshot | NMT | ✅ | `temporal/`; test pass (fixture tự tạo) |
-| P3.15 | Áp event lên dữ liệu thật → chuỗi phiên bản trong Neo4j | NMT | ⬜ | Có đơn vị với 2 phiên bản trở lên, `created_by_event_id` khác rỗng |
+| P3.15 | Áp event lên dữ liệu thật → chuỗi phiên bản trong Neo4j | NMT | 🟡 | 20/09: `scripts/pipeline/build_versions.py` dựng offline `data/derived/versions.jsonl` (1,59 triệu phiên bản, 15.634 nút có ≥ 2 phiên bản, `created_by_event_id` luôn khác rỗng) và `event_log.jsonl`. Còn thiếu: nạp vào Neo4j (Gói D) |
 | P3.16 | Tính trước khoảng hiệu lực thực của mỗi phiên bản (cách A) | NMT | ⬜ | Khớp `ValidityService` trên mẫu ngẫu nhiên |
 | P3.17 | Hợp nhất định nghĩa "có hiệu lực tại t" | NMT | ⬜ | Chỉ còn một đường tính; `index.version_at` bị bỏ |
 | P3.18 | Kiểm chứng snapshot trên 100 truy vấn đối chiếu tay | NMT | ⬜ | Bảng 100 truy vấn, kết quả, người kiểm |
@@ -313,3 +313,4 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-17 | Backfill T5.4: tái lập đúng phương pháp v1 — 243 văn bản một tác nhân, 919 bộ ba gold (v1: 228/843) | `../completed/2026-09-17-backfill-corpus-v2.md` |
 | 2026-09-17 | Backfill T3.3: commit code (`7794627`), đóng băng snapshot v2, đẩy HF (`7d8ab0c`), tải về thư mục khác kiểm chứng `verify_pipeline.py` pass — **M1 đạt trước hạn** | `../completed/2026-09-17-backfill-corpus-v2.md` |
 | 2026-09-18 | L2: event có `id`/`status`/lời văn mới; 16.804 event áp được (2.819 `verified`), 96,7% chạy qua `EventApplier`; precision 58/60. P3.10 xong qua mức `verified`; P3.9, P3.11, P3.13 🟡 | [`l2-event-store.md`](l2-event-store.md) |
+| 2026-09-20 | Q1 chốt: ID miền theo `temporal/ids.py`, đổi ở `ingest.py`; ID event duy nhất. C2: `build_versions.py` dựng chuỗi phiên bản toàn corpus offline; P3.15 🟡 | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md), commit `c9b1eec`, `8b7e98e` |

@@ -119,7 +119,7 @@ Out of scope (tới lượt thì làm, hoặc để `needs_review`):
 - 50.700 dòng event: 2.819 `verified`, 13.985 `auto_accepted`, còn lại
   `needs_review`. Tính trên các event đã resolve: bãi bỏ áp được 99,9%, sửa đổi
   41,9% (có lời văn khớp cây), thay thế 10,8%, bổ sung 0%.
-- `scripts/check/apply_provision_events.py`: 16.254/16.804 (96,7%) event áp được
+- `scripts/pipeline/build_versions.py`: 16.254/16.804 (96,7%) event áp được
   chạy qua `EventApplier` không lỗi. Lỗi còn lại: 269 ngày của actor không sau
   ngày bắt đầu phiên bản hiện tại, 170 nút đích không có text, 111 nút đã bị
   đóng trước đó.

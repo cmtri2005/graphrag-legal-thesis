@@ -36,7 +36,7 @@ Những điều đã biết mà plan phải xử lý:
   qua công thức (3) (`temporal/validity.py`).
 - **Nút Khoản/Điểm tách từ thân văn bản (backfill T5, 424.409 nút)** chưa có
   phiên bản trong index. Chúng phải có phiên bản, vì event nhắm vào chúng.
-- **Áp thử 16.804 event** (`scripts/check/apply_provision_events.py`): 550 lỗi,
+- **Áp thử 16.804 event** (`scripts/pipeline/build_versions.py`): 550 lỗi,
   gồm 269 sai thứ tự ngày, 170 nút không có text, 111 nút đã bị đóng trước đó.
 - **Đáp án kiểm tra tự động:** 874 cạnh "Văn bản được hợp nhất" (CONSOLIDATES):
   356 văn bản hợp nhất, tất cả có trong `data/raw`, hợp nhất 621 văn bản gốc.
@@ -89,7 +89,7 @@ Xong khi: hai dịch vụ healthy, có runbook, có số RAM baseline.
 | B5 | (Tùy chọn, làm nếu dư thời gian) lời văn không nằm trong ngoặc kép | — |
 | B6 | Đo lại: đủ 200 mẫu kiểm tay trên các seed mới; NMT kiểm chéo 50 mẫu, tính Cohen κ | P3.13 ✅ |
 
-Mỗi lần sửa: chạy lại pipeline, `apply_provision_events.py`, rồi kiểm trên một
+Mỗi lần sửa: chạy lại pipeline, `build_versions.py`, rồi kiểm trên một
 seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 
 ### Gói C — Dựng chuỗi phiên bản offline (NMT, CMT hỗ trợ) · P3.15, P3.16, P3.17
@@ -97,7 +97,7 @@ seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 | Bước | Việc | Xong khi |
 |---|---|---|
 | C1 | Thống nhất ID theo `temporal/ids.py` cho `ingest`, applier và loader (Q1) | Một hàm sinh ID cho mỗi loại nút; test |
-| C2 | `scripts/pipeline/build_versions.py`: nâng `apply_provision_events.py` lên toàn corpus. Phiên bản 1 để mở; nút T5 có phiên bản; áp event theo `(effective_on, actor)` | `data/derived/versions.jsonl` và `event_log.jsonl` (mỗi event: đã áp, hoặc bị từ chối kèm lý do) |
+| C2 | `scripts/pipeline/build_versions.py`: nâng `build_versions.py` lên toàn corpus. Phiên bản 1 để mở; nút T5 có phiên bản; áp event theo `(effective_on, actor)` | `data/derived/versions.jsonl` và `event_log.jsonl` (mỗi event: đã áp, hoặc bị từ chối kèm lý do) |
 | C3 | Xử lý xung đột (Q2): event sai thứ tự ngày, hoặc tác động lên nút đã đóng, thì không áp và ghi vào hàng đợi review, không sắp xếp lại ngầm | Coverage cộng hàng đợi review = tiêu chí "không áp âm thầm" |
 | C4 | P3.16: tính khoảng hiệu lực thực của mỗi phiên bản (giao với mọi tổ tiên, công thức (3)) và ghi vào `versions.jsonl` | Khớp `ValidityService` trên 1.000 cặp (nút, t) ngẫu nhiên |
 | C5 | P3.17: chỉ còn `ValidityService` trả lời "có hiệu lực tại t"; bỏ `index.version_at` | grep không còn đường tính thứ hai |
@@ -185,7 +185,7 @@ Các quyết định cần chốt ở tuần 1. Ý kiến đề xuất chưa ph�
 - [ ] Chốt Q1–Q6 (Q1 xong 20/09; Q2–Q6 còn)
 - [ ] Gói A — hạ tầng (P3.1, P3.2)
 - [ ] Gói B — L2 đủ bốn thao tác, 200 mẫu, κ (P3.11, P3.13)
-- [ ] Gói C — chuỗi phiên bản offline (P3.15–P3.17). C1 xong 20/09: index, `expiry_targets.jsonl` và `provision_events.jsonl` dựng lại với ID miền, ID lồng nhau không lặp tiền tố (`version:<uuid>:1`). Kết quả giống bản cũ (expiry 55.019 dòng; recall 62,2%; cùng ba lớp lỗi khi áp thử). Event: mỗi ID một event, 77 câu lặp y hệt ghi một lần, `document_number` vào dấu vân tay ID → 50.623 event, áp được 16.233/16.783
+- [ ] Gói C — chuỗi phiên bản offline (P3.15–P3.17). C1, C2 xong 20/09 (C2: `build_versions.py` toàn corpus, 4 phút 23 giây: 1.592.178 phiên bản, 15.634 nút có ≥ 2 phiên bản, 50.623 event đều có dòng trong `event_log.jsonl` = 16.233 áp + 550 từ chối kèm lý do + 33.840 `needs_review`; chạy hai lần cho sha256 giống hệt; Q2 vẫn là đề xuất, script chưa áp và ghi log, chưa có hàng đợi review = C3). C1: index, `expiry_targets.jsonl` và `provision_events.jsonl` dựng lại với ID miền, ID lồng nhau không lặp tiền tố (`version:<uuid>:1`). Kết quả giống bản cũ (expiry 55.019 dòng; recall 62,2%; cùng ba lớp lỗi khi áp thử). Event: mỗi ID một event, 77 câu lặp y hệt ghi một lần, `document_number` vào dấu vân tay ID → 50.623 event, áp được 16.233/16.783
 - [ ] Gói D — loader Neo4j (P3.4, P3.5, P3.9)
 - [ ] Gói E — kiểm chứng snapshot (P3.18)
 - [ ] Gói F — dẫn chiếu chéo (P3.19)
