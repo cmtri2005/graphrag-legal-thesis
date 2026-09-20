@@ -9,7 +9,7 @@ thái từng việc vẫn cập nhật ở master plan.
 
 ## Outcome
 
-**M3 (16/11/2026):** 1.150 câu hỏi theo Bảng 2 của đề cương, mỗi câu có nhãn
+**M3 (16/11/2026):** 1.150 câu hỏi theo bảng cấu trúc ViLexTime của đề cương, mỗi câu có nhãn
 vàng dẫn xuất từ khác biệt văn bản và truy ngược được về nút, phiên bản và
 event sinh ra nó. Cohen κ ≥ 0,6 trên tập kiểm chéo. Tập dev/test chia sẵn,
 không rò rỉ giữa hai tập.
@@ -31,7 +31,7 @@ database.
 Trên 17.091 văn bản `benchmark_eligible` (`data/derived/eligibility.jsonl`,
 P2.8), dùng `versions.jsonl` và `event_log.jsonl`:
 
-| Nhóm | Định nghĩa Bảng 2 | Số câu | Ứng viên đo được | Dư |
+| Nhóm | Định nghĩa trong đề cương | Số câu | Ứng viên đo được | Dư |
 |---|---|---:|---:|---:|
 | T1 | Tra cứu một phiên bản, không mơ hồ | 250 | ~1,55 triệu nút một phiên bản | thừa |
 | T2 | Cặp tương phản cùng câu, khác mốc | 400 (200 cặp) | 15.070 nút ≥ 2 phiên bản, trong 1.442 VB | 75× |
@@ -49,11 +49,21 @@ Hai nhóm chặn tiến độ, phần còn lại thừa trữ lượng:
   "có lợi" là phán đoán pháp lý, không đo được bằng dữ liệu; sau khi cố vấn
   luật lọc có thể còn dưới 50.
 
+### Bản đề cương dùng làm chuẩn
+
+Bản `.docx` trong repo là bản 12/09 và **đã cũ**. Bản mới (ảnh chụp 20/09) đánh
+số bảng cấu trúc là **Bảng 1** thay vì Bảng 2, và đổi vai trò của T6 từ "Phá vỡ
+đường cơ sở B7" thành "Đánh giá hiệu lực ở cấp điều khoản". Sáu nhóm, phần mô
+tả và toàn bộ quota (250 · 400 · 200 · 150 · 50 · 100 = 1.150) giữ nguyên. Kế
+hoạch này không trích số bảng, để khỏi lệch giữa hai bản. Cần đưa bản mới vào
+repo để `data/` và `docs/` cùng trỏ về một nguồn.
+
 ### Hai mâu thuẫn trong đề cương (đã chốt 20/09, xem Decisions)
 
-1. **T6/T7** (master plan §12): đề cương viết "gồm bảy nhóm" nhưng Bảng 2 chỉ
-   có T1–T6; giả thuyết nhắc T1–T7; `docs/graph_justification.md` gọi nhóm hết
-   hiệu lực một phần là T7, còn Bảng 2 gọi là T6. → Chốt: **T6**.
+1. **T6/T7** (master plan §12): đề cương viết "gồm bảy nhóm" nhưng bảng cấu
+   trúc chỉ có T1–T6; giả thuyết nhắc T1–T7; `docs/graph_justification.md` gọi
+   nhóm hết hiệu lực một phần là T7, còn bảng gọi là T6. → Chốt: **T6**,
+   đối chiếu lại với bản đề cương mới ngày 20/09.
 2. **Phạm vi kiểm định chéo** (phát hiện 20/09): đề cương viết "300 câu (toàn
    bộ T3, T4, T5, T6 và mẫu ngẫu nhiên từ T2)", nhưng T3+T4+T5+T6 = 500 câu,
    đã vượt 300. → Chốt: **300 câu**, "toàn bộ" chỉ áp cho T5 và T6.
@@ -167,7 +177,7 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
 ## Decisions đã chốt
 
 - 2026-09-20 (Q1, CMT): nhóm hết hiệu lực một phần ở cấp Khoản/Điểm là **T6**;
-  bộ dữ liệu có đúng sáu nhóm T1–T6 theo Bảng 2. `graph_justification.md` đã
+  bộ dữ liệu có đúng sáu nhóm T1–T6 theo bảng cấu trúc. `graph_justification.md` đã
   sửa T7 → T6 ở ba chỗ, gồm cả giả thuyết H2 — H2 giờ đọc là "khoảng cách giữa
   phương pháp đề xuất và B7 lớn nhất trên T6". Đề cương (`.docx`) vẫn còn nhắc
   T1–T7; sửa ở P1.2.
@@ -204,7 +214,7 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
 
 | Tiêu chí M3 | Bằng chứng |
 |---|---|
-| Đủ 1.150 câu theo quota Bảng 2 | Đếm theo nhóm từ `data/vilextime/` |
+| Đủ 1.150 câu theo quota của đề cương | Đếm theo nhóm từ `data/vilextime/` |
 | Nhãn vàng không phụ thuộc LLM | Mỗi dòng có `provision_id`, hai `version_id`, `event_id`; xóa trường câu hỏi vẫn dựng lại được nhãn |
 | Cohen κ ≥ 0,6 | Bảng kiểm chéo theo phạm vi Q2, có tên người kiểm |
 | Không rò rỉ dev/test | Kiểm tra tự động: giao của tập `document_id` hai bên là rỗng |
