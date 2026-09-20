@@ -85,7 +85,7 @@ Xong khi: hai dịch vụ healthy, có runbook, có số RAM baseline.
 | B1 | Tách câu hai thao tác ("Bãi bỏ Điều 6 và sửa đổi Điều 15") thành hai câu chỉ dẫn | Test cho hai lỗi của mẫu 20260923 |
 | B2 | BỔ SUNG tạo nút mới ("Bổ sung khoản 5a vào sau khoản 5 Điều 51 như sau: “5a. …”") thành `ProvisionInsertion`: nút cha, nút đứng trước, ID tất định (quyết định Q1) | Số event BỔ SUNG áp được > 0; có precision trên mẫu riêng |
 | B3 | Sửa đổi có thay đổi cấu trúc (khối thêm hoặc bớt Khoản/Điểm): tách thành cập nhật text, chèn nút mới, và bãi bỏ các con bị bỏ (quyết định Q3). **Trước khi ghi bãi bỏ, phải dò xem cùng đợt sửa có dời nội dung đó sang đơn vị khác không; ca nghi di dời thì `needs_review`, không bãi bỏ thẳng** | Nhóm `structure_mismatch` (4.447) giảm; không tăng lỗi trên mẫu mới; có mẫu kiểm tay riêng cho ca di dời |
-| B4 | Thay cụm từ: `new_text = old.replace(A, B)` khi A có trong text cũ | Phần còn lại vẫn `needs_review` |
+| B4 | ✅ 20/09 Thay cụm từ: `new_text = old.replace(A, B)` khi A có trong text cũ | `missing_resulting_text` 10.816 → 6.837; áp được 16.233 → 18.840; T3 321 → 407. Ca không tìm thấy cụm từ, hoặc xóa xong còn dấu câu thừa, thành `phrase_not_found` (1.060). **Chưa kiểm tay precision — điều kiện nhận chưa đạt** |
 | B5 | (Tùy chọn, làm nếu dư thời gian) lời văn không nằm trong ngoặc kép | — |
 | B6 | Đo lại: đủ 200 mẫu kiểm tay trên các seed mới; NMT kiểm chéo 50 mẫu, tính Cohen κ | P3.13 ✅ |
 
@@ -211,7 +211,7 @@ Các quyết định cần chốt ở tuần 1. Ý kiến đề xuất chưa ph�
 
 - [ ] Chốt Q1–Q6 (Q1 xong 20/09; Q2–Q6 còn)
 - [ ] Gói A — hạ tầng (P3.1, P3.2)
-- [ ] Gói B — L2 đủ bốn thao tác, 200 mẫu, κ (P3.11, P3.13)
+- [ ] Gói B — L2 đủ bốn thao tác, 200 mẫu, κ (P3.11, P3.13). B4 xong 20/09 (chờ kiểm tay); còn B1, B2, B3, B6
 - [ ] Gói C — chuỗi phiên bản offline (P3.15–P3.17). C1–C5 xong 20/09; còn C6 (C2: `build_versions.py` toàn corpus, 4 phút 23 giây: 1.592.178 phiên bản, 15.634 nút có ≥ 2 phiên bản, 50.623 event đều có dòng trong `event_log.jsonl` = 16.233 áp + 550 từ chối kèm lý do + 33.840 `needs_review`; chạy hai lần cho sha256 giống hệt; Q2 vẫn là đề xuất, script chưa áp và ghi log, chưa có hàng đợi review = C3). C1: index, `expiry_targets.jsonl` và `provision_events.jsonl` dựng lại với ID miền, ID lồng nhau không lặp tiền tố (`version:<uuid>:1`). Kết quả giống bản cũ (expiry 55.019 dòng; recall 62,2%; cùng ba lớp lỗi khi áp thử). Event: mỗi ID một event, 77 câu lặp y hệt ghi một lần, `document_number` vào dấu vân tay ID → 50.623 event, áp được 16.233/16.783
 - [ ] Gói D — loader Neo4j (P3.4, P3.5, P3.9)
 - [ ] Gói E — kiểm chứng snapshot (P3.18)

@@ -39,11 +39,11 @@ from datetime import date
 
 from legal_crawler.extraction import TargetReference, TargetResolver, TargetScope
 from legal_crawler.extraction.provision_ops import extract_mentions, normalize_number, title_document
-from legal_crawler.extraction.wording import fit, parse_items, wording_blocks
+from legal_crawler.extraction.wording import apply_phrase, fit, parse_items, phrase_edits, wording_blocks
 from legal_crawler.index import TemporalIndex
 from legal_crawler.provisions.text import parse_paragraphs
 from legal_crawler.storage.documents import DocumentStore
-from legal_crawler.temporal.ids import make_document_id, make_event_id
+from legal_crawler.temporal.ids import make_document_id, make_event_id, make_provision_id
 
 # Operations that end the version the portal calls expired (see measure_provision_events.py).
 ENDING = {"repeal", "replace", "amend", "correct", "suspend"}
@@ -88,12 +88,46 @@ def main() -> None:
         if row.get("code") == "resolved_exact":
             gold.update((row["doc_id"], pid) for pid in row.get("provision_ids", []))
     tree_cache: dict[str, dict] = {}
+    text_cache: dict[str, dict[str, str]] = {}
+    subtree_of = {make_document_id(i): i for i in store.ids("derived/subtrees")}
 
     def provision(doc_id: str, pid: str):
         if doc_id not in tree_cache:
             tree_cache.clear()  # ponytail: one document at a time is enough, rows come grouped by actor
             tree_cache[doc_id] = {p.id: p for p in index.document_order(doc_id)}
         return tree_cache[doc_id].get(pid)
+
+    def node_text(doc_id: str, pid: str) -> str | None:
+        """Current text of one node: the index for tree nodes, the T5 split for the rest."""
+        if doc_id not in text_cache:
+            text_cache.clear()
+            derived = {}
+            if doc_id in subtree_of:
+                derived = {make_provision_id(n["id"]): n.get("text")
+                           for n in store.load("derived/subtrees", subtree_of[doc_id])["nodes"]}
+            text_cache[doc_id] = derived
+        stored = index.versions_of(pid)
+        return stored[0].text if stored else text_cache[doc_id].get(pid)
+
+    def phrase_updates(doc_id: str, pid: str, edits: list[tuple[str, str]]) -> dict[str, str]:
+        """Apply the edits to the target and every descendant that carries the phrase.
+
+        "thay thế cụm từ A tại Điều 7" reaches the whole article, not only its
+        heading, so the subtree is searched — but a node whose text does not
+        contain A verbatim is left alone rather than rewritten on a hunch.
+        """
+        root = provision(doc_id, pid)
+        if root is None:
+            return {}
+        out: dict[str, str] = {}
+        for node in (root, *index.descendants_of(pid)):
+            current = node_text(doc_id, node.id)
+            if not current:
+                continue
+            new_text = apply_phrase(current, edits)
+            if new_text is not None:
+                out[node.id] = new_text
+        return out
 
     stats: collections.Counter[str] = collections.Counter()
     rows: collections.Counter[str] = collections.Counter()
@@ -157,6 +191,7 @@ def main() -> None:
                             affected_provision_ids=list(target.affected_provision_ids),
                         )
                     updates = None
+                    phrase_missing = False
                     block = blocks.get(mention.paragraph)
                     if row["operation"] in TEXT_OPS and block and row["target_provision_id"]:
                         items = parse_items(block.lines)
@@ -164,8 +199,18 @@ def main() -> None:
                         if items and root:
                             updates = fit(items, {p.level: p.label for p in ref.locator.parts}, root,
                                           index.descendants_of(root.id))
+                    # B4: a phrase edit carries its payload in the instruction itself, so
+                    # it needs the original paragraph — `mention.evidence` has already had
+                    # its curly-quoted runs masked out.
+                    if not updates and row["operation"] in TEXT_OPS and row["target_provision_id"]:
+                        edits = phrase_edits(paragraphs[mention.paragraph])
+                        if edits:
+                            updates = phrase_updates(row["target_document_id"],
+                                                     row["target_provision_id"], edits)
+                            phrase_missing = not updates
                     row["text_updates"] = [{"target_provision_id": k, "new_text": v} for k, v in (updates or {}).items()]
-                    row["status"], row["status_reason"] = _status(row, block is not None, gold)
+                    row["status"], row["status_reason"] = _status(row, block is not None, gold,
+                                                                  phrase_missing=phrase_missing)
                     row["id"] = make_event_id(
                         actor_id, row["operation"],
                         [row["target_provision_id"]] if row["target_provision_id"] else [],
@@ -194,7 +239,8 @@ def main() -> None:
         print(f"  {count:>7,}  {key}")
 
 
-def _status(row: dict, quoted: bool, gold: set[tuple[str, str]]) -> tuple[str, str | None]:
+def _status(row: dict, quoted: bool, gold: set[tuple[str, str]],
+            *, phrase_missing: bool = False) -> tuple[str, str | None]:
     """(EventStatus value, reason) — the gate P3.15 reads before applying."""
     op = row["operation"]
     if not row["code"].startswith("resolved"):
@@ -204,6 +250,10 @@ def _status(row: dict, quoted: bool, gold: set[tuple[str, str]]) -> tuple[str, s
     if row["effective_on"] is None:
         return "needs_review", "missing_effective_date"
     if op in TEXT_OPS and not row["text_updates"]:
+        if phrase_missing:
+            # The instruction was read, but the phrase it replaces is not in the
+            # target verbatim: the wrong node, or text the corpus never got.
+            return "needs_review", "phrase_not_found"
         return "needs_review", "structure_mismatch" if quoted else "missing_resulting_text"
     if op not in ENDING or op == "suspend":
         return "needs_review", f"{op}_not_materializable"

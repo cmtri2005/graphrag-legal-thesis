@@ -193,3 +193,78 @@ def _flat(item: Item) -> str:
 
 def _label(title: str) -> str:
     return title.split()[-1] if title.split() else ""
+
+
+# --- B4: phrase-level edits -------------------------------------------------
+# "Thay thế cụm từ "A" bằng cụm từ "B" tại khoản 2 Điều 5" rewrites a phrase
+# inside text that otherwise stays, so there is no quoted replacement block to
+# fit. The instruction carries the whole payload, and the target's own text is
+# the rest of the answer: new = old.replace(A, B).
+#
+# The second phrase can sit before or after the locator list ("thay thế cụm từ
+# A tại khoản 1 Điều 2 thành cụm từ B"), so the quoted spans are read in order
+# rather than by an adjacency pattern. Anything that is not exactly one span
+# (a deletion) or two (a replacement) is refused: `apply_phrase` then verifies
+# that A really occurs in the target, which is what keeps this deterministic.
+
+_QUOTE_PAIRS = (("“", "”"), ("‘", "’"), ('"', '"'), ("'", "'"))
+_REPLACE_VERB = re.compile(r"(?i:thay\s+thế|thay|sửa\s+đổi|thế)\s+(?:(?i:cụm\s+từ|từ|chữ|cụm|khái\s+niệm))")
+_DELETE_VERB = re.compile(r"(?i:bãi\s+bỏ|hủy\s+bỏ|huỷ\s+bỏ|bỏ)\s+(?:(?i:cụm\s+từ|từ|chữ|cụm|khái\s+niệm))")
+
+
+def quoted_spans(text: str) -> list[str]:
+    """Quoted runs in order, for every quote style vbpl bodies use."""
+    spans: list[str] = []
+    i = 0
+    while i < len(text):
+        for open_q, close_q in _QUOTE_PAIRS:
+            if text[i] == open_q:
+                end = text.find(close_q, i + 1)
+                if end > i + 1:
+                    spans.append(text[i + 1 : end])
+                    i = end
+                    break
+        i += 1
+    return spans
+
+
+def phrase_edits(text: str) -> list[tuple[str, str]]:
+    """[(old, new)] for a phrase instruction; new is "" for a deletion.
+
+    Returns [] when the sentence is not a phrase edit, or when its shape is not
+    one this can read without guessing.
+    """
+    replace_at = _REPLACE_VERB.search(text)
+    delete_at = _DELETE_VERB.search(text)
+    if not replace_at and not delete_at:
+        return []
+    spans = [s.strip() for s in quoted_spans(text) if s.strip()]
+    if replace_at and (not delete_at or replace_at.start() < delete_at.start()):
+        return [(spans[0], spans[1])] if len(spans) == 2 else []
+    return [(spans[0], "")] if len(spans) == 1 else []
+
+
+# Deleting a phrase can leave the punctuation that framed it behind ("cấp
+# tỉnh, ; tổ chức"). The consolidated text surely reads "cấp tỉnh; tổ chức",
+# but that wording is ours, not the source's, and this module stores legal text
+# verbatim. So a result that gains a dangling separator is refused instead,
+# and the event goes to review with its reason.
+_ARTIFACT = re.compile(r",\s*[;,.]|\s{2,}|\s+[;,.]|\(\s*\)")
+
+
+def apply_phrase(old_text: str, edits: list[tuple[str, str]]) -> str | None:
+    """The text after every edit.
+
+    None when a phrase is not in the text verbatim, when nothing changed, or
+    when the edit leaves a punctuation artifact the source would not contain.
+    """
+    out = old_text
+    for old, new in edits:
+        if not old or old not in out:
+            return None
+        out = out.replace(old, new)
+    if out == old_text:
+        return None
+    if len(_ARTIFACT.findall(out)) > len(_ARTIFACT.findall(old_text)):
+        return None
+    return out
