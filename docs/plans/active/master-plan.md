@@ -137,7 +137,7 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 | P3.14 | Logic version chain, event applier, validity, snapshot | NMT | ✅ | `temporal/`; test pass (fixture tự tạo) |
 | P3.15 | Áp event lên dữ liệu thật → chuỗi phiên bản trong Neo4j | NMT | 🟡 | 20/09: `scripts/pipeline/build_versions.py` dựng offline `data/derived/versions.jsonl` (1,59 triệu phiên bản, 15.634 nút có ≥ 2 phiên bản, `created_by_event_id` luôn khác rỗng) và `event_log.jsonl`. Còn thiếu: nạp vào Neo4j (Gói D) |
 | P3.16 | Tính trước khoảng hiệu lực thực của mỗi phiên bản (cách A) | NMT | ⬜ | Khớp `ValidityService` trên mẫu ngẫu nhiên |
-| P3.17 | Hợp nhất định nghĩa "có hiệu lực tại t" | NMT | ⬜ | Chỉ còn một đường tính; `index.version_at` bị bỏ |
+| P3.17 | Hợp nhất định nghĩa "có hiệu lực tại t" | NMT | ✅ | 20/09: `index.version_at` đã xóa, `grep` không còn nơi gọi. Chỉ còn `VersionChain.at` cho một nút và `ValidityService` cho lan truyền trên cây |
 | P3.18 | Kiểm chứng snapshot trên 100 truy vấn đối chiếu tay | NMT | ⬜ | Bảng 100 truy vấn, kết quả, người kiểm |
 | P3.19 | Giải dẫn chiếu chéo có nhận biết thời gian | NMT | ⬜ | "khoản 2 Điều 5 của Luật này" → đúng phiên bản tại t |
 

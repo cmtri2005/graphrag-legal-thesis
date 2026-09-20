@@ -215,21 +215,6 @@ class TemporalIndex:
         )
         return tuple(_provision(r) for r in rows)
 
-    def version_at(self, provision_id: str, at: date) -> ProvisionVersion | None:
-        """The version in force at `at`, per the half-open interval [from, to).
-
-        A version with no `valid_from` is undated — 4.4% of the corpus, where
-        the portal never published an effective date — and is deliberately not
-        returned: a point-in-time answer must not rest on a guessed date.
-        """
-        row = self._db.execute(
-            "SELECT * FROM versions WHERE provision_id = ? AND valid_from IS NOT NULL "
-            "AND valid_from <= ? AND (valid_to IS NULL OR valid_to > ?) "
-            "ORDER BY ordinal DESC LIMIT 1",
-            (provision_id, at.isoformat(), at.isoformat()),
-        ).fetchone()
-        return _version(row) if row else None
-
     def versions_of(self, provision_id: str) -> tuple[ProvisionVersion, ...]:
         rows = self._db.execute(
             "SELECT * FROM versions WHERE provision_id = ? ORDER BY ordinal",

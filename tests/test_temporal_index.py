@@ -4,6 +4,7 @@ import pytest
 
 from legal_crawler.ingest import build_document, build_versions, walk_tree, IngestReport
 from legal_crawler.index import TemporalIndex
+from legal_crawler.temporal.version_chain import UndatedVersionError, VersionChain
 from legal_crawler.temporal import (
     LegalDocument, Provision, ProvisionLevel, make_document_id, make_provision_id, make_version_id,
 )
@@ -75,25 +76,25 @@ def test_undated_document_yields_versions_no_query_can_return():
     store.put_documents([document])
     store.put_provisions(provisions)
     store.put_versions(versions)
-    assert store.version_at(P("d1"), date(2020, 1, 1)) is None
-    assert len(store.versions_of(P("d1"))) == 1
+    assert len(store.versions_of(P("d1"))) == 1  # stored, and readable as history
+
+    # …but no point-in-time path can return it: a chain refuses an undated version.
+    with pytest.raises(UndatedVersionError):
+        VersionChain(P("d1"), versions)
 
 
-def test_version_at_respects_the_half_open_interval():
+def test_document_window_reaches_the_version_as_a_half_open_interval():
     report = IngestReport()
     document = build_document(
         "x", {"docNum": "n", "title": "t", "effFrom": "2020-01-01", "effTo": "2025-01-01"},
         report)
     provisions = list(walk_tree(_tree(), "x"))
-    store = TemporalIndex()
-    store.put_documents([document])
-    store.put_provisions(provisions)
-    store.put_versions(build_versions(provisions, {"k1": {"text": "x"}}, document))
+    chain = VersionChain(P("k1"), build_versions(provisions, {"k1": {"text": "x"}}, document))
 
-    assert store.version_at(P("k1"), date(2019, 12, 31)) is None
-    assert store.version_at(P("k1"), date(2020, 1, 1)) is not None
-    assert store.version_at(P("k1"), date(2024, 12, 31)) is not None
-    assert store.version_at(P("k1"), date(2025, 1, 1)) is None
+    assert chain.at(date(2019, 12, 31)) is None
+    assert chain.at(date(2020, 1, 1)) is not None
+    assert chain.at(date(2024, 12, 31)) is not None
+    assert chain.at(date(2025, 1, 1)) is None
 
 
 def test_order_comes_from_the_walk_not_the_overflowing_portal_counter():
