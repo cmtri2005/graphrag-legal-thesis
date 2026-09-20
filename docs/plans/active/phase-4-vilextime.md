@@ -172,7 +172,7 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
 | Q3 | T5 định nghĩa hẹp ("có lợi cho đối tượng") hay rộng (mọi hồi tố) | Giữ hẹp theo đề cương, nhưng nếu sau khi cố vấn lọc mà dưới 50 câu thì hạ quota và ghi lý do, không nới định nghĩa để lấp số | D2, D3 |
 | Q4 | T3 chỉ có 321 chuỗi trong 100 VB cho 200 câu | Sinh T3 sau khi Gói B của Giai đoạn 3 xong (trữ lượng sẽ tăng). Nếu tới tuần 6 vẫn dưới 300 chuỗi thì hạ T3 xuống 150 và chuyển 50 câu sang T2 | B2, D3 |
 | Q5 | Model sinh câu hỏi (P4.4) trước khi P5.1 chốt | Dùng bất kỳ model nào sẵn có, vì nhãn vàng không phụ thuộc model; ghi tên model và tham số vào từng dòng để tái lập | C1 |
-| Q6 | Chia dev/test theo câu hay theo văn bản | Theo văn bản: cùng một Điều sửa nhiều lần sẽ sinh nhiều câu, chia theo câu là rò rỉ | E |
+| Q6 | Chia dev/test theo câu hay theo văn bản | **Chốt 20/09 (CMT): theo văn bản.** Cùng một Điều sửa nhiều lần sẽ sinh nhiều câu, chia theo câu là rò rỉ | ~~E~~ |
 
 ## Decisions đã chốt
 

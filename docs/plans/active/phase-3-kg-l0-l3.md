@@ -98,7 +98,7 @@ seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 |---|---|---|
 | C1 | Thống nhất ID theo `temporal/ids.py` cho `ingest`, applier và loader (Q1) | Một hàm sinh ID cho mỗi loại nút; test |
 | C2 | `scripts/pipeline/build_versions.py`: nâng `build_versions.py` lên toàn corpus. Phiên bản 1 để mở; nút T5 có phiên bản; áp event theo `(effective_on, actor)` | `data/derived/versions.jsonl` và `event_log.jsonl` (mỗi event: đã áp, hoặc bị từ chối kèm lý do) |
-| C3 | Xử lý xung đột (Q2): event sai thứ tự ngày, hoặc tác động lên nút đã đóng, thì không áp và ghi vào hàng đợi review, không sắp xếp lại ngầm | Coverage cộng hàng đợi review = tiêu chí "không áp âm thầm" |
+| C3 | ✅ 20/09 Xử lý xung đột (Q2): event sai thứ tự ngày, hoặc tác động lên nút đã đóng, thì không áp và ghi vào hàng đợi review, không sắp xếp lại ngầm | `data/review/provision_events.jsonl`: 550 dòng, mỗi dòng đủ ngữ cảnh để duyệt. Verdict của LLM hay người không bị ghi đè khi chạy lại (có test) |
 | C4 | ✅ 20/09 P3.16: tính khoảng hiệu lực thực của mỗi phiên bản (giao với mọi tổ tiên, công thức (3)) và ghi vào `versions.jsonl` | `build_versions.py --verify` khớp `ValidityService` 1.005/1.005 cặp, hỏi ở đúng các mốc biên |
 | C5 | ✅ 20/09 P3.17: chỉ còn `ValidityService` trả lời "có hiệu lực tại t"; bỏ `index.version_at` | grep không còn đường tính thứ hai; hai test chuyển sang `VersionChain` |
 | C6 | Test chuỗi A → B → C trên dữ liệu thật: một nút bị sửa 2 lần, một Điều bị bãi bỏ kéo theo cả cây con | Test pass; chạy hai lần cho ra file giống hệt (so sha256) |
@@ -163,14 +163,23 @@ Các quyết định cần chốt ở tuần 1. Ý kiến đề xuất chưa ph�
 | # | Câu hỏi | Đề xuất | Chặn |
 |---|---|---|---|
 | Q1 | Một sơ đồ ID cho mọi nút và phiên bản | **Chốt 20/09 (CMT): prefix đầy đủ theo `temporal/ids.py`, áp ở `ingest.py`.** Theo `temporal/ids.py` (`provision:<uuid>`, `version:<provision>:<n>`). Nút chèn mới: băm từ (id event, nhãn). Làm lúc Neo4j còn rỗng thì không tốn chi phí chuyển đổi | C1, B2, D2 |
-| Q2 | Event sai thứ tự ngày, hoặc tác động lên nút đã đóng | Không áp; ghi `event_log` kèm lý do; đưa vào hàng đợi review | C3 |
+| Q2 | Event sai thứ tự ngày, hoặc tác động lên nút đã đóng | **Chốt 20/09 (CMT): không áp; ghi `event_log` kèm lý do; đưa vào hàng đợi review.** Duyệt bằng LLM trước, người double-check và điều chỉnh sau | ~~C3~~ |
 | Q3 | "Sửa đổi khoản 3 như sau" mà khối mới không còn điểm c: điểm c có hết hiệu lực không? | Có, cùng ngày, vì cả đơn vị được thay. Hỏi cố vấn luật để xác nhận | B3 |
-| Q4 | 1.626 QPPL có text nhưng không có cây (master plan §12) | Cho M2: chỉ nạp Document, không có Provision. Xét lại khi thiết kế ViLexTime | D4 |
+| Q4 | 1.626 QPPL có text nhưng không có cây (master plan §12) | **Chốt 20/09 (CMT):** cho M2 chỉ nạp Document, không có Provision. Xét lại khi thiết kế ViLexTime | D4 |
 | Q5 | Ngưỡng đạt của P3.18 | ≥ 95/100, giống ngưỡng đã dùng cho backfill T5 | E2 |
-| Q6 | Giữ index SQLite cho pipeline offline hay chuyển hết sang Neo4j (ADR 0001 ghi là chuyển) | Giữ SQLite làm index dựng offline; Neo4j chỉ phục vụ truy vấn. Nếu chọn phương án này thì sửa ADR 0001 | Gói G |
+| Q6 | Giữ index SQLite cho pipeline offline hay chuyển hết sang Neo4j (ADR 0001 ghi là chuyển) | **Chốt 20/09 (CMT): giữ SQLite, hoãn migrate sang sau.** Neo4j chỉ phục vụ truy vấn. Đã ghi chú vào ADR 0001; P3.6 hoãn | ~~Gói G~~ |
 
 ## Decisions đã chốt
 
+- 2026-09-20 (CMT, Q2): 550 event bị từ chối đi vào
+  `data/review/provision_events.jsonl`. **Quy trình duyệt: LLM chạy trước, người
+  double-check và điều chỉnh sau.** Mỗi dòng mang sẵn lời văn hiện hành, tiêu đề
+  nút và câu chỉ dẫn, nên duyệt được mà không cần mở corpus. `build_versions.py`
+  chỉ sở hữu dòng `method: auto_rejected`; dòng đã có verdict (`llm_reviewed`,
+  `human_reviewed`) được đọc lại nguyên vẹn, theo đúng khuôn của
+  `verify_temporal_candidates.py`.
+- 2026-09-20 (CMT, Q6): giữ index SQLite cho pipeline offline, Neo4j chỉ phục vụ
+  truy vấn. Không phải đảo quyết định của ADR 0001, chỉ là hoãn; P3.6 lùi lại.
 - 2026-09-20 (CMT): **nút không có phiên bản là trong suốt khi lan truyền hiệu
   lực.** `ValidityService` trước đó bắt nút cha phải có text thì con mới có
   hiệu lực, nên 72.049 nút có text (66.008 trong VB đủ điều kiện benchmark,
@@ -196,7 +205,7 @@ Các quyết định cần chốt ở tuần 1. Ý kiến đề xuất chưa ph�
 - [ ] Chốt Q1–Q6 (Q1 xong 20/09; Q2–Q6 còn)
 - [ ] Gói A — hạ tầng (P3.1, P3.2)
 - [ ] Gói B — L2 đủ bốn thao tác, 200 mẫu, κ (P3.11, P3.13)
-- [ ] Gói C — chuỗi phiên bản offline (P3.15–P3.17). C1, C2, **C4, C5** xong 20/09; còn C3 (chờ Q2) và C6 (C2: `build_versions.py` toàn corpus, 4 phút 23 giây: 1.592.178 phiên bản, 15.634 nút có ≥ 2 phiên bản, 50.623 event đều có dòng trong `event_log.jsonl` = 16.233 áp + 550 từ chối kèm lý do + 33.840 `needs_review`; chạy hai lần cho sha256 giống hệt; Q2 vẫn là đề xuất, script chưa áp và ghi log, chưa có hàng đợi review = C3). C1: index, `expiry_targets.jsonl` và `provision_events.jsonl` dựng lại với ID miền, ID lồng nhau không lặp tiền tố (`version:<uuid>:1`). Kết quả giống bản cũ (expiry 55.019 dòng; recall 62,2%; cùng ba lớp lỗi khi áp thử). Event: mỗi ID một event, 77 câu lặp y hệt ghi một lần, `document_number` vào dấu vân tay ID → 50.623 event, áp được 16.233/16.783
+- [ ] Gói C — chuỗi phiên bản offline (P3.15–P3.17). C1–C5 xong 20/09; còn C6 (C2: `build_versions.py` toàn corpus, 4 phút 23 giây: 1.592.178 phiên bản, 15.634 nút có ≥ 2 phiên bản, 50.623 event đều có dòng trong `event_log.jsonl` = 16.233 áp + 550 từ chối kèm lý do + 33.840 `needs_review`; chạy hai lần cho sha256 giống hệt; Q2 vẫn là đề xuất, script chưa áp và ghi log, chưa có hàng đợi review = C3). C1: index, `expiry_targets.jsonl` và `provision_events.jsonl` dựng lại với ID miền, ID lồng nhau không lặp tiền tố (`version:<uuid>:1`). Kết quả giống bản cũ (expiry 55.019 dòng; recall 62,2%; cùng ba lớp lỗi khi áp thử). Event: mỗi ID một event, 77 câu lặp y hệt ghi một lần, `document_number` vào dấu vân tay ID → 50.623 event, áp được 16.233/16.783
 - [ ] Gói D — loader Neo4j (P3.4, P3.5, P3.9)
 - [ ] Gói E — kiểm chứng snapshot (P3.18)
 - [ ] Gói F — dẫn chiếu chéo (P3.19)

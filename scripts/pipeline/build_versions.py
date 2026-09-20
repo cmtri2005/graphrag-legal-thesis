@@ -27,6 +27,19 @@ Writes, whole and deterministic (delete and re-run):
   data/derived/event_log.jsonl  every event: applied, rejected (why), or skipped
                                 because it is `needs_review` (why)
 
+And the review queue for what it refused (C3, decision Q2), which is *not*
+disposable:
+  data/review/provision_events.jsonl   one row per rejected event, with the
+                                       text and the instruction sentence a
+                                       reviewer needs to judge it
+
+That file is reviewed by an LLM first and double-checked by a human, so this
+script owns only the rows it wrote itself (`method: auto_rejected`). A row
+another process decided (`llm_reviewed`, `human_reviewed`) is read back
+untouched and never recomputed: a verdict must not be silently reinstated as
+"needs review" just because a re-run met the same event again. Only a full run
+rewrites it — with --limit the queue would be missing every document not built.
+
 Usage:
     python scripts/pipeline/build_versions.py [--limit N]   # first N documents
 """
@@ -35,6 +48,7 @@ from __future__ import annotations
 import argparse
 import collections
 import json
+import pathlib
 import random
 import re
 from datetime import date, timedelta
@@ -211,6 +225,7 @@ def main() -> None:
     chains: collections.Counter[str] = collections.Counter()
     rng = random.Random(20260920)
     checked = wrong = 0
+    review: list[dict] = []
     with (args.data / "derived/versions.jsonl").open("w", encoding="utf-8") as out:
         for n, document in enumerate(documents, 1):
             if n % 2000 == 0:
@@ -238,10 +253,18 @@ def main() -> None:
                 reason = outcomes[row["id"]]
                 log[row["id"]] = {"event_id": row["id"], "status": row["status"],
                                   "outcome": "applied" if reason is None else "rejected", "reason": reason}
+                if reason is not None:
+                    review.append(_review_row(row, reason, state))
 
     with (args.data / "derived/event_log.jsonl").open("w", encoding="utf-8") as out:
         for event_id in sorted(log):
             out.write(json.dumps(log[event_id], ensure_ascii=False) + "\n")
+
+    if args.limit:
+        print(f"{len(review):,} rejected events NOT written to the review queue (partial run)")
+    else:
+        total, verdicts = write_review_queue(args.data / "review/provision_events.jsonl", review)
+        print(f"review queue: {total:,} rows ({verdicts:,} already decided by an LLM or a human)")
 
     print(f"{len(documents):,} documents -> {chains['versions']:,} versions, "
           f"{chains['chains with 2+ versions']:,} provisions with 2+ versions, "
@@ -255,6 +278,56 @@ def main() -> None:
     print(f"{len(log):,} events logged")
     for (kind, reason), count in sorted(outcome.items(), key=lambda kv: (kv[0][0], -kv[1])):
         print(f"  {count:>7,}  {kind:<9} {reason}")
+
+
+def _review_row(row: dict, reason: str, state: TemporalState) -> dict:
+    """One rejected event, self-contained enough to judge without the corpus."""
+    pid = row["target_provision_id"] or next(
+        (u["target_provision_id"] for u in row["text_updates"]), None
+    )
+    provision = state.provision(pid) if pid else None
+    chain = state.chain(pid) if pid else None
+    latest = chain.versions[-1] if chain and chain.versions else None
+    return {
+        "schema_version": 1,
+        "event_id": row["id"],
+        "decision": "needs_review",
+        "method": "auto_rejected",
+        "reason": reason,
+        "actor_id": row["actor_id"],
+        "actor_number": row["actor_number"],
+        "operation": row["operation"],
+        "effective_on": row["effective_on"],
+        "target_document_id": row["target_document_id"],
+        "target_provision_id": pid,
+        "provision_title": provision.title if provision else None,
+        "provision_level": provision.level.value if provision else None,
+        "current_text": latest.text if latest else None,
+        "current_valid_from": (
+            latest.validity.start.isoformat() if latest and latest.validity else None
+        ),
+        "locator": row["locator"],
+        "evidence": row["evidence"],
+    }
+
+
+def write_review_queue(path: pathlib.Path, fresh: list[dict]) -> tuple[int, int]:
+    """Merge newly rejected events into the queue, keeping every verdict."""
+    kept = []
+    if path.exists():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                record = json.loads(line)
+                if record.get("method") != "auto_rejected":
+                    kept.append(record)
+    decided = {record["event_id"] for record in kept}
+    rows = kept + [row for row in fresh if row["event_id"] not in decided]
+    rows.sort(key=lambda r: r["event_id"])
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8"
+    )
+    return len(rows), len(kept)
 
 
 def _version_row(v: ProvisionVersion, effective: Window | None) -> dict:
