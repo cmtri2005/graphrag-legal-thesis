@@ -84,7 +84,7 @@ Xong khi: hai dịch vụ healthy, có runbook, có số RAM baseline.
 |---|---|---|
 | B1 | Tách câu hai thao tác ("Bãi bỏ Điều 6 và sửa đổi Điều 15") thành hai câu chỉ dẫn | Test cho hai lỗi của mẫu 20260923 |
 | B2 | BỔ SUNG tạo nút mới ("Bổ sung khoản 5a vào sau khoản 5 Điều 51 như sau: “5a. …”") thành `ProvisionInsertion`: nút cha, nút đứng trước, ID tất định (quyết định Q1) | Số event BỔ SUNG áp được > 0; có precision trên mẫu riêng |
-| B3 | Sửa đổi có thay đổi cấu trúc (khối thêm hoặc bớt Khoản/Điểm): tách thành cập nhật text, chèn nút mới, và bãi bỏ các con bị bỏ (quyết định Q3) | Nhóm `structure_mismatch` (4.457) giảm; không tăng lỗi trên mẫu mới |
+| B3 | Sửa đổi có thay đổi cấu trúc (khối thêm hoặc bớt Khoản/Điểm): tách thành cập nhật text, chèn nút mới, và bãi bỏ các con bị bỏ (quyết định Q3). **Trước khi ghi bãi bỏ, phải dò xem cùng đợt sửa có dời nội dung đó sang đơn vị khác không; ca nghi di dời thì `needs_review`, không bãi bỏ thẳng** | Nhóm `structure_mismatch` (4.447) giảm; không tăng lỗi trên mẫu mới; có mẫu kiểm tay riêng cho ca di dời |
 | B4 | Thay cụm từ: `new_text = old.replace(A, B)` khi A có trong text cũ | Phần còn lại vẫn `needs_review` |
 | B5 | (Tùy chọn, làm nếu dư thời gian) lời văn không nằm trong ngoặc kép | — |
 | B6 | Đo lại: đủ 200 mẫu kiểm tay trên các seed mới; NMT kiểm chéo 50 mẫu, tính Cohen κ | P3.13 ✅ |
@@ -164,13 +164,20 @@ Các quyết định cần chốt ở tuần 1. Ý kiến đề xuất chưa ph�
 |---|---|---|---|
 | Q1 | Một sơ đồ ID cho mọi nút và phiên bản | **Chốt 20/09 (CMT): prefix đầy đủ theo `temporal/ids.py`, áp ở `ingest.py`.** Theo `temporal/ids.py` (`provision:<uuid>`, `version:<provision>:<n>`). Nút chèn mới: băm từ (id event, nhãn). Làm lúc Neo4j còn rỗng thì không tốn chi phí chuyển đổi | C1, B2, D2 |
 | Q2 | Event sai thứ tự ngày, hoặc tác động lên nút đã đóng | **Chốt 20/09 (CMT): không áp; ghi `event_log` kèm lý do; đưa vào hàng đợi review.** Duyệt bằng LLM trước, người double-check và điều chỉnh sau | ~~C3~~ |
-| Q3 | "Sửa đổi khoản 3 như sau" mà khối mới không còn điểm c: điểm c có hết hiệu lực không? | Có, cùng ngày, vì cả đơn vị được thay. Hỏi cố vấn luật để xác nhận | B3 |
+| Q3 | "Sửa đổi khoản 3 như sau" mà khối mới không còn điểm c: điểm c có hết hiệu lực không? | **Chốt 20/09 — cố vấn luật xác nhận: CÓ.** Khối sau "như sau:" là kỹ thuật thay toàn bộ đơn vị được nêu tên, không phải cộng dồn; điểm không được lặp lại thì hết hiệu lực cùng ngày. **Kèm cảnh báo:** nội dung có thể bị *di dời* sang đơn vị khác trong cùng đợt sửa, khi đó là đổi vị trí chứ không phải biến mất | B3 |
 | Q4 | 1.626 QPPL có text nhưng không có cây (master plan §12) | **Chốt 20/09 (CMT):** cho M2 chỉ nạp Document, không có Provision. Xét lại khi thiết kế ViLexTime | D4 |
 | Q5 | Ngưỡng đạt của P3.18 | ≥ 95/100, giống ngưỡng đã dùng cho backfill T5 | E2 |
 | Q6 | Giữ index SQLite cho pipeline offline hay chuyển hết sang Neo4j (ADR 0001 ghi là chuyển) | **Chốt 20/09 (CMT): giữ SQLite, hoãn migrate sang sau.** Neo4j chỉ phục vụ truy vấn. Đã ghi chú vào ADR 0001; P3.6 hoãn | ~~Gói G~~ |
 
 ## Decisions đã chốt
 
+- 2026-09-20 (cố vấn luật, Q3): khối lời văn sau "như sau:" **thay toàn bộ** đơn vị
+  được nêu tên. Điểm cũ không xuất hiện lại trong khối thì hết hiệu lực cùng ngày, và
+  đây không phải "văn bản im lặng nên giữ nguyên". Căn cứ: kỹ thuật trình bày văn bản
+  (Nghị định 34/2016/NĐ-CP và các văn bản kế thừa). Mở khóa 4.447 ca
+  `structure_mismatch` cho B3. **Ràng buộc kèm theo:** nội dung bị bỏ đôi khi được dời
+  sang đơn vị khác trong cùng đợt sửa (đánh số lại, gộp vào điều khác); đó là đổi vị
+  trí, không phải hết hiệu lực, nên B3 phải dò trước khi ghi bãi bỏ.
 - 2026-09-20 (CMT, Q2): 550 event bị từ chối đi vào
   `data/review/provision_events.jsonl`. **Quy trình duyệt: LLM chạy trước, người
   double-check và điều chỉnh sau.** Mỗi dòng mang sẵn lời văn hiện hành, tiêu đề

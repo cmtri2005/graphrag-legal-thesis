@@ -37,7 +37,7 @@ P2.8), dùng `versions.jsonl` và `event_log.jsonl`:
 | T2 | Cặp tương phản cùng câu, khác mốc | 400 (200 cặp) | 15.070 nút ≥ 2 phiên bản, trong 1.442 VB | 75× |
 | T3 | Chuỗi sửa đổi nhiều bước A → B → C | 200 | **321 chuỗi ≥ 3 phiên bản, trong 100 VB** (97 chuỗi mọi bước `verified`) | **1,6×** |
 | T4 | Bẫy thời gian, phiên bản cũ rất giống | 150 | 5.149 cặp có độ giống ≥ 0,9 (trung vị toàn bộ 0,78) | 34× |
-| T5 | Hiệu lực trở về trước có lợi cho đối tượng | 50 | 282 event hồi tố (`effective_on` < `issueDate` của VB tác động): 236 sửa đổi, 45 bãi bỏ | 5,6× **trước** khi lọc "có lợi" |
+| T5 | Hiệu lực trở về trước có lợi cho đối tượng | 50 | 282 event hồi tố, nhưng chỉ trong **19 văn bản tác động**. Sau khi loại 1 đính chính và 187 event của 6 VB hướng dẫn đồng bộ hiệu lực: **95 event trong 13 VB** | **1,9×**, và chưa lọc theo Điều 152 |
 | T6 | Hết hiệu lực một phần ở cấp Khoản/Điểm | 100 | 2.221 Khoản/Điểm hết hiệu lực không có phiên bản kế, trong VB còn hiệu lực | 22× |
 
 Hai nhóm chặn tiến độ, phần còn lại thừa trữ lượng:
@@ -169,12 +169,28 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
 |---|---|---|---|
 | Q1 | T6 hay T7 cho nhóm hết hiệu lực một phần | **Chốt 20/09 (CMT): T6.** Sáu nhóm T1–T6 theo Bảng 2; `graph_justification.md` đã sửa T7 → T6 (3 chỗ, gồm H2). Còn lại: sửa đề cương (P1.2) | ~~A1, A2~~ |
 | Q2 | Phạm vi kiểm định chéo: "300 câu" mâu thuẫn "toàn bộ T3–T6" (= 500) | **Chốt 20/09 (CMT): giữ 300 câu** = toàn bộ T5 (50) và T6 (100), cộng mẫu ngẫu nhiên 50 mỗi nhóm T2, T3, T4. Lý do: T5, T6 cần chuyên môn luật nên kiểm toàn bộ; T2–T4 sinh máy móc hơn nên lấy mẫu. Còn lại: sửa đề cương (P1.2) | ~~A1~~, D4 |
-| Q3 | T5 định nghĩa hẹp ("có lợi cho đối tượng") hay rộng (mọi hồi tố) | Giữ hẹp theo đề cương, nhưng nếu sau khi cố vấn lọc mà dưới 50 câu thì hạ quota và ghi lý do, không nới định nghĩa để lấp số | D2, D3 |
+| Q3 | T5 định nghĩa hẹp ("có lợi cho đối tượng") hay rộng (mọi hồi tố) | **Cố vấn luật 20/09 bác cách đặt vấn đề:** "có lợi" là ngôn ngữ của Bộ luật Hình sự, không phải phép thử của Điều 152. Không có dấu hiệu câu chữ nào lọc tự động được. Trữ lượng thật sau khi loại đính chính và ca đồng bộ hiệu lực: **95 sự kiện trong 13 văn bản**, cho quota 50. **Cần chốt lại định nghĩa T5 — xem Decisions** | D2, D3 |
 | Q4 | T3 chỉ có 321 chuỗi trong 100 VB cho 200 câu | Sinh T3 sau khi Gói B của Giai đoạn 3 xong (trữ lượng sẽ tăng). Nếu tới tuần 6 vẫn dưới 300 chuỗi thì hạ T3 xuống 150 và chuyển 50 câu sang T2 | B2, D3 |
 | Q5 | Model sinh câu hỏi (P4.4) trước khi P5.1 chốt | Dùng bất kỳ model nào sẵn có, vì nhãn vàng không phụ thuộc model; ghi tên model và tham số vào từng dòng để tái lập | C1 |
 | Q6 | Chia dev/test theo câu hay theo văn bản | **Chốt 20/09 (CMT): theo văn bản.** Cùng một Điều sửa nhiều lần sẽ sinh nhiều câu, chia theo câu là rò rỉ | ~~E~~ |
 
 ## Decisions đã chốt
+
+- 2026-09-20 (cố vấn luật, Q3): **cách đặt vấn đề của đề cương cho T5 chưa đúng
+  khung pháp lý.** "Hiệu lực trở về trước có lợi cho đối tượng áp dụng" dùng chuẩn
+  "có lợi" của Bộ luật Hình sự. Điều 152 Luật BHVBQPPL 80/2015/QH13 dùng hai chuẩn
+  khác: khoản 1 là điều kiện cho phép ("thật cần thiết để bảo đảm lợi ích chung của
+  xã hội, thực hiện các quyền, lợi ích của tổ chức, cá nhân"), khoản 2 là phép loại
+  trừ (không được quy định trách nhiệm pháp lý mới hoặc nặng hơn cho hành vi xảy ra
+  trước). Khoản 2 nói "không được bất lợi hơn", **không** khẳng định phần còn lại là
+  có lợi. Hệ quả: không lọc tự động được, vì "có lợi" phụ thuộc vào đối tượng áp dụng
+  nào và phải so nội dung mới với nội dung cũ. Đề cương cần sửa ở P1.2.
+- 2026-09-20 (cố vấn luật, Q3): mốc so sánh **ngày hiệu lực ghi trong văn bản với
+  ngày ký/thông qua**, không phải ngày đăng Công báo, không phải mốc 45 ngày của Điều
+  151. Cách đo hiện tại (`effective_from` với `issued_on`) khớp. Hai lớp nhiễu phải
+  loại: **đính chính** (cơ chế khác, ngoài Điều 152) và **văn bản hướng dẫn có hiệu
+  lực đồng bộ với văn bản được hướng dẫn** (về số học trông như hồi tố, bản chất là
+  đồng bộ hóa).
 
 - 2026-09-20 (Q1, CMT): nhóm hết hiệu lực một phần ở cấp Khoản/Điểm là **T6**;
   bộ dữ liệu có đúng sáu nhóm T1–T6 theo bảng cấu trúc. `graph_justification.md` đã

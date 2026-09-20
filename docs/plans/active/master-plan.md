@@ -271,6 +271,7 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | ~~Kiểm định chéo ghi "300 câu (toàn bộ T3, T4, T5, T6…)"~~ **Chốt 20/09: 300 câu = toàn bộ T5, T6 + 50 mẫu mỗi nhóm T2, T3, T4.** Còn sửa `.docx` | P1.2 | Phát hiện và chốt 20/09; Q2 của [plan GĐ4](phase-4-vilextime.md) |
 | Hai công thức cùng đánh số (5); lỗi chính tả "driff-driven", "cuarm ô hình", "mình họa"; MSSV `23621643` khác tên file `23521643` | P1.2 | |
 | Câu "metadata giảm đáng kể chi phí gán nhãn": metadata cho biết *khoản nào* hết hiệu lực, không cho biết *khi nào* | P1.2 | `docs/audit_dataset.md` §9 |
+| T5 của ViLexTime mô tả là "hiệu lực trở về trước **có lợi cho đối tượng áp dụng**" — "có lợi" là chuẩn của Bộ luật Hình sự, không phải phép thử của Điều 152 Luật BHVBQPPL | P1.2, P4.1 | Cố vấn luật 20/09; xem [plan GĐ4](phase-4-vilextime.md) |
 | Có dùng H1–H4 không; A4 chỉ là proxy cho H3 | P1.5 | |
 | Chọn embedding model và LLM | P5.1 | |
 | Danh sách loại văn bản QPPL; "Quyết định" lẫn văn bản cá biệt | P2.8 | backfill T2.1 |
