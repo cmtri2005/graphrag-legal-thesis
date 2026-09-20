@@ -25,16 +25,16 @@ Active. Hiện ở cuối Giai đoạn 1; Giai đoạn 2–3 đang đi trước 
 
 | GĐ | Thời gian | Nội dung | Trạng thái | Việc xong | So với kế hoạch |
 |---|---|---|---|---:|---|
-| 1 | 01/09 – 14/09 | Hoàn thiện đề cương | 🟡 | 2/6 | Đến hạn hôm nay |
+| 1 | 01/09 – 14/09 | Hoàn thiện đề cương | 🟡 | 2/6 | **Quá hạn 6 ngày** (P1.2, P1.5) |
 | 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | ✅ | 12/12 | Backfill v2 xong, snapshot đóng băng trước M1 |
-| 3 | 06/10 – 26/10 | Xây dựng đồ thị tri thức (L0–L3) | 🟡 | 5/19 | Bắt đầu sớm; **đường găng** |
-| 4 | 27/10 – 16/11 | Bộ dữ liệu ViLexTime | ⬜ | 0/9 | — |
+| 3 | 06/10 – 26/10 | Xây dựng đồ thị tri thức (L0–L3) | 🟡 | 7/19 | Bắt đầu sớm; **đường găng** |
+| 4 | 27/10 – 16/11 | Bộ dữ liệu ViLexTime | 🟡 | 0/9 | Bắt đầu sớm từ 21/09 ([plan](phase-4-vilextime.md)) |
 | 5 | 17/11 – 30/11 | Cài đặt & đánh giá đường cơ sở | ⬜ | 0/14 | — |
 | 6 | 01/12 – 21/12 | Hệ thống đề xuất (L4–L5) | ⬜ | 0/7 | — |
 | 7 | 22/12 – 04/01 | Thực nghiệm & phân tích | ⬜ | 0/5 | — |
 | 8 | 05/01 – 11/01 | Viết bài báo khoa học | ⬜ | 0/3 | — |
 | 9 | 12/01 – 01/02 | Hoàn thiện khóa luận | ⬜ | 0/5 | — |
-| | | **Tổng** | | **19/80** | |
+| | | **Tổng** | | **21/80** | |
 
 ### Mốc kiểm tra
 
