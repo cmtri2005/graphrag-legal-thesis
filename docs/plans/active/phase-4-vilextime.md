@@ -115,7 +115,7 @@ Không có gói nào khác bắt đầu đúng trước khi T1–T6 có định 
 |---|---|---|
 | B1 | ✅ 20/09 `scripts/pipeline/build_question_pool.py`: đọc `versions.jsonl`, lọc `benchmark_eligible` (P4.6), sinh bộ ba (trước, sau, mốc chuyển) cho mọi nút ≥ 2 phiên bản | `data/derived/vilextime_pool.jsonl` 9.331 dòng; chạy hai lần cho sha256 giống hệt; đọc theo luồng nên không tốn RAM |
 | B2 | ✅ 20/09 (trừ T5) Phân tầng ứng viên theo T1–T6 bằng tiêu chí đo được | T1 1.435.086 · T2 10.194 · T3 331 · T4 5.390 · T6 2.218. Mỗi nhóm vẫn ≥ quota; T3 mỏng nhất, chỉ 1,7× |
-| B3 | Loại ứng viên rác: text quá ngắn, khác biệt chỉ ở dấu câu hoặc khoảng trắng, nút không có tiêu đề | Kiểm tay 30 ứng viên mỗi nhóm, ghi tỷ lệ dùng được |
+| B3 | Loại ứng viên rác: text quá ngắn, khác biệt chỉ ở dấu câu hoặc khoảng trắng, nút không có tiêu đề | 🟡 20/09: `scripts/check/sample_question_pool.py` xuất `data/derived/vilextime_sample.tsv`, 30 ứng viên mỗi nhóm kèm link vbpl và câu chỉ dẫn. **Chờ CMT kiểm tay 150 dòng** rồi mới chốt tiêu chí loại |
 | B4 | ✅ 20/09 (phần nhóm) Chống rò rỉ: mỗi nút chỉ vào một nhóm | Kiểm tự động: 0 nút trùng trên 9.331 dòng. Nhóm hiếm được ưu tiên trước (T3 → T6 → T4 → T2 → T1). Phần chia dev/test vẫn ở Gói E |
 
 ### Gói C — Diễn đạt thành câu hỏi (NMT) · P4.4
