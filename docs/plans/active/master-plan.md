@@ -151,10 +151,12 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 
 Đề cương phân công: NMT chủ trì quy trình diff-driven; CMT kiểm định chéo và làm việc với cố vấn luật.
 
+Kế hoạch chi tiết đến M3, bắt đầu sớm từ 21/09 vì 3 tuần không đủ: [`phase-4-vilextime.md`](phase-4-vilextime.md). Trữ lượng ứng viên đo ngày 20/09 đủ cho mọi nhóm trừ T3 (321 chuỗi ≥ 3 phiên bản cho 200 câu) và T5 (282 ứng viên hồi tố chưa lọc "có lợi").
+
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
 | P4.1 | Hướng dẫn gán nhãn; thống nhất định nghĩa T1–T6 | NMT | ⬜ | Tài liệu hướng dẫn; hết mâu thuẫn T6/T7 |
-| P4.2 | So khớp phiên bản: cặp `snapshot(u,t₁) ≠ snapshot(u,t₂)` | NMT | ⬜ | Cần P3.15 |
+| P4.2 | So khớp phiên bản: cặp `snapshot(u,t₁) ≠ snapshot(u,t₂)` | NMT | ⬜ | Hết chặn từ 20/09: `data/derived/versions.jsonl` có 15.070 nút ≥ 2 phiên bản trong VB đủ điều kiện |
 | P4.3 | Trích khác biệt thành bộ ba (trước, sau, mốc chuyển) | NMT | ⬜ | Mỗi bộ ba truy ngược được về nút và event |
 | P4.4 | Sinh câu hỏi bằng LLM (chỉ để diễn đạt) | NMT | ⬜ | Nhãn vàng không phụ thuộc LLM |
 | P4.5 | Đủ số lượng: T1 250 · T2 400 · T3 200 · T4 150 · T5 50 · T6 100 | NMT | ⬜ | Tổng 1.150 |
@@ -264,7 +266,8 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | Vấn đề | Chặn việc | Ghi chú |
 |---|---|---|
 | Đề cương ghi "bốn mục tiêu" nhưng liệt kê 5 | P1.2 | |
-| Giả thuyết nhắc T1–T7, Bảng 2 chỉ có T1–T6; `graph_justification.md` gọi nhóm hết hiệu lực một phần là T7 | P1.2, P4.1 | |
+| Giả thuyết nhắc T1–T7, Bảng 2 chỉ có T1–T6; `graph_justification.md` gọi nhóm hết hiệu lực một phần là T7 | P1.2, P4.1 | Q1 của [plan GĐ4](phase-4-vilextime.md) |
+| Kiểm định chéo ghi "300 câu (toàn bộ T3, T4, T5, T6…)" nhưng T3+T4+T5+T6 = 500 | P1.2, P4.7 | Phát hiện 20/09; Q2 của [plan GĐ4](phase-4-vilextime.md) |
 | Hai công thức cùng đánh số (5); lỗi chính tả "driff-driven", "cuarm ô hình", "mình họa"; MSSV `23621643` khác tên file `23521643` | P1.2 | |
 | Câu "metadata giảm đáng kể chi phí gán nhãn": metadata cho biết *khoản nào* hết hiệu lực, không cho biết *khi nào* | P1.2 | `docs/audit_dataset.md` §9 |
 | Có dùng H1–H4 không; A4 chỉ là proxy cho H3 | P1.5 | |
@@ -314,3 +317,4 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-17 | Backfill T3.3: commit code (`7794627`), đóng băng snapshot v2, đẩy HF (`7d8ab0c`), tải về thư mục khác kiểm chứng `verify_pipeline.py` pass — **M1 đạt trước hạn** | `../completed/2026-09-17-backfill-corpus-v2.md` |
 | 2026-09-18 | L2: event có `id`/`status`/lời văn mới; 16.804 event áp được (2.819 `verified`), 96,7% chạy qua `EventApplier`; precision 58/60. P3.10 xong qua mức `verified`; P3.9, P3.11, P3.13 🟡 | [`l2-event-store.md`](l2-event-store.md) |
 | 2026-09-20 | Q1 chốt: ID miền theo `temporal/ids.py`, đổi ở `ingest.py`; ID event duy nhất. C2: `build_versions.py` dựng chuỗi phiên bản toàn corpus offline; P3.15 🟡 | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md), commit `c9b1eec`, `8b7e98e` |
+| 2026-09-20 | Lập kế hoạch Giai đoạn 4, bắt đầu sớm 21/09; đo trữ lượng ứng viên T1–T6; phát hiện mâu thuẫn phạm vi κ (300 vs 500) | [`phase-4-vilextime.md`](phase-4-vilextime.md) |
