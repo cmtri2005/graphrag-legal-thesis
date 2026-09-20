@@ -27,10 +27,10 @@ Hiện trạng ngày 18/09 (5/19 việc ✅):
 
 Những điều đã biết mà plan phải xử lý:
 
-- **ID chưa thống nhất.** `ingest.py` dùng UUID của cổng cho nút và `"<uuid>:1"`
-  cho phiên bản. `EventApplier` tạo phiên bản mới bằng `make_version_id`
-  (`"version:<id>:2"`). `temporal/ids.py` còn định nghĩa tiền tố
-  `provision:`/`document:`. Tiêu chí "ID ổn định" chưa đạt.
+- **ID (đã xử lý 20/09, Q1).** Trước đó `ingest.py` dùng UUID của cổng cho nút
+  và `"<uuid>:1"` cho phiên bản, còn `EventApplier` dùng `make_version_id`.
+  Nay `ingest.py` là nơi duy nhất đổi ID cổng thành ID miền theo
+  `temporal/ids.py`; index, event và `expiry_targets.jsonl` đều mang ID miền.
 - **Phiên bản 1 phải để mở.** Nếu đóng tại `effTo` của văn bản, mọi event trên
   văn bản đã hết hiệu lực sẽ lỗi "no open version". Hiệu lực của văn bản đã đi
   qua công thức (3) (`temporal/validity.py`).
@@ -162,7 +162,7 @@ Các quyết định cần chốt ở tuần 1. Ý kiến đề xuất chưa ph�
 
 | # | Câu hỏi | Đề xuất | Chặn |
 |---|---|---|---|
-| Q1 | Một sơ đồ ID cho mọi nút và phiên bản | Theo `temporal/ids.py` (`provision:<uuid>`, `version:<provision>:<n>`). Nút chèn mới: băm từ (id event, nhãn). Làm lúc Neo4j còn rỗng thì không tốn chi phí chuyển đổi | C1, B2, D2 |
+| Q1 | Một sơ đồ ID cho mọi nút và phiên bản | **Chốt 20/09 (CMT): prefix đầy đủ theo `temporal/ids.py`, áp ở `ingest.py`.** Theo `temporal/ids.py` (`provision:<uuid>`, `version:<provision>:<n>`). Nút chèn mới: băm từ (id event, nhãn). Làm lúc Neo4j còn rỗng thì không tốn chi phí chuyển đổi | C1, B2, D2 |
 | Q2 | Event sai thứ tự ngày, hoặc tác động lên nút đã đóng | Không áp; ghi `event_log` kèm lý do; đưa vào hàng đợi review | C3 |
 | Q3 | "Sửa đổi khoản 3 như sau" mà khối mới không còn điểm c: điểm c có hết hiệu lực không? | Có, cùng ngày, vì cả đơn vị được thay. Hỏi cố vấn luật để xác nhận | B3 |
 | Q4 | 1.626 QPPL có text nhưng không có cây (master plan §12) | Cho M2: chỉ nạp Document, không có Provision. Xét lại khi thiết kế ViLexTime | D4 |
@@ -182,10 +182,10 @@ Các quyết định cần chốt ở tuần 1. Ý kiến đề xuất chưa ph�
 
 ## Progress
 
-- [ ] Chốt Q1–Q6
+- [ ] Chốt Q1–Q6 (Q1 xong 20/09; Q2–Q6 còn)
 - [ ] Gói A — hạ tầng (P3.1, P3.2)
 - [ ] Gói B — L2 đủ bốn thao tác, 200 mẫu, κ (P3.11, P3.13)
-- [ ] Gói C — chuỗi phiên bản offline (P3.15–P3.17)
+- [ ] Gói C — chuỗi phiên bản offline (P3.15–P3.17). C1 xong 20/09: index, `expiry_targets.jsonl` và `provision_events.jsonl` dựng lại với ID miền, ID lồng nhau không lặp tiền tố (`version:<uuid>:1`). Kết quả giống bản cũ (expiry 55.019 dòng; recall 62,2%; cùng ba lớp lỗi khi áp thử). Event: mỗi ID một event, 77 câu lặp y hệt ghi một lần, `document_number` vào dấu vân tay ID → 50.623 event, áp được 16.233/16.783
 - [ ] Gói D — loader Neo4j (P3.4, P3.5, P3.9)
 - [ ] Gói E — kiểm chứng snapshot (P3.18)
 - [ ] Gói F — dẫn chiếu chéo (P3.19)

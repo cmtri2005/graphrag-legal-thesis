@@ -98,6 +98,7 @@ def main() -> None:
     stats: collections.Counter[str] = collections.Counter()
     rows: collections.Counter[str] = collections.Counter()
     skipped_mismatch: list[str] = []
+    seen: dict[str, int] = {}  # event id -> hash of its row
     out_path = data / "derived" / "provision_events.jsonl"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w", encoding="utf-8") as out:
@@ -170,8 +171,15 @@ def main() -> None:
                         [row["target_provision_id"]] if row["target_provision_id"] else [],
                         date.fromisoformat(effective_on) if effective_on else None,
                         target_document_id=row["target_document_id"],
-                        evidence_text=f"{mention.evidence}|{row['locator']}",
+                        evidence_text=f"{mention.evidence}|{row['locator']}|{mention.document_number}",
                     )
+                    fingerprint = hash(json.dumps(row, sort_keys=True))
+                    if row["id"] in seen:
+                        if seen[row["id"]] != fingerprint:  # an id must never merge two events
+                            raise ValueError(f"two different events share the id {row['id']}")
+                        stats["duplicate mention"] += 1  # the same sentence, repeated in the body
+                        continue
+                    seen[row["id"]] = fingerprint
                     stats[f"status {row['status']:<13} {row['status_reason'] or ''}"] += 1
                     rows[f"{row['operation']:<10} {'document' if ref.locator is None else 'provision':<9} {row['code']}"] += 1
                     out.write(json.dumps(row, ensure_ascii=False) + "\n")
@@ -179,6 +187,7 @@ def main() -> None:
     print(f"{stats['actors read']:,} acting documents read -> {out_path}")
     print(f"  skipped: {stats['actor out of scope']:,} not central normative, {stats['actor without body']:,} without body, "
           f"{len(skipped_mismatch):,} whose body carries another document's number: {skipped_mismatch[:12]}")
+    print(f"  {stats['duplicate mention']:,} repeated mentions written once")
     for key, count in sorted(rows.items()):
         print(f"  {count:>7,}  {key}")
     for key, count in sorted((k, v) for k, v in stats.items() if k.startswith("status ")):

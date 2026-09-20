@@ -5,8 +5,12 @@ storage backends.  They must never depend on processing order or an internal
 Neo4j/Milvus identifier.
 
 Opaque identifiers originating from the source are Unicode-normalized and URL
-escaped.  Composite entities whose inputs may be long use a SHA-256 digest of
-canonical JSON; the readable source prefix is retained for auditability.
+escaped, except ``#``, the separator of the derived Khoản/Điểm nodes
+(``<article>#k2#c``) and no delimiter of any ID.  Composite entities whose
+inputs may be long use a SHA-256 digest of canonical JSON; the readable source
+prefix is retained for auditability.  An ID that embeds another ID (version,
+event) embeds its local part, never the ``provision:``/``document:`` prefix
+twice.
 """
 from __future__ import annotations
 
@@ -34,7 +38,13 @@ def _required(value: object, name: str) -> str:
 
 def _escaped(value: object, name: str) -> str:
     """Canonical, delimiter-safe representation of one opaque source ID."""
-    return quote(_required(value, name), safe="-._~")
+    return quote(_required(value, name), safe="-._~#")
+
+
+def _embedded(domain_id: object, prefix: str, name: str) -> str:
+    """Local part of an ID this module already built; anything else is escaped."""
+    value = _required(domain_id, name)
+    return value[len(prefix):] if value.startswith(prefix) else _escaped(value, name)
 
 
 def _enum_value(value: Enum | str, name: str) -> str:
@@ -74,7 +84,7 @@ def make_version_id(provision_id: str, ordinal: int) -> str:
     """ID for the ``ordinal``-th textual state of a provision."""
     if ordinal < 1:
         raise ValueError("version ordinal starts at 1")
-    return f"version:{_escaped(provision_id, 'provision_id')}:{ordinal}"
+    return f"version:{_embedded(provision_id, 'provision:', 'provision_id')}:{ordinal}"
 
 
 def make_event_id(
@@ -108,7 +118,7 @@ def make_event_id(
         "effective_on": effective_on.isoformat() if effective_on else None,
         "evidence_text": _canonical_text(evidence_text),
     }
-    return f"event:{_escaped(source, 'source_document_id')}:{_digest(payload)}"
+    return f"event:{_embedded(source, 'document:', 'source_document_id')}:{_digest(payload)}"
 
 
 def make_edge_id(

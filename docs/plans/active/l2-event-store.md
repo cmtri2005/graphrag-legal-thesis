@@ -127,5 +127,6 @@ Out of scope (tới lượt thì làm, hoặc để `needs_review`):
   88,6–99,1%). Cả 2 lỗi là câu có hai thao tác ("Bãi bỏ Điều 6 và sửa đổi
   Điều 15"), trong đó thao tác thứ hai bị nhận là bãi bỏ.
 - Kiểm tay 30 lời văn mới: 30/30 cắt đúng biên nút.
+- 2026-09-20: ID event đổi (ID miền, thêm `document_number` vào dấu vân tay); 77 câu chỉ dẫn lặp y hệt chỉ ghi một lần → 50.623 dòng, mỗi ID một event (2.817 `verified`, 13.966 `auto_accepted`); áp được 16.233/16.783. Các số đo khác không đổi.
 - Recall theo expiryProvisions giảm từ 64,9% xuống 62,2%, vì bỏ các câu có
   phụ lục và che khối lời văn mới. Cùng actor với gold một-actor: 98,2%.

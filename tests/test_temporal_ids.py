@@ -30,6 +30,16 @@ def test_version_id_is_deterministic_and_validates_ordinal():
         make_version_id(provision_id, 0)
 
 
+def test_ids_embedding_another_id_do_not_repeat_its_prefix():
+    provision_id = make_provision_id("0b1c-2d#k2#c")
+    assert provision_id == "provision:0b1c-2d#k2#c"
+    assert make_version_id(provision_id, 3) == "version:0b1c-2d#k2#c:3"
+    event_id = make_event_id(make_document_id("42"), LegalOperation.REPEAL, [], None)
+    assert event_id.startswith("event:42:")
+    # an ID that did not come from this module is still escaped, never trusted
+    assert make_version_id("a:b", 1) == "version:a%3Ab:1"
+
+
 def test_event_id_ignores_target_order_and_duplicate_targets():
     common = {
         "source_document_id": "document-b",
