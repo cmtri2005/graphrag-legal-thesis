@@ -49,14 +49,16 @@ Hai nhóm chặn tiến độ, phần còn lại thừa trữ lượng:
   "có lợi" là phán đoán pháp lý, không đo được bằng dữ liệu; sau khi cố vấn
   luật lọc có thể còn dưới 50.
 
-### Hai mâu thuẫn trong đề cương phải chốt trước khi viết hướng dẫn
+### Hai mâu thuẫn trong đề cương (đã chốt 20/09, xem Decisions)
 
-1. **T6/T7** (đã ghi ở master plan §12): đề cương viết "gồm bảy nhóm" nhưng
-   Bảng 2 chỉ có T1–T6; giả thuyết nhắc T1–T7; `docs/graph_justification.md`
-   gọi nhóm hết hiệu lực một phần là T7, còn Bảng 2 gọi là T6.
+1. **T6/T7** (master plan §12): đề cương viết "gồm bảy nhóm" nhưng Bảng 2 chỉ
+   có T1–T6; giả thuyết nhắc T1–T7; `docs/graph_justification.md` gọi nhóm hết
+   hiệu lực một phần là T7, còn Bảng 2 gọi là T6. → Chốt: **T6**.
 2. **Phạm vi kiểm định chéo** (phát hiện 20/09): đề cương viết "300 câu (toàn
    bộ T3, T4, T5, T6 và mẫu ngẫu nhiên từ T2)", nhưng T3+T4+T5+T6 = 500 câu,
-   đã vượt 300. Hoặc con số 300 sai, hoặc "toàn bộ" sai.
+   đã vượt 300. → Chốt: **300 câu**, "toàn bộ" chỉ áp cho T5 và T6.
+
+Cả hai đều còn phải sửa vào file `.docx` của đề cương, thuộc P1.2.
 
 ## Scope
 
@@ -93,7 +95,7 @@ Không có gói nào khác bắt đầu đúng trước khi T1–T6 có định 
 
 | Bước | Việc | Xong khi |
 |---|---|---|
-| A1 | Chốt Q1 (T6/T7) và Q2 (phạm vi κ) | Sửa vào đề cương, hết hai mục ở §12 |
+| A1 | ✅ 20/09 Chốt Q1 (T6) và Q2 (κ trên 300 câu) | Quyết định ghi ở mục Decisions; `graph_justification.md` đã khớp; còn sửa `.docx` ở P1.2 |
 | A2 | Viết hướng dẫn gán nhãn: định nghĩa vận hành từng nhóm, tiêu chí loại câu, ví dụ đúng và sai | `docs/vilextime-annotation.md`; hai người đọc hiểu giống nhau trên 20 ví dụ thử |
 | A3 | Chốt lược đồ một dòng dữ liệu (trường bắt buộc, cách truy ngược) | Có ví dụ JSON; script Gói B ghi đúng lược đồ |
 
@@ -136,7 +138,7 @@ phần việc script và giấy tờ, không nhận phần cần ngồi kiểm t
 
 | Tuần | Việc | Kết thúc tuần phải có |
 |---|---|---|
-| 1 · 21–27/09 | A1, A2; D1 (liên hệ cố vấn luật ngay, đây là việc có thời gian chờ dài nhất) | Q1, Q2 chốt; nháp hướng dẫn gán nhãn; đã liên hệ cố vấn |
+| 1 · 21–27/09 | ~~A1~~ (xong 20/09), A2; D1 (liên hệ cố vấn luật ngay, đây là việc có thời gian chờ dài nhất) | Q1, Q2 chốt; nháp hướng dẫn gán nhãn; đã liên hệ cố vấn |
 | 2 · 28/09–04/10 | A3; B1 | `vilextime_pool.jsonl` chạy được trên toàn corpus |
 | 3 · 05–11/10 | B2, B3 | Bảng trữ lượng thật theo T1–T6; tỷ lệ dùng được trên mẫu 30 |
 | 4 · 12–18/10 | B4; C1, C2 | 50 câu mẫu sinh thử, qua kiểm tra tự động |
@@ -155,12 +157,24 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
 
 | # | Câu hỏi | Đề xuất | Chặn |
 |---|---|---|---|
-| Q1 | T6 hay T7 cho nhóm hết hiệu lực một phần | Theo Bảng 2: sáu nhóm T1–T6, nhóm hết hiệu lực một phần là T6. Sửa `graph_justification.md` và phần giả thuyết cho khớp | A1, A2, mọi gói sau |
-| Q2 | Phạm vi kiểm định chéo: "300 câu" mâu thuẫn "toàn bộ T3–T6" (= 500) | Giữ 300 câu: toàn bộ T5 (50) và T6 (100), mẫu ngẫu nhiên 50 mỗi nhóm T3, T4, T2. Lý do: T5, T6 là nhóm cần chuyên môn luật, T2 và T3 sinh máy móc hơn | A1, D4 |
+| Q1 | T6 hay T7 cho nhóm hết hiệu lực một phần | **Chốt 20/09 (CMT): T6.** Sáu nhóm T1–T6 theo Bảng 2; `graph_justification.md` đã sửa T7 → T6 (3 chỗ, gồm H2). Còn lại: sửa đề cương (P1.2) | ~~A1, A2~~ |
+| Q2 | Phạm vi kiểm định chéo: "300 câu" mâu thuẫn "toàn bộ T3–T6" (= 500) | **Chốt 20/09 (CMT): giữ 300 câu** = toàn bộ T5 (50) và T6 (100), cộng mẫu ngẫu nhiên 50 mỗi nhóm T2, T3, T4. Lý do: T5, T6 cần chuyên môn luật nên kiểm toàn bộ; T2–T4 sinh máy móc hơn nên lấy mẫu. Còn lại: sửa đề cương (P1.2) | ~~A1~~, D4 |
 | Q3 | T5 định nghĩa hẹp ("có lợi cho đối tượng") hay rộng (mọi hồi tố) | Giữ hẹp theo đề cương, nhưng nếu sau khi cố vấn lọc mà dưới 50 câu thì hạ quota và ghi lý do, không nới định nghĩa để lấp số | D2, D3 |
 | Q4 | T3 chỉ có 321 chuỗi trong 100 VB cho 200 câu | Sinh T3 sau khi Gói B của Giai đoạn 3 xong (trữ lượng sẽ tăng). Nếu tới tuần 6 vẫn dưới 300 chuỗi thì hạ T3 xuống 150 và chuyển 50 câu sang T2 | B2, D3 |
 | Q5 | Model sinh câu hỏi (P4.4) trước khi P5.1 chốt | Dùng bất kỳ model nào sẵn có, vì nhãn vàng không phụ thuộc model; ghi tên model và tham số vào từng dòng để tái lập | C1 |
 | Q6 | Chia dev/test theo câu hay theo văn bản | Theo văn bản: cùng một Điều sửa nhiều lần sẽ sinh nhiều câu, chia theo câu là rò rỉ | E |
+
+## Decisions đã chốt
+
+- 2026-09-20 (Q1, CMT): nhóm hết hiệu lực một phần ở cấp Khoản/Điểm là **T6**;
+  bộ dữ liệu có đúng sáu nhóm T1–T6 theo Bảng 2. `graph_justification.md` đã
+  sửa T7 → T6 ở ba chỗ, gồm cả giả thuyết H2 — H2 giờ đọc là "khoảng cách giữa
+  phương pháp đề xuất và B7 lớn nhất trên T6". Đề cương (`.docx`) vẫn còn nhắc
+  T1–T7; sửa ở P1.2.
+- 2026-09-20 (Q2, CMT): kiểm định chéo **300 câu**, gồm toàn bộ T5 (50) và T6
+  (100) vì hai nhóm này cần chuyên môn luật, cộng mẫu ngẫu nhiên 50 câu mỗi
+  nhóm T2, T3, T4. Thay cho câu "toàn bộ T3, T4, T5, T6" của đề cương, vốn cộng
+  lại thành 500 câu chứ không phải 300. Cohen κ tính trên đúng 300 câu này.
 
 ## Risks And Recovery
 
@@ -180,7 +194,7 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
 
 ## Progress
 
-- [ ] Gói A — chốt Q1, Q2 và hướng dẫn gán nhãn (P4.1)
+- [ ] Gói A — chốt Q1, Q2 và hướng dẫn gán nhãn (P4.1). A1 xong 20/09; còn A2 (hướng dẫn gán nhãn), A3 (lược đồ dòng dữ liệu)
 - [ ] Gói B — sinh ứng viên tự động (P4.2, P4.3, P4.6)
 - [ ] Gói C — diễn đạt thành câu hỏi (P4.4)
 - [ ] Gói D — đủ quota, cố vấn luật, Cohen κ (P4.5, P4.7, P4.8)

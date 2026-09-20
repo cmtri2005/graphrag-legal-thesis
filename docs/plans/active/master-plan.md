@@ -266,8 +266,8 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | Vấn đề | Chặn việc | Ghi chú |
 |---|---|---|
 | Đề cương ghi "bốn mục tiêu" nhưng liệt kê 5 | P1.2 | |
-| Giả thuyết nhắc T1–T7, Bảng 2 chỉ có T1–T6; `graph_justification.md` gọi nhóm hết hiệu lực một phần là T7 | P1.2, P4.1 | Q1 của [plan GĐ4](phase-4-vilextime.md) |
-| Kiểm định chéo ghi "300 câu (toàn bộ T3, T4, T5, T6…)" nhưng T3+T4+T5+T6 = 500 | P1.2, P4.7 | Phát hiện 20/09; Q2 của [plan GĐ4](phase-4-vilextime.md) |
+| ~~Giả thuyết nhắc T1–T7~~ **Chốt 20/09: sáu nhóm T1–T6, nhóm hết hiệu lực một phần là T6.** `graph_justification.md` đã sửa; còn sửa `.docx` | P1.2 | Q1 của [plan GĐ4](phase-4-vilextime.md) |
+| ~~Kiểm định chéo ghi "300 câu (toàn bộ T3, T4, T5, T6…)"~~ **Chốt 20/09: 300 câu = toàn bộ T5, T6 + 50 mẫu mỗi nhóm T2, T3, T4.** Còn sửa `.docx` | P1.2 | Phát hiện và chốt 20/09; Q2 của [plan GĐ4](phase-4-vilextime.md) |
 | Hai công thức cùng đánh số (5); lỗi chính tả "driff-driven", "cuarm ô hình", "mình họa"; MSSV `23621643` khác tên file `23521643` | P1.2 | |
 | Câu "metadata giảm đáng kể chi phí gán nhãn": metadata cho biết *khoản nào* hết hiệu lực, không cho biết *khi nào* | P1.2 | `docs/audit_dataset.md` §9 |
 | Có dùng H1–H4 không; A4 chỉ là proxy cho H3 | P1.5 | |
