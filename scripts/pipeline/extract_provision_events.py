@@ -43,7 +43,7 @@ from legal_crawler.extraction.wording import fit, parse_items, wording_blocks
 from legal_crawler.index import TemporalIndex
 from legal_crawler.provisions.text import parse_paragraphs
 from legal_crawler.storage.documents import DocumentStore
-from legal_crawler.temporal.ids import make_event_id
+from legal_crawler.temporal.ids import make_document_id, make_event_id
 
 # Operations that end the version the portal calls expired (see measure_provision_events.py).
 ENDING = {"repeal", "replace", "amend", "correct", "suspend"}
@@ -66,18 +66,19 @@ def main() -> None:
             by_number[normalize_number(doc.number)].append(doc.id)
 
     targets_of: dict[str, set[str]] = collections.defaultdict(set)
-    actors: set[str] = set()
+    actors: dict[str, str] = {}  # domain id -> portal id, which names the file under data/raw
     for line in (data / "edges.jsonl").read_text(encoding="utf-8").splitlines():
         edge = json.loads(line)
-        targets_of[edge["source_id"]].add(edge["target_id"])
+        source = make_document_id(edge["source_id"])
+        targets_of[source].add(make_document_id(edge["target_id"]))
         if edge["group"] == "genealogy":
-            actors.add(edge["source_id"])
+            actors[source] = edge["source_id"]
 
     # Only a central normative act can amend one (ADR 0002 scope): a provincial
     # resolution or a consolidated text that cites "Điều 4 Nghị định số X" is
     # quoting it, not changing it.
     central = {
-        row["doc_id"] for row in map(json.loads, (data / "derived/eligibility.jsonl").read_text(encoding="utf-8").splitlines())
+        make_document_id(row["doc_id"]) for row in map(json.loads, (data / "derived/eligibility.jsonl").read_text(encoding="utf-8").splitlines())
         if row.get("doc_class") == "qppl"
     }
 
@@ -100,11 +101,11 @@ def main() -> None:
     out_path = data / "derived" / "provision_events.jsonl"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w", encoding="utf-8") as out:
-        for actor_id in sorted(actors):
+        for actor_id, portal_id in sorted(actors.items()):
             if actor_id not in central:
                 stats["actor out of scope"] += 1
                 continue
-            raw = store.load("raw", actor_id)
+            raw = store.load("raw", portal_id)
             html = ((raw or {}).get("documentContent") or {}).get("content") or ""
             if not html:
                 stats["actor without body"] += 1

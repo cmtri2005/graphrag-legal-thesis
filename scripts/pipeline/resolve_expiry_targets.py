@@ -29,7 +29,7 @@ from legal_crawler.extraction import (
 )
 from legal_crawler.index import TemporalIndex
 from legal_crawler.storage.documents import DocumentStore
-from legal_crawler.temporal import ProvisionLevel
+from legal_crawler.temporal import ProvisionLevel, make_document_id
 
 LEVELS = {
     "phần": ProvisionLevel.PART,
@@ -70,8 +70,9 @@ def main() -> None:
     distinct: dict[tuple[str, str], str] = {}
     out = args.out or args.data / "expiry_targets.jsonl"
     with out.open("w", encoding="utf-8") as f:
-        for doc_id in sorted(source.ids("history")):
-            entries = source.load("history", doc_id).get("history") or []
+        for portal_id in sorted(source.ids("history")):
+            doc_id = make_document_id(portal_id)
+            entries = source.load("history", portal_id).get("history") or []
             for entry in entries:
                 for text in entry.get("expiryProvisions") or []:
                     text = text.strip()

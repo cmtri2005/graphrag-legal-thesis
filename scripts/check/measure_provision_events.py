@@ -34,6 +34,7 @@ import random
 from pathlib import Path
 
 from legal_crawler.index import TemporalIndex
+from legal_crawler.temporal import make_document_id
 
 # 20260918–20 and 20260922 drew the samples the error classes were found on; 20260921
 # measured v4 (56/60, all resolved events). From 20260923 section 3 samples only the
@@ -61,7 +62,7 @@ def main() -> None:
     for line in (data / "edges.jsonl").read_text(encoding="utf-8").splitlines():
         e = json.loads(line)
         if e["group"] == "genealogy" and e["source_id"] in raw_ids:
-            actors_of[e["target_id"]].add(e["source_id"])
+            actors_of[make_document_id(e["target_id"])].add(make_document_id(e["source_id"]))
 
     gold: set[tuple[str, str]] = set()
     gold_status: dict[tuple[str, str], set[str]] = collections.defaultdict(set)

@@ -37,6 +37,9 @@ from legal_crawler.temporal import (
     ProvisionVersion,
     TemporalInterval,
     TextUpdate,
+    make_document_id,
+    make_provision_id,
+    make_version_id,
 )
 from legal_crawler.temporal.event_applier import EventApplicationError
 from legal_crawler.temporal.state import TemporalState
@@ -49,7 +52,7 @@ def main() -> None:
     args = parser.parse_args()
     index = TemporalIndex(args.data / "temporal.sqlite")
     store = DocumentStore(args.data)
-    subtree_ids = set(store.ids("derived/subtrees"))
+    subtree_of = {make_document_id(i): i for i in store.ids("derived/subtrees")}  # domain id -> portal id
 
     by_target: dict[str, list[dict]] = collections.defaultdict(list)
     for line in (args.data / "derived/provision_events.jsonl").read_text(encoding="utf-8").splitlines():
@@ -65,14 +68,15 @@ def main() -> None:
         state = TemporalState()
         target = index.document(doc_id)
         state.add_document(target)
-        derived = ({node["id"]: node.get("text") for node in store.load("derived/subtrees", doc_id)["nodes"]}
-                   if doc_id in subtree_ids else {})
+        derived = ({make_provision_id(node["id"]): node.get("text")
+                    for node in store.load("derived/subtrees", subtree_of[doc_id])["nodes"]}
+                   if doc_id in subtree_of else {})
         for p in index.document_order(doc_id):
             state.add_provision(p)
             stored = index.versions_of(p.id)
             text = stored[0].text if stored else derived.get(p.id)
             if text and target.effective_from:
-                state.add_version(ProvisionVersion(id=f"{p.id}:1", provision_id=p.id, ordinal=1, text=text,
+                state.add_version(ProvisionVersion(id=make_version_id(p.id, 1), provision_id=p.id, ordinal=1, text=text,
                                                    validity=TemporalInterval(target.effective_from)))
         for row in sorted(rows, key=lambda r: (r["effective_on"], r["actor_id"])):
             if state.document(row["actor_id"]) is None:

@@ -5,6 +5,10 @@ which is what keeps the crawler free of interpretation and the domain free of
 the portal's quirks. It is one-way and idempotent: drop the SQLite file and
 run it again.
 
+It is also where the portal's ids become domain ids (`temporal/ids.py`): every
+document, provision and version leaves here with its prefixed id, so nothing
+downstream ever sees, or has to translate, a raw portal id.
+
 Three facts from `docs/audit_dataset.md` shape what it does, and none of them
 may be papered over — each is a silent wrong answer if it is:
 
@@ -34,6 +38,9 @@ from .temporal import (
     ProvisionLevel,
     ProvisionVersion,
     TemporalInterval,
+    make_document_id,
+    make_provision_id,
+    make_version_id,
 )
 
 DOCUMENT_URL = "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID="
@@ -61,7 +68,7 @@ def build_document(doc_id: str, raw: dict, report: IngestReport) -> LegalDocumen
     if not effective_from:
         report.bump("documents_without_effective_from")
     return LegalDocument(
-        id=doc_id,
+        id=make_document_id(doc_id),
         number=str(raw.get("docNum") or ""),
         title=str(raw.get("title") or ""),
         issued_on=_as_date(raw.get("issueDate")),
@@ -87,8 +94,9 @@ def walk_tree(nodes: list[dict], document_id: str) -> Iterator[Provision]:
     def walk(children: list[dict], parent_id: str | None) -> Iterator[Provision]:
         nonlocal position
         for node in children:
+            provision_id = make_provision_id(node["id"])
             yield Provision(
-                id=node["id"],
+                id=provision_id,
                 document_id=document_id,
                 level=ProvisionLevel(node["level"]),
                 title=node.get("title") or "",
@@ -96,7 +104,7 @@ def walk_tree(nodes: list[dict], document_id: str) -> Iterator[Provision]:
                 order_index=position,
             )
             position += 1
-            yield from walk(node.get("children") or [], node["id"])
+            yield from walk(node.get("children") or [], provision_id)
 
     yield from walk(nodes, None)
 
@@ -104,7 +112,7 @@ def walk_tree(nodes: list[dict], document_id: str) -> Iterator[Provision]:
 def build_versions(
     provisions: list[Provision], texts: dict[str, dict], document: LegalDocument
 ) -> list[ProvisionVersion]:
-    """One version per provision that has text.
+    """One version per provision that has text. `texts` is keyed by portal node id.
 
     ponytail: the validity comes from the document's own effective window,
     because the corpus holds only the current consolidated text. Real version
@@ -116,6 +124,7 @@ def build_versions(
         if document.effective_from
         else None
     )
+    texts = {make_provision_id(node_id): node for node_id, node in texts.items()}
     versions = []
     for provision in provisions:
         text = (texts.get(provision.id) or {}).get("text")
@@ -123,7 +132,7 @@ def build_versions(
             continue
         versions.append(
             ProvisionVersion(
-                id=f"{provision.id}:1",
+                id=make_version_id(provision.id, 1),
                 provision_id=provision.id,
                 ordinal=1,
                 text=text,
@@ -137,11 +146,11 @@ def subtree_provisions(record: dict, document_id: str) -> list[Provision]:
     """Khoản/Điểm split from article text (backfill T5), parents already stored."""
     return [
         Provision(
-            id=node["id"],
+            id=make_provision_id(node["id"]),
             document_id=document_id,
             level=ProvisionLevel(node["level"]),
             title=node["title"],
-            parent_id=node["parent_id"],
+            parent_id=make_provision_id(node["parent_id"]),
         )
         for node in record["nodes"]
     ]
@@ -177,14 +186,14 @@ def ingest(
         if doc_id not in tree_ids:
             report.bump("documents_without_tree")
             continue
-        provisions = list(walk_tree(source.load("trees", doc_id), doc_id))
+        provisions = list(walk_tree(source.load("trees", doc_id), document.id))
         if not provisions:
             report.bump("documents_without_structure")
             continue
         store.put_provisions(provisions)
         report.bump("provisions", len(provisions))
         if doc_id in subtree_ids:
-            derived = subtree_provisions(source.load("derived/subtrees", doc_id), doc_id)
+            derived = subtree_provisions(source.load("derived/subtrees", doc_id), document.id)
             store.put_provisions(derived)
             report.bump("subtree_provisions", len(derived))
 
