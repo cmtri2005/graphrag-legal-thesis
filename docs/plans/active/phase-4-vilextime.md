@@ -37,8 +37,8 @@ P2.8), dùng `versions.jsonl` và `event_log.jsonl`:
 | T2 | Cặp tương phản cùng câu, khác mốc | 400 (200 cặp) | 15.070 nút ≥ 2 phiên bản, trong 1.442 VB | 75× |
 | T3 | Chuỗi sửa đổi nhiều bước A → B → C | 200 | **321 chuỗi ≥ 3 phiên bản, trong 100 VB** (97 chuỗi mọi bước `verified`) | **1,6×** |
 | T4 | Bẫy thời gian, phiên bản cũ rất giống | 150 | 5.149 cặp có độ giống ≥ 0,9 (trung vị toàn bộ 0,78) | 34× |
-| T5 | Hiệu lực trở về trước có lợi cho đối tượng | 50 | 282 event hồi tố, nhưng chỉ trong **19 văn bản tác động**. Sau khi loại 1 đính chính và 187 event của 6 VB hướng dẫn đồng bộ hiệu lực: **95 event trong 13 VB** | **1,9×**, và chưa lọc theo Điều 152 |
-| T6 | Hết hiệu lực một phần ở cấp Khoản/Điểm | 100 | 2.221 Khoản/Điểm hết hiệu lực không có phiên bản kế, trong VB còn hiệu lực | 22× |
+| T5 | Hiệu lực trở về trước (Điều 152), bỏ "có lợi" | ≤50 | 282 event hồi tố, nhưng chỉ trong **19 văn bản tác động**. Sau khi loại 1 đính chính và 187 event của 6 VB hướng dẫn đồng bộ hiệu lực: **95 event trong 13 VB** | **1,9×**, và chưa lọc theo Điều 152 |
+| T6 | Hết hiệu lực một phần ở cấp Khoản/Điểm | 100 **+ phần T5 thiếu** | 2.221 Khoản/Điểm hết hiệu lực không có phiên bản kế, trong VB còn hiệu lực | 22× |
 
 Hai nhóm chặn tiến độ, phần còn lại thừa trữ lượng:
 
@@ -131,7 +131,7 @@ Không có gói nào khác bắt đầu đúng trước khi T1–T6 có định 
 | Bước | Việc | Xong khi |
 |---|---|---|
 | D1 | Liên hệ và chốt lịch cố vấn luật cho T5, T6 | Có người nhận và lịch làm việc |
-| D2 | Cố vấn luật lọc T5 ("có lợi cho đối tượng áp dụng") và duyệt mẫu T6 | Đủ 50 câu T5 hoặc có văn bản ghi lý do giảm quota |
+| D2 | Cố vấn luật xác nhận 95 ca hồi tố trong 13 VB có thuộc Điều 152 không, và duyệt mẫu T6 | Số T5 chốt được, phần thiếu chuyển sang T6 |
 | D3 | Sinh đủ quota T1 250 · T2 400 · T3 200 · T4 150 · T5 50 · T6 100 | Tổng 1.150; mỗi câu truy ngược được |
 | D4 | Kiểm chéo độc lập theo phạm vi đã chốt ở A1, tính Cohen κ | κ ≥ 0,6; nếu thấp hơn thì viết lại hướng dẫn và kiểm lại |
 | D5 | Biên bản kiểm định: ai kiểm, câu nào lệch, xử lý thế nào | Bảng kết quả trong plan |
@@ -169,12 +169,22 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
 |---|---|---|---|
 | Q1 | T6 hay T7 cho nhóm hết hiệu lực một phần | **Chốt 20/09 (CMT): T6.** Sáu nhóm T1–T6 theo Bảng 2; `graph_justification.md` đã sửa T7 → T6 (3 chỗ, gồm H2). Còn lại: sửa đề cương (P1.2) | ~~A1, A2~~ |
 | Q2 | Phạm vi kiểm định chéo: "300 câu" mâu thuẫn "toàn bộ T3–T6" (= 500) | **Chốt 20/09 (CMT): giữ 300 câu** = toàn bộ T5 (50) và T6 (100), cộng mẫu ngẫu nhiên 50 mỗi nhóm T2, T3, T4. Lý do: T5, T6 cần chuyên môn luật nên kiểm toàn bộ; T2–T4 sinh máy móc hơn nên lấy mẫu. Còn lại: sửa đề cương (P1.2) | ~~A1~~, D4 |
-| Q3 | T5 định nghĩa hẹp ("có lợi cho đối tượng") hay rộng (mọi hồi tố) | **Cố vấn luật 20/09 bác cách đặt vấn đề:** "có lợi" là ngôn ngữ của Bộ luật Hình sự, không phải phép thử của Điều 152. Không có dấu hiệu câu chữ nào lọc tự động được. Trữ lượng thật sau khi loại đính chính và ca đồng bộ hiệu lực: **95 sự kiện trong 13 văn bản**, cho quota 50. **Cần chốt lại định nghĩa T5 — xem Decisions** | D2, D3 |
+| Q3 | T5 định nghĩa hẹp ("có lợi cho đối tượng") hay rộng (mọi hồi tố) | **Cố vấn luật 20/09 bác cách đặt vấn đề:** "có lợi" là ngôn ngữ của Bộ luật Hình sự, không phải phép thử của Điều 152. Không có dấu hiệu câu chữ nào lọc tự động được. Trữ lượng thật sau khi loại đính chính và ca đồng bộ hiệu lực: **95 sự kiện trong 13 văn bản**, cho quota 50. **Chốt 20/09 (CMT): lấy định nghĩa đúng luật, thiếu bao nhiêu bù sang T6** — xem Decisions | D2, D3 |
 | Q4 | T3 chỉ có 321 chuỗi trong 100 VB cho 200 câu | Sinh T3 sau khi Gói B của Giai đoạn 3 xong (trữ lượng sẽ tăng). Nếu tới tuần 6 vẫn dưới 300 chuỗi thì hạ T3 xuống 150 và chuyển 50 câu sang T2 | B2, D3 |
 | Q5 | Model sinh câu hỏi (P4.4) trước khi P5.1 chốt | Dùng bất kỳ model nào sẵn có, vì nhãn vàng không phụ thuộc model; ghi tên model và tham số vào từng dòng để tái lập | C1 |
 | Q6 | Chia dev/test theo câu hay theo văn bản | **Chốt 20/09 (CMT): theo văn bản.** Cùng một Điều sửa nhiều lần sẽ sinh nhiều câu, chia theo câu là rò rỉ | ~~E~~ |
 
 ## Decisions đã chốt
+
+- 2026-09-20 (CMT, Q3 — chốt sau khi cố vấn luật trả lời): **T5 định nghĩa lại theo
+  Điều 152**, là "văn bản quy định hiệu lực trở về trước", bỏ mệnh đề "có lợi cho đối
+  tượng áp dụng". Số câu T5 là số ca cố vấn xác nhận được, không đặt trước. **Phần
+  thiếu so với 50 chuyển sang T6**, vì T6 dư trữ lượng (2.221) và phục vụ trực tiếp
+  giả thuyết H2 — phép thử quyết định với đường cơ sở B7. Tổng vẫn giữ 1.150.
+  Không nới định nghĩa T5 để lấp cho đủ số, và không lấy ca đồng bộ hiệu lực vào T5.
+  Khóa luận phải ghi rõ: T5 nhỏ vì hồi tố là hiện tượng hiếm và tập trung trong 13
+  văn bản của corpus này, đó là một quan sát về thực tiễn lập pháp, không phải thiếu
+  sót của bộ dữ liệu. Đề cương sửa mô tả T5 ở P1.2.
 
 - 2026-09-20 (cố vấn luật, Q3): **cách đặt vấn đề của đề cương cho T5 chưa đúng
   khung pháp lý.** "Hiệu lực trở về trước có lợi cho đối tượng áp dụng" dùng chuẩn
