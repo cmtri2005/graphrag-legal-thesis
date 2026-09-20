@@ -107,16 +107,16 @@ Không có gói nào khác bắt đầu đúng trước khi T1–T6 có định 
 |---|---|---|
 | A1 | ✅ 20/09 Chốt Q1 (T6) và Q2 (κ trên 300 câu) | Quyết định ghi ở mục Decisions; `graph_justification.md` đã khớp; còn sửa `.docx` ở P1.2 |
 | A2 | Viết hướng dẫn gán nhãn: định nghĩa vận hành từng nhóm, tiêu chí loại câu, ví dụ đúng và sai | `docs/vilextime-annotation.md`; hai người đọc hiểu giống nhau trên 20 ví dụ thử |
-| A3 | Chốt lược đồ một dòng dữ liệu (trường bắt buộc, cách truy ngược) | Có ví dụ JSON; script Gói B ghi đúng lược đồ |
+| A3 | ✅ 20/09 Chốt lược đồ một dòng dữ liệu (trường bắt buộc, cách truy ngược) | `schema_version: 1` trong `build_question_pool.py`: nhóm, nút, danh sách phiên bản kèm khoảng hiệu lực, `gold` theo từng mốc, `event_ids`, `evidence`, `actor_numbers` |
 
 ### Gói B — Sinh ứng viên tự động (NMT) · P4.2, P4.3, P4.6
 
 | Bước | Việc | Xong khi |
 |---|---|---|
-| B1 | `scripts/pipeline/build_question_pool.py`: đọc `versions.jsonl`, lọc `benchmark_eligible` (P4.6), sinh bộ ba (trước, sau, mốc chuyển) cho mọi nút ≥ 2 phiên bản | `data/derived/vilextime_pool.jsonl`; chạy hai lần cho file giống hệt |
-| B2 | Phân tầng ứng viên theo T1–T6 bằng tiêu chí đo được: T3 theo độ dài chuỗi, T4 theo độ giống văn bản, T5 theo hồi tố, T6 theo nút hết hiệu lực trong VB còn hiệu lực | Số ứng viên mỗi nhóm ≥ quota; bảng trữ lượng in ra được |
+| B1 | ✅ 20/09 `scripts/pipeline/build_question_pool.py`: đọc `versions.jsonl`, lọc `benchmark_eligible` (P4.6), sinh bộ ba (trước, sau, mốc chuyển) cho mọi nút ≥ 2 phiên bản | `data/derived/vilextime_pool.jsonl` 9.331 dòng; chạy hai lần cho sha256 giống hệt; đọc theo luồng nên không tốn RAM |
+| B2 | ✅ 20/09 (trừ T5) Phân tầng ứng viên theo T1–T6 bằng tiêu chí đo được | T1 1.435.086 · T2 10.194 · T3 331 · T4 5.390 · T6 2.218. Mỗi nhóm vẫn ≥ quota; T3 mỏng nhất, chỉ 1,7× |
 | B3 | Loại ứng viên rác: text quá ngắn, khác biệt chỉ ở dấu câu hoặc khoảng trắng, nút không có tiêu đề | Kiểm tay 30 ứng viên mỗi nhóm, ghi tỷ lệ dùng được |
-| B4 | Chống rò rỉ: mỗi nút chỉ vào một nhóm và một tập | Kiểm tra tự động, không có `provision_id` xuất hiện ở hai tập |
+| B4 | ✅ 20/09 (phần nhóm) Chống rò rỉ: mỗi nút chỉ vào một nhóm | Kiểm tự động: 0 nút trùng trên 9.331 dòng. Nhóm hiếm được ưu tiên trước (T3 → T6 → T4 → T2 → T1). Phần chia dev/test vẫn ở Gói E |
 
 ### Gói C — Diễn đạt thành câu hỏi (NMT) · P4.4
 
@@ -214,6 +214,14 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
 
 ## Risks And Recovery
 
+- **11,1% cặp phiên bản liền nhau có chữ giống hệt nhau** (2.132/19.192, đo
+  20/09). Sửa đổi mà không đổi một ký tự nào: hoặc cổng đã cập nhật sẵn lời văn
+  vào bản gốc, hoặc khối trích xuất chính là lời văn đang có. `build_question_pool.py`
+  loại chúng (1.947 ca T4, 69 ca T3), nhưng câu hỏi nền vẫn mở: **lời văn trong
+  `data/provisions/` là bản gốc lúc ban hành hay bản hiện hành?** Nếu là bản hiện
+  hành thì vế "trước khi sửa" của mọi cặp T2/T4 sai. Chỉ E1 (đối chiếu 356 văn bản
+  hợp nhất) trả lời được, nên E1 cần làm trước khi chốt nhãn vàng T2/T4.
+
 - **T3 không đủ trữ lượng** (rủi ro lớn nhất): phụ thuộc Gói B của Giai đoạn 3.
   Giảm thiểu bằng Q4, quyết ở tuần 6 chứ không để tới tuần 8.
 - **T5 hụt sau khi cố vấn luật lọc:** 282 ứng viên là cận trên, chưa xét "có
@@ -231,7 +239,7 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
 ## Progress
 
 - [ ] Gói A — chốt Q1, Q2 và hướng dẫn gán nhãn (P4.1). A1 xong 20/09; còn A2 (hướng dẫn gán nhãn), A3 (lược đồ dòng dữ liệu)
-- [ ] Gói B — sinh ứng viên tự động (P4.2, P4.3, P4.6)
+- [ ] Gói B — sinh ứng viên tự động (P4.2, P4.3, P4.6). B1, B2, B4 xong 20/09; còn B3 (loại ứng viên rác, kiểm tay 30 mẫu mỗi nhóm)
 - [ ] Gói C — diễn đạt thành câu hỏi (P4.4)
 - [ ] Gói D — đủ quota, cố vấn luật, Cohen κ (P4.5, P4.7, P4.8)
 - [ ] Gói E — chia dev/test (P4.9)
