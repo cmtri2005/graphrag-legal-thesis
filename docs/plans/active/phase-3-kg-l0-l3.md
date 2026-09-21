@@ -6,8 +6,9 @@ Date: 2026-09-18
 
 Active. Kế hoạch chi tiết cho mục 4 của [master plan](master-plan.md); trạng
 thái từng việc vẫn cập nhật ở master plan. C1–C3 đã hoàn thành ngày 18/09;
-C4–C6 và D1–D3, D5 hoàn thành ngày 19/09. Gói C xong; Gói D đang triển khai;
-Phase 3 tổng thể chưa hoàn thành.
+C4–C6 và D1–D3, D5 hoàn thành ngày 19/09; D6 hoàn thành ngày 21/09. Gói C và
+phần đã chốt của Gói D xong; D4 vẫn tạm hoãn theo yêu cầu. Phase 3 tổng thể
+chưa hoàn thành.
 
 ## Outcome
 
@@ -110,7 +111,7 @@ seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 | D3 ✅ | P3.5: nạp 13 loại `RelationType` từ snapshot v2; không dùng số cạnh M1 cũ | 128.548 cạnh nguồn phân biệt = 124.934 cạnh Neo4j + 3.614 unresolved; hai lượt không tăng cạnh/báo cáo; đếm theo từng loại khớp |
 | D4 | 1.626 QPPL có text nhưng không có cây (Q4) | Theo quyết định Q4 |
 | D5 ✅ | Truy vấn Cypher đọc snapshot từ khoảng hiệu lực thực đã nạp; đối chiếu `valid`/version ID/text với `SnapshotService` | 200/200 cặp khớp trên 32 văn bản có cây; xem bằng chứng dưới đây |
-| D6 | P3.2: đo RAM và thời gian nạp full corpus | Số đo ghi vào plan hạ tầng |
+| D6 ✅ | P3.2: đo RAM và thời gian nạp full corpus | Cold load 704,0s; lượt MERGE đo chi tiết 573,9s; Neo4j peak 3,72 GiB/4 GiB; report và runbook đã cập nhật |
 
 ### Gói E — Kiểm chứng snapshot (NMT, CMT kiểm chéo) · P3.18
 
@@ -203,7 +204,7 @@ backfill đích sau này mà không làm sai bản sắc văn bản.
   - [x] D3 — 13 loại cạnh văn bản, audit đích vắng mặt, chạy lại không trùng
   - [ ] D4 — Q4 (tạm bỏ qua theo yêu cầu, chưa chốt)
   - [x] D5 — snapshot Cypher đối chiếu 200 cặp với bản offline
-  - [ ] D6 — đo RAM và thời gian nạp full corpus
+  - [x] D6 — đo RAM và thời gian nạp full corpus
 - [ ] Gói E — kiểm chứng snapshot (P3.18)
 - [ ] Gói F — dẫn chiếu chéo (P3.19)
 - [ ] Gói G — P3.6, P3.12 theo quyết định
@@ -465,4 +466,39 @@ Kiểm tra chung của repository: `python -m pytest -q`.
 - Phạm vi D5 là **tính nhất quán của read model** (trạng thái, version và text),
   không đánh giá đúng/sai pháp lý của text, không đối chiếu đầy đủ reason,
   event object hay provenance của `SnapshotResult`. E2 vẫn phải có 100 truy
-  vấn kiểm tay; D4 và D6 vẫn mở. Không tính 200 cặp này vào E2.
+  vấn kiểm tay; tại thời điểm chốt D5, D4 và D6 vẫn mở. Không tính 200 cặp này
+  vào E2.
+
+### D6 — 21/09/2026
+
+- `load_neo4j.py --report PATH` ghi atomically số đếm đã kiểm, kích thước bốn
+  input, tổng thời gian và timing riêng cho preflight, Document, Provision,
+  LegalEvent, ProvisionVersion, `CONTAINS`, `CAUSED_BY` và hậu kiểm. Report chỉ
+  được công bố sau khi chín số đếm nguồn–Neo4j đều khớp.
+- `measure_graph_resources.py` đọc `docker stats`/`docker inspect`, có chế độ
+  chỉ đo stack và `--run-loader` để lấy mẫu trong suốt một lượt MERGE toàn
+  corpus. Công cụ không có lệnh xóa graph/volume, không ghi credential vào
+  report, báo lỗi nếu container thiếu, unhealthy hoặc bị OOM. Parser và phép
+  tổng hợp start/final/peak có test dương/âm.
+- Thời gian trên máy đo (4 logical CPU, WSL2 nhìn thấy 11,68 GiB RAM): lượt nạp
+  đầu vào graph rỗng ở D2 là **704,0s**; lượt MERGE thứ hai ở D2 **553,9s**;
+  lượt D6 **573,9s**. Timing lượt D6: preflight 7,2s; Document 4,3s;
+  Provision 170,3s; LegalEvent 4,9s; Version 231,4s; `CONTAINS` 152,1s;
+  `CAUSED_BY` 1,3s; kiểm số đếm 2,3s.
+- Trong 53 mẫu lúc MERGE, Neo4j từ 1.517,6 MiB lên đỉnh **3.813,4 MiB**,
+  tương đương **93,09%** giới hạn 4 GiB. Đỉnh/final của Milvus là
+  103,4/103,3 MiB, MinIO 91,1/91,1 MiB, etcd 35,3/29,4 MiB; tổng các đỉnh là
+  **3,95 GiB**. Hậu kiểm steady cuối gồm hai mẫu, vẫn khoảng 3,95 GiB toàn
+  stack, riêng Neo4j 3.812,4 MiB. Milvus chưa có embedding thật nên con số này không
+  dự báo RAM ở P5.3.
+- Sau phép đo, cả bốn container `healthy`, `OOMKilled=false`, `RestartCount=0`.
+  Chín số đếm vẫn đúng (23.139 Document, 1.700.484 Provision, 1.592.178
+  Version, 50.540 Event và đủ các cạnh); lượt MERGE không tạo trùng. Smoke test
+  đã được siết để thật sự assert node/vector đọc lại đúng và luôn dọn state;
+  Neo4j + Milvus đều PASS. Full suite: **268 passed**.
+- Report dẫn xuất: `data/derived/neo4j_resource_report.json`, report timing
+  loader cùng tên `.loader.json`, và `neo4j_resource_steady_report.json`.
+  Các file này không phải nguồn sự thật và không commit; số đo bền vững được
+  ghi tại [plan hạ tầng](neo4j-milvus-infra.md). D6/P3.2 hoàn thành, nhưng cần
+  tăng giới hạn để Neo4j có ít nhất 0,5 GiB headroom trước workload truy vấn
+  song song; phải đo lại khi Milvus có vector thật.

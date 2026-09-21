@@ -4,7 +4,9 @@ import json
 
 import pytest
 
-from load_neo4j import _batches, _version_rows, _write_batch, read_event_nodes
+from load_neo4j import (
+    _batches, _version_rows, _write_batch, _write_report, read_event_nodes,
+)
 from legal_crawler.temporal import make_version_id
 
 
@@ -144,3 +146,11 @@ def test_missing_graph_endpoint_fails_batch_with_actionable_error():
     rows = [{"id": "provision:a"}, {"id": "provision:b"}]
     with pytest.raises(ValueError, match=r"D2 version_of: matched 1/2 rows.*Transaction rolled back"):
         _write_batch(_Transaction(1), "Cypher", rows, "version_of")
+
+
+def test_timing_report_is_atomic_json(tmp_path):
+    path = tmp_path / "derived" / "load-report.json"
+    payload = {"total_seconds": 12.5, "counts": {"documents": 2}}
+    _write_report(path, payload)
+    assert json.loads(path.read_text(encoding="utf-8")) == payload
+    assert not path.with_name(path.name + ".tmp").exists()

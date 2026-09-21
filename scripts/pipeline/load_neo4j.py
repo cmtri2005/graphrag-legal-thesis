@@ -25,6 +25,7 @@ import time
 from collections import defaultdict
 from collections.abc import Iterable, Iterator
 from contextlib import closing
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -271,9 +272,18 @@ def _check_counts(session, expected: dict[str, int]) -> None:
             )
 
 
-def load_graph(session, data_dir: Path, index_path: Path, *, batch_size: int = 500) -> dict[str, int]:
+def load_graph(
+    session,
+    data_dir: Path,
+    index_path: Path,
+    *,
+    batch_size: int = 500,
+    stage_seconds: dict[str, float] | None = None,
+) -> dict[str, int]:
     if batch_size < 1:
         raise ValueError("batch_size must be at least 1")
+    timings = stage_seconds if stage_seconds is not None else {}
+    stage_started = time.monotonic()
     verify_constraints(session.run(SHOW_CONSTRAINTS).data())
     source_ids = _source_document_ids(data_dir)
     event_nodes = read_event_nodes(data_dir)
@@ -287,20 +297,30 @@ def load_graph(session, data_dir: Path, index_path: Path, *, batch_size: int = 5
                 f"index-only, {len(source_ids - index_ids)} raw-only; rebuild "
                 "temporal.sqlite with --with-subtrees before loading"
             )
+        timings["preflight"] = time.monotonic() - stage_started
 
         expected = {}
+        stage_started = time.monotonic()
         expected["documents"] = _load_stage(session, "documents", DOCUMENTS, _document_rows(db), batch_size)
+        timings["documents"] = time.monotonic() - stage_started
+        stage_started = time.monotonic()
         expected["provisions"] = _load_stage(session, "provisions", PROVISIONS, _provision_rows(db), batch_size)
+        timings["provisions"] = time.monotonic() - stage_started
+        stage_started = time.monotonic()
         expected["events"] = _load_stage(session, "events", EVENTS, event_nodes.values(), batch_size)
+        timings["events"] = time.monotonic() - stage_started
 
         causal_edges: list[dict[str, str]] = []
+        stage_started = time.monotonic()
         expected["versions"] = _load_stage(
             session, "versions", VERSIONS,
             _version_rows(data_dir / "derived/versions.jsonl", set(event_nodes), causal_edges),
             batch_size,
         )
+        timings["versions"] = time.monotonic() - stage_started
 
         expected["root_contains"] = expected["child_contains"] = 0
+        stage_started = time.monotonic()
         for batch in _batches(_containment_rows(db), batch_size):
             roots = [item for item in batch if item["parent_id"] is None]
             children = [item for item in batch if item["parent_id"] is not None]
@@ -319,15 +339,31 @@ def load_graph(session, data_dir: Path, index_path: Path, *, batch_size: int = 5
             f"  contains: {expected['root_contains']:,} document roots + "
             f"{expected['child_contains']:,} child provisions", flush=True
         )
+        timings["contains"] = time.monotonic() - stage_started
         expected["version_of"] = expected["versions"]
         if expected["root_contains"] + expected["child_contains"] != expected["provisions"]:
             raise ValueError("D2 CONTAINS edge count does not cover every provision")
         expected["created_by"] = sum(edge["role"] == "created" for edge in causal_edges)
         expected["ended_by"] = len(causal_edges) - expected["created_by"]
+        stage_started = time.monotonic()
         _load_stage(session, "caused_by", CAUSED_BY, causal_edges, batch_size)
+        timings["caused_by"] = time.monotonic() - stage_started
 
+    stage_started = time.monotonic()
     _check_counts(session, expected)
+    timings["verify_counts"] = time.monotonic() - stage_started
     return expected
+
+
+def _write_report(path: Path, payload: dict[str, Any]) -> None:
+    """Atomically publish timings only after every graph postcondition passes."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + ".tmp")
+    temporary.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    temporary.replace(path)
 
 
 def main() -> None:
@@ -336,6 +372,8 @@ def main() -> None:
     parser.add_argument("--index", type=Path, default=None)
     parser.add_argument("--batch-size", type=int, default=500)
     parser.add_argument("--database", default="neo4j")
+    parser.add_argument("--report", type=Path, default=None,
+                        help="write verified counts and per-stage timings as JSON")
     args = parser.parse_args()
 
     try:
@@ -346,14 +384,39 @@ def main() -> None:
     user = os.environ.get("NEO4J_USER", "neo4j")
     password = os.environ.get("NEO4J_PASSWORD", "changeme123")
     started = time.monotonic()
+    measured_at = datetime.now(timezone.utc).isoformat()
+    stage_seconds: dict[str, float] = {}
     with GraphDatabase.driver(uri, auth=(user, password)) as driver:
         driver.verify_connectivity()
         with driver.session(database=args.database) as session:
             counts = load_graph(
                 session, args.data, args.index or args.data / "temporal.sqlite",
                 batch_size=args.batch_size,
+                stage_seconds=stage_seconds,
             )
-    print(f"D2 graph verified in {time.monotonic() - started:.1f}s: {counts}")
+    total_seconds = time.monotonic() - started
+    if args.report is not None:
+        index_path = args.index or args.data / "temporal.sqlite"
+        _write_report(args.report, {
+            "schema_version": 1,
+            "check": "D2 idempotent full-corpus Neo4j load",
+            "measured_at": measured_at,
+            "database": args.database,
+            "batch_size": args.batch_size,
+            "total_seconds": total_seconds,
+            "stage_seconds": stage_seconds,
+            "counts": counts,
+            "input_bytes": {
+                "temporal_sqlite": index_path.stat().st_size,
+                "versions_jsonl": (args.data / "derived/versions.jsonl").stat().st_size,
+                "provision_events_jsonl": (
+                    args.data / "derived/provision_events.jsonl"
+                ).stat().st_size,
+                "event_log_jsonl": (args.data / "derived/event_log.jsonl").stat().st_size,
+            },
+        })
+        print(f"timing report: {args.report}")
+    print(f"D2 graph verified in {total_seconds:.1f}s: {counts}")
 
 
 if __name__ == "__main__":

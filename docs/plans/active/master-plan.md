@@ -1,6 +1,6 @@
 # Master Plan — Khóa luận Temporal-Aware KG RAG
 
-Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-18
+Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-21
 
 > **Nguồn sự thật về tiến độ dự án.** Timeline bám theo mục "Kế hoạch thực hiện"
 > trong `DeCuongKLTN_23521635_23521643.docx` (01/09/2026 – 01/02/2027).
@@ -8,7 +8,7 @@ Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-18
 
 ## Status
 
-Active. Hiện ở cuối Giai đoạn 1; Giai đoạn 2–3 đang đi trước kế hoạch.
+Active. Giai đoạn 2 hoàn thành; Giai đoạn 3 đang đi trước kế hoạch.
 
 ## Cách đọc và cập nhật file này
 
@@ -27,14 +27,14 @@ Active. Hiện ở cuối Giai đoạn 1; Giai đoạn 2–3 đang đi trước 
 |---|---|---|---|---:|---|
 | 1 | 01/09 – 14/09 | Hoàn thiện đề cương | 🟡 | 2/6 | Đến hạn hôm nay |
 | 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | ✅ | 12/12 | Backfill v2 xong, snapshot đóng băng trước M1 |
-| 3 | 06/10 – 26/10 | Xây dựng đồ thị tri thức (L0–L3) | 🟡 | 5/19 | Bắt đầu sớm; **đường găng** |
+| 3 | 06/10 – 26/10 | Xây dựng đồ thị tri thức (L0–L3) | 🟡 | 13/19 | Bắt đầu sớm; **đường găng** |
 | 4 | 27/10 – 16/11 | Bộ dữ liệu ViLexTime | ⬜ | 0/9 | — |
 | 5 | 17/11 – 30/11 | Cài đặt & đánh giá đường cơ sở | ⬜ | 0/14 | — |
 | 6 | 01/12 – 21/12 | Hệ thống đề xuất (L4–L5) | ⬜ | 0/7 | — |
 | 7 | 22/12 – 04/01 | Thực nghiệm & phân tích | ⬜ | 0/5 | — |
 | 8 | 05/01 – 11/01 | Viết bài báo khoa học | ⬜ | 0/3 | — |
 | 9 | 12/01 – 01/02 | Hoàn thiện khóa luận | ⬜ | 0/5 | — |
-| | | **Tổng** | | **19/80** | |
+| | | **Tổng** | | **27/80** | |
 
 ### Mốc kiểm tra
 
@@ -63,8 +63,8 @@ P3.1 hạ tầng Docker ─► P3.4 loader Neo4j ─► P3.9 lưu event ─► P
 Lõi logic L3 (`src/legal_crawler/temporal/`) và chuỗi phiên bản offline trên dữ
 liệu thật đã có; Gói C (C1–C6) của plan Phase 3 đã hoàn thành, gồm khoảng
 hiệu lực thực và test chuỗi thật. D1–D3 đã nạp full corpus và 13 loại cạnh
-văn bản lên Neo4j hai lượt với số đếm ổn định. Còn thiếu D4–D6 và kiểm chứng
-snapshot để đạt M2.
+văn bản lên Neo4j hai lượt với số đếm ổn định; D5–D6 đã kiểm parity Cypher và
+đo tải/RAM. D4 đang tạm hoãn; còn thiếu kiểm chứng snapshot P3.18 để đạt M2.
 
 ---
 
@@ -108,8 +108,8 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
-| P3.1 | `docker-compose` cho Neo4j và Milvus có giới hạn RAM; runbook bật/tắt | CMT | 🟡 | 18/09: 4 container healthy, smoke Neo4j/Milvus PASS; còn ghi bằng chứng vào runbook |
-| P3.2 | Đo RAM thực tế khi nạp đủ corpus | CMT | ⬜ | Số đo được ghi lại; chốt có phải tắt `legal-rag-api` hay không |
+| P3.1 | `docker-compose` cho Neo4j và Milvus có giới hạn RAM; runbook bật/tắt | CMT | ✅ | 21/09: 4 container healthy, smoke Neo4j/Milvus assert đọc/ghi PASS, runbook có start/stop/giữ volume và số đo D6 |
+| P3.2 | Đo RAM thực tế khi nạp đủ corpus | CMT | ✅ | D6: cold load 704,0s; full MERGE 573,9s; Neo4j peak 3.813,4 MiB/4 GiB, toàn stack 3,95 GiB; 0 OOM/restart. Milvus chưa có vector, đo lại ở P5.3. [Bằng chứng](phase-3-kg-l0-l3.md#d6--21092026) |
 
 ### 3B. L0–L1: cấu trúc và cạnh metadata
 
@@ -321,3 +321,4 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-19 | Phase 3 D2: hai lượt nạp full Neo4j khớp chín nhóm số đếm từ corpus, gồm 23.139 Document, 1.700.484 Provision, 1.592.178 Version, 50.540 LegalEvent; chuỗi thật A→B→C pass; 241 test pass. P3.4, P3.9, P3.15 ✅; D3–D6/P3.18 còn mở | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d2--19092026) |
 | 2026-09-19 | Phase 3 D3: 13 loại cạnh, 124.934 cạnh đủ hai Document nạp Neo4j hai lượt; 3.614 cạnh thiếu đích trong report (141 genealogy), 249 test pass. P3.5 ✅ theo phạm vi corpus hiện có; D4–D6/P3.18 còn mở | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d3--19092026) |
 | 2026-09-19 | Phase 3 D5: Cypher read model từ khoảng hiệu lực C4 đối chiếu `valid`/version ID/text với `SnapshotService`: 200/200 cặp trên 32 văn bản có cây (gồm ngày chuyển phiên bản, bãi bỏ cha/con); 257 test pass. D4 tạm bỏ qua, D6 và P3.18 vẫn mở | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d5--19092026) |
+| 2026-09-21 | Phase 3 D6: công cụ timing + Docker metrics; cold load 704,0s, full MERGE đo chi tiết 573,9s; Neo4j peak 3.813,4 MiB/4 GiB, toàn stack 3,95 GiB; 4 container healthy, 0 OOM/restart; 268 test pass. P3.1–P3.2 ✅; D4 tạm hoãn, P3.18 còn mở | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d6--21092026) |
