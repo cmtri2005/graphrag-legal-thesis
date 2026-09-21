@@ -11,7 +11,7 @@ Accepted
 `data/derived/vilextime_pool.jsonl` (9.331 ứng viên, 2.949 văn bản) là bảng ứng
 viên, chưa phải bộ hỏi đáp: nó không có trường `question`. Đợt audit
 `vilextime_sample.tsv` ngày 20/09 và đợt khảo sát tài liệu ngày 21/09
-(`reports/Schema bộ dữ liệu ViLexTime.md`) cùng chỉ vào một nhóm lỗi *hình
+(`docs/reports/2026-09-21-schema-vilextime.md`) cùng chỉ vào một nhóm lỗi *hình
 dạng*, không phải lỗi dữ liệu:
 
 - Một bản ghi gộp nhiều mốc `as_of` vào mảng `gold`, nên độ dài bản ghi đổi
@@ -231,5 +231,5 @@ Tradeoffs:
   ca trong 13 văn bản (Q3, D2).
 - Kiểm bản phát hành chính thức của TimeQA trước khi đóng băng v1: đây là prior
   art liên quan nhất và bản mirror trên HuggingFace có thể thiếu trường.
-- `reports/Schema bộ dữ liệu ViLexTime.md` giữ phần truy nguồn từng tên trường
+- `docs/reports/2026-09-21-schema-vilextime.md` giữ phần truy nguồn từng tên trường
   và các giới hạn của kết quả âm tính.
