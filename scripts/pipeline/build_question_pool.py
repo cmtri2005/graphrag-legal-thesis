@@ -124,7 +124,10 @@ def build_row(group: str, provision: dict, versions: list[dict], today: date,
         "provision_id": provision["id"],
         "level": provision["level"],
         "title": provision["title"],
-        "transition_on": versions[-1]["effective_from"] if len(versions) > 1 else None,
+        # T6 asks about the ending, so its transition is when the last version
+        # stopped; every other group's is when the last one opened.
+        "transition_on": (versions[-1]["effective_to"] if group == "T6"
+                          else versions[-1]["effective_from"] if len(versions) > 1 else None),
         "gold": gold,
         "versions": [
             {k: v[k] for k in ("id", "ordinal", "text", "effective_from", "effective_to")}

@@ -13,7 +13,8 @@ reason in `note`; the file is a worksheet, not an output of the pipeline.
 
 Columns after the two you fill in:
     group · doc_num · provision · link · transition_on · actor · as_of_N /
-    answer_N (one pair per date the question is asked at) · evidence
+    answer_N (one pair per date the question is asked at, as many pairs as the
+    longest chain in the sample needs) · evidence
 
 Writes `data/derived/vilextime_sample.tsv`.
 
@@ -32,7 +33,6 @@ import sqlite3
 from pathlib import Path
 
 SEED = 20260920
-MAX_DATES = 3
 
 
 def cell(value: str | None, limit: int = 4000) -> str:
@@ -85,8 +85,11 @@ def main() -> None:
                                  key=lambda r: r["id"]))
 
     out_path = data / "derived/vilextime_sample.tsv"
+    # A T3 chain can have four versions and so four dates; a fixed three columns
+    # silently dropped the last gold answer, so the sheet follows the data.
+    max_dates = max(len(row["gold"]) for row in picked)
     header = ["correct", "note", "group", "doc_num", "provision", "link", "transition_on", "actor"]
-    for n in range(1, MAX_DATES + 1):
+    for n in range(1, max_dates + 1):
         header += [f"as_of_{n}", f"answer_{n}"]
     header += ["evidence", "candidate_id"]
 
@@ -97,7 +100,7 @@ def main() -> None:
             line = ["", "", row["group"], cell(number, 40), cell(path_of(row["provision_id"]), 120),
                     cell(url, 120), cell(row["transition_on"], 12),
                     cell(", ".join(row["actor_numbers"]), 60)]
-            for n in range(MAX_DATES):
+            for n in range(max_dates):
                 gold = row["gold"][n] if n < len(row["gold"]) else None
                 if gold is None:
                     line += ["", ""]

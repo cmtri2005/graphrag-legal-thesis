@@ -115,16 +115,17 @@ Không có gói nào khác bắt đầu đúng trước khi T1–T6 có định 
 |---|---|---|
 | B1 | ✅ 20/09 `scripts/pipeline/build_question_pool.py`: đọc `versions.jsonl`, lọc `benchmark_eligible` (P4.6), sinh bộ ba (trước, sau, mốc chuyển) cho mọi nút ≥ 2 phiên bản | `data/derived/vilextime_pool.jsonl` 9.331 dòng; chạy hai lần cho sha256 giống hệt; đọc theo luồng nên không tốn RAM |
 | B2 | ✅ 20/09 (trừ T5) Phân tầng ứng viên theo T1–T6 bằng tiêu chí đo được | T1 1.435.086 · T2 10.194 · T3 331 · T4 5.390 · T6 2.218. Mỗi nhóm vẫn ≥ quota; T3 mỏng nhất, chỉ 1,7× |
-| B3 | Loại ứng viên rác: text quá ngắn, khác biệt chỉ ở dấu câu hoặc khoảng trắng, nút không có tiêu đề | 🟡 20/09: `scripts/check/sample_question_pool.py` xuất `data/derived/vilextime_sample.tsv`, 30 ứng viên mỗi nhóm kèm link vbpl và câu chỉ dẫn. **Chờ CMT kiểm tay 150 dòng** rồi mới chốt tiêu chí loại |
+| B3 | Loại ứng viên rác: text quá ngắn, khác biệt chỉ ở dấu câu hoặc khoảng trắng, nút không có tiêu đề | 🟡 21/09: worksheet dựng lại sau audit (18 cột, `transition_on` của T6 đã có, evidence không còn mask `«Q»`). Lỗi **cấu trúc** đã tự động hoá thành `flags` (ADR 0003 §9): T1 có 97/2.500 dòng (3,9%). Tiêu chí **độ dài** vẫn **chờ CMT kiểm tay 150 dòng** — đo được: ngưỡng 80 ký tự cắt 31,2% mà phần lớn là điều khoản ngắn hợp lệ |
 | B4 | ✅ 20/09 (phần nhóm) Chống rò rỉ: mỗi nút chỉ vào một nhóm | Kiểm tự động: 0 nút trùng trên 9.331 dòng. Nhóm hiếm được ưu tiên trước (T3 → T6 → T4 → T2 → T1). Phần chia dev/test vẫn ở Gói E |
+| B5 | ✅ 21/09 Chốt schema phát hành và sinh nhóm T1 | [ADR 0003](../../decisions/0003-schema-bo-du-lieu-vilextime.md) Accepted. `scripts/pipeline/build_vilextime.py` → `data/derived/vilextime/T1.jsonl`: **2.500 câu** từ 2.500 điều khoản trong 1.890 văn bản, một bản ghi cho mỗi cặp (điều khoản, `as_of`). 2.500/2.500 có `as_of` nằm trong `[valid_from, valid_to)`. `split` còn null (Gói E). Bản ghi mang `document_title` (2.500/2.500) và `lead_in` — câu dẫn của nút cha tại đúng `as_of` (2.308/2.500, 92,3%) — vì 47,1% điều khoản là mục trong danh sách, vô nghĩa nếu tách khỏi câu dẫn. 8 test trong `tests/test_vilextime.py` |
 
 ### Gói C — Diễn đạt thành câu hỏi (NMT) · P4.4
 
 | Bước | Việc | Xong khi |
 |---|---|---|
-| C1 | Prompt sinh câu hỏi từ bộ ba, cấm model tự thêm số liệu hoặc mốc thời gian không có trong bộ ba | Prompt lưu trong repo; ghi model và tham số vào mỗi dòng |
-| C2 | Kiểm tra tự động sau sinh: mọi số và mốc trong câu hỏi phải có trong bộ ba gốc | Câu vi phạm bị loại tự động, có đếm |
-| C3 | Cặp tương phản T2 dùng chung một câu hỏi, chỉ khác mốc t | Mỗi cặp có cùng `question_id`, khác `as_of` |
+| C1 | ✅ 21/09 Prompt sinh câu hỏi từ bộ ba, cấm model tự thêm số liệu hoặc mốc thời gian không có trong bộ ba | `prompts/vilextime/base.md` + một file mỗi nhóm (T1, T2, T3, T4, T6). `question_source` ghi provider/model/temperature/prompt_sha trên từng dòng. Client đa nhà cung cấp `src/legal_crawler/llm.py` (Groq trước), không thêm dependency |
+| C2 | ✅ 21/09 Kiểm tra tự động sau sinh: mọi số và mốc trong câu hỏi phải có trong bộ ba gốc | `generate_questions.validate()`, 9 mã lý do (ADR 0003 §10). Chặt hơn plan: thêm `copies_the_answer` (trùng 8-gram với đáp án), `cites_a_provision`, `conversational_filler`. Câu bị loại ghi kèm nguyên văn, không thử lại ngầm. 9 test |
+| C3 | ✅ 21/09 (phần cơ chế) Cặp tương phản T2 dùng chung một câu hỏi, chỉ khác mốc t | Sinh theo **lineage**, không theo dòng: một câu cho mọi `as_of`. `lineage_id` giữ vai trò `question_id`. Mốc thời gian không nằm trong câu hỏi, nên một câu phục vụ được mọi mốc. Chờ T2 tồn tại mới chạy thật được |
 
 ### Gói D — Đủ quota và kiểm định (CMT chủ trì, NMT phối hợp) · P4.5, P4.7, P4.8
 
@@ -239,8 +240,8 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
 ## Progress
 
 - [ ] Gói A — chốt Q1, Q2 và hướng dẫn gán nhãn (P4.1). A1 xong 20/09; còn A2 (hướng dẫn gán nhãn), A3 (lược đồ dòng dữ liệu)
-- [ ] Gói B — sinh ứng viên tự động (P4.2, P4.3, P4.6). B1, B2, B4 xong 20/09; còn B3 (loại ứng viên rác, kiểm tay 30 mẫu mỗi nhóm)
-- [ ] Gói C — diễn đạt thành câu hỏi (P4.4)
+- [ ] Gói B — sinh ứng viên tự động (P4.2, P4.3, P4.6). B1, B2, B4 xong 20/09; B5 (schema + T1) xong 21/09; còn B3 (tiêu chí độ dài, chờ kiểm tay) và T2–T6 (chờ chốt quota đếm theo câu hay theo điều khoản — xem Follow-Up của ADR 0003)
+- [ ] Gói C — diễn đạt thành câu hỏi (P4.4). C1, C2, C3 (cơ chế) xong 21/09; **chưa chạy thật**: cần API key và quyết định gửi text luật ra dịch vụ ngoài
 - [ ] Gói D — đủ quota, cố vấn luật, Cohen κ (P4.5, P4.7, P4.8)
 - [ ] Gói E — chia dev/test (P4.9)
 

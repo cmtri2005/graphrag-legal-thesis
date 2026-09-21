@@ -55,3 +55,25 @@ def test_a_chain_whose_amendment_changed_nothing_cannot_be_a_contrast_pair():
     answers = [(g["in_force"], g["text"]) for g in row["gold"]]
     assert len(set(answers)) == 1  # the gate in main() drops exactly this shape
     assert in_force_at(unchanged, date(2023, 12, 31))["ordinal"] == 1
+
+
+def test_T6_records_the_date_the_provision_stopped():
+    """T6's transition is the ending, not a later version's start: 984 of the
+    1,000 T6 candidates have a single version, so `versions[-1].effective_from`
+    left the column empty and forced downstream to read it off `as_of_2`."""
+    from build_question_pool import build_row
+
+    provision = {"id": "provision:x", "document_id": "document:d", "level": "Clause", "title": "Khoản 1"}
+    ended = [_v(1, "2015-01-01", "2020-01-01", ended_by="event:x")]
+    row = build_row("T6", provision, ended, date(2026, 9, 20), {})
+
+    assert row["transition_on"] == "2020-01-01"
+    assert row["gold"][-1]["as_of"] == row["transition_on"]
+    assert row["gold"][-1]["in_force"] is False
+
+    # An amended-then-repealed Khoản still reports the ending, not the amendment.
+    amended = [_v(1, "2015-01-01", "2018-01-01"), _v(2, "2018-01-01", "2020-01-01", ended_by="event:x")]
+    assert build_row("T6", provision, amended, date(2026, 9, 20), {})["transition_on"] == "2020-01-01"
+    # Every other group keeps the date its last version opened.
+    assert build_row("T2", provision, amended, date(2026, 9, 20), {})["transition_on"] == "2018-01-01"
+    assert build_row("T1", provision, [_v(1, "2015-01-01")], date(2026, 9, 20), {})["transition_on"] is None

@@ -25,6 +25,7 @@ may be papered over — each is a silent wrong answer if it is:
 """
 from __future__ import annotations
 
+import re
 from collections.abc import Iterator
 from datetime import date
 from pathlib import Path
@@ -44,10 +45,20 @@ from .temporal import (
 )
 
 DOCUMENT_URL = "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID="
+# 9 documents carry a spreadsheet's text marker inside `docNum` itself
+# ("'42/2022/TT-BCT", "24/2025/TT-BCT'", "22'/2025/QĐ-UBND"). A legal number
+# never contains an apostrophe, and `provision_ops.normalize_number` already
+# drops them when matching, so the displayed number must not keep them either.
+_QUOTE_NOISE = re.compile(r"['\u2019]")
 
 
 def _as_date(value: str | None) -> date | None:
     return date.fromisoformat(value[:10]) if value else None
+
+
+def document_number(raw_number: object) -> str:
+    """The portal's `docNum` as a legal number, without its quoting artefacts."""
+    return _QUOTE_NOISE.sub("", str(raw_number or "")).strip()
 
 
 class IngestReport(dict):
@@ -69,7 +80,7 @@ def build_document(doc_id: str, raw: dict, report: IngestReport) -> LegalDocumen
         report.bump("documents_without_effective_from")
     return LegalDocument(
         id=make_document_id(doc_id),
-        number=str(raw.get("docNum") or ""),
+        number=document_number(raw.get("docNum")),
         title=str(raw.get("title") or ""),
         issued_on=_as_date(raw.get("issueDate")),
         effective_from=effective_from,

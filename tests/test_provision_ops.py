@@ -237,3 +237,36 @@ def test_parts_of_an_appendix_are_not_the_bodys_provisions():
     # An attached regulation's articles are in the tree: "ban hành kèm theo" alone is fine.
     assert summary(["Sửa đổi khoản 1 Điều 3 Quy chế ban hành kèm theo Quyết định số 12/2010/QĐ-TTg."]) == [
         (Op.AMEND, "12/2010/qd/ttg", [(("Article", "3"), ("Clause", "1"))], "explicit")]
+
+
+def test_the_displayed_number_loses_the_portal_s_quoting_artefacts():
+    """9 documents carry a spreadsheet's text marker inside `docNum` itself."""
+    from legal_crawler.ingest import document_number
+
+    assert document_number("'42/2022/TT-BCT") == "42/2022/TT-BCT"
+    assert document_number("24/2025/TT-BCT'") == "24/2025/TT-BCT"
+    assert document_number("22'/2025/QĐ-UBND") == "22/2025/QĐ-UBND"
+    assert document_number("22’/2025/QĐ-UBND") == "22/2025/QĐ-UBND"
+    assert document_number(None) == ""
+    # Nothing else moves, and matching still agrees with display.
+    assert document_number("47/2000/QĐ-BGD&ĐT") == "47/2000/QĐ-BGD&ĐT"
+    assert normalize_number(document_number("'42/2022/TT-BCT")) == normalize_number("42/2022/TT-BCT")
+
+
+def test_a_phrase_edit_keeps_its_quoted_payload_in_the_evidence():
+    """`extract_mentions` masks “…” as «Q»; for a phrase edit that is the payload."""
+    from extract_provision_events import evidence_of
+
+    body = ["Sửa đổi Thông tư số 36/2013/TT-BGTVT như sau:",
+            "Thay thế cụm từ “được tổ chức hoa tiêu nơi thực tập xác nhận” tại các Điều 11, "
+            "16, 18 bằng cụm từ “được tổ chức hoa tiêu nơi thực tập sát hạch xác nhận”."]
+    [mention] = extract_mentions(body)
+    assert "«Q»" in mention.evidence  # the mask is still what keys the event id
+    restored = evidence_of(mention, body)
+    assert "«Q»" not in restored
+    assert "thực tập sát hạch" in restored
+
+    class _Plain:
+        evidence, paragraph = "Bãi bỏ Điều 5.", 0
+
+    assert evidence_of(_Plain(), ["Bãi bỏ Điều 5."]) == "Bãi bỏ Điều 5."

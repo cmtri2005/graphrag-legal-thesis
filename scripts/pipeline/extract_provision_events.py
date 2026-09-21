@@ -41,9 +41,26 @@ from legal_crawler.extraction import TargetReference, TargetResolver, TargetScop
 from legal_crawler.extraction.provision_ops import extract_mentions, normalize_number, title_document
 from legal_crawler.extraction.wording import apply_phrase, fit, parse_items, phrase_edits, wording_blocks
 from legal_crawler.index import TemporalIndex
+from legal_crawler.ingest import document_number
 from legal_crawler.provisions.text import parse_paragraphs
 from legal_crawler.storage.documents import DocumentStore
 from legal_crawler.temporal.ids import make_document_id, make_event_id, make_provision_id
+
+
+def evidence_of(mention, paragraphs: list[str], limit: int = 400) -> str:
+    """The sentence this event was read from, with its quoted runs intact.
+
+    `extract_mentions` masks every curly-quoted run as «Q» so that quoted new
+    wording is never read as an instruction. For a phrase edit the quoted runs
+    *are* the payload ("thay thế cụm từ A bằng cụm từ B"), so the masked
+    sentence proves nothing and the original paragraph stands as evidence.
+    The masked text still keys the event id, which must not move.
+    """
+    text = mention.evidence or ""
+    if "«Q»" not in text:
+        return text
+    return " ".join(paragraphs[mention.paragraph].split())[:limit]
+
 
 # Operations that end the version the portal calls expired (see measure_provision_events.py).
 ENDING = {"repeal", "replace", "amend", "correct", "suspend"}
@@ -160,13 +177,13 @@ def main() -> None:
                 candidates = narrowed or candidates
                 base = {
                     "actor_id": actor_id,
-                    "actor_number": raw.get("docNum"),
+                    "actor_number": document_number(raw.get("docNum")),
                     "operation": mention.operation.value,
                     "method": mention.method,
                     "document_number": mention.document_number,
                     "candidate_document_ids": candidates,
                     "effective_on": effective_on,
-                    "evidence": mention.evidence,
+                    "evidence": evidence_of(mention, paragraphs),
                 }
                 references = (
                     [TargetReference(f"{actor_id}:{n}", mention.evidence or "?", TargetScope.DOCUMENT,
