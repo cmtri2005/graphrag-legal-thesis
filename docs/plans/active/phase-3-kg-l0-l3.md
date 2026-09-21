@@ -6,9 +6,10 @@ Date: 2026-09-18
 
 Active. Kế hoạch chi tiết cho mục 4 của [master plan](master-plan.md); trạng
 thái từng việc vẫn cập nhật ở master plan. C1–C3 đã hoàn thành ngày 18/09;
-C4–C6 và D1–D3, D5 hoàn thành ngày 19/09; D6 hoàn thành ngày 21/09. Gói C và
-phần đã chốt của Gói D xong; D4 vẫn tạm hoãn theo yêu cầu. Phase 3 tổng thể
-chưa hoàn thành.
+C4–C6 và D1–D3, D5 hoàn thành ngày 19/09; D6 hoàn thành ngày 21/09. E1 đã có
+công cụ và phép đo đầu ngày 21/09 nhưng chưa phủ đủ 356 VBHN do thiếu body
+nguồn. Gói C và phần đã chốt của Gói D xong; D4 vẫn tạm hoãn theo yêu cầu.
+Gói E còn E1 coverage và E2–E3; Phase 3 tổng thể chưa hoàn thành.
 
 ## Outcome
 
@@ -117,7 +118,7 @@ seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 
 | Bước | Việc |
 |---|---|
-| E1 | Kiểm tra tự động bằng văn bản hợp nhất: với mỗi văn bản hợp nhất (356), so `snapshot(u, ngày hợp nhất)` với text hợp nhất của cùng Điều/Khoản. Kết quả là tỷ lệ khớp trên hàng nghìn nút, không chỉ 100 |
+| E1 🟡 | Kiểm tra tự động bằng văn bản hợp nhất: kiểm kê 356 VBHN, so `snapshot(u, ngày hợp nhất)` với text hợp nhất của cùng Điều/Khoản nếu đủ dữ liệu; công bố cả phạm vi so được và tỷ lệ khớp | Công cụ và báo cáo chạy được: 51 VBHN đủ điều kiện, 5.762/7.201 cặp text khớp chính xác (80,02%). Chưa đạt phạm vi 356 vì 299 VBHN thiếu body hiển thị |
 | E2 | 100 truy vấn đối chiếu tay, phân tầng: 30 nút có ≥ 2 phiên bản · 20 nút bị bãi bỏ · 15 nút có cha bị bãi bỏ · 15 truy vấn đúng ngày chuyển phiên bản (t−1, t) · 20 nút không có event |
 | E3 | Bảng kết quả gồm truy vấn, kết quả hệ thống, đáp án, người kiểm. Lỗi thì truy ngược về event và gói việc gây ra nó |
 
@@ -206,6 +207,11 @@ backfill đích sau này mà không làm sai bản sắc văn bản.
   - [x] D5 — snapshot Cypher đối chiếu 200 cặp với bản offline
   - [x] D6 — đo RAM và thời gian nạp full corpus
 - [ ] Gói E — kiểm chứng snapshot (P3.18)
+  - [ ] E1 — công cụ đối chiếu và báo cáo đã chạy; còn thiếu body ở 299 VBHN
+    - [x] Triển khai phép so tự động và report từng Điều/Khoản
+    - [ ] Phủ đủ nguồn VBHN theo phạm vi 356 văn bản của plan
+  - [ ] E2 — 100 truy vấn kiểm tay phân tầng
+  - [ ] E3 — bảng đáp án, người kiểm và truy nguyên lỗi
 - [ ] Gói F — dẫn chiếu chéo (P3.19)
 - [ ] Gói G — P3.6, P3.12 theo quyết định
 
@@ -502,3 +508,41 @@ Kiểm tra chung của repository: `python -m pytest -q`.
   ghi tại [plan hạ tầng](neo4j-milvus-infra.md). D6/P3.2 hoàn thành, nhưng cần
   tăng giới hạn để Neo4j có ít nhất 0,5 GiB headroom trước workload truy vấn
   song song; phải đo lại khi Milvus có vector thật.
+
+### E1 — 21/09/2026
+
+- `scripts/check/compare_consolidated_snapshots.py` quét toàn bộ 874 cạnh
+  `CONSOLIDATES` từ snapshot v2, kiểm kê **356 VBHN**. Với nhiều target, chỉ
+  chọn văn bản gốc khi số văn bản đó là target được dẫn đầu tiên trong phần
+  mở đầu VBHN; không chọn theo thứ tự cạnh hoặc đoán bằng ngày. Ngày truy vấn
+  là `issueDate` của VBHN, không tự bù ngày thiếu. Đọc `SnapshotService` từ
+  SQLite, `versions.jsonl` và event nguồn bằng cùng loader offline đã dùng ở
+  D5; không sửa corpus hay Neo4j.
+- Bộ căn chỉnh chỉ dùng **Điều có số duy nhất** và **Khoản có số duy nhất dưới
+  đúng Điều**. Không join UUID giữa hai văn bản, không fuzzy match để chọn
+  target; bỏ các khóa trùng, dừng trước phụ lục/chữ ký, tách Điểm ra khỏi text
+  Khoản. So text sau Unicode NFC và gộp whitespace; khác dấu câu/từ ngữ vẫn
+  là sai khác. Report có nguồn, thời điểm, ID, phiên bản, SHA-256 và đoạn đầu
+  hai phía; có checksum của `edges.jsonl`, `versions.jsonl` và event nguồn.
+- Kết quả thật: **51/356 VBHN** đủ điều kiện đối chiếu; **299** body không có
+  chữ hiển thị, **2** không có marker Điều, **4** văn bản gốc không có cây.
+  Trong 51 VBHN này có **7.688 đơn vị nguồn** Điều/Khoản có khóa duy nhất;
+  **20 khóa nguồn trùng** bị loại trước khi tạo cặp. **7.201 cặp có text ở cả
+  hai phía**, trong đó **5.762 khớp chính xác = 80,02%**; 1.393 khác text và
+  46 chỉ khác phần tiêu đề Điều. Ngoài mẫu số text: 406 đơn vị không có khóa
+  tương ứng trong cây gốc, 42 marker bãi bỏ khớp trạng thái, 36 marker bãi bỏ
+  trái trạng thái snapshot và 3 snapshot không có text hiệu lực.
+- Trong 1.393 sai khác text, 1.260 đang ở version 1, 130 ở version 2 và 3 ở
+  version 3; đây là **hàng đợi điều tra**, chưa được quy tất cả cho lỗi trích
+  xuất event vì cũng có khác biệt định dạng, nguồn và căn chỉnh. Tỷ lệ 80,02%
+  chỉ có mẫu số là 7.201 cặp đủ điều kiện, **không phải độ chính xác pháp lý
+  toàn bộ corpus** và không thay thế 100 ca kiểm tay E2. D5 đã đối chiếu
+  Neo4j–offline 200/200 trên cùng read model, nhưng không phải gold VBHN.
+- Chạy lại: `python scripts/check/compare_consolidated_snapshots.py`; báo cáo
+  dẫn xuất `data/derived/consolidated_snapshot_report.json` (không commit).
+  Test có ca khớp, sai khác, body rỗng, marker/chú thích, khóa trùng và chọn
+  văn bản gốc; full suite **275 passed**. Báo cáo chạy hai lượt có cùng SHA-256
+  `f6c352879a42c2016965cfc9fe1ed24d71b0011c2f5a3fc8e59e9fc2c7b38ec8`.
+  **Chưa chốt E1 theo phạm vi 356 VBHN**: muốn tăng coverage phải phục hồi
+  body nguồn và chạy lại, không điền đoán từ graph. P3.18/M2 vẫn mở đến khi
+  E2–E3 có đáp án kiểm tay và đạt Q5.
