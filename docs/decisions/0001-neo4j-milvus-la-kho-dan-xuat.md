@@ -65,6 +65,17 @@ Tradeoffs:
 - `index.py`, `ingest.py`, `build_store.py` chỉ là cầu nối tạm. Chúng bị thay
   khi loader Neo4j chạy được; `target_resolver` phải đổi nguồn đọc.
 
+## Amendments
+
+- **2026-09-20.** Quyết định 3 (cách A) đã cài đặt: `scripts/pipeline/build_versions.py`
+  ghi `effective_from`/`effective_to` cho từng phiên bản vào
+  `data/derived/versions.jsonl`, khớp `ValidityService` 1.005/1.005 cặp kiểm tra.
+- **2026-09-20.** Mục Consequences viết `index.py`, `ingest.py`, `build_store.py`
+  "bị thay khi loader Neo4j chạy được". Nhóm hoãn việc này: SQLite ở lại làm index
+  dựng offline (pipeline L2/L3 chạy trong vài phút, không cần Docker), Neo4j chỉ
+  phục vụ truy vấn và trình diễn. Migrate sau, không phải trước M2. Quyết định
+  vẫn giữ nguyên, chỉ lùi thời điểm.
+
 ## Follow-Up
 
 - Master plan: `docs/plans/active/master-plan.md`, các việc P3.1–P3.6, P3.9,

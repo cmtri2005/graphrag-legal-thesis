@@ -5,6 +5,10 @@ which is what keeps the crawler free of interpretation and the domain free of
 the portal's quirks. It is one-way and idempotent: drop the SQLite file and
 run it again.
 
+It is also where the portal's ids become domain ids (`temporal/ids.py`): every
+document, provision and version leaves here with its prefixed id, so nothing
+downstream ever sees, or has to translate, a raw portal id.
+
 Three facts from `docs/audit_dataset.md` shape what it does, and none of them
 may be papered over — each is a silent wrong answer if it is:
 
@@ -95,7 +99,11 @@ def walk_tree(nodes: list[dict], document_id: str) -> Iterator[Provision]:
             provision_id = make_provision_id(node["id"])
             yield Provision(
                 id=provision_id,
+<<<<<<< HEAD
                 document_id=domain_document_id,
+=======
+                document_id=document_id,
+>>>>>>> origin/feature/audit-data
                 level=ProvisionLevel(node["level"]),
                 title=node.get("title") or "",
                 parent_id=parent_id,
@@ -110,17 +118,26 @@ def walk_tree(nodes: list[dict], document_id: str) -> Iterator[Provision]:
 def build_versions(
     provisions: list[Provision], texts: dict[str, dict], document: LegalDocument
 ) -> list[ProvisionVersion]:
-    """One version per provision that has text.
+    """One version per provision that has text. `texts` is keyed by portal node id.
 
     The first local version starts with the document but stays open. Document
     and ancestor bounds are applied by ``ValidityService``; real local endings
     appear only when L2 events are materialized.
     """
+<<<<<<< HEAD
     # The local version stays open. Document and ancestor bounds are applied by
     # ValidityService (formula (3)); copying document.effective_to here would
     # make later amendment events fail with "no open version".
     validity = TemporalInterval(document.effective_from) if document.effective_from else None
     normalized_texts = {make_provision_id(key): value for key, value in texts.items()}
+=======
+    validity = (
+        TemporalInterval(document.effective_from, document.effective_to)
+        if document.effective_from
+        else None
+    )
+    texts = {make_provision_id(node_id): node for node_id, node in texts.items()}
+>>>>>>> origin/feature/audit-data
     versions = []
     for provision in provisions:
         text = (normalized_texts.get(provision.id) or {}).get("text")
@@ -143,7 +160,11 @@ def subtree_provisions(record: dict, document_id: str) -> list[Provision]:
     return [
         Provision(
             id=make_provision_id(node["id"]),
+<<<<<<< HEAD
             document_id=make_document_id(document_id),
+=======
+            document_id=document_id,
+>>>>>>> origin/feature/audit-data
             level=ProvisionLevel(node["level"]),
             title=node["title"],
             parent_id=make_provision_id(node["parent_id"]),
@@ -180,7 +201,7 @@ def ingest(
         if doc_id not in tree_ids:
             report.bump("documents_without_tree")
             continue
-        provisions = list(walk_tree(source.load("trees", doc_id), doc_id))
+        provisions = list(walk_tree(source.load("trees", doc_id), document.id))
         if not provisions:
             report.bump("documents_without_structure")
             continue
@@ -188,8 +209,12 @@ def ingest(
         report.bump("provisions", len(provisions))
         derived_record = None
         if doc_id in subtree_ids:
+<<<<<<< HEAD
             derived_record = source.load("derived/subtrees", doc_id)
             derived = subtree_provisions(derived_record, doc_id)
+=======
+            derived = subtree_provisions(source.load("derived/subtrees", doc_id), document.id)
+>>>>>>> origin/feature/audit-data
             store.put_provisions(derived)
             report.bump("subtree_provisions", len(derived))
             provisions.extend(derived)

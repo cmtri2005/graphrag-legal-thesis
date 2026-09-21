@@ -29,12 +29,25 @@ Hiện trạng sau D2 (19/09):
 
 Những điều đã biết mà plan phải xử lý:
 
+<<<<<<< HEAD
 - **Đã xử lý C1:** `ingest.py`, SQLite và event store dùng chung ID
   `document:`/`provision:`/`version:`; kiểm tra full index không còn ID thô.
 - **Đã xử lý C2:** phiên bản 1 để mở; hiệu lực văn bản vẫn đi qua công thức (3)
   trong `temporal/validity.py`.
 - **Đã xử lý C2:** 424.409 Khoản/Điểm backfill T5 có phiên bản trong index.
 - **Áp thử 16.804 event** (`scripts/check/apply_provision_events.py`): 550 lỗi,
+=======
+- **ID (đã xử lý 20/09, Q1).** Trước đó `ingest.py` dùng UUID của cổng cho nút
+  và `"<uuid>:1"` cho phiên bản, còn `EventApplier` dùng `make_version_id`.
+  Nay `ingest.py` là nơi duy nhất đổi ID cổng thành ID miền theo
+  `temporal/ids.py`; index, event và `expiry_targets.jsonl` đều mang ID miền.
+- **Phiên bản 1 phải để mở.** Nếu đóng tại `effTo` của văn bản, mọi event trên
+  văn bản đã hết hiệu lực sẽ lỗi "no open version". Hiệu lực của văn bản đã đi
+  qua công thức (3) (`temporal/validity.py`).
+- **Nút Khoản/Điểm tách từ thân văn bản (backfill T5, 424.409 nút)** chưa có
+  phiên bản trong index. Chúng phải có phiên bản, vì event nhắm vào chúng.
+- **Áp thử 16.804 event** (`scripts/pipeline/build_versions.py`): 550 lỗi,
+>>>>>>> origin/feature/audit-data
   gồm 269 sai thứ tự ngày, 170 nút không có text, 111 nút đã bị đóng trước đó.
 - **Đáp án kiểm tra tự động:** 874 cạnh "Văn bản được hợp nhất" (CONSOLIDATES):
   356 văn bản hợp nhất, tất cả có trong `data/raw`, hợp nhất 621 văn bản gốc.
@@ -82,24 +95,33 @@ Xong khi: hai dịch vụ healthy, có runbook, có số RAM baseline.
 |---|---|---|
 | B1 | Tách câu hai thao tác ("Bãi bỏ Điều 6 và sửa đổi Điều 15") thành hai câu chỉ dẫn | Test cho hai lỗi của mẫu 20260923 |
 | B2 | BỔ SUNG tạo nút mới ("Bổ sung khoản 5a vào sau khoản 5 Điều 51 như sau: “5a. …”") thành `ProvisionInsertion`: nút cha, nút đứng trước, ID tất định (quyết định Q1) | Số event BỔ SUNG áp được > 0; có precision trên mẫu riêng |
-| B3 | Sửa đổi có thay đổi cấu trúc (khối thêm hoặc bớt Khoản/Điểm): tách thành cập nhật text, chèn nút mới, và bãi bỏ các con bị bỏ (quyết định Q3) | Nhóm `structure_mismatch` (4.457) giảm; không tăng lỗi trên mẫu mới |
-| B4 | Thay cụm từ: `new_text = old.replace(A, B)` khi A có trong text cũ | Phần còn lại vẫn `needs_review` |
+| B3 | Sửa đổi có thay đổi cấu trúc (khối thêm hoặc bớt Khoản/Điểm): tách thành cập nhật text, chèn nút mới, và bãi bỏ các con bị bỏ (quyết định Q3). **Trước khi ghi bãi bỏ, phải dò xem cùng đợt sửa có dời nội dung đó sang đơn vị khác không; ca nghi di dời thì `needs_review`, không bãi bỏ thẳng** | Nhóm `structure_mismatch` (4.447) giảm; không tăng lỗi trên mẫu mới; có mẫu kiểm tay riêng cho ca di dời |
+| B4 | ✅ 20/09 Thay cụm từ: `new_text = old.replace(A, B)` khi A có trong text cũ | `missing_resulting_text` 10.816 → 6.837; áp được 16.233 → 18.840; T3 321 → 407. Ca không tìm thấy cụm từ, hoặc xóa xong còn dấu câu thừa, thành `phrase_not_found` (1.060). **Chưa kiểm tay precision — điều kiện nhận chưa đạt** |
 | B5 | (Tùy chọn, làm nếu dư thời gian) lời văn không nằm trong ngoặc kép | — |
 | B6 | Đo lại: đủ 200 mẫu kiểm tay trên các seed mới; NMT kiểm chéo 50 mẫu, tính Cohen κ | P3.13 ✅ |
 
-Mỗi lần sửa: chạy lại pipeline, `apply_provision_events.py`, rồi kiểm trên một
+Mỗi lần sửa: chạy lại pipeline, `build_versions.py`, rồi kiểm trên một
 seed chưa dùng (cách làm của [plan L2](l2-event-store.md)).
 
 ### Gói C — Dựng chuỗi phiên bản offline (NMT, CMT hỗ trợ) · P3.15, P3.16, P3.17
 
 | Bước | Việc | Xong khi |
 |---|---|---|
+<<<<<<< HEAD
 | C1 ✅ | Thống nhất ID theo `temporal/ids.py` cho `ingest`, applier và loader (Q1) | Full SQLite: 0 Document/Provision/Version dùng ID thô; test |
 | C2 ✅ | `scripts/pipeline/build_versions.py`: nâng `apply_provision_events.py` lên toàn corpus. Phiên bản 1 để mở; nút T5 có phiên bản; áp event theo `(effective_on, actor)` | `versions.jsonl` 1.592.178 dòng; `event_log.jsonl` 50.700 dòng |
 | C3 ✅ | Xử lý xung đột (Q2): event sai thứ tự ngày, hoặc tác động lên nút đã đóng, thì không áp và ghi vào hàng đợi review, không sắp xếp lại ngầm | Mọi event có outcome; 550 event đã chấp nhận nhưng không áp được đều có lý do |
 | C4 ✅ | P3.16: tính khoảng hiệu lực thực của mỗi phiên bản (giao với mọi tổ tiên, công thức (3)) và ghi vào `versions.jsonl` | 6.108 cặp (nút, t) trên dữ liệu thật khớp `ValidityService` |
 | C5 ✅ | P3.17: chỉ còn `ValidityService` trả lời "có hiệu lực tại t"; bỏ `index.version_at` | Không còn định nghĩa/lời gọi API cũ; 225 test pass, kể cả local-open nhưng document-expired |
 | C6 ✅ | Test chuỗi A → B → C trên dữ liệu thật: một nút bị sửa 2 lần, một Điều bị bãi bỏ kéo theo cả cây con | 2 ca snapshot v2 pass; 2 lượt full corpus có SHA-256 của cả hai artifact giống hệt |
+=======
+| C1 | Thống nhất ID theo `temporal/ids.py` cho `ingest`, applier và loader (Q1) | Một hàm sinh ID cho mỗi loại nút; test |
+| C2 | `scripts/pipeline/build_versions.py`: nâng `build_versions.py` lên toàn corpus. Phiên bản 1 để mở; nút T5 có phiên bản; áp event theo `(effective_on, actor)` | `data/derived/versions.jsonl` và `event_log.jsonl` (mỗi event: đã áp, hoặc bị từ chối kèm lý do) |
+| C3 | ✅ 20/09 Xử lý xung đột (Q2): event sai thứ tự ngày, hoặc tác động lên nút đã đóng, thì không áp và ghi vào hàng đợi review, không sắp xếp lại ngầm | `data/review/provision_events.jsonl`: 550 dòng, mỗi dòng đủ ngữ cảnh để duyệt. Verdict của LLM hay người không bị ghi đè khi chạy lại (có test) |
+| C4 | ✅ 20/09 P3.16: tính khoảng hiệu lực thực của mỗi phiên bản (giao với mọi tổ tiên, công thức (3)) và ghi vào `versions.jsonl` | `build_versions.py --verify` khớp `ValidityService` 1.005/1.005 cặp, hỏi ở đúng các mốc biên |
+| C5 | ✅ 20/09 P3.17: chỉ còn `ValidityService` trả lời "có hiệu lực tại t"; bỏ `index.version_at` | grep không còn đường tính thứ hai; hai test chuyển sang `VersionChain` |
+| C6 | Test chuỗi A → B → C trên dữ liệu thật: một nút bị sửa 2 lần, một Điều bị bãi bỏ kéo theo cả cây con | Test pass; chạy hai lần cho ra file giống hệt (so sha256) |
+>>>>>>> origin/feature/audit-data
 
 ### Gói D — Loader Neo4j (CMT) · P3.4, P3.5, P3.9, P3.2
 
@@ -161,12 +183,46 @@ nhóm xác nhận trước khi phần phụ thuộc bắt đầu.
 
 | # | Câu hỏi | Đề xuất | Chặn |
 |---|---|---|---|
+<<<<<<< HEAD
 | Q1 | Một sơ đồ ID cho mọi nút và phiên bản | **Đã chốt:** theo `temporal/ids.py` (`provision:<uuid>`, `version:<provision>:<n>`). Nút chèn mới: băm từ (id event, nhãn) | C1, B2, D2 |
 | Q2 | Event sai thứ tự ngày, hoặc tác động lên nút đã đóng | **Đã chốt:** không áp; ghi `event_log` kèm lý do; đưa vào hàng đợi review | C3 |
 | Q3 | "Sửa đổi khoản 3 như sau" mà khối mới không còn điểm c: điểm c có hết hiệu lực không? | Có, cùng ngày, vì cả đơn vị được thay. Hỏi cố vấn luật để xác nhận | B3 |
 | Q4 | 1.626 QPPL có text nhưng không có cây (master plan §12) | Cho M2: chỉ nạp Document, không có Provision. Xét lại khi thiết kế ViLexTime | D4 |
+=======
+| Q1 | Một sơ đồ ID cho mọi nút và phiên bản | **Chốt 20/09 (CMT): prefix đầy đủ theo `temporal/ids.py`, áp ở `ingest.py`.** Theo `temporal/ids.py` (`provision:<uuid>`, `version:<provision>:<n>`). Nút chèn mới: băm từ (id event, nhãn). Làm lúc Neo4j còn rỗng thì không tốn chi phí chuyển đổi | C1, B2, D2 |
+| Q2 | Event sai thứ tự ngày, hoặc tác động lên nút đã đóng | **Chốt 20/09 (CMT): không áp; ghi `event_log` kèm lý do; đưa vào hàng đợi review.** Duyệt bằng LLM trước, người double-check và điều chỉnh sau | ~~C3~~ |
+| Q3 | "Sửa đổi khoản 3 như sau" mà khối mới không còn điểm c: điểm c có hết hiệu lực không? | **Chốt 20/09 — cố vấn luật xác nhận: CÓ.** Khối sau "như sau:" là kỹ thuật thay toàn bộ đơn vị được nêu tên, không phải cộng dồn; điểm không được lặp lại thì hết hiệu lực cùng ngày. **Kèm cảnh báo:** nội dung có thể bị *di dời* sang đơn vị khác trong cùng đợt sửa, khi đó là đổi vị trí chứ không phải biến mất | B3 |
+| Q4 | 1.626 QPPL có text nhưng không có cây (master plan §12) | **Chốt 20/09 (CMT):** cho M2 chỉ nạp Document, không có Provision. Xét lại khi thiết kế ViLexTime | D4 |
+>>>>>>> origin/feature/audit-data
 | Q5 | Ngưỡng đạt của P3.18 | ≥ 95/100, giống ngưỡng đã dùng cho backfill T5 | E2 |
-| Q6 | Giữ index SQLite cho pipeline offline hay chuyển hết sang Neo4j (ADR 0001 ghi là chuyển) | Giữ SQLite làm index dựng offline; Neo4j chỉ phục vụ truy vấn. Nếu chọn phương án này thì sửa ADR 0001 | Gói G |
+| Q6 | Giữ index SQLite cho pipeline offline hay chuyển hết sang Neo4j (ADR 0001 ghi là chuyển) | **Chốt 20/09 (CMT): giữ SQLite, hoãn migrate sang sau.** Neo4j chỉ phục vụ truy vấn. Đã ghi chú vào ADR 0001; P3.6 hoãn | ~~Gói G~~ |
+
+## Decisions đã chốt
+
+- 2026-09-20 (cố vấn luật, Q3): khối lời văn sau "như sau:" **thay toàn bộ** đơn vị
+  được nêu tên. Điểm cũ không xuất hiện lại trong khối thì hết hiệu lực cùng ngày, và
+  đây không phải "văn bản im lặng nên giữ nguyên". Căn cứ: kỹ thuật trình bày văn bản
+  (Nghị định 34/2016/NĐ-CP và các văn bản kế thừa). Mở khóa 4.447 ca
+  `structure_mismatch` cho B3. **Ràng buộc kèm theo:** nội dung bị bỏ đôi khi được dời
+  sang đơn vị khác trong cùng đợt sửa (đánh số lại, gộp vào điều khác); đó là đổi vị
+  trí, không phải hết hiệu lực, nên B3 phải dò trước khi ghi bãi bỏ.
+- 2026-09-20 (CMT, Q2): 550 event bị từ chối đi vào
+  `data/review/provision_events.jsonl`. **Quy trình duyệt: LLM chạy trước, người
+  double-check và điều chỉnh sau.** Mỗi dòng mang sẵn lời văn hiện hành, tiêu đề
+  nút và câu chỉ dẫn, nên duyệt được mà không cần mở corpus. `build_versions.py`
+  chỉ sở hữu dòng `method: auto_rejected`; dòng đã có verdict (`llm_reviewed`,
+  `human_reviewed`) được đọc lại nguyên vẹn, theo đúng khuôn của
+  `verify_temporal_candidates.py`.
+- 2026-09-20 (CMT, Q6): giữ index SQLite cho pipeline offline, Neo4j chỉ phục vụ
+  truy vấn. Không phải đảo quyết định của ADR 0001, chỉ là hoãn; P3.6 lùi lại.
+- 2026-09-20 (CMT): **nút không có phiên bản là trong suốt khi lan truyền hiệu
+  lực.** `ValidityService` trước đó bắt nút cha phải có text thì con mới có
+  hiệu lực, nên 72.049 nút có text (66.008 trong VB đủ điều kiện benchmark,
+  trải trên 1.640 VB) không bao giờ trả về text ở bất kỳ mốc nào: 65.443 do
+  Chương/Phần/Mục vốn không có text, 6.606 do Điều/Khoản cha thiếu text. Nay
+  chỉ tổ tiên bị bãi bỏ, có khoảng trống, hoặc văn bản hết hiệu lực mới chặn;
+  bản thân nút thiếu text vẫn trả lời `NO_VERSION_HELD`. Căn cứ: nguyên tắc
+  §11 "không coi thiếu dữ liệu là dữ liệu nói khác", nay thành D12.
 
 Quyết định D3 ngày 19/09: với cạnh có đích không nằm trong `data/raw`, **không
 tạo `Document` giả**. Chỉ nạp khi cả hai đầu có trong corpus; ghi từng cạnh
@@ -187,6 +243,7 @@ backfill đích sau này mà không làm sai bản sắc văn bản.
 
 ## Progress
 
+<<<<<<< HEAD
 - [ ] Chốt Q1–Q6 (đã chốt Q1–Q2; còn Q3–Q6)
 - [ ] Gói A — hạ tầng (P3.1, P3.2)
 - [ ] Gói B — L2 đủ bốn thao tác, 200 mẫu, κ (P3.11, P3.13)
@@ -197,6 +254,12 @@ backfill đích sau này mà không làm sai bản sắc văn bản.
   - [x] C4 — tính khoảng hiệu lực thực
   - [x] C5 — hợp nhất đường tính hiệu lực
   - [x] C6 — test chuỗi thật A → B → C và bãi bỏ cây con
+=======
+- [ ] Chốt Q1–Q6 (Q1 xong 20/09; Q2–Q6 còn)
+- [ ] Gói A — hạ tầng (P3.1, P3.2)
+- [ ] Gói B — L2 đủ bốn thao tác, 200 mẫu, κ (P3.11, P3.13). B4 xong 20/09 (chờ kiểm tay); còn B1, B2, B3, B6
+- [ ] Gói C — chuỗi phiên bản offline (P3.15–P3.17). C1–C5 xong 20/09; còn C6 (C2: `build_versions.py` toàn corpus, 4 phút 23 giây: 1.592.178 phiên bản, 15.634 nút có ≥ 2 phiên bản, 50.623 event đều có dòng trong `event_log.jsonl` = 16.233 áp + 550 từ chối kèm lý do + 33.840 `needs_review`; chạy hai lần cho sha256 giống hệt; Q2 vẫn là đề xuất, script chưa áp và ghi log, chưa có hàng đợi review = C3). C1: index, `expiry_targets.jsonl` và `provision_events.jsonl` dựng lại với ID miền, ID lồng nhau không lặp tiền tố (`version:<uuid>:1`). Kết quả giống bản cũ (expiry 55.019 dòng; recall 62,2%; cùng ba lớp lỗi khi áp thử). Event: mỗi ID một event, 77 câu lặp y hệt ghi một lần, `document_number` vào dấu vân tay ID → 50.623 event, áp được 16.233/16.783
+>>>>>>> origin/feature/audit-data
 - [ ] Gói D — loader Neo4j (P3.4, P3.5, P3.9)
   - [x] D1 — schema node ID và hợp đồng cạnh cấu trúc
   - [x] D2 — loader corpus + version + event, chạy lại không trùng

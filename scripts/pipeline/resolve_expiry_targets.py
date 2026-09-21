@@ -70,9 +70,15 @@ def main() -> None:
     distinct: dict[tuple[str, str], str] = {}
     out = args.out or args.data / "expiry_targets.jsonl"
     with out.open("w", encoding="utf-8") as f:
+<<<<<<< HEAD
         for doc_id in sorted(source.ids("history")):
             domain_document_id = make_document_id(doc_id)
             entries = source.load("history", doc_id).get("history") or []
+=======
+        for portal_id in sorted(source.ids("history")):
+            doc_id = make_document_id(portal_id)
+            entries = source.load("history", portal_id).get("history") or []
+>>>>>>> origin/feature/audit-data
             for entry in entries:
                 for text in entry.get("expiryProvisions") or []:
                     text = text.strip()

@@ -68,3 +68,41 @@ def test_a_leaf_takes_the_whole_item_as_its_text():
     leaf = node("k2", L.CLAUSE, "Khoản 2", "d4")
     assert fit(items, {L.ARTICLE: "4", L.CLAUSE: "2"}, leaf, ()) == {"k2": "2. Điều kiện: a) Có chứng chỉ; b) Kinh nghiệm."}
     assert [i.label for i in parse_items(("Điều 11", "Phạm vi", "1. Một"))] == ["11"]
+
+
+def test_phrase_edit_reads_a_replacement_either_side_of_the_locators():
+    from legal_crawler.extraction.wording import phrase_edits
+
+    assert phrase_edits('Thay thế cụm từ "Cục Con nuôi" bằng cụm từ "Bộ Tư pháp" tại khoản 3 Điều 30.') == [
+        ("Cục Con nuôi", "Bộ Tư pháp")
+    ]
+    assert phrase_edits('Thay thế cụm từ “A” tại khoản 1 Điều 2, khoản 4 Điều 4 thành cụm từ “B”.') == [("A", "B")]
+    assert phrase_edits('Bãi bỏ cụm từ "thi hoặc" tại khoản 4 Điều 4.') == [("thi hoặc", "")]
+
+
+def test_phrase_edit_refuses_what_it_cannot_read_without_guessing():
+    from legal_crawler.extraction.wording import phrase_edits
+
+    assert phrase_edits("Sửa đổi, bổ sung khoản 2 Điều 17 như sau:") == []
+    # three quoted runs: which one replaces which is not determined
+    assert phrase_edits('Thay thế cụm từ "A" bằng cụm từ "B" và cụm từ "C".') == []
+    assert phrase_edits('Bãi bỏ cụm từ "A" và cụm từ "B".') == []
+
+
+def test_apply_phrase_demands_the_phrase_be_present_verbatim():
+    from legal_crawler.extraction.wording import apply_phrase
+
+    assert apply_phrase("Do Cục Con nuôi quyết định.", [("Cục Con nuôi", "Bộ Tư pháp")]) == "Do Bộ Tư pháp quyết định."
+    assert apply_phrase("Do Bộ Tư pháp quyết định.", [("Cục Con nuôi", "Bộ Tư pháp")]) is None
+    # a deletion that would leave "Cấm  kiểm tra." is refused, see the test below
+    assert apply_phrase("Cấm thi hoặc kiểm tra.", [("thi hoặc", "")]) is None
+
+
+def test_apply_phrase_refuses_a_deletion_that_strands_punctuation():
+    from legal_crawler.extraction.wording import apply_phrase
+
+    # "… cấp tỉnh, <phrase>; tổ chức …" would be left as "cấp tỉnh, ; tổ chức"
+    assert apply_phrase("Đại hội cấp tỉnh, cấp huyện; tổ chức hoạt động.",
+                        [("cấp huyện", "")]) is None
+    # a clean deletion still goes through
+    assert apply_phrase("Cấm thi hoặc kiểm tra.", [("thi hoặc ", "")]) == "Cấm kiểm tra."

@@ -4,6 +4,7 @@ import pytest
 
 from legal_crawler.ingest import build_document, build_versions, walk_tree, IngestReport
 from legal_crawler.index import TemporalIndex
+<<<<<<< HEAD
 from legal_crawler.temporal import (
     InvalidityReason,
     LegalDocument,
@@ -14,6 +15,14 @@ from legal_crawler.temporal import (
     make_document_id,
     make_provision_id,
 )
+=======
+from legal_crawler.temporal.version_chain import UndatedVersionError, VersionChain
+from legal_crawler.temporal import (
+    LegalDocument, Provision, ProvisionLevel, make_document_id, make_provision_id, make_version_id,
+)
+
+P = make_provision_id
+>>>>>>> origin/feature/audit-data
 
 
 def _tree():
@@ -34,6 +43,7 @@ def _tree():
 
 def test_walk_tree_yields_parents_before_children():
     items = list(walk_tree(_tree(), "doc1"))
+<<<<<<< HEAD
     assert [p.id for p in items] == [
         "provision:ch1",
         "provision:d1",
@@ -45,18 +55,37 @@ def test_walk_tree_yields_parents_before_children():
         "provision:d1",
     ]
     assert {p.document_id for p in items} == {"document:doc1"}
+=======
+    assert [p.id for p in items] == [P("ch1"), P("d1"), P("k1")]
+    assert [p.parent_id for p in items] == [None, P("ch1"), P("d1")]
+
+
+def test_ids_leave_ingest_in_the_domain_scheme():
+    document = build_document("42", {"docNum": "n", "title": "t", "effFrom": "2020-01-01"}, IngestReport())
+    provisions = list(walk_tree(_tree(), document.id))
+    versions = build_versions(provisions, {"d1": {"text": "x"}}, document)
+    assert document.id == make_document_id("42")
+    assert versions[0].id == make_version_id(P("d1"), 1)
+    assert {p.document_id for p in provisions} == {document.id}
+>>>>>>> origin/feature/audit-data
 
 
 def test_descendants_use_materialized_path():
     store = TemporalIndex()
     store.put_documents([LegalDocument("document:doc1", "01/2020", "Luật A")])
     store.put_provisions(walk_tree(_tree(), "doc1"))
+<<<<<<< HEAD
     assert [p.id for p in store.descendants_of("provision:ch1")] == [
         "provision:d1",
         "provision:k1",
     ]
     assert [p.id for p in store.descendants_of("provision:k1")] == []
     assert len(store.document_order("document:doc1")) == 3
+=======
+    assert [p.id for p in store.descendants_of(P("ch1"))] == [P("d1"), P("k1")]
+    assert [p.id for p in store.descendants_of(P("k1"))] == []
+    assert len(store.document_order("doc1")) == 3
+>>>>>>> origin/feature/audit-data
 
 
 def test_contradictory_effective_to_is_dropped_not_the_document():
@@ -83,17 +112,29 @@ def test_undated_document_yields_versions_no_query_can_return():
     store.put_documents([document])
     store.put_provisions(provisions)
     store.put_versions(versions)
+<<<<<<< HEAD
     stored = store.versions_of("provision:d1")
     assert len(stored) == 1
     assert stored[0].validity is None
 
 
 def test_initial_version_stays_locally_open_but_document_expiry_is_enforced():
+=======
+    assert len(store.versions_of(P("d1"))) == 1  # stored, and readable as history
+
+    # …but no point-in-time path can return it: a chain refuses an undated version.
+    with pytest.raises(UndatedVersionError):
+        VersionChain(P("d1"), versions)
+
+
+def test_document_window_reaches_the_version_as_a_half_open_interval():
+>>>>>>> origin/feature/audit-data
     report = IngestReport()
     document = build_document(
         "x", {"docNum": "n", "title": "t", "effFrom": "2020-01-01", "effTo": "2025-01-01"},
         report)
     provisions = list(walk_tree(_tree(), "x"))
+<<<<<<< HEAD
     store = TemporalIndex()
     store.put_documents([document])
     store.put_provisions(provisions)
@@ -128,6 +169,14 @@ def test_initial_version_stays_locally_open_but_document_expiry_is_enforced():
 
 def test_sqlite_index_does_not_expose_an_incomplete_point_in_time_answer():
     assert not hasattr(TemporalIndex, "version_at")
+=======
+    chain = VersionChain(P("k1"), build_versions(provisions, {"k1": {"text": "x"}}, document))
+
+    assert chain.at(date(2019, 12, 31)) is None
+    assert chain.at(date(2020, 1, 1)) is not None
+    assert chain.at(date(2024, 12, 31)) is not None
+    assert chain.at(date(2025, 1, 1)) is None
+>>>>>>> origin/feature/audit-data
 
 
 def test_order_comes_from_the_walk_not_the_overflowing_portal_counter():
@@ -142,6 +191,7 @@ def test_derived_subtree_nodes_resolve_under_their_article():
     from legal_crawler.temporal import Provision, ProvisionLevel
 
     index = TemporalIndex(":memory:")
+<<<<<<< HEAD
     index.put_provisions([
         Provision(
             make_provision_id("a1"),
@@ -152,6 +202,9 @@ def test_derived_subtree_nodes_resolve_under_their_article():
             0,
         )
     ])
+=======
+    index.put_provisions([Provision(P("a1"), "D", ProvisionLevel.ARTICLE, "Điều 1", None, 0)])
+>>>>>>> origin/feature/audit-data
     index.put_provisions(subtree_provisions(
         {"nodes": [
             {"id": "a1#k1", "parent_id": "a1", "level": "Clause", "title": "Khoản 1"},
@@ -159,7 +212,11 @@ def test_derived_subtree_nodes_resolve_under_their_article():
         ]},
         "D",
     ))
+<<<<<<< HEAD
     assert [p.id for p in index.descendants_of(make_provision_id("a1"))] == [
         make_provision_id("a1#k1"),
         make_provision_id("a1#k1#a"),
     ]
+=======
+    assert [p.id for p in index.descendants_of(P("a1"))] == [P("a1#k1"), P("a1#k1#a")]
+>>>>>>> origin/feature/audit-data

@@ -163,3 +163,29 @@ def test_validity_defensively_detects_a_cycle_from_corrupted_storage():
     assert not result.valid
     assert result.reason is InvalidityReason.STRUCTURE_CYCLE
     assert result.invalid_ancestor_id == "point"
+
+
+def test_a_heading_without_text_does_not_invalidate_what_it_contains():
+    """Chương/Mục carry no words of their own, and 58,669 Điều sit under one."""
+    state = make_tree_state()
+    bare = TemporalState()
+    bare.add_document(state.document("doc"))
+    bare.add_provision(state.provision("chapter"))  # a chapter, no version at all
+    bare.add_provision(state.provision("article"))
+    bare.add_version(state.chain("article").versions[0])
+    validity = ValidityService(bare)
+
+    assert validity.is_valid("article", date(2024, 1, 1))
+    # the heading itself still reports that we hold no text for it
+    assert validity.check("chapter", date(2024, 1, 1)).reason is (
+        InvalidityReason.NO_VERSION_HELD
+    )
+
+
+def test_a_repealed_ancestor_still_invalidates_even_though_missing_text_does_not():
+    state = make_tree_state()
+    legal_event = repeal(state, "chapter")
+    result = ValidityService(state).check("article", date(2024, 1, 1))
+
+    assert result.reason is InvalidityReason.PARENT_INVALID
+    assert result.caused_by_event_id == legal_event.id
