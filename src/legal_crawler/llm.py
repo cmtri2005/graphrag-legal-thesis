@@ -24,6 +24,7 @@ import os
 import random
 import time
 from dataclasses import dataclass
+from pathlib import Path
 
 import requests
 
@@ -38,6 +39,32 @@ PROVIDERS: dict[str, tuple[str, str, str]] = {
                "GEMINI_API_KEY", "GEMINI_MODEL"),
 }
 _RETRIABLE = (408, 409, 425, 429, 500, 502, 503, 504)
+_ENV_FILE = Path(__file__).resolve().parents[2] / ".env"
+
+
+def _load_env_file() -> None:
+    """Read `.env` for keys the environment does not already set.
+
+    The repo already keeps secrets there for docker-compose and git already
+    ignores it, so it is where someone puts an API key. A real environment
+    variable always wins, and a missing or unreadable file is not an error —
+    this is a convenience, never a requirement.
+    """
+    try:
+        lines = _ENV_FILE.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return
+    for line in lines:
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        name, _, value = line.partition("=")
+        name = name.strip()
+        if name and name not in os.environ:
+            os.environ[name] = value.strip().strip("\"'")
+
+
+_load_env_file()
 
 
 class LLMError(RuntimeError):
