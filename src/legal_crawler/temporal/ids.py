@@ -47,6 +47,22 @@ def _embedded(domain_id: object, prefix: str, name: str) -> str:
     return value[len(prefix):] if value.startswith(prefix) else _escaped(value, name)
 
 
+def _domain_id(value: object, *, prefix: str, name: str) -> str:
+    """Return one canonical domain ID without applying its prefix twice.
+
+    Pipeline boundaries receive a mixture of opaque source IDs and domain IDs:
+    raw files use the former while derived stores use the latter.  Keeping the
+    constructor idempotent lets every boundary normalize defensively without
+    turning ``document:123`` into ``document:document%3A123``.
+    """
+    normalized = _required(value, name)
+    if normalized.startswith(prefix):
+        if not normalized.removeprefix(prefix):
+            raise ValueError(f"{name} must contain an identifier after {prefix}")
+        return normalized
+    return f"{prefix}{_escaped(normalized, name)}"
+
+
 def _enum_value(value: Enum | str, name: str) -> str:
     raw = value.value if isinstance(value, Enum) else value
     return _required(raw, name)
@@ -72,12 +88,20 @@ def _digest(payload: dict[str, object]) -> str:
 
 def make_document_id(source_document_id: str) -> str:
     """ID for one source document, accepting both numeric and UUID source IDs."""
-    return f"document:{_escaped(source_document_id, 'source_document_id')}"
+    return _domain_id(
+        source_document_id,
+        prefix="document:",
+        name="source_document_id",
+    )
 
 
 def make_provision_id(tree_node_id: str) -> str:
     """ID for a stable provision identity backed by a source tree-node ID."""
-    return f"provision:{_escaped(tree_node_id, 'tree_node_id')}"
+    return _domain_id(
+        tree_node_id,
+        prefix="provision:",
+        name="tree_node_id",
+    )
 
 
 def make_version_id(provision_id: str, ordinal: int) -> str:
@@ -137,4 +161,3 @@ def make_edge_id(
         "valid_from": valid_from.isoformat() if valid_from else None,
     }
     return f"edge:{_digest(payload)}"
-

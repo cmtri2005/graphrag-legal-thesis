@@ -112,7 +112,8 @@ for doc_id, text, vf, vt in db.execute(query):
 multi = [g for g in groups.values() if len({d for d, _, _ in g}) >= 2]
 
 
-def valid(vf: str | None, vt: str | None, at: str) -> bool | None:
+def flat_local_interval_match(vf: str | None, vt: str | None, at: str) -> bool | None:
+    """Counterfactual flat-index baseline, not legal point-in-time validity."""
     if not vf:
         return None
     return vf <= at and (vt is None or at < vt)
@@ -124,7 +125,7 @@ for at in AS_OF:
     iso = at.isoformat()
     conflicting, versions, invalid, with_vbhn = 0, 0, 0, 0
     for g in multi:
-        states = [valid(vf, vt, iso) for _, vf, vt in g]
+        states = [flat_local_interval_match(vf, vt, iso) for _, vf, vt in g]
         dated = [s for s in states if s is not None]
         if True in dated and False in dated:
             conflicting += 1

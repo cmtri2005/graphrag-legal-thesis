@@ -21,6 +21,11 @@ def test_source_ids_are_stable_and_delimiter_safe():
     assert make_provision_id("node:article/6") == "provision:node%3Aarticle%2F6"
 
 
+def test_domain_id_normalization_is_idempotent():
+    assert make_document_id(make_document_id("7804")) == "document:7804"
+    assert make_provision_id(make_provision_id("article-6")) == "provision:article-6"
+
+
 def test_version_id_is_deterministic_and_validates_ordinal():
     provision_id = make_provision_id("article-6")
     assert make_version_id(provision_id, 2) == make_version_id(provision_id, 2)
@@ -107,4 +112,3 @@ def test_edge_id_includes_relation_and_validity_start():
 def test_empty_required_identifier_is_rejected(factory, args):
     with pytest.raises(ValueError, match="must not be empty"):
         factory(*args)
-

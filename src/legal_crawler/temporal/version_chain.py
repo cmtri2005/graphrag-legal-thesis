@@ -1,8 +1,9 @@
-"""In-memory version-chain invariants and point-in-time lookup.
+"""In-memory invariants and local point-in-time lookup for one version chain.
 
 This module owns the temporal rules for versions of one stable provision.  It
 does not know where versions are stored and does not apply legal events; those
 concerns are handled by repository adapters and the event applier respectively.
+Document and ancestor validity belong to ``ValidityService``.
 """
 from __future__ import annotations
 
@@ -114,12 +115,15 @@ class VersionChain:
     def _sort(self) -> None:
         self._versions.sort(key=lambda item: (item.validity.start, item.ordinal, item.id))
 
-    def at(self, query_date: date) -> ProvisionVersion | None:
-        """Return the unique version valid at ``query_date``, if one exists."""
+    def local_at(self, query_date: date) -> ProvisionVersion | None:
+        """Return the local textual version, without document/ancestor bounds.
+
+        Only ``ValidityService`` can decide point-in-time legal validity.
+        """
         for version in self._versions:
             if version.validity.start > query_date:
                 break
-            if version.is_valid_at(query_date):
+            if version.is_locally_valid_at(query_date):
                 return version
         return None
 

@@ -11,3 +11,4 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts" / "pipeline"))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts" / "review"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts" / "check"))

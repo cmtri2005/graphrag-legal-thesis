@@ -58,7 +58,7 @@ def test_chain_sorts_input_and_resolves_a_b_c_fixture():
 
     assert [version.ordinal for version in chain.versions] == [1, 2, 3]
     for query in raw["queries"]:
-        result = chain.at(date.fromisoformat(query["at"]))
+        result = chain.local_at(date.fromisoformat(query["at"]))
         actual = result.ordinal if result else None
         assert actual == query["expected_ordinal"]
 
@@ -105,7 +105,7 @@ def test_overlapping_versions_are_rejected_but_gaps_are_allowed():
         chain.add(make_version("article-1", 2, date(2021, 1, 1)))
 
     assert chain.add(make_version("article-1", 2, date(2023, 1, 1)))
-    assert chain.at(date(2022, 6, 1)) is None
+    assert chain.local_at(date(2022, 6, 1)) is None
 
 
 def test_version_for_another_provision_is_rejected():
@@ -123,8 +123,8 @@ def test_close_current_preserves_frozen_version_and_boundary_semantics():
     assert current.validity.end is None
     assert closed.validity.end == date(2024, 1, 1)
     assert chain.current() is None
-    assert chain.at(date(2023, 12, 31)) == closed
-    assert chain.at(date(2024, 1, 1)) is None
+    assert chain.local_at(date(2023, 12, 31)) == closed
+    assert chain.local_at(date(2024, 1, 1)) is None
 
 
 def test_close_requires_an_open_version_and_later_date():

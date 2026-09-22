@@ -19,11 +19,19 @@ def check_neo4j() -> None:
 
     password = os.environ.get("NEO4J_PASSWORD", "changeme123")
     driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", password))
-    with driver.session() as session:
-        session.run("MERGE (n:SmokeTest {id: 1}) SET n.ok = true")
-        count = session.run("MATCH (n:SmokeTest) RETURN count(n) AS c").single()["c"]
-        session.run("MATCH (n:SmokeTest) DELETE n")
-    driver.close()
+    try:
+        with driver.session() as session:
+            try:
+                session.run("MERGE (n:SmokeTest {id: 1}) SET n.ok = true").consume()
+                count = session.run(
+                    "MATCH (n:SmokeTest {id: 1, ok: true}) RETURN count(n) AS c"
+                ).single()["c"]
+                if count != 1:
+                    raise RuntimeError(f"expected one smoke node, found {count}")
+            finally:
+                session.run("MATCH (n:SmokeTest {id: 1}) DELETE n").consume()
+    finally:
+        driver.close()
     print(f"[PASS] Neo4j: wrote and read back a node (count was {count})")
 
 
@@ -31,10 +39,19 @@ def check_milvus() -> None:
     from pymilvus import MilvusClient
 
     client = MilvusClient(uri="http://localhost:19530")
-    client.create_collection(collection_name="smoke_test", dimension=4)
-    client.insert(collection_name="smoke_test", data=[{"id": 1, "vector": [0.1, 0.2, 0.3, 0.4]}])
-    result = client.query(collection_name="smoke_test", filter="id == 1", output_fields=["id"])
-    client.drop_collection("smoke_test")
+    collection = "smoke_test"
+    if client.has_collection(collection):
+        client.drop_collection(collection)
+    try:
+        client.create_collection(collection_name=collection, dimension=4)
+        client.insert(collection_name=collection, data=[{"id": 1, "vector": [0.1, 0.2, 0.3, 0.4]}])
+        client.flush(collection_name=collection)
+        result = client.query(collection_name=collection, filter="id == 1", output_fields=["id"])
+        if not any(row.get("id") == 1 for row in result):
+            raise RuntimeError(f"inserted id=1 but query returned {result!r}")
+    finally:
+        if client.has_collection(collection):
+            client.drop_collection(collection)
     print(f"[PASS] Milvus: wrote and queried back a vector ({result})")
 
 

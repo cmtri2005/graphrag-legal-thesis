@@ -76,7 +76,6 @@ def main() -> None:
     store = DocumentStore(data)
     index = TemporalIndex(args.index or data / "temporal.sqlite")
     resolver = TargetResolver(index)
-
     by_number: dict[str, list[str]] = collections.defaultdict(list)
     for doc in index.documents():
         if doc.number:
@@ -103,7 +102,10 @@ def main() -> None:
     for line in (data / "expiry_targets.jsonl").read_text(encoding="utf-8").splitlines():
         row = json.loads(line)
         if row.get("code") == "resolved_exact":
-            gold.update((row["doc_id"], pid) for pid in row.get("provision_ids", []))
+            gold.update(
+                (make_document_id(row["doc_id"]), make_provision_id(pid))
+                for pid in row.get("provision_ids", [])
+            )
     tree_cache: dict[str, dict] = {}
     text_cache: dict[str, dict[str, str]] = {}
     subtree_of = {make_document_id(i): i for i in store.ids("derived/subtrees")}

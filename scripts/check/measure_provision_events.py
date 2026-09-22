@@ -34,7 +34,7 @@ import random
 from pathlib import Path
 
 from legal_crawler.index import TemporalIndex
-from legal_crawler.temporal import make_document_id
+from legal_crawler.temporal import make_document_id, make_provision_id
 
 # 20260918–20 and 20260922 drew the samples the error classes were found on; 20260921
 # measured v4 (56/60, all resolved events). From 20260923 section 3 samples only the
@@ -70,8 +70,9 @@ def main() -> None:
         row = json.loads(line)
         if row.get("code") == "resolved_exact":
             for pid in row.get("provision_ids", []):
-                gold.add((row["doc_id"], pid))
-                gold_status[(row["doc_id"], pid)].add(row.get("status"))
+                pair = (make_document_id(row["doc_id"]), make_provision_id(pid))
+                gold.add(pair)
+                gold_status[pair].add(row.get("status"))
 
     covering: dict[tuple[str, str], set[str]] = collections.defaultdict(set)
     covering_ops: dict[tuple[str, str], set[str]] = collections.defaultdict(set)

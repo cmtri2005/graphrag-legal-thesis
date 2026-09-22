@@ -91,7 +91,7 @@ class ValidityService:
             )
 
         chain = self._state.chain(provision_id)
-        version = chain.at(at) if chain else None
+        version = chain.local_at(at) if chain else None
         # A node we hold no text for says nothing about its children. Chương and
         # Mục are headings that carry no words of their own, and an Điều whose
         # text the corpus lacks is missing data, not data to the contrary

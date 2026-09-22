@@ -1,93 +1,200 @@
+import hashlib
+import json
 from datetime import date
 
-from build_versions import build_document_versions, effective_intervals
+from build_versions import build_version_files
 from legal_crawler.index import TemporalIndex
-from legal_crawler.ingest import build_versions
+from legal_crawler.storage.documents import DocumentStore
 from legal_crawler.temporal import (
-    EventApplier, LegalDocument, Provision, ProvisionLevel, make_provision_id as P,
+    LegalDocument,
+    Provision,
+    ProvisionLevel,
+    ProvisionVersion,
+    TemporalInterval,
+    make_provision_id,
+    make_version_id,
 )
 
 
-def _index(effective_from: date | None) -> TemporalIndex:
-    index = TemporalIndex()
-    target = LegalDocument("T", "01/2020", "Luật", effective_from=effective_from)
-    actor = LegalDocument("A", "02/2024", "Nghị định", effective_from=date(2024, 1, 1))
-    index.put_documents([target, actor])
-    provisions = [Provision(P("d1"), "T", ProvisionLevel.ARTICLE, "Điều 1", None, 0),
-                  Provision(P("k1"), "T", ProvisionLevel.CLAUSE, "Khoản 1", P("d1"), 1)]
-    index.put_provisions(provisions)
-    index.put_versions(build_versions(provisions, {"d1": {"text": "Điều 1"}, "k1": {"text": "cũ"}}, target))
-    return index
+def _jsonl(path):
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
 
 
-def _row(event_id, operation, on, node="k1", new_text=None):
-    return {"id": event_id, "actor_id": "A", "operation": operation, "target_document_id": "T",
-            "target_provision_id": P(node), "effective_on": on, "status": "auto_accepted", "evidence": "e",
-            "text_updates": [{"target_provision_id": P(node), "new_text": new_text}] if new_text else []}
+def _sha256(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _build(index, rows):
-    versions, outcomes, _, _ = build_document_versions(
-        index, index.document("T"), {}, rows, EventApplier())
-    return versions, outcomes
+def test_builds_subtree_versions_and_audits_every_event_deterministically(tmp_path):
+    data = tmp_path / "data"
+    store = DocumentStore(data)
+    for document_id in ("target", "actor-a"):
+        store.save("raw", document_id, {"title": document_id})
+    store.save(
+        "derived/subtrees",
+        "target",
+        {
+            "nodes": [
+                {
+                    "id": "article-1#clause-1",
+                    "parent_id": "article-1",
+                    "level": "Clause",
+                    "title": "Khoản 1",
+                    "text": "Nội dung khoản ban đầu.",
+                }
+            ]
+        },
+    )
 
+    index_path = data / "temporal.sqlite"
+    with TemporalIndex(index_path) as index:
+        index.put_documents(
+            [
+                LegalDocument(
+                    "target",
+                    "01/2020",
+                    "Văn bản gốc",
+                    effective_from=date(2020, 1, 1),
+                    effective_to=date(2024, 1, 1),
+                ),
+                LegalDocument("actor-a", "01/2022", "Văn bản A"),
+            ]
+        )
+        index.put_provisions(
+            [
+                Provision(
+                    "article-1",
+                    "target",
+                    ProvisionLevel.ARTICLE,
+                    "Điều 1",
+                    None,
+                    0,
+                ),
+                Provision(
+                    "article-1#clause-1",
+                    "target",
+                    ProvisionLevel.CLAUSE,
+                    "Khoản 1",
+                    "article-1",
+                    None,
+                ),
+            ]
+        )
+        index.put_versions(
+            [
+                ProvisionVersion(
+                    "article-1:1",
+                    "article-1",
+                    1,
+                    "Nội dung điều ban đầu.",
+                    TemporalInterval(date(2020, 1, 1), date(2024, 1, 1)),
+                )
+            ]
+        )
 
-def _windows(index, rows):
-    """{provision_id: (effective_from, effective_to)} of each node's last version."""
-    versions, _, state, provisions = build_document_versions(
-        index, index.document("T"), {}, rows, EventApplier())
-    intervals = effective_intervals(index.document("T"), provisions, state)
-    latest = {}
-    for v in sorted(versions, key=lambda v: v.ordinal):
-        latest[v.provision_id] = intervals.get(v.id)
-    return latest
+    events = [
+        {
+            "id": "event:z-update-first",
+            "actor_id": "actor-a",
+            "operation": "amend",
+            "effective_on": "2022-01-01",
+            "target_document_id": "target",
+            "target_provision_id": "article-1#clause-1",
+            "text_updates": [
+                {
+                    "target_provision_id": "article-1#clause-1",
+                    "new_text": "Nội dung khoản sau sửa đổi.",
+                }
+            ],
+            "status": "auto_accepted",
+            "status_reason": None,
+            "evidence": "Sửa đổi khoản 1.",
+        },
+        {
+            "id": "event:a-update-second",
+            "actor_id": "actor-a",
+            "operation": "amend",
+            "effective_on": "2022-01-01",
+            "target_document_id": "target",
+            "target_provision_id": "article-1#clause-1",
+            "text_updates": [
+                {
+                    "target_provision_id": "article-1#clause-1",
+                    "new_text": "Không được âm thầm áp dụng.",
+                }
+            ],
+            "status": "auto_accepted",
+            "status_reason": None,
+            "evidence": "Sửa đổi trùng ngày.",
+        },
+        {
+            "id": "event:repeal",
+            "actor_id": "actor-a",
+            "operation": "repeal",
+            "effective_on": "2023-01-01",
+            "target_document_id": "target",
+            "target_provision_id": "article-1",
+            "text_updates": [],
+            "status": "verified",
+            "status_reason": None,
+            "evidence": "Bãi bỏ Điều 1.",
+        },
+        {
+            "id": "event:review",
+            "actor_id": "actor-a",
+            "operation": "replace",
+            "effective_on": "2023-06-01",
+            "target_document_id": "target",
+            "target_provision_id": "article-1",
+            "text_updates": [],
+            "status": "needs_review",
+            "status_reason": "missing_resulting_text",
+            "evidence": "Ca chưa đủ bằng chứng.",
+        },
+    ]
+    event_store = data / "derived" / "provision_events.jsonl"
+    event_store.parent.mkdir(parents=True, exist_ok=True)
+    event_store.write_text(
+        "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in events),
+        encoding="utf-8",
+    )
 
+    versions_path = data / "derived" / "versions.jsonl"
+    log_path = data / "derived" / "event_log.jsonl"
+    first = build_version_files(data, index_path, versions_path, log_path, verify_pairs=1)
+    first_hashes = (_sha256(versions_path), _sha256(log_path))
+    second = build_version_files(data, index_path, versions_path, log_path, verify_pairs=1)
 
-def test_amendment_closes_version_one_and_opens_two():
-    versions, outcomes = _build(_index(date(2020, 1, 1)), [_row("e1", "amend", "2024-01-01", new_text="mới")])
-    k1 = [v for v in versions if v.provision_id == P("k1")]
-    assert outcomes == {"e1": None}
-    assert [(v.ordinal, v.text) for v in k1] == [(1, "cũ"), (2, "mới")]
-    assert (k1[0].validity.end, k1[1].validity.start, k1[1].validity.end) == (date(2024, 1, 1), date(2024, 1, 1), None)
-    assert k1[0].ended_by_event_id == k1[1].created_by_event_id == "e1"
+    assert first == second
+    assert first_hashes == (_sha256(versions_path), _sha256(log_path))
+    assert first["events_applied"] == 2
+    assert first["events_rejected"] == 2
+    assert first["verified_pairs"] >= 1
 
+    versions = _jsonl(versions_path)
+    by_id = {row["id"]: row for row in versions}
+    article_id = make_provision_id("article-1")
+    clause_id = make_provision_id("article-1#clause-1")
+    article_v1 = by_id[make_version_id(article_id, 1)]
+    clause_v1 = by_id[make_version_id(clause_id, 1)]
+    clause_v2 = by_id[make_version_id(clause_id, 2)]
+    assert article_v1["valid_to"] == "2023-01-01"
+    assert article_v1["ended_by_event_id"] == "event:repeal"
+    assert article_v1["effective_from"] == "2020-01-01"
+    assert article_v1["effective_to"] == "2023-01-01"
+    assert clause_v1["valid_to"] == "2022-01-01"
+    assert clause_v2["valid_to"] is None
+    assert clause_v2["effective_from"] == "2022-01-01"
+    assert clause_v2["effective_to"] == "2023-01-01"
+    assert clause_v2["effective_intervals"] == [
+        {"start": "2022-01-01", "end": "2023-01-01"}
+    ]
+    assert clause_v2["created_by_event_id"] == "event:z-update-first"
 
-def test_event_on_a_closed_node_is_rejected_not_forced():
-    rows = [_row("repeal", "repeal", "2023-01-01"), _row("late", "amend", "2024-01-01", new_text="mới")]
-    versions, outcomes = _build(_index(date(2020, 1, 1)), rows)
-    assert outcomes["repeal"] is None and "no open version" in outcomes["late"]
-    assert [v.ordinal for v in versions if v.provision_id == P("k1")] == [1]
-
-
-def test_document_without_effective_date_keeps_undated_versions_and_rejects_events():
-    versions, outcomes = _build(_index(None), [_row("e1", "amend", "2024-01-01", new_text="mới")])
-    assert len(versions) == 2 and all(v.validity is None for v in versions)
-    assert outcomes["e1"] is not None
-
-
-def test_repealing_the_parent_ends_the_child_window_too():
-    """Formula (3): Khoản 1's own version stays open, but Điều 1 ended in 2024."""
-    index = _index(date(2020, 1, 1))
-    windows = _windows(index, [_row("e1", "repeal", "2024-01-01", node="d1")])
-
-    assert windows[P("d1")] == (date(2020, 1, 1), date(2024, 1, 1))
-    assert windows[P("k1")] == (date(2020, 1, 1), date(2024, 1, 1))
-
-
-def test_the_document_window_bounds_every_version():
-    index = TemporalIndex()
-    document = LegalDocument("T", "01/2020", "Luật", effective_from=date(2020, 1, 1),
-                             effective_to=date(2023, 1, 1))
-    index.put_documents([document, LegalDocument("A", "02/2024", "NĐ",
-                                                 effective_from=date(2024, 1, 1))])
-    provisions = [Provision(P("d1"), "T", ProvisionLevel.ARTICLE, "Điều 1", None, 0)]
-    index.put_provisions(provisions)
-    index.put_versions(build_versions(provisions, {"d1": {"text": "x"}}, document))
-    _, _, state, ordered = build_document_versions(index, document, {}, [], EventApplier())
-
-    assert effective_intervals(document, ordered, state) == {
-        list(state.versions)[0].id: (date(2020, 1, 1), date(2023, 1, 1))
-    }
+    logs = {row["event_id"]: row for row in _jsonl(log_path)}
+    assert logs["event:z-update-first"]["outcome"] == "applied"
+    assert logs["event:a-update-second"]["reason"] == "event_not_after_version_start"
+    assert logs["event:repeal"]["outcome"] == "applied"
+    assert logs["event:review"]["reason"] == "status_not_applicable"
 
 
 def test_the_review_queue_keeps_verdicts_across_reruns(tmp_path):

@@ -1,16 +1,12 @@
-"""SQLite store for the temporal legal graph.
+"""Derived SQLite read model for offline corpus and provision structure.
 
-`data/` stays the system of record: this file is a derived index, safe to
-delete and rebuild from the crawl at any time. SQLite rather than a graph
-service because the queries the thesis actually runs — "which version of this
-provision was in force at t", "what hangs under this node" — are an indexed
-lookup and a prefix scan, and stdlib already ships the engine.
+``data/`` remains the system of record. This index stores local version chains
+and materialized provision paths for efficient rebuilding and inspection. It
+does not answer legal point-in-time validity: document bounds and ancestor
+status must be checked by ``ValidityService``. Neo4j and Milvus are separate
+derived stores for the later graph/retrieval phases.
 
-Provision ancestry is stored as a materialized path (`/root/child/leaf`), so
-`descendants_of` is one indexed range scan on `path` instead of a recursive
-query. That is the whole reason a graph database is not needed here.
-
-Open with `TemporalIndex(":memory:")` in tests; the schema is identical.
+Open with ``TemporalIndex(":memory:")`` in tests; the schema is identical.
 """
 from __future__ import annotations
 
@@ -216,9 +212,21 @@ class TemporalIndex:
         return tuple(_provision(r) for r in rows)
 
     def versions_of(self, provision_id: str) -> tuple[ProvisionVersion, ...]:
+        """Return stored local history, not a point-in-time validity decision."""
         rows = self._db.execute(
             "SELECT * FROM versions WHERE provision_id = ? ORDER BY ordinal",
             (provision_id,),
+        )
+        return tuple(_version(row) for row in rows)
+
+    def versions_for_document(self, document_id: str) -> tuple[ProvisionVersion, ...]:
+        """All versions belonging to one document in deterministic order."""
+        rows = self._db.execute(
+            "SELECT v.* FROM versions AS v "
+            "JOIN provisions AS p ON p.id = v.provision_id "
+            "WHERE p.document_id = ? "
+            "ORDER BY p.order_index IS NULL, p.order_index, p.path, v.ordinal",
+            (document_id,),
         )
         return tuple(_version(row) for row in rows)
 
