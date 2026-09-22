@@ -41,6 +41,7 @@ STRUCTURAL_RELATIONSHIPS = (
     (NodeKind.PROVISION, RelationType.CONTAINS, NodeKind.PROVISION),
     (NodeKind.PROVISION_VERSION, RelationType.VERSION_OF, NodeKind.PROVISION),
     (NodeKind.PROVISION_VERSION, RelationType.CAUSED_BY, NodeKind.LEGAL_EVENT),
+    (NodeKind.LEGAL_EVENT, RelationType.CAUSED_BY, NodeKind.DOCUMENT),
 )
 
 

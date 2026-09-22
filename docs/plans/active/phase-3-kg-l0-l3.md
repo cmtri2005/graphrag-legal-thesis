@@ -202,6 +202,7 @@ backfill đích sau này mà không làm sai bản sắc văn bản.
 - [ ] Gói D — loader Neo4j (P3.4, P3.5, P3.9)
   - [x] D1 — schema node ID và hợp đồng cạnh cấu trúc
   - [x] D2 — loader corpus + version + event, chạy lại không trùng
+    - [x] Bổ sung `LegalEvent -[:CAUSED_BY]-> Document` theo `actor_id`
   - [x] D3 — 13 loại cạnh văn bản, audit đích vắng mặt, chạy lại không trùng
   - [ ] D4 — Q4 (tạm bỏ qua theo yêu cầu, chưa chốt)
   - [x] D5 — snapshot Cypher đối chiếu 200 cặp với bản offline
@@ -400,6 +401,24 @@ Kiểm tra chung của repository: `python -m pytest -q`.
   ghi **128.289 cạnh phân biệt** từ snapshot cũ 22.550 văn bản. Phải đối
   chiếu/đóng băng baseline snapshot v2 trước khi dùng ngưỡng 128.289 của D3;
   D2 không nạp hoặc sửa các cạnh này.
+
+### D2 extension — 22/09/2026: văn bản nguồn gây ra event
+
+- Theo yêu cầu minh họa chuỗi nhân quả, bổ sung cạnh có hướng
+  `LegalEvent -[:CAUSED_BY]-> Document` với đích là `actor_id` của event.
+  Cạnh `ProvisionVersion -[:CAUSED_BY {role}]-> LegalEvent` giữ nguyên; role
+  `created`/`ended` chỉ thuộc cạnh version → event. `target_document_id` là
+  văn bản bị tác động, **không phải** văn bản gây ra event.
+- Loader kiểm toàn bộ `actor_id` có trong `data/raw` trước khi ghi, dùng
+  `MATCH` hai endpoint và `MERGE` cạnh, không tạo `Document` giả. Thêm số đếm
+  hậu kiểm riêng cho cạnh event → document, nên chạy lại loader không nhân đôi.
+- Snapshot local: 50.540 event phân biệt, 50.540 `actor_id` khớp Document;
+  không có actor thiếu. Trên Neo4j đang chạy đã backfill theo lô: **50.540
+  cạnh / 50.540 event**, 0 cạnh nối sai `actor_id`. Chạy lại phép backfill vẫn
+  50.540 cạnh; số cạnh version → event giữ **37.640**, số Document giữ 23.139.
+  Test tập trung `tests/test_load_neo4j.py` và `tests/test_neo4j_schema.py`:
+  **17 passed**. Chưa chạy lại toàn bộ full-corpus loader sau thay đổi này;
+  Neo4j hiện tại được cập nhật trực tiếp và lần nạp lại sau sẽ dùng loader mới.
 
 ### D3 — 19/09/2026
 

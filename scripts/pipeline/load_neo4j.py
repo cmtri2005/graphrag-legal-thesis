@@ -82,6 +82,13 @@ MATCH (e:LegalEvent {id: row.event_id})
 MERGE (v)-[:CAUSED_BY {role: row.role}]->(e)
 RETURN count(v) AS loaded
 """
+EVENT_CAUSED_BY_DOCUMENT = """
+UNWIND $rows AS row
+MATCH (e:LegalEvent {id: row.event_id})
+MATCH (actor:Document {id: row.actor_id})
+MERGE (e)-[:CAUSED_BY]->(actor)
+RETURN count(e) AS loaded
+"""
 
 COUNTS = {
     "documents": "MATCH (n:Document) RETURN count(n) AS n",
@@ -93,6 +100,7 @@ COUNTS = {
     "version_of": "MATCH (:ProvisionVersion)-[r:VERSION_OF]->(:Provision) RETURN count(r) AS n",
     "created_by": "MATCH (:ProvisionVersion)-[r:CAUSED_BY {role:'created'}]->(:LegalEvent) RETURN count(r) AS n",
     "ended_by": "MATCH (:ProvisionVersion)-[r:CAUSED_BY {role:'ended'}]->(:LegalEvent) RETURN count(r) AS n",
+    "event_caused_by_document": "MATCH (:LegalEvent)-[r:CAUSED_BY]->(:Document) RETURN count(r) AS n",
 }
 
 
@@ -262,6 +270,24 @@ def _source_document_ids(data_dir: Path) -> set[str]:
     return {make_document_id(item) for item in raw}
 
 
+def _event_actor_rows(
+    event_nodes: dict[str, dict[str, Any]], source_ids: set[str]
+) -> list[dict[str, str]]:
+    """Resolve event provenance only to real corpus documents before writing."""
+    rows = [
+        {"event_id": event_id, "actor_id": node["props"]["actor_id"]}
+        for event_id, node in sorted(event_nodes.items())
+    ]
+    missing = sorted({row["actor_id"] for row in rows if row["actor_id"] not in source_ids})
+    if missing:
+        raise ValueError(
+            f"D2 {len(missing)} event actor Document IDs are absent from data/raw "
+            f"(first: {missing[0]}); backfill the source document or review the event, "
+            "then rerun load_neo4j.py; no placeholder Document will be created"
+        )
+    return rows
+
+
 def _check_counts(session, expected: dict[str, int]) -> None:
     for key, query in COUNTS.items():
         actual = session.run(query).single()["n"]
@@ -287,6 +313,7 @@ def load_graph(
     verify_constraints(session.run(SHOW_CONSTRAINTS).data())
     source_ids = _source_document_ids(data_dir)
     event_nodes = read_event_nodes(data_dir)
+    event_actor_rows = _event_actor_rows(event_nodes, source_ids)
     with closing(sqlite3.connect(index_path.resolve().as_uri() + "?mode=ro", uri=True)) as db:
         db.row_factory = sqlite3.Row
         db.execute("PRAGMA query_only=ON")
@@ -309,6 +336,12 @@ def load_graph(
         stage_started = time.monotonic()
         expected["events"] = _load_stage(session, "events", EVENTS, event_nodes.values(), batch_size)
         timings["events"] = time.monotonic() - stage_started
+        stage_started = time.monotonic()
+        expected["event_caused_by_document"] = _load_stage(
+            session, "event_caused_by_document", EVENT_CAUSED_BY_DOCUMENT,
+            event_actor_rows, batch_size,
+        )
+        timings["event_caused_by_document"] = time.monotonic() - stage_started
 
         causal_edges: list[dict[str, str]] = []
         stage_started = time.monotonic()

@@ -5,7 +5,8 @@ import json
 import pytest
 
 from load_neo4j import (
-    _batches, _version_rows, _write_batch, _write_report, read_event_nodes,
+    EVENT_CAUSED_BY_DOCUMENT, _batches, _event_actor_rows, _version_rows,
+    _write_batch, _write_report, read_event_nodes,
 )
 from legal_crawler.temporal import make_version_id
 
@@ -69,6 +70,25 @@ def test_same_event_id_with_conflicting_core_fields_is_rejected(tmp_path):
     _line(tmp_path / "derived/event_log.jsonl", [_audit(1), _audit(2)])
     with pytest.raises(ValueError, match="conflicting core fields"):
         read_event_nodes(tmp_path)
+
+
+def test_event_actor_edge_uses_causal_direction_and_existing_document():
+    nodes = {"event:one": {"props": {"actor_id": "document:actor"}}}
+
+    assert _event_actor_rows(nodes, {"document:actor"}) == [
+        {"event_id": "event:one", "actor_id": "document:actor"}
+    ]
+    assert "MATCH (e:LegalEvent {id: row.event_id})" in EVENT_CAUSED_BY_DOCUMENT
+    assert "MATCH (actor:Document {id: row.actor_id})" in EVENT_CAUSED_BY_DOCUMENT
+    assert "MERGE (e)-[:CAUSED_BY]->(actor)" in EVENT_CAUSED_BY_DOCUMENT
+    assert "CREATE (" not in EVENT_CAUSED_BY_DOCUMENT
+
+
+def test_event_actor_edge_rejects_missing_source_document_before_writes():
+    nodes = {"event:one": {"props": {"actor_id": "document:missing"}}}
+
+    with pytest.raises(ValueError, match="absent from data/raw.*no placeholder"):
+        _event_actor_rows(nodes, {"document:other"})
 
 
 def test_version_maps_local_and_effective_bounds_and_both_event_roles(tmp_path):
