@@ -28,6 +28,10 @@ not overwrite those with upstream product assumptions.
 
 - Root `README.md`: product overview, installation, maintenance, EOL, and
   development.
+- [`gcs-source-snapshots.md`](gcs-source-snapshots.md): snapshot nguồn/full
+  bất biến trên Cloud Storage.
+- [`gcs-parquet-tables.md`](gcs-parquet-tables.md): export Parquet và BigQuery
+  external tables cho dữ liệu L0–L3.
 - `crates/harness/`: safe core installer/updater.
 - `scripts/`: platform bootstrap, release, and validation entrypoints.
 - `tests/`: behavior ownership and repository contract.

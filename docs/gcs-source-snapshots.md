@@ -47,6 +47,19 @@ không ghi đè ID đã tồn tại. Nếu một lần upload thất bại giữ
 mới sau khi kiểm tra nguyên nhân; prefix cũ không có manifest hoàn chỉnh và
 không được pull. Không chạy các bước thay đổi `data/` đồng thời với push.
 
+### Full snapshot
+
+Khi cần sao lưu nguyên trạng toàn bộ `data/`, kể cả artifact có thể dựng lại:
+
+```bash
+python scripts/gcs_snapshot.py push --full
+```
+
+Chế độ này giữ cả `data/derived/`, `data/temporal.sqlite` và
+`data/expiry_targets.jsonl`. ID tự sinh có hậu tố `-full`; `manifest.json` ghi
+`snapshot_type: full` và `excluded: []` để pull phân biệt chính xác với
+snapshot nguồn. Không chạy pipeline ghi vào `data/` trong lúc đóng gói.
+
 ## Pull
 
 Chỉ pull vào **thư mục cha trống**; archive sẽ tạo thư mục `data/` bên trong:
@@ -67,9 +80,10 @@ python scripts/check/verify_pipeline.py --data /tmp/corpus-v2-reviewed/data
 python scripts/pipeline/build_store.py --data /tmp/corpus-v2-reviewed/data --with-subtrees
 ```
 
-Các artifact trong `derived/` cần được tái tạo bằng pipeline tương ứng; không
-coi chúng đã có sẵn trong snapshot này. Nếu dùng bucket khác, đặt `--bucket`
-**trước** subcommand:
+Với snapshot nguồn, các artifact trong `derived/` cần được tái tạo bằng
+pipeline tương ứng. Full snapshot đã giữ các artifact này nhưng chỉ phản ánh
+đúng trạng thái tại lúc đóng gói. Nếu dùng bucket khác, đặt `--bucket` **trước**
+subcommand:
 
 ```bash
 python scripts/gcs_snapshot.py --bucket gs://another-bucket push

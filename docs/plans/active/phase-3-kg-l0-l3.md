@@ -565,3 +565,30 @@ Kiểm tra chung của repository: `python -m pytest -q`.
   **Chưa chốt E1 theo phạm vi 356 VBHN**: muốn tăng coverage phải phục hồi
   body nguồn và chạy lại, không điền đoán từ graph. P3.18/M2 vẫn mở đến khi
   E2–E3 có đáp án kiểm tay và đạt Q5.
+
+### Mở rộng vận hành — 23/09/2026: bảng Parquet trên GCS và BigQuery
+
+- Bổ sung pipeline dẫn xuất bảy bảng Parquet có schema cố định từ SQLite,
+  version/event JSONL và cạnh nguồn: `documents`, `provisions`,
+  `provision_versions`, `legal_events`, `containment_edges`, `causal_edges`,
+  `document_reference_edges`. Export theo batch, nén ZSTD, ghi manifest chứa
+  hash input/file, schema và row count; thư mục đích bất biến và chỉ được công
+  bố sau khi export hoàn tất.
+- Uploader kiểm lại checksum, schema và số dòng trước khi ghi GCS; dùng
+  precondition không ghi đè và upload `manifest.json` cuối cùng. Có thể tạo
+  bảy BigQuery external table cùng vùng với bucket, nên dữ liệu Parquet không
+  bị sao chép sang BigQuery storage.
+- Đã phát hành snapshot
+  `gs://graphrag-legal-thesis/tables/20260923-phase3-v2-d7ada236/`: 25 file,
+  246.460.861 byte. BigQuery dataset `graphrag-509313.legal_graph` tại
+  `us-east1` có đúng 23.139 Document, 1.700.484 Provision, 1.592.178 Version,
+  50.540 Event, 1.700.484 cạnh containment, 88.180 cạnh causal và 128.548 cạnh
+  dẫn chiếu nguồn. Trong cạnh dẫn chiếu, 124.934 đích resolve được và 3.614
+  đích chưa có Document vẫn được giữ cùng cờ trạng thái.
+- Truy vấn đếm cả bảy bảng và phép nối Version → Event → Document đã chạy trực
+  tiếp trên BigQuery và trả dữ liệu thật. Manifest ghi `git_dirty = true` vì
+  công cụ chưa được commit khi tạo snapshot; muốn artifact chính thức gắn với
+  working tree sạch thì phải phát hành ID mới sau commit, không sửa snapshot
+  này.
+- Đây là mở rộng phục vụ lưu trữ/chia sẻ và phân tích artifact L0–L3, không
+  thay đổi tiêu chí hoàn thành E1–E3 hay tự đóng Phase 3.
