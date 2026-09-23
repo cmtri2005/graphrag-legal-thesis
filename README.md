@@ -161,8 +161,12 @@ python3 scripts/pipeline/fetch_histories.py
 python3 scripts/pipeline/attach_provision_text.py
 
 # Stage 6 — derived query index, then resolve expiryProvisions onto it
-python3 scripts/pipeline/build_store.py            # ~5 min, data/temporal.sqlite
-python3 scripts/pipeline/resolve_expiry_targets.py
+python3 scripts/pipeline/build_store.py --with-subtrees   # ~9 min, data/temporal.sqlite
+python3 scripts/pipeline/resolve_expiry_targets.py        # ~4 min
+python3 scripts/pipeline/extract_provision_events.py      # ~25 min, data/derived/provision_events.jsonl
+python3 scripts/pipeline/build_versions.py                # ~5 min, data/derived/versions.jsonl + event_log.jsonl
+# All four write domain IDs (temporal/ids.py); they are derived and gitignored, so after
+# pulling a change to the ID scheme run them again, in this order.
 
 # Keeping the corpus current (§6b). --dry-run reports without touching anything;
 # without it, stale caches are deleted and the commands to refill them printed.

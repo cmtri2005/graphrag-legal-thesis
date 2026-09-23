@@ -1,6 +1,6 @@
 # Master Plan — Khóa luận Temporal-Aware KG RAG
 
-Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-21
+Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-22
 
 > **Nguồn sự thật về tiến độ dự án.** Timeline bám theo mục "Kế hoạch thực hiện"
 > trong `DeCuongKLTN_23521635_23521643.docx` (01/09/2026 – 01/02/2027).
@@ -25,10 +25,10 @@ Active. Giai đoạn 2 hoàn thành; Giai đoạn 3 đang đi trước kế ho�
 
 | GĐ | Thời gian | Nội dung | Trạng thái | Việc xong | So với kế hoạch |
 |---|---|---|---|---:|---|
-| 1 | 01/09 – 14/09 | Hoàn thiện đề cương | 🟡 | 2/6 | Đến hạn hôm nay |
+| 1 | 01/09 – 14/09 | Hoàn thiện đề cương | 🟡 | 2/6 | **Quá hạn 6 ngày** (P1.2, P1.5) |
 | 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | ✅ | 12/12 | Backfill v2 xong, snapshot đóng băng trước M1 |
 | 3 | 06/10 – 26/10 | Xây dựng đồ thị tri thức (L0–L3) | 🟡 | 13/19 | Bắt đầu sớm; **đường găng** |
-| 4 | 27/10 – 16/11 | Bộ dữ liệu ViLexTime | ⬜ | 0/9 | — |
+| 4 | 27/10 – 16/11 | Bộ dữ liệu ViLexTime | 🟡 | 0/9 | Bắt đầu sớm từ 21/09 ([plan](phase-4-vilextime.md)) |
 | 5 | 17/11 – 30/11 | Cài đặt & đánh giá đường cơ sở | ⬜ | 0/14 | — |
 | 6 | 01/12 – 21/12 | Hệ thống đề xuất (L4–L5) | ⬜ | 0/7 | — |
 | 7 | 22/12 – 04/01 | Thực nghiệm & phân tích | ⬜ | 0/5 | — |
@@ -118,7 +118,7 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 | P3.3 | Domain model và ID tất định | NMT | ✅ | `temporal/models.py`, `temporal/ids.py`; 18/09 full SQLite có 0 ID thô; test pass |
 | P3.4 | Loader `data/` → Neo4j: Document, Provision, `CONTAINS`, Version | CMT | ✅ | D2 (19/09): 2 lượt full load cùng 23.139 Document, 1.700.484 Provision, 1.592.178 Version; 1.700.484 cạnh `CONTAINS`, 1.592.178 `VERSION_OF`; đối chiếu source IDs và count pass; [bằng chứng](phase-3-kg-l0-l3.md#d2--19092026) |
 | P3.5 | Nạp cạnh giữa văn bản thành quan hệ có kiểu | CMT | ✅ | D3 (19/09): snapshot v2 có 128.548 bộ ba phân biệt/13 loại; hai lượt Neo4j cùng 124.934 cạnh đủ hai đầu, 3.614 cạnh thiếu đích được audit (không tạo Document giả). Mốc M1 128.289 thuộc snapshot cũ. [Bằng chứng](phase-3-kg-l0-l3.md#d3--19092026) |
-| P3.6 | Chuyển `target_resolver` và `resolve_expiry_targets.py` sang Neo4j; bỏ index SQLite | CMT | ⬜ | Tỷ lệ resolve vẫn là 73,3%; xóa được `index.py`, `build_store.py` |
+| P3.6 | Chuyển `target_resolver` và `resolve_expiry_targets.py` sang Neo4j; bỏ index SQLite | CMT | ⬜ | **Hoãn (Q6, 20/09):** giữ SQLite cho pipeline offline, migrate sau. Khi làm: tỷ lệ resolve vẫn là 73,3%; xóa được `index.py`, `build_store.py` |
 
 ### 3C. L2: trích xuất thao tác sửa đổi
 
@@ -130,7 +130,7 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 | P3.10 | Event BÃI BỎ từ 228 VB chỉ có một văn bản tác động (843 bộ ba) | CMT | ✅ | Thay bằng mức `verified`: 2.819 event mà cổng liệt kê đúng nút. Không sinh event chỉ từ metadata, lý do trong [plan](l2-event-store.md) |
 | P3.11 | Bộ trích xuất regex: SỬA ĐỔI / BỔ SUNG / BÃI BỎ / THAY THẾ | CMT | 🟡 | `extraction/provision_ops.py`, `extraction/wording.py`, `scripts/pipeline/extract_provision_events.py` → `data/derived/provision_events.jsonl` (12.676 VB tác động; bỏ 768 không phải QPPL trung ương, 84 VB mà cổng trả nhầm thân văn bản). Ca không chắc chắn ghi `needs_review` kèm lý do. Còn thiếu: lời văn không ngoặc kép, thay đổi cấu trúc, BỔ SUNG nút mới ([plan](l2-event-store.md)) |
 | P3.12 | LLM cho ca phức tạp | CMT | ⬜ | Chỉ gọi khi regex bó tay; ghi `method=LLM` |
-| P3.13 | Đo độ chính xác L2 | CMT, NMT | 🟡 | `scripts/check/measure_provision_events.py`, `scripts/check/apply_provision_events.py` (2026-09-18). Precision kiểm tay trên 60 event áp được (seed 20260923, chưa dùng để sửa): 58/60 = 96,7% (Wilson 95%: 88,6–99,1%); lời văn mới 30/30 cắt đúng. Các vòng trước: v4 56/60 trên mọi event đã resolve (seed 20260921); seed 20260918–20 và 20260922 dùng để tìm lỗi. Recall theo expiryProvisions 62,2% (5.007/8.046 cặp); cùng actor với gold một-actor 98,2%; loại thao tác khớp hậu tố trạng thái 90,3% (HHL1P1=bãi bỏ, P2=đính chính, P3=sửa đổi, P4=thay thế). Hạn chế: câu hai thao tác ("Bãi bỏ … và sửa đổi …") gán thao tác thứ hai thành bãi bỏ. Chưa đạt 200 mẫu kiểm tay, NMT chưa kiểm chéo |
+| P3.13 | Đo độ chính xác L2 | CMT, NMT | 🟡 | `scripts/check/measure_provision_events.py`, `scripts/pipeline/build_versions.py` (2026-09-18). Precision kiểm tay trên 60 event áp được (seed 20260923, chưa dùng để sửa): 58/60 = 96,7% (Wilson 95%: 88,6–99,1%); lời văn mới 30/30 cắt đúng. Các vòng trước: v4 56/60 trên mọi event đã resolve (seed 20260921); seed 20260918–20 và 20260922 dùng để tìm lỗi. Recall theo expiryProvisions 62,2% (5.007/8.046 cặp); cùng actor với gold một-actor 98,2%; loại thao tác khớp hậu tố trạng thái 90,3% (HHL1P1=bãi bỏ, P2=đính chính, P3=sửa đổi, P4=thay thế). Hạn chế: câu hai thao tác ("Bãi bỏ … và sửa đổi …") gán thao tác thứ hai thành bãi bỏ. Chưa đạt 200 mẫu kiểm tay, NMT chưa kiểm chéo |
 
 ### 3D. L3: hợp nhất phiên bản và lan truyền hiệu lực
 
@@ -138,8 +138,8 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 |---|---|---|---|---|
 | P3.14 | Logic version chain, event applier, validity, snapshot | NMT | ✅ | `temporal/`; test pass (fixture tự tạo) |
 | P3.15 | Áp event lên dữ liệu thật → chuỗi phiên bản trong Neo4j | NMT | ✅ | D2 nạp 1.592.178 version và 37.640 cạnh version–event, hai lượt full load cùng số đếm; chuỗi A → B → C trong Neo4j đúng 3 text SHA-256 và cạnh event tạo/kết thúc. Đánh giá snapshot 100 mẫu vẫn ở P3.18. [Bằng chứng](phase-3-kg-l0-l3.md#d2--19092026) |
-| P3.16 | Tính trước khoảng hiệu lực thực của mỗi phiên bản (cách A) | NMT | ✅ | C4 (19/09): `versions.jsonl` có `effective_intervals`; 6.108/6.108 cặp (nút, ngày) trên 1.729 văn bản ngẫu nhiên khớp `ValidityService`; 224 test pass. Xem [plan Phase 3](phase-3-kg-l0-l3.md#c4--19092026) |
-| P3.17 | Hợp nhất định nghĩa "có hiệu lực tại t" | NMT | ✅ | C5 (19/09): bỏ `index.version_at`; tên API khoảng cục bộ tách khỏi hiệu lực pháp lý; `ValidityService` là đường quyết định, 225 test pass. Xem [plan Phase 3](phase-3-kg-l0-l3.md#c5--19092026) |
+| P3.16 | Tính trước khoảng hiệu lực thực của mỗi phiên bản (cách A) | NMT | 🟡 | C4 (19/09): `versions.jsonl` có `effective_intervals`; 6.108/6.108 cặp (nút, ngày) khớp `ValidityService`. **Đo lại 22/09 sau khi hợp nhất hai nhánh:** quy tắc §11 (nút không có text là trong suốt) trước đó bị bỏ trong nhánh phase3-v2, nên số cũ đo dưới luật khác. Xem [C7](phase-3-kg-l0-l3.md#c7--22092026) |
+| P3.17 | Hợp nhất định nghĩa "có hiệu lực tại t" | NMT | ✅ | C5 (19/09): bỏ `index.version_at`; tên API khoảng cục bộ (`VersionChain.local_at`) tách khỏi hiệu lực pháp lý; `ValidityService` là đường quyết định duy nhất |
 | P3.18 | Kiểm chứng snapshot trên 100 truy vấn đối chiếu tay | NMT | 🟡 | E1 (21/09): 356 VBHN được kiểm kê, 51 đủ điều kiện; 5.762/7.201 cặp Điều/Khoản khớp text tự động (80,02%), 299 VBHN thiếu body. [Bằng chứng](phase-3-kg-l0-l3.md#e1--21092026). Chưa có 100 đáp án kiểm tay E2–E3; không coi E1 là gold hoặc đạt M2 |
 | P3.19 | Giải dẫn chiếu chéo có nhận biết thời gian | NMT | ⬜ | "khoản 2 Điều 5 của Luật này" → đúng phiên bản tại t |
 
@@ -153,10 +153,12 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 
 Đề cương phân công: NMT chủ trì quy trình diff-driven; CMT kiểm định chéo và làm việc với cố vấn luật.
 
+Kế hoạch chi tiết đến M3, bắt đầu sớm từ 21/09 vì 3 tuần không đủ: [`phase-4-vilextime.md`](phase-4-vilextime.md). Trữ lượng ứng viên đo ngày 20/09 đủ cho mọi nhóm trừ T3 (321 chuỗi ≥ 3 phiên bản cho 200 câu) và T5 (282 ứng viên hồi tố chưa lọc "có lợi").
+
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
 | P4.1 | Hướng dẫn gán nhãn; thống nhất định nghĩa T1–T6 | NMT | ⬜ | Tài liệu hướng dẫn; hết mâu thuẫn T6/T7 |
-| P4.2 | So khớp phiên bản: cặp `snapshot(u,t₁) ≠ snapshot(u,t₂)` | NMT | ⬜ | Cần P3.15 |
+| P4.2 | So khớp phiên bản: cặp `snapshot(u,t₁) ≠ snapshot(u,t₂)` | NMT | ⬜ | Hết chặn từ 20/09: `data/derived/versions.jsonl` có 15.070 nút ≥ 2 phiên bản trong VB đủ điều kiện |
 | P4.3 | Trích khác biệt thành bộ ba (trước, sau, mốc chuyển) | NMT | ⬜ | Mỗi bộ ba truy ngược được về nút và event |
 | P4.4 | Sinh câu hỏi bằng LLM (chỉ để diễn đạt) | NMT | ⬜ | Nhãn vàng không phụ thuộc LLM |
 | P4.5 | Đủ số lượng: T1 250 · T2 400 · T3 200 · T4 150 · T5 50 · T6 100 | NMT | ⬜ | Tổng 1.150 |
@@ -251,6 +253,7 @@ Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định
 | D9 | "Thay cụm từ" phải chuyển thành toàn văn trước khi áp | `TextUpdate` |
 | D10 | Resolver chỉ nhận đúng một kết quả khớp cấu trúc, không fuzzy | `target_resolver.py` |
 | D11 | Bằng chứng truy xuất phải lấy từ đúng snapshot hợp lệ | Áp dụng khi làm L4 (P6.1) |
+| D12 | Nút không có phiên bản (Chương/Mục, hoặc Điều thiếu text) là **trong suốt** khi lan truyền hiệu lực; chỉ tổ tiên bị bãi bỏ hoặc văn bản hết hiệu lực mới chặn | `ValidityService`; chốt 20/09, xem [plan GĐ3](phase-3-kg-l0-l3.md) |
 
 Các quyết định cũ **đã bị thay thế**: serialization envelope, repository Protocol, query schema riêng (bị xóa ở `5b8ee70`), và "Neo4j là nguồn sự thật" (bị thay bởi 0001).
 
@@ -266,9 +269,11 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | Vấn đề | Chặn việc | Ghi chú |
 |---|---|---|
 | Đề cương ghi "bốn mục tiêu" nhưng liệt kê 5 | P1.2 | |
-| Giả thuyết nhắc T1–T7, Bảng 2 chỉ có T1–T6; `graph_justification.md` gọi nhóm hết hiệu lực một phần là T7 | P1.2, P4.1 | |
+| ~~Giả thuyết nhắc T1–T7~~ **Chốt 20/09: sáu nhóm T1–T6, nhóm hết hiệu lực một phần là T6.** `graph_justification.md` đã sửa; còn sửa `.docx` | P1.2 | Q1 của [plan GĐ4](phase-4-vilextime.md) |
+| ~~Kiểm định chéo ghi "300 câu (toàn bộ T3, T4, T5, T6…)"~~ **Chốt 20/09: 300 câu = toàn bộ T5, T6 + 50 mẫu mỗi nhóm T2, T3, T4.** Còn sửa `.docx` | P1.2 | Phát hiện và chốt 20/09; Q2 của [plan GĐ4](phase-4-vilextime.md) |
 | Hai công thức cùng đánh số (5); lỗi chính tả "driff-driven", "cuarm ô hình", "mình họa"; MSSV `23621643` khác tên file `23521643` | P1.2 | |
 | Câu "metadata giảm đáng kể chi phí gán nhãn": metadata cho biết *khoản nào* hết hiệu lực, không cho biết *khi nào* | P1.2 | `docs/audit_dataset.md` §9 |
+| T5 của ViLexTime mô tả là "hiệu lực trở về trước **có lợi cho đối tượng áp dụng**" — "có lợi" là chuẩn của Bộ luật Hình sự, không phải phép thử của Điều 152 Luật BHVBQPPL | P1.2, P4.1 | Cố vấn luật 20/09; xem [plan GĐ4](phase-4-vilextime.md) |
 | Có dùng H1–H4 không; A4 chỉ là proxy cho H3 | P1.5 | |
 | Chọn embedding model và LLM | P5.1 | |
 | Danh sách loại văn bản QPPL; "Quyết định" lẫn văn bản cá biệt | P2.8 | backfill T2.1 |
@@ -321,5 +326,8 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-19 | Phase 3 D2: hai lượt nạp full Neo4j khớp chín nhóm số đếm từ corpus, gồm 23.139 Document, 1.700.484 Provision, 1.592.178 Version, 50.540 LegalEvent; chuỗi thật A→B→C pass; 241 test pass. P3.4, P3.9, P3.15 ✅; D3–D6/P3.18 còn mở | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d2--19092026) |
 | 2026-09-19 | Phase 3 D3: 13 loại cạnh, 124.934 cạnh đủ hai Document nạp Neo4j hai lượt; 3.614 cạnh thiếu đích trong report (141 genealogy), 249 test pass. P3.5 ✅ theo phạm vi corpus hiện có; D4–D6/P3.18 còn mở | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d3--19092026) |
 | 2026-09-19 | Phase 3 D5: Cypher read model từ khoảng hiệu lực C4 đối chiếu `valid`/version ID/text với `SnapshotService`: 200/200 cặp trên 32 văn bản có cây (gồm ngày chuyển phiên bản, bãi bỏ cha/con); 257 test pass. D4 tạm bỏ qua, D6 và P3.18 vẫn mở | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d5--19092026) |
+| 2026-09-20 | Q1 chốt: ID miền theo `temporal/ids.py`, đổi ở `ingest.py`; ID event duy nhất. Q3, Q4, Q6 chốt cùng ngày (cố vấn luật cho Q3; hoãn migrate SQLite ở Q6) | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md), commit `c9b1eec`, `8b7e98e` |
+| 2026-09-20 | Lập kế hoạch Giai đoạn 4, bắt đầu sớm 21/09; đo trữ lượng ứng viên T1–T6; phát hiện mâu thuẫn phạm vi κ (300 vs 500) | [`phase-4-vilextime.md`](phase-4-vilextime.md) |
 | 2026-09-21 | Phase 3 D6: công cụ timing + Docker metrics; cold load 704,0s, full MERGE đo chi tiết 573,9s; Neo4j peak 3.813,4 MiB/4 GiB, toàn stack 3,95 GiB; 4 container healthy, 0 OOM/restart; 268 test pass. P3.1–P3.2 ✅; D4 tạm hoãn, P3.18 còn mở | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d6--21092026) |
 | 2026-09-21 | Phase 3 E1 phép đo đầu: kiểm kê đủ 356 VBHN; 51 đủ điều kiện, 7.201 cặp text so được, 5.762 khớp (80,02%). 299 VBHN thiếu body hiển thị nên E1 chưa phủ đủ phạm vi; 1.393 sai khác text vào hàng đợi điều tra. Report có provenance/hash từng cặp; 275 test pass. P3.18 🟡, E2–E3 chưa làm, M2 chưa đạt | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#e1--21092026) |
+| 2026-09-22 | Hợp nhất `main` và `feature/phase3-v2` (C7): hai nhánh đã cài trùng P3.15–P3.17 nên 11 file xung đột. Giữ khoảng hiệu lực dạng nhiều khoảng rời (giữ được gap) và quy tắc §11 nút không text là trong suốt; P3.16 phải đo lại | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#c7--22092026) |

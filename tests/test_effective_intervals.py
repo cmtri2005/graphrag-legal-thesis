@@ -35,7 +35,13 @@ def test_parent_amendment_preserves_child_but_repeal_ends_it():
     assert not ValidityService(state).is_valid("clause", date(2023, 1, 1))
 
 
-def test_document_end_clips_descendants_and_missing_parent_text_excludes_child():
+def test_document_end_clips_descendants_and_a_text_less_parent_is_transparent():
+    """Master plan §11: a node we hold no text for says nothing about its children.
+
+    A Chương/Mục heading carries no words of its own, and an Điều the corpus
+    lacks text for is missing data, not data to the contrary. Treating it as a
+    repeal would silence every provision beneath it.
+    """
     state = TemporalState()
     state.add_document(
         LegalDocument("doc", "1", "Law", effective_from=date(2020, 1, 1),
@@ -44,12 +50,15 @@ def test_document_end_clips_descendants_and_missing_parent_text_excludes_child()
     state.add_provision(Provision("article", "doc", ProvisionLevel.ARTICLE, "Article", None))
     state.add_provision(Provision("clause", "doc", ProvisionLevel.CLAUSE, "Clause", "article"))
     state.add_version(_version("child", "clause", 1, "2020-01-01"))
-    assert effective_intervals_by_version(state, "doc")["child"] == ()
+    document_window = (TemporalInterval(date(2020, 1, 1), date(2024, 1, 1)),)
 
+    assert effective_intervals_by_version(state, "doc")["child"] == document_window
+    assert ValidityService(state).is_valid("clause", date(2021, 1, 1))
+    assert not ValidityService(state).is_valid("clause", date(2024, 1, 1))
+
+    # Text for the parent changes nothing here: it opens with the document too.
     state.add_version(_version("parent", "article", 1, "2020-01-01"))
-    assert effective_intervals_by_version(state, "doc")["child"] == (
-        TemporalInterval(date(2020, 1, 1), date(2024, 1, 1)),
-    )
+    assert effective_intervals_by_version(state, "doc")["child"] == document_window
 
 
 def test_disjoint_parent_coverage_is_not_broadened():

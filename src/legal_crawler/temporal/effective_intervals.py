@@ -42,9 +42,18 @@ def effective_intervals_by_version(
                 if provision.parent_id is not None
                 else document_window
             )
-            windows: list[TemporalInterval] = []
             chain = state.chain(provision_id)
-            for version in chain.versions if chain else ():
+            versions = chain.versions if chain else ()
+            if not versions:
+                # A node we hold no text for says nothing about its children:
+                # a Chương/Mục heading carries no words of its own, and an Điều
+                # the corpus lacks text for is missing data, not data to the
+                # contrary (master plan §11). It is transparent to propagation,
+                # exactly as in ``ValidityService``.
+                coverage[provision_id] = parent_windows
+                return coverage[provision_id]
+            windows: list[TemporalInterval] = []
+            for version in versions:
                 intervals = (
                     _intersect((version.validity,), parent_windows)
                     if version.validity is not None

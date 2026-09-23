@@ -5,6 +5,10 @@ which is what keeps the crawler free of interpretation and the domain free of
 the portal's quirks. It is one-way and idempotent: drop the SQLite file and
 run it again.
 
+It is also where the portal's ids become domain ids (`temporal/ids.py`): every
+document, provision and version leaves here with its prefixed id, so nothing
+downstream ever sees, or has to translate, a raw portal id.
+
 Three facts from `docs/audit_dataset.md` shape what it does, and none of them
 may be papered over — each is a silent wrong answer if it is:
 
@@ -21,6 +25,7 @@ may be papered over — each is a silent wrong answer if it is:
 """
 from __future__ import annotations
 
+import re
 from collections.abc import Iterator
 from datetime import date
 from pathlib import Path
@@ -40,10 +45,20 @@ from .temporal import (
 )
 
 DOCUMENT_URL = "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID="
+# 9 documents carry a spreadsheet's text marker inside `docNum` itself
+# ("'42/2022/TT-BCT", "24/2025/TT-BCT'", "22'/2025/QĐ-UBND"). A legal number
+# never contains an apostrophe, and `provision_ops.normalize_number` already
+# drops them when matching, so the displayed number must not keep them either.
+_QUOTE_NOISE = re.compile(r"['\u2019]")
 
 
 def _as_date(value: str | None) -> date | None:
     return date.fromisoformat(value[:10]) if value else None
+
+
+def document_number(raw_number: object) -> str:
+    """The portal's `docNum` as a legal number, without its quoting artefacts."""
+    return _QUOTE_NOISE.sub("", str(raw_number or "")).strip()
 
 
 class IngestReport(dict):
@@ -65,7 +80,7 @@ def build_document(doc_id: str, raw: dict, report: IngestReport) -> LegalDocumen
         report.bump("documents_without_effective_from")
     return LegalDocument(
         id=make_document_id(doc_id),
-        number=str(raw.get("docNum") or ""),
+        number=document_number(raw.get("docNum")),
         title=str(raw.get("title") or ""),
         issued_on=_as_date(raw.get("issueDate")),
         effective_from=effective_from,
@@ -110,7 +125,7 @@ def walk_tree(nodes: list[dict], document_id: str) -> Iterator[Provision]:
 def build_versions(
     provisions: list[Provision], texts: dict[str, dict], document: LegalDocument
 ) -> list[ProvisionVersion]:
-    """One version per provision that has text.
+    """One version per provision that has text. `texts` is keyed by portal node id.
 
     The first local version starts with the document but stays open. Document
     and ancestor bounds are applied by ``ValidityService``; real local endings
@@ -120,7 +135,7 @@ def build_versions(
     # ValidityService (formula (3)); copying document.effective_to here would
     # make later amendment events fail with "no open version".
     validity = TemporalInterval(document.effective_from) if document.effective_from else None
-    normalized_texts = {make_provision_id(key): value for key, value in texts.items()}
+    normalized_texts = {make_provision_id(node_id): node for node_id, node in texts.items()}
     versions = []
     for provision in provisions:
         text = (normalized_texts.get(provision.id) or {}).get("text")
@@ -180,7 +195,7 @@ def ingest(
         if doc_id not in tree_ids:
             report.bump("documents_without_tree")
             continue
-        provisions = list(walk_tree(source.load("trees", doc_id), doc_id))
+        provisions = list(walk_tree(source.load("trees", doc_id), document.id))
         if not provisions:
             report.bump("documents_without_structure")
             continue
@@ -188,8 +203,7 @@ def ingest(
         report.bump("provisions", len(provisions))
         derived_record = None
         if doc_id in subtree_ids:
-            derived_record = source.load("derived/subtrees", doc_id)
-            derived = subtree_provisions(derived_record, doc_id)
+            derived = subtree_provisions(source.load("derived/subtrees", doc_id), document.id)
             store.put_provisions(derived)
             report.bump("subtree_provisions", len(derived))
             provisions.extend(derived)

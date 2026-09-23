@@ -119,7 +119,7 @@ Out of scope (tới lượt thì làm, hoặc để `needs_review`):
 - 50.700 dòng event: 2.819 `verified`, 13.985 `auto_accepted`, còn lại
   `needs_review`. Tính trên các event đã resolve: bãi bỏ áp được 99,9%, sửa đổi
   41,9% (có lời văn khớp cây), thay thế 10,8%, bổ sung 0%.
-- `scripts/check/apply_provision_events.py`: 16.254/16.804 (96,7%) event áp được
+- `scripts/pipeline/build_versions.py`: 16.254/16.804 (96,7%) event áp được
   chạy qua `EventApplier` không lỗi. Lỗi còn lại: 269 ngày của actor không sau
   ngày bắt đầu phiên bản hiện tại, 170 nút đích không có text, 111 nút đã bị
   đóng trước đó.
@@ -127,5 +127,6 @@ Out of scope (tới lượt thì làm, hoặc để `needs_review`):
   88,6–99,1%). Cả 2 lỗi là câu có hai thao tác ("Bãi bỏ Điều 6 và sửa đổi
   Điều 15"), trong đó thao tác thứ hai bị nhận là bãi bỏ.
 - Kiểm tay 30 lời văn mới: 30/30 cắt đúng biên nút.
+- 2026-09-20: ID event đổi (ID miền, thêm `document_number` vào dấu vân tay); 77 câu chỉ dẫn lặp y hệt chỉ ghi một lần → 50.623 dòng, mỗi ID một event (2.817 `verified`, 13.966 `auto_accepted`); áp được 16.233/16.783. Các số đo khác không đổi.
 - Recall theo expiryProvisions giảm từ 64,9% xuống 62,2%, vì bỏ các câu có
   phụ lục và che khối lời văn mới. Cùng actor với gold một-actor: 98,2%.

@@ -195,3 +195,27 @@ def test_builds_subtree_versions_and_audits_every_event_deterministically(tmp_pa
     assert logs["event:a-update-second"]["reason"] == "event_not_after_version_start"
     assert logs["event:repeal"]["outcome"] == "applied"
     assert logs["event:review"]["reason"] == "status_not_applicable"
+
+
+def test_the_review_queue_keeps_verdicts_across_reruns(tmp_path):
+    """An LLM or human verdict must never fall back to "needs_review"."""
+    import json
+
+    from build_versions import write_review_queue
+
+    path = tmp_path / "provision_events.jsonl"
+    fresh = [{"event_id": e, "method": "auto_rejected", "decision": "needs_review"}
+             for e in ("e1", "e2")]
+    write_review_queue(path, fresh)
+
+    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    rows[0] |= {"method": "human_reviewed", "decision": "accept", "note": "đúng"}
+    path.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
+
+    total, verdicts = write_review_queue(path, fresh)  # the next run meets both again
+
+    after = {r["event_id"]: r for r in
+             (json.loads(line) for line in path.read_text(encoding="utf-8").splitlines())}
+    assert (total, verdicts) == (2, 1)
+    assert after["e1"]["decision"] == "accept" and after["e1"]["note"] == "đúng"
+    assert after["e2"]["decision"] == "needs_review"

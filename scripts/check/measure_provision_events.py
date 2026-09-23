@@ -62,9 +62,7 @@ def main() -> None:
     for line in (data / "edges.jsonl").read_text(encoding="utf-8").splitlines():
         e = json.loads(line)
         if e["group"] == "genealogy" and e["source_id"] in raw_ids:
-            actors_of[make_document_id(e["target_id"])].add(
-                make_document_id(e["source_id"])
-            )
+            actors_of[make_document_id(e["target_id"])].add(make_document_id(e["source_id"]))
 
     gold: set[tuple[str, str]] = set()
     gold_status: dict[tuple[str, str], set[str]] = collections.defaultdict(set)

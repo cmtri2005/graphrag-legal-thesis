@@ -39,11 +39,28 @@ from datetime import date
 
 from legal_crawler.extraction import TargetReference, TargetResolver, TargetScope
 from legal_crawler.extraction.provision_ops import extract_mentions, normalize_number, title_document
-from legal_crawler.extraction.wording import fit, parse_items, wording_blocks
+from legal_crawler.extraction.wording import apply_phrase, fit, parse_items, phrase_edits, wording_blocks
 from legal_crawler.index import TemporalIndex
+from legal_crawler.ingest import document_number
 from legal_crawler.provisions.text import parse_paragraphs
 from legal_crawler.storage.documents import DocumentStore
 from legal_crawler.temporal.ids import make_document_id, make_event_id, make_provision_id
+
+
+def evidence_of(mention, paragraphs: list[str], limit: int = 400) -> str:
+    """The sentence this event was read from, with its quoted runs intact.
+
+    `extract_mentions` masks every curly-quoted run as «Q» so that quoted new
+    wording is never read as an instruction. For a phrase edit the quoted runs
+    *are* the payload ("thay thế cụm từ A bằng cụm từ B"), so the masked
+    sentence proves nothing and the original paragraph stands as evidence.
+    The masked text still keys the event id, which must not move.
+    """
+    text = mention.evidence or ""
+    if "«Q»" not in text:
+        return text
+    return " ".join(paragraphs[mention.paragraph].split())[:limit]
+
 
 # Operations that end the version the portal calls expired (see measure_provision_events.py).
 ENDING = {"repeal", "replace", "amend", "correct", "suspend"}
@@ -59,23 +76,19 @@ def main() -> None:
     store = DocumentStore(data)
     index = TemporalIndex(args.index or data / "temporal.sqlite")
     resolver = TargetResolver(index)
-    source_id_by_domain = {
-        make_document_id(source_id): source_id for source_id in store.ids("raw")
-    }
-
     by_number: dict[str, list[str]] = collections.defaultdict(list)
     for doc in index.documents():
         if doc.number:
             by_number[normalize_number(doc.number)].append(doc.id)
 
     targets_of: dict[str, set[str]] = collections.defaultdict(set)
-    actors: set[str] = set()
+    actors: dict[str, str] = {}  # domain id -> portal id, which names the file under data/raw
     for line in (data / "edges.jsonl").read_text(encoding="utf-8").splitlines():
         edge = json.loads(line)
-        source_id = make_document_id(edge["source_id"])
-        targets_of[source_id].add(make_document_id(edge["target_id"]))
-        if edge["group"] == "genealogy" and source_id in source_id_by_domain:
-            actors.add(source_id)
+        source = make_document_id(edge["source_id"])
+        targets_of[source].add(make_document_id(edge["target_id"]))
+        if edge["group"] == "genealogy":
+            actors[source] = edge["source_id"]
 
     # Only a central normative act can amend one (ADR 0002 scope): a provincial
     # resolution or a consolidated text that cites "Điều 4 Nghị định số X" is
@@ -94,6 +107,8 @@ def main() -> None:
                 for pid in row.get("provision_ids", [])
             )
     tree_cache: dict[str, dict] = {}
+    text_cache: dict[str, dict[str, str]] = {}
+    subtree_of = {make_document_id(i): i for i in store.ids("derived/subtrees")}
 
     def provision(doc_id: str, pid: str):
         if doc_id not in tree_cache:
@@ -101,17 +116,50 @@ def main() -> None:
             tree_cache[doc_id] = {p.id: p for p in index.document_order(doc_id)}
         return tree_cache[doc_id].get(pid)
 
+    def node_text(doc_id: str, pid: str) -> str | None:
+        """Current text of one node: the index for tree nodes, the T5 split for the rest."""
+        if doc_id not in text_cache:
+            text_cache.clear()
+            derived = {}
+            if doc_id in subtree_of:
+                derived = {make_provision_id(n["id"]): n.get("text")
+                           for n in store.load("derived/subtrees", subtree_of[doc_id])["nodes"]}
+            text_cache[doc_id] = derived
+        stored = index.versions_of(pid)
+        return stored[0].text if stored else text_cache[doc_id].get(pid)
+
+    def phrase_updates(doc_id: str, pid: str, edits: list[tuple[str, str]]) -> dict[str, str]:
+        """Apply the edits to the target and every descendant that carries the phrase.
+
+        "thay thế cụm từ A tại Điều 7" reaches the whole article, not only its
+        heading, so the subtree is searched — but a node whose text does not
+        contain A verbatim is left alone rather than rewritten on a hunch.
+        """
+        root = provision(doc_id, pid)
+        if root is None:
+            return {}
+        out: dict[str, str] = {}
+        for node in (root, *index.descendants_of(pid)):
+            current = node_text(doc_id, node.id)
+            if not current:
+                continue
+            new_text = apply_phrase(current, edits)
+            if new_text is not None:
+                out[node.id] = new_text
+        return out
+
     stats: collections.Counter[str] = collections.Counter()
     rows: collections.Counter[str] = collections.Counter()
     skipped_mismatch: list[str] = []
+    seen: dict[str, int] = {}  # event id -> hash of its row
     out_path = data / "derived" / "provision_events.jsonl"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w", encoding="utf-8") as out:
-        for actor_id in sorted(actors):
+        for actor_id, portal_id in sorted(actors.items()):
             if actor_id not in central:
                 stats["actor out of scope"] += 1
                 continue
-            raw = store.load("raw", source_id_by_domain[actor_id])
+            raw = store.load("raw", portal_id)
             html = ((raw or {}).get("documentContent") or {}).get("content") or ""
             if not html:
                 stats["actor without body"] += 1
@@ -131,13 +179,13 @@ def main() -> None:
                 candidates = narrowed or candidates
                 base = {
                     "actor_id": actor_id,
-                    "actor_number": raw.get("docNum"),
+                    "actor_number": document_number(raw.get("docNum")),
                     "operation": mention.operation.value,
                     "method": mention.method,
                     "document_number": mention.document_number,
                     "candidate_document_ids": candidates,
                     "effective_on": effective_on,
-                    "evidence": mention.evidence,
+                    "evidence": evidence_of(mention, paragraphs),
                 }
                 references = (
                     [TargetReference(f"{actor_id}:{n}", mention.evidence or "?", TargetScope.DOCUMENT,
@@ -162,6 +210,7 @@ def main() -> None:
                             affected_provision_ids=list(target.affected_provision_ids),
                         )
                     updates = None
+                    phrase_missing = False
                     block = blocks.get(mention.paragraph)
                     if row["operation"] in TEXT_OPS and block and row["target_provision_id"]:
                         items = parse_items(block.lines)
@@ -169,15 +218,32 @@ def main() -> None:
                         if items and root:
                             updates = fit(items, {p.level: p.label for p in ref.locator.parts}, root,
                                           index.descendants_of(root.id))
+                    # B4: a phrase edit carries its payload in the instruction itself, so
+                    # it needs the original paragraph — `mention.evidence` has already had
+                    # its curly-quoted runs masked out.
+                    if not updates and row["operation"] in TEXT_OPS and row["target_provision_id"]:
+                        edits = phrase_edits(paragraphs[mention.paragraph])
+                        if edits:
+                            updates = phrase_updates(row["target_document_id"],
+                                                     row["target_provision_id"], edits)
+                            phrase_missing = not updates
                     row["text_updates"] = [{"target_provision_id": k, "new_text": v} for k, v in (updates or {}).items()]
-                    row["status"], row["status_reason"] = _status(row, block is not None, gold)
+                    row["status"], row["status_reason"] = _status(row, block is not None, gold,
+                                                                  phrase_missing=phrase_missing)
                     row["id"] = make_event_id(
                         actor_id, row["operation"],
                         [row["target_provision_id"]] if row["target_provision_id"] else [],
                         date.fromisoformat(effective_on) if effective_on else None,
                         target_document_id=row["target_document_id"],
-                        evidence_text=f"{mention.evidence}|{row['locator']}",
+                        evidence_text=f"{mention.evidence}|{row['locator']}|{mention.document_number}",
                     )
+                    fingerprint = hash(json.dumps(row, sort_keys=True))
+                    if row["id"] in seen:
+                        if seen[row["id"]] != fingerprint:  # an id must never merge two events
+                            raise ValueError(f"two different events share the id {row['id']}")
+                        stats["duplicate mention"] += 1  # the same sentence, repeated in the body
+                        continue
+                    seen[row["id"]] = fingerprint
                     stats[f"status {row['status']:<13} {row['status_reason'] or ''}"] += 1
                     rows[f"{row['operation']:<10} {'document' if ref.locator is None else 'provision':<9} {row['code']}"] += 1
                     out.write(json.dumps(row, ensure_ascii=False) + "\n")
@@ -185,13 +251,15 @@ def main() -> None:
     print(f"{stats['actors read']:,} acting documents read -> {out_path}")
     print(f"  skipped: {stats['actor out of scope']:,} not central normative, {stats['actor without body']:,} without body, "
           f"{len(skipped_mismatch):,} whose body carries another document's number: {skipped_mismatch[:12]}")
+    print(f"  {stats['duplicate mention']:,} repeated mentions written once")
     for key, count in sorted(rows.items()):
         print(f"  {count:>7,}  {key}")
     for key, count in sorted((k, v) for k, v in stats.items() if k.startswith("status ")):
         print(f"  {count:>7,}  {key}")
 
 
-def _status(row: dict, quoted: bool, gold: set[tuple[str, str]]) -> tuple[str, str | None]:
+def _status(row: dict, quoted: bool, gold: set[tuple[str, str]],
+            *, phrase_missing: bool = False) -> tuple[str, str | None]:
     """(EventStatus value, reason) — the gate P3.15 reads before applying."""
     op = row["operation"]
     if not row["code"].startswith("resolved"):
@@ -201,6 +269,10 @@ def _status(row: dict, quoted: bool, gold: set[tuple[str, str]]) -> tuple[str, s
     if row["effective_on"] is None:
         return "needs_review", "missing_effective_date"
     if op in TEXT_OPS and not row["text_updates"]:
+        if phrase_missing:
+            # The instruction was read, but the phrase it replaces is not in the
+            # target verbatim: the wrong node, or text the corpus never got.
+            return "needs_review", "phrase_not_found"
         return "needs_review", "structure_mismatch" if quoted else "missing_resulting_text"
     if op not in ENDING or op == "suspend":
         return "needs_review", f"{op}_not_materializable"

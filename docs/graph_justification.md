@@ -228,14 +228,14 @@ Theo Mục 3, $\mathcal{G}$ chứa đủ I1–I3, nên $\mathrm{valid}(u, t)$ t�
 
 Các quan sát ở Mục 4 là bằng chứng về *điều kiện cần*: thông tin quyết định hiệu lực tồn tại trong dữ liệu và bị các biểu diễn đơn giản hơn đánh mất. Chúng chưa chứng minh rằng hệ thống dựa trên $\mathcal{G}$ trả lời đúng hơn ở mức đầu – cuối, vì kết quả còn phụ thuộc vào chất lượng trích xuất thao tác sửa đổi, chất lượng truy xuất và mô hình sinh. Để biến lập luận thành các khẳng định có thể bác bỏ, chúng tôi xác định trước các giả thuyết trong Bảng 7.
 
-Các thiết lập đối chứng gồm: B2 (BM25), B3 (truy xuất dày), B4 (truy xuất lai kèm bộ xếp hạng lại), B5 (GraphRAG phi thời gian), B6 (đồ thị tri thức phân cấp cho pháp luật Việt Nam) và B7 (truy xuất kèm lọc theo siêu dữ liệu hiệu lực cấp văn bản, không dùng đồ thị). Các nhóm câu hỏi liên quan gồm: T1 (tra cứu một phiên bản, không mơ hồ về thời gian), T2 (cặp câu hỏi tương phản theo thời gian), T3 (truy vết chuỗi sửa đổi nhiều bước), T4 (phiên bản cũ còn trong kho và rất giống về nội dung) và T7 (hết hiệu lực một phần ở cấp khoản, điểm). Các chỉ số gồm TVER (tỉ lệ câu trả lời có trích dẫn không còn hiệu lực), VCR (tỉ lệ trích đúng đơn vị nhưng sai phiên bản) và TCS (tỉ lệ trả lời đúng ở cả hai mốc của một cặp tương phản).
+Các thiết lập đối chứng gồm: B2 (BM25), B3 (truy xuất dày), B4 (truy xuất lai kèm bộ xếp hạng lại), B5 (GraphRAG phi thời gian), B6 (đồ thị tri thức phân cấp cho pháp luật Việt Nam) và B7 (truy xuất kèm lọc theo siêu dữ liệu hiệu lực cấp văn bản, không dùng đồ thị). Các nhóm câu hỏi liên quan gồm: T1 (tra cứu một phiên bản, không mơ hồ về thời gian), T2 (cặp câu hỏi tương phản theo thời gian), T3 (truy vết chuỗi sửa đổi nhiều bước), T4 (phiên bản cũ còn trong kho và rất giống về nội dung) và T6 (hết hiệu lực một phần ở cấp khoản, điểm). Các chỉ số gồm TVER (tỉ lệ câu trả lời có trích dẫn không còn hiệu lực), VCR (tỉ lệ trích đúng đơn vị nhưng sai phiên bản) và TCS (tỉ lệ trả lời đúng ở cả hai mốc của một cặp tương phản).
 
 **Bảng 7.** Giả thuyết, dự đoán và điều kiện bác bỏ.
 
 | Giả thuyết | Xuất phát từ | Dự đoán | Bị bác bỏ nếu |
 |---|---|---|---|
 | H1 | Quan sát 1 | VCR của B2–B4 trên T4 cao hơn đáng kể so với trên T1 | VCR của B2–B4 trên T4 không cao hơn trên T1 |
-| H2 | Quan sát 2 | Khoảng cách giữa phương pháp đề xuất và B7 lớn nhất trên T7 | B7 đạt kết quả tương đương phương pháp đề xuất trên T7 |
+| H2 | Quan sát 2 | Khoảng cách giữa phương pháp đề xuất và B7 lớn nhất trên T6 | B7 đạt kết quả tương đương phương pháp đề xuất trên T6 |
 | H3 | Quan sát 3 | Loại bỏ lan truyền làm tăng TVER, tập trung ở câu hỏi mà bằng chứng nằm dưới một đơn vị bị bãi bỏ | TVER không thay đổi đáng kể trên tập con này |
 | H4 | Quan sát 4 | A2 làm giảm độ chính xác nhiều nhất trên T3; B5 có TCS thấp hơn phương pháp đề xuất trên T2 | A2 không làm giảm độ chính xác trên T3 |
 

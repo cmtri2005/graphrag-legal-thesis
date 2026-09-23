@@ -13,3 +13,4 @@ documents here as real choices are accepted, then index them in this file.
 
 - [0001 Neo4j và Milvus là kho dẫn xuất từ `data/`](0001-neo4j-milvus-la-kho-dan-xuat.md) — Accepted, 2026-09-14.
 - [0002 Phạm vi neo thời gian, vai trò VBHN và dữ liệu dẫn xuất](0002-pham-vi-neo-thoi-gian-va-du-lieu-dan-xuat.md) — Accepted, 2026-09-14.
+- [0003 Schema bộ dữ liệu ViLexTime](0003-schema-bo-du-lieu-vilextime.md) — Accepted, 2026-09-21.

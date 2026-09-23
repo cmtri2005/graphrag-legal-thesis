@@ -15,6 +15,7 @@ class InvalidityReason(str, Enum):
     DOCUMENT_NOT_YET_EFFECTIVE = "document_not_yet_effective"
     DOCUMENT_EXPIRED = "document_expired"
     PROVISION_NOT_YET_EFFECTIVE = "provision_not_yet_effective"
+    NO_VERSION_HELD = "no_version_held"
     PROVISION_REPEALED = "provision_repealed"
     INACTIVE_GAP = "inactive_gap"
     PARENT_INVALID = "parent_invalid"
@@ -57,6 +58,7 @@ class ValidityService:
         at: date,
         *,
         path: tuple[str, ...],
+        as_ancestor: bool = False,
     ) -> ValidityResult:
         if provision_id in path:
             return ValidityResult(
@@ -90,7 +92,13 @@ class ValidityService:
 
         chain = self._state.chain(provision_id)
         version = chain.local_at(at) if chain else None
-        if version is None:
+        # A node we hold no text for says nothing about its children. Chương and
+        # Mục are headings that carry no words of their own, and an Điều whose
+        # text the corpus lacks is missing data, not data to the contrary
+        # (master plan §11). Such a node is transparent to propagation, and
+        # still answers NO_VERSION_HELD about itself.
+        never_had_text = not (chain and chain.versions)
+        if version is None and not (as_ancestor and never_had_text):
             return self._missing_version_result(provision_id, at, chain)
 
         if provision.parent_id is not None:
@@ -98,6 +106,7 @@ class ValidityService:
                 provision.parent_id,
                 at,
                 path=(*path, provision_id),
+                as_ancestor=True,
             )
             if not parent.valid:
                 ancestor = parent.invalid_ancestor_id or parent.provision_id
@@ -124,7 +133,11 @@ class ValidityService:
         chain,
     ) -> ValidityResult:
         versions = chain.versions if chain else ()
-        if not versions or at < versions[0].validity.start:
+        if not versions:
+            return ValidityResult(
+                provision_id, at, False, reason=InvalidityReason.NO_VERSION_HELD
+            )
+        if at < versions[0].validity.start:
             return ValidityResult(
                 provision_id,
                 at,

@@ -14,6 +14,25 @@ Initial versions are deliberately open-ended. Document and ancestor bounds are
 precomputed into separate effective intervals and remain independently checked
 by ``ValidityService``; closing a local chain at the document's ``effective_to``
 would prevent later historical events from being materialized.
+
+A node we hold no text for is transparent to propagation, exactly as in
+``ValidityService``: Chương and Mục are headings that carry no words of their
+own, and an Điều the corpus lacks text for is missing data, not data to the
+contrary (master plan §11).
+
+Rejected events also go to the review queue (C3, decision Q2), which is *not*
+disposable:
+
+  data/review/provision_events.jsonl   one row per rejected event, with the
+                                       text and the instruction sentence a
+                                       reviewer needs to judge it
+
+That file is reviewed by an LLM first and double-checked by a human, so this
+script owns only the rows it wrote itself (``method: auto_rejected``). A row
+another process decided (``llm_reviewed``, ``human_reviewed``) is read back
+untouched and never recomputed: a verdict must not be silently reinstated as
+"needs review" just because a re-run met the same event again. Only a full run
+rewrites it — a partial run would be missing every document it did not build.
 """
 from __future__ import annotations
 
@@ -93,6 +112,7 @@ def build_version_files(
     versions_path: Path,
     event_log_path: Path,
     *,
+    review_path: Path | None = None,
     limit_documents: int | None = None,
     target_document_ids: Iterable[str] = (),
     verify_pairs: int = 0,
@@ -119,6 +139,7 @@ def build_version_files(
 
     report: collections.Counter[str] = collections.Counter()
     outcomes: dict[int, dict[str, Any]] = {}
+    review: list[dict[str, Any]] = []
     try:
         with TemporalIndex(index_path) as index:
             documents = {
@@ -163,6 +184,7 @@ def build_version_files(
                         output=version_out,
                         outcomes=outcomes,
                         report=report,
+                        review=review,
                         verify=(document.id in verify_ids),
                         rng=rng,
                     )
@@ -188,6 +210,12 @@ def build_version_files(
 
         versions_tmp.replace(versions_path)
         event_log_tmp.replace(event_log_path)
+        if review_path is not None and full_run:
+            rows, decided = write_review_queue(review_path, review)
+            report["review_rows"] = rows
+            report["review_rows_already_decided"] = decided
+        else:
+            report["review_rows_not_written"] = len(review)
     finally:
         versions_tmp.unlink(missing_ok=True)
         event_log_tmp.unlink(missing_ok=True)
@@ -229,6 +257,7 @@ def _build_document_versions(
     output,
     outcomes: dict[int, dict[str, Any]],
     report: collections.Counter[str],
+    review: list[dict[str, Any]],
     verify: bool,
     rng: random.Random,
 ) -> None:
@@ -328,6 +357,7 @@ def _build_document_versions(
                 _application_reason(exc),
                 detail=str(exc),
             )
+            review.append(_review_row(row, str(exc), state))
             continue
         outcomes[envelope.line_number] = {
             **_base_log(envelope),
@@ -459,6 +489,57 @@ def _version_row(
     }
 
 
+def _review_row(row: dict[str, Any], reason: str, state: TemporalState) -> dict[str, Any]:
+    """One rejected event, self-contained enough to judge without the corpus."""
+    pid = row.get("target_provision_id") or next(
+        (item["target_provision_id"] for item in row.get("text_updates") or ()), None
+    )
+    provision = state.provision(pid) if pid else None
+    chain = state.chain(pid) if pid else None
+    latest = chain.versions[-1] if chain and chain.versions else None
+    return {
+        "schema_version": 1,
+        "event_id": row["id"],
+        "decision": "needs_review",
+        "method": "auto_rejected",
+        "reason": reason,
+        "actor_id": row["actor_id"],
+        "actor_number": row.get("actor_number"),
+        "operation": row["operation"],
+        "effective_on": row["effective_on"],
+        "target_document_id": row.get("target_document_id"),
+        "target_provision_id": pid,
+        "provision_title": provision.title if provision else None,
+        "provision_level": provision.level.value if provision else None,
+        "current_text": latest.text if latest else None,
+        "current_valid_from": (
+            latest.validity.start.isoformat() if latest and latest.validity else None
+        ),
+        "locator": row.get("locator"),
+        "evidence": row.get("evidence"),
+    }
+
+
+def write_review_queue(path: Path, fresh: list[dict[str, Any]]) -> tuple[int, int]:
+    """Merge newly rejected events into the queue, keeping every verdict."""
+    kept = []
+    if path.exists():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                record = json.loads(line)
+                if record.get("method") != "auto_rejected":
+                    kept.append(record)
+    decided = {record["event_id"] for record in kept}
+    rows = kept + [row for row in fresh if row["event_id"] not in decided]
+    rows.sort(key=lambda item: item["event_id"])
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        "".join(json.dumps(item, ensure_ascii=False) + "\n" for item in rows),
+        encoding="utf-8",
+    )
+    return len(rows), len(kept)
+
+
 def _verify_effective_intervals(
     state: TemporalState,
     effective: dict[str, tuple[TemporalInterval, ...]],
@@ -480,6 +561,20 @@ def _verify_effective_intervals(
         dates.update((local.end - timedelta(days=1), local.end))
     if document.effective_to is not None:
         dates.add(document.effective_to)
+    # Repealing an Điều ends its Khoản too, so a child's answer can only flip on
+    # an ancestor's boundary. Sampling the version's own dates alone would never
+    # reach the gap this precomputation exists to preserve.
+    ancestor_id = state.provision(version.provision_id).parent_id
+    while ancestor_id is not None:
+        ancestor_chain = state.chain(ancestor_id)
+        for item in ancestor_chain.versions if ancestor_chain else ():
+            if item.validity is None:
+                continue
+            dates.add(item.validity.start)
+            if item.validity.end is not None:
+                dates.update((item.validity.end - timedelta(days=1), item.validity.end))
+        ancestor = state.provision(ancestor_id)
+        ancestor_id = ancestor.parent_id if ancestor else None
     lower = max(date.min.toordinal(), local.start.toordinal() - 365)
     upper = min(date.max.toordinal(), (local.end or local.start).toordinal() + 365)
     dates.add(date.fromordinal(rng.randint(lower, upper)))
@@ -571,6 +666,10 @@ def main() -> None:
     parser.add_argument("--index", type=Path, default=None)
     parser.add_argument("--out", type=Path, default=None)
     parser.add_argument("--event-log", type=Path, default=None)
+    parser.add_argument(
+        "--review", type=Path, default=None,
+        help="review queue for rejected events; written on a full run only",
+    )
     parser.add_argument("--limit-documents", type=int, default=None)
     parser.add_argument(
         "--verify-pairs", type=int, default=0,
@@ -586,11 +685,13 @@ def main() -> None:
     index_path = args.index or args.data / "temporal.sqlite"
     versions_path = args.out or args.data / "derived" / "versions.jsonl"
     event_log_path = args.event_log or args.data / "derived" / "event_log.jsonl"
+    review_path = args.review or args.data / "review" / "provision_events.jsonl"
     report = build_version_files(
         args.data,
         index_path,
         versions_path,
         event_log_path,
+        review_path=review_path,
         limit_documents=args.limit_documents,
         target_document_ids=args.target_document,
         verify_pairs=args.verify_pairs,

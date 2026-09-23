@@ -33,6 +33,8 @@ import time
 from datetime import date
 from pathlib import Path
 
+from legal_crawler.temporal import make_document_id
+
 DATA = Path("data")
 SEED, SAMPLE = 42, 1000
 AS_OF = (date(2026, 9, 12), date(2020, 1, 1))
@@ -63,7 +65,8 @@ rng = random.Random(SEED)
 # ------------------------------------------------------------------ M1 structure
 print("M1 — relational structure of the corpus")
 lines = [l for l in (DATA / "edges.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
-raw_edges = [json.loads(l) for l in lines]
+raw_edges = [(e := json.loads(l)) | {"source_id": make_document_id(e["source_id"]),
+                                     "target_id": make_document_id(e["target_id"])} for l in lines]
 distinct = {(e["source_id"], e["target_id"], e["reference_type"]): e for e in raw_edges}
 by_label = collections.Counter(e["label_vi"] for e in distinct.values())
 genealogy = [e for e in distinct.values() if e["group"] == "genealogy"]

@@ -30,10 +30,10 @@ from legal_crawler.temporal import (
 
 DATA = Path(__file__).resolve().parents[1] / "data"
 CHAIN_DOCUMENT = "document:105518"  # 03/2014/TT-NHNN
-CHAIN_PROVISION = "provision:6834edc0-df42-11f0-a8db-4162e9af2290%23k2"
+CHAIN_PROVISION = "provision:6834edc0-df42-11f0-a8db-4162e9af2290#k2"
 CHAIN_EVENTS = (
-    "event:document%3A122819:adbe8577ccdca0621bed67cc",
-    "event:document%3A138969:480edd1803e0091360508085",
+    "event:122819:0bca4ba1ce6348b22fc59cb9",
+    "event:138969:49c1039b4e82faa4d9c52475",
 )
 CHAIN_TEXT_SHA256 = (
     "fa484e9a88590f832de4ddc9c9ce8fcbd7e2350b770a6cfdd75771ead502278e",
@@ -42,10 +42,7 @@ CHAIN_TEXT_SHA256 = (
 )
 REPEAL_DOCUMENT = "document:178250"  # 144/2025/NĐ-CP
 REPEALED_ARTICLE = "provision:02e81570-2c0c-11f1-be02-ef7b71d803d4"
-REPEAL_EVENT = (
-    "event:document%3A012c2440-6e5d-11f1-be32-359c7a7c0807:"
-    "a0de3a1133f8bd081ecdc77f"
-)
+REPEAL_EVENT = "event:012c2440-6e5d-11f1-be32-359c7a7c0807:6cf27e846c6bd3e83a16872a"
 REPEAL_DATE = date(2026, 7, 1)
 DOCUMENT_IDS = (CHAIN_DOCUMENT, REPEAL_DOCUMENT)
 EVENT_IDS = frozenset((*CHAIN_EVENTS, REPEAL_EVENT))

@@ -70,9 +70,9 @@ def main() -> None:
     distinct: dict[tuple[str, str], str] = {}
     out = args.out or args.data / "expiry_targets.jsonl"
     with out.open("w", encoding="utf-8") as f:
-        for doc_id in sorted(source.ids("history")):
-            domain_document_id = make_document_id(doc_id)
-            entries = source.load("history", doc_id).get("history") or []
+        for portal_id in sorted(source.ids("history")):
+            doc_id = make_document_id(portal_id)
+            entries = source.load("history", portal_id).get("history") or []
             for entry in entries:
                 for text in entry.get("expiryProvisions") or []:
                     text = text.strip()
@@ -80,14 +80,14 @@ def main() -> None:
                            "recorded_at": entry.get("createdDate"), "status": entry.get("content")}
                     if text.casefold().startswith("toàn bộ"):
                         code, provision_ids = "whole_document", []
-                    elif not index.exists(domain_document_id):
+                    elif not index.exists(doc_id):
                         code, provision_ids = "document_not_indexed", []
                     elif (locator := locator_for(text)) is None:
                         code, provision_ids = "unparsed", []
                     else:
                         reference = TargetReference(f"{doc_id}:{text}", text, TargetScope.EXACT,
                                                     locator=locator)
-                        result = resolver.resolve(reference, (domain_document_id,))
+                        result = resolver.resolve(reference, (doc_id,))
                         code = result.code.value
                         provision_ids = list(result.target.candidate_provision_ids)
                     codes[code] += 1
