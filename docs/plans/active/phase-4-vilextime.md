@@ -226,7 +226,19 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   bản, 0 cờ, 250/250 `as_of` trong `[valid_from, valid_to)`, mở đầu phân bố đều
   (Trường 38 · Trong 37 · Theo 34 · Pháp 28 · Nếu 28 · Một 26 · Khi 26).
   **Chưa có:** kiểm tay T1 (B3), và `questions.jsonl` vẫn nằm dưới `data/*`
-  bị gitignore — câu chữ LLM chưa được commit (xem Risks).
+  bị gitignore — câu chữ LLM chưa được commit (xem Risks). *(Đã xử lý 24/09:
+  chuyển sang `data/vilextime/questions.jsonl`, whitelist trong `.gitignore`.)*
+- 2026-09-24: **T2 đủ quota.** 202 lineage qua C2 trên 247 đã viết → 400 dòng
+  (200 cặp) trong `selected.jsonl`, 175 văn bản, 0 cờ, 400/400 `as_of` trong
+  khoảng hiệu lực; mọi cặp dùng chung một câu hỏi và có hai đáp án khác nhau.
+  **Phát hiện mới về dữ liệu L2:** khoảng 1/20 cặp T2 không phải hai phiên bản
+  của cùng một quy định mà là hai quy định khác chủ đề chung số thứ tự (vd.
+  "10. Nghiệm thu xe cơ giới cải tạo là…" → "10. Cơ quan nghiệm thu là…";
+  "c) Kinh doanh bảo hiểm … 500 tỷ" → "c) Thu hoa hồng tái bảo hiểm…"), tức
+  lineage bị nối nhầm khi khoản/điểm được thay thế hoặc đánh số lại. Không câu
+  hỏi nào phục vụ được cả hai mốc, nên các cặp này được đánh
+  `insufficient_context`; chưa có cờ cấu trúc cho chúng. Cần đo tỷ lệ trên toàn
+  T2/T4 và báo lại cho Giai đoạn 3 (L2).
 
 - 2026-09-20 (CMT, Q3 — chốt sau khi cố vấn luật trả lời): **T5 định nghĩa lại theo
   Điều 152**, là "văn bản quy định hiệu lực trở về trước", bỏ mệnh đề "có lợi cho đối
