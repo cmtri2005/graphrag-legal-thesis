@@ -688,3 +688,59 @@ khoảng hiệu lực mới — P3.16 giữ 🟡 đến lúc đó. Merge **chưa
   này.
 - Đây là mở rộng phục vụ lưu trữ/chia sẻ và phân tích artifact L0–L3, không
   thay đổi tiêu chí hoàn thành E1–E3 hay tự đóng Phase 3.
+
+### Rebuild sau khi đồng bộ `main` — 23/09/2026
+
+- Thay `data/` bằng bản đã giải nén trong
+  `hf-snapshot-incoming-odO6eKml` sau khi kiểm checksum archive thành công.
+  `SNAPSHOT.txt` ghi `as_of: 2026-09-12`, 23.139 văn bản và code commit
+  `429558de38650a9b895f8c64f784302135d468f0`. Bản `data/` trước khi thay được
+  giữ tại `/mnt/c/Users/Admin/OneDrive/Desktop/KLTN/data-before-hf-incoming-20260923`
+  để phục hồi thủ công nếu cần.
+- Dựng lại đúng thứ tự `build_store.py --with-subtrees` →
+  `resolve_expiry_targets.py` → `extract_provision_events.py` →
+  `build_versions.py`. Kết quả: 23.139 Document, 1.700.484 Provision;
+  55.019 expiry target (8.046/8.518 cặp provision-level resolve được);
+  50.623 event; 1.595.391 version; 18.840 event áp được và 31.783 event bị từ
+  chối có lý do.
+- ID lồng nhau đã theo schema sau merge: `version:<provision-local-id>:<n>` và
+  `event:<document-local-id>:<fingerprint>`, không còn
+  `version:provision%3A...` hoặc `event:document%3A...`. SHA-256:
+  `temporal.sqlite` =
+  `6a7bde74dcbf1790cfb0e53c612715f5e9ca6a4be88f5068866041c26c923eed`;
+  `expiry_targets.jsonl` =
+  `c1fe29122d61ed667d4294f86594926677847beb220d6b607a9da585e6ae3ef6`;
+  `provision_events.jsonl` =
+  `05643b2c5ecd96cd701f33471e7589d9e522472ce80bb18c4687c918406b7520`;
+  `versions.jsonl` =
+  `64db0acb219368c44c527443127060b353c724d52a3d32622adad77f187a1832`;
+  `event_log.jsonl` =
+  `4aaa694a49a5f98a6ae458a7a697277ab94918715467fb21a2a10584c258a6a0`.
+- `verify_pipeline.py`: **all checks passed**. Full suite: **331 passed**;
+  hai test chuỗi version trên dữ liệu thật từng lỗi do artifact ID cũ đều đã
+  pass.
+- Neo4j và snapshot Parquet/BigQuery ngày 23/09 ở mục trên vẫn là artifact
+  lịch sử theo ID cũ. Phải reload graph và phát hành table snapshot ID mới
+  trước khi dùng chúng với artifact vừa dựng; không ghi đè snapshot GCS cũ.
+  Việc rebuild này không tự đóng E1–E3 hoặc Phase 3.
+
+### Đồng bộ Neo4j và bảng cloud — 24/09/2026
+
+- Reset riêng volume `graphrag-legal_neo4j_data`; giữ nguyên log/plugin và
+  toàn bộ volume Milvus, MinIO, etcd. Tạo lại bốn ID constraint rồi full-load
+  artifact mới. Loader tự hậu kiểm trong **937,6s**: 23.139 Document,
+  1.700.484 Provision, 1.595.391 ProvisionVersion, 50.623 LegalEvent,
+  1.700.484 `CONTAINS`, 1.595.391 `VERSION_OF`, 44.060 cạnh Version → Event và
+  50.623 cạnh Event → Document. Không còn Version/Event dùng ID lồng schema cũ.
+- Nạp lại 13 loại quan hệ văn bản: **124.934** cạnh graph và **3.614** cạnh
+  unresolved. Smoke test Neo4j/Milvus PASS và phép đối chiếu D5 sau reload đạt
+  **200/200 snapshot khớp**.
+- Export và phát hành snapshot Parquet bất biến mới tại
+  `gs://graphrag-legal-thesis/tables/20260924-phase3-v2-c9adff4/`
+  (246.747.197 byte cả prefix). Bảy BigQuery external table trong
+  `graphrag-509313.legal_graph` đã chuyển sang prefix này; truy vấn trực tiếp
+  trả đúng 23.139 Document, 1.700.484 Provision, 1.595.391 Version, 50.623
+  Event, 1.700.484 containment edge, 94.683 causal edge và 128.548 reference
+  edge.
+- Snapshot ngày 23/09 được giữ nguyên như artifact lịch sử; không ghi đè hoặc
+  xóa. Việc đồng bộ kho dẫn xuất này không tự đóng E1–E3 hoặc Phase 3.

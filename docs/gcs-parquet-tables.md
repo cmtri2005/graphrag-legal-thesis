@@ -137,3 +137,23 @@ Mỗi lần dữ liệu thay đổi, tạo `snapshot-id` mới và prefix GCS m�
 Parquet của snapshot cũ. Nếu chạy `--create-bigquery`, bảy external table trong
 dataset `legal_graph` sẽ được chuyển sang snapshot mới bằng `CREATE OR REPLACE`;
 snapshot cũ vẫn còn trên GCS để truy nguyên hoặc rollback định nghĩa bảng.
+
+## Snapshot active sau khi đồng bộ main — 24/09/2026
+
+- GCS: `gs://graphrag-legal-thesis/tables/20260924-phase3-v2-c9adff4/`;
+- BigQuery: `graphrag-509313.legal_graph` tại `us-east1`;
+- tổng kích thước prefix: 246.747.197 byte;
+- BigQuery external tables hiện trỏ tới snapshot này.
+
+| Bảng | Số dòng đã truy vấn lại |
+|---|---:|
+| `documents` | 23.139 |
+| `provisions` | 1.700.484 |
+| `provision_versions` | 1.595.391 |
+| `legal_events` | 50.623 |
+| `containment_edges` | 1.700.484 |
+| `causal_edges` | 94.683 |
+| `document_reference_edges` | 128.548 |
+
+Snapshot `20260923-phase3-v2-d7ada236` ở mục trên là artifact lịch sử theo
+schema ID trước khi đồng bộ `main`; nó vẫn được giữ nguyên để truy nguyên.
