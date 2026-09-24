@@ -130,7 +130,7 @@ hoà giải là thứ không khôi phục được sau khi đã hoà giải, và
 các mã sau phát hành là thay đổi MAJOR. `review` ship **nhãn thô của từng
 annotator** kèm mã giả danh, không chỉ kappa, để bên thứ ba tính lại được.
 
-Từ vựng `flags` v1.0.0, chốt 21/09 (CMT), v1.1.0 thêm `answer_in_children` 24/09 — **chỉ lỗi cấu trúc**:
+Từ vựng `flags` v1.0.0, chốt 21/09 (CMT), v1.1.0 thêm `answer_in_children`, v1.2.0 thêm `cosmetic_change` 24/09 — **chỉ lỗi cấu trúc**:
 
 | Mã | Nghĩa | T1 |
 |---|---|---:|
@@ -139,6 +139,7 @@ Từ vựng `flags` v1.0.0, chốt 21/09 (CMT), v1.1.0 thêm `answer_in_children
 | `untitled_ancestor` | nút nguồn không có số, làm citation hỏng ("Khoản 3 Điều") | 17 |
 | `kg_unreproducible` | đồ thị hiện tại không tái dựng được gold (chưa gán, chờ đo) | — |
 | `answer_in_children` | **v1.1.0, thêm 24/09 (CMT).** Text là tiêu đề hoặc câu dẫn, nội dung nằm ở nút con: nút có con, hoặc kết thúc bằng ":", hoặc là Điều chỉ còn tiêu đề (≤ 15 từ, phần thân mất khi crawl). `heading_only` chỉ bắt trường hợp trùng khít tiêu đề nên bỏ sót "Điều 10. Gia hạn …" | xem plan |
+| `cosmetic_change` | **v1.2.0, thêm 24/09.** Hai phiên bản liền nhau chỉ khác chữ hoa, khoảng trắng hoặc dấu câu (so sau khi bỏ ký tự không phải chữ/số). Không câu hỏi nào tách được hai mốc. 70/1.500 cặp T4 | xem plan |
 
 **Độ dài đáp án không phải tiêu chí.** Đo trên T1: ngưỡng 80 ký tự cắt 779 dòng
 (31,2%) mà phần lớn là điều khoản ngắn hợp lệ ("đ) Số lượng, khối lượng dịch vụ

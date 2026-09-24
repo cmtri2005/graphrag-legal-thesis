@@ -193,3 +193,11 @@ def test_the_versions_file_is_read_whatever_its_json_separators():
     for line in ('{"id":"v:1","provision_id":"provision:p","text":"x"}',
                  '{"id": "v:1", "provision_id": "provision:p", "text": "x"}'):
         assert _PROVISION_ID.search(line).group(1) == "provision:p"
+
+
+def test_a_change_of_case_or_punctuation_is_not_a_change():
+    from build_vilextime import cosmetic_only
+
+    assert cosmetic_only(["tỉnh, thành phố trực thuộc Trung ương.", "tỉnh, thành phố trực thuộc trung ương;"])
+    assert not cosmetic_only(["giao Bộ Tài nguyên và Môi trường", "giao Bộ Nông nghiệp và Môi trường"])
+    assert cosmetic_only(["a", "b thay", "B thay."])         # any consecutive pair counts

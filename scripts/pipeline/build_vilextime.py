@@ -100,6 +100,17 @@ def flags_of(level: str, cite: str, answer: str | None, chain: list[tuple[str, s
     return flags
 
 
+def cosmetic_only(texts: list[str]) -> bool:
+    """Two consecutive versions that differ only in case, spacing or punctuation.
+
+    The pool dropped byte-identical pairs, not these: "Trung ương" -> "trung
+    ương", "hành." -> "hành;". No question can tell such dates apart, and 70 of
+    1,500 T4 pairs were only this (24/09).
+    """
+    norm = [" ".join(re.findall(r"\w+", (t or "").casefold())) for t in texts]
+    return any(a == b for a, b in zip(norm, norm[1:]))
+
+
 def question_of(cite: str, doc_type: str, law_id: str, as_of: str) -> str:
     day = date.fromisoformat(as_of).strftime("%d/%m/%Y")
     where = f"{cite} {doc_type} số {law_id}".strip() if cite else f"{doc_type} số {law_id}".strip()
@@ -153,6 +164,7 @@ def records_of(row: dict, documents: dict[str, tuple], chains: dict[str, list],
     # question has not been generated — or whose generated one failed C2 — keep
     # the template, and `question_source.kind` says which is which.
     generated = questions.get(row["provision_id"])
+    cosmetic = cosmetic_only([v["text"] for v in sorted(row["versions"], key=lambda v: v["ordinal"])])
     out = []
     for gold in row["gold"]:
         version = by_id.get(gold["version_id"]) if gold["version_id"] else None
@@ -209,7 +221,7 @@ def records_of(row: dict, documents: dict[str, tuple], chains: dict[str, list],
             "review": {"status": "unchecked", "labels": [], "adjudicator": None,
                        "guideline_version": "1.0", "note": ""},
             "flags": flags_of(row["level"], cite, gold["text"], chain,
-                              row["provision_id"] in with_children),
+                              row["provision_id"] in with_children) + (["cosmetic_change"] if cosmetic else []),
             "similarity": row.get("similarity"),
         })
     return out

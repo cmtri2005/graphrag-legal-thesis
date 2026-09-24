@@ -259,6 +259,15 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   khác nhau. 3 dòng dùng câu của lượt thử Groq `gpt-oss-120b` (lineage không có
   câu dẫn nên không bị bỏ), còn lại `claude-opus-5-5`. Chuỗi quay về nguyên văn
   bản cũ: 1/331 — không đáng xử lý riêng.
+- 2026-09-24: **T4 đủ quota.** 77 lineage qua C2 trên 100 đã viết → 150 dòng
+  (75 cặp), 63 văn bản, 0 cờ. Phần lớn cặp T4 là **đổi tên cơ quan** (Bộ Tài
+  nguyên và Môi trường → Bộ Nông nghiệp và Môi trường, Tổng cục → Ủy ban, Chi cục
+  Hải quan → Hải quan cửa khẩu, thị trấn → đặc khu) — đúng loại bẫy T4 nhắm tới.
+  **Cờ mới `cosmetic_change`** (ADR 0003 flags v1.2.0): hai phiên bản liền nhau
+  chỉ khác chữ hoa/dấu câu — T4 70/1.500, T3 7, T6 3. Đo được chính xác, khác lỗi
+  nối nhầm lineage. Cờ bắt được 1 chuỗi T3 đã chọn (v2→v3 chỉ "đất," → "đất;"),
+  nay được thay bằng chuỗi kế tiếp; phép kiểm "mỗi mốc có đáp án khác nhau" trước
+  đó so nguyên văn nên đã bỏ sót.
 
 - 2026-09-20 (CMT, Q3 — chốt sau khi cố vấn luật trả lời): **T5 định nghĩa lại theo
   Điều 152**, là "văn bản quy định hiệu lực trở về trước", bỏ mệnh đề "có lợi cho đối
