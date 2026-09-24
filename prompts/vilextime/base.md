@@ -26,7 +26,7 @@ năm 2016 lẫn năm 2026, nên nó không được khẳng định mốc nào l
 >   giấy tờ nào?
 
 **2. Không dẫn vị trí.** Không số hiệu văn bản, không "Điều 5", "Khoản 2",
-"Điểm a". Câu hỏi phải hỏi *nội dung quy định thế nào*, không phải *điều khoản
+"Điểm a", không ký hiệu mục như "a)", "loại c)". Câu hỏi phải hỏi *nội dung quy định thế nào*, không phải *điều khoản
 số mấy viết gì*. Người biết số điều khoản thì đã không cần hỏi.
 
 > ✗ Khoản 1 Điều 3 Thông tư 36/2016/TT-BTTTT quy định nội dung gì?
@@ -52,14 +52,31 @@ Người hỏi không biết số hiệu, nhưng biết mình đang hỏi về l
 chủ đề từ tên văn bản (bỏ phần "Thông tư số .../Nghị định số ..." ở đầu) và
 dùng nó để khoanh vùng câu hỏi.
 
-**Đổi cách mở đầu giữa các câu.** Bộ dữ liệu có hàng nghìn câu; nếu câu nào
-cũng bắt đầu bằng "Theo quy định..." thì nó lại thành một cái khuôn khác. Luân
-phiên các dạng:
+## Dạng câu hỏi và cách mở đầu: làm đúng như đầu vào chỉ định
 
-- Theo quy định về <chủ đề>, ... ?
-- Trong lĩnh vực <chủ đề>, ... ?
-- Pháp luật về <chủ đề> quy định ... như thế nào?
-- ... được xác định ra sao trong <chủ đề>?
+Cuối phần đầu vào có hai dòng `DẠNG CÂU HỎI` và `MỞ ĐẦU`. Chúng được gán sẵn
+cho từng điều khoản để cả bộ dữ liệu không bị lặp một khuôn; bạn **phải** viết
+theo đúng dạng và dùng đúng cách mở đầu được giao (thay phần trong `<...>` bằng
+nội dung thật, giữ nguyên cấu trúc).
+
+**Dạng tra cứu** — hỏi thẳng quy định về một khía cạnh cụ thể: điều kiện, thủ
+tục, thời hạn, thẩm quyền, mức phạt, đối tượng.
+
+> ✓ Pháp luật về thủ tục giải thể cơ sở bảo trợ xã hội quy định đơn trong hồ
+>   sơ giải thể phải đáp ứng yêu cầu gì?
+
+**Dạng tình huống** — mô tả một chủ thể đang làm một việc hoặc gặp một sự
+việc, rồi hỏi quy định áp dụng cho tình huống đó là gì. Mốc thời gian của bộ
+dữ liệu chính là thời điểm tình huống xảy ra, nên tình huống **không được**
+tự mang ngày tháng. Chủ thể là một vai chung ("một doanh nghiệp", "một người
+điều khiển phương tiện", "một tổ chức tín dụng"), không có tên riêng, và mọi
+chi tiết của tình huống phải lấy từ ngữ cảnh — không bịa thêm tình tiết làm
+đổi đáp án.
+
+> ✓ Một cơ sở bảo trợ xã hội muốn chấm dứt hoạt động thì đơn trong hồ sơ giải
+>   thể phải đáp ứng yêu cầu gì?
+
+Ở cả hai dạng, câu hỏi phải có **đúng một** đáp án là điều khoản được giao.
 
 ## Khi đáp án là một mục trong danh sách
 

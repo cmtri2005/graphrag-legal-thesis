@@ -69,8 +69,8 @@ def test_the_prompt_is_the_one_stored_in_the_repo():
 
 def test_one_question_serves_every_date_so_the_model_sees_every_version():
     """C3: a T2 pair shares one question, so both texts go in one prompt."""
-    records = [{"as_of": "2015-01-01", "answer": "bản cũ", "target": {"document_title": TITLE, "lead_in": LEAD_IN}},
-               {"as_of": "2020-01-01", "answer": "bản mới", "target": {"document_title": TITLE, "lead_in": LEAD_IN}}]
+    records = [{"as_of": "2015-01-01", "answer": "bản cũ", "target": {"document_title": TITLE, "lead_in": LEAD_IN}, "lineage_id": "provision:x"},
+               {"as_of": "2020-01-01", "answer": "bản mới", "target": {"document_title": TITLE, "lead_in": LEAD_IN}, "lineage_id": "provision:x"}]
     message, context, answer = user_prompt(records)
 
     assert "CÁC PHIÊN BẢN" in message and "[1] bản cũ" in message and "[2] bản mới" in message
@@ -127,3 +127,45 @@ def test_the_examples_in_the_prompt_agree_with_the_validator():
     # The prompt teaches against it; only the hand-check can enforce it.
     assert validate("Những hành vi nào bị phạt tiền từ 20.000.000 đồng đến 40.000.000 đồng?",
                     air_context, air_answer) is None
+
+
+def test_the_model_is_handed_the_difference_and_an_assigned_form():
+    """The proposal: code finds the difference, the model only words it. And the
+    form is assigned, because left alone the model opened 31/31 with "Trong"."""
+    from generate_questions import changes, style_of
+
+    old = "a) Đơn xin giải thể cơ sở bảo trợ xã hội nêu rõ lý do xin giải thể;"
+    new = "a) Đơn đề nghị giải thể cơ sở bảo trợ xã hội, trong đó nêu rõ lý do xin giải thể (Mẫu số 4);"
+    diff = changes(old, new)
+    assert "«xin» → «đề nghị»" in diff and "(Mẫu số 4)" in diff
+
+    records = [{"as_of": "2015-01-01", "answer": old, "lineage_id": "provision:x",
+                "target": {"document_title": TITLE, "lead_in": LEAD_IN}},
+               {"as_of": "2020-01-01", "answer": new, "lineage_id": "provision:x",
+                "target": {"document_title": TITLE, "lead_in": LEAD_IN}}]
+    message, _, _ = user_prompt(records)
+    assert "CHỖ THAY ĐỔI" in message and "[1→2]" in message
+    assert "DẠNG CÂU HỎI" in message and "MỞ ĐẦU" in message
+
+    forms = [style_of(f"provision:{i}")[0] for i in range(1000)]
+    assert style_of("provision:x") == style_of("provision:x")
+    assert 400 < forms.count("tinh_huong") < 600
+
+
+def test_a_list_label_is_a_position_too():
+    assert validate("Trong lĩnh vực chứng khoán, hình thức xử phạt chính loại c) được quy định thế nào?",
+                    CONTEXT, ANSWER) == "cites_a_provision"
+
+
+def test_naming_the_act_is_framing_but_naming_the_version_is_a_leak():
+    """A situation has to name the act; a contrast pair must not name the date."""
+    old = ("đ) Tạm đình chỉ hoạt động giao dịch chứng khoán của tổ chức vi phạm từ 01 tháng "
+           "đến 03 tháng kể từ ngày quyết định xử phạt có hiệu lực thi hành;")
+    new = ("đ) Tạm đình chỉ hoạt động giao dịch chứng khoán của tổ chức vi phạm từ 03 tháng "
+           "đến 06 tháng kể từ ngày quyết định xử phạt có hiệu lực thi hành;")
+    framing = "Nghị định Quy định xử phạt vi phạm hành chính trong lĩnh vực chứng khoán"
+
+    assert validate("Một tổ chức bị tạm đình chỉ hoạt động giao dịch chứng khoán của tổ chức vi phạm "
+                    "thì thời hạn đình chỉ là bao lâu?", framing, [old, new]) is None
+    assert validate("Một tổ chức vi phạm bị tạm đình chỉ giao dịch từ 03 tháng đến 06 tháng kể từ ngày "
+                    "quyết định xử phạt có hiệu lực thì áp dụng khi nào?", framing, [old, new]) == "copies_the_answer"

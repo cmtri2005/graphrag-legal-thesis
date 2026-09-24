@@ -177,6 +177,57 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
 
 ## Decisions đã chốt
 
+- 2026-09-24 (CMT, Follow-Up ADR 0003): **quota đếm theo dòng QA**, tổng 1.150
+  dòng. T2 400 dòng = 200 điều khoản, T3 200 dòng ≈ 55–65 chuỗi. Không cắt một
+  lineage giữa các mốc.
+- 2026-09-24 (CMT, E1 với T2/T4): **không chặn T2/T4 chờ E1.** Sinh và lấy mẫu
+  T2/T4 ngay; trước D4 kiểm tay vế "trước sửa đổi" trên mẫu, ghi tỷ lệ sai vào
+  Risks. Đổi lại, gold T2/T4 chưa đóng băng cho tới khi có con số này.
+- 2026-09-24 (CMT, C1): nhà cung cấp LLM sinh câu hỏi là **Groq** (mặc định của
+  `src/legal_crawler/llm.py`). Chỉ gửi text văn bản luật công khai.
+  Model `openai/gpt-oss-120b` (Groq không có model mặc định, Q5). Chạy thử
+  10 lineage T1: 5/10 qua C2 (loại: 2 `cites_a_provision`, 2
+  `copies_the_answer`, 1 `insufficient_context`). Lượt đầu 1/5 vì
+  `max_tokens=512` bị phần suy luận ẩn của gpt-oss ăn hết và câu bị cắt ghi
+  thành lỗi model; `llm.complete()` nay báo lỗi khi `finish_reason=length`.
+- 2026-09-24 (CMT): **sửa prompt sau khi đọc 31 câu đầu.** Cả 31 mở bằng
+  "Trong …", 10 kết bằng "…như thế nào?", và T2–T4 không chắc hỏi trúng chỗ
+  sửa. Sửa: dạng *tình huống* / *tra cứu* 50/50 gán theo hash lineage (theo
+  định nghĩa đầu vào "thời điểm phát sinh hành vi" của đề cương), câu mở đầu
+  gán sẵn, khác biệt tính bằng difflib đưa vào prompt, ký hiệu mục "c)" bị C2
+  loại. 35 câu sinh bằng prompt cũ đã xoá. Lấy mẫu: `sample_vilextime.py`
+  (2× quota, T3 3× vì chỉ qua 9/22, tối đa 2 lineage mỗi văn bản, seed
+  20260924); T3 chạm trần 571/600 dòng do chỉ có 121 văn bản.
+- 2026-09-24: **`copies_the_answer` thu hẹp lại.** Luật cũ (bất kỳ 8-gram trùng
+  đáp án) loại phần lớn câu tình huống, vì mô tả tình huống buộc phải gọi đúng
+  tên hành vi. Luật mới chỉ loại khi (a) phần chép phủ ≥ 1/2 một phiên bản, hoặc
+  có chép trong câu có/không; (b) với nhiều phiên bản, phần chép chứa từ chỉ một
+  phiên bản có — câu hỏi lộ mốc. Luật (b) bắt đúng các câu T2 nhắc "cho vay bằng
+  phương tiện điện tử" hay "công nghệ thông tin cơ bản" — chính là phần mới thêm.
+  Chấm lại offline bằng `--revalidate`, không gọi lại API. Giới hạn Groq miễn phí
+  (1.000 request/ngày, 8.000 token/phút) làm tốc độ ~1 câu/phút.
+- 2026-09-24: **Groq miễn phí bị chặn ở 200.000 token/ngày** (~75 câu/ngày với
+  gpt-oss-120b). CMT chốt: câu hỏi do phiên Claude Code viết (`--answers`,
+  `provider: claude-code`, `model: claude-opus-5-5`), cùng prompt và cùng
+  `validate()`. Khoá luận phải ghi rõ, vì nếu một đường cơ sở dùng Claude thì
+  nó trả lời câu do chính Claude viết.
+- 2026-09-24: **hai lỗi dữ liệu phát hiện khi viết T1.** (1) Cờ mới
+  `answer_in_children` (ADR 0003 §9, v1.1.0): text là tiêu đề/câu dẫn, nội dung
+  ở nút con — T1 617, T2 588, T4 332, T6 145, T3 38 dòng; `heading_only` chỉ bắt
+  trùng khít nên bỏ sót. (2) **`lead_in` rỗng trên toàn bộ 16.513 dòng** từ khi
+  `versions.jsonl` chuyển sang JSON gọn (22/09): bộ lọc chuỗi
+  `'"provision_id": "'` bỏ qua mọi dòng. Sửa bằng regex; lead_in về 92–99%.
+  Mọi câu đã sinh (158) được viết khi prompt thiếu câu dẫn nên đã bỏ; giữ 11
+  câu của lineage vốn không có câu dẫn. Mẫu lấy lại sau cờ mới.
+- 2026-09-24: **T1 đủ quota.** 255 câu qua C2 trên 342 lineage đã viết (câu
+  dẫn có sẵn: ~80% giữ được; loại 64 `insufficient_context` do chính người viết
+  đánh — dẫn chiếu trần, cụm danh từ, câu lệnh sửa đổi; 12 `copies_the_answer`).
+  `sample_vilextime.py --select` → 250 dòng T1 trong `selected.jsonl`, 244 văn
+  bản, 0 cờ, 250/250 `as_of` trong `[valid_from, valid_to)`, mở đầu phân bố đều
+  (Trường 38 · Trong 37 · Theo 34 · Pháp 28 · Nếu 28 · Một 26 · Khi 26).
+  **Chưa có:** kiểm tay T1 (B3), và `questions.jsonl` vẫn nằm dưới `data/*`
+  bị gitignore — câu chữ LLM chưa được commit (xem Risks).
+
 - 2026-09-20 (CMT, Q3 — chốt sau khi cố vấn luật trả lời): **T5 định nghĩa lại theo
   Điều 152**, là "văn bản quy định hiệu lực trở về trước", bỏ mệnh đề "có lợi cho đối
   tượng áp dụng". Số câu T5 là số ca cố vấn xác nhận được, không đặt trước. **Phần
@@ -240,7 +291,7 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
 ## Progress
 
 - [ ] Gói A — chốt Q1, Q2 và hướng dẫn gán nhãn (P4.1). A1 xong 20/09; còn A2 (hướng dẫn gán nhãn), A3 (lược đồ dòng dữ liệu)
-- [ ] Gói B — sinh ứng viên tự động (P4.2, P4.3, P4.6). B1, B2, B4 xong 20/09; B5 (schema + T1) xong 21/09; còn B3 (tiêu chí độ dài, chờ kiểm tay) và T2–T6 (chờ chốt quota đếm theo câu hay theo điều khoản — xem Follow-Up của ADR 0003)
+- [ ] Gói B — sinh ứng viên tự động (P4.2, P4.3, P4.6). B1, B2, B4 xong 20/09; B5 (schema + T1) xong 21/09; còn B3 (tiêu chí độ dài, chờ kiểm tay); quota chốt 24/09 là đếm theo dòng QA
 - [ ] Gói C — diễn đạt thành câu hỏi (P4.4). C1, C2, C3 (cơ chế) xong 21/09; **chưa chạy thật**: cần API key và quyết định gửi text luật ra dịch vụ ngoài
 - [ ] Gói D — đủ quota, cố vấn luật, Cohen κ (P4.5, P4.7, P4.8)
 - [ ] Gói E — chia dev/test (P4.9)

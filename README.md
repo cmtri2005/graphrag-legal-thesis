@@ -27,7 +27,8 @@ This README is the orientation map and the how-to-run.
 | 2b. Reverse-edge closure | done | `data/diagrams/`, `data/reverse_seeds.json` |
 | 3. Full fetch | done, resumable | `data/raw/*.json`, `data/manifest.sqlite` |
 | 3b. `referenceType` mapping | done, hand-verified | `data/reference_type_map.json` |
-| 4. Field-based review | done, human-confirmed | `data/excluded_ids.txt` |
+| 4. Field-based review | done, human-confirmed | `data/vilextime/questions.jsonl` | ViLexTime question text, one row per lineage, with who wrote it and why a rejected one was rejected | **no** — model or hand-written text, not rebuildable; everything else in the dataset is derived |
+| `data/excluded_ids.txt` |
 | 5a. Provision trees | done, 99%+ | `data/trees/*.json` |
 | 5b. Text → tree mapping | done, 98.9% of matchable nodes | `data/provisions/*.json` |
 | 6. Temporal graph build | **not started** | — |
@@ -210,6 +211,7 @@ Run tests with `pytest` (or `python3 -m pytest`) from the repo root.
 | `data/delta_runs.jsonl` | when each delta run happened and what it moved | **no** — this is what lets the corpus say "as of when" |
 | `data/tree_content_mismatch.txt` | documents whose tree claims articles the body lacks — review queue for Stage 5b | yes, regenerated |
 | `data/field_filter_review.txt` | Stage 4 candidates, regenerated each run | yes |
+| `data/vilextime/questions.jsonl` | ViLexTime question text, one row per lineage, with who wrote it and why a rejected one was rejected | **no** — model or hand-written text, not rebuildable; everything else in the dataset is derived |
 | `data/excluded_ids.txt` | **human-confirmed** exclusions from `apply_field_review.py` | no — encodes a manual decision, don't hand-edit without updating the script's `CONFIRMED_EXCLUSIONS` too |
 
 ## Gotchas (learned the hard way — read before you crawl)

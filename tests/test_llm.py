@@ -58,3 +58,22 @@ def test_the_env_file_fills_gaps_but_never_overrides(monkeypatch, tmp_path):
 def test_a_missing_env_file_is_not_an_error(monkeypatch, tmp_path):
     monkeypatch.setattr("legal_crawler.llm._ENV_FILE", tmp_path / "nope")
     _load_env_file()          # must not raise; the file is a convenience
+
+
+def test_a_truncated_answer_is_an_error_not_a_bad_question(monkeypatch):
+    """gpt-oss spends max_tokens thinking; a cut-off reply must not be scored as the model's question."""
+    from legal_crawler.llm import complete
+
+    class Cut:
+        ok, status_code, headers = True, 200, {}
+
+        def json(self):
+            return {"choices": [{"finish_reason": "length", "message": {"content": "Trong lĩnh vực"}}]}
+
+    class Session:
+        def post(self, *args, **kwargs):
+            return Cut()
+
+    monkeypatch.setenv("GROQ_API_KEY", "x")
+    with pytest.raises(LLMError, match="truncated"):
+        complete("s", "u", provider="groq", model="m", session=Session())

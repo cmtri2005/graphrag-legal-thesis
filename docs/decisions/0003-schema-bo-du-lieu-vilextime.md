@@ -130,7 +130,7 @@ hoà giải là thứ không khôi phục được sau khi đã hoà giải, và
 các mã sau phát hành là thay đổi MAJOR. `review` ship **nhãn thô của từng
 annotator** kèm mã giả danh, không chỉ kappa, để bên thứ ba tính lại được.
 
-Từ vựng `flags` v1.0.0, chốt 21/09 (CMT) — **chỉ lỗi cấu trúc**:
+Từ vựng `flags` v1.0.0, chốt 21/09 (CMT), v1.1.0 thêm `answer_in_children` 24/09 — **chỉ lỗi cấu trúc**:
 
 | Mã | Nghĩa | T1 |
 |---|---|---:|
@@ -138,6 +138,7 @@ Từ vựng `flags` v1.0.0, chốt 21/09 (CMT) — **chỉ lỗi cấu trúc**:
 | `heading_only` | text của nút chính là tiêu đề của nó (`answer` = "Chương IV") | 32 |
 | `untitled_ancestor` | nút nguồn không có số, làm citation hỏng ("Khoản 3 Điều") | 17 |
 | `kg_unreproducible` | đồ thị hiện tại không tái dựng được gold (chưa gán, chờ đo) | — |
+| `answer_in_children` | **v1.1.0, thêm 24/09 (CMT).** Text là tiêu đề hoặc câu dẫn, nội dung nằm ở nút con: nút có con, hoặc kết thúc bằng ":", hoặc là Điều chỉ còn tiêu đề (≤ 15 từ, phần thân mất khi crawl). `heading_only` chỉ bắt trường hợp trùng khít tiêu đề nên bỏ sót "Điều 10. Gia hạn …" | xem plan |
 
 **Độ dài đáp án không phải tiêu chí.** Đo trên T1: ngưỡng 80 ký tự cắt 779 dòng
 (31,2%) mà phần lớn là điều khoản ngắn hợp lệ ("đ) Số lượng, khối lượng dịch vụ
@@ -151,9 +152,16 @@ Mỗi lineage có **một** câu hỏi dùng chung cho mọi `as_of` (C3), và *
 gian không nằm trong câu hỏi** — nó là trường `as_of`. Đây là điều kiện để một
 câu hỏi phục vụ được hai mốc của cặp tương phản T2.
 
-Văn phong: câu hỏi nội dung, neo bằng chủ đề văn bản ("Theo <chủ đề>, ..."),
-văn phong khoa học. Không dẫn số hiệu, không dẫn Điều/Khoản/Điểm, không lời
-dẫn hội thoại. Prompt nằm trong `prompts/vilextime/` (`base.md` + một file mỗi
+Văn phong: câu hỏi nội dung, neo bằng chủ đề văn bản, văn phong khoa học.
+Không dẫn số hiệu, không dẫn Điều/Khoản/Điểm hay ký hiệu mục "c)", không lời
+dẫn hội thoại. **Sửa 24/09 (CMT):** hai dạng câu, mỗi dạng một nửa số lineage —
+*tra cứu* (hỏi thẳng quy định) và *tình huống* (một chủ thể làm hoặc gặp một
+việc; mốc `as_of` là thời điểm tình huống phát sinh, đúng định nghĩa đầu vào
+của đề cương). Dạng và câu mở đầu do `style_of(lineage_id)` gán theo hash, không
+để model tự chọn: lượt đầu model tự luân phiên thì 31/31 câu mở bằng "Trong …".
+Với T2–T4, khác biệt giữa các phiên bản do `changes()` (difflib, mức từ) tính
+sẵn và đưa vào prompt là `CHỖ THAY ĐỔI` — code tìm khác biệt, LLM chỉ diễn đạt,
+như đề cương mô tả. Prompt nằm trong `prompts/vilextime/` (`base.md` + một file mỗi
 nhóm), và `question_source` ghi `provider`, `model`, `temperature`,
 `prompt_sha` trên từng dòng (C1). Dòng chưa sinh hoặc bị C2 loại giữ khuôn máy
 và `question_source.kind` = `template`.
@@ -221,11 +229,12 @@ Tradeoffs:
 
 ## Follow-Up
 
-- **Chưa chốt:** quota trong `docs/plans/active/phase-4-vilextime.md` (T1 250 ·
-  T2 400 · T3 200 · T4 150 · T5 50 · T6 100 = 1.150) đếm theo **câu** hay theo
-  **điều khoản**. Dưới schema này một điều khoản T2 sinh 2 dòng, T3 sinh 3–4.
-  Cần quyết định của CMT trước khi sinh T2–T6; T1 không bị ảnh hưởng vì một
-  điều khoản T1 sinh đúng một dòng.
+- **Chốt 24/09 (CMT):** quota trong `docs/plans/active/phase-4-vilextime.md` (T1 250 ·
+  T2 400 · T3 200 · T4 150 · T5 50 · T6 100 = 1.150) đếm theo **dòng QA**
+  (cặp điều khoản, `as_of`), không theo điều khoản. Tổng bộ phát hành đúng
+  1.150 dòng. T2 400 dòng = 200 điều khoản; T3 200 dòng ≈ 55–65 chuỗi (mỗi
+  chuỗi 3–4 dòng), vừa trữ lượng 331 chuỗi. Một lineage không bị cắt dở giữa
+  các mốc để lọt quota.
 - T5 có thể cần một trường tùy chọn thứ hai cho mốc hồi tố (hiệu lực trở về
   trước theo Điều 152 có hai mốc, không phải một). Chờ cố vấn luật xác nhận 95
   ca trong 13 văn bản (Q3, D2).

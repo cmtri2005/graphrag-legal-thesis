@@ -44,6 +44,7 @@ _CITED = {"Article": "article_id", "Clause": "clause_id", "Point": "point_id"}
 # the citation unusable: "Khoản 3 Điều".
 _UNTITLED = re.compile(r"(?:Điều|Khoản|Điểm)(?:\s|$)(?!\S)")
 _CONTAINERS = ("Chapter", "Section", "Subsection")
+_PROVISION_ID = re.compile(r'"provision_id"\s*:\s*"([^"]+)"')
 
 
 def citation(chain: list[tuple[str, str]]) -> str:
@@ -61,7 +62,14 @@ def parts_of(chain: list[tuple[str, str]]) -> dict[str, str | None]:
     return out
 
 
-def flags_of(level: str, cite: str, answer: str | None, chain: list[tuple[str, str]]) -> list[str]:
+# ponytail: an Article whose whole text is this short is its heading; a real
+# one-sentence article runs longer. Only needed where the crawl lost the body,
+# since an Article with children is caught by `has_children` directly.
+_HEADING_WORDS = 15
+
+
+def flags_of(level: str, cite: str, answer: str | None, chain: list[tuple[str, str]],
+             has_children: bool = False) -> list[str]:
     """Closed vocabulary (ADR 0003 §9): what is wrong with this candidate.
 
     Structural faults only — a target that is not a provision at all, a text
@@ -80,6 +88,15 @@ def flags_of(level: str, cite: str, answer: str | None, chain: list[tuple[str, s
         flags.append("heading_only")
     if _UNTITLED.search(cite or ""):
         flags.append("untitled_ancestor")
+    # The text is a heading or a lead-in and what it introduces lives in other
+    # nodes: "Điều 10. Gia hạn tạm ứng ngân quỹ nhà nước", "4. Những hàng hóa
+    # cấm mang theo người bao gồm:". The gold then lacks the very content a
+    # question asks for — 23% of T1 before this flag (24/09).
+    text = (answer or "").strip()
+    if text and "heading_only" not in flags and (
+            has_children or text.endswith(":")
+            or (level == "Article" and len(text.split()) <= _HEADING_WORDS)):
+        flags.append("answer_in_children")
     return flags
 
 
@@ -123,7 +140,7 @@ def transitions_of(row: dict, documents: dict[str, tuple]) -> list[dict]:
 
 def records_of(row: dict, documents: dict[str, tuple], chains: dict[str, list],
                parents: dict[str, str], lead_ins: dict[tuple[str, str], str],
-               questions: dict[str, dict]) -> list[dict]:
+               questions: dict[str, dict], with_children: frozenset[str] = frozenset()) -> list[dict]:
     """One record per entry in the pool row's `gold` array."""
     number, doc_type, url, _, _, title = documents[row["document_id"]]
     parent_id = parents.get(row["provision_id"])
@@ -191,7 +208,8 @@ def records_of(row: dict, documents: dict[str, tuple], chains: dict[str, list],
             "language": "vi",
             "review": {"status": "unchecked", "labels": [], "adjudicator": None,
                        "guideline_version": "1.0", "note": ""},
-            "flags": flags_of(row["level"], cite, gold["text"], chain),
+            "flags": flags_of(row["level"], cite, gold["text"], chain,
+                              row["provision_id"] in with_children),
             "similarity": row.get("similarity"),
         })
     return out
@@ -228,6 +246,8 @@ def main() -> None:
     chains = {pid: [titles[a] for a in path.strip("/").split("/") if a in titles]
               for pid, path in paths.items()}
 
+    with_children = frozenset(parent for (parent,) in db.execute("SELECT parent_id FROM provisions")
+                              if parent in wanted_provisions)
     parents = {pid: parent for pid, parent
                in db.execute("SELECT id, parent_id FROM provisions")
                if pid in wanted_provisions and parent}
@@ -238,7 +258,11 @@ def main() -> None:
     wanted_parents = set(parents.values())
     parent_versions: dict[str, list[tuple[str, str | None, str]]] = collections.defaultdict(list)
     for line in (data / "derived/versions.jsonl").open(encoding="utf-8"):
-        if '"provision_id": "' not in line:
+        # Match the key whatever the separators: the file switched to compact
+        # JSON on 22/09 and a literal '"provision_id": "' then skipped every
+        # line, leaving all 16,513 records without a lead-in, silently.
+        found = _PROVISION_ID.search(line)
+        if not found or found.group(1) not in wanted_parents:
             continue
         version = json.loads(line)
         if version["provision_id"] in wanted_parents and version["effective_from"]:
@@ -255,7 +279,7 @@ def main() -> None:
                     lead_ins[(parent, at)] = text
                     break
 
-    questions_path = data / "derived/vilextime/questions.jsonl"
+    questions_path = data / "vilextime/questions.jsonl"
     questions: dict[str, dict] = {}
     if questions_path.exists():
         for line in questions_path.open(encoding="utf-8"):
@@ -268,7 +292,7 @@ def main() -> None:
     written: collections.Counter[str] = collections.Counter()
     by_group: dict[str, list[dict]] = collections.defaultdict(list)
     for row in rows:
-        for record in records_of(row, documents, chains, parents, lead_ins, questions):
+        for record in records_of(row, documents, chains, parents, lead_ins, questions, with_children):
             by_group[row["group"]].append(record)
 
     for group in sorted(by_group):

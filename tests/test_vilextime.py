@@ -119,6 +119,17 @@ def test_flags_name_structural_faults_and_never_judge_length():
     # A numbered citation is fine, however deeply nested.
     assert flags_of("Point", "Điểm đ Khoản 1 Điều 17", "đ) Số lượng, khối lượng dịch vụ thủy nông được trợ cấp;",
                     [("Article", "Điều 17"), ("Clause", "Khoản 1"), ("Point", "Điểm đ")]) == []
+    # A heading or a lead-in whose content lives in child nodes is not an answer.
+    art = [("Article", "Điều 10")]
+    assert flags_of("Article", "Điều 10", "Điều 10. Gia hạn tạm ứng ngân quỹ nhà nước", art,
+                    has_children=True) == ["answer_in_children"]
+    assert flags_of("Clause", "Khoản 4 Điều 10", "4. Những hàng hóa cấm mang theo người bao gồm:",
+                    art + [("Clause", "Khoản 4")]) == ["answer_in_children"]
+    assert flags_of("Article", "Điều 4", "Điều 4. Hiệu lực thi hành", [("Article", "Điều 4")]) == [
+        "answer_in_children"]                              # the crawl lost its body
+    assert flags_of("Article", "Điều 38", "Điều 38. Vốn nhận ủy thác Vốn nhận ủy thác theo quy định tại "
+                    "Điều 32 Nghị định này không thuộc vốn hoạt động của Quỹ và được hạch toán tách bạch.",
+                    [("Article", "Điều 38")]) == []        # heading and body in one text
     # 54 characters and entirely valid: length is the hand-check's call, not ours.
     assert flags_of("Point", "Điểm a Khoản 4 Điều 17", "a) Chi tổ chức hội nghị, hội thảo, sơ kết, tổng kết;",
                     [("Article", "Điều 17"), ("Clause", "Khoản 4"), ("Point", "Điểm a")]) == []
@@ -143,3 +154,39 @@ def test_a_generated_question_replaces_the_template_across_every_date():
     fallback = records_of(_t3_row(), DOCUMENTS, {"provision:p": CHAIN}, PARENTS, LEAD_INS, {})
     assert fallback[0]["question_source"]["kind"] == "template"
     assert len({r["question"] for r in fallback}) == 4      # the template embeds the date
+
+
+def test_the_sample_skips_flags_caps_documents_and_never_splits_a_lineage():
+    from sample_vilextime import sample
+
+    def rec(lid, doc, flags=()):
+        return {"lineage_id": lid, "target": {"document_id": doc}, "flags": list(flags)}
+
+    records = [rec(f"l{i}", "big") for i in range(10) for _ in range(2)]           # 10 two-date lineages, one doc
+    records += [rec("bad", "other", ["not_a_provision"]), rec("ok", "other")]
+
+    picked = sample(records, target=100)       # asks for far more than exists
+    ids = [p["lineage_id"] for p in picked]
+    assert "bad" not in ids and "ok" in ids
+    assert sum(p["document_id"] == "big" for p in picked) == 2      # PER_DOCUMENT
+    assert all(p["rows"] == 2 for p in picked if p["document_id"] == "big")
+    assert picked == sample(records, target=100)                    # seeded
+    assert [p["rank"] for p in picked] == list(range(len(picked)))
+
+
+def test_the_release_fills_the_quota_exactly_in_rank_order():
+    from sample_vilextime import select
+
+    ranked = [{"rank": i, "lineage_id": f"l{i}", "rows": rows} for i, rows in enumerate([3, 4, 3, 3, 4])]
+    assert select(ranked, {"l0", "l1", "l2", "l3", "l4"}, quota=10) == ["l0", "l1", "l2"]
+    assert select(ranked, {"l1", "l2", "l3", "l4"}, quota=10) == ["l1", "l2", "l3"]      # l0 failed C2
+    assert select(ranked, {"l0", "l1", "l3", "l4"}, quota=9) == ["l0", "l1"]              # never over
+
+
+def test_the_versions_file_is_read_whatever_its_json_separators():
+    """versions.jsonl went compact on 22/09 and every lead-in vanished silently."""
+    from build_vilextime import _PROVISION_ID
+
+    for line in ('{"id":"v:1","provision_id":"provision:p","text":"x"}',
+                 '{"id": "v:1", "provision_id": "provision:p", "text": "x"}'):
+        assert _PROVISION_ID.search(line).group(1) == "provision:p"

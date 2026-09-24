@@ -119,7 +119,7 @@ def list_models(provider: str | None = None) -> list[str]:
 
 
 def complete(system: str, user: str, *, provider: str | None = None, model: str | None = None,
-             temperature: float = 0.0, max_tokens: int = 512, timeout: int = 90,
+             temperature: float = 0.0, max_tokens: int = 4096, timeout: int = 90,
              retries: int = 5, session: requests.Session | None = None) -> Completion:
     """One completion, retrying only what is worth retrying.
 
@@ -149,5 +149,9 @@ def complete(system: str, user: str, *, provider: str | None = None, model: str 
         choices = response.json().get("choices") or []
         if not choices:
             raise LLMError(f"{provider} returned no choice: {response.text[:400]}")
-        return Completion(choices[0]["message"]["content"].strip(), provider, model, temperature)
+        # Reasoning models (gpt-oss, qwen3) spend max_tokens on hidden thinking
+        # first, so a cut-off answer looks like a bad one. Never pass it on.
+        if choices[0].get("finish_reason") == "length":
+            raise LLMError(f"{provider} {model}: hit max_tokens={max_tokens}; the answer is truncated")
+        return Completion((choices[0]["message"]["content"] or "").strip(), provider, model, temperature)
     raise LLMError(f"{provider} still failing after {retries} attempts")
