@@ -180,7 +180,10 @@ def test_the_release_fills_the_quota_exactly_in_rank_order():
     ranked = [{"rank": i, "lineage_id": f"l{i}", "rows": rows} for i, rows in enumerate([3, 4, 3, 3, 4])]
     assert select(ranked, {"l0", "l1", "l2", "l3", "l4"}, quota=10) == ["l0", "l1", "l2"]
     assert select(ranked, {"l1", "l2", "l3", "l4"}, quota=10) == ["l1", "l2", "l3"]      # l0 failed C2
-    assert select(ranked, {"l0", "l1", "l3", "l4"}, quota=9) == ["l0", "l1"]              # never over
+    assert select(ranked, {"l0", "l1", "l3", "l4"}, quota=9) == ["l1", "l4"]   # 9 unreachable: closest below, never over
+    # Greedy stranded T3 at 198/200: 3+3+3 leaves 1 and nothing fits.
+    chains = [{"rank": i, "lineage_id": f"c{i}", "rows": rows} for i, rows in enumerate([3, 3, 3, 4])]
+    assert select(chains, {"c0", "c1", "c2", "c3"}, quota=10) == ["c0", "c1", "c3"]
 
 
 def test_the_versions_file_is_read_whatever_its_json_separators():

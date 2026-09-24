@@ -71,12 +71,24 @@ def sample(records: list[dict], target: int, seed: int = SEED) -> list[dict]:
 
 
 def select(ranked: list[dict], passed: set[str], quota: int) -> list[str]:
-    """Lineages in rank order that passed and still fit, until exactly `quota` rows."""
+    """Lineages in rank order that passed, summing to exactly `quota` rows.
+
+    Taking whatever still fits stranded T3 at 198/200: chains are 3-5 rows, so
+    two rows short nothing fits. A lineage is taken only if what is left of the
+    quota can still be made exactly from the lineages ranked after it (subset
+    sum), which keeps rank order wherever an exact total exists at all.
+    """
+    pool = [p for p in sorted(ranked, key=lambda p: p["rank"]) if p["lineage_id"] in passed]
+    reachable = [set() for _ in range(len(pool) + 1)]
+    reachable[-1] = {0}
+    for i in range(len(pool) - 1, -1, -1):
+        rows = pool[i]["rows"]
+        reachable[i] = reachable[i + 1] | {t + rows for t in reachable[i + 1] if t + rows <= quota}
+    if quota not in reachable[0]:              # no exact total: fall back to closest from below
+        quota = max(reachable[0])
     chosen, left = [], quota
-    for p in sorted(ranked, key=lambda p: p["rank"]):
-        if left == 0:
-            break
-        if p["lineage_id"] in passed and p["rows"] <= left:
+    for i, p in enumerate(pool):
+        if left and p["rows"] <= left and left - p["rows"] in reachable[i + 1]:
             chosen.append(p["lineage_id"])
             left -= p["rows"]
     return chosen

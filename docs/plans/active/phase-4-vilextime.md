@@ -251,6 +251,14 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   dung dùng chung hai mốc. Xử lý: tiếp tục sàng tay khi viết (`insufficient_context`),
   T4 ít bị vì đã lọc similarity ≥ 0,9. Loại (a) cần chuyển Giai đoạn 3 như mẫu
   cho đo precision L2 (P3.13).
+- 2026-09-24: **T3 đủ quota.** 71 chuỗi qua C2 trên 72 đã viết (chuỗi dài nên
+  ngữ cảnh đủ, gần như không phải bỏ). `select()` chọn tham lam thì kẹt ở
+  198/200 vì chuỗi 3–5 dòng; nay chỉ nhận lineage nếu phần quota còn lại vẫn
+  lấp đúng được bằng các lineage sau (tổng tập con), giữ thứ tự rank. Kết quả:
+  200 dòng, 66 chuỗi (64 × 3 dòng, 2 × 4), 52 văn bản, 0 cờ, mọi mốc có đáp án
+  khác nhau. 3 dòng dùng câu của lượt thử Groq `gpt-oss-120b` (lineage không có
+  câu dẫn nên không bị bỏ), còn lại `claude-opus-5-5`. Chuỗi quay về nguyên văn
+  bản cũ: 1/331 — không đáng xử lý riêng.
 
 - 2026-09-20 (CMT, Q3 — chốt sau khi cố vấn luật trả lời): **T5 định nghĩa lại theo
   Điều 152**, là "văn bản quy định hiệu lực trở về trước", bỏ mệnh đề "có lợi cho đối
