@@ -239,6 +239,18 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   hỏi nào phục vụ được cả hai mốc, nên các cặp này được đánh
   `insufficient_context`; chưa có cờ cấu trúc cho chúng. Cần đo tỷ lệ trên toàn
   T2/T4 và báo lại cho Giai đoạn 3 (L2).
+- 2026-09-24: **đo xong, không thêm cờ tự động.** Trên 247 lineage T2 đã đọc
+  tay, 18 (7,3%) có hai phiên bản khác chủ đề. Không dấu hiệu máy nào tách được:
+  Jaccard từ vựng < 0,2 bắt 8/18 nhưng đã cắt 2/202 cặp tốt, < 0,3 bắt 14/18
+  và cắt 15/202 — sửa đổi hợp lệ cũng viết lại gần hết câu; `method`/`locator`
+  của event phân bố như nhau ở hai nhóm. 18 ca gồm hai loại: (a) **lỗi L2 thật**,
+  câu lệnh không nêu Điều ("Sửa đổi, bổ sung điểm c khoản 2 như sau") và Điều bị
+  suy sai — vd. 46/2023/NĐ-CP Điều 35 nhận nội dung về doanh thu tái bảo hiểm;
+  (b) **cả Điều bị thay**, khoản mới ghép với khoản cũ theo số thứ tự: vị trí đúng
+  về pháp lý nhưng nội dung đổi chủ đề. Cả hai đều không hợp với câu hỏi nội
+  dung dùng chung hai mốc. Xử lý: tiếp tục sàng tay khi viết (`insufficient_context`),
+  T4 ít bị vì đã lọc similarity ≥ 0,9. Loại (a) cần chuyển Giai đoạn 3 như mẫu
+  cho đo precision L2 (P3.13).
 
 - 2026-09-20 (CMT, Q3 — chốt sau khi cố vấn luật trả lời): **T5 định nghĩa lại theo
   Điều 152**, là "văn bản quy định hiệu lực trở về trước", bỏ mệnh đề "có lợi cho đối
