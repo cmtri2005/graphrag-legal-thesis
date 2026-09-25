@@ -223,6 +223,9 @@ def records_of(row: dict, documents: dict[str, tuple], chains: dict[str, list],
             "flags": flags_of(row["level"], cite, gold["text"], chain,
                               row["provision_id"] in with_children) + (["cosmetic_change"] if cosmetic else []),
             "similarity": row.get("similarity"),
+            # T5 only: when the change took effect against when it was signed, and
+            # what kind of document made it — the facts the Điều 152 judgement needs.
+            "retroactive": row.get("retroactive"),
         })
     return out
 

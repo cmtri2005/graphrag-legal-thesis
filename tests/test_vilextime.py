@@ -201,3 +201,30 @@ def test_a_change_of_case_or_punctuation_is_not_a_change():
     assert cosmetic_only(["tỉnh, thành phố trực thuộc Trung ương.", "tỉnh, thành phố trực thuộc trung ương;"])
     assert not cosmetic_only(["giao Bộ Tài nguyên và Môi trường", "giao Bộ Nông nghiệp và Môi trường"])
     assert cosmetic_only(["a", "b thay", "B thay."])         # any consecutive pair counts
+
+
+def test_retroactive_kind_is_measured_not_guessed_from_wording():
+    from build_question_pool import retro_kind
+
+    effective = {"100/2016/NĐ-CP": "2016-07-01", "242/2025/NĐ-CP": "2025-09-10"}
+    # Guidance that takes effect with the decree it details: excluded by the adviser.
+    assert retro_kind("130/2016/TT-BTC", "Thông tư số 130/2016/TT-BTC Hướng dẫn thực hiện Nghị định số "
+                      "100/2016/NĐ-CP", "2016-07-01", effective) == "guidance_in_sync"
+    # An amendment quoting its target's title, and the title opening with its own number.
+    assert retro_kind("119/2026/NĐ-CP", "Nghị định 119/2026/NĐ-CP Sửa đổi, bổ sung Nghị định 242/2025/NĐ-CP "
+                      "quy định chi tiết", "2026-01-01", effective) == "stated_retroactive"
+    assert retro_kind("2714/QĐ-BTC", "Quyết định về việc đính chính Thông tư", "2013-08-12", {}) == "correction"
+
+
+def test_the_ranking_on_disk_survives_a_lineage_leaving_its_group():
+    from sample_vilextime import sample
+
+    def rec(lid, doc):
+        return {"lineage_id": lid, "target": {"document_id": doc}, "flags": []}
+
+    records = [rec(f"l{i}", f"d{i}") for i in range(6)]
+    first = [p["lineage_id"] for p in sample(records, target=6)]
+    moved = first[1]                                           # say it went to T5
+    second = [p["lineage_id"] for p in sample([r for r in records if r["lineage_id"] != moved],
+                                              target=5, prior=first)]
+    assert second == [lid for lid in first if lid != moved]

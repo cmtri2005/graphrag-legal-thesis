@@ -24,7 +24,7 @@ Usage:
     python scripts/pipeline/generate_questions.py --group T1 --dry-run --limit 3
     python scripts/pipeline/generate_questions.py --group T1 --limit 50
     python scripts/pipeline/generate_questions.py --group T1
-    python scripts/pipeline/generate_questions.py --group T1 --sample data/derived/vilextime/sample.jsonl
+    python scripts/pipeline/generate_questions.py --group T1 --sample data/vilextime/sample.jsonl
     python scripts/pipeline/generate_questions.py --group T1 --revalidate   # after changing validate()
 """
 from __future__ import annotations

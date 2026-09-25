@@ -6,18 +6,22 @@ at a date is the version whose *effective* window contains it, so the label is
 a property of the data, not of any model. An LLM later phrases the question in
 Vietnamese and never touches the answer (P4.4).
 
-Groups, per the proposal's structure table. T5 is not built here: which
-retroactive acts fall under Điều 152 is a legal judgement, and the 95
-candidates are waiting on the adviser (plan phase-4, Q3).
+Groups, per the proposal's structure table. T5 is built as *candidates*:
+which retroactive acts fall under Điều 152 is a legal judgement the adviser
+makes (plan phase-4, Q3), so every T5 row carries `retroactive` with the
+facts that judgement needs, and nothing here decides it.
 
   T1  one version, unambiguous in time            control
   T2  two versions: same question, two dates      core group
   T3  three or more versions: A -> B -> C         where the graph should pay
   T4  two versions whose texts are near-identical the citation trap
+  T5  a change made by a document that takes effect before it was signed
   T6  a Khoản/Điểm that ended inside a document still in force
 
-A provision lands in exactly one group, scarcest first (T3, then T6, T4, T2,
-T1), so no node — and so no text — can appear twice in the benchmark. The
+A provision lands in exactly one group, scarcest first (T5, then T3, T6, T4,
+T2, T1), so no node — and so no text — can appear twice in the benchmark. T5
+is taken *after* the other groups are capped, so moving a provision into it
+removes that one row and leaves every other group's sample as it was. The
 dev/test split is by document for the same reason (Q6) and is left to P4.9.
 
 A candidate must also have a *different* answer at each of its dates, which
@@ -40,6 +44,7 @@ import collections
 import difflib
 import json
 import random
+import re
 import sqlite3
 from datetime import date, timedelta
 from pathlib import Path
@@ -47,8 +52,8 @@ from pathlib import Path
 ONE_DAY = timedelta(days=1)
 # Quota from the proposal; the pool keeps `cap` times as many candidates so the
 # hand-check and the adviser can reject freely without starving a group.
-QUOTA = {"T1": 250, "T2": 400, "T3": 200, "T4": 150, "T6": 100}
-PRIORITY = ("T3", "T6", "T4", "T2", "T1")  # scarcest first
+QUOTA = {"T1": 250, "T2": 400, "T3": 200, "T4": 150, "T5": 50, "T6": 100}
+PRIORITY = ("T3", "T6", "T4", "T2", "T1")  # scarcest first; T5 is taken out after capping
 NEAR_IDENTICAL = 0.90
 SEED = 20260920
 
@@ -144,6 +149,75 @@ def build_row(group: str, provision: dict, versions: list[dict], today: date,
     return row
 
 
+# A document whose effect starts before its signing. Two kinds look the same in
+# the numbers and the adviser excluded both (20/09): corrections, and guidance
+# that takes effect together with the act it details. The second is measured,
+# not guessed from wording: the act its title cites by number takes effect on
+# the same day. They are named for the audit rather than silently dropped.
+_CITED_NUMBER = re.compile(r"\b(\d+/\d{4}/[A-ZĐ][A-ZĐa-z0-9\-]*)")
+
+
+def retro_kind(number: str, title: str, effective: str, effective_by_number: dict[str, str]) -> str:
+    low = (title or "").lower()
+    if "đính chính" in low:
+        return "correction"
+    # The portal's titles open with the document's own number; that one is not a citation.
+    cited = {n for n in _CITED_NUMBER.findall(title or "") if n.replace(" ", "") != (number or "").replace(" ", "")}
+    if any(effective_by_number.get(n) == effective for n in cited):
+        return "guidance_in_sync"
+    return "stated_retroactive"
+
+
+def build_t5_row(provision: dict, versions: list[dict], evidence: dict[str, dict],
+                 actors: dict[str, tuple]) -> dict | None:
+    """Either side of the first change made by a retroactive document.
+
+    `actors` maps a retroactive document to (number, title, issued_on,
+    effective_from). The later date is the day the change took effect — in
+    the retroactive window, before anyone could read it — which is the case a
+    point-in-time system gets wrong.
+    """
+    for i, v in enumerate(versions[1:], 1):
+        event = v["created_by_event_id"]
+        actor = f"document:{event.split(':')[1]}" if event else None
+        if actor not in actors:
+            continue
+        number, title, issued, effective, kind = actors[actor]
+        start = _d(v["effective_from"])
+        dates = [start - ONE_DAY, start]
+        gold = []
+        for at in dates:
+            hit = in_force_at(versions, at)
+            gold.append({"as_of": at.isoformat(), "in_force": hit is not None,
+                         "version_id": hit["id"] if hit else None, "text": hit["text"] if hit else None})
+        if len({(g["in_force"], g["text"]) for g in gold}) != 2:
+            return None
+        events = sorted({x for w in versions for x in (w["created_by_event_id"], w["ended_by_event_id"]) if x})
+        return {
+            "schema_version": 1,
+            "id": f"vilextime:T5:{provision['id']}",
+            "group": "T5",
+            "document_id": provision["document_id"],
+            "provision_id": provision["id"],
+            "level": provision["level"],
+            "title": provision["title"],
+            "transition_on": v["effective_from"],
+            "gold": gold,
+            "versions": [{k: w[k] for k in ("id", "ordinal", "text", "effective_from", "effective_to")}
+                         for w in versions],
+            "event_ids": events,
+            "evidence": [evidence[e]["evidence"] for e in events if e in evidence],
+            "actor_numbers": sorted({evidence[e]["actor_number"] for e in events if e in evidence}),
+            "retroactive": {
+                "actor_document_id": actor, "actor_law_id": number,
+                "effective_from": effective, "issued_on": issued,
+                "window_days": (_d(issued) - _d(effective)).days,
+                "kind": kind, "event_id": event,
+            },
+        }
+    return None
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--data", type=Path, default=Path("data"))
@@ -164,6 +238,14 @@ def main() -> None:
         for pid, doc, lvl, title in db.execute("SELECT id, document_id, level, title FROM provisions")
     }
     document_ends = {doc: _d(end) for doc, end in db.execute("SELECT id, effective_to FROM documents")}
+    effective_by_number = {n: e for n, e in db.execute("SELECT number, effective_from FROM documents") if n}
+    retro_actors = {
+        doc: (number, title, issued, effective, retro_kind(number, title, effective, effective_by_number))
+        for doc, number, title, issued, effective in db.execute(
+            "SELECT id, number, title, issued_on, effective_from FROM documents "
+            "WHERE issued_on IS NOT NULL AND effective_from IS NOT NULL AND effective_from < issued_on")
+    }
+    t5_rows: list[dict] = []
     evidence = {}
     for line in (data / "derived/provision_events.jsonl").read_text(encoding="utf-8").splitlines():
         e = json.loads(line)
@@ -181,6 +263,8 @@ def main() -> None:
         if provision is None or provision["document_id"] not in eligible:
             return
         rows.sort(key=lambda v: v["ordinal"])
+        if (t5 := build_t5_row(provision, rows, evidence, retro_actors)) is not None:
+            t5_rows.append(t5)
         group = classify(rows, document_ends.get(provision["document_id"]), provision["level"], args.today)
         if group is None:
             counts["bỏ: phiên bản không có ngày"] += 1
@@ -193,7 +277,7 @@ def main() -> None:
         counts[group] += 1
         buckets[group].append(row)
 
-    for line in (data / "derived/versions.jsonl").read_text(encoding="utf-8").splitlines():
+    for line in (data / "derived/versions.jsonl").open(encoding="utf-8"):   # ~1 GB: stream it
         v = json.loads(line)
         if current and v["provision_id"] != current[0]["provision_id"]:
             flush(current)
@@ -204,12 +288,18 @@ def main() -> None:
     out_path = data / "derived/vilextime_pool.jsonl"
     written: collections.Counter[str] = collections.Counter()
     documents: set[str] = set()
+    in_t5 = {r["provision_id"] for r in t5_rows}
     with out_path.open("w", encoding="utf-8") as out:
+        for row in sorted(t5_rows, key=lambda r: r["id"]):
+            out.write(json.dumps(row, ensure_ascii=False) + "\n")
+            documents.add(row["document_id"])
+        written["T5"] = counts["T5"] = len(t5_rows)
         for group in PRIORITY:
             rows = sorted(buckets[group], key=lambda r: r["id"])
             cap = QUOTA[group] * args.per_group_cap
             if len(rows) > cap:
                 rows = sorted(random.Random(SEED).sample(rows, cap), key=lambda r: r["id"])
+            rows = [r for r in rows if r["provision_id"] not in in_t5]   # T5 is scarcer
             for row in rows:
                 out.write(json.dumps(row, ensure_ascii=False) + "\n")
                 documents.add(row["document_id"])
@@ -217,11 +307,12 @@ def main() -> None:
 
     print(f"{sum(written.values()):,} ứng viên -> {out_path}\n")
     print(f"  {'nhóm':<5} {'quota':>6} {'có':>9} {'giữ':>8}   dư")
-    for group in ("T1", "T2", "T3", "T4", "T6"):
+    for group in ("T1", "T2", "T3", "T4", "T5", "T6"):
         have = counts[group]
         margin = have / QUOTA[group]
         print(f"  {group:<5} {QUOTA[group]:>6,} {have:>9,} {written[group]:>8,}   {margin:>5.1f}x")
-    print(f"\n  T5: chưa dựng — chờ cố vấn luật xác nhận 95 ứng viên theo Điều 152")
+    kinds = collections.Counter(r["retroactive"]["kind"] for r in t5_rows)
+    print(f"\n  T5 là ứng viên, chờ cố vấn luật theo Điều 152: {dict(kinds)}")
     for key, value in counts.items():
         if key.startswith("bỏ"):
             print(f"  {value:,} {key}")

@@ -21,7 +21,8 @@ Rules, in order:
 T6 is sampled for 150 rows, not 100: its quota also absorbs whatever T5 falls
 short of 50 once the legal advisor has ruled (plan, Q3).
 
-Writes `data/derived/vilextime/sample.jsonl`. Offline and deterministic.
+Writes `data/vilextime/sample.jsonl`, committed: it is the ranking of record, and
+a re-run keeps it (see `sample`). Offline and deterministic given that file.
 
 `--select` is the second half, run after `generate_questions.py --sample` and
 `build_vilextime.py`: it walks the same ranks and writes the records of the
@@ -41,20 +42,31 @@ import json
 import random
 from pathlib import Path
 
-QUOTA = {"T1": 250, "T2": 400, "T3": 200, "T4": 150, "T6": 150}
-RELEASE = {**QUOTA, "T6": 100}   # T5 and T6's share of its shortfall wait for the legal advisor
-OVERSAMPLE = {"T1": 2, "T2": 2, "T3": 3, "T4": 2, "T6": 2}   # T3 kept 9 of 22 in the first run
+QUOTA = {"T1": 250, "T2": 400, "T3": 200, "T4": 150, "T5": 50, "T6": 150}
+RELEASE = {**QUOTA, "T6": 100}   # T6 absorbs whatever T5 falls short of 50 once the adviser rules
+OVERSAMPLE = {"T1": 2, "T2": 2, "T3": 3, "T4": 2, "T5": 2, "T6": 2}   # T3 kept 9 of 22 in the first run
 PER_DOCUMENT = 2
 SEED = 20260924
+# T5 kinds the adviser excluded on 20/09: corrections, and guidance taking effect
+# with the act it details. They stay in the worksheet, not in the release.
+EXCLUDED_T5 = {"correction", "guidance_in_sync"}
 
 
-def sample(records: list[dict], target: int, seed: int = SEED) -> list[dict]:
-    """Ranked lineages whose rows add up to at least `target`."""
+def sample(records: list[dict], target: int, seed: int = SEED, prior: list[str] = ()) -> list[dict]:
+    """Ranked lineages whose rows add up to at least `target`.
+
+    `prior` is the ranking already on disk. It is kept: a lineage that left the
+    group is skipped, and only what lies past it comes from the seeded shuffle.
+    Reshuffling instead would reorder the whole group whenever one lineage
+    moved, and orphan the questions already written for the old order.
+    """
     lineages: dict[str, list[dict]] = collections.defaultdict(list)
     for record in records:
         lineages[record["lineage_id"]].append(record)
-    order = sorted(lineages)
-    random.Random(seed).shuffle(order)
+    kept = [lid for lid in prior if lid in lineages]
+    rest = sorted(set(lineages) - set(kept))
+    random.Random(seed).shuffle(rest)
+    order = kept + rest
 
     picked, per_doc, rows = [], collections.Counter(), 0
     for lid in order:
@@ -62,7 +74,8 @@ def sample(records: list[dict], target: int, seed: int = SEED) -> list[dict]:
             break
         recs = lineages[lid]
         doc = recs[0]["target"]["document_id"]
-        if any(r["flags"] for r in recs) or per_doc[doc] >= PER_DOCUMENT:
+        excluded = (recs[0].get("retroactive") or {}).get("kind") in EXCLUDED_T5
+        if any(r["flags"] for r in recs) or excluded or per_doc[doc] >= PER_DOCUMENT:
             continue
         per_doc[doc] += 1
         rows += len(recs)
@@ -101,11 +114,15 @@ def main() -> None:
     args = parser.parse_args()
 
     base = args.data / "derived/vilextime"
+    ranking = args.data / "vilextime/sample.jsonl"
     if args.select:
-        ranked = [json.loads(line) for line in (base / "sample.jsonl").open(encoding="utf-8")]
+        ranked = [json.loads(line) for line in ranking.open(encoding="utf-8")]
         total = 0
         with (base / "selected.jsonl").open("w", encoding="utf-8") as out:
+            got: dict[str, int] = {}
             for group, quota in RELEASE.items():
+                if group == "T6":   # T6 takes what T5 could not fill (plan phase-4, decision 20/09)
+                    quota += RELEASE["T5"] - got.get("T5", RELEASE["T5"])
                 records = collections.defaultdict(list)
                 for line in (base / f"{group}.jsonl").open(encoding="utf-8"):
                     record = json.loads(line)
@@ -113,6 +130,7 @@ def main() -> None:
                 passed = {lid for lid, recs in records.items() if recs[0]["question_source"]["kind"] == "llm"}
                 chosen = select([p for p in ranked if p["group"] == group], passed, quota)
                 rows = [r for lid in chosen for r in sorted(records[lid], key=lambda r: r["as_of"])]
+                got[group] = len(rows)
                 total += len(rows)
                 print(f"{group}: {len(rows):>4}/{quota} dòng · {len(chosen)} lineage"
                       + ("  << THIẾU, sinh thêm mẫu" if len(rows) < quota else ""))
@@ -121,18 +139,23 @@ def main() -> None:
         print(f"tổng {total:,} dòng -> {base / 'selected.jsonl'}")
         return
 
-    with (base / "sample.jsonl").open("w", encoding="utf-8") as out:
-        for group, quota in QUOTA.items():
-            records = [json.loads(line) for line in (base / f"{group}.jsonl").open(encoding="utf-8")]
-            need = quota * OVERSAMPLE[group]
-            picked = sample(records, need)
-            rows = sum(p["rows"] for p in picked)
-            short = "  << THIẾU" if rows < need else ""
-            print(f"{group}: {len(picked):>4} lineage · {rows:>4} dòng (cần {need})"
-                  f" · {len({p['document_id'] for p in picked})} văn bản{short}")
-            for p in picked:
-                out.write(json.dumps({"group": group, **p}, ensure_ascii=False) + "\n")
-
+    prior: dict[str, list[str]] = collections.defaultdict(list)
+    if ranking.exists():
+        for line in ranking.open(encoding="utf-8"):
+            r = json.loads(line)
+            prior[r["group"]].append(r["lineage_id"])
+    lines = []
+    for group, quota in QUOTA.items():
+        records = [json.loads(line) for line in (base / f"{group}.jsonl").open(encoding="utf-8")]
+        need = quota * OVERSAMPLE[group]
+        picked = sample(records, need, prior=prior[group])
+        rows = sum(p["rows"] for p in picked)
+        short = "  << THIẾU" if rows < need else ""
+        print(f"{group}: {len(picked):>4} lineage · {rows:>4} dòng (cần {need})"
+              f" · {len({p['document_id'] for p in picked})} văn bản{short}")
+        lines += [json.dumps({"group": group, **p}, ensure_ascii=False) + "\n" for p in picked]
+    ranking.parent.mkdir(parents=True, exist_ok=True)
+    ranking.write_text("".join(lines), encoding="utf-8")
 
 if __name__ == "__main__":
     main()

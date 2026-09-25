@@ -280,6 +280,26 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   123/2003/QĐ-BTC; 12/2015/NĐ-CP, 26/2015/TT-BTC, 130/2016/TT-BTC (khả năng là
   hướng dẫn đồng bộ hiệu lực — cố vấn đã nói loại); 2714/QĐ-BTC (đính chính,
   loại). Con số "95 ca trong 13 văn bản" ở trên đã lỗi thời. T5 vẫn chờ cố vấn.
+- 2026-09-25 (CMT): **T5 dựng đủ dưới dạng ứng viên, chờ luật sư.** Pool có 249
+  điều khoản bị một văn bản hồi tố sửa (HL trước ngày ký); T5 được ưu tiên như
+  nhóm hiếm nhất nhưng tách ra **sau** khi các nhóm khác đã lấy mẫu, và
+  `sample_vilextime.py` giữ thứ tự xếp hạng đã có (`data/vilextime/sample.jsonl`,
+  nay commit) — chỉ 8 điều khoản rời T2/T3/T4, thứ tự còn lại không đổi. Mỗi
+  bản ghi T5 có `retroactive` (văn bản tác động, ngày HL, ngày ký, số ngày hồi
+  tố, loại); mốc sau luôn nằm trong khoảng hồi tố [HL, ký). Loại đo bằng dữ
+  liệu, không đoán từ chữ: `guidance_in_sync` khi văn bản mà tên nó nêu số hiệu
+  có cùng ngày HL (26/2015/TT-BTC, 130/2016/TT-BTC), `correction` khi là đính
+  chính — hai loại cố vấn đã loại, không vào bản phát hành nhưng vẫn trong bảng
+  audit. **Giới hạn:** 12/2015/NĐ-CP hướng dẫn Luật thuế sửa đổi mà tên không
+  nêu số hiệu, nên máy không nhận ra là đồng bộ — luật sư xét. 80/2025/TT-NHNN
+  thực ra lệch năm (văn bản: 25/01/2026) nhưng nêu hai ngày nên không tự sửa.
+  Bản phát hành: T5 44 dòng (22 cặp, trần 2 điều khoản/văn bản), **T6 tự nhận
+  phần thiếu** (106 dòng) → **tổng 1.150**. Bảng cho luật sư:
+  `data/review/t5_documents.tsv` (10 văn bản, câu hiệu lực trích từ văn bản,
+  cột quyết định) và `data/review/t5_items.tsv` (38 điều khoản có câu hỏi, 22
+  trong bản phát hành, cột ý kiến). Sinh lại: `scripts/review/t5_worksheet.py`.
+  Kèm theo: `build_question_pool.py` nay đọc `versions.jsonl` theo luồng (bị
+  kill khi RAM trống ~1 GB).
 
 - 2026-09-20 (CMT, Q3 — chốt sau khi cố vấn luật trả lời): **T5 định nghĩa lại theo
   Điều 152**, là "văn bản quy định hiệu lực trở về trước", bỏ mệnh đề "có lợi cho đối
