@@ -346,6 +346,15 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   `data/provisions/` là bản gốc lúc ban hành hay bản hiện hành?** Nếu là bản hiện
   hành thì vế "trước khi sửa" của mọi cặp T2/T4 sai. Chỉ E1 (đối chiếu 356 văn bản
   hợp nhất) trả lời được, nên E1 cần làm trước khi chốt nhãn vàng T2/T4.
+  **Đóng 25/09 (E1):** (1) đối chiếu văn bản hợp nhất chỉ phủ 9/1.150 dòng
+  phát hành (51/356 VBHN so được); 7 dòng lệch đều là vế sau và đều do định dạng
+  VBHN (chú thích [3], [12], [146], khối chữ ký, mục danh sách gộp vào khoản),
+  không lệch nội dung. (2) Vế trước không VBHN nào kiểm được, nên kiểm trực tiếp
+  cả 275 cặp T2/T4 phát hành (`scripts/check/check_before_side.py`): 275/275 vế
+  trước là phiên bản 1 và có nguyên văn trong văn bản gốc; 272/275 cặp có cụm
+  từ mới tìm thấy trong văn bản sửa đổi; 2 cặp có lời văn vế sau xuất hiện trong
+  văn bản gốc, xem tay đều là lời của khoản/điểm khác cùng văn bản. **Tỷ lệ sai
+  vế trước đo được: 0/275.** Gold T2/T4 chờ D4 để đóng băng.
 
 - **T3 không đủ trữ lượng** (rủi ro lớn nhất): phụ thuộc Gói B của Giai đoạn 3.
   Giảm thiểu bằng Q4, quyết ở tuần 6 chứ không để tới tuần 8.
@@ -363,10 +372,10 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
 
 ## Progress
 
-- [ ] Gói A — chốt Q1, Q2 và hướng dẫn gán nhãn (P4.1). A1 xong 20/09; còn A2 (hướng dẫn gán nhãn), A3 (lược đồ dòng dữ liệu)
+- [ ] Gói A — chốt Q1, Q2 và hướng dẫn gán nhãn (P4.1). A1 xong 20/09; A2 nháp v1.0 xong 25/09 (`docs/vilextime-annotation.md`, chưa thử 20 ví dụ với hai người); còn A3 (lược đồ dòng dữ liệu)
 - [ ] Gói B — sinh ứng viên tự động (P4.2, P4.3, P4.6). B1, B2, B4 xong 20/09; B5 (schema + T1) xong 21/09; còn B3 (tiêu chí độ dài, chờ kiểm tay); quota chốt 24/09 là đếm theo dòng QA
 - [ ] Gói C — diễn đạt thành câu hỏi (P4.4). C1, C2, C3 (cơ chế) xong 21/09; **chưa chạy thật**: cần API key và quyết định gửi text luật ra dịch vụ ngoài
-- [ ] Gói D — đủ quota, cố vấn luật, Cohen κ (P4.5, P4.7, P4.8)
+- [ ] Gói D — đủ quota, cố vấn luật, Cohen κ (P4.5, P4.7, P4.8). Bản phát hành đủ 1.150 dòng (T5 44 chờ luật sư, T6 106). D4: bảng kiểm chéo 300 dòng dựng 25/09 (`scripts/review/crosscheck.py build` → `data/review/crosscheck_A.tsv`, `_B.tsv`: T2 50, T3 50, T4 50, T5 44, T6 106, theo lineage); chờ hai người gán nhãn rồi `crosscheck.py kappa`. Nếu luật sư loại dòng T5, dựng lại bảng trước khi gán
 - [ ] Gói E — chia dev/test (P4.9)
 
 ## Validation
