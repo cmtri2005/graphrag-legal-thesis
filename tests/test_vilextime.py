@@ -228,3 +228,15 @@ def test_the_ranking_on_disk_survives_a_lineage_leaving_its_group():
     second = [p["lineage_id"] for p in sample([r for r in records if r["lineage_id"] != moved],
                                               target=5, prior=first)]
     assert second == [lid for lid in first if lid != moved]
+
+
+def test_t5_worksheet_quotes_an_undated_from_signing_clause():
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts" / "review"))
+    from t5_worksheet import effectivity_words
+
+    words = effectivity_words("<p>Điều 30. Hiệu lực thi hành 1. Nghị định này có hiệu lực thi hành kể từ ngày ký "
+                              "ban hành, trừ khoản 2. 2. Điều 25 có hiệu lực thi hành từ ngày 01 tháng 7 năm 2026</p>")
+    assert "kể từ ngày ký ban hành" in words.split(" | ")[0]
+    assert "01 tháng 7 năm 2026" in words

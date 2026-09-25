@@ -26,7 +26,9 @@ from __future__ import annotations
 
 import argparse
 import collections
+import html
 import json
+import re
 from pathlib import Path
 
 from legal_crawler.vocab.status_codes import effective_clause_dates
@@ -34,6 +36,18 @@ from legal_crawler.vocab.status_codes import effective_clause_dates
 KIND = {"stated_retroactive": "hồi tố, cần luật sư xét",
         "guidance_in_sync": "hướng dẫn cùng ngày hiệu lực với văn bản được hướng dẫn (cố vấn: loại)",
         "correction": "đính chính (cố vấn: loại)"}
+
+
+# "có hiệu lực ... kể từ ngày ký" carries no date, so effective_clause_dates
+# misses it and shows only a dated exception (97/2026/NĐ-CP did exactly that).
+_FROM_SIGNING = re.compile(r"[^.;]*có hiệu lực[^.;]*(?:ngày ký|ngày ban hành|ngày được ban hành)[^.;]*")
+
+
+def effectivity_words(content: str) -> str:
+    text = " ".join(re.sub(r"<[^>]+>", " ", html.unescape(content)).split())
+    parts = [m[0].strip() for m in _FROM_SIGNING.finditer(text)][:1]
+    parts += [words for _, words in effective_clause_dates(content)[:2]]
+    return " | ".join(parts) or "(không đọc được)"
 
 
 def cell(value: object) -> str:
@@ -69,11 +83,10 @@ def main() -> None:
         for doc_id, retro in sorted(actors.items(), key=lambda kv: -candidates[kv[0]]):
             raw_path = d / "raw" / f"{doc_id.split(':', 1)[1]}.json"
             raw = json.loads(raw_path.read_text(encoding="utf-8")) if raw_path.exists() else {}
-            clauses = effective_clause_dates((raw.get("documentContent") or {}).get("content") or "")
             f.write("\t".join(cell(v) for v in [
                 retro["actor_law_id"], raw.get("title"), retro["issued_on"], retro["effective_from"],
                 retro["window_days"], KIND[retro["kind"]],
-                " | ".join(words for _, words in clauses[:2]) or "(không đọc được)",
+                effectivity_words((raw.get("documentContent") or {}).get("content") or ""),
                 candidates[doc_id], pairs[doc_id],
                 f"https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID={doc_id.split(':', 1)[1]}", "", "",
             ]) + "\n")

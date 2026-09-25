@@ -337,6 +337,27 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   nhóm T2, T3, T4. Thay cho câu "toàn bộ T3, T4, T5, T6" của đề cương, vốn cộng
   lại thành 500 câu chứ không phải 300. Cohen κ tính trên đúng 300 câu này.
 
+- 2026-09-25 (CMT, trước D4): **kiểm hai lỗi ngày còn mở trên bản phát hành.**
+  (1) 367 quyết định `effective_to` đã duyệt nhưng ingest chưa áp: **0 dòng
+  phát hành bị ảnh hưởng** — văn bản bị bãi bỏ mà cổng thiếu `effTo` đã bị loại
+  khỏi benchmark từ `build_eligibility.py` (`benchmark_eligible: false`), nên
+  khoảng hở này chỉ còn ảnh hưởng KG, không ảnh hưởng ViLexTime. (2) 5 candidate
+  `effective_from` chờ người: chỉ 97/2026/NĐ-CP chạm bản phát hành (2 cặp T5).
+  Đọc câu hiệu lực: 97/2026/NĐ-CP "có hiệu lực kể từ ngày ký ban hành" (31/03/2026;
+  cổng 13/03; candidate 01/07 chỉ là ngoại lệ Điều 25, 26, khoản 4 Điều 31) và
+  80/2025/TT-NHNN lệch năm (25/01/2026; cổng 2025) — **cả hai không hồi tố**, 3 cặp
+  T5 mang gold sai. Sửa ở nguồn: 2 quyết định `human_reviewed` trong
+  `data/review/temporal_candidates.jsonl`, dựng lại `build_store --with-subtrees`
+  → `build_versions` (1.565.078 versions, 18.840 event, khớp lần trước; queue
+  review đổi đúng 1 dòng của 80/2025) → pool → records → chọn lại. Bản phát hành
+  chỉ đổi 6 dòng T5 → 6 dòng T6; không dòng nào khác đổi đáp án/phiên bản/câu
+  hỏi. **T5 38, T6 112, tổng 1.150.** Bảng luật sư còn 8 văn bản; cột câu hiệu
+  lực nay trích cả câu "kể từ ngày ký" (trước chỉ trích câu có ngày nên che mất
+  ngày thật của 97/2026). 4 candidate còn lại (02/2018/TT-BGTVT, 24/2001/TT-BTC,
+  113/2011/TT-BTC, 20/2026/TT-BTC) không chạm bản phát hành, vẫn chờ người.
+  **Giới hạn:** hiệu lực riêng từng Điều (ngoại lệ trong câu hiệu lực) chưa mô
+  hình hóa; event của các Điều đó mang ngày chung của văn bản.
+
 ## Risks And Recovery
 
 - **11,1% cặp phiên bản liền nhau có chữ giống hệt nhau** (2.132/19.192, đo
@@ -375,7 +396,7 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
 - [ ] Gói A — chốt Q1, Q2 và hướng dẫn gán nhãn (P4.1). A1 xong 20/09; A2 nháp v1.0 xong 25/09 (`docs/vilextime-annotation.md`, chưa thử 20 ví dụ với hai người); còn A3 (lược đồ dòng dữ liệu)
 - [ ] Gói B — sinh ứng viên tự động (P4.2, P4.3, P4.6). B1, B2, B4 xong 20/09; B5 (schema + T1) xong 21/09; còn B3 (tiêu chí độ dài, chờ kiểm tay); quota chốt 24/09 là đếm theo dòng QA
 - [ ] Gói C — diễn đạt thành câu hỏi (P4.4). C1, C2, C3 (cơ chế) xong 21/09; **chưa chạy thật**: cần API key và quyết định gửi text luật ra dịch vụ ngoài
-- [ ] Gói D — đủ quota, cố vấn luật, Cohen κ (P4.5, P4.7, P4.8). Bản phát hành đủ 1.150 dòng (T5 44 chờ luật sư, T6 106). D4: bảng kiểm chéo 300 dòng dựng 25/09 (`scripts/review/crosscheck.py build` → `data/review/crosscheck_A.tsv`, `_B.tsv`: T2 50, T3 50, T4 50, T5 44, T6 106, theo lineage); chờ hai người gán nhãn rồi `crosscheck.py kappa`. Nếu luật sư loại dòng T5, dựng lại bảng trước khi gán
+- [ ] Gói D — đủ quota, cố vấn luật, Cohen κ (P4.5, P4.7, P4.8). Bản phát hành đủ 1.150 dòng (T5 38 chờ luật sư, T6 112). D4: bảng kiểm chéo 300 dòng dựng 25/09 (`scripts/review/crosscheck.py build` → `data/review/crosscheck_A.tsv`, `_B.tsv`: T2 50, T3 50, T4 50, T5 38, T6 112, theo lineage); chờ hai người gán nhãn rồi `crosscheck.py kappa`. Nếu luật sư loại dòng T5, dựng lại bảng trước khi gán
 - [ ] Gói E — chia dev/test (P4.9)
 
 ## Validation
