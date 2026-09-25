@@ -268,6 +268,18 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   nối nhầm lineage. Cờ bắt được 1 chuỗi T3 đã chọn (v2→v3 chỉ "đất," → "đất;"),
   nay được thay bằng chuỗi kế tiếp; phép kiểm "mỗi mốc có đáp án khác nhau" trước
   đó so nguyên văn nên đã bỏ sót.
+- 2026-09-25: **T6 đủ quota** (100 dòng, 50 cặp, 40 văn bản; 76 lineage đã có
+  câu, đủ cho 150 dòng nếu T5 thiếu). Tổng 1.100/1.150.
+- 2026-09-25 (CMT): **sửa `effFrom` lệch năm ở nguồn** (chi tiết: plan Giai đoạn 3,
+  "Sửa effFrom lệch năm"). 31 văn bản được sửa theo câu hiệu lực của chính văn
+  bản. Trong bộ đã chọn chỉ 2 cặp T2 đổi mốc (vd. 61/2024/TT-BGTVT: hỏi ở
+  2024-02-14/15 — trước khi văn bản được ký — nay 2025-02-14/15); câu hỏi giữ
+  nguyên vì không chứa ngày; thứ tự mẫu và 1.100 lineage đã chọn không đổi.
+  **T5:** ứng viên hồi tố còn 10 văn bản (240 event): 119/2026/NĐ-CP,
+  65/2025/TT-BQP, 97/2026/NĐ-CP, 80/2025/TT-NHNN, 96/2002/QĐ-BTC,
+  123/2003/QĐ-BTC; 12/2015/NĐ-CP, 26/2015/TT-BTC, 130/2016/TT-BTC (khả năng là
+  hướng dẫn đồng bộ hiệu lực — cố vấn đã nói loại); 2714/QĐ-BTC (đính chính,
+  loại). Con số "95 ca trong 13 văn bản" ở trên đã lỗi thời. T5 vẫn chờ cố vấn.
 
 - 2026-09-20 (CMT, Q3 — chốt sau khi cố vấn luật trả lời): **T5 định nghĩa lại theo
   Điều 152**, là "văn bản quy định hiệu lực trở về trước", bỏ mệnh đề "có lợi cho đối

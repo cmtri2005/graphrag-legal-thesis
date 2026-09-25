@@ -16,6 +16,12 @@ Offline, a pure function of `data/` (run `build_eligibility.py` first). Writes
     interval_check      effTo not after effFrom: the history's own dates
                         (normalised by `legal_date`) are attached as evidence
                         and the document stays unanchored.
+    effective_from      effFrom before issueDate while the document's own
+                        effectivity clause names a different date that is not
+                        before its signing ("có hiệu lực từ ngày 15 tháng 02
+                        năm 2022" against effFrom 2021-02-15). status
+                        needs_review; verify_temporal_candidates.py accepts
+                        only the exact one-year typing slip.
 
 Documents that fit none of these are counted by reason, not written.
 
@@ -37,6 +43,7 @@ from legal_crawler.vocab.status_codes import (
     EMPTY_INTERVAL,
     NO_EFF_FROM,
     REPEALED_WITHOUT_EFF_TO,
+    effective_clause_dates,
     legal_date,
 )
 
@@ -85,6 +92,27 @@ def effective_to_candidate(target_id: str, target: dict, actors: dict[str, tuple
     }
 
 
+def effective_from_candidate(doc_id: str, doc: dict) -> dict | None:
+    """The date the text states when it contradicts an effFrom set before signing."""
+    eff_from, issued = _day(doc.get("effFrom")), _day(doc.get("issueDate"))
+    if not (eff_from and issued and eff_from < issued):
+        return None
+    stated = effective_clause_dates((doc.get("documentContent") or {}).get("content") or "")
+    if any(d.isoformat() == eff_from for d, _ in stated):
+        return None                            # the text says so too: really retroactive
+    later = sorted({(d, words) for d, words in stated if d.isoformat() >= issued})
+    if len({d for d, _ in later}) != 1:
+        return None                            # silent, or several dates: nothing to propose
+    value, words = later[0]
+    return {
+        "schema_version": SCHEMA_VERSION, "document_id": doc_id, "field": "effective_from",
+        "value": value.isoformat(), "method": "text_effective_clause",
+        "evidence_document_ids": [doc_id], "evidence_relation_codes": [],
+        "evidence": {"clause": words, "effFrom": eff_from, "issueDate": issued},
+        "status": "needs_review",
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=Path("data"))
@@ -103,10 +131,14 @@ def main() -> None:
     records, review_rows = [], []
     skipped: collections.Counter[str] = collections.Counter()
     for row in eligibility:
-        if not row["in_scope"] or row["anchor_problem"] is None:
+        if not row["in_scope"]:
             continue
         doc_id = row["doc_id"]
         doc = store.load("raw", doc_id)
+        if (record := effective_from_candidate(doc_id, doc)) is not None:
+            records.append(record)
+        if row["anchor_problem"] is None:
+            continue
         if row["anchor_problem"] == REPEALED_WITHOUT_EFF_TO:
             actors = {a: (store.load("raw", a), codes) for a, codes in ending.get(doc_id, {}).items()}
             record = effective_to_candidate(doc_id, doc, actors)

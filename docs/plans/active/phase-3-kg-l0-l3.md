@@ -661,3 +661,29 @@ khoảng hiệu lực mới — P3.16 giữ 🟡 đến lúc đó. Merge **chưa
   **Chưa chốt E1 theo phạm vi 356 VBHN**: muốn tăng coverage phải phục hồi
   body nguồn và chạy lại, không điền đoán từ graph. P3.18/M2 vẫn mở đến khi
   E2–E3 có đáp án kiểm tay và đạt Q5.
+
+### Sửa `effFrom` lệch năm — 25/09/2026
+
+Phát hiện khi dựng T5 (plan Giai đoạn 4): 41/2021/TT-BGTVT ký 31/12/2021, văn
+bản ghi "có hiệu lực thi hành từ ngày 15 tháng 02 năm 2022", portal ghi
+`effFrom` 2021-02-15. History chép lại đúng giá trị sai nên không kiểm chứng
+chéo được. Đo trên 639 văn bản trong phạm vi có `effFrom` trước `issueDate`:
+110 tự ghi ngày hồi tố (giữ nguyên), 488 không có câu hiệu lực đọc được (giữ
+nguyên — nhiều thông tư thuế 1990–2000 hồi tố thật), phần còn lại mâu thuẫn.
+
+Theo ADR 0002 §4–5 (không sửa `data/raw`, giá trị dẫn xuất có bằng chứng và
+quyết định): `build_temporal_candidates.py` sinh candidate `effective_from` khi
+câu hiệu lực của chính văn bản nêu đúng một ngày không trước ngày ký và khác
+`effFrom` (36 văn bản); `verify_temporal_candidates.py` chỉ chấp nhận tự động
+khi ngày đó bằng `effFrom` + đúng 1 năm (**31 văn bản**, `text_corroborated`);
+5 ca còn lại (lệch tháng/ngày, hoặc ngày chỉ áp cho một Điều) chờ người duyệt.
+`ingest.py` áp dụng quyết định accept. Rebuild `build_store` →
+`resolve_expiry_targets` → `extract_provision_events` → `build_versions`:
+18.840 event applied, 1.565.078 versions, `verify_pipeline.py` all pass;
+`data/review/provision_events.jsonl` chỉ đổi 1 dòng (event của 14/2020/TT-BTNMT
+mang ngày mới). Tác động: 32 lineage trong pool ViLexTime đổi mốc, không lineage
+nào đổi nhóm; ứng viên hồi tố T5 từ 19 còn 10 văn bản.
+
+Còn mở: quyết định accept `effective_to` (367 bản ghi) chưa được `ingest.py`
+áp dụng — lỗ hổng có từ T4.3 của backfill, ngoài phạm vi lần sửa này.
+

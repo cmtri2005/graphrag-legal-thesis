@@ -43,8 +43,10 @@ import argparse
 import html
 import json
 import re
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
+
+from legal_crawler.vocab.status_codes import year_typo
 
 KEYWORDS = ("bãi bỏ", "hết hiệu lực", "thay thế", "hủy bỏ")
 ARTICLE_SPLIT = re.compile(r"(?=Điều\s+\d+\.)")
@@ -158,14 +160,16 @@ def main() -> None:
                 rec = json.loads(line)
                 if rec.get("method") != "text_corroborated":
                     kept.append(rec)
-    already_decided = {rec["document_id"] for rec in kept}
+    # Keyed by field too: a human decision on a document's effective_to must
+    # not stop this script from deciding its effective_from.
+    already_decided = {(rec["document_id"], rec.get("field", "effective_to")) for rec in kept}
 
     accepted = []
     inconclusive = 0
     now = datetime.now(timezone.utc).isoformat()
     for c in eff_to:
         doc_id = c["document_id"]
-        if doc_id in already_decided:
+        if (doc_id, "effective_to") in already_decided:
             continue
         actor_id = c["evidence_document_ids"][0]
         target = load("raw", doc_id) or {}
@@ -190,6 +194,24 @@ def main() -> None:
             }
         )
 
+    # effective_from: the candidate already quotes the document's own clause;
+    # what makes it a typing slip rather than a disagreement is the exact
+    # one-year shift. Anything else stays for a human.
+    eff_from = [c for c in candidates if c.get("field") == "effective_from"]
+    from_accepted = 0
+    for c in eff_from:
+        if (c["document_id"], "effective_from") in already_decided:
+            continue
+        if year_typo(date.fromisoformat(c["evidence"]["effFrom"]), date.fromisoformat(c["value"])):
+            from_accepted += 1
+            accepted.append({
+                "schema_version": 1, "document_id": c["document_id"], "field": "effective_from",
+                "value": c["value"], "decision": "accept", "method": "text_corroborated",
+                "evidence_document_ids": c["evidence_document_ids"],
+                "evidence": {**c["evidence"], "rule": "stated date is effFrom + 1 year to the day"},
+                "reviewer": "claude-opus-5-5-agent", "reviewed_at": now,
+            })
+
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w", encoding="utf-8") as f:
         for rec in kept + accepted:
@@ -197,6 +219,8 @@ def main() -> None:
 
     print(f"{len(eff_to)} effective_to candidates ({len(already_decided)} already decided by a human/other reviewer, left untouched)")
     print(f"  {len(accepted)} accepted -> {out_path} (target docNum cited near a repeal/replace keyword in actor's own text)")
+    print(f"{len(eff_from)} effective_from candidates: {from_accepted} accepted (one-year typing slip), "
+          f"{len(eff_from) - from_accepted} left for a human")
     print(f"  {inconclusive} inconclusive (no explicit citation found — common in pre-2000 drafting; needs human or L2 extraction, NOT rejected)")
 
 

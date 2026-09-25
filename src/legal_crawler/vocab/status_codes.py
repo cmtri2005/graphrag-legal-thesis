@@ -141,6 +141,39 @@ def legal_date(row: dict) -> date | None:
     return date.fromisoformat(stamp[:10]) + timedelta(days=shift)
 
 
+# A document's own effectivity clause: "Thông tư này có hiệu lực (thi hành) (kể)
+# từ ngày 15 tháng 02 năm 2022". Measured 24/09 on the 639 in-scope documents
+# whose `effFrom` falls before their `issueDate`: in 27 the clause names exactly
+# one later date that is `effFrom` plus one year to the day, i.e. the portal
+# typed the wrong year, and its history rows copy the same wrong value, so they
+# cannot corroborate. 110 others state the early date themselves (really
+# retroactive) and must keep it.
+_EFFECTIVE_CLAUSE = re.compile(
+    r"có hiệu lực(?: thi hành)?(?: kể)? từ ngày (\d{1,2})\s*(?:tháng|/)\s*(\d{1,2})\s*(?:năm|/)\s*(\d{4})"
+)
+_TAG = re.compile(r"<[^>]+>")
+
+
+def effective_clause_dates(content: str) -> list[tuple[date, str]]:
+    """Every date the text says it takes effect on, with the words that say so."""
+    text = " ".join(_TAG.sub(" ", content or "").split())
+    found = []
+    for m in _EFFECTIVE_CLAUSE.finditer(text):
+        try:
+            found.append((date(int(m[3]), int(m[2]), int(m[1])), text[max(0, m.start() - 60):m.end()]))
+        except ValueError:
+            continue
+    return found
+
+
+def year_typo(eff_from: date, stated: date) -> bool:
+    """`stated` is `eff_from` one year later to the day — the portal's typing slip."""
+    try:
+        return stated == eff_from.replace(year=eff_from.year + 1)
+    except ValueError:            # 29 February
+        return False
+
+
 # Why a document cannot be placed on the timeline. One definition, shared by
 # `scripts/check/data_status.py` and `ingest.py`, checked in this order.
 NO_EFF_FROM = "no effFrom — cannot place on the timeline at all"
