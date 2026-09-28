@@ -103,6 +103,9 @@ def test_the_present_tense_that_real_vietnamese_legal_qa_uses_is_rejected():
                   "Theo quy định hiện nay, thời hạn giải quyết là bao lâu?",
                   "Quy định đang có hiệu lực về hồ sơ giải thể yêu cầu những gì?"):
         assert validate(wrong, CONTEXT, ANSWER) == "presumes_the_present"
+    # "thực hiện hành vi" (commit an act) contains the letters, not the tense.
+    assert validate("Người nước ngoài thực hiện hành vi đánh bạc trên môi trường mạng thì bị xử phạt bổ "
+                    "sung hình thức nào?", CONTEXT, ANSWER) != "presumes_the_present"
 
 
 def test_the_examples_in_the_prompt_agree_with_the_validator():

@@ -150,6 +150,11 @@ def test_a_generated_question_replaces_the_template_across_every_date():
                                              "temperature": 0.0, "prompt_sha": "4c766103a79e"}
     assert "2021" not in records[2]["question"]             # the date lives in as_of, not the text
 
+    # A question a person rewrote during the hand-check says who and when.
+    generated["provision:p"].update(edited_by="human:excel", edited_at="2026-09-28")
+    edited = records_of(_t3_row(), DOCUMENTS, {"provision:p": CHAIN}, PARENTS, LEAD_INS, generated)
+    assert edited[0]["question_source"]["edited_by"] == "human:excel"
+
     # With nothing generated the row falls back and says so.
     fallback = records_of(_t3_row(), DOCUMENTS, {"provision:p": CHAIN}, PARENTS, LEAD_INS, {})
     assert fallback[0]["question_source"]["kind"] == "template"

@@ -36,7 +36,7 @@ SAMPLED = {"T2": 50, "T3": 50, "T4": 50}
 WHOLE = ("T5", "T6")
 VERDICTS = {"dat", "khong_dat"}
 REASONS = {"question_ambiguous", "question_leaks", "gold_wrong", "group_mismatch",
-           "unanswerable_as_asked", "other"}
+           "unanswerable_as_asked", "transitional_rule", "other"}   # transitional_rule: guideline v1.1
 COLUMNS = ["id", "group", "lineage_id", "question", "as_of", "answer", "citation", "law_id",
            "source_url", "note_for_annotator", "verdict", "reasons", "note"]
 

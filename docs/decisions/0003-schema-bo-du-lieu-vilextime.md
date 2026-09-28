@@ -230,6 +230,11 @@ Tradeoffs:
 
 ## Follow-Up
 
+- **28/09 (CMT), MINOR:** `question_source` có thêm hai trường tùy chọn
+  `edited_by` (mã giả danh, ví dụ `human:excel`) và `edited_at` khi người kiểm
+  tay viết lại câu hỏi của model. `kind` vẫn là `llm` (câu gốc do model viết,
+  giữ ở `model_question` trong `data/vilextime/questions.jsonl`), câu sửa vẫn phải
+  qua `validate()` (C2). Áp cho 10 câu T1 sửa trong đợt kiểm tay đầu.
 - **Chốt 24/09 (CMT):** quota trong `docs/plans/active/phase-4-vilextime.md` (T1 250 ·
   T2 400 · T3 200 · T4 150 · T5 50 · T6 100 = 1.150) đếm theo **dòng QA**
   (cặp điều khoản, `as_of`), không theo điều khoản. Tổng bộ phát hành đúng

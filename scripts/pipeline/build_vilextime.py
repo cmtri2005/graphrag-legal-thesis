@@ -180,7 +180,9 @@ def records_of(row: dict, documents: dict[str, tuple], chains: dict[str, list],
                          else question_of(cite, doc_type or "", number or "", gold["as_of"])),
             "question_source": (
                 {"kind": "llm", "provider": generated["provider"], "model": generated["model"],
-                 "temperature": generated["temperature"], "prompt_sha": generated["prompt_sha"]}
+                 "temperature": generated["temperature"], "prompt_sha": generated["prompt_sha"],
+                 # a person rewrote the model's question during the hand-check
+                 **{k: generated[k] for k in ("edited_by", "edited_at") if generated.get(k)}}
                 if generated else {"kind": "template", "id": QUESTION_TEMPLATE_ID}),
             "as_of": gold["as_of"],
             "target": {

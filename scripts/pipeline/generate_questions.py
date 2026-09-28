@@ -63,7 +63,8 @@ _FILLER = re.compile(r"(?i)cho\s+(?:em|tôi|mình)\s+hỏi|xin\s+chào|\bạ\s*[
 # opens, and it is exactly wrong here: it pins the question to the reader's
 # present, while the anchor is `as_of`. The same question is asked in 2016 and
 # in 2026, so it may not claim either is "now".
-_PRESENT = re.compile(r"(?i)hiện\s+hành|hiện\s+nay|hiện\s+t\u1ea1i|bây\s+giờ|"
+# "thực hiện hành vi" is an act, not "hiện hành" (in force now).
+_PRESENT = re.compile(r"(?i)(?<!thực )hiện\s+hành|hiện\s+nay|hiện\s+t\u1ea1i|bây\s+giờ|"
                       r"đang\s+có\s+hiệu\s+lực|mới\s+nhất|gần\s+đây")
 
 

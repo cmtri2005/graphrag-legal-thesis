@@ -358,6 +358,35 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   **Giới hạn:** hiệu lực riêng từng Điều (ngoại lệ trong câu hiệu lực) chưa mô
   hình hóa; event của các Điều đó mang ngày chung của văn bản.
 
+- 2026-09-28 (CMT): **model gán nhãn trước, nhóm audit cuốn chiếu** (hướng dẫn
+  v1.1 §6). Nhãn ngoài D4 nằm ở `data/review/labels.tsv`, một dòng cho mỗi
+  (dòng QA, người gán), chỉ ghi qua `scripts/review/labels.py` (kiểm từ vựng
+  đóng; từ chối nhãn model trên dòng D4 khi A, B chưa gán xong). κ vẫn chỉ giữa
+  hai người. Nhãn tay T1 gõ trong file Excel preview được nhập nguyên văn
+  (`human:excel`, 184 dòng T1 + 26 dòng T2 `CHECKED`; 10 câu hỏi bị sửa trong
+  Excel giữ ở `note`, chưa áp vào `questions.jsonl`). Hướng dẫn v1.1: câu dẫn là
+  một phần của đáp án, mã `transitional_rule`, lớp `meta_issues`.
+  **T1 do model gán đủ 250:** 222 `dat`, 28 `khong_dat` (20 `question_ambiguous`,
+  3 `unanswerable_as_asked`, 3 `other` — điều khoản thi hành dính khối chữ ký,
+  2 `question_leaks`), 33 dòng có `meta_issues` (16 `valid_to_wrong`: valid_to
+  rỗng dù có cạnh 'Văn bản được thay thế' hoặc văn bản đã bị thay thế; 15
+  `citation_path_wrong`: citation thiếu cấp cha). 7 dòng `dat` là điều khoản hiệu
+  lực/thi hành, ghi chú "cân nhắc loại khỏi T1".
+  So với 141 dòng người có verdict: đồng ý 83,0%; 6 dòng lệch do quy tắc câu dẫn
+  mới, 6 dòng người đã sửa câu hỏi (tức câu gốc có lỗi). Ba mẫu lỗi lặp: văn bản
+  chức danh nghề nghiệp/ngạch có một Điều cho mỗi hạng mà câu hỏi không nêu hạng;
+  cùng mục có ở nhiều Điều cho nhiều loại đồ án/nghề; câu hỏi về "một tổ chức"
+  trong nghị định xử phạt mà mức ghi trong khoản là mức cho cá nhân (tổ chức gấp
+  02 lần). 96 nhãn cần audit: `labels.py audit-sheet` → điền → `import-audit`.
+  **Cập nhật cùng ngày (CMT):** `CHECKED` ở 26 dòng T2 và `verified` ở T1 nghĩa
+  là đạt. 10 câu hỏi sửa trong Excel được áp vào `questions.jsonl`
+  (`edited_by: human:excel`, câu gốc giữ ở `model_question`; ADR 0003 Follow-Up),
+  cả 10 qua C2 sau khi sửa lỗi `presumes_the_present` bắt nhầm "thực hiện hành vi"
+  (0 câu từng bị loại oan). Dựng lại T1 + `--select`: bản phát hành chỉ đổi đúng
+  10 dòng ở `question`, `question_source`. Model chấm lại 10 câu: 9 đạt, 1 vẫn mơ
+  hồ (63/2007 điểm b khoản 5 Điều 18). T1 của model nay 228 `dat` / 22
+  `khong_dat`, đồng ý với người 86,5% (141 dòng), 91 nhãn cần audit.
+
 ## Risks And Recovery
 
 - **11,1% cặp phiên bản liền nhau có chữ giống hệt nhau** (2.132/19.192, đo
