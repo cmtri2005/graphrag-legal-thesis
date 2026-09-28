@@ -43,7 +43,7 @@ toàn bộ T5 vào test.
 | V4 | D4: dựng lại bộ κ từ `release.jsonl` (chỉ dòng `ranh_gioi`, thêm cột ngữ cảnh), A/B gán mù, κ + AC1 + % đồng thuận | Kết quả `crosscheck.py kappa`, biên bản hòa giải |
 | V5 | T5: bản đề xuất cho luật sư → quyết định Điều 152 | Cột `LUẬT SƯ:` điền đủ |
 | V6 | Kiểm gold độc lập ~120 dòng (gộp E2 của GĐ3), dư mẫu `giua_khoang` | Tỷ lệ gold sai + Wilson CI; dòng hỏng → `excluded` |
-| V7 | Scorer chính thức + probe (oracle, mới nhất, đầu tiên, ngày gần nhất) | Unit test; kết quả probe trên hai chế độ `as_of` |
+| V7 ✅ | Scorer chính thức + probe (oracle, mới nhất, đầu tiên, ngày gần nhất) | Unit test; kết quả probe trên hai chế độ `as_of` |
 | V8 | Sửa/thay dòng không đạt, chia tập, datasheet, đóng băng v1.0 | Tag, sha256, datasheet |
 
 Tiến độ V1–V2 (28/09): `release.jsonl` 2.297 dòng = 1.150 ranh giới + 1.147
@@ -105,6 +105,38 @@ Kiểm: 1.008 dòng không đụng tới giữ nguyên từng trường, 300 id 
 `fix` ghi lý do loại, để người audit xác nhận việc loại. 7 nhãn `khong_dat` của người
 (human:excel) vẫn giữ: 4 dòng hợp lệ theo quy tắc câu dẫn v1.1 (19/2014, 109/2026
 Đ16, 17/2018, 15/2003), 3 dòng câu hỏi đã viết lại. Audit bắt buộc: 338 nhãn.
+
+V7 (28/09): `scripts/eval/score_vilextime.py`, scorer chính thức và 4 probe. Định nghĩa
+theo khung đánh giá của đề cương và công thức 6–9 (TVER, VCR, TCS, TV-Recall@k; ảnh
+công thức ở bản đề cương trước, `DeCuongKLTN_23521635_23521643.docx` trong git). **Chốt
+28/09 (CMT)** ba chỗ công thức để ngỏ: (1) Accuracy và "â = a*" của TCS: câu trả lời
+(chuẩn hóa) chứa mọi đoạn của `short_answer`; EM/F1 tính riêng trên âm tiết; (2) E* chỉ
+là đơn vị gold (|E*| = 1): Recall@k trúng khi lấy đúng điều khoản, phiên bản nào cũng
+được, hoặc `accepted_evidence`; TV-Recall@k chỉ khi đúng phiên bản có hiệu lực tại `as_of`
+hoặc `accepted_evidence`; (3) dòng không có đáp án đúng khi bài nộp trả `answerable:
+false`, truy xuất trúng khi lấy được lệnh bãi bỏ, không tính EM/F1. TVER, VCR tính trên
+dòng có trích dẫn (đề cương); mã đơn vị không có trong corpus tính là không còn hiệu lực.
+Bài nộp là JSONL `{id, answer, answerable, citations, retrieved}` với mã đơn vị của
+corpus hai lớp; mã lớp A quy về phiên bản (`asis:provision` = bản 1, `asis:event` = bản
+lệnh đó viết ra, lệnh bãi bỏ = hiệu lực từ ngày bãi bỏ). 7 unit test trên ví dụ tay.
+
+Kết quả probe (hệ thống được cho sẵn điều khoản gold, chỉ chọn phiên bản; toàn release):
+
+| Probe | as_of | TV-Recall@1 | Accuracy | TVER = VCR | TCS |
+|---|---|---|---|---|---|
+| oracle | cả hai | 1,000 | 1,000 | 0,000 | 1,000 |
+| mới nhất | giữa khoảng / ranh giới | 0,577 / 0,578 | 0,606 / 0,607 | 0,423 / 0,422 | 0,101 / 0,100 |
+| đầu tiên | giữa khoảng / ranh giới | 0,577 / 0,576 | 0,586 / 0,584 | 0,423 / 0,424 | 0,015 / 0,015 |
+| ngày gần nhất | giữa khoảng / ranh giới | 0,762 / 0,696 | 0,774 / 0,717 | 0,238 / 0,304 | 0,530 / 0,100 |
+
+Oracle đạt trần ở mọi chỉ số (kể cả dòng bị bãi bỏ: từ chối và trích lệnh bãi bỏ), nên
+scorer nhất quán từ đầu tới cuối. Accuracy cao hơn TV-Recall@1 ở probe sai phiên bản
+(0,606 so với 0,577): có dòng mà phiên bản sai vẫn chứa đáp án ngắn, nên Accuracy một
+mình đánh giá cao hệ thống. Bẫy ngày gần nhất chỉ tác dụng ở chế độ ranh giới (TCS 0,53
+→ 0,10). **Phát hiện:** 200/200 dòng ranh giới T3 nằm đúng 1 ngày sau ngày bắt đầu phiên
+bản của nó, không dòng nào ở ngày trước lần sửa như T2/T4/T5, nên probe ngày gần nhất
+đạt 1,000 trên T3 ranh giới; muốn T3 ranh giới thử bẫy này thì phải đổi cách đặt `as_of`
+(chưa đổi, chờ quyết định).
 
 ## Context
 
