@@ -28,7 +28,10 @@ a re-run keeps it (see `sample`). Offline and deterministic given that file.
 `build_vilextime.py`: it walks the same ranks and writes the records of the
 first lineages whose question is the model's (not the template) and whose rows
 still fit, to exactly the release quota. T6 is selected at 100 until T5 exists;
-its shortfall is added once the legal advisor rules.
+its shortfall is added once the legal advisor rules. A lineage listed in
+`data/vilextime/dropped.jsonl` (review found it unfixable: not a norm, a
+truncated source, too few distinct answers) is skipped as if its question had
+failed, so the next ranked lineage takes its rows.
 
 Usage:
     python scripts/pipeline/sample_vilextime.py
@@ -137,6 +140,9 @@ def main() -> None:
     ranking = args.data / "vilextime/sample.jsonl"
     if args.select:
         ranked = [json.loads(line) for line in ranking.open(encoding="utf-8")]
+        dropfile = args.data / "vilextime/dropped.jsonl"
+        dropped = ({json.loads(line)["lineage_id"] for line in dropfile.open(encoding="utf-8")}
+                   if dropfile.exists() else set())
         total = 0
         with (base / "selected.jsonl").open("w", encoding="utf-8") as out:
             got: dict[str, int] = {}
@@ -147,7 +153,7 @@ def main() -> None:
                 for line in (base / f"{group}.jsonl").open(encoding="utf-8"):
                     record = json.loads(line)
                     records[record["lineage_id"]].append(record)
-                passed = {lid for lid, recs in records.items() if recs[0]["question_source"]["kind"] == "llm"}
+                passed = {lid for lid, recs in records.items() if recs[0]["question_source"]["kind"] == "llm"} - dropped
                 quotas = ({"ancestor": T6_ANCESTOR_ROWS, "direct": quota - T6_ANCESTOR_ROWS} if group == "T6"
                           else {None: quota})
                 chosen = [lid for part, q in quotas.items()

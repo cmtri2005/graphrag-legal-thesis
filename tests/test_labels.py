@@ -86,3 +86,26 @@ def test_audit_round_trips_through_the_workbook(tmp_path):
     import_audit(data, tmp_path / "a.xlsx")
     (label,) = read(data / "review/labels.tsv")
     assert (label["audit"], label["auditor"]) == ("khong_dong_y", "A")
+
+
+def test_a_row_whose_lineage_was_dropped_still_reaches_the_audit_sheet(tmp_path):
+    from openpyxl import load_workbook
+
+    from labels import audit_sheet
+
+    data, ids = _data(tmp_path)
+    add(data, _batch(tmp_path / "b.tsv", [
+        {"id": ids[1], "labeler": "claude-opus-5-5", "verdict": "khong_dat", "reasons": "group_mismatch"}]))
+    gone = {"id": ids[1], "group": "T2", "lineage_id": "p1", "question": "q", "as_of": "2020-01-01", "answer": "a",
+            "source_url": "u", "target": {"citation": "c", "law_id": "l"}}
+    (data / "derived/vilextime/T2.jsonl").write_text(json.dumps(gone) + "\n")
+    kept = [line for line in (data / "derived/vilextime/release.jsonl").open() if ids[1] not in line]
+    (data / "derived/vilextime/release.jsonl").write_text("".join(kept))
+    (data / "vilextime").mkdir()
+    (data / "vilextime/dropped.jsonl").write_text(json.dumps({"lineage_id": "p1", "reason": "group_mismatch",
+                                                              "note": "hai đáp án"}) + "\n")
+    audit_sheet(data, tmp_path / "a.xlsx", None)
+    ws = load_workbook(tmp_path / "a.xlsx").active
+    head, row = [c.value for c in ws[1]], [c.value for c in ws[2]]
+    assert row[head.index("id")] == ids[1]
+    assert row[head.index("fix")] == "loại lineage (group_mismatch): hai đáp án"

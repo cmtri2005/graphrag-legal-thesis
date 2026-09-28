@@ -84,6 +84,28 @@ release đổi 13 đáp án T3 (6 trong bộ κ, dựng lại: giữ nguyên 300
 bản nguồn (không sửa được ở pipeline):** 2 đáp án bị cắt ngay trong HTML gốc ở chữ "do"
 (59/2011 Đ36.2.b bản 2, 13/2019/TT-BGTVT Đ87.2 bản 1), đã đánh `gold_wrong`/`meta other`.
 
+Tiến độ V8, phần sửa/thay dòng không đạt (28/09): cả 138 nhãn `khong_dat` (131 của
+model trên 73 lineage, 7 của người) đã xử lý, không còn dòng `khong_dat` nào của model
+trong release. **Viết lại câu hỏi** 56 lineage (99 dòng): câu mới qua cùng `validate()`, ghi đè
+`question` trong `questions.jsonl`, câu model gốc giữ ở `model_question`,
+`edited_by: claude-opus-5-5`; nhãn model của mọi dòng lineage đó chấm lại tại chỗ
+(ghi chú giữ câu cũ và nhãn cũ), luôn bắt buộc audit. Câu hỏi phạt tiền hỏi "khung
+phạt tiền của hành vi" thay vì "mức phạt với tổ chức". Sửa một nhãn sai: 63/2019 Đ51
+là lĩnh vực dự trữ quốc gia, câu cũ nói tài sản công mà đã được gán `dat`.
+**Loại** 19 lineage không sửa được (không phải quy phạm, văn bản nguồn bị cắt, chỉ 2
+đáp án khác nhau ở T3, câu hỏi không thể tách khỏi điểm/khoản anh em) vào
+`data/vilextime/dropped.jsonl` (lý do, ghi chú, người loại); `sample_vilextime.py
+--select` coi lineage bị loại như câu hỏi không qua, nên lineage xếp hạng kế tiếp vào
+thay. Thêm một lineage T3 (hạng 56) loại trước khi sinh câu hỏi vì chỉ có 2 đáp án.
+**Thay thế** 43 dòng: 7 lineage dự trữ đã có câu hỏi, 12 câu mới viết bằng phiên
+Claude Code theo thứ hạng (T2 hạng 242–246, T3 hạng 70–73, 85, 143 — subset-sum bỏ
+qua các lineage 3 dòng ở giữa vì T3 cần đúng 20 dòng); nhãn và đáp án ngắn đủ.
+Kiểm: 1.008 dòng không đụng tới giữ nguyên từng trường, 300 id κ không đổi, hạn ngạch
+đủ, `check_release.py` OK. `audit-sheet` đọc cả dòng đã loại (từ file nhóm) với cột
+`fix` ghi lý do loại, để người audit xác nhận việc loại. 7 nhãn `khong_dat` của người
+(human:excel) vẫn giữ: 4 dòng hợp lệ theo quy tắc câu dẫn v1.1 (19/2014, 109/2026
+Đ16, 17/2018, 15/2003), 3 dòng câu hỏi đã viết lại. Audit bắt buộc: 338 nhãn.
+
 ## Context
 
 Đề cương giao NMT chủ trì quy trình diff-driven, CMT kiểm định chéo và làm việc

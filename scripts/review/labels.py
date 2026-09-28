@@ -18,7 +18,9 @@ vocabulary, so free-text codes cannot creep back in.
     report             labels per labeler and group, model–human agreement on
                        rows both labelled, and audit outcomes
     audit-sheet XLSX   the labels still waiting for their required audit, with
-                       question, answer and lead-in beside them, as a workbook
+                       question, answer and lead-in beside them, as a workbook;
+                       a row whose lineage was dropped (data/vilextime/dropped.jsonl)
+                       is still there, read from its group file, with the drop in `fix`
     import-audit XLSX  writes `audit`, `auditor`, `audit_note` filled in that
                        workbook back into labels.tsv
 
@@ -55,7 +57,7 @@ RAW_META = {"valid_to": "valid_to_wrong", "lead_in": "lead_in_wrong", "citation/
             "provison_path": "citation_path_wrong", "document_number": "doc_number_wrong",
             "group": "group_wrong", "num_versions": "group_wrong", "type": "other"}
 SHEET = ["id", "group", "question", "as_of", "lead_in", "answer", "citation", "law_id", "source_url",
-         "labeler", "verdict", "reasons", "meta_issues", "note", "evidence", "audit", "auditor", "audit_note"]
+         "labeler", "verdict", "reasons", "meta_issues", "note", "evidence", "fix", "audit", "auditor", "audit_note"]
 AUDIT_SHARE = 5   # a model's `dat` is audited when sha1(id) % 5 == 0: a fixed 20% sample
 
 
@@ -243,12 +245,24 @@ def audit_sheet(data: Path, out: Path, group: str | None) -> None:
     ws.append(SHEET)
     todo = [x for x in read(data / "review/labels.tsv")
             if x["audit_required"] and not x["audit"] and (not group or x["group"] == group)]
+    dropfile = data / "vilextime/dropped.jsonl"
+    dropped = ({d["lineage_id"]: d for d in map(json.loads, dropfile.open(encoding="utf-8"))}
+               if dropfile.exists() else {})
+
+    def row(x: dict) -> dict:
+        if x["id"] in released:
+            return released[x["id"]]
+        group_file = data / f"derived/vilextime/{x['group']}.jsonl"
+        return next(r for r in map(json.loads, group_file.open(encoding="utf-8")) if r["id"] == x["id"])
+
     for x in sorted(todo, key=lambda x: (x["group"], x["id"])):
-        r = released[x["id"]]
+        r = row(x)
+        drop = dropped.get(r.get("lineage_id"))
         answer = r["answer"] if r["answer"] is not None else f"(không có đáp án: {r['no_answer_reason']})"
         ctx = {"question": r["question"], "as_of": r["as_of"], "lead_in": r["target"].get("lead_in") or "",
                "answer": answer, "citation": r["target"]["citation"], "law_id": r["target"]["law_id"],
-               "source_url": r["source_url"]}
+               "source_url": r["source_url"],
+               "fix": f"loại lineage ({drop['reason']}): {drop['note']}" if drop else ""}
         ws.append([{**x, **ctx}.get(c, "") for c in SHEET])
     wb.save(out)
     print(f"{len(todo)} nhãn cần audit -> {out}  (điền audit: dong_y | khong_dong_y, auditor: mã giả danh)")
