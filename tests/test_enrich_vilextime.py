@@ -75,3 +75,6 @@ def test_a_short_answer_must_be_a_span_of_the_answer_or_the_lead_in():
     assert check_short_answer("từ 15.000.000 đồng đến 20.000.000 đồng", answer, lead)
     assert check_short_answer("phạt tiền", answer, lead)
     assert not check_short_answer("30.000.000 đồng", answer, lead)
+    assert check_short_answer("phạt tiền … từ 15.000.000 đồng", answer, lead)       # two spans
+    assert not check_short_answer("iền đối", answer, lead)                            # whole words only
+    assert not check_short_answer("vi phạm 3 phạt tiền", answer, lead)                # never across the two

@@ -39,8 +39,10 @@ and picks boundary rows as before; this step reads `selected.jsonl` and writes
       Heuristics for the checker, not errors: the amending document has a
       transitional article; its effect clause names more than one date.
   short_answer
-      From `data/vilextime/short_answers.jsonl`, written and audited by hand,
-      keyed by (lineage, version); it must be a span of the answer or lead-in.
+      From `data/vilextime/short_answers.jsonl`, keyed by (lineage, version),
+      its writer in `by` (a person or a model, audited with the row's label);
+      it must be a span of the answer or lead-in,
+      or several such spans joined by " … ".
 
 Usage:
     python scripts/pipeline/enrich_vilextime.py
@@ -199,7 +201,10 @@ def references(answer: str, target: dict) -> list[dict]:
 
 
 def check_short_answer(short: str, answer: str | None, lead_in: str | None) -> bool:
-    return bool(short) and norm(short) in norm(f"{answer or ''} {lead_in or ''}")
+    """Every span of the short answer (several are joined by " … ") is in the answer or the lead-in."""
+    source = f" {norm(answer)} | {norm(lead_in)} "
+    spans = [norm(s) for s in (short or "").split("…")]
+    return bool(spans) and all(s and f" {s} " in source for s in spans)
 
 
 # ------------------------------------------------------------------ corpus lookups
