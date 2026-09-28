@@ -66,6 +66,24 @@ dòng nào của pool cũ; `sample_vilextime.py` xếp hạng phần này riêng
 nguyên, 24 lineage nối thêm), chọn 24 dòng ancestor + 88 dòng direct. 24 câu hỏi
 viết bằng phiên Claude Code, 21 qua C2. Bộ κ đổi đúng 24 dòng T6 (chưa ai gán).
 
+Tiến độ V3 (28/09): model (`claude-opus-5-5`) đã gán mọi dòng ranh giới ngoài bộ κ
+của T1–T4 (`data/review/labels.tsv`): T1 228/22, T2 311/39, T3 106/44, T4 74/26
+(đạt/không đạt); 319 nhãn bắt buộc audit, phiếu ở `data/review/audit_T{1..4}.xlsx`,
+chưa audit dòng nào. `short_answer` phủ 2.185/2.185 dòng có đáp án (1.094 phiên bản,
+`data/vilextime/short_answers.jsonl`, mỗi dòng ghi `by`); dòng κ chỉ có đáp án ngắn, không
+có nhãn model. Quy tắc T3 áp dụng (§3 hướng dẫn: câu hỏi phải tách được mọi mốc):
+lineage mà câu hỏi chỉ có dưới 3 đáp án khác nhau thì mọi dòng `group_mismatch` (ghi chú
+cặp mốc có thể chuyển sang T2); lineage đạt thì dòng trùng đáp án với mốc liền trước là
+`group_mismatch`. Đồng thuận model–người trên 159 dòng cùng gán: 86,8%.
+**Lỗi pipeline tìm ra khi gán T3, đã sửa (4c5a8b7):** phép "thay thế cụm từ" được giải
+trên lời văn như công bố, nên nếu điều khoản đã bị sửa trước đó thì lần thay cụm từ âm
+thầm quay về lời văn cũ (ví dụ 191/2015/TT-BTC Đ12.2.b năm 2025 mất nội dung sửa năm
+2019). `extract_provision_events.py` giờ ghi `phrase_edits`, `build_versions.py` giải lại
+trên phiên bản đang có hiệu lực. 59/1.595.391 phiên bản đổi lời văn; pool đổi 56 dòng T3,
+release đổi 13 đáp án T3 (6 trong bộ κ, dựng lại: giữ nguyên 300 id và thứ tự). **Lỗi văn
+bản nguồn (không sửa được ở pipeline):** 2 đáp án bị cắt ngay trong HTML gốc ở chữ "do"
+(59/2011 Đ36.2.b bản 2, 13/2019/TT-BGTVT Đ87.2 bản 1), đã đánh `gold_wrong`/`meta other`.
+
 ## Context
 
 Đề cương giao NMT chủ trì quy trình diff-driven, CMT kiểm định chéo và làm việc
