@@ -210,6 +210,7 @@ def main() -> None:
                             affected_provision_ids=list(target.affected_provision_ids),
                         )
                     updates = None
+                    edits = []
                     phrase_missing = False
                     block = blocks.get(mention.paragraph)
                     if row["operation"] in TEXT_OPS and block and row["target_provision_id"]:
@@ -228,6 +229,10 @@ def main() -> None:
                                                      row["target_provision_id"], edits)
                             phrase_missing = not updates
                     row["text_updates"] = [{"target_provision_id": k, "new_text": v} for k, v in (updates or {}).items()]
+                    if edits and updates:
+                        # resolved here against the as-published text; build_versions
+                        # re-resolves them against the text in force on effective_on
+                        row["phrase_edits"] = [list(edit) for edit in edits]
                     row["status"], row["status_reason"] = _status(row, block is not None, gold,
                                                                   phrase_missing=phrase_missing)
                     row["id"] = make_event_id(

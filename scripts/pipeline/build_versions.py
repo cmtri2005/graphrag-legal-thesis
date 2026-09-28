@@ -46,6 +46,7 @@ from datetime import date, timedelta
 from pathlib import Path
 from typing import Any, Iterable
 
+from legal_crawler.extraction.wording import apply_phrase
 from legal_crawler.index import TemporalIndex
 from legal_crawler.storage.documents import DocumentStore
 from legal_crawler.temporal import (
@@ -349,6 +350,7 @@ def _build_document_versions(
             continue
         state.add_document(actor[1])
         try:
+            row = rebase_phrase_edit(row, text_by_provision, lambda pid: _open_text(state, pid))
             event = _event_from_row(row)
             result = applier.apply(event, state)
         except (EventApplicationError, TemporalStateError, ValueError) as exc:
@@ -383,6 +385,38 @@ def _build_document_versions(
             report["effective_empty"] += 1
         elif len(intervals) > 1:
             report["effective_disjoint"] += 1
+
+
+def rebase_phrase_edit(row: dict[str, Any], initial: dict[str, str], current) -> dict[str, Any]:
+    """Re-resolve a phrase edit against the text in force when it takes effect.
+
+    extract_provision_events resolves "thay thế cụm từ A bằng B" against the
+    as-published text (and records them as `phrase_edits`), so an earlier
+    amendment of the same node would be lost. An update is rebased only when
+    the edits turn the as-published text into exactly the stored `new_text` —
+    proof that it is that phrase edit; anything else is left as extracted. When
+    the phrase is no longer in the text in force the extracted text is kept too:
+    the version in force may itself come from a mis-targeted event, and
+    rejecting the edit would carry that version forward.
+    """
+    edits = [tuple(edit) for edit in row.get("phrase_edits") or ()]
+    if not edits or not row.get("text_updates"):
+        return row
+    updates = []
+    for item in row["text_updates"]:
+        pid = make_provision_id(item["target_provision_id"])
+        base, now = initial.get(pid), current(pid)
+        if base is None or now is None or now == base or apply_phrase(base, edits) != item["new_text"]:
+            updates.append(item)
+            continue
+        rebased = apply_phrase(now, edits)
+        updates.append({**item, "new_text": rebased} if rebased is not None else item)
+    return {**row, "text_updates": updates}
+
+
+def _open_text(state: TemporalState, provision_id: str) -> str | None:
+    chain = state.chain(provision_id)
+    return chain.versions[-1].text if chain is not None and len(chain) else None
 
 
 def _canonical_document(document: LegalDocument) -> LegalDocument:

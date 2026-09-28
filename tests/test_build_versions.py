@@ -2,7 +2,7 @@ import hashlib
 import json
 from datetime import date
 
-from build_versions import build_version_files
+from build_versions import build_version_files, rebase_phrase_edit
 from legal_crawler.index import TemporalIndex
 from legal_crawler.storage.documents import DocumentStore
 from legal_crawler.temporal import (
@@ -219,3 +219,19 @@ def test_the_review_queue_keeps_verdicts_across_reruns(tmp_path):
     assert (total, verdicts) == (2, 1)
     assert after["e1"]["decision"] == "accept" and after["e1"]["note"] == "đúng"
     assert after["e2"]["decision"] == "needs_review"
+
+
+def test_a_phrase_edit_keeps_an_earlier_amendment_of_the_same_node():
+    pid = make_provision_id("a#k1")
+    base = "Chi cục Hải quan tiếp nhận hồ sơ."
+    amended = "Chi cục Hải quan tiếp nhận và kiểm tra hồ sơ."
+    row = {"evidence": "khoản 1", "phrase_edits": [["Chi cục Hải quan", "Hải quan cửa khẩu"]],
+           "text_updates": [{"target_provision_id": "a#k1", "new_text": "Hải quan cửa khẩu tiếp nhận hồ sơ."}]}
+    initial = {pid: base}
+
+    rebased = rebase_phrase_edit(row, initial, lambda _: amended)
+    assert rebased["text_updates"][0]["new_text"] == "Hải quan cửa khẩu tiếp nhận và kiểm tra hồ sơ."
+    assert rebase_phrase_edit(row, initial, lambda _: base) == row             # nothing changed before it
+    full = {k: v for k, v in row.items() if k != "phrase_edits"}                # not a phrase edit
+    assert rebase_phrase_edit(full, initial, lambda _: amended) == full
+    assert rebase_phrase_edit(row, initial, lambda _: "Cơ quan hải quan tiếp nhận hồ sơ.") == row  # phrase gone
