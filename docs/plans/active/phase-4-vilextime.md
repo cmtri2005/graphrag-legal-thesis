@@ -14,6 +14,52 @@ vàng dẫn xuất từ khác biệt văn bản và truy ngược được về 
 event sinh ra nó. Cohen κ ≥ 0,6 trên tập kiểm chéo. Tập dev/test chia sẵn,
 không rò rỉ giữa hai tập.
 
+**Cập nhật 28/09 (CMT duyệt): ViLexTime v1.0 sẵn sàng thực nghiệm, làm nhanh
+nhất có thể.** Đề cương đã nộp (`DeCuongKLTN_23521635_23521643_UIT.docx`) đặt GĐ4
+ở 24/10–13/11, GĐ5 ở 14/11–04/12 và kết thúc khóa luận 26/12/2026; mốc đó chỉ là
+hình thức, việc chạy theo thứ tự phụ thuộc. Master plan còn theo lịch đề cương cũ
+(đến 01/02/2027).
+
+### Kế hoạch v1.0 (duyệt 28/09)
+
+Quyết định: (1) **`as_of` ghép cặp**: giữ nguyên dòng sát ranh giới
+(`as_of_strategy: ranh_gioi`), thêm dòng anh em giữa khoảng hiệu lực
+(`giua_khoang`, `twin_of`) cùng câu hỏi, cùng phiên bản đáp án; bảng kết quả chính
+dùng `giua_khoang`, `ranh_gioi` là bài kiểm tra ngày chuyển phiên bản. Căn cứ đo 28/09:
+biết mỗi `as_of` là thu 17.091 văn bản đủ điều kiện về trung vị 7 (T1/T3) hoặc 4
+(vế sau T2/T4) văn bản có ngày hiệu lực khớp. (2) **Schema 1.1.0** (MINOR, ADR 0003):
+`short_answer`, `changed_span`, `evidence_set`, `accepted_evidence`, `op` trên từng
+transition, `domain`/`domain_source`, `legal_markers`, `as_of_strategy`, `twin_of`.
+(3) **Corpus hai lớp**: lớp "như công bố" cho baseline thông thường và B7, lớp "theo
+phiên bản" cho hệ thống đề xuất và B7+; bằng chứng đúng ở lớp nào cũng được chấm
+qua `accepted_evidence`. (4) A = CMT, B = NMT. (5) Dev/test 20/80 theo văn bản,
+toàn bộ T5 vào test.
+
+| Gói | Việc | Xong khi |
+|---|---|---|
+| V1 | `scripts/pipeline/enrich_vilextime.py`: `selected.jsonl` → `release.jsonl` (dòng anh em + trường 1.1) | Test; gold dòng anh em tính lại từ chuỗi phiên bản và trùng dòng gốc |
+| V2 | `scripts/pipeline/build_corpus.py`: hai lớp + manifest (snapshot id, sha256) | Số đếm, sha256 ghi vào manifest |
+| V3 | Nhãn: model gán T2/T3/T4 ngoài bộ κ + `short_answer`; nhóm audit (§6 hướng dẫn) | Mọi nhãn model bắt buộc audit đã audit |
+| V4 | D4: dựng lại bộ κ từ `release.jsonl` (chỉ dòng `ranh_gioi`, thêm cột ngữ cảnh), A/B gán mù, κ + AC1 + % đồng thuận | Kết quả `crosscheck.py kappa`, biên bản hòa giải |
+| V5 | T5: bản đề xuất cho luật sư → quyết định Điều 152 | Cột `LUẬT SƯ:` điền đủ |
+| V6 | Kiểm gold độc lập ~120 dòng (gộp E2 của GĐ3), dư mẫu `giua_khoang` | Tỷ lệ gold sai + Wilson CI; dòng hỏng → `excluded` |
+| V7 | Scorer chính thức + probe (oracle, mới nhất, đầu tiên, ngày gần nhất) | Unit test; kết quả probe trên hai chế độ `as_of` |
+| V8 | Sửa/thay dòng không đạt, chia tập, datasheet, đóng băng v1.0 | Tag, sha256, datasheet |
+
+Tiến độ V1–V2 (28/09): `release.jsonl` 2.297 dòng = 1.150 ranh giới + 1.147
+giữa khoảng (3 khoảng mở sau ngày chụp corpus không có dòng anh em). 363 dòng có
+đơn vị được dẫn chiếu trong `evidence_set` (329 dẫn chiếu phân giải được, 37
+`locator_not_found`). `accepted_evidence` phủ 2.297/2.297: cây điều khoản của văn
+bản sửa đổi làm rơi lời văn trong ngoặc kép ở khoảng 1/3 số lần sửa, nên lớp A có
+riêng một đơn vị cho mỗi câu lệnh (câu lệnh + lời văn mới). Miền: 721 dòng seed,
+1.436 kế thừa qua quan hệ, 140 `khac`. Corpus: 17.307 văn bản; lớp A 1.455.372 điều
+khoản + 48.328 câu lệnh; lớp B 1.473.900 phiên bản. `check_release.py` OK. Bộ κ
+dựng lại từ `release.jsonl` (đúng 300 dòng cũ, thêm cột câu dẫn/`changed_span`/
+khoảng hiệu lực); `crosscheck.py kappa` báo thêm % đồng thuận, AC1, κ theo lineage.
+**Phát hiện:** T6 chỉ chứa ca bãi bỏ trực tiếp (điều kiện chọn nhóm đòi
+`ended_by_event_id` trên chính nút), nên H3 (mất hiệu lực do nút cha bị bãi bỏ)
+chưa có dòng nào để kiểm — cần quyết có thêm tập con này không.
+
 ## Context
 
 Đề cương giao NMT chủ trì quy trình diff-driven, CMT kiểm định chéo và làm việc

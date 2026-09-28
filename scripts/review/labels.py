@@ -78,7 +78,8 @@ def write(path: Path, rows: list[dict]) -> None:
 
 
 def release(data: Path) -> dict[str, dict]:
-    return {r["id"]: r for r in map(json.loads, (data / "derived/vilextime/selected.jsonl").open(encoding="utf-8"))}
+    """Boundary rows and their mid-interval twins; labels go on boundary rows, twins share them."""
+    return {r["id"]: r for r in map(json.loads, (data / "derived/vilextime/release.jsonl").open(encoding="utf-8"))}
 
 
 def is_human(labeler: str) -> bool:

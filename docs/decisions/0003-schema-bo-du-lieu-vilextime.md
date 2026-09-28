@@ -230,6 +230,21 @@ Tradeoffs:
 
 ## Follow-Up
 
+- **28/09 (CMT duyệt), schema 1.1.0 (MINOR):** bản phát hành là
+  `data/derived/vilextime/release.jsonl`, dựng bởi `scripts/pipeline/enrich_vilextime.py`
+  sau bước chọn dòng. Thêm: `as_of_strategy` (`ranh_gioi` · `giua_khoang`) và
+  `twin_of` — mỗi dòng ranh giới có một dòng anh em cùng câu hỏi, cùng phiên bản
+  đáp án, hỏi ở ngày có seed cách hai đầu khoảng hiệu lực ≥ 30 ngày; gold dòng anh
+  em tính lại từ chuỗi phiên bản; `changed_span`; `evidence_set` (vai trò `gold` ·
+  `lead_in` · `reference`, mỗi mục kèm phiên bản tại `as_of`); `accepted_evidence`
+  (đơn vị lớp A của corpus: `asis:<provision>` khi gold là lời văn gốc,
+  `asis:<event>` cho câu lệnh sửa đổi/bãi bỏ); `op` trên từng transition;
+  `domain` + `domain_source` (`seed` · `quan_he_<n>` · `khong_ro`);
+  `legal_markers` (`actor_has_transitional` · `split_effective_date`, heuristic,
+  không phải cờ lỗi — `flags` vẫn chỉ cho lỗi cấu trúc); `short_answer` (từ
+  `data/vilextime/short_answers.jsonl`, phải là một đoạn của đáp án/câu dẫn).
+  Corpus hai lớp: `scripts/pipeline/build_corpus.py`. Kiểm:
+  `scripts/check/check_release.py`.
 - **28/09 (CMT), MINOR:** `question_source` có thêm hai trường tùy chọn
   `edited_by` (mã giả danh, ví dụ `human:excel`) và `edited_at` khi người kiểm
   tay viết lại câu hỏi của model. `kind` vẫn là `llm` (câu gốc do model viết,

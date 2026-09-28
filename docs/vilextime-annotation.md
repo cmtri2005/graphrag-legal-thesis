@@ -93,7 +93,9 @@ lực của văn bản sửa đổi ở dòng T5.
 
 1. Hai người gán nhãn **độc lập**, mỗi người một file (`data/review/crosscheck_A.tsv`,
    `crosscheck_B.tsv`), không trao đổi trong lúc làm. Tên thật không ghi vào
-   file; dùng mã `A` / `B`.
+   file; dùng mã `A` / `B` (28/09: A = CMT, B = NMT; bảng ánh xạ chỉ nằm ở plan,
+   không phát hành). Chỉ gán dòng `ranh_gioi`: dòng anh em `giua_khoang` cùng câu
+   hỏi và cùng phiên bản đáp án nên dùng chung nhãn.
 2. Không sửa câu hỏi hay đáp án trong file — chỉ điền `verdict`, `reasons`, `note`.
 3. Xong cả hai, chạy `python scripts/review/crosscheck.py kappa` để tính κ
    (mục tiêu ≥ 0,6). Nếu thấp hơn: viết lại hướng dẫn ở các điểm hay lệch, tăng

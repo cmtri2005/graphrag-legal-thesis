@@ -2,7 +2,7 @@
 """ViLexTime — the current release selection as an Excel workbook, for people.
 
 A read-only view for the team: it writes nothing back and the repository stays
-the system of record (ADR 0002). Re-run whenever `selected.jsonl` changes.
+the system of record (ADR 0002). Re-run whenever `release.jsonl` changes.
 
 Tabs:
   Đọc trước   status of this preview, what each column means
@@ -40,8 +40,14 @@ COLUMNS = [
     ("group", 7, False, lambda r: r["group"], "Nhóm T1–T6"),
     ("question", 50, True, lambda r: r["question"], "Câu hỏi (LLM viết, đã qua kiểm tự động, chưa qua người)"),
     ("as_of", 11, False, lambda r: r["as_of"], "Mốc thời gian câu hỏi được hỏi (YYYY-MM-DD)"),
+    ("as_of_strategy", 12, False, lambda r: r["as_of_strategy"],
+     "ranh_gioi = sát ngày chuyển phiên bản; giua_khoang = dòng anh em giữa khoảng hiệu lực, cùng câu hỏi và đáp án"),
     ("answer", 70, True, lambda r: r["answer"] if r["answer"] is not None else "",
      "Đáp án chuẩn: nguyên văn điều khoản có hiệu lực tại as_of; rỗng khi không có đáp án"),
+    ("short_answer", 24, True, lambda r: r.get("short_answer") or "",
+     "Đáp án ngắn (một đoạn của đáp án/câu dẫn), viết tay và đã audit; rỗng = chưa có"),
+    ("changed_span", 24, True, lambda r: r.get("changed_span") or "",
+     "Chữ phiên bản này có mà phiên bản kề nó không có (máy tính bằng difflib)"),
     ("answerable", 11, False, lambda r: "có" if r["answerable"] else "không", "Có đáp án tại as_of không"),
     ("no_answer_reason", 18, False, lambda r: r["no_answer_reason"] or "",
      "Lý do không có đáp án (provision_repealed = điều khoản đã bị bãi bỏ)"),
@@ -62,6 +68,10 @@ COLUMNS = [
      lambda r: (f"{r['retroactive']['actor_law_id']}: ký {r['retroactive']['issued_on']}, "
                 f"hiệu lực {r['retroactive']['effective_from']}") if r.get("retroactive") else "",
      "Chỉ T5: văn bản hồi tố, ngày ký, ngày hiệu lực"),
+    ("domain", 18, False, lambda r: ", ".join(r["domain"]),
+     "Lĩnh vực của đề cương (seed); văn bản ngoài seed kế thừa từ văn bản seed gần nhất qua quan hệ"),
+    ("legal_markers", 22, False, lambda r: ", ".join(r["legal_markers"]),
+     "Dấu hiệu cần xem: văn bản sửa đổi có điều chuyển tiếp / câu hiệu lực nêu nhiều ngày"),
     ("source_url", 16, False, lambda r: r["source_url"], "Link văn bản trên vbpl.vn"),
     ("review_status", 12, False, lambda r: r["review"]["status"], "unchecked = chưa ai kiểm"),
     ("split", 8, False, lambda r: r["split"] or "", "dev/test — chưa chia"),
@@ -98,24 +108,29 @@ def dataset(wb: Workbook, rows: list[dict]) -> None:
 
 
 def statistics(wb: Workbook, n: int) -> None:
+    """Quota counts boundary rows; each has one mid-interval twin beside it."""
     ws = wb.create_sheet("Thống kê")
-    header(ws, 1, ["Nhóm", "Mô tả", "Quota đề cương", "Số dòng", "Có đáp án", "Không có đáp án", "Chênh quota"])
+    header(ws, 1, ["Nhóm", "Mô tả", "Quota đề cương", "Số dòng (ranh giới)", "Có đáp án", "Không có đáp án",
+                   "Chênh quota", "Dòng giữa khoảng"])
     last = n + 1
+    col = {name: get_column_letter(i) for i, (name, *_) in enumerate(COLUMNS, 1)}
+    rng = lambda name: f"Dataset!${col[name]}$2:${col[name]}${last}"
     for i, (g, desc) in enumerate(GROUPS.items(), 2):
         ws.cell(i, 1, g); ws.cell(i, 2, desc); ws.cell(i, 3, QUOTA[g])
-        ws.cell(i, 4, f"=COUNTIF(Dataset!$B$2:$B${last},A{i})")
-        ws.cell(i, 5, f'=COUNTIFS(Dataset!$B$2:$B${last},A{i},Dataset!$F$2:$F${last},"có")')
+        ws.cell(i, 4, f'=COUNTIFS({rng("group")},A{i},{rng("as_of_strategy")},"ranh_gioi")')
+        ws.cell(i, 5, f'=COUNTIFS({rng("group")},A{i},{rng("as_of_strategy")},"ranh_gioi",{rng("answerable")},"có")')
         ws.cell(i, 6, f"=D{i}-E{i}")
         ws.cell(i, 7, f"=D{i}-C{i}")
+        ws.cell(i, 8, f'=COUNTIFS({rng("group")},A{i},{rng("as_of_strategy")},"giua_khoang")')
     t = len(GROUPS) + 2
     ws.cell(t, 1, "Tổng")
-    for col in "CDEFG":
+    for col in "CDEFGH":
         ws[f"{col}{t}"] = f"=SUM({col}2:{col}{t - 1})"
     for row in ws.iter_rows(min_row=2, max_row=t):
         for c in row:
             c.font = Font(name=FONT, size=10, bold=c.row == t)
     ws.cell(t + 2, 1, "T6 nhận phần T5 thiếu (T5 chờ luật sư) để giữ tổng 1.150 — quyết định trong plan phase-4.").font = BODY
-    for col, width in zip("ABCDEFG", (8, 52, 15, 10, 11, 16, 12)):
+    for col, width in zip("ABCDEFGH", (8, 52, 15, 18, 11, 16, 12, 16)):
         ws.column_dimensions[col].width = width
 
 
@@ -124,11 +139,12 @@ def readme(wb: Workbook, n: int, commit: str) -> None:
     ws.title = "Đọc trước"
     lines = [
         ("ViLexTime — bản xem trước", True),
-        (f"{n} dòng QA · schema 1.0.0 (ADR 0003) · dựng từ commit {commit}", False),
+        (f"{n} dòng QA · schema 1.1.0 (ADR 0003) · dựng từ commit {commit}", False),
         ("", False),
         ("TRẠNG THÁI: CHƯA PHÁT HÀNH", True),
-        ("• Câu hỏi mới qua kiểm tự động; chưa qua người kiểm (review_status = unchecked).", False),
-        ("• Kiểm chéo Cohen κ trên 300 dòng: chưa gán nhãn (data/review/crosscheck_A.tsv, _B.tsv).", False),
+        ("• Mỗi dòng ranh giới có một dòng anh em giữa khoảng hiệu lực (cùng câu hỏi, cùng đáp án).", False),
+        ("• Nhãn nằm ở data/review/labels.tsv (không gán trong file này); dòng anh em dùng chung nhãn.", False),
+        ("• Kiểm chéo κ trên 300 dòng: A = CMT, B = NMT (data/review/crosscheck_A.tsv, _B.tsv).", False),
         ("• T5: chờ luật sư xét theo Điều 152 Luật BHVBQPPL.", False),
         ("• Chưa chia dev/test (cột split rỗng).", False),
         ("• Đáp án chuẩn lấy từ dữ liệu phiên bản, không do LLM viết.", False),
@@ -154,7 +170,7 @@ def main() -> None:
     ap.add_argument("--data", type=Path, default=Path("data"))
     ap.add_argument("--out", type=Path, default=Path("data/derived/vilextime/vilextime_preview.xlsx"))
     args = ap.parse_args()
-    rows = [json.loads(line) for line in (args.data / "derived/vilextime/selected.jsonl").open(encoding="utf-8")]
+    rows = [json.loads(line) for line in (args.data / "derived/vilextime/release.jsonl").open(encoding="utf-8")]
     rows.sort(key=lambda r: (r["group"], r["lineage_id"], r["as_of"]))
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
     wb = Workbook()

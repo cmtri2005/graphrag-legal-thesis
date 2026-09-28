@@ -10,9 +10,16 @@ judged whole. Labels follow docs/vilextime-annotation.md v1.0.
             rows, lineages in a shuffled order, empty `verdict`, `reasons`,
             `note` (and `adjudicated` on A). Refuses to overwrite a file that
             already carries labels.
-    kappa   reads both files and reports Cohen κ on `verdict` over the rows
-            both annotators filled, overall and per group, plus the rows they
-            disagree on. Writes data/review/crosscheck_result.json.
+    kappa   reads both files and reports, over the rows both annotators
+            filled: raw agreement, Cohen κ and Gwet's AC1 on `verdict` (κ drops
+            when nearly every row is `dat` even if the two agree; AC1 does not),
+            overall, per group and per lineage (a lineage is `khong_dat` when any
+            of its rows is), plus the rows they disagree on. Writes
+            data/review/crosscheck_result.json.
+
+Rows come from release.jsonl (enrich_vilextime.py), boundary rows only: a
+mid-interval twin shares its row's question and gold version, so it is judged
+with it.
 
 Usage:
     python scripts/review/crosscheck.py build
@@ -37,8 +44,8 @@ WHOLE = ("T5", "T6")
 VERDICTS = {"dat", "khong_dat"}
 REASONS = {"question_ambiguous", "question_leaks", "gold_wrong", "group_mismatch",
            "unanswerable_as_asked", "transitional_rule", "other"}   # transitional_rule: guideline v1.1
-COLUMNS = ["id", "group", "lineage_id", "question", "as_of", "answer", "citation", "law_id",
-           "source_url", "note_for_annotator", "verdict", "reasons", "note"]
+COLUMNS = ["id", "group", "lineage_id", "question", "as_of", "lead_in", "answer", "changed_span", "citation",
+           "law_id", "valid_from", "valid_to", "source_url", "note_for_annotator", "verdict", "reasons", "note"]
 
 
 def cohen_kappa(a: list[str], b: list[str]) -> float | None:
@@ -50,6 +57,20 @@ def cohen_kappa(a: list[str], b: list[str]) -> float | None:
     ca, cb = collections.Counter(a), collections.Counter(b)
     expected = sum(ca[k] * cb[k] for k in set(ca) | set(cb)) / (n * n)
     return None if expected == 1 else (observed - expected) / (1 - expected)
+
+
+def gwet_ac1(a: list[str], b: list[str]) -> float | None:
+    """Gwet's AC1 for two raters: chance agreement from the mean category share."""
+    n = len(a)
+    if n == 0:
+        return None
+    observed = sum(x == y for x, y in zip(a, b)) / n
+    cats = set(a) | set(b)
+    if len(cats) < 2:
+        return 1.0
+    share = {c: (a.count(c) + b.count(c)) / (2 * n) for c in cats}
+    expected = sum(p * (1 - p) for p in share.values()) / (len(cats) - 1)
+    return (observed - expected) / (1 - expected)
 
 
 def pick(rows: list[dict]) -> list[dict]:
@@ -75,8 +96,9 @@ def row_cells(r: dict) -> list[str]:
         x = r["retroactive"]
         hint = f"T5: {x['actor_law_id']} ký {x['issued_on']}, hiệu lực {x['effective_from']}"
     answer = r["answer"] if r["answer"] is not None else f"(không có đáp án: {r['no_answer_reason']})"
-    return [r["id"], r["group"], r["lineage_id"], r["question"], r["as_of"], answer,
-            r["target"]["citation"], r["target"]["law_id"], r["source_url"], hint, "", "", ""]
+    return [r["id"], r["group"], r["lineage_id"], r["question"], r["as_of"], r["target"].get("lead_in") or "",
+            answer, r.get("changed_span") or "", r["target"]["citation"], r["target"]["law_id"],
+            r["valid_from"] or "", r["valid_to"] or "", r["source_url"], hint, "", "", ""]
 
 
 def read(path: Path) -> list[dict]:
@@ -90,7 +112,8 @@ def build(data: Path) -> None:
         path = out / name
         if path.exists() and any(r.get("verdict") for r in read(path)):
             raise SystemExit(f"{path} already carries labels; refusing to overwrite")
-    rows = pick([json.loads(line) for line in (data / "derived/vilextime/selected.jsonl").open(encoding="utf-8")])
+    rows = pick([r for r in map(json.loads, (data / "derived/vilextime/release.jsonl").open(encoding="utf-8"))
+                 if r["as_of_strategy"] == "ranh_gioi"])
     for name, extra in (("crosscheck_A.tsv", ["adjudicated"]), ("crosscheck_B.tsv", [])):
         with (out / name).open("w", encoding="utf-8", newline="") as f:
             w = csv.writer(f, delimiter="\t", lineterminator="\n")
@@ -111,24 +134,35 @@ def kappa(data: Path) -> None:
     if bad:
         raise SystemExit(f"nhãn ngoài từ vựng (docs/vilextime-annotation.md §2): {bad[:10]}")
     both = [i for i in a if i in b and a[i]["verdict"] and b[i]["verdict"]]
-    per_group = {}
-    for g in sorted({a[i]["group"] for i in both}):
-        ids = [i for i in both if a[i]["group"] == g]
-        per_group[g] = {"n": len(ids), "kappa": cohen_kappa([a[i]["verdict"] for i in ids], [b[i]["verdict"] for i in ids])}
+    def scores(ids: list[str]) -> dict:
+        va, vb = [a[i]["verdict"] for i in ids], [b[i]["verdict"] for i in ids]
+        return {"n": len(ids), "agreement": sum(x == y for x, y in zip(va, vb)) / len(ids) if ids else None,
+                "kappa": cohen_kappa(va, vb), "ac1": gwet_ac1(va, vb)}
+
+    lineage: dict[str, list[str]] = collections.defaultdict(list)
+    for i in both:
+        lineage[a[i]["lineage_id"]].append(i)
+    worst = lambda rows, lid: "khong_dat" if any(rows[i]["verdict"] == "khong_dat" for i in lineage[lid]) else "dat"
+    lids = sorted(lineage)
+    lva, lvb = [worst(a, lid) for lid in lids], [worst(b, lid) for lid in lids]
     result = {
-        "guideline_version": "1.0",
+        "guideline_version": "1.1",
         "labelled_by_both": len(both), "total": len(a),
-        "kappa": cohen_kappa([a[i]["verdict"] for i in both], [b[i]["verdict"] for i in both]),
-        "agreement": sum(a[i]["verdict"] == b[i]["verdict"] for i in both) / len(both) if both else None,
-        "per_group": per_group,
+        **scores(both),
+        "per_group": {g: scores([i for i in both if a[i]["group"] == g]) for g in sorted({a[i]["group"] for i in both})},
+        "per_lineage": {"n": len(lids), "agreement": sum(x == y for x, y in zip(lva, lvb)) / len(lids) if lids else None,
+                        "kappa": cohen_kappa(lva, lvb), "ac1": gwet_ac1(lva, lvb)},
         "disagreements": [i for i in both if a[i]["verdict"] != b[i]["verdict"]],
     }
     (data / "review/crosscheck_result.json").write_text(json.dumps(result, ensure_ascii=False, indent=1) + "\n",
                                                         encoding="utf-8")
-    k = result["kappa"]
-    print(f"{len(both)}/{len(a)} dòng cả hai đã gán · κ = {k:.3f}" if k is not None else f"{len(both)} dòng · κ chưa tính được")
-    for g, v in per_group.items():
-        print(f"  {g}: n={v['n']:>3}  κ={v['kappa']:.3f}" if v["kappa"] is not None else f"  {g}: n={v['n']:>3}  κ=—")
+    fmt = lambda x: f"{x:.3f}" if x is not None else "—"
+    print(f"{len(both)}/{len(a)} dòng cả hai đã gán · đồng ý {fmt(result['agreement'])} · "
+          f"κ {fmt(result['kappa'])} · AC1 {fmt(result['ac1'])}")
+    for g, v in result["per_group"].items():
+        print(f"  {g}: n={v['n']:>3}  đồng ý={fmt(v['agreement'])}  κ={fmt(v['kappa'])}  AC1={fmt(v['ac1'])}")
+    v = result["per_lineage"]
+    print(f"  theo lineage: n={v['n']}  đồng ý={fmt(v['agreement'])}  κ={fmt(v['kappa'])}  AC1={fmt(v['ac1'])}")
     print(f"  {len(result['disagreements'])} dòng lệch cần hoà giải · mục tiêu κ ≥ 0,6")
 
 
