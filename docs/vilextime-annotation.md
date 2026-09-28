@@ -77,6 +77,10 @@ lực của văn bản sửa đổi ở dòng T5.
 - **T6** (hết hiệu lực một phần): mốc sau có đáp án rỗng và
   `no_answer_reason = provision_repealed`. Đúng khi điều khoản đã bị bãi bỏ trong
   khi văn bản vẫn còn hiệu lực. Câu hỏi không được giả định quy định đang tồn tại.
+  `repeal_mode = ancestor` (24 dòng, từ 28/09): điều khoản không bị bãi bỏ đích
+  danh mà mất hiệu lực vì Điều/Khoản/Mục/Chương chứa nó bị bãi bỏ (`repealed_by`
+  ghi nút cha và event). Kiểm như T6 thường; nếu câu bãi bỏ của nút cha thật ra
+  giữ lại điều khoản này (ví dụ "trừ điểm a") thì đánh `gold_wrong`.
 
 ## 4. Ví dụ
 

@@ -244,7 +244,9 @@ Tradeoffs:
   không phải cờ lỗi — `flags` vẫn chỉ cho lỗi cấu trúc); `short_answer` (từ
   `data/vilextime/short_answers.jsonl`, phải là một đoạn của đáp án/câu dẫn).
   Corpus hai lớp: `scripts/pipeline/build_corpus.py`. Kiểm:
-  `scripts/check/check_release.py`.
+  `scripts/check/check_release.py`. Cùng ngày: T6 có `repeal_mode` (`direct` ·
+  `ancestor`) và, với `ancestor`, `repealed_by` (`ancestor_id`, `event_id`) —
+  24 dòng T6 mất hiệu lực vì nút cha bị bãi bỏ, để kiểm H3.
 - **28/09 (CMT), MINOR:** `question_source` có thêm hai trường tùy chọn
   `edited_by` (mã giả danh, ví dụ `human:excel`) và `edited_at` khi người kiểm
   tay viết lại câu hỏi của model. `kind` vẫn là `llm` (câu gốc do model viết,

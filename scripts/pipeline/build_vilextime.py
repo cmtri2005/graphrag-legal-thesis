@@ -228,6 +228,9 @@ def records_of(row: dict, documents: dict[str, tuple], chains: dict[str, list],
             # T5 only: when the change took effect against when it was signed, and
             # what kind of document made it — the facts the Điều 152 judgement needs.
             "retroactive": row.get("retroactive"),
+            # T6 only: "direct" (an event ended it) or "ancestor" (its Điều/Khoản/... was repealed)
+            "repeal_mode": row.get("repeal_mode"),
+            "repealed_by": row.get("repealed_by"),
         })
     return out
 

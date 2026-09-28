@@ -318,6 +318,7 @@ def main() -> None:
     events = {}
     want_events = {t["event_id"] for r in rows for t in r["derivation"]["transitions"]}
     want_events |= {chains[lid][-1]["ended_by_event_id"] for lid in lineages if chains.get(lid)} - {None}
+    want_events |= {r["repealed_by"]["event_id"] for r in rows if r.get("repealed_by")}
     for line in (data / "derived/provision_events.jsonl").open(encoding="utf-8"):
         e = json.loads(line)
         if e["id"] in want_events:
@@ -366,8 +367,11 @@ def main() -> None:
             t["op"] = e["operation"] if e else None
             if e and k is not None and t["to_version"] == versions[k]["ordinal"]:
                 accepted.append(f"asis:{e['id']}")
-        if r["version_id"] is None and chains.get(lid) and chains[lid][-1]["ended_by_event_id"] in events:
-            accepted.append(f"asis:{chains[lid][-1]['ended_by_event_id']}")
+        if r["version_id"] is None:     # the repeal: of the provision itself, or of the ancestor it fell with
+            ended = (r.get("repealed_by") or {}).get("event_id") or (chains[lid][-1]["ended_by_event_id"]
+                                                                      if chains.get(lid) else None)
+            if ended in events:
+                accepted.append(f"asis:{ended}")
         stats["accepted_evidence: " + ("có" if accepted else "rỗng")] += 1
         r["accepted_evidence"] = accepted
         r["domain"], r["domain_source"] = fields[r["target"]["document_id"]]

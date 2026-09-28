@@ -1,6 +1,6 @@
 from datetime import date
 
-from build_question_pool import ask_dates, classify, in_force_at
+from build_question_pool import ask_dates, classify, in_force_at, repealed_by_ancestor
 
 
 def _v(ordinal, start, end=None, ended_by=None):
@@ -77,3 +77,15 @@ def test_T6_records_the_date_the_provision_stopped():
     # Every other group keeps the date its last version opened.
     assert build_row("T2", provision, amended, date(2026, 9, 20), {})["transition_on"] == "2018-01-01"
     assert build_row("T1", provision, [_v(1, "2015-01-01")], date(2026, 9, 20), {})["transition_on"] is None
+
+
+def test_a_provision_that_fell_with_its_ancestor_is_told_apart_from_one_repealed_itself():
+    """H3: out of force with no event of its own, inside a document still in force."""
+    today = date(2026, 9, 20)
+    fell = {"effective_to": "2025-01-01", "valid_to": None, "ended_by_event_id": None}
+    assert repealed_by_ancestor(fell, "Point", None, today)
+    assert not repealed_by_ancestor({**fell, "ended_by_event_id": "event:x", "valid_to": "2025-01-01"},
+                                    "Point", None, today)                       # repealed itself: direct
+    assert not repealed_by_ancestor(fell, "Point", date(2025, 1, 1), today)     # the whole document ended
+    assert not repealed_by_ancestor(fell, "Article", None, today)               # T6 asks about Khoản/Điểm
+    assert not repealed_by_ancestor({**fell, "effective_to": "2027-01-01"}, "Clause", None, today)

@@ -16,7 +16,9 @@ facts that judgement needs, and nothing here decides it.
   T3  three or more versions: A -> B -> C         where the graph should pay
   T4  two versions whose texts are near-identical the citation trap
   T5  a change made by a document that takes effect before it was signed
-  T6  a Khoản/Điểm that ended inside a document still in force
+  T6  a Khoản/Điểm that ended inside a document still in force; `repeal_mode`
+      says how: "direct" (an event ended it) or "ancestor" (it lost force
+      because its Điều, Khoản, Mục or Chương was repealed — H3, decided 28/09)
 
 A provision lands in exactly one group, scarcest first (T5, then T3, T6, T4,
 T2, T1), so no node — and so no text — can appear twice in the benchmark. T5
@@ -56,6 +58,7 @@ QUOTA = {"T1": 250, "T2": 400, "T3": 200, "T4": 150, "T5": 50, "T6": 100}
 PRIORITY = ("T3", "T6", "T4", "T2", "T1")  # scarcest first; T5 is taken out after capping
 NEAR_IDENTICAL = 0.90
 SEED = 20260920
+ANCESTOR_CAP = 300     # T6 "ancestor" candidates kept; 10,249 exist (28/09) for a 24-row quota
 
 
 def _d(value: str | None) -> date | None:
@@ -107,6 +110,13 @@ def ask_dates(group: str, versions: list[dict], today: date) -> list[date]:
     return [starts[1] - ONE_DAY, starts[1]]  # T2, T4: either side of the switch
 
 
+def repealed_by_ancestor(last: dict, level: str, document_ends: date | None, today: date) -> bool:
+    """Out of force without an event of its own, inside a document still in force."""
+    return (level in ("Clause", "Point") and last["effective_to"] is not None and last["valid_to"] is None
+            and last["ended_by_event_id"] is None and _d(last["effective_to"]) <= today
+            and (document_ends is None or document_ends > today))
+
+
 def build_row(group: str, provision: dict, versions: list[dict], today: date,
               evidence: dict[str, dict]) -> dict:
     dates = ask_dates(group, versions, today)
@@ -142,6 +152,8 @@ def build_row(group: str, provision: dict, versions: list[dict], today: date,
         "evidence": [evidence[e]["evidence"] for e in sorted(set(events)) if e in evidence],
         "actor_numbers": sorted({evidence[e]["actor_number"] for e in set(events) if e in evidence}),
     }
+    if group == "T6":
+        row["repeal_mode"] = "direct"
     if group == "T4":
         row["similarity"] = round(
             difflib.SequenceMatcher(None, versions[0]["text"], versions[1]["text"]).ratio(), 4
@@ -246,6 +258,7 @@ def main() -> None:
             "WHERE issued_on IS NOT NULL AND effective_from IS NOT NULL AND effective_from < issued_on")
     }
     t5_rows: list[dict] = []
+    ancestor_rows: list[dict] = []
     evidence = {}
     for line in (data / "derived/provision_events.jsonl").read_text(encoding="utf-8").splitlines():
         e = json.loads(line)
@@ -265,6 +278,11 @@ def main() -> None:
         rows.sort(key=lambda v: v["ordinal"])
         if (t5 := build_t5_row(provision, rows, evidence, retro_actors)) is not None:
             t5_rows.append(t5)
+        if all(v["effective_from"] for v in rows) and repealed_by_ancestor(
+                rows[-1], provision["level"], document_ends.get(provision["document_id"]), args.today):
+            row = build_row("T6", provision, rows, args.today, evidence)
+            row.update(id=f"vilextime:T6:{provision['id']}", repeal_mode="ancestor")
+            ancestor_rows.append(row)
         group = classify(rows, document_ends.get(provision["document_id"]), provision["level"], args.today)
         if group is None:
             counts["bỏ: phiên bản không có ngày"] += 1
@@ -285,10 +303,38 @@ def main() -> None:
         current.append(v)
     flush(current)
 
+    # T6 "ancestor": a seeded sample, never a provision another group already holds
+    # (the groups above are written unchanged), and the repeal it inherits named.
+    ancestor_rows = sorted(ancestor_rows, key=lambda r: r["id"])
+    ancestor_rows = sorted(random.Random(SEED).sample(ancestor_rows, min(ANCESTOR_CAP, len(ancestor_rows))),
+                           key=lambda r: r["id"])
+    parent_of = {pid: parent for pid, parent in db.execute("SELECT id, parent_id FROM provisions")}
+    chains = {r["provision_id"]: [] for r in ancestor_rows}
+    for pid in list(chains):
+        up = parent_of.get(pid)
+        while up:
+            chains[pid].append(up)
+            up = parent_of.get(up)
+    wanted = {a for chain in chains.values() for a in chain}
+    last_of: dict[str, dict] = {}
+    for line in (data / "derived/versions.jsonl").open(encoding="utf-8"):
+        found = re.search(r'"provision_id"\s*:\s*"([^"]+)"', line)
+        if found and found.group(1) in wanted:
+            v = json.loads(line)
+            if v["provision_id"] not in last_of or v["ordinal"] > last_of[v["provision_id"]]["ordinal"]:
+                last_of[v["provision_id"]] = v
+    for row in ancestor_rows:
+        end = row["versions"][-1]["effective_to"]
+        hit = next((a for a in chains[row["provision_id"]] if (v := last_of.get(a))
+                    and v["ended_by_event_id"] and v["effective_to"] == end), None)
+        row["repealed_by"] = ({"ancestor_id": hit, "event_id": last_of[hit]["ended_by_event_id"]} if hit else None)
+    counts["T6 ancestor (ứng viên)"] = len(ancestor_rows)
+
     out_path = data / "derived/vilextime_pool.jsonl"
     written: collections.Counter[str] = collections.Counter()
     documents: set[str] = set()
     in_t5 = {r["provision_id"] for r in t5_rows}
+    taken = set(in_t5)                 # provisions already written for another group
     with out_path.open("w", encoding="utf-8") as out:
         for row in sorted(t5_rows, key=lambda r: r["id"]):
             out.write(json.dumps(row, ensure_ascii=False) + "\n")
@@ -303,7 +349,13 @@ def main() -> None:
             for row in rows:
                 out.write(json.dumps(row, ensure_ascii=False) + "\n")
                 documents.add(row["document_id"])
+                taken.add(row["provision_id"])
             written[group] = len(rows)
+        ancestor_rows = [r for r in ancestor_rows if r["provision_id"] not in taken and r["repealed_by"]]
+        for row in ancestor_rows:
+            out.write(json.dumps(row, ensure_ascii=False) + "\n")
+            documents.add(row["document_id"])
+        written["T6 ancestor"] = len(ancestor_rows)
 
     print(f"{sum(written.values()):,} ứng viên -> {out_path}\n")
     print(f"  {'nhóm':<5} {'quota':>6} {'có':>9} {'giữ':>8}   dư")
@@ -312,6 +364,7 @@ def main() -> None:
         margin = have / QUOTA[group]
         print(f"  {group:<5} {QUOTA[group]:>6,} {have:>9,} {written[group]:>8,}   {margin:>5.1f}x")
     kinds = collections.Counter(r["retroactive"]["kind"] for r in t5_rows)
+    print(f"  T6 ancestor: {written['T6 ancestor']:,} ứng viên ghi (mất hiệu lực do nút cha bị bãi bỏ)")
     print(f"\n  T5 là ứng viên, chờ cố vấn luật theo Điều 152: {dict(kinds)}")
     for key, value in counts.items():
         if key.startswith("bỏ"):

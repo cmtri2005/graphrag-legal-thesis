@@ -58,7 +58,13 @@ dựng lại từ `release.jsonl` (đúng 300 dòng cũ, thêm cột câu dẫn/
 khoảng hiệu lực); `crosscheck.py kappa` báo thêm % đồng thuận, AC1, κ theo lineage.
 **Phát hiện:** T6 chỉ chứa ca bãi bỏ trực tiếp (điều kiện chọn nhóm đòi
 `ended_by_event_id` trên chính nút), nên H3 (mất hiệu lực do nút cha bị bãi bỏ)
-chưa có dòng nào để kiểm — cần quyết có thêm tập con này không.
+chưa có dòng nào để kiểm. **Chốt 28/09 (CMT): tách 12 cặp (24 dòng) vào T6**,
+tổng giữ 1.150. `build_question_pool.py` thêm 300 ứng viên `repeal_mode: ancestor`
+(trên 10.249 điều khoản đủ điều kiện trong 487 văn bản; mẫu 300/300 truy được về
+nút cha bị bãi bỏ cùng ngày — 237 Điều, 32 Khoản, 22 Chương, 9 Mục), không đụng
+dòng nào của pool cũ; `sample_vilextime.py` xếp hạng phần này riêng (thứ hạng cũ giữ
+nguyên, 24 lineage nối thêm), chọn 24 dòng ancestor + 88 dòng direct. 24 câu hỏi
+viết bằng phiên Claude Code, 21 qua C2. Bộ κ đổi đúng 24 dòng T6 (chưa ai gán).
 
 ## Context
 

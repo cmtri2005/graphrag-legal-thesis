@@ -1396,3 +1396,27 @@
 {"group": "T6", "rank": 147, "lineage_id": "provision:0bd55060-eb77-11f0-a67b-4dba7caf5575", "document_id": "document:72689", "rows": 2}
 {"group": "T6", "rank": 148, "lineage_id": "provision:e757ad50-eb71-11f0-ab10-ff16d9dc7f99", "document_id": "document:178779", "rows": 2}
 {"group": "T6", "rank": 149, "lineage_id": "provision:66ce3340-2c88-11f1-91a7-e52777175e0f", "document_id": "document:26239", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 0, "lineage_id": "provision:e3892244-2d43-11f1-9d52-4165844a6537", "document_id": "document:171689", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 1, "lineage_id": "provision:555511d0-2d53-11f1-9d72-85aa173ce880", "document_id": "document:55063", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 2, "lineage_id": "provision:3d71eb9a-2c83-11f1-8d7f-9d6a3e1bfe9d", "document_id": "document:140152", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 3, "lineage_id": "provision:dca54f90-2b52-11f1-b68e-3be60edd2d85", "document_id": "document:159093", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 4, "lineage_id": "provision:4c2ed3c4-e173-11f0-84af-adfd42405a47", "document_id": "document:166651", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 5, "lineage_id": "provision:8081a6b0-28b8-11f1-a889-e500de4c1aed", "document_id": "document:141954", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 6, "lineage_id": "provision:0ef72120-2d70-11f1-966d-199c748e9ca8", "document_id": "document:26117", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 7, "lineage_id": "provision:41522558-2d42-11f1-be12-85fe9520288d", "document_id": "document:178653", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 8, "lineage_id": "provision:36175100-eac5-11f0-8682-6378809d27f4", "document_id": "document:37012", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 9, "lineage_id": "provision:7dd23e96-e157-11f0-9ff6-2f1cec3635ba", "document_id": "document:15925", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 10, "lineage_id": "provision:7145bde0-29ed-11f1-a62f-f3c84e70d508", "document_id": "document:113164", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 11, "lineage_id": "provision:e0ac20c0-209c-11f1-a5e5-736005c41f12", "document_id": "document:58638", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 12, "lineage_id": "provision:693d0c20-2d53-11f1-bc97-c1fffc43d982", "document_id": "document:48921", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 13, "lineage_id": "provision:3ecbea50-2d54-11f1-bb75-63ba11a7a756", "document_id": "document:26222", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 14, "lineage_id": "provision:35f68290-eac5-11f0-bbcf-8d3bfb4355e4", "document_id": "document:37012", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 15, "lineage_id": "provision:d27a02c0-2c85-11f1-829c-79c4fc7b8e0e", "document_id": "document:32509", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 16, "lineage_id": "provision:690f4560-2d53-11f1-8392-a350153d63b8", "document_id": "document:48921", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 17, "lineage_id": "provision:832e4360-df4c-11f0-b9d7-0961c9d9f06f", "document_id": "document:133903", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 18, "lineage_id": "provision:4e21a590-2d44-11f1-9167-c55a49677b18", "document_id": "document:168754", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 19, "lineage_id": "provision:ec873ad0-e166-11f0-9414-1100f64bb8ec", "document_id": "document:96172", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 20, "lineage_id": "provision:586128fe-eb87-11f0-8b8d-75b1eef739ca", "document_id": "document:163295", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 21, "lineage_id": "provision:714bd860-29ed-11f1-9c3a-dd8d02adc5db", "document_id": "document:113164", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 22, "lineage_id": "provision:dd6d7080-209c-11f1-b379-974612d72e0a", "document_id": "document:58638", "rows": 2}
+{"group": "T6", "repeal_mode": "ancestor", "rank": 23, "lineage_id": "provision:8ac0e590-eb6f-11f0-9260-cfdb9d2b3946", "document_id": "document:152359", "rows": 2}

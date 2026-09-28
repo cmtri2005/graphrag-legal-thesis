@@ -245,3 +245,13 @@ def test_t5_worksheet_quotes_an_undated_from_signing_clause():
                               "ban hành, trừ khoản 2. 2. Điều 25 có hiệu lực thi hành từ ngày 01 tháng 7 năm 2026</p>")
     assert "kể từ ngày ký ban hành" in words.split(" | ")[0]
     assert "01 tháng 7 năm 2026" in words
+
+
+def test_t6_ranks_its_ancestor_part_apart_and_old_ranking_lines_read_as_direct():
+    from sample_vilextime import T6_ANCESTOR_ROWS, part_of, parts
+
+    records = [{"lineage_id": "a", "repeal_mode": "direct"}, {"lineage_id": "b", "repeal_mode": "ancestor"}]
+    split = {part: [r["lineage_id"] for r in recs] for part, recs, _ in parts("T6", records, 300)}
+    assert split == {"direct": ["a"], "ancestor": ["b"]}
+    assert dict((p, n) for p, _, n in parts("T6", records, 300))["ancestor"] == 2 * T6_ANCESTOR_ROWS
+    assert part_of({"group": "T6"}) == "direct" and part_of({"group": "T2"}) is None

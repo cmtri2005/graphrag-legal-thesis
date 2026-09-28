@@ -46,6 +46,11 @@ QUOTA = {"T1": 250, "T2": 400, "T3": 200, "T4": 150, "T5": 50, "T6": 150}
 RELEASE = {**QUOTA, "T6": 100}   # T6 absorbs whatever T5 falls short of 50 once the adviser rules
 OVERSAMPLE = {"T1": 2, "T2": 2, "T3": 3, "T4": 2, "T5": 2, "T6": 2}   # T3 kept 9 of 22 in the first run
 PER_DOCUMENT = 2
+# T6 has two parts (decided 28/09): "ancestor" — lost force because its Điều,
+# Khoản, Mục or Chương was repealed, the case H3 is about — is ranked on its own,
+# so the "direct" ranking already on disk is untouched, and takes this many rows
+# out of T6's release quota.
+T6_ANCESTOR_ROWS = 24
 SEED = 20260924
 # T5 kinds the adviser excluded on 20/09: corrections, and guidance taking effect
 # with the act it details. They stay in the worksheet, not in the release.
@@ -81,6 +86,21 @@ def sample(records: list[dict], target: int, seed: int = SEED, prior: list[str] 
         rows += len(recs)
         picked.append({"rank": len(picked), "lineage_id": lid, "document_id": doc, "rows": len(recs)})
     return picked
+
+
+def part_of(row: dict) -> str | None:
+    """T6's two parts; every other group has one. Old ranking lines carry no mode: direct."""
+    if row["group"] != "T6":
+        return None
+    return "ancestor" if row.get("repeal_mode") == "ancestor" else "direct"
+
+
+def parts(group: str, records: list[dict], need: int) -> list[tuple[str | None, list[dict], int]]:
+    if group != "T6":
+        return [(None, records, need)]
+    anc = [r for r in records if r.get("repeal_mode") == "ancestor"]
+    return [("direct", [r for r in records if r.get("repeal_mode") != "ancestor"], need),
+            ("ancestor", anc, T6_ANCESTOR_ROWS * 2)]
 
 
 def select(ranked: list[dict], passed: set[str], quota: int) -> list[str]:
@@ -128,7 +148,11 @@ def main() -> None:
                     record = json.loads(line)
                     records[record["lineage_id"]].append(record)
                 passed = {lid for lid, recs in records.items() if recs[0]["question_source"]["kind"] == "llm"}
-                chosen = select([p for p in ranked if p["group"] == group], passed, quota)
+                quotas = ({"ancestor": T6_ANCESTOR_ROWS, "direct": quota - T6_ANCESTOR_ROWS} if group == "T6"
+                          else {None: quota})
+                chosen = [lid for part, q in quotas.items()
+                          for lid in select([p for p in ranked if p["group"] == group and part_of(p) == part],
+                                            passed, q)]
                 rows = [r for lid in chosen for r in sorted(records[lid], key=lambda r: r["as_of"])]
                 got[group] = len(rows)
                 total += len(rows)
@@ -139,21 +163,22 @@ def main() -> None:
         print(f"tổng {total:,} dòng -> {base / 'selected.jsonl'}")
         return
 
-    prior: dict[str, list[str]] = collections.defaultdict(list)
+    prior: dict[tuple, list[str]] = collections.defaultdict(list)
     if ranking.exists():
         for line in ranking.open(encoding="utf-8"):
             r = json.loads(line)
-            prior[r["group"]].append(r["lineage_id"])
+            prior[(r["group"], part_of(r))].append(r["lineage_id"])
     lines = []
     for group, quota in QUOTA.items():
         records = [json.loads(line) for line in (base / f"{group}.jsonl").open(encoding="utf-8")]
-        need = quota * OVERSAMPLE[group]
-        picked = sample(records, need, prior=prior[group])
-        rows = sum(p["rows"] for p in picked)
-        short = "  << THIẾU" if rows < need else ""
-        print(f"{group}: {len(picked):>4} lineage · {rows:>4} dòng (cần {need})"
-              f" · {len({p['document_id'] for p in picked})} văn bản{short}")
-        lines += [json.dumps({"group": group, **p}, ensure_ascii=False) + "\n" for p in picked]
+        for part, part_records, need in parts(group, records, quota * OVERSAMPLE[group]):
+            picked = sample(part_records, need, prior=prior[(group, part)])
+            rows = sum(p["rows"] for p in picked)
+            short = "  << THIẾU" if rows < need else ""
+            print(f"{group}{'/' + part if part else ''}: {len(picked):>4} lineage · {rows:>4} dòng (cần {need})"
+                  f" · {len({p['document_id'] for p in picked})} văn bản{short}")
+            lines += [json.dumps({"group": group, **({"repeal_mode": part} if part == "ancestor" else {}), **p},
+                                 ensure_ascii=False) + "\n" for p in picked]
     ranking.parent.mkdir(parents=True, exist_ok=True)
     ranking.write_text("".join(lines), encoding="utf-8")
 

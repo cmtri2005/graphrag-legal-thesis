@@ -4,7 +4,8 @@
   * a boundary row carries every field of its selected row unchanged;
   * a twin has its boundary row's question, answer and gold version, and its
     date lies inside the gold version's window (T5: inside the retroactive one);
-  * every `accepted_evidence` unit exists in corpus layer A and every version
+  * every row has at least one `accepted_evidence` unit, each exists in
+    corpus layer A, and every version
     of an `evidence_set` in layer B;
   * ids are unique.
 
@@ -54,6 +55,8 @@ def problems(release: list[dict], selected: dict[str, dict], layer_a: set[str], 
             retro = r.get("retroactive")
             if retro and r["valid_from"] == retro["effective_from"] and at >= date.fromisoformat(retro["issued_on"]):
                 out.append(f"{r['id']}: ra ngoài khoảng hồi tố")
+        if not r["accepted_evidence"]:
+            out.append(f"{r['id']}: không có bằng chứng lớp A nào")
         missing = [u for u in r["accepted_evidence"] if u not in layer_a]
         missing += [e["version_id"] for e in r["evidence_set"] if e["version_id"] and e["version_id"] not in layer_b]
         if missing:
