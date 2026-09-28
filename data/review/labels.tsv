@@ -811,3 +811,153 @@ vilextime:T2:provision:8963ea7e-df46-11f0-91fd-5382c11fc5ab#k4:2021-03-28	T2	cla
 vilextime:T2:provision:8963ea7e-df46-11f0-91fd-5382c11fc5ab#k4:2021-03-29	T2	claude-opus-5-5	1.1	dat									
 vilextime:T2:provision:ea36de00-24de-11f1-9675-cda508cdae7a:2024-06-30	T2	claude-opus-5-5	1.1	dat									
 vilextime:T2:provision:ea36de00-24de-11f1-9675-cda508cdae7a:2024-07-01	T2	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:ec4a7a6e-df40-11f0-9161-ff81534d3941:2014-10-21	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Ở cả ba mốc câu trả lời như nhau: hàng hóa khác không phải xin giấy phép, chỉ làm thủ tục tại Hải quan; chỗ đổi chỉ là tên cơ quan cấp phép không cần xin. Câu hỏi còn giả định sai là phải xin giấy phép			có			
+vilextime:T3:provision:ec4a7a6e-df40-11f0-9161-ff81534d3941:2025-07-02	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Ở cả ba mốc câu trả lời như nhau: hàng hóa khác không phải xin giấy phép, chỉ làm thủ tục tại Hải quan; chỗ đổi chỉ là tên cơ quan cấp phép không cần xin. Câu hỏi còn giả định sai là phải xin giấy phép			có			
+vilextime:T3:provision:ec4a7a6e-df40-11f0-9161-ff81534d3941:2026-05-30	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Ở cả ba mốc câu trả lời như nhau: hàng hóa khác không phải xin giấy phép, chỉ làm thủ tục tại Hải quan; chỗ đổi chỉ là tên cơ quan cấp phép không cần xin. Câu hỏi còn giả định sai là phải xin giấy phép			có			
+vilextime:T3:provision:40778740-2c7f-11f1-abee-c9b7a53cf5c7:2020-10-16	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:40778740-2c7f-11f1-abee-c9b7a53cf5c7:2022-02-01	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:40778740-2c7f-11f1-abee-c9b7a53cf5c7:2025-02-22	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:daefdc5c-e150-11f0-b445-0d3a8637038e#k3:2014-02-15	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:daefdc5c-e150-11f0-b445-0d3a8637038e#k3:2016-07-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:daefdc5c-e150-11f0-b445-0d3a8637038e#k3:2020-02-20	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:a3e3a25a-ec3d-11f0-ab79-a33691076a8e:2017-01-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:a3e3a25a-ec3d-11f0-ab79-a33691076a8e:2022-05-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:a3e3a25a-ec3d-11f0-ab79-a33691076a8e:2025-07-02	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:6fbb0706-2c80-11f1-af00-8de7411db35a:2013-09-16	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Chỉ hai đáp án: danh sách hợp đồng của mốc 1 và danh sách mở rộng từ 2020; lần sửa 2024 chỉ thêm 'Việt Nam' sau 'tổ chức tín dụng'. Có thể chuyển T2 (mốc 1–2)			có			
+vilextime:T3:provision:6fbb0706-2c80-11f1-af00-8de7411db35a:2020-02-15	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Chỉ hai đáp án: danh sách hợp đồng của mốc 1 và danh sách mở rộng từ 2020; lần sửa 2024 chỉ thêm 'Việt Nam' sau 'tổ chức tín dụng'. Có thể chuyển T2 (mốc 1–2)			có			
+vilextime:T3:provision:6fbb0706-2c80-11f1-af00-8de7411db35a:2024-07-02	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Chỉ hai đáp án: danh sách hợp đồng của mốc 1 và danh sách mở rộng từ 2020; lần sửa 2024 chỉ thêm 'Việt Nam' sau 'tổ chức tín dụng'. Có thể chuyển T2 (mốc 1–2)			có			
+vilextime:T3:provision:d427a720-2d53-11f1-a1cc-67f2013d5aa0:2014-01-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:d427a720-2d53-11f1-a1cc-67f2013d5aa0:2016-07-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:d427a720-2d53-11f1-a1cc-67f2013d5aa0:2018-02-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:f3c99590-eada-11f0-9062-8d3b36c07159:2018-07-16	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:f3c99590-eada-11f0-9062-8d3b36c07159:2023-07-22	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:f3c99590-eada-11f0-9062-8d3b36c07159:2025-07-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:31d98de0-1f97-11f1-bcba-c5e53edd89aa:2016-01-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:31d98de0-1f97-11f1-bcba-c5e53edd89aa:2019-10-16	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:31d98de0-1f97-11f1-bcba-c5e53edd89aa:2025-07-10	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:f5c84a24-df38-11f0-94cb-634e6f8d12a0:2016-07-02	T3	claude-opus-5-5	1.1	dat			Từ mốc 2 câu dẫn gọi Trạm Thú y là 'Cơ quan quản lý chuyên ngành thú y cấp huyện'			có			
+vilextime:T3:provision:f5c84a24-df38-11f0-94cb-634e6f8d12a0:2024-12-13	T3	claude-opus-5-5	1.1	dat			Từ mốc 2 câu dẫn gọi Trạm Thú y là 'Cơ quan quản lý chuyên ngành thú y cấp huyện'						
+vilextime:T3:provision:f5c84a24-df38-11f0-94cb-634e6f8d12a0:2025-07-02	T3	claude-opus-5-5	1.1	dat			Từ mốc 2 câu dẫn gọi Trạm Thú y là 'Cơ quan quản lý chuyên ngành thú y cấp huyện'			có			
+vilextime:T3:provision:a9deea50-2d53-11f1-9ae2-252c6aade9ea:2014-10-16	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:a9deea50-2d53-11f1-9ae2-252c6aade9ea:2016-11-19	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:a9deea50-2d53-11f1-9ae2-252c6aade9ea:2023-02-16	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:393dc8e0-eac6-11f0-bb51-7b4ee690de15#k1:2018-11-02	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:393dc8e0-eac6-11f0-bb51-7b4ee690de15#k1:2019-10-06	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:393dc8e0-eac6-11f0-bb51-7b4ee690de15#k1:2024-07-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:3ec22650-2d54-11f1-a21d-01a2a81c6434:2011-05-09	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:3ec22650-2d54-11f1-a21d-01a2a81c6434:2025-01-09	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:3ec22650-2d54-11f1-a21d-01a2a81c6434:2026-01-16	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:43d5c1fe-2c89-11f1-8be5-39da3bf77b9b:2010-04-15	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:43d5c1fe-2c89-11f1-8be5-39da3bf77b9b:2019-02-12	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:43d5c1fe-2c89-11f1-8be5-39da3bf77b9b:2019-09-17	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:387a3620-2c82-11f1-8d74-79a15475fa71:2019-01-02	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:387a3620-2c82-11f1-8d74-79a15475fa71:2024-07-19	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:387a3620-2c82-11f1-8d74-79a15475fa71:2025-08-17	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:4720fefe-eb8f-11f0-a786-237da4d41ad5#k4:2017-06-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:4720fefe-eb8f-11f0-a786-237da4d41ad5#k4:2019-12-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:4720fefe-eb8f-11f0-a786-237da4d41ad5#k4:2024-06-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:11c19b26-e183-11f0-a1fe-6192bcf0213f#k4#g:2019-09-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:11c19b26-e183-11f0-a1fe-6192bcf0213f#k4#g:2021-02-16	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:11c19b26-e183-11f0-a1fe-6192bcf0213f#k4#g:2022-01-26	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:668e75b0-27a7-11f1-b175-29f953138aa1:2021-01-02	T3	claude-opus-5-5	1.1	dat			Mốc 2 bỏ 'các hoạt động khác được ghi trong quyết định xử phạt' (phạm vi hẹp lại); mốc 3 tăng lên 24 tháng						
+vilextime:T3:provision:668e75b0-27a7-11f1-b175-29f953138aa1:2022-01-02	T3	claude-opus-5-5	1.1	dat			Mốc 2 bỏ 'các hoạt động khác được ghi trong quyết định xử phạt' (phạm vi hẹp lại); mốc 3 tăng lên 24 tháng						
+vilextime:T3:provision:668e75b0-27a7-11f1-b175-29f953138aa1:2026-01-10	T3	claude-opus-5-5	1.1	dat			Mốc 2 bỏ 'các hoạt động khác được ghi trong quyết định xử phạt' (phạm vi hẹp lại); mốc 3 tăng lên 24 tháng						
+vilextime:T3:provision:53c9f49c-e17d-11f0-b95f-77080cf1bb2c#k5:2016-12-16	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:53c9f49c-e17d-11f0-b95f-77080cf1bb2c#k5:2018-11-06	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:53c9f49c-e17d-11f0-b95f-77080cf1bb2c#k5:2021-01-16	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:52a1bca6-eb7f-11f0-bacc-3745bc0439a2:2017-08-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:52a1bca6-eb7f-11f0-bacc-3745bc0439a2:2020-06-16	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:52a1bca6-eb7f-11f0-bacc-3745bc0439a2:2022-02-03	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:f2947168-df4f-11f0-b8a1-cba0d0f18fba:2019-02-16	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		Khoản 3 chỉ nói trường hợp mua cổ phần khi ngân hàng tăng vốn điều lệ; câu hỏi không nêu trường hợp đó, và khoản 2 cùng Điều là hồ sơ chấp thuận mua, nhận chuyển nhượng cổ phần dẫn đến trở thành cổ đông lớn nói chung	2. Hồ sơ đề nghị chấp thuận mua, nhận chuyển nhượng cổ phần dẫn đến trở thành cổ đông lớn: Văn bản đề nghị của...		có			
+vilextime:T3:provision:f2947168-df4f-11f0-b8a1-cba0d0f18fba:2022-08-16	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		Khoản 3 chỉ nói trường hợp mua cổ phần khi ngân hàng tăng vốn điều lệ; câu hỏi không nêu trường hợp đó, và khoản 2 cùng Điều là hồ sơ chấp thuận mua, nhận chuyển nhượng cổ phần dẫn đến trở thành cổ đông lớn nói chung	2. Hồ sơ đề nghị chấp thuận mua, nhận chuyển nhượng cổ phần dẫn đến trở thành cổ đông lớn: Văn bản đề nghị của...		có			
+vilextime:T3:provision:f2947168-df4f-11f0-b8a1-cba0d0f18fba:2024-07-02	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		Khoản 3 chỉ nói trường hợp mua cổ phần khi ngân hàng tăng vốn điều lệ; câu hỏi không nêu trường hợp đó, và khoản 2 cùng Điều là hồ sơ chấp thuận mua, nhận chuyển nhượng cổ phần dẫn đến trở thành cổ đông lớn nói chung	2. Hồ sơ đề nghị chấp thuận mua, nhận chuyển nhượng cổ phần dẫn đến trở thành cổ đông lớn: Văn bản đề nghị của...		có			
+vilextime:T3:provision:e20d4360-2c4d-11f1-94e0-875bba306d69:2019-01-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:e20d4360-2c4d-11f1-94e0-875bba306d69:2020-12-26	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:e20d4360-2c4d-11f1-94e0-875bba306d69:2022-03-05	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:35a63f90-2474-11f1-91a6-77384b04742d:2019-05-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:35a63f90-2474-11f1-91a6-77384b04742d:2022-02-16	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:35a63f90-2474-11f1-91a6-77384b04742d:2026-01-26	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:fc52f300-eb84-11f0-ab2c-4f4961cea41c:2017-08-16	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Câu hỏi hỏi cơ quan xây dựng, vận hành: mốc 1 và 2 cùng là Tổng cục Tiêu chuẩn Đo lường Chất lượng (lần sửa 2023 chỉ thêm 'chia sẻ … trực tuyến'), mốc 3 là Ủy ban. Chỉ hai đáp án; có thể chuyển T2 (mốc 2–3)			có			
+vilextime:T3:provision:fc52f300-eb84-11f0-ab2c-4f4961cea41c:2023-08-11	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Câu hỏi hỏi cơ quan xây dựng, vận hành: mốc 1 và 2 cùng là Tổng cục Tiêu chuẩn Đo lường Chất lượng (lần sửa 2023 chỉ thêm 'chia sẻ … trực tuyến'), mốc 3 là Ủy ban. Chỉ hai đáp án; có thể chuyển T2 (mốc 2–3)			có			
+vilextime:T3:provision:fc52f300-eb84-11f0-ab2c-4f4961cea41c:2024-11-23	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Câu hỏi hỏi cơ quan xây dựng, vận hành: mốc 1 và 2 cùng là Tổng cục Tiêu chuẩn Đo lường Chất lượng (lần sửa 2023 chỉ thêm 'chia sẻ … trực tuyến'), mốc 3 là Ủy ban. Chỉ hai đáp án; có thể chuyển T2 (mốc 2–3)			có			
+vilextime:T3:provision:96eb9928-2c7e-11f1-82dd-c36c58de53fd:2017-07-02	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:96eb9928-2c7e-11f1-82dd-c36c58de53fd:2018-11-10	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:96eb9928-2c7e-11f1-82dd-c36c58de53fd:2022-06-17	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:de0f8ef2-2c85-11f1-b16a-0dee4373a04b:2013-10-16	T3	claude-opus-5-5	1.1	dat			Mốc 1→2 chỉ đổi 'Bán' thành 'Buôn bán' — khác biệt nhỏ nhưng có nghĩa pháp lý; audit xem có coi là đổi đáp án không						
+vilextime:T3:provision:de0f8ef2-2c85-11f1-b16a-0dee4373a04b:2022-01-02	T3	claude-opus-5-5	1.1	dat			Mốc 1→2 chỉ đổi 'Bán' thành 'Buôn bán' — khác biệt nhỏ nhưng có nghĩa pháp lý; audit xem có coi là đổi đáp án không			có			
+vilextime:T3:provision:de0f8ef2-2c85-11f1-b16a-0dee4373a04b:2024-07-02	T3	claude-opus-5-5	1.1	dat			Mốc 1→2 chỉ đổi 'Bán' thành 'Buôn bán' — khác biệt nhỏ nhưng có nghĩa pháp lý; audit xem có coi là đổi đáp án không						
+vilextime:T3:provision:eaad2c74-df45-11f0-8793-1d800b3bbbe4:2017-07-02	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Mốc 2 và 3 trả lời như nhau cho câu hỏi (cùng các loại tàu, cùng hình thức sổ giấy và cơ sở dữ liệu); chỉ hai đáp án. Văn bản mốc 3 kết thúc ở 'cơ sở dữ liệu' (có thể thiếu 'điện tử')			có			
+vilextime:T3:provision:eaad2c74-df45-11f0-8793-1d800b3bbbe4:2020-09-16	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Mốc 2 và 3 trả lời như nhau cho câu hỏi (cùng các loại tàu, cùng hình thức sổ giấy và cơ sở dữ liệu); chỉ hai đáp án. Văn bản mốc 3 kết thúc ở 'cơ sở dữ liệu' (có thể thiếu 'điện tử')			có			
+vilextime:T3:provision:eaad2c74-df45-11f0-8793-1d800b3bbbe4:2025-10-31	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Mốc 2 và 3 trả lời như nhau cho câu hỏi (cùng các loại tàu, cùng hình thức sổ giấy và cơ sở dữ liệu); chỉ hai đáp án. Văn bản mốc 3 kết thúc ở 'cơ sở dữ liệu' (có thể thiếu 'điện tử')			có			
+vilextime:T3:provision:d9ace170-2d52-11f1-a3cd-6fe9242b4f5e:2016-01-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:d9ace170-2d52-11f1-a3cd-6fe9242b4f5e:2025-01-10	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:d9ace170-2d52-11f1-a3cd-6fe9242b4f5e:2026-01-16	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:387cf540-2c82-11f1-8aba-550abdbfe211:2019-01-02	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:387cf540-2c82-11f1-8aba-550abdbfe211:2024-07-19	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:387cf540-2c82-11f1-8aba-550abdbfe211:2025-08-17	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:db5da940-2d53-11f1-b8ea-772cb5c62cab:2013-11-29	T3	claude-opus-5-5	1.1	dat			Khoản 1 áp cho công ty luật TNHH hai thành viên trở lên và công ty luật hợp danh; khoản 2 là văn phòng luật sư, công ty luật TNHH một thành viên — audit xem câu hỏi 'công ty luật' có cần nêu loại hình						
+vilextime:T3:provision:db5da940-2d53-11f1-b8ea-772cb5c62cab:2025-05-30	T3	claude-opus-5-5	1.1	dat			Khoản 1 áp cho công ty luật TNHH hai thành viên trở lên và công ty luật hợp danh; khoản 2 là văn phòng luật sư, công ty luật TNHH một thành viên — audit xem câu hỏi 'công ty luật' có cần nêu loại hình			có			
+vilextime:T3:provision:db5da940-2d53-11f1-b8ea-772cb5c62cab:2026-01-16	T3	claude-opus-5-5	1.1	dat			Khoản 1 áp cho công ty luật TNHH hai thành viên trở lên và công ty luật hợp danh; khoản 2 là văn phòng luật sư, công ty luật TNHH một thành viên — audit xem câu hỏi 'công ty luật' có cần nêu loại hình			có			
+vilextime:T3:provision:6ece9720-1edb-11f1-b5ee-25d1c75e0691:2019-09-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:6ece9720-1edb-11f1-b5ee-25d1c75e0691:2022-01-02	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:6ece9720-1edb-11f1-b5ee-25d1c75e0691:2026-02-10	T3	claude-opus-5-5	1.1	khong_dat	unanswerable_as_asked		Từ 2026-02-10 khoản 1 trao quyền cho Chủ tịch Ủy ban nhân dân cấp xã (cấp huyện không còn); câu hỏi vẫn hỏi Chủ tịch cấp huyện. Đề xuất sửa câu hỏi thành 'Chủ tịch Ủy ban nhân dân theo khoản 1 Điều 51'			có			
+vilextime:T3:provision:e6c5d5d4-df40-11f0-a50d-ddac3e38e697:2013-01-02	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		Câu hỏi 'hành vi nào của tổ chức đó bị coi là vi phạm' khớp cả khoản 2 (cập nhật nội dung không phù hợp nội dung đã đăng ký), khoản 3 (báo cáo không trung thực), khoản 5 cùng Điều; khoản 1 chỉ là một hành vi	2. Tổ chức cập nhật kiến thức cho kiểm toán viên hành nghề những nội dung không phù hợp với nội dung đã đăng k...		có			
+vilextime:T3:provision:e6c5d5d4-df40-11f0-a50d-ddac3e38e697:2024-05-02	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		Câu hỏi 'hành vi nào của tổ chức đó bị coi là vi phạm' khớp cả khoản 2 (cập nhật nội dung không phù hợp nội dung đã đăng ký), khoản 3 (báo cáo không trung thực), khoản 5 cùng Điều; khoản 1 chỉ là một hành vi	2. Tổ chức cập nhật kiến thức cho kiểm toán viên hành nghề những nội dung không phù hợp với nội dung đã đăng k...		có			
+vilextime:T3:provision:e6c5d5d4-df40-11f0-a50d-ddac3e38e697:2025-07-02	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		Câu hỏi 'hành vi nào của tổ chức đó bị coi là vi phạm' khớp cả khoản 2 (cập nhật nội dung không phù hợp nội dung đã đăng ký), khoản 3 (báo cáo không trung thực), khoản 5 cùng Điều; khoản 1 chỉ là một hành vi	2. Tổ chức cập nhật kiến thức cho kiểm toán viên hành nghề những nội dung không phù hợp với nội dung đã đăng k...		có			
+vilextime:T3:provision:c7f12dfe-df43-11f0-b0e9-95ce281f9970#k2#a:2016-07-02	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		Khoản 2 'Xe tập lái' có các điểm a đến k (sở hữu, trọng tải, kiểm định, phanh phụ, mui che, biển TẬP LÁI…); câu hỏi chung 'điều kiện về xe tập lái' khớp cả khoản, đáp án chỉ là điểm a	b) Thuộc sở hữu của cơ sở đào tạo lái xe. Có thể sử dụng xe hợp đồng thời hạn từ 01 năm trở lên với số lượng k...		có			
+vilextime:T3:provision:c7f12dfe-df43-11f0-b0e9-95ce281f9970#k2#a:2018-12-02	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		Khoản 2 'Xe tập lái' có các điểm a đến k (sở hữu, trọng tải, kiểm định, phanh phụ, mui che, biển TẬP LÁI…); câu hỏi chung 'điều kiện về xe tập lái' khớp cả khoản, đáp án chỉ là điểm a	b) Thuộc sở hữu của cơ sở đào tạo lái xe. Có thể sử dụng xe hợp đồng thời hạn từ 01 năm trở lên với số lượng k...		có			
+vilextime:T3:provision:c7f12dfe-df43-11f0-b0e9-95ce281f9970#k2#a:2022-11-02	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		Khoản 2 'Xe tập lái' có các điểm a đến k (sở hữu, trọng tải, kiểm định, phanh phụ, mui che, biển TẬP LÁI…); câu hỏi chung 'điều kiện về xe tập lái' khớp cả khoản, đáp án chỉ là điểm a	b) Thuộc sở hữu của cơ sở đào tạo lái xe. Có thể sử dụng xe hợp đồng thời hạn từ 01 năm trở lên với số lượng k...		có			
+vilextime:T3:provision:de1449b0-2c85-11f1-ab0c-978972b56b54:2013-10-16	T3	claude-opus-5-5	1.1	dat			Như lineage 31: mốc 1→2 chỉ đổi 'Bán' thành 'Buôn bán'						
+vilextime:T3:provision:de1449b0-2c85-11f1-ab0c-978972b56b54:2022-01-02	T3	claude-opus-5-5	1.1	dat			Như lineage 31: mốc 1→2 chỉ đổi 'Bán' thành 'Buôn bán'						
+vilextime:T3:provision:de1449b0-2c85-11f1-ab0c-978972b56b54:2024-07-02	T3	claude-opus-5-5	1.1	dat			Như lineage 31: mốc 1→2 chỉ đổi 'Bán' thành 'Buôn bán'						
+vilextime:T3:provision:f7a7b860-24e9-11f1-80fb-911f0cd7b0b5:2025-01-02	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		Ở mốc 1 khoản 8 chỉ nói xe ô tô; biển số mô tô, xe gắn máy trúng đấu giá ở khoản 9. Câu hỏi 'áp dụng cho loại xe nào' khớp cả hai khoản	9. Tổ chức, cá nhân trúng đấu giá biển số xe mô tô, xe gắn máy được lựa chọn đăng ký, cấp biển số xe trúng đấu...		có			
+vilextime:T3:provision:f7a7b860-24e9-11f1-80fb-911f0cd7b0b5:2025-03-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:f7a7b860-24e9-11f1-80fb-911f0cd7b0b5:2025-07-02	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:55ea1630-eab5-11f0-bdfc-15535a34d098:2021-03-11	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:55ea1630-eab5-11f0-bdfc-15535a34d098:2022-09-16	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:55ea1630-eab5-11f0-bdfc-15535a34d098:2024-04-11	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:64015f1e-2c85-11f1-bf18-f11eea13dfa4:2014-04-11	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		'Người có uy tín trong cộng đồng' là tên cả khoản 3; điểm a cùng khoản (Chủ tịch Hội đồng cấp tỉnh triệu tập) cũng thuộc nhóm này. Câu hỏi còn nói 'trưởng bản' trong khi văn bản là 'trưởng họ tộc'	a) Chủ tịch Hội đồng giáo dục quốc phòng và an ninh cấp tỉnh quyết định triệu tập bồi dưỡng kiến thức quốc phò...		có			
+vilextime:T3:provision:64015f1e-2c85-11f1-bf18-f11eea13dfa4:2021-01-16	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		'Người có uy tín trong cộng đồng' là tên cả khoản 3; điểm a cùng khoản (Chủ tịch Hội đồng cấp tỉnh triệu tập) cũng thuộc nhóm này. Câu hỏi còn nói 'trưởng bản' trong khi văn bản là 'trưởng họ tộc'	a) Chủ tịch Hội đồng giáo dục quốc phòng và an ninh cấp tỉnh quyết định triệu tập bồi dưỡng kiến thức quốc phò...		có			
+vilextime:T3:provision:64015f1e-2c85-11f1-bf18-f11eea13dfa4:2025-08-08	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		'Người có uy tín trong cộng đồng' là tên cả khoản 3; điểm a cùng khoản (Chủ tịch Hội đồng cấp tỉnh triệu tập) cũng thuộc nhóm này. Câu hỏi còn nói 'trưởng bản' trong khi văn bản là 'trưởng họ tộc'	a) Chủ tịch Hội đồng giáo dục quốc phòng và an ninh cấp tỉnh quyết định triệu tập bồi dưỡng kiến thức quốc phò...		có			
+vilextime:T3:provision:938c3d26-eb99-11f0-bfb4-15b5584e2964:2016-02-02	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Điều kiện khôi phục không đổi qua ba mốc (sai sót, sự cố đã được khắc phục); mốc 2 chỉ đổi dẫn chiếu điểm d thành điểm c do Điều 7 đánh số lại			có			
+vilextime:T3:provision:938c3d26-eb99-11f0-bfb4-15b5584e2964:2021-01-02	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Như mốc 1			có			
+vilextime:T3:provision:938c3d26-eb99-11f0-bfb4-15b5584e2964:2024-07-02	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch	other	"Như mốc 1. Văn bản đáp án mốc 3 dính cả khoản 3, 4 của lời văn sửa đổi (…đã được khắc phục."" ""3. Tổ chức quản lý thuê bao…)"			có			
+vilextime:T3:provision:59915bf0-2d53-11f1-bf60-a9df1703fcab:2015-04-07	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:59915bf0-2d53-11f1-bf60-a9df1703fcab:2025-05-30	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:59915bf0-2d53-11f1-bf60-a9df1703fcab:2026-01-16	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:31c78c80-1f97-11f1-8d96-116f0620cd8e:2016-01-02	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Mốc 2 và 3 cùng loại tờ khai (trị giá thấp theo Phụ lục II Danh mục 2, hoặc tờ khai giấy HQ/2015); mốc 3 chỉ thêm 'nhóm 2' và đổi 'phần A, mục II' thành 'mục II'. Chỉ hai đáp án			có			
+vilextime:T3:provision:31c78c80-1f97-11f1-8d96-116f0620cd8e:2019-10-16	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Mốc 2 và 3 cùng loại tờ khai (trị giá thấp theo Phụ lục II Danh mục 2, hoặc tờ khai giấy HQ/2015); mốc 3 chỉ thêm 'nhóm 2' và đổi 'phần A, mục II' thành 'mục II'. Chỉ hai đáp án			có			
+vilextime:T3:provision:31c78c80-1f97-11f1-8d96-116f0620cd8e:2025-07-10	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Mốc 2 và 3 cùng loại tờ khai (trị giá thấp theo Phụ lục II Danh mục 2, hoặc tờ khai giấy HQ/2015); mốc 3 chỉ thêm 'nhóm 2' và đổi 'phần A, mục II' thành 'mục II'. Chỉ hai đáp án			có			
+vilextime:T3:provision:52a19514-eb7f-11f0-834c-df767891920b:2017-08-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:52a19514-eb7f-11f0-834c-df767891920b:2020-06-16	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:52a19514-eb7f-11f0-834c-df767891920b:2022-02-03	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:ceb9e5a6-df50-11f0-857c-4791e49360cb#k2#a:2015-06-02	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:ceb9e5a6-df50-11f0-857c-4791e49360cb#k2#a:2017-09-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:ceb9e5a6-df50-11f0-857c-4791e49360cb#k2#a:2020-01-02	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:746ee898-eb72-11f0-a645-6bade352d545#k3:2019-03-29	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:746ee898-eb72-11f0-a645-6bade352d545#k3:2022-03-02	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:746ee898-eb72-11f0-a645-6bade352d545#k3:2023-08-16	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:5d48bef2-df54-11f0-abca-45ca78a631ce:2015-07-21	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:5d48bef2-df54-11f0-abca-45ca78a631ce:2025-07-02	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:5d48bef2-df54-11f0-abca-45ca78a631ce:2026-05-30	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:2353f712-e160-11f0-837a-cd6604c821b5:2015-09-02	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Mốc 1→2 chỉ đổi 'bán' thành 'bán đấu giá' và bỏ chữ 'bán đấu giá' ở cuối — cùng một bước; chỉ mốc 3 thêm việc chọn tổ chức đấu giá. Chỉ hai đáp án; 'bước xử lý đầu tiên' cũng mơ hồ			có			
+vilextime:T3:provision:2353f712-e160-11f0-837a-cd6604c821b5:2020-05-02	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Mốc 1→2 chỉ đổi 'bán' thành 'bán đấu giá' và bỏ chữ 'bán đấu giá' ở cuối — cùng một bước; chỉ mốc 3 thêm việc chọn tổ chức đấu giá. Chỉ hai đáp án; 'bước xử lý đầu tiên' cũng mơ hồ			có			
+vilextime:T3:provision:2353f712-e160-11f0-837a-cd6604c821b5:2025-01-02	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Mốc 1→2 chỉ đổi 'bán' thành 'bán đấu giá' và bỏ chữ 'bán đấu giá' ở cuối — cùng một bước; chỉ mốc 3 thêm việc chọn tổ chức đấu giá. Chỉ hai đáp án; 'bước xử lý đầu tiên' cũng mơ hồ			có			
+vilextime:T3:provision:054aaf90-3188-11f1-9b71-9161173b0ca7:2024-08-02	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Câu hỏi hỏi phiếu chuyển thông tin đến từ cơ quan nào: mốc 1 và 2 như nhau (cơ quan quản lý đất đai và các cơ quan khác); lần sửa 2025 chỉ mở rộng các khoản tiền phải tính. Chỉ hai đáp án			có			
+vilextime:T3:provision:054aaf90-3188-11f1-9b71-9161173b0ca7:2025-11-07	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Câu hỏi hỏi phiếu chuyển thông tin đến từ cơ quan nào: mốc 1 và 2 như nhau (cơ quan quản lý đất đai và các cơ quan khác); lần sửa 2025 chỉ mở rộng các khoản tiền phải tính. Chỉ hai đáp án			có			
+vilextime:T3:provision:054aaf90-3188-11f1-9b71-9161173b0ca7:2026-02-01	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Câu hỏi hỏi phiếu chuyển thông tin đến từ cơ quan nào: mốc 1 và 2 như nhau (cơ quan quản lý đất đai và các cơ quan khác); lần sửa 2025 chỉ mở rộng các khoản tiền phải tính. Chỉ hai đáp án			có			
+vilextime:T3:provision:226dbd28-df45-11f0-84f9-87051d7f496f:2013-06-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:226dbd28-df45-11f0-84f9-87051d7f496f:2014-11-26	T3	claude-opus-5-5	1.1	dat		other	Văn bản mốc 2 lỗi chữ ở nguồn ('sau đây gọi là hàng Nhà nước', 'Trưng bày thường kỳ', 'ngày 21 phiên tháng 8'); danh sách nghị quyết vẫn đọc được			có			
+vilextime:T3:provision:226dbd28-df45-11f0-84f9-87051d7f496f:2016-08-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:938c3da8-eb99-11f0-b3df-b36a9bf88f4b:2016-02-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:938c3da8-eb99-11f0-b3df-b36a9bf88f4b:2021-01-02	T3	claude-opus-5-5	1.1	dat						có			
+vilextime:T3:provision:938c3da8-eb99-11f0-b3df-b36a9bf88f4b:2024-07-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:f8d931e0-1df6-11f1-a901-7169bc99fc94:2017-07-02	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:f8d931e0-1df6-11f1-a901-7169bc99fc94:2022-10-31	T3	claude-opus-5-5	1.1	dat									
+vilextime:T3:provision:f8d931e0-1df6-11f1-a901-7169bc99fc94:2023-11-28	T3	claude-opus-5-5	1.1	dat		other	Văn bản đáp án mốc 3 dính cả khoản 3 ('…nêu rõ lý do.3. Khi cấp lại Giấy xác nhận…')			có			
+vilextime:T3:provision:6ab23f90-eb76-11f0-9edf-679bcacb72e6#k3:2011-09-06	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Mốc 2 và 3 cùng nguyên tắc (không quá 03 tỷ đồng có thể chỉ định thầu, còn lại đấu thầu); mốc 3 chỉ sửa câu chữ ('hình thức tư vấn', 'Điểm a nói trên'). Chỉ hai đáp án; có thể chuyển T2 (mốc 1–2)			có			
+vilextime:T3:provision:6ab23f90-eb76-11f0-9edf-679bcacb72e6#k3:2014-01-16	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Mốc 2 và 3 cùng nguyên tắc (không quá 03 tỷ đồng có thể chỉ định thầu, còn lại đấu thầu); mốc 3 chỉ sửa câu chữ ('hình thức tư vấn', 'Điểm a nói trên'). Chỉ hai đáp án; có thể chuyển T2 (mốc 1–2)			có			
+vilextime:T3:provision:6ab23f90-eb76-11f0-9edf-679bcacb72e6#k3:2015-11-12	T3	claude-opus-5-5	1.1	khong_dat	group_mismatch		Mốc 2 và 3 cùng nguyên tắc (không quá 03 tỷ đồng có thể chỉ định thầu, còn lại đấu thầu); mốc 3 chỉ sửa câu chữ ('hình thức tư vấn', 'Điểm a nói trên'). Chỉ hai đáp án; có thể chuyển T2 (mốc 1–2)			có			
+vilextime:T3:provision:3ebea3e0-2d54-11f1-99aa-5169be827cf7:2011-05-09	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		Khoản 3 là đăng ký nuôi con nuôi rồi gửi văn bản thông báo; câu hỏi gọi đó là 'xin ý kiến cơ quan trong nước', vốn là việc của khoản 4 (yêu cầu cơ quan trong nước kiểm tra, xác minh). Đề xuất hỏi thời hạn đăng ký và nơi gửi thông báo	4. Trường hợp hồ sơ nuôi con nuôi không rõ ràng, cần yêu cầu cơ quan trong nước kiểm tra, xác minh, Cơ quan đạ...		có			
+vilextime:T3:provision:3ebea3e0-2d54-11f1-99aa-5169be827cf7:2025-01-09	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		Khoản 3 là đăng ký nuôi con nuôi rồi gửi văn bản thông báo; câu hỏi gọi đó là 'xin ý kiến cơ quan trong nước', vốn là việc của khoản 4 (yêu cầu cơ quan trong nước kiểm tra, xác minh). Đề xuất hỏi thời hạn đăng ký và nơi gửi thông báo	4. Trường hợp hồ sơ nuôi con nuôi không rõ ràng, cần yêu cầu cơ quan trong nước kiểm tra, xác minh, Cơ quan đạ...		có			
+vilextime:T3:provision:3ebea3e0-2d54-11f1-99aa-5169be827cf7:2026-01-16	T3	claude-opus-5-5	1.1	khong_dat	question_ambiguous		Khoản 3 là đăng ký nuôi con nuôi rồi gửi văn bản thông báo; câu hỏi gọi đó là 'xin ý kiến cơ quan trong nước', vốn là việc của khoản 4 (yêu cầu cơ quan trong nước kiểm tra, xác minh). Đề xuất hỏi thời hạn đăng ký và nơi gửi thông báo	4. Trường hợp hồ sơ nuôi con nuôi không rõ ràng, cần yêu cầu cơ quan trong nước kiểm tra, xác minh, Cơ quan đạ...		có			
