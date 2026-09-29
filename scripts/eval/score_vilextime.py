@@ -32,8 +32,9 @@ alone, the row's provision, so |E*| = 1:
   TCS           T2 pairs (same lineage, same as_of_strategy): Accuracy on both (formula 8)
 
 Every metric is reported per `as_of_strategy` (giua_khoang is the main table,
-ranh_gioi the boundary test) and per group. Rows whose split is "excluded" are
-never scored.
+ranh_gioi the boundary test) and per group. Only `test` is scored by default
+(ADR 0003 §7); until the release is split, every row is, and the header says so.
+Rows whose split is "excluded" are never scored.
 
 `--probes` scores four systems that are handed the gold provision and only
 choose its version: oracle (in force at as_of), latest, first, and nearest (the
@@ -148,6 +149,11 @@ def score(rows: list[dict], preds: dict[str, dict], units: dict, ks=KS) -> dict:
     return out
 
 
+def default_split(rows: list[dict]) -> str | None:
+    """`test` once the release is split (ADR 0003 §7: only test is seen by default); before that, everything."""
+    return "test" if any(r.get("split") for r in rows) else None
+
+
 def report(rows: list[dict], preds: dict[str, dict], units: dict, split: str | None, ks=KS) -> dict:
     rows = [r for r in rows if r.get("split") != "excluded" and (split is None or r.get("split") == split)]
     out = {}
@@ -245,12 +251,13 @@ def main() -> None:
     ap.add_argument("predictions", type=Path, nargs="?")
     ap.add_argument("--probes", action="store_true", help="score the four version-choice probes")
     ap.add_argument("--data", type=Path, default=Path("data"))
-    ap.add_argument("--split", help="score only this split (default: every row not excluded)")
+    ap.add_argument("--split", help="score only this split (default: test, or every row before the split)")
     ap.add_argument("--out", type=Path, help="write the full report (per strategy and group) as JSON")
     args = ap.parse_args()
     if bool(args.predictions) == args.probes:
         ap.error("give a predictions file or --probes")
     rows = [json.loads(line) for line in (args.data / "derived/vilextime/release.jsonl").open(encoding="utf-8")]
+    split = args.split or default_split(rows)
 
     if args.probes:
         gold = {r["lineage_id"] for r in rows}
@@ -262,8 +269,8 @@ def main() -> None:
         runs = {args.predictions.stem: {p["id"]: p for p in map(json.loads, args.predictions.open(encoding="utf-8"))}}
     ids = {u for preds in runs.values() for p in preds.values() for u in (p.get("citations") or []) + (p.get("retrieved") or [])}
     units = resolve(args.data, ids)
-    results = {name: report(rows, preds, units, args.split) for name, preds in runs.items()}
-    print(table(f"ViLexTime · {len(rows):,} dòng · split {args.split or 'tất cả'} · "
+    results = {name: report(rows, preds, units, split) for name, preds in runs.items()}
+    print(table(f"ViLexTime · {len(rows):,} dòng · split {split or 'tất cả (chưa chia)'} · "
                 f"{len(ids - units.keys())} mã đơn vị không có trong corpus", results))
     if args.out:
         args.out.write_text(json.dumps(results, ensure_ascii=False, indent=1), encoding="utf-8")

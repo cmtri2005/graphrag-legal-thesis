@@ -99,3 +99,10 @@ def test_probes_choose_versions_by_their_rule():
     assert oracle["r1"]["citations"] == ["version:P:1"] and oracle["r3"]["answerable"] is False
     assert latest["r1"]["citations"] == ["version:P:2"] and latest["r3"]["answerable"] is True
     assert score(rows, oracle, UNITS)["accuracy"] == 1
+
+
+def test_only_test_is_scored_by_default_once_the_release_is_split():
+    from score_vilextime import default_split
+
+    assert default_split(ROWS) is None                       # not split yet: every row
+    assert default_split([{**ROWS[0], "split": "dev"}, {**ROWS[1], "split": "test"}]) == "test"
