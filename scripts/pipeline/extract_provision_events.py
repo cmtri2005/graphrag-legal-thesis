@@ -229,9 +229,11 @@ def main() -> None:
                                                      row["target_provision_id"], edits)
                             phrase_missing = not updates
                     row["text_updates"] = [{"target_provision_id": k, "new_text": v} for k, v in (updates or {}).items()]
-                    if edits and updates:
+                    if edits:
                         # resolved here against the as-published text; build_versions
-                        # re-resolves them against the text in force on effective_on
+                        # re-resolves them against the text in force on effective_on —
+                        # also when they miss here, since an earlier amendment may be
+                        # what put the phrase in (phrase_not_found, plan phase-4 J3)
                         row["phrase_edits"] = [list(edit) for edit in edits]
                     row["status"], row["status_reason"] = _status(row, block is not None, gold,
                                                                   phrase_missing=phrase_missing)

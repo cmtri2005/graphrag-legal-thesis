@@ -188,8 +188,12 @@ def test_real_three_version_chain_crosses_both_amendment_boundaries(real_cases):
     assert [row["valid_to"] for row in versions] == [
         "2017-09-01", "2020-01-01", None,
     ]
+    # The local chain stays open; the document window closes it: 27/2024/TT-NHNN
+    # repealed 03/2014/TT-NHNN from 01/07/2024 (an accepted effective_to decision,
+    # applied by ingest since 29/09).
+    assert documents[CHAIN_DOCUMENT].effective_to == date(2024, 7, 1)
     assert [row["effective_intervals"] for row in versions] == [
-        [{"start": row["valid_from"], "end": row["valid_to"]}]
+        [{"start": row["valid_from"], "end": row["valid_to"] or "2024-07-01"}]
         for row in versions
     ]
     assert [hashlib.sha256(row["text"].encode()).hexdigest() for row in versions] == (

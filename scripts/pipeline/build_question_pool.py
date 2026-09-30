@@ -106,7 +106,10 @@ def ask_dates(group: str, versions: list[dict], today: date) -> list[date]:
         end = _d(versions[-1]["effective_to"])
         return [end - ONE_DAY, end]
     if group == "T3":
-        return [s + ONE_DAY for s in starts]  # one date inside each version
+        # the day before each switch, then the day of the last one — like T2, so a
+        # system that picks the version starting nearest to as_of is caught (JUDGE
+        # N3: at start + 1 it solved 200/200 T3 boundary rows; decided 29/09)
+        return [s - ONE_DAY for s in starts[1:]] + [starts[-1]]
     return [starts[1] - ONE_DAY, starts[1]]  # T2, T4: either side of the switch
 
 
@@ -230,6 +233,22 @@ def build_t5_row(provision: dict, versions: list[dict], evidence: dict[str, dict
     return None
 
 
+def stable_sample(rows: list[dict], cap: int, ranked: set[str]) -> list[dict]:
+    """`cap` rows: every row whose lineage is already ranked in this group, then a seeded sample of the rest.
+
+    A seeded sample of a list that gained or lost a row picks different rows, so
+    a rebuild that moves a few provisions between groups would drop lineages the
+    release already holds (data/vilextime/sample.jsonl is walked in rank order)
+    out of the pool (plan phase-4, J3). `ranked` must be this group's lineages
+    only: a T6 "ancestor" lineage is also a T1 candidate, and kept in T1 it would
+    be taken before T6 could have it.
+    """
+    kept = [r for r in rows if r["provision_id"] in ranked]
+    rest = [r for r in rows if r["provision_id"] not in ranked]
+    picked = random.Random(SEED).sample(rest, max(0, min(cap - len(kept), len(rest))))
+    return sorted(kept + picked, key=lambda r: r["id"])
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--data", type=Path, default=Path("data"))
@@ -238,6 +257,11 @@ def main() -> None:
     parser.add_argument("--today", type=date.fromisoformat, default=date(2026, 9, 20))
     args = parser.parse_args()
     data = args.data
+    ranking = data / "vilextime/sample.jsonl"
+    ranked: dict[str, set[str]] = collections.defaultdict(set)     # group -> its ranked lineages
+    for line in ranking.open(encoding="utf-8") if ranking.exists() else ():
+        entry = json.loads(line)
+        ranked[entry["group"]].add(entry["lineage_id"])
 
     eligible = {
         f"document:{row['doc_id']}"
@@ -305,9 +329,7 @@ def main() -> None:
 
     # T6 "ancestor": a seeded sample, never a provision another group already holds
     # (the groups above are written unchanged), and the repeal it inherits named.
-    ancestor_rows = sorted(ancestor_rows, key=lambda r: r["id"])
-    ancestor_rows = sorted(random.Random(SEED).sample(ancestor_rows, min(ANCESTOR_CAP, len(ancestor_rows))),
-                           key=lambda r: r["id"])
+    ancestor_rows = stable_sample(sorted(ancestor_rows, key=lambda r: r["id"]), ANCESTOR_CAP, ranked["T6"])
     parent_of = {pid: parent for pid, parent in db.execute("SELECT id, parent_id FROM provisions")}
     chains = {r["provision_id"]: [] for r in ancestor_rows}
     for pid in list(chains):
@@ -344,7 +366,7 @@ def main() -> None:
             rows = sorted(buckets[group], key=lambda r: r["id"])
             cap = QUOTA[group] * args.per_group_cap
             if len(rows) > cap:
-                rows = sorted(random.Random(SEED).sample(rows, cap), key=lambda r: r["id"])
+                rows = stable_sample(rows, cap, ranked[group])
             rows = [r for r in rows if r["provision_id"] not in in_t5]   # T5 is scarcer
             for row in rows:
                 out.write(json.dumps(row, ensure_ascii=False) + "\n")

@@ -98,6 +98,19 @@ def test_apply_phrase_demands_the_phrase_be_present_verbatim():
     assert apply_phrase("Cấm thi hoặc kiểm tra.", [("thi hoặc", "")]) is None
 
 
+def test_apply_phrase_matches_a_phrase_whatever_its_case():
+    from legal_crawler.extraction.wording import apply_phrase
+
+    # 104/2022/NĐ-CP quotes "trong giai đoạn…" where 123/2015/NĐ-CP opens a sentence with it
+    assert apply_phrase("1. Trong giai đoạn chuyển tiếp, cơ quan cấp giấy.", [("trong giai đoạn chuyển tiếp, ", "")]) \
+        == "1. cơ quan cấp giấy."
+    assert apply_phrase("Tổng cục Đường bộ; tổng cục đường bộ.", [("Tổng cục Đường bộ", "Cục Đường bộ")]) \
+        == "Cục Đường bộ; tổng cục đường bộ."            # a verbatim match wins over the folded one
+    assert apply_phrase("Giấy chứng nhận quyền sử dụng đất.", [("giấy chứng nhận quyền sử dụng đất", "giấy chứng nhận")]) \
+        == "Giấy chứng nhận."                              # the capital stays where the sentence opens
+    assert apply_phrase("Do Bộ Tư pháp quyết định.", [("cục con nuôi", "Bộ Tư pháp")]) is None
+
+
 def test_apply_phrase_refuses_a_deletion_that_strands_punctuation():
     from legal_crawler.extraction.wording import apply_phrase
 

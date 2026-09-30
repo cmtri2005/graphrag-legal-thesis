@@ -1,6 +1,6 @@
 from datetime import date
 
-from build_question_pool import ask_dates, classify, in_force_at, repealed_by_ancestor
+from build_question_pool import ask_dates, classify, in_force_at, repealed_by_ancestor, stable_sample
 
 
 def _v(ordinal, start, end=None, ended_by=None):
@@ -40,6 +40,13 @@ def test_T2_is_asked_either_side_of_the_switch():
     versions = [_v(1, "2020-01-01", "2024-01-01"), _v(2, "2024-01-01")]
 
     assert ask_dates("T2", versions, date(2026, 9, 20)) == [date(2023, 12, 31), date(2024, 1, 1)]
+
+
+def test_T3_is_asked_the_day_before_each_switch_and_on_the_last():
+    chain = [_v(1, "2019-01-01", "2021-01-01"), _v(2, "2021-01-01", "2024-01-01"), _v(3, "2024-01-01")]
+    dates = ask_dates("T3", chain, date(2026, 9, 20))
+    assert dates == [date(2020, 12, 31), date(2023, 12, 31), date(2024, 1, 1)]
+    assert [in_force_at(chain, d)["ordinal"] for d in dates] == [1, 2, 3]      # one date inside each version
 
 
 def test_a_chain_whose_amendment_changed_nothing_cannot_be_a_contrast_pair():
@@ -89,3 +96,12 @@ def test_a_provision_that_fell_with_its_ancestor_is_told_apart_from_one_repealed
     assert not repealed_by_ancestor(fell, "Point", date(2025, 1, 1), today)     # the whole document ended
     assert not repealed_by_ancestor(fell, "Article", None, today)               # T6 asks about Khoản/Điểm
     assert not repealed_by_ancestor({**fell, "effective_to": "2027-01-01"}, "Clause", None, today)
+
+
+def test_a_capped_group_keeps_its_ranked_lineages_when_the_candidates_change():
+    rows = [{"id": f"r{i:02}", "provision_id": f"p{i:02}"} for i in range(40)]
+    ranked = {"p03", "p17", "p31"}
+    before = stable_sample(rows, 10, ranked)
+    after = stable_sample([r for r in rows if r["id"] != "r05"], 10, ranked)   # one candidate left the group
+    assert len(before) == len(after) == 10
+    assert ranked <= {r["provision_id"] for r in before} and ranked <= {r["provision_id"] for r in after}

@@ -97,12 +97,22 @@ class EventEnvelope:
         )
 
     @property
-    def application_sort_key(self) -> tuple[str, str, int]:
-        """Legal ordering from the plan, preserving source order for ties."""
+    def application_sort_key(self) -> tuple[str, str, int, int]:
+        """Legal ordering from the plan, preserving source order for ties.
+
+        On one day, one acting document's phrase edits go after its other
+        instructions. A node can take one change per day, and when the same
+        document both rewrites or repeals a node and replaces a phrase in it,
+        the rewrite already carries the new wording and a repeal leaves nothing
+        to edit — so it is the phrase edit that must yield (29/09: once phrase
+        edits stopped missing on case, 15 same-day rewrites and repeals lost
+        to them).
+        """
         actor = self.row.get("actor_id")
         return (
             str(self.row.get("effective_on") or ""),
             make_document_id(actor) if actor else "",
+            1 if self.row.get("phrase_edits") else 0,
             self.line_number,
         )
 
@@ -329,8 +339,15 @@ def _build_document_versions(
         state.add_version(version)
 
     applier = EventApplier()
+    order = tuple(provision.id for provision in provisions)
+    children: dict[str, list[str]] = collections.defaultdict(list)
+    for provision in provisions:
+        if provision.parent_id:
+            children[provision.parent_id].append(provision.id)
     for envelope in sorted(envelopes, key=lambda item: item.application_sort_key):
         row = envelope.row
+        if row.get("status_reason") == "phrase_not_found":
+            row = phrase_in_force(row, order, children, lambda pid: _open_text(state, pid)) or row
         if row.get("status") not in {
             EventStatus.VERIFIED.value,
             EventStatus.AUTO_ACCEPTED.value,
@@ -364,7 +381,7 @@ def _build_document_versions(
         outcomes[envelope.line_number] = {
             **_base_log(envelope),
             "outcome": "applied",
-            "reason": None,
+            "reason": row.get("status_reason"),      # REBASED_IN_FORCE, or None
             "already_applied": result.already_applied,
             "created_provision_ids": list(result.created_provision_ids),
             "created_version_ids": list(result.created_version_ids),
@@ -385,6 +402,40 @@ def _build_document_versions(
             report["effective_empty"] += 1
         elif len(intervals) > 1:
             report["effective_disjoint"] += 1
+
+
+REBASED_IN_FORCE = "phrase_rebased_in_force"
+
+
+def phrase_in_force(row: dict[str, Any], order: tuple[str, ...], children: dict[str, list[str]],
+                    current) -> dict[str, Any] | None:
+    """A `phrase_not_found` event made applicable against the text in force, or None.
+
+    extract_provision_events looked for the phrase in the as-published text of
+    the target and its subtree. When an earlier amendment is what put the phrase
+    there, it is only in the text in force when this edit takes effect — the same
+    reasoning as `rebase_phrase_edit`, for the events that missed outright (plan
+    phase-4, J3; 274 of them matched verbatim on the text in force, 29/09). Each
+    node whose text in force carries the phrase is rewritten; the rest are left.
+    """
+    edits = [tuple(edit) for edit in row.get("phrase_edits") or ()]
+    root = row.get("target_provision_id")
+    if not edits or not root:
+        return None
+    subtree, stack = set(), [make_provision_id(root)]
+    while stack:
+        pid = stack.pop()
+        subtree.add(pid)
+        stack.extend(children.get(pid, ()))
+    updates = []
+    for pid in order:
+        now = current(pid) if pid in subtree else None
+        if now and (new_text := apply_phrase(now, edits)) is not None:
+            updates.append({"target_provision_id": pid, "new_text": new_text})
+    if not updates:
+        return None
+    return {**row, "status": EventStatus.AUTO_ACCEPTED.value, "status_reason": REBASED_IN_FORCE,
+            "text_updates": updates}
 
 
 def rebase_phrase_edit(row: dict[str, Any], initial: dict[str, str], current) -> dict[str, Any]:
@@ -479,6 +530,7 @@ def _event_from_row(row: dict[str, Any]) -> LegalEvent:
                 actor_id,
                 ExtractionMethod.RULE,
                 evidence_text=row.get("evidence"),
+                details={"status_reason": row["status_reason"]} if row.get("status_reason") else {},
             ),
         ),
     )

@@ -252,17 +252,37 @@ def phrase_edits(text: str) -> list[tuple[str, str]]:
 _ARTIFACT = re.compile(r",\s*[;,.]|\s{2,}|\s+[;,.]|\(\s*\)")
 
 
+def _replace_ignoring_case(text: str, old: str, new: str) -> str | None:
+    """Every occurrence of `old` whatever its case, replaced; None when there is none.
+
+    An instruction quotes the phrase as it would sit mid-sentence ("bãi bỏ cụm từ
+    “trong giai đoạn chuyển tiếp…”") while the text may open a sentence with it
+    ("Trong giai đoạn chuyển tiếp…"); a replacement there keeps the capital.
+    """
+    def keep_capital(m: re.Match) -> str:
+        return new[:1].upper() + new[1:] if m.group(0)[:1].isupper() and new[:1].islower() else new
+
+    out, n = re.subn(re.escape(old), keep_capital, text, flags=re.IGNORECASE)
+    return out if n else None
+
+
 def apply_phrase(old_text: str, edits: list[tuple[str, str]]) -> str | None:
     """The text after every edit.
 
-    None when a phrase is not in the text verbatim, when nothing changed, or
-    when the edit leaves a punctuation artifact the source would not contain.
+    None when a phrase is in the text neither verbatim nor up to case, when
+    nothing changed, or when the edit leaves a punctuation artifact the source
+    would not contain. The verbatim match wins when there is one.
     """
     out = old_text
     for old, new in edits:
-        if not old or old not in out:
+        if not old:
             return None
-        out = out.replace(old, new)
+        if old in out:
+            out = out.replace(old, new)
+        elif (folded := _replace_ignoring_case(out, old, new)) is not None:
+            out = folded
+        else:
+            return None
     if out == old_text:
         return None
     if len(_ARTIFACT.findall(out)) > len(_ARTIFACT.findall(old_text)):

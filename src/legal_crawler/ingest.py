@@ -69,29 +69,32 @@ class IngestReport(dict):
         self[key] = self.get(key, 0) + by
 
 
-def accepted_effective_from(data_dir: Path) -> dict[str, date]:
-    """Reviewed corrections to `effFrom`, keyed by portal id (ADR 0002 §4).
+def accepted_corrections(data_dir: Path) -> dict[str, dict[str, date]]:
+    """Reviewed corrections to `effFrom` and `effTo`, keyed by portal id (ADR 0002 §4).
 
     The raw record is never edited; a correction is a derived value with its
     evidence and a decision in `data/review/temporal_candidates.jsonl`, and
-    only an accepted one reaches the store.
+    only an accepted one reaches the store. An `effTo` correction dates a
+    document the portal still shows in force although another one ended it
+    (plan phase-4, J3), or one the portal marks ended without a date.
     """
     path = data_dir / "review" / "temporal_candidates.jsonl"
     if not path.exists():
         return {}
-    out = {}
+    out: dict[str, dict[str, date]] = {}
     for line in path.read_text(encoding="utf-8").splitlines():
         rec = json.loads(line) if line.strip() else {}
-        if rec.get("field") == "effective_from" and rec.get("decision") == "accept":
-            out[str(rec["document_id"])] = date.fromisoformat(rec["value"])
+        if rec.get("field") in ("effective_from", "effective_to") and rec.get("decision") == "accept":
+            out.setdefault(str(rec["document_id"]), {})[rec["field"]] = date.fromisoformat(rec["value"])
     return out
 
 
 def build_document(doc_id: str, raw: dict, report: IngestReport,
-                   corrected_from: date | None = None) -> LegalDocument:
+                   corrected: dict[str, date] | None = None) -> LegalDocument:
+    corrected = corrected or {}
     effective_from = _as_date(raw.get("effFrom"))
-    if corrected_from and corrected_from != effective_from:
-        effective_from = corrected_from
+    if (fix := corrected.get("effective_from")) and fix != effective_from:
+        effective_from = fix
         report.bump("effective_from_corrected")
     effective_to = _as_date(raw.get("effTo"))
     if anchor_problem(raw, date.today()) == EMPTY_INTERVAL:
@@ -99,6 +102,12 @@ def build_document(doc_id: str, raw: dict, report: IngestReport,
         # lose only the field that cannot be true.
         effective_to = None
         report.bump("effective_to_dropped")
+    if (fix := corrected.get("effective_to")) and fix != effective_to:
+        if effective_from and fix <= effective_from:
+            report.bump("effective_to_correction_refused")   # would leave an empty interval
+        else:
+            effective_to = fix
+            report.bump("effective_to_corrected")
     if not effective_from:
         report.bump("documents_without_effective_from")
     return LegalDocument(
@@ -206,7 +215,7 @@ def ingest(
     tree_ids = set(source.ids("trees"))
     text_ids = set(source.ids("provisions"))
     subtree_ids = set(source.ids("derived/subtrees")) if with_subtrees else set()
-    corrections = accepted_effective_from(data_dir)
+    corrections = accepted_corrections(data_dir)
 
     for n, doc_id in enumerate(doc_ids, 1):
         if n % 1000 == 0:
