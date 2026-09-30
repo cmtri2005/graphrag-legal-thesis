@@ -17,17 +17,33 @@ vocabulary, so free-text codes cannot creep back in.
                        both labelled it; sets `audit_required`
     report             labels per labeler and group, model–human agreement on
                        rows both labelled, and audit outcomes
+    mark-audit         applies the audit rules below to labels already in the file
+                       (only ever adds "có"), after the rules changed
     audit-sheet XLSX   the labels still waiting for their required audit, with
                        question, answer and lead-in beside them, as a workbook;
+                       also the dates the same question is asked again (the
+                       twin and the row after the document ended), the
+                       validity flags of the lineage (data/review/validity_queue.tsv)
+                       and the amending documents, since guideline 1.2 asks the
+                       auditor to check the gold at those dates too;
                        a row whose lineage was dropped (data/vilextime/dropped.jsonl)
                        is still there, read from its group file, with the drop in `fix`
     import-audit XLSX  writes `audit`, `auditor`, `audit_note` filled in that
-                       workbook back into labels.tsv
+                       workbook back into labels.tsv; the auditor is a person
+                       (`human:<code>`), never a model
+
+A model label must be audited (guideline §6) when it is `khong_dat` or has
+`meta_issues`, for a fixed 20% of the rest, and — since 1.2, after the review of
+29/09 — when the amending document has a transitional article
+(`actor_has_transitional`), when the row still speaks of "cấp huyện" after
+01/07/2025, and when it was written under 1.2 (the lineages that replaced
+dropped ones).
 
 Usage:
     python scripts/review/labels.py import-excel "Gán Nhãn Bộ Dữ Liệu ViLexTime.xlsx"
     python scripts/review/labels.py add batch.tsv
     python scripts/review/labels.py report
+    python scripts/review/labels.py mark-audit
     python scripts/review/labels.py audit-sheet audit.xlsx --group T1
     python scripts/review/labels.py import-audit audit.xlsx
 """
@@ -43,9 +59,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from crosscheck import REASONS, VERDICTS  # noqa: E402  one vocabulary for both files
+from crosscheck import GUIDELINE, REASONS, VERDICTS  # noqa: E402  one vocabulary for both files
 
-GUIDELINE = "1.1"
 COLUMNS = ["id", "group", "labeler", "guideline_version", "verdict", "reasons", "meta_issues", "note",
            "evidence", "raw_label", "audit_required", "audit", "auditor", "audit_note"]
 META = {"valid_to_wrong", "valid_from_wrong", "group_wrong", "citation_path_wrong", "doc_number_wrong",
@@ -56,9 +71,11 @@ RAW_META = {"valid_to": "valid_to_wrong", "lead_in": "lead_in_wrong", "citation/
             "citation": "citation_path_wrong", "provision_path": "citation_path_wrong",
             "provison_path": "citation_path_wrong", "document_number": "doc_number_wrong",
             "group": "group_wrong", "num_versions": "group_wrong", "type": "other"}
-SHEET = ["id", "group", "question", "as_of", "lead_in", "answer", "citation", "law_id", "source_url",
-         "labeler", "verdict", "reasons", "meta_issues", "note", "evidence", "fix", "audit", "auditor", "audit_note"]
+SHEET = ["id", "group", "question", "as_of", "also_asked_at", "lead_in", "answer", "citation", "law_id", "source_url",
+         "amended_by", "legal_markers", "validity_flags", "labeler", "verdict", "reasons", "meta_issues", "note",
+         "evidence", "fix", "audit", "auditor", "audit_note"]
 AUDIT_SHARE = 5   # a model's `dat` is audited when sha1(id) % 5 == 0: a fixed 20% sample
+DISTRICTS_ABOLISHED = "2025-07-01"
 
 
 def codes(cell: str) -> list[str]:
@@ -88,11 +105,28 @@ def is_human(labeler: str) -> bool:
     return labeler.startswith("human:")
 
 
-def audit_required(label: dict) -> str:
+def audit_required(label: dict, row: dict | None = None) -> str:
     if is_human(label["labeler"]):
         return ""
     sampled = int(hashlib.sha1(label["id"].encode()).hexdigest(), 16) % AUDIT_SHARE == 0
-    return "có" if label["verdict"] == "khong_dat" or label["meta_issues"] or sampled else ""
+    row = row or {}
+    said = " ".join(filter(None, (row.get("question"), row.get("answer"), row.get("short_answer")))).lower()
+    rules = (label["verdict"] == "khong_dat", bool(label["meta_issues"]), sampled,
+             label["guideline_version"] == "1.2",
+             "actor_has_transitional" in (row.get("legal_markers") or ()),
+             row.get("as_of", "") >= DISTRICTS_ABOLISHED and "cấp huyện" in said)
+    return "có" if any(rules) else ""
+
+
+def mark_audit(data: Path) -> None:
+    path = data / "review/labels.tsv"
+    labels, rows = read(path), release(data)
+    added = 0
+    for x in labels:
+        if not x["audit_required"] and audit_required(x, rows.get(x["id"])):
+            x["audit_required"], added = "có", added + 1
+    write(path, labels)
+    print(f"+{added} nhãn cần audit theo luật mới -> {path} ({sum(bool(x['audit_required']) for x in labels)} tổng)")
 
 
 def problems(label: dict, rows: dict[str, dict], blind: set[str]) -> list[str]:
@@ -143,7 +177,7 @@ def add(data: Path, batch: Path) -> None:
         if errs:
             errors.append(f"dòng {n} {label['id']}: {'; '.join(errs)}")
             continue
-        label["audit_required"] = audit_required(label)
+        label["audit_required"] = audit_required(label, rows.get(label["id"]))
         seen.add((label["id"], label["labeler"]))
         new.append(label)
     if errors:
@@ -248,24 +282,40 @@ def audit_sheet(data: Path, out: Path, group: str | None) -> None:
     dropfile = data / "vilextime/dropped.jsonl"
     dropped = ({d["lineage_id"]: d for d in map(json.loads, dropfile.open(encoding="utf-8"))}
                if dropfile.exists() else {})
+    again = collections.defaultdict(list)          # boundary id -> "as_of (mode)" of its twin and after-end row
+    for r in released.values():
+        if r.get("twin_of"):
+            again[r["twin_of"]].append(f"{r['as_of']} ({r['as_of_strategy']})")
+    flags = collections.defaultdict(set)
+    for q in read(data / "review/validity_queue.tsv"):
+        if q["active"] == "co":
+            flags[q["lineage"]].add(f"{q['kind']} {q['date']} {q['decision'] or 'chờ'}".strip())
 
-    def row(x: dict) -> dict:
+    def row(x: dict) -> dict | None:
         if x["id"] in released:
             return released[x["id"]]
         group_file = data / f"derived/vilextime/{x['group']}.jsonl"
-        return next(r for r in map(json.loads, group_file.open(encoding="utf-8")) if r["id"] == x["id"])
+        return next((r for r in map(json.loads, group_file.open(encoding="utf-8")) if r["id"] == x["id"]), None)
 
     for x in sorted(todo, key=lambda x: (x["group"], x["id"])):
         r = row(x)
+        if r is None:        # the lineage changed group or gold since it was labelled (29/09 rebuild)
+            ws.append([{**x, "fix": "dòng không còn trong bộ dữ liệu: lineage đổi nhóm hoặc gold sau khi dựng lại"}.get(c, "")
+                       for c in SHEET])
+            continue
         drop = dropped.get(r.get("lineage_id"))
         answer = r["answer"] if r["answer"] is not None else f"(không có đáp án: {r['no_answer_reason']})"
         ctx = {"question": r["question"], "as_of": r["as_of"], "lead_in": r["target"].get("lead_in") or "",
                "answer": answer, "citation": r["target"]["citation"], "law_id": r["target"]["law_id"],
-               "source_url": r["source_url"],
+               "source_url": r["source_url"], "also_asked_at": "; ".join(again.get(x["id"], ())),
+               "amended_by": "; ".join(sorted({(t.get("actor") or {}).get("law_id") or ""
+                                               for t in (r.get("derivation") or {}).get("transitions", ())} - {""})),
+               "legal_markers": ", ".join(r.get("legal_markers") or ()),
+               "validity_flags": "; ".join(sorted(flags.get(r.get("lineage_id"), ()))),
                "fix": f"loại lineage ({drop['reason']}): {drop['note']}" if drop else ""}
         ws.append([{**x, **ctx}.get(c, "") for c in SHEET])
     wb.save(out)
-    print(f"{len(todo)} nhãn cần audit -> {out}  (điền audit: dong_y | khong_dong_y, auditor: mã giả danh)")
+    print(f"{len(todo)} nhãn cần audit -> {out}  (điền audit: dong_y | khong_dong_y, auditor: human:<mã giả danh>)")
 
 
 def import_audit(data: Path, xlsx: Path) -> None:
@@ -280,8 +330,8 @@ def import_audit(data: Path, xlsx: Path) -> None:
         if a is None:
             continue
         audit, auditor = str(a["audit"]).strip(), str(a.get("auditor") or "").strip()
-        if audit not in AUDITS or not auditor:
-            errors.append(f"{x['id']}: audit phải là dong_y|khong_dong_y và có auditor")
+        if audit not in AUDITS or not is_human(auditor):
+            errors.append(f"{x['id']}: audit phải là dong_y|khong_dong_y và auditor là người (human:<mã>)")
             continue
         x["audit"], x["auditor"], x["audit_note"], n = audit, auditor, str(a.get("audit_note") or "").strip(), n + 1
     errors += [f"{i} ({lab}): không có trong labels.tsv" for i, lab in filled]
@@ -301,6 +351,7 @@ def main() -> None:
     imp.add_argument("--labeler", default="human:excel", help="mã giả danh, không ghi tên thật")
     sub.add_parser("add", parents=[common]).add_argument("batch", type=Path)
     sub.add_parser("report", parents=[common])
+    sub.add_parser("mark-audit", parents=[common])
     sheet = sub.add_parser("audit-sheet", parents=[common])
     sheet.add_argument("xlsx", type=Path)
     sheet.add_argument("--group", help="chỉ một nhóm, ví dụ T1")
@@ -314,6 +365,8 @@ def main() -> None:
         audit_sheet(args.data, args.xlsx, args.group)
     elif args.command == "import-audit":
         import_audit(args.data, args.xlsx)
+    elif args.command == "mark-audit":
+        mark_audit(args.data)
     else:
         report(args.data)
 

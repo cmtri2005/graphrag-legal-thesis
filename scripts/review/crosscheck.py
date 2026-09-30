@@ -4,7 +4,7 @@
 Scope, decided 20/09 (plan phase-4, Q2): 300 rows = every T5 and T6 row of the
 release (T6 absorbs T5's shortfall, so together they stay 150) plus a random
 50 rows from each of T2, T3 and T4, drawn by lineage so a pair or chain is
-judged whole. Labels follow docs/vilextime-annotation.md v1.0.
+judged whole. Labels follow docs/vilextime-annotation.md (version GUIDELINE).
 
     build   writes data/review/crosscheck_A.tsv and crosscheck_B.tsv: the same
             rows, lineages in a shuffled order, empty `verdict`, `reasons`,
@@ -14,8 +14,11 @@ judged whole. Labels follow docs/vilextime-annotation.md v1.0.
             filled: raw agreement, Cohen κ and Gwet's AC1 on `verdict` (κ drops
             when nearly every row is `dat` even if the two agree; AC1 does not),
             overall, per group and per lineage (a lineage is `khong_dat` when any
-            of its rows is), plus the rows they disagree on. Writes
-            data/review/crosscheck_result.json.
+            of its rows is), plus the rows they disagree on, and the rows that
+            already carry a label from outside D4 (data/review/labels.tsv: the
+            Excel preview, or a model label from before the row joined the set)
+            — they were not blind to whoever labelled them, and the record of D5
+            must say so. Writes data/review/crosscheck_result.json.
 
 Rows come from release.jsonl (enrich_vilextime.py), boundary rows only: a
 mid-interval twin shares its row's question and gold version, so it is judged
@@ -41,6 +44,7 @@ from sample_vilextime import select  # noqa: E402  exact row totals without spli
 SEED = 20260925
 SAMPLED = {"T2": 50, "T3": 50, "T4": 50}
 WHOLE = ("T5", "T6")
+GUIDELINE = "1.2"   # docs/vilextime-annotation.md; labels.py and check_release.py read it from here
 VERDICTS = {"dat", "khong_dat"}
 REASONS = {"question_ambiguous", "question_leaks", "gold_wrong", "group_mismatch",
            "unanswerable_as_asked", "transitional_rule", "other"}   # transitional_rule: guideline v1.1
@@ -73,7 +77,14 @@ def gwet_ac1(a: list[str], b: list[str]) -> float | None:
     return (observed - expected) / (1 - expected)
 
 
-def pick(rows: list[dict]) -> list[dict]:
+def pick(rows: list[dict], prior: set[str] = frozenset()) -> list[dict]:
+    """The cross-check rows; lineages of an earlier draw (`prior`) still in the release come first.
+
+    A seeded shuffle of a list that gained or lost lineages draws a different
+    sample, and a lineage new to the set would arrive carrying the model labels
+    it got outside D4 (29/09 rebuild: 35 of 141 lineages moved). Keeping the
+    earlier draw and topping it up keeps D4 human-only.
+    """
     by_lineage: dict[str, list[dict]] = collections.defaultdict(list)
     for r in rows:
         by_lineage[r["lineage_id"]].append(r)
@@ -84,6 +95,7 @@ def pick(rows: list[dict]) -> list[dict]:
             chosen += lineages
             continue
         random.Random(f"{SEED}:{group}").shuffle(lineages)
+        lineages = [lid for lid in lineages if lid in prior] + [lid for lid in lineages if lid not in prior]
         ranked = [{"rank": i, "lineage_id": lid, "rows": len(by_lineage[lid])} for i, lid in enumerate(lineages)]
         chosen += select(ranked, set(lineages), SAMPLED[group])
     random.Random(SEED).shuffle(chosen)                    # groups interleaved, pairs kept together
@@ -112,8 +124,10 @@ def build(data: Path) -> None:
         path = out / name
         if path.exists() and any(r.get("verdict") for r in read(path)):
             raise SystemExit(f"{path} already carries labels; refusing to overwrite")
+    before = out / "crosscheck_A.tsv"
+    prior = {r["lineage_id"] for r in read(before)} if before.exists() else set()
     rows = pick([r for r in map(json.loads, (data / "derived/vilextime/release.jsonl").open(encoding="utf-8"))
-                 if r["as_of_strategy"] == "ranh_gioi"])
+                 if r["as_of_strategy"] == "ranh_gioi"], prior)
     for name, extra in (("crosscheck_A.tsv", ["adjudicated"]), ("crosscheck_B.tsv", [])):
         with (out / name).open("w", encoding="utf-8", newline="") as f:
             w = csv.writer(f, delimiter="\t", lineterminator="\n")
@@ -145,14 +159,18 @@ def kappa(data: Path) -> None:
     worst = lambda rows, lid: "khong_dat" if any(rows[i]["verdict"] == "khong_dat" for i in lineage[lid]) else "dat"
     lids = sorted(lineage)
     lva, lvb = [worst(a, lid) for lid in lids], [worst(b, lid) for lid in lids]
+    labels = data / "review/labels.tsv"
+    outside = read(labels) if labels.exists() else []
     result = {
-        "guideline_version": "1.1",
+        "guideline_version": GUIDELINE,
         "labelled_by_both": len(both), "total": len(a),
         **scores(both),
         "per_group": {g: scores([i for i in both if a[i]["group"] == g]) for g in sorted({a[i]["group"] for i in both})},
         "per_lineage": {"n": len(lids), "agreement": sum(x == y for x, y in zip(lva, lvb)) / len(lids) if lids else None,
                         "kappa": cohen_kappa(lva, lvb), "ac1": gwet_ac1(lva, lvb)},
         "disagreements": [i for i in both if a[i]["verdict"] != b[i]["verdict"]],
+        "labelled_before_d4": {i: sorted({x["labeler"] for x in outside if x["id"] == i})
+                               for i in sorted({x["id"] for x in outside if x["id"] in a})},
     }
     (data / "review/crosscheck_result.json").write_text(json.dumps(result, ensure_ascii=False, indent=1) + "\n",
                                                         encoding="utf-8")
@@ -164,6 +182,8 @@ def kappa(data: Path) -> None:
     v = result["per_lineage"]
     print(f"  theo lineage: n={v['n']}  đồng ý={fmt(v['agreement'])}  κ={fmt(v['kappa'])}  AC1={fmt(v['ac1'])}")
     print(f"  {len(result['disagreements'])} dòng lệch cần hoà giải · mục tiêu κ ≥ 0,6")
+    seen = collections.Counter(lab for labs in result["labelled_before_d4"].values() for lab in labs)
+    print(f"  {len(result['labelled_before_d4'])} dòng đã có nhãn ngoài D4 trước khi gán (ghi vào biên bản D5): {dict(seen)}")
 
 
 def main() -> None:

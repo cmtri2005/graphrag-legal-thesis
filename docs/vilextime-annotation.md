@@ -1,10 +1,17 @@
 # Hướng dẫn gán nhãn ViLexTime
 
-Phiên bản hướng dẫn: **1.1** (28/09/2026). So với 1.0: câu dẫn là một phần của
-đáp án (§1), thêm mã `transitional_rule` (§2), thêm lớp `meta_issues` và quy trình
-cho nhãn do model gán (§6). Bản ghi phát hành vẫn mang `review.guideline_version`
-1.0 cho tới lần dựng lại kế tiếp; `data/review/labels.tsv` ghi phiên bản trên từng
-nhãn.
+Phiên bản hướng dẫn: **1.2** (29/09/2026). Các thay đổi so với 1.1 đều là hệ quả của
+phản biện `docs/reports/JUDGE_DATASET.md`:
+- dòng anh em không còn mặc định đúng theo nhãn của dòng ranh giới (§5.1);
+- audit có thêm bước kiểm hiệu lực tại mọi ngày hỏi, và các luật audit bắt buộc
+  mới (§6);
+- có loại dòng mới `sau_het_hieu_luc` (§3);
+- người audit phải là người.
+
+So với 1.0: câu dẫn là một phần của đáp án (§1), có mã `transitional_rule` (§2), có
+lớp `meta_issues` và quy trình cho nhãn do model gán (§6). `review.guideline_version`
+của bản ghi phát hành và `data/review/labels.tsv` (trên từng nhãn) ghi phiên bản
+hướng dẫn đã dùng.
 Áp dụng cho đợt kiểm chéo D4 (Cohen κ) và mọi lượt kiểm tay sau đó.
 
 ## 1. Bạn đang kiểm cái gì
@@ -81,6 +88,13 @@ lực của văn bản sửa đổi ở dòng T5.
   danh mà mất hiệu lực vì Điều/Khoản/Mục/Chương chứa nó bị bãi bỏ (`repealed_by`
   ghi nút cha và event). Kiểm như T6 thường; nếu câu bãi bỏ của nút cha thật ra
   giữ lại điều khoản này (ví dụ "trừ điểm a") thì đánh `gold_wrong`.
+- **`sau_het_hieu_luc`** (v1.2): cùng câu hỏi với lineage, nhưng hỏi **sau ngày văn
+  bản đích hết hiệu lực**. Đáp án chuẩn là không có đáp án
+  (`no_answer_reason = document_repealed`). `accepted_evidence` là câu của văn bản
+  chấm dứt ("... hết hiệu lực kể từ ...", "Thông tư này thay thế Thông tư số ...").
+  Kiểm câu đó có thật sự chấm dứt **cả** văn bản và đúng ngày không. Nếu chỉ chấm
+  dứt một phần, hoặc có điều khoản chuyển tiếp giữ nguyên quy định được hỏi, thì
+  đánh `gold_wrong`.
 
 ## 4. Ví dụ
 
@@ -98,8 +112,16 @@ lực của văn bản sửa đổi ở dòng T5.
 1. Hai người gán nhãn **độc lập**, mỗi người một file (`data/review/crosscheck_A.tsv`,
    `crosscheck_B.tsv`), không trao đổi trong lúc làm. Tên thật không ghi vào
    file; dùng mã `A` / `B` (28/09: A = CMT, B = NMT; bảng ánh xạ chỉ nằm ở plan,
-   không phát hành). Chỉ gán dòng `ranh_gioi`: dòng anh em `giua_khoang` cùng câu
-   hỏi và cùng phiên bản đáp án nên dùng chung nhãn.
+   không phát hành). Chỉ gán dòng `ranh_gioi`. Dòng anh em `giua_khoang` cùng câu hỏi
+   và cùng phiên bản đáp án, nên **câu hỏi** dùng chung nhãn. **Gold thì không** (v1.2).
+   Dòng anh em hỏi ở ngày muộn hơn, nên mọi lần sửa đổi hay bãi bỏ mà chuỗi phiên bản
+   bỏ sót trong khoảng giữa hai ngày đều làm gold sai. Phản biện 29/09 tìm được 10/11
+   lỗi gold ở dòng anh em.
+
+   Các lỗi này do `scripts/check/check_validity.py` dò. Hàng đợi ở
+   `data/review/validity_queue.tsv`: dòng thuộc bộ κ mang `sau_D4` và chỉ được
+   phân xử sau hoà giải (bước 4). Dòng ngoài bộ κ được phân xử ngay, với
+   `decision` là `loi` · `co_the_sai` · `bao_dong_gia` · `da_sua`.
 2. Không sửa câu hỏi hay đáp án trong file — chỉ điền `verdict`, `reasons`, `note`.
 3. Xong cả hai, chạy `python scripts/review/crosscheck.py kappa` để tính κ
    (mục tiêu ≥ 0,6). Nếu thấp hơn: viết lại hướng dẫn ở các điểm hay lệch, tăng
@@ -110,7 +132,7 @@ lực của văn bản sửa đổi ở dòng T5.
 5. Dòng `khong_dat` sau hoà giải: câu hỏi viết lại hoặc dòng bị loại, không lặng lẽ
    sửa đáp án chuẩn — sửa gold là thay đổi MAJOR (ADR 0003 §8).
 
-## 6. Nhãn do model gán và audit cuốn chiếu (v1.1)
+## 6. Nhãn do model gán và audit cuốn chiếu (v1.1, bổ sung v1.2)
 
 Chốt 28/09 (CMT): để kịp tiến độ, model (`claude-opus-5-5`) gán nhãn trước, nhóm
 audit theo từng đợt. Bốn ràng buộc giữ cho số liệu còn bảo vệ được:
@@ -123,11 +145,39 @@ audit theo từng đợt. Bốn ràng buộc giữ cho số liệu còn bảo v�
 2. **Nhãn nào cũng ghi người gán.** `labeler` là `claude-opus-5-5`, hoặc
    `human:<mã>` cho người. Nhãn của model không bao giờ ghi đè nhãn của người;
    mỗi (dòng, người gán) là một dòng riêng trong `labels.tsv`.
-3. **Audit bắt buộc:** mọi `khong_dat` và mọi `meta_issues` của model, cộng một
-   mẫu cố định 20% các `dat` (`sha1(id) % 5 == 0`, cột `audit_required`). Người
-   audit điền `audit` (`dong_y` · `khong_dong_y`), `auditor`, `audit_note`. Nếu
-   tỷ lệ `khong_dong_y` trong mẫu `dat` của một nhóm vượt 5%, audit toàn bộ `dat`
-   của nhóm đó. `python scripts/review/labels.py report` báo các tỷ lệ này.
+3. **Audit bắt buộc** (cột `audit_required`) gồm:
+   - mọi `khong_dat` và mọi `meta_issues` của model;
+   - một mẫu cố định 20% các `dat` (`sha1(id) % 5 == 0`).
+
+   Từ **v1.2**, bắt buộc thêm:
+   - dòng mà văn bản sửa đổi có điều khoản chuyển tiếp (`actor_has_transitional`);
+   - dòng hỏi sau 01/07/2025 mà câu hỏi hoặc đáp án còn nói "cấp huyện";
+   - mọi nhãn model gán theo v1.2, tức nhãn của các lineage thay thế.
+
+   Áp luật mới cho nhãn đã có bằng `labels.py mark-audit`.
+
+   Người audit điền `audit` (`dong_y` · `khong_dong_y`), `auditor` và `audit_note`.
+   `auditor` phải là `human:<mã>`; `import-audit` từ chối model. Nếu tỷ lệ
+   `khong_dong_y` trong mẫu `dat` của một nhóm vượt 5%, audit toàn bộ `dat` của nhóm
+   đó. `python scripts/review/labels.py report` báo các tỷ lệ này.
+
+   **Audit không chỉ đọc cột gold** (v1.2). Phiếu audit có các cột:
+   - `also_asked_at`: các ngày cùng câu hỏi được hỏi lại (dòng anh em, dòng
+     `sau_het_hieu_luc`);
+   - `amended_by`: các văn bản tác động;
+   - `legal_markers`, `validity_flags`: dấu hiệu từ `validity_queue.tsv`.
+
+   Người audit mở lịch sử văn bản (lược đồ, văn bản hợp nhất trên cổng) để kiểm ba
+   điều ở **mọi** ngày đó:
+   - (a) không có văn bản nào sửa đổi hay bãi bỏ điều khoản trước ngày hỏi;
+   - (b) văn bản chưa hết hiệu lực toàn bộ;
+   - (c) điều khoản chuyển tiếp không giữ quy định cũ cho đúng quan hệ trong câu
+     hỏi. Nếu có, đánh `transitional_rule` và ghi Điều.
+
+   Lỗi ở dòng anh em ghi vào `audit_note` kèm ngày và văn bản.
+
+   Đáp án ngắn "đòi thừa" so với câu hỏi được đề xuất sửa trong `audit_note`. Nhóm
+   sửa trong `data/vilextime/short_answers.jsonl` với `by: human:<mã>`.
 4. **Model viết câu hỏi thì không tự chấm được lỗi của chính mình một cách khách
    quan.** Câu hỏi do `claude-opus-5-5` viết, nên tỷ lệ `dat` của model là cận
    trên. Khoá luận báo tỷ lệ đồng ý khi audit, không báo nhãn model như nhãn người.

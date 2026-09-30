@@ -43,11 +43,16 @@ KIND = {"stated_retroactive": "hồi tố, cần luật sư xét",
 _FROM_SIGNING = re.compile(r"[^.;]*có hiệu lực[^.;]*(?:ngày ký|ngày ban hành|ngày được ban hành)[^.;]*")
 
 
+UNREADABLE = "(không đọc được)"
+NO_CLAUSE = (" · CÂU HIỆU LỰC KHÔNG NÊU NGÀY HỒI TỐ: ngày hiệu lực chỉ lấy từ siêu dữ liệu cổng;"
+             " luật sư xác nhận văn bản có thật sự hồi tố không (JUDGE_DATASET N4)")
+
+
 def effectivity_words(content: str) -> str:
     text = " ".join(re.sub(r"<[^>]+>", " ", html.unescape(content)).split())
     parts = [m[0].strip() for m in _FROM_SIGNING.finditer(text)][:1]
     parts += [words for _, words in effective_clause_dates(content)[:2]]
-    return " | ".join(parts) or "(không đọc được)"
+    return " | ".join(parts) or UNREADABLE
 
 
 def cell(value: object) -> str:
@@ -83,10 +88,13 @@ def main() -> None:
         for doc_id, retro in sorted(actors.items(), key=lambda kv: -candidates[kv[0]]):
             raw_path = d / "raw" / f"{doc_id.split(':', 1)[1]}.json"
             raw = json.loads(raw_path.read_text(encoding="utf-8")) if raw_path.exists() else {}
+            words = effectivity_words((raw.get("documentContent") or {}).get("content") or "")
+            # 12/2015/NĐ-CP (7 released pairs): the retroactive date comes from the portal's
+            # metadata alone, so whether it is retroactive at all is the lawyer's first question
+            kind = KIND[retro["kind"]] + (NO_CLAUSE if words == UNREADABLE else "")
             f.write("\t".join(cell(v) for v in [
                 retro["actor_law_id"], raw.get("title"), retro["issued_on"], retro["effective_from"],
-                retro["window_days"], KIND[retro["kind"]],
-                effectivity_words((raw.get("documentContent") or {}).get("content") or ""),
+                retro["window_days"], kind, words,
                 candidates[doc_id], pairs[doc_id],
                 f"https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID={doc_id.split(':', 1)[1]}", "", "",
             ]) + "\n")

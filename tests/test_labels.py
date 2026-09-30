@@ -81,11 +81,15 @@ def test_audit_round_trips_through_the_workbook(tmp_path):
     ws = wb.active
     head = [c.value for c in ws[1]]
     ws.cell(2, head.index("audit") + 1, "khong_dong_y")
-    ws.cell(2, head.index("auditor") + 1, "A")
+    ws.cell(2, head.index("auditor") + 1, "claude-opus-5-5")
+    wb.save(tmp_path / "a.xlsx")
+    with pytest.raises(SystemExit):                     # a model never audits (guideline 1.2 §6)
+        import_audit(data, tmp_path / "a.xlsx")
+    ws.cell(2, head.index("auditor") + 1, "human:A")
     wb.save(tmp_path / "a.xlsx")
     import_audit(data, tmp_path / "a.xlsx")
     (label,) = read(data / "review/labels.tsv")
-    assert (label["audit"], label["auditor"]) == ("khong_dong_y", "A")
+    assert (label["audit"], label["auditor"]) == ("khong_dong_y", "human:A")
 
 
 def test_a_row_whose_lineage_was_dropped_still_reaches_the_audit_sheet(tmp_path):
@@ -109,3 +113,16 @@ def test_a_row_whose_lineage_was_dropped_still_reaches_the_audit_sheet(tmp_path)
     head, row = [c.value for c in ws[1]], [c.value for c in ws[2]]
     assert row[head.index("id")] == ids[1]
     assert row[head.index("fix")] == "loại lineage (group_mismatch): hai đáp án"
+
+
+def test_guideline_1_2_audits_transitional_and_district_rows_and_its_own_labels():
+    from labels import audit_required
+
+    def model(i, gv="1.1"):
+        return {"id": f"vilextime:T1:provision:x{i}:2020-01-02", "labeler": "claude-opus-5-5", "verdict": "dat",
+                "meta_issues": "", "guideline_version": gv}
+    plain = next(model(i) for i in range(50) if not audit_required(model(i)))   # outside the 20% sample
+    assert audit_required(plain, {"legal_markers": ["actor_has_transitional"]}) == "có"
+    assert audit_required(plain, {"as_of": "2025-08-01", "question": "UBND cấp huyện cấp giấy?"}) == "có"
+    assert audit_required(plain, {"as_of": "2024-08-01", "question": "UBND cấp huyện cấp giấy?"}) == ""
+    assert audit_required({**plain, "guideline_version": "1.2"}) == "có"
