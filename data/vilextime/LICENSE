@@ -1,0 +1,26 @@
+ViLexTime — giấy phép dữ liệu
+
+SPDX-License-Identifier: CC-BY-4.0
+
+Phần do nhóm tác giả và model (claude-opus-5-5) viết cho ViLexTime được cấp phép
+theo Creative Commons Attribution 4.0 International (CC BY 4.0). Phần này gồm:
+  - câu hỏi (data/vilextime/questions.jsonl);
+  - đáp án ngắn (data/vilextime/short_answers.jsonl);
+  - nhãn và kết quả audit (data/review/labels.tsv, crosscheck_*.tsv);
+  - danh sách dòng bị loại cùng lý do (data/vilextime/dropped.jsonl);
+  - các trường dẫn xuất của bản phát hành (release.jsonl).
+Toàn văn giấy phép: https://creativecommons.org/licenses/by/4.0/legalcode
+
+Khi dùng lại, ghi nguồn: ViLexTime, khóa luận "Truy xuất tăng cường dựa trên đồ thị tri
+thức có nhận biết thời gian cho hỏi đáp pháp luật Việt Nam theo mốc hiệu lực"
+(Temporal-Aware Knowledge Graph RAG for Point-in-Time Vietnamese Legal Question
+Answering), Trường Đại học Công nghệ Thông tin – ĐHQG-HCM, 2026.
+
+Lời văn điều khoản trong đáp án chuẩn và trong corpus được trích nguyên văn từ văn bản
+quy phạm pháp luật đăng trên Cơ sở dữ liệu quốc gia về văn bản pháp luật (vbpl.vn).
+Theo Điều 15 Luật Sở hữu trí tuệ, văn bản quy phạm pháp luật không thuộc đối tượng bảo
+hộ quyền tác giả. Nhận định này chưa được luật sư xác nhận, nên giấy phép trên chỉ áp
+cho phần do nhóm và model viết, không áp cho lời văn pháp luật.
+
+Không có bảo đảm. Bộ dữ liệu có lỗi đã biết, liệt kê trong docs/vilextime-datasheet.md.
+Không dùng thay cho tư vấn pháp lý.
