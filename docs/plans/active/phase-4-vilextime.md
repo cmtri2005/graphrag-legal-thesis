@@ -119,6 +119,7 @@ dòng có trích dẫn (đề cương); mã đơn vị không có trong corpus t
 Bài nộp là JSONL `{id, answer, answerable, citations, retrieved}` với mã đơn vị của
 corpus hai lớp; mã lớp A quy về phiên bản (`asis:provision` = bản 1, `asis:event` = bản
 lệnh đó viết ra, lệnh bãi bỏ = hiệu lực từ ngày bãi bỏ). 7 unit test trên ví dụ tay.
+**Ngày 29/09, CMT thay quyết định (1) và cách chấm trích dẫn**, xem mục "Xử lý phản biện 29/09".
 
 Kết quả probe (hệ thống được cho sẵn điều khoản gold, chỉ chọn phiên bản; toàn release):
 
@@ -137,6 +138,142 @@ mình đánh giá cao hệ thống. Bẫy ngày gần nhất chỉ tác dụng �
 bản của nó, không dòng nào ở ngày trước lần sửa như T2/T4/T5, nên probe ngày gần nhất
 đạt 1,000 trên T3 ranh giới; muốn T3 ranh giới thử bẫy này thì phải đổi cách đặt `as_of`
 (chưa đổi, chờ quyết định).
+
+### Xử lý phản biện 29/09 (`docs/reports/JUDGE_DATASET.md`)
+
+Phản biện độc lập kết luận release đủ để phát triển GĐ5 nhưng chưa đủ để báo số chính thức. Có năm điểm chặn:
+
+| # | Điểm chặn |
+|---|---|
+| C1 | Gold sai ở bảng `giua_khoang`, vì chuỗi phiên bản bỏ sót sửa đổi hoặc bãi bỏ |
+| C2 | Accuracy và TCS bị lách bằng câu trả lời rào đón |
+| C3 | TVER của B1 bằng 100% do cách chấm, không do hành vi của model |
+| C4 | Chưa có người kiểm |
+| C5 | Chưa có split, datasheet, giấy phép, manifest |
+
+**Chốt 29/09 (CMT):**
+
+1. **Chỉ số chính đổi**, thay quyết định (1) của V7:
+   - Accuracy và TCS dùng bản *tương phản*: câu trả lời phải chứa mọi đoạn gold, và không được chứa đoạn nào
+     chỉ đáp án ngắn của phiên bản khác cùng lineage có. Bản 28/09 giữ lại, đặt tên `accuracy_lenient` và
+     `tcs_lenient`.
+   - Trích dẫn dạng chữ được quy về điều khoản.
+   - Trích dẫn không phân giải được thì không tính vào TVER chính, nhưng tính là lỗi ở `tver_strict`.
+   - Báo thêm độ phủ trích dẫn.
+2. **Dòng mà sửa chuỗi không cứu được:**
+   - chỉ dòng anh em sai: dời `as_of` về trước event bị bỏ sót (quyết định ghi trong
+     `data/review/validity_queue.tsv`);
+   - dòng ranh giới sai: loại cả lineage qua `dropped.jsonl`, lấy lineage kế tiếp theo thứ hạng.
+3. **Giấy phép CC BY 4.0** cho câu hỏi, đáp án ngắn và nhãn.
+4. **Làm thêm:**
+   - dòng `document_repealed` (chế độ `sau_het_hieu_luc`);
+   - dời ranh giới T3 về ngày trước mỗi lần chuyển;
+   - loại lineage mà lời văn là điều khoản hiệu lực;
+   - gán miền theo trường của cổng.
+
+Thứ tự khác §7 của báo cáo. D4 đi **sau** J1–J5, vì hai lý do: 0/300 dòng κ đã gán, và J3–J4 đổi một số dòng κ.
+Riêng việc liên hệ luật sư làm song song ngay từ đầu.
+
+| Gói | Việc | Xong khi |
+|---|---|---|
+| J0 | Ghi quyết định vào plan này và ADR 0003 (schema 1.2.0) | ✅ 29/09 |
+| J1 | Scorer:<br>• Accuracy/TCS tương phản<br>• bộ phân giải trích dẫn chữ<br>• `tver_strict`, độ phủ trích dẫn<br>• probe `hedge` · `no_cite` · `text_cite`<br>• `--ids` | ✅ 29/09 |
+| J2 | `scripts/check/check_validity.py` → `data/review/validity_queue.tsv`. Các loại cờ:<br>• event bị bỏ sót<br>• văn bản đã hết hiệu lực<br>• điều khoản hiệu lực<br>• sau ngày chụp<br>• cấp huyện | ✅ 29/09; mọi cờ ngoài κ đã phân xử |
+| J3 | Sửa gốc:<br>• thay cụm từ lệch hoa/thường, giải lại trên lời văn đang có hiệu lực<br>• nhận `effective_to` đã duyệt<br>• giữ pool ổn định<br>Sau đó dựng lại | ✅ 29/09; precision 29/30 |
+| J4 | Ranh giới T3, dời dòng anh em, loại/thay lineage, dòng `sau_het_hieu_luc`, miền theo cổng, `retrieved_at`, `split` | ✅ 29/09 |
+| J5 | Hướng dẫn v1.2, luật audit mới, dựng lại bộ κ, đóng băng bộ κ | ✅ 29/09, bộ κ đã đóng băng |
+| J6 | Người làm: D4/D5, audit, luật sư, phân xử cờ κ | κ ≥ 0,6; audit đủ |
+| J7 | Gold độc lập khoảng 120 dòng (gộp V6) | Tỷ lệ sai kèm Wilson CI; hai cột điểm |
+| J8 | Manifest, datasheet, LICENSE, master plan, tag | Tag `vilextime-v1.0` (hỏi trước khi đẩy ra ngoài) |
+
+#### Tiến độ 29/09
+
+**J1 ✅.** Kết quả probe trên release trước khi dựng lại:
+- `hedge` đạt Accuracy 0,293 theo bản tương phản, 0,951 theo bản lỏng; TCS = 0.
+- `text_cite` cho TVER 0,049, đúng bằng tỷ lệ dòng bị bãi bỏ (trước đây 1,000).
+- Oracle giữ trần.
+- 21/665 trích dẫn chữ không phân giải được. Nguyên nhân: `citation` thiếu Điều ở các văn bản cũ đánh số theo mục, và số hiệu cũ trùng mà không có năm.
+- Cổng lưu một số văn bản hai lần (cùng số hiệu, cùng ngày ký). Trích dẫn tới những văn bản này đứng cho điều khoản ở mọi bản.
+
+**J2 ✅.** `check_validity.py` bắt được cả 12 dòng lỗi mà phản biện đã nêu. Đã siết để giảm báo động giả:
+- chỉ giữ cạnh genealogy loại 12 ("thay thế"); loại 1 bị cổng dùng cả cho bãi bỏ một điều;
+- câu chấm dứt phải có dạng "thay thế/bãi bỏ + loại văn bản + số", hoặc "số … hết hiệu lực", và không có dấu hiệu chấm dứt một phần (Điều/Khoản, phụ lục, mẫu, cụm từ, "một số").
+
+Kết quả phân xử (`validity_queue.tsv`, reviewer `claude-opus-5-5`, người audit xác nhận ở J6):
+- `document_ended`: 38 cặp văn bản. 9 văn bản đã hết hiệu lực mà siêu dữ liệu cổng bỏ sót: 176/2013/NĐ-CP, 147/2014/TT-BTC, 47/2020/NĐ-CP, 09/2017/TT-BLĐTBXH, 28/2018/TT-BNNPTNT, 135/2004/NĐ-CP, 62/2014/QH13, 81/CP (1995), 50/2016/TT-BGTVT. Tất cả đã ghi thành quyết định `effective_to` có trích câu nguồn trong `temporal_candidates.jsonl`. Các cặp còn lại là báo động giả.
+- `missed_event` ngoài bộ κ: 32 cờ, 13 cờ đúng (10 lineage), 19 cờ giả. Có 2 lỗi mới ngoài danh sách của phản biện:
+  - 102/2024/NĐ-CP Điều 32 hết hiệu lực theo NĐ 49/2026 (lệnh bãi bỏ dạng liệt kê mà L2 bỏ sót);
+  - 16/2013/TT-BGTVT Điều 3 bị 10/2024 viết lại toàn bộ.
+
+  Ngoài ra có một nhóm cờ giả do hai văn bản trùng số hiệu 01/2014/TT-NHNN: event của văn bản này bị gán sang văn bản kia.
+- 18 cờ `missed_event` và 8 cờ `document_ended` thuộc lineage κ giữ `sau_D4`.
+
+**J3 ✅ (code và dựng lại).**
+- Thay cụm từ lệch hoa/thường; lệnh `phrase_not_found` được giải lại trên lời văn đang có hiệu lực.
+- Event được áp: 18.840 → 19.182. Mẫu 30 event mới được áp có 29/30 đúng nội dung (Wilson 95% [83,3; 99,4]). Lỗi còn lại là cụm từ lặp ("05 ngày làm việc làm việc"), loại lỗi đã có từ trước (74 chỗ lặp trong bản cũ).
+- **Phát hiện khi dựng lại:** khi lệnh thay cụm từ không còn trượt, 15 lệnh sửa cả điều khoản hoặc lệnh bãi bỏ **cùng ngày, cùng văn bản** bị chúng chiếm chỗ. Bộ áp event chỉ nhận một thay đổi mỗi ngày cho một nút. Sửa: trong một ngày, lệnh thay cụm từ của cùng văn bản áp sau cùng (`application_sort_key`). Không đổi bất biến của bộ áp event.
+- **Lỗi của bản sửa pool, đã sửa:** thứ hạng giữ lại phải theo từng nhóm. Nếu không, 12 lineage T6 "ancestor" (cũng là ứng viên T1) bị giữ ở T1.
+- Ingest áp thêm 375 quyết định `effective_to` (367 cũ + mới). `tests/test_real_version_chains.py` cập nhật theo: 03/2014/TT-NHNN nay kết thúc 01/07/2024.
+
+**J4.** Đã loại 12 lineage (`dropped.jsonl`):
+- 5 lineage là điều khoản hiệu lực thi hành;
+- 3 cặp hỏi sau ngày chụp corpus;
+- 4 lineage có dòng ranh giới sai.
+
+Lineage thay thế:
+- Câu hỏi mới viết bằng phiên Claude Code qua `validate()`: T1 8/8, T2 7/8 (1 `insufficient_context`: lineage 40/2014/TT-BCT bị nối nhầm), T3 5/5.
+- Hai chuỗi 4 phiên bản kế tiếp không dùng được: hạng 84 bị nối nhầm, hạng 129 là điều khoản hiệu lực thi hành.
+- **Chốt 29/09 (CMT): T3 199 + T1 251**, tổng vẫn 1.150. Sau khi loại, mọi chuỗi T3 còn dùng được dài 3 dòng, nên T3 chỉ ra 199 hoặc 202.
+
+**Lưu ý:** `sample_vilextime.py` (không kèm `--select`) giữ thứ tự cũ nhưng **đánh số hạng lại** khi có lineage rời nhóm. Đợt này không dùng nó; `sample.jsonl` giữ nguyên bản đã commit.
+
+**J4 ✅.** Bản phát hành mới có 2.481 dòng:
+- 1.150 dòng ranh giới: T1 251 · T2 400 · T3 199 · T4 150 · T5 38 · T6 112;
+- 1.150 dòng anh em;
+- 181 dòng `sau_het_hieu_luc` (91 lineage không có dòng này vì không tìm được câu chấm dứt).
+
+Tổng cộng 666 lineage trên 517 văn bản. Split theo văn bản: 131 lineage dev, 535 lineage test.
+- Miền: `seed` 215 · `portal_field` 223 · `portal_major` 135 · `khong_ro` 93 lineage.
+- 17 lineage mới vào bản chọn: 13 dùng câu hỏi vừa viết, 4 lấy từ dự phòng. Đã bổ sung 31 đáp án ngắn và 30 nhãn model (đều bắt buộc audit). Lineage T6 mới rơi vào bộ κ nên không có nhãn model.
+- `check_release.py`: OK. Không lineage nào ở hai split, không văn bản nào ở hai split, T5 không có trong dev.
+- `check_validity.py`: mọi cờ ngoài κ đã có quyết định, trừ `cap_huyen` (chờ người audit).
+
+**J5 ✅ (phần của agent).**
+- Hướng dẫn v1.2 và `GUIDELINE = "1.2"` (một nguồn, ở `crosscheck.py`).
+- `labels.py`:
+  - thêm luật audit bắt buộc cho dòng có điều khoản chuyển tiếp và dòng nói "cấp huyện";
+  - thêm `mark-audit`;
+  - người audit phải là `human:*`;
+  - phiếu audit thêm cột ngày hỏi lại, văn bản tác động và cờ hiệu lực.
+- 140 nhãn T3 chuyển sang id mới (cùng lineage, câu hỏi và gold), có ghi chú id cũ.
+- 490 nhãn bắt buộc audit (trước đây 338). Phiếu audit T1–T4 đã dựng lại.
+- **Bộ κ dựng lại có giữ lượt bốc cũ** (`crosscheck.py pick(prior)`). Nếu bốc lại từ đầu thì seed xáo 35/141 lineage, và các lineage mới vào sẽ mang sẵn nhãn model. Kết quả: giữ 138 lineage; 3 lineage đã rời bản phát hành được thay. Id của 50 dòng T3 đổi theo ngày ranh giới mới.
+- `kappa` liệt kê 13 dòng κ đã có nhãn ngoài D4 (8 `human:excel`, 5 nhãn model gán khi dòng chưa thuộc κ), để ghi vào biên bản D5.
+- Bảng luật sư T5 dựng lại, có đánh dấu văn bản mà câu hiệu lực không nêu ngày hồi tố.
+- **Bộ κ đã đóng băng, sẵn sàng cho D4.**
+
+**J8 (một phần).**
+- `data/vilextime/LICENSE` (CC BY 4.0).
+- `docs/vilextime-datasheet.md` đã có số liệu 29/09.
+- `check_release.py --manifest` ghi `data/vilextime/manifest.json`. Lần ghi hiện tại có `uncommitted_changes: true`, phải ghi lại sau khi commit.
+- Master plan có thêm B7+ (P5.13b), ghi chú P5.1 và P5.6; P5.4, P5.5 ✅.
+- Còn lại: tag `vilextime-v1.0` và đẩy release lên GCS. Hai việc này làm sau J6/J7 và cần hỏi CMT trước.
+
+**Scorer, chỉnh cuối.** Đơn vị thuộc `accepted_evidence` của dòng không bao giờ bị tính là lỗi TVER, kể cả khi câu chấm dứt nằm trong một văn bản về sau cũng hết hiệu lực. Nhờ đó oracle đạt trần ở cả ba chế độ.
+
+Probe trên split test:
+- "ngày gần nhất" ở T3 ranh giới: 1,000 → 0,325;
+- `hedge`, Accuracy tương phản trên bảng chính: T2 0,057 · T3 0,000 · T4 0,028; TCS 0.
+
+**Kiểm chứng:** `python -m pytest -q` cho 385 passed, không test nào bị bỏ qua.
+
+**Còn lại cho người (J6, J7):**
+- D4/D5 trên bộ κ mới;
+- audit 490 nhãn;
+- luật sư chốt T5;
+- phân xử 26 cờ `sau_D4`;
+- cờ `cap_huyen`;
+- khoảng 120 dòng gold độc lập.
 
 ## Context
 

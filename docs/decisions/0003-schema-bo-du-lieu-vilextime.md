@@ -230,6 +230,19 @@ Tradeoffs:
 
 ## Follow-Up
 
+- **29/09 (CMT), schema 1.2.0 (MINOR), sau phản biện `docs/reports/JUDGE_DATASET.md`.**
+  Các thay đổi:
+  - Thêm `retrieved_at`, trục thứ hai của §6. Giá trị là ngày chụp corpus.
+  - `split` được điền theo §7:
+    - chia theo văn bản đích: dev nếu `sha1("vilextime-split-v1:" + document_id)` < 0,2, còn lại test;
+    - văn bản có dòng T5 luôn vào test.
+  - Thêm `as_of_strategy` `sau_het_hieu_luc`:
+    - hỏi sau ngày văn bản đích hết hiệu lực, dùng lại câu hỏi của lineage;
+    - gold là `document_repealed`.
+  - `domain_source` nhận `seed` · `portal_field` · `portal_major` · `khong_ro`, thay cho nhãn kế thừa qua quan hệ.
+  - Dòng ranh giới của T3 đặt ở ngày trước mỗi lần chuyển, cộng ngày của lần chuyển cuối, thay cho ngày bắt đầu + 1.
+
+  v1.0 chưa đóng băng, nên chưa có dòng nào bị đổi split hay đổi gold theo nghĩa MAJOR của §8.
 - **28/09 (CMT duyệt), schema 1.1.0 (MINOR):** bản phát hành là
   `data/derived/vilextime/release.jsonl`, dựng bởi `scripts/pipeline/enrich_vilextime.py`
   sau bước chọn dòng. Thêm: `as_of_strategy` (`ranh_gioi` · `giua_khoang`) và

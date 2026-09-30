@@ -73,7 +73,7 @@ văn bản lên Neo4j hai lượt với số đếm ổn định; D5–D6 đã k
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
 | P1.1 | Rà soát phạm vi, RQ1–RQ3, giả thuyết | CMT, NMT | ✅ | `DeCuongKLTN_23521635_23521643.docx` (4 miền, khoảng 8.700 VB) |
-| P1.2 | Sửa mâu thuẫn trong đề cương (xem §12) | CMT, NMT | ⬜ | Không còn mục nào ở §12 |
+| P1.2 | Sửa mâu thuẫn trong đề cương (xem §12) | CMT, NMT | ⬜ | Không còn mục nào ở §12. Bản UIT đã nộp không sửa được nữa: khóa luận công bố các chỗ lệch theo bảng "Chỗ lệch với đề cương" của `docs/vilextime-datasheet.md` (JUDGE N6) |
 | P1.3 | Khảo sát RAG, GraphRAG, LightRAG, RAPTOR, IRCoT | CMT | 🟡 | Nháp `docs/graph_justification.md` §5; còn trích dẫn chưa kiểm |
 | P1.4 | Khảo sát temporal RAG và Legal NLP tiếng Việt | NMT | 🟡 | Nháp như trên; cần đối chiếu SAT-Graph RAG, VersionRAG với bài gốc |
 | P1.5 | Thống nhất giả thuyết H1–H4 và ký hiệu công thức với chương Phương pháp | CMT, NMT | ⬜ | H1–H4 được đưa vào đề cương hoặc bị loại có ghi lý do |
@@ -173,12 +173,12 @@ Kế hoạch chi tiết đến M3, bắt đầu sớm từ 21/09 vì 3 tuần kh
 
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
-| P5.1 | Chốt LLM sinh và embedding model | CMT, NMT | ⬜ | Ghi thành decision |
+| P5.1 | Chốt LLM sinh và embedding model | CMT, NMT | ⬜ | Ghi thành decision. Câu hỏi và đáp án ngắn ViLexTime do `claude-opus-5-5` viết: cột kết quả chính dùng LLM không thuộc họ Claude (JUDGE, RQ1) |
 | P5.2 | Collection Milvus theo phiên bản: vector, `eff_from`/`eff_to` thực, level, doc | CMT | ⬜ | Kiểm chứng analyzer BM25 tiếng Việt trước |
 | P5.3 | Embedding khoảng 1,14 triệu nút có text | CMT | ⬜ | ⚠ CPU có thể mất nhiều ngày; ghi thời gian thực tế |
-| P5.4 | Chỉ số Recall@k, MRR, TV-Recall@k, Accuracy, EM/F1 | NMT | ⬜ | Có unit test |
-| P5.5 | Chỉ số TVER, VCR, TCS (công thức 6–8) | NMT | ⬜ | Có unit test trên ví dụ tay |
-| P5.6 | LLM-as-judge hiệu chuẩn trên 100 mẫu | NMT | ⬜ | Báo cáo độ đồng thuận với người chấm |
+| P5.4 | Chỉ số Recall@k, MRR, TV-Recall@k, Accuracy, EM/F1 | NMT | ✅ | `scripts/eval/score_vilextime.py` (V7 28/09, J1 29/09: Accuracy tương phản, trích dẫn chữ); `tests/test_score_vilextime.py` |
+| P5.5 | Chỉ số TVER, VCR, TCS (công thức 6–8) | NMT | ✅ | Như P5.4; thêm `tver_strict`, độ phủ trích dẫn |
+| P5.6 | LLM-as-judge hiệu chuẩn trên 100 mẫu | NMT | ⬜ | Báo cáo độ đồng thuận với người chấm. Phải bắt được câu trả lời rào đón (probe `hedge` của scorer) |
 | P5.7 | B1 — LLM không truy xuất | CMT | ⬜ | |
 | P5.8 | B2 — BM25 + sinh | CMT | ⬜ | |
 | P5.9 | B3 — Dense + sinh | CMT | ⬜ | |
@@ -186,6 +186,7 @@ Kế hoạch chi tiết đến M3, bắt đầu sớm từ 21/09 vì 3 tuần kh
 | P5.11 | B5 — GraphRAG phi thời gian (LightRAG) | NMT | ⬜ | |
 | P5.12 | B6 — KG phân cấp cho pháp luật Việt Nam | NMT | ⬜ | Tái hiện theo tài liệu [10], [11] của đề cương |
 | P5.13 | B7 — lọc metadata cấp văn bản, không dùng đồ thị | NMT | ⬜ | Làm sớm nhất có thể |
+| P5.13b | B7+ — lọc theo phiên bản (lớp B của corpus), không dùng đồ thị | NMT | ⬜ | Phép đối chứng chính cho RQ3 (JUDGE N2); báo RQ3 bằng TVER, VCR, TV-Recall@1 |
 | P5.14 | 🚩 Điểm quyết định B7 (M4) | CMT, NMT | ⬜ | Nếu B7 gần mức trần thì đánh giá lại L2–L4 |
 
 ## 7. Giai đoạn 6 — Hệ thống đề xuất L4–L5 (01/12 – 21/12)
