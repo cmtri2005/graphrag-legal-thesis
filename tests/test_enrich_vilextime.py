@@ -78,3 +78,37 @@ def test_a_short_answer_must_be_a_span_of_the_answer_or_the_lead_in():
     assert check_short_answer("phạt tiền … từ 15.000.000 đồng", answer, lead)       # two spans
     assert not check_short_answer("iền đối", answer, lead)                            # whole words only
     assert not check_short_answer("vi phạm 3 phạt tiền", answer, lead)                # never across the two
+
+
+def test_a_missed_amendment_caps_the_twin_window():
+    from enrich_vilextime import window
+
+    before = _row("2025-02-28", "version:p:1")
+    assert window(before, VERSIONS, None, (date(2022, 6, 1),)) == (date(2020, 1, 1), date(2022, 6, 1))
+    assert window(before, VERSIONS, None, (date(2019, 6, 1), date(2026, 1, 1))) == (date(2020, 1, 1), date(2025, 3, 1))
+    twin = twin_of(before, VERSIONS, None, (date(2022, 6, 1),))
+    assert date.fromisoformat(twin["as_of"]) < date(2022, 5, 2)              # before the cap, MARGIN kept
+
+
+def test_a_lineage_whose_document_ended_is_asked_after_the_end_with_no_answer():
+    from enrich_vilextime import AFTER_END, after_end
+
+    base = _row("2020-01-02", "version:p:1", answer="Bộ Tài nguyên và Môi trường cấp phép.", answerable=True,
+                target={"lead_in": "1."}, short_answer="Bộ Tài nguyên")
+    assert after_end(base, date(2024, 1, 1), []) is None                     # nothing in the corpus says it ended
+    assert after_end(base, date(2027, 1, 1), ["asis:provision:x"]) is None   # ends after the snapshot
+    late = after_end(base, date(2024, 1, 1), ["asis:provision:x"])
+    assert (late["as_of_strategy"], late["answerable"], late["no_answer_reason"]) == (AFTER_END, False, "document_repealed")
+    assert late["twin_of"] == base["id"] and late["as_of"] >= "2024-01-01" and late["id"].endswith(late["as_of"])
+    assert late["version_id"] is None and late["short_answer"] is None and late["_ending_units"] == ["asis:provision:x"]
+
+
+def test_split_is_by_document_stable_and_keeps_T5_in_test():
+    from enrich_vilextime import DEV_SHARE, split_of
+
+    docs = [f"document:{i}" for i in range(2000)]
+    splits = [split_of(d, set()) for d in docs]
+    assert abs(splits.count("dev") / len(docs) - DEV_SHARE) < 0.03
+    assert splits == [split_of(d, {"document:unrelated"}) for d in docs]      # never depends on other documents
+    dev = next(d for d, s in zip(docs, splits) if s == "dev")
+    assert split_of(dev, {dev}) == "test"

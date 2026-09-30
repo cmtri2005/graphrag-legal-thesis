@@ -36,6 +36,7 @@ from pathlib import Path
 
 SCHEMA_VERSION = "1.0.0"
 QUESTION_TEMPLATE_ID = "as_of_provision_text.v1"
+GUIDELINE_VERSION = "1.2"   # docs/vilextime-annotation.md; scripts/review/labels.py GUIDELINE
 # "Điểm đ" -> "đ", "Khoản 3" -> "3", "Điều 23" -> "23". The label is the whole
 # tail because an article can be "23a" and a point can be "đ".
 _LABEL = re.compile(r"^(?:Điều|Khoản|Điểm)\s+(?P<label>\S+)$")
@@ -221,7 +222,7 @@ def records_of(row: dict, documents: dict[str, tuple], chains: dict[str, list],
             "jurisdiction": "VN",
             "language": "vi",
             "review": {"status": "unchecked", "labels": [], "adjudicator": None,
-                       "guideline_version": "1.0", "note": ""},
+                       "guideline_version": GUIDELINE_VERSION, "note": ""},
             "flags": flags_of(row["level"], cite, gold["text"], chain,
                               row["provision_id"] in with_children) + (["cosmetic_change"] if cosmetic else []),
             "similarity": row.get("similarity"),

@@ -47,6 +47,9 @@ from pathlib import Path
 
 QUOTA = {"T1": 250, "T2": 400, "T3": 200, "T4": 150, "T5": 50, "T6": 150}
 RELEASE = {**QUOTA, "T6": 100}   # T6 absorbs whatever T5 falls short of 50 once the adviser rules
+# 29/09 (CMT): after the review's drops, every T3 chain still available is 3 rows long,
+# so T3 lands on 199 or 202, never 200; T1 (one row a lineage) takes the odd row.
+RELEASE.update(T1=251, T3=199)
 OVERSAMPLE = {"T1": 2, "T2": 2, "T3": 3, "T4": 2, "T5": 2, "T6": 2}   # T3 kept 9 of 22 in the first run
 PER_DOCUMENT = 2
 # T6 has two parts (decided 28/09): "ancestor" — lost force because its Điều,

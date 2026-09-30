@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ViLexTime — the release file: the selected rows, their mid-interval twins, schema 1.1.
+"""ViLexTime — the release file: the selected rows, their mid-interval twins, schema 1.2.
 
 Runs after `sample_vilextime.py --select` and leaves it alone: selection counts
 and picks boundary rows as before; this step reads `selected.jsonl` and writes
@@ -15,7 +15,12 @@ and picks boundary rows as before; this step reads `selected.jsonl` and writes
       the twin's. T5's later date stays inside the retroactive window; a
       repealed provision's twin stays after the repeal and before the document
       ends; windows are capped at the snapshot. The twin's gold is recomputed
-      from the version chain and must equal its boundary row's, or no twin.
+      from the version chain and must equal its boundary row's, or no twin. A
+      date the review found an amendment the chain missed on caps the window
+      (`data/review/validity_queue.tsv`, `missed_event` judged `loi`; 29/09).
+      A lineage whose document ended before the snapshot gets a third row,
+      "sau_het_hieu_luc": asked after the end, no answer (`document_repealed`),
+      the ending sentence as accepted evidence (29/09, JUDGE N2).
   changed_span
       The words this version has and its neighbouring versions do not.
   evidence_set
@@ -32,9 +37,20 @@ and picks boundary rows as before; this step reads `selected.jsonl` and writes
   derivation.transitions[].op
       The event's operation (amend, supplement, replace, repeal, ...).
   domain, domain_source
-      The proposal's four fields from the seed keyword search; a document the
-      crawl reached through relations inherits the fields of the nearest seed
-      documents; otherwise "khac".
+      The proposal's four fields: from the seed keyword search ("seed"), else
+      from the portal's own classification of the document, its fields
+      ("portal_field") then its sectors ("portal_major"), matched by keyword;
+      a classified document outside the four is "khac", an unclassified one
+      "khac" / "khong_ro". Inheriting the nearest seeds' fields over document
+      relations was dropped on 29/09: a sample found it almost always wrong
+      (JUDGE N5).
+  retrieved_at
+      The corpus snapshot the gold was built from (ADR 0003 §6).
+  split
+      By target document (ADR 0003 §7, decided 28/09): "dev" when the
+      document's seeded hash falls in the first DEV_SHARE, else "test"; a
+      document with a T5 row is always "test". Stable under adding or dropping
+      rows: a document's split never depends on another.
   legal_markers
       Heuristics for the checker, not errors: the amending document has a
       transitional article; its effect clause names more than one date.
@@ -51,8 +67,10 @@ from __future__ import annotations
 
 import argparse
 import collections
+import csv
 import difflib
 import json
+import hashlib
 import random
 import re
 import sqlite3
@@ -69,11 +87,23 @@ from legal_crawler.extraction.target_resolver import TargetResolver  # noqa: E40
 from legal_crawler.index import TemporalIndex  # noqa: E402
 from legal_crawler.temporal.models import ProvisionLevel as L  # noqa: E402
 
-SCHEMA_VERSION = "1.1.0"
+SCHEMA_VERSION = "1.2.0"
 SNAPSHOT = date(2026, 9, 17)   # corpus snapshot v2, frozen at M1
 MARGIN = 30                    # days a mid-interval date keeps from either boundary
 SEED = "vilextime-twin-v1"
-DOMAIN_DEPTH = 3
+SPLIT_SEED = "vilextime-split-v1"
+DEV_SHARE = 0.2
+AFTER_END = "sau_het_hieu_luc"
+AFTER_END_GROUPS = ("T1", "T2", "T3", "T4", "T5")     # T6 is already unanswerable
+# the proposal's four fields, by the words of the portal's own classification
+_FIELD_WORDS = (
+    ("thue", ("thuế", "phí", "hải quan", "xuất nhập khẩu")),
+    ("dat_dai", ("đất đai",)),
+    ("doanh_nghiep_dau_tu", ("doanh nghiệp", "đầu tư")),
+    ("giao_thong", ("giao thông", "đường bộ", "đường sắt", "đường thủy", "hàng hải", "hàng không", "vận tải",
+                    "đăng kiểm")),
+)
+_ENDING_WORDS = re.compile(r"(?i)hết hiệu lực|thay thế|bãi bỏ|hủy bỏ|huỷ bỏ")
 _ORDER = (L.ARTICLE, L.CLAUSE, L.POINT)
 _WORD = re.compile(r"\w+", re.UNICODE)
 _DOC_TYPES = r"(?:Bộ luật|Luật|Pháp lệnh|Nghị định|Nghị quyết|Thông tư liên tịch|Thông tư|Quyết định|Quy chế|Quy định|Điều lệ)"
@@ -112,8 +142,13 @@ def in_force_at(versions: list[dict], at: date) -> dict | None:
     return None
 
 
-def window(record: dict, versions: list[dict], document_end: date | None) -> tuple[date, date | None] | None:
-    """The stretch of time over which this row's gold stays the same."""
+def window(record: dict, versions: list[dict], document_end: date | None,
+           caps: tuple[date, ...] = ()) -> tuple[date, date | None] | None:
+    """The stretch of time over which this row's gold stays the same.
+
+    `caps` are dates on which review found the chain wrong (an amendment it
+    missed): the window ends at the first one inside it.
+    """
     if record["version_id"] is None:                         # repealed: after the repeal
         ends = [_d(v["effective_to"]) for v in versions if v["effective_to"]]
         return (max(ends), document_end) if ends else None
@@ -124,11 +159,13 @@ def window(record: dict, versions: list[dict], document_end: date | None) -> tup
     retro = record.get("retroactive")
     if retro and version["effective_from"] == retro["effective_from"]:
         end = min(filter(None, (end, _d(retro["issued_on"]))))   # stay inside the retroactive window
-    return start, end
+    inside = [c for c in caps if start < c and (end is None or c < end)]
+    return start, min(inside, default=end)
 
 
-def twin_of(record: dict, versions: list[dict], document_end: date | None) -> dict | None:
-    span = window(record, versions, document_end)
+def twin_of(record: dict, versions: list[dict], document_end: date | None,
+            caps: tuple[date, ...] = ()) -> dict | None:
+    span = window(record, versions, document_end, caps)
     at = mid_date(*span, record["id"]) if span else None
     if at is None or at.isoformat() == record["as_of"]:
         return None
@@ -140,6 +177,35 @@ def twin_of(record: dict, versions: list[dict], document_end: date | None) -> di
                 as_of_strategy="giua_khoang", twin_of=record["id"])
     twin["derivation"]["query"] = f"as_of({record['lineage_id']}, {at.isoformat()})"
     return twin
+
+
+def after_end(record: dict, document_end: date | None, evidence: list[str]) -> dict | None:
+    """The lineage asked after its document ended: no answer, the ending sentence as evidence.
+
+    None when the document has not ended before the snapshot, or when no unit
+    of the corpus says so (a row nobody could retrieve the reason for).
+    """
+    if document_end is None or not evidence:
+        return None
+    at = mid_date(document_end, None, f"{record['lineage_id']}:{AFTER_END}")
+    if at is None:
+        return None
+    row = json.loads(json.dumps(record))
+    row.update(id=f"{record['id'].rsplit(':', 1)[0]}:{at.isoformat()}", as_of=at.isoformat(),
+               as_of_strategy=AFTER_END, twin_of=record["id"], answer=None, answerable=False, in_force=False,
+               no_answer_reason="document_repealed", version_id=None, valid_from=document_end.isoformat(),
+               valid_to=None, relevant_version_ids=[], utilized_version_ids=[], short_answer=None)
+    row["target"]["lead_in"] = None
+    row["derivation"] = {"transitions": [], "query": f"as_of({record['lineage_id']}, {at.isoformat()})"}
+    row["_ending_units"] = evidence
+    return row
+
+
+def split_of(document_id: str, always_test: set[str]) -> str:
+    if document_id in always_test:
+        return "test"
+    share = int(hashlib.sha1(f"{SPLIT_SEED}:{document_id}".encode()).hexdigest(), 16) / 16 ** 40
+    return "dev" if share < DEV_SHARE else "test"
 
 
 # ------------------------------------------------------------------ text
@@ -242,32 +308,63 @@ def markers(nodes: list[dict]) -> set[str]:
 
 
 def domains(data: Path, documents: set[str]) -> dict[str, tuple[list[str], str]]:
-    """document -> (fields, source) — seed fields, else the nearest seeds' over document relations."""
+    """document -> (fields, source) — seed fields, else the portal's classification of it."""
     seed: dict[str, set[str]] = collections.defaultdict(set)
     for field, rows in json.loads((data / "seeds.json").read_text(encoding="utf-8")).items():
         for row in rows:
             seed[row["doc_id"]].add(field)
-    near: dict[str, set[str]] = collections.defaultdict(set)
-    for line in (data / "edges.jsonl").open(encoding="utf-8"):
-        edge = json.loads(line)
-        if edge["group"] == "genealogy":
-            near[edge["source_id"]].add(edge["target_id"])
-            near[edge["target_id"]].add(edge["source_id"])
     out = {}
     for doc in documents:
         portal = doc.split(":", 1)[1]
         if portal in seed:
             out[doc] = (sorted(seed[portal]), "seed")
             continue
-        frontier, seen, votes, depth = {portal}, {portal}, collections.Counter(), 0
-        while frontier and not votes and depth < DOMAIN_DEPTH:
-            frontier = {n for d in frontier for n in near.get(d, ()) if n not in seen}
-            seen |= frontier
-            depth += 1
-            votes = collections.Counter(f for d in frontier for f in seed.get(d, ()))
-        top = max(votes.values(), default=0)   # the fields most of the nearest seeds share
-        out[doc] = (sorted(f for f, n in votes.items() if n == top), f"quan_he_{depth}") if votes \
-            else (["khac"], "khong_ro")
+        raw = json.loads((data / f"raw/{portal}.json").read_text(encoding="utf-8"))
+        out[doc] = (["khac"], "khong_ro")
+        for source, key in (("portal_field", "documentFields"), ("portal_major", "documentMajors")):
+            names = " ; ".join(x.get("name") or "" for x in raw.get(key) or ()
+                               if x.get("name") != "Chưa phân loại").casefold()
+            if names.strip(" ;"):
+                found = sorted(code for code, words in _FIELD_WORDS if any(w in names for w in words))
+                out[doc] = (found or ["khac"], source)
+                break
+    return out
+
+
+def ending_units(db: sqlite3.Connection, data: Path, ended: dict[str, tuple[str, date]]) -> dict[str, list[str]]:
+    """Target document -> layer A units of the document(s) that ended it and name its number.
+
+    The ending document is the one a reviewed `effective_to` decision cites, or
+    one that repeals or replaces it (genealogy) taking effect on that day. A unit
+    counts when it names the number and it, or the clause above it, says the
+    document ends ("các văn bản sau đây hết hiệu lực: a) …").
+    """
+    actors: dict[str, set[str]] = collections.defaultdict(set)
+    raw_of = {doc.split(":", 1)[1]: doc for doc in ended}
+    path = data / "review/temporal_candidates.jsonl"
+    for line in path.read_text(encoding="utf-8").splitlines() if path.exists() else ():
+        rec = json.loads(line)
+        if rec.get("field") == "effective_to" and rec.get("decision") == "accept" and rec["document_id"] in raw_of:
+            actors[raw_of[rec["document_id"]]] |= {f"document:{a}" for a in rec.get("evidence_document_ids") or ()}
+    starts = {d: _d(f) for d, f in db.execute("SELECT id, effective_from FROM documents")}
+    for line in (data / "edges.jsonl").open(encoding="utf-8"):
+        edge = json.loads(line)
+        doc, actor = raw_of.get(edge["target_id"]), f"document:{edge['source_id']}"
+        if doc and edge["reference_type"] in (1, 12) and starts.get(actor) == ended[doc][1]:
+            actors[doc].add(actor)
+    corpus = {json.loads(line)["document_id"] for line in (data / "derived/corpus/documents.jsonl").open(encoding="utf-8")}
+    out: dict[str, list[str]] = {}
+    for doc, (number, _) in ended.items():
+        named = re.compile(rf"(?<![\w/-])(?:{re.escape(number)}|{re.escape(number.replace('/', '-', 1))})(?![\w/])")
+        units = []
+        for actor in sorted(actors.get(doc, set()) & corpus):
+            text = {pid: (parent, t) for pid, parent, t in db.execute(
+                "SELECT p.id, p.parent_id, v.text FROM provisions p JOIN versions v ON v.provision_id = p.id "
+                "WHERE p.document_id = ? AND v.ordinal = 1", (actor,))}
+            for pid, (parent, t) in text.items():
+                if named.search(t or "") and (_ENDING_WORDS.search(t) or _ENDING_WORDS.search(text.get(parent, (None, ""))[1] or "")):
+                    units.append(f"asis:{pid}")
+        out[doc] = sorted(units)
     return out
 
 
@@ -356,6 +453,13 @@ def main() -> None:
         texts = [v["text"] for v in versions]
         k = next((i for i, v in enumerate(versions) if v["id"] == r["version_id"]), None)
         r["changed_span"] = changed_span(texts, k) if k is not None else None
+        r["retrieved_at"] = SNAPSHOT.isoformat()
+        r["split"] = split_of(r["target"]["document_id"], always_test)
+        r["domain"], r["domain_source"] = fields[r["target"]["document_id"]]
+        if r["as_of_strategy"] == AFTER_END:                         # built whole by after_end()
+            r["evidence_set"], r["accepted_evidence"], r["legal_markers"] = [], r.pop("_ending_units"), []
+            stats["dòng sau hết hiệu lực"] += 1
+            return r
         evidence = []
         if r["version_id"]:
             evidence.append({"provision_id": lid, "version_id": r["version_id"], "role": "gold"})
@@ -379,7 +483,6 @@ def main() -> None:
                 accepted.append(f"asis:{ended}")
         stats["accepted_evidence: " + ("có" if accepted else "rỗng")] += 1
         r["accepted_evidence"] = accepted
-        r["domain"], r["domain_source"] = fields[r["target"]["document_id"]]
         acts = {events[t["event_id"]]["actor_id"] for t in r["derivation"]["transitions"] if t["event_id"] in events}
         r["legal_markers"] = sorted({m for a in acts for m in actor_markers.get(a, ())})
         s = shorts.get((lid, r["version_id"]))
@@ -388,13 +491,33 @@ def main() -> None:
         r["short_answer"] = s["short_answer"] if s else None
         return r
 
-    out = []
+    always_test = {r["target"]["document_id"] for r in rows if r["group"] == "T5"}
+    caps: dict[str, list[date]] = collections.defaultdict(list)
+    queue = data / "review/validity_queue.tsv"
+    if queue.exists():
+        for q in csv.DictReader(queue.open(encoding="utf-8"), delimiter="\t"):
+            if q["kind"] == "missed_event" and q["decision"] == "loi" and q["strategy"] == "giua_khoang":
+                caps[q["lineage"]].append(date.fromisoformat(q["date"]))
+    ended = {r["target"]["document_id"]: (r["target"]["law_id"], document_end[r["target"]["document_id"]])
+             for r in rows if r["group"] in AFTER_END_GROUPS and (e := document_end.get(r["target"]["document_id"]))
+             and e < SNAPSHOT}
+    ending = ending_units(db, data, ended)
+
+    out, asked_after = [], set()
     for r in rows:
-        twin = twin_of(r, pool[r["lineage_id"]], document_end.get(r["target"]["document_id"]))
+        doc = r["target"]["document_id"]
+        twin = twin_of(r, pool[r["lineage_id"]], document_end.get(doc), tuple(caps.get(r["lineage_id"], ())))
         stats["dòng anh em: có" if twin else "dòng anh em: không (cửa sổ rỗng hoặc chuỗi lệch)"] += 1
+        late = None
+        if doc in ended and r["lineage_id"] not in asked_after:
+            asked_after.add(r["lineage_id"])
+            late = after_end(r, ended[doc][1], ending.get(doc, []))
+            stats["sau hết hiệu lực: " + ("có dòng" if late else "không tìm được câu chấm dứt")] += 1
         out.append(enrich(r))
         if twin:
             out.append(enrich(twin))
+        if late:
+            out.append(enrich(late))
     ids = [r["id"] for r in out]
     if len(ids) != len(set(ids)):
         raise SystemExit("id trùng trong release.jsonl")
@@ -402,10 +525,11 @@ def main() -> None:
     with target.open("w", encoding="utf-8") as f:
         for r in out:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
-    print(f"{len(out):,} dòng ({len(rows):,} ranh giới + {len(out) - len(rows):,} giữa khoảng) -> {target}")
+    print(f"{len(out):,} dòng ({len(rows):,} ranh giới + {len(out) - len(rows):,} giữa khoảng/sau hết hiệu lực) -> {target}")
     for key, value in sorted(stats.items()):
         print(f"  {key}: {value:,}")
-    print("  domain_source:", dict(collections.Counter(r["domain_source"].split("_")[0] for r in out[::1])))
+    print("  domain_source:", dict(collections.Counter(r["domain_source"] for r in out)))
+    print("  split:", dict(collections.Counter((r["split"], r["group"]) for r in out if r["as_of_strategy"] == "ranh_gioi")))
     print("  legal_markers:", dict(collections.Counter(m for r in out for m in r["legal_markers"])))
     print(f"  short_answer: {sum(1 for r in out if r['short_answer'])}/{len(out)}")
 
