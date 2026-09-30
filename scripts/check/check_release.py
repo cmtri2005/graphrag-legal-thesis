@@ -118,7 +118,8 @@ def manifest(data: Path, release: list[dict]) -> dict:
         "schema_version": sorted({r["schema_version"] for r in release}),
         "snapshot": SNAPSHOT,
         "commit": git("rev-parse", "--short", "HEAD"),
-        "uncommitted_changes": bool(git("status", "--porcelain", "--", "scripts", "src", "data/vilextime", "data/review")),
+        "uncommitted_changes": bool(git("status", "--porcelain", "--", "scripts", "src", "data/vilextime", "data/review",
+                                        ":(exclude)data/vilextime/manifest.json")),
         "sha256": {f: hashlib.sha256((data / f).read_bytes()).hexdigest() for f in MANIFESTED if (data / f).exists()},
         "rows": len(release),
         "counts": {f"{g} · {m} · {sp}": n for (g, m, sp), n in sorted(collections.Counter(
