@@ -69,7 +69,7 @@ trả lời rỗng và bị chấm sai. Lý do: khi chỉ có hai trạng thái,
 "không" để nói "tôi không biết" và được chấm **đúng** trên cả 293 dòng
 unanswerable vì một lý do sai — mà lý do mới là thứ benchmark đo (ADR 0003 §3).
 
-### 4. Embedding model — CHƯA CHỐT, cần nhóm quyết định
+### 4. Embedding model — CHỐT 02/10/2026 (cài đặt), chưa embed
 
 Phương án đề xuất: dedupe theo SHA-256 text (1.455.372 đơn vị layer A chỉ có
 1.247.953 text phân biệt) rồi embed trên GPU miễn phí (Colab/Kaggle T4) với
@@ -77,6 +77,12 @@ Phương án đề xuất: dedupe theo SHA-256 text (1.455.372 đơn vị layer 
 `intfloat/multilingual-e5-small` (384d) chạy theo lô có checkpoint. Chốt chiều
 vector trước khi nạp Milvus, vì `neo4j-milvus-infra.md` không chịu ước RAM khi
 chưa biết chiều.
+
+**Chốt (CMT, 02/10):** dùng `sentence-transformers` với
+`AITeamVN/Vietnamese_Embedding`; client là `pymilvus` (ghim `<2.5` theo Milvus
+v2.4.15) và driver `neo4j`. Cài qua `pip install -e ".[graph,embed]"` (torch bản
+CPU). Máy dev không có GPU, nên embed 1,25M text phân biệt nên chạy theo lô có
+checkpoint hoặc trên Colab/Kaggle; chiều vector (1024) chốt trước khi nạp Milvus.
 
 ### 5. Chế độ Verifier — CHỐT 02/10/2026
 
