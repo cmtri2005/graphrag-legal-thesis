@@ -9,7 +9,7 @@ Accepted
 ## Context
 
 Commit `5b8ee70` (13/09/2026) đã xóa adapter Neo4j/vector và thay bằng một index
-SQLite (`src/legal_crawler/index.py`). Nhóm cần một stack cố định cho đồ thị tri
+SQLite (`src/vilexgraph/build/index.py`). Nhóm cần một stack cố định cho đồ thị tri
 thức (L0–L3), truy xuất có ràng buộc thời gian (L4), baseline B2–B7 và phần
 trình diễn bằng chứng trước hội đồng.
 

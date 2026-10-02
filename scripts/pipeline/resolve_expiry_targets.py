@@ -20,16 +20,16 @@ import json
 import re
 from pathlib import Path
 
-from legal_crawler.extraction import (
+from vilexgraph.build.extraction import (
     ProvisionLocator,
     ProvisionReferencePart,
     TargetReference,
     TargetResolver,
     TargetScope,
 )
-from legal_crawler.index import TemporalIndex
-from legal_crawler.storage.documents import DocumentStore
-from legal_crawler.temporal import ProvisionLevel, make_document_id
+from vilexgraph.build.index import TemporalIndex
+from vilexgraph.build.storage.documents import DocumentStore
+from vilexgraph.build.temporal import ProvisionLevel, make_document_id
 
 LEVELS = {
     "phần": ProvisionLevel.PART,

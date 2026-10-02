@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from legal_crawler.temporal.models import ProvisionVersion, TemporalInterval
-from legal_crawler.temporal.version_chain import (
+from vilexgraph.build.temporal.models import ProvisionVersion, TemporalInterval
+from vilexgraph.build.temporal.version_chain import (
     DuplicateVersionError,
     NoCurrentVersionError,
     OverlappingVersionError,

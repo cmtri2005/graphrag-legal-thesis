@@ -50,7 +50,7 @@ Cùng ngày còn xác nhận thêm ba điều:
 
 ### Quy tắc phân loại (chốt ở T2.1, 14/09/2026)
 
-Cài đặt tại `src/legal_crawler/vocab/scope.py`. Thứ tự xét:
+Cài đặt tại `src/vilexgraph/build/vocab/scope.py`. Thứ tự xét:
 
 1. **Bản dịch** (`isTranslationDoc` hoặc loại "Bản dịch văn bản") → ngoài phạm vi.
 2. **VBHN** (`docType.parentCode = VBHN`) → ngoài phạm vi, chỉ dùng kiểm chứng L3.

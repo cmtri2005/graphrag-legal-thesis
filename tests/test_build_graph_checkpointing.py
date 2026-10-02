@@ -6,7 +6,7 @@ immediately — not only after the whole BFS finishes (see scripts/pipeline/buil
 from pathlib import Path
 
 from build_graph import make_checkpointing_fetcher
-from legal_crawler.storage.manifest import CrawlManifest
+from vilexgraph.build.storage.manifest import CrawlManifest
 
 
 class FakeApiClient:
@@ -74,7 +74,7 @@ def test_edges_are_rebuilt_from_every_raw_file_not_from_one_run(tmp_path: Path):
     import json
 
     from build_graph import write_edges
-    from legal_crawler.vocab.reference_types import ReferenceTypeMap
+    from vilexgraph.build.vocab.reference_types import ReferenceTypeMap
 
     raw = tmp_path / "raw"
     raw.mkdir()
@@ -103,7 +103,7 @@ def test_edges_are_rebuilt_from_every_raw_file_not_from_one_run(tmp_path: Path):
 def test_review_queue_is_rebuilt_from_the_whole_corpus(tmp_path: Path):
     """A run that processes one document must not shrink the queue to that one."""
     from attach_provision_text import write_review_queue
-    from legal_crawler.storage.documents import DocumentStore
+    from vilexgraph.build.storage.documents import DocumentStore
 
     store = DocumentStore(tmp_path)
     for doc_id, coverage in (("old-low", 0.1), ("fresh-low", 0.2), ("fine", 0.9)):

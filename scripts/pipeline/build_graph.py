@@ -16,12 +16,12 @@ from pathlib import Path
 
 import requests
 
-from legal_crawler.sources.api_client import ApiClient
-from legal_crawler.graph.expand import declared_edges, expand
-from legal_crawler.storage.manifest import CrawlManifest
-from legal_crawler.vocab.reference_types import DEFAULT_MAP_PATH, ReferenceTypeMap
-from legal_crawler.sources.sitemap import fetch_central_entries
-from legal_crawler.storage.documents import read_json, write_json
+from vilexgraph.build.sources.api_client import ApiClient
+from vilexgraph.build.graph.expand import declared_edges, expand
+from vilexgraph.build.storage.manifest import CrawlManifest
+from vilexgraph.build.vocab.reference_types import DEFAULT_MAP_PATH, ReferenceTypeMap
+from vilexgraph.build.sources.sitemap import fetch_central_entries
+from vilexgraph.build.storage.documents import read_json, write_json
 
 
 def seed_ids_in(value: object) -> set[str]:

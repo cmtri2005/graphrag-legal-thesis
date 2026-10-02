@@ -20,8 +20,8 @@ import collections
 import re
 from pathlib import Path
 
-from legal_crawler.vocab.status_codes import FREE_TEXT_PATTERN, StatusCodeMap
-from legal_crawler.storage.documents import read_json
+from vilexgraph.build.vocab.status_codes import FREE_TEXT_PATTERN, StatusCodeMap
+from vilexgraph.build.storage.documents import read_json
 
 
 def main() -> None:

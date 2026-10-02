@@ -16,7 +16,7 @@ set `<PROVIDER>_MODEL`. `list_models()` asks the provider what it currently
 serves, which is quicker than reading a changelog.
 
     export GROQ_API_KEY=...
-    python -c "from legal_crawler.llm import list_models; print(list_models())"
+    python -c "from vilexgraph.llm import list_models; print(list_models())"
 """
 from __future__ import annotations
 

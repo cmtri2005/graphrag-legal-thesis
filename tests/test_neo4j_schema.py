@@ -3,13 +3,13 @@
 import pytest
 
 from init_neo4j_schema import SHOW_CONSTRAINTS, ensure_schema, read_schema
-from legal_crawler.graph.neo4j_schema import (
+from vilexgraph.build.graph.neo4j_schema import (
     NODE_ID_CONSTRAINTS,
     STRUCTURAL_RELATIONSHIPS,
     constraint_statements,
     verify_constraints,
 )
-from legal_crawler.temporal import NodeKind, RelationType
+from vilexgraph.build.temporal import NodeKind, RelationType
 
 
 def _row(constraint):

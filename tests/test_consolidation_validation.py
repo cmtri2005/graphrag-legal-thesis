@@ -1,8 +1,8 @@
-from legal_crawler.graph.consolidation_validation import (
+from vilexgraph.build.graph.consolidation_validation import (
     normalized_text, select_base_target, source_units, target_units,
 )
-from legal_crawler.provisions.text import Paragraph
-from legal_crawler.temporal import Provision, ProvisionLevel
+from vilexgraph.build.provisions.text import Paragraph
+from vilexgraph.build.temporal import Provision, ProvisionLevel
 
 
 def test_source_alignment_keeps_article_and_nested_clause_separate():

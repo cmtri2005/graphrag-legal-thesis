@@ -1,6 +1,6 @@
 from datetime import date
 
-from legal_crawler.temporal import (
+from vilexgraph.build.temporal import (
     EventApplier,
     EventStatus,
     ExtractionMethod,

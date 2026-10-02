@@ -17,7 +17,7 @@ import argparse
 import os
 from pathlib import Path
 
-from legal_crawler.graph.neo4j_schema import (
+from vilexgraph.build.graph.neo4j_schema import (
     NODE_ID_CONSTRAINTS,
     constraint_statements,
     verify_constraints,
@@ -45,7 +45,7 @@ def read_schema(path: Path = SCHEMA_PATH) -> tuple[str, ...]:
     if statements != expected:
         raise ValueError(
             f"{path} differs from approved D1 node constraints; compare with "
-            "legal_crawler.graph.neo4j_schema before applying"
+            "vilexgraph.build.graph.neo4j_schema before applying"
         )
     return statements
 

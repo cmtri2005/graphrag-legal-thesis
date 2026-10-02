@@ -2,10 +2,10 @@ from datetime import date
 
 import pytest
 
-from legal_crawler.ingest import build_document, build_versions, walk_tree, IngestReport
-from legal_crawler.index import TemporalIndex
-from legal_crawler.temporal.version_chain import UndatedVersionError, VersionChain
-from legal_crawler.temporal import (
+from vilexgraph.build.ingest import build_document, build_versions, walk_tree, IngestReport
+from vilexgraph.build.index import TemporalIndex
+from vilexgraph.build.temporal.version_chain import UndatedVersionError, VersionChain
+from vilexgraph.build.temporal import (
     InvalidityReason, LegalDocument, Provision, ProvisionLevel, TemporalState, ValidityService,
     make_document_id, make_provision_id, make_version_id,
 )
@@ -136,9 +136,9 @@ def test_order_comes_from_the_walk_not_the_overflowing_portal_counter():
 
 
 def test_derived_subtree_nodes_resolve_under_their_article():
-    from legal_crawler.ingest import subtree_provisions
-    from legal_crawler.index import TemporalIndex
-    from legal_crawler.temporal import Provision, ProvisionLevel
+    from vilexgraph.build.ingest import subtree_provisions
+    from vilexgraph.build.index import TemporalIndex
+    from vilexgraph.build.temporal import Provision, ProvisionLevel
 
     index = TemporalIndex(":memory:")
     index.put_provisions(

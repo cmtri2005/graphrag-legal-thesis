@@ -46,7 +46,7 @@ import re
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from legal_crawler.vocab.status_codes import year_typo
+from vilexgraph.build.vocab.status_codes import year_typo
 
 KEYWORDS = ("bãi bỏ", "hết hiệu lực", "thay thế", "hủy bỏ")
 ARTICLE_SPLIT = re.compile(r"(?=Điều\s+\d+\.)")

@@ -3,9 +3,9 @@ import json
 from datetime import date
 
 from build_versions import build_version_files, rebase_phrase_edit
-from legal_crawler.index import TemporalIndex
-from legal_crawler.storage.documents import DocumentStore
-from legal_crawler.temporal import (
+from vilexgraph.build.index import TemporalIndex
+from vilexgraph.build.storage.documents import DocumentStore
+from vilexgraph.build.temporal import (
     LegalDocument,
     Provision,
     ProvisionLevel,

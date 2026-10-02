@@ -2,14 +2,14 @@ from datetime import date
 
 import pytest
 
-from legal_crawler.temporal.ids import (
+from vilexgraph.build.temporal.ids import (
     make_document_id,
     make_edge_id,
     make_event_id,
     make_provision_id,
     make_version_id,
 )
-from legal_crawler.temporal.models import LegalOperation, RelationType
+from vilexgraph.build.temporal.models import LegalOperation, RelationType
 
 
 def test_source_ids_are_stable_and_delimiter_safe():

@@ -29,8 +29,8 @@ import collections
 import json
 from pathlib import Path
 
-from legal_crawler.sources.api_client import ApiClient, DocumentNotFoundError
-from legal_crawler.storage.documents import load_permanent_failures
+from vilexgraph.build.sources.api_client import ApiClient, DocumentNotFoundError
+from vilexgraph.build.storage.documents import load_permanent_failures
 
 
 def main() -> None:

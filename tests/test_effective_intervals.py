@@ -1,7 +1,7 @@
 from datetime import date
 
 from build_versions import _version_row
-from legal_crawler.temporal import (
+from vilexgraph.build.temporal import (
     LegalDocument,
     Provision,
     ProvisionLevel,
@@ -10,7 +10,7 @@ from legal_crawler.temporal import (
     TemporalState,
     ValidityService,
 )
-from legal_crawler.temporal.effective_intervals import effective_intervals_by_version
+from vilexgraph.build.temporal.effective_intervals import effective_intervals_by_version
 
 
 def _version(id, provision_id, ordinal, start, end=None):

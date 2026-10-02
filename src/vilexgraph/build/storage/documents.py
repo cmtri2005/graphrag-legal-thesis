@@ -22,7 +22,7 @@ DEFAULT_DATA_DIR = Path("data")
 # ship with the source rather than being crawl output. Resolved here, once:
 # three modules used to count `parent` levels themselves, which silently breaks
 # the moment a file moves into a subpackage.
-REPO_DATA_DIR = Path(__file__).resolve().parents[3] / "data"
+REPO_DATA_DIR = Path(__file__).resolve().parents[4] / "data"
 
 # One directory per stage, all keyed by doc_id. A delta run drops a document's
 # entry from each of these to make the ordinary scripts re-fetch it, so this

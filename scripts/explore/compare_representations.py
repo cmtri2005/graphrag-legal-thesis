@@ -33,7 +33,7 @@ import time
 from datetime import date
 from pathlib import Path
 
-from legal_crawler.temporal import make_document_id
+from vilexgraph.build.temporal import make_document_id
 
 DATA = Path("data")
 SEED, SAMPLE = 42, 1000

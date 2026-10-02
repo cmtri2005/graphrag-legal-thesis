@@ -80,12 +80,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
-from legal_crawler.extraction.models import (  # noqa: E402
+from vilexgraph.build.extraction.models import (  # noqa: E402
     ProvisionLocator, ProvisionReferencePart, TargetReference, TargetScope)
-from legal_crawler.extraction.provision_ops import parse_locators  # noqa: E402
-from legal_crawler.extraction.target_resolver import TargetResolver  # noqa: E402
-from legal_crawler.index import TemporalIndex  # noqa: E402
-from legal_crawler.temporal.models import ProvisionLevel as L  # noqa: E402
+from vilexgraph.build.extraction.provision_ops import parse_locators  # noqa: E402
+from vilexgraph.build.extraction.target_resolver import TargetResolver  # noqa: E402
+from vilexgraph.build.index import TemporalIndex  # noqa: E402
+from vilexgraph.build.temporal.models import ProvisionLevel as L  # noqa: E402
 
 SCHEMA_VERSION = "1.2.0"
 SNAPSHOT = date(2026, 9, 17)   # corpus snapshot v2, frozen at M1

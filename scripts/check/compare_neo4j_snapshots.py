@@ -16,9 +16,9 @@ from collections import Counter
 from datetime import date, timedelta
 from pathlib import Path
 
-from legal_crawler.graph.neo4j_snapshot import graph_snapshot
-from legal_crawler.index import TemporalIndex
-from legal_crawler.temporal import (
+from vilexgraph.build.graph.neo4j_snapshot import graph_snapshot
+from vilexgraph.build.index import TemporalIndex
+from vilexgraph.build.temporal import (
     EventStatus, LegalEvent, LegalOperation, ProvisionVersion, SnapshotService,
     TemporalInterval, TemporalState,
 )

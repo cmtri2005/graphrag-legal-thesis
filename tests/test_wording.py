@@ -1,7 +1,7 @@
-from legal_crawler.extraction.provision_ops import extract_mentions
-from legal_crawler.extraction.wording import fit, parse_items, wording_blocks
-from legal_crawler.temporal.models import Provision
-from legal_crawler.temporal.models import ProvisionLevel as L
+from vilexgraph.build.extraction.provision_ops import extract_mentions
+from vilexgraph.build.extraction.wording import fit, parse_items, wording_blocks
+from vilexgraph.build.temporal.models import Provision
+from vilexgraph.build.temporal.models import ProvisionLevel as L
 
 AMEND = [
     "Điều 1. Sửa đổi, bổ sung một số điều của Thông tư số 23/2021/TT-BTC như sau:",
@@ -71,7 +71,7 @@ def test_a_leaf_takes_the_whole_item_as_its_text():
 
 
 def test_phrase_edit_reads_a_replacement_either_side_of_the_locators():
-    from legal_crawler.extraction.wording import phrase_edits
+    from vilexgraph.build.extraction.wording import phrase_edits
 
     assert phrase_edits('Thay thế cụm từ "Cục Con nuôi" bằng cụm từ "Bộ Tư pháp" tại khoản 3 Điều 30.') == [
         ("Cục Con nuôi", "Bộ Tư pháp")
@@ -81,7 +81,7 @@ def test_phrase_edit_reads_a_replacement_either_side_of_the_locators():
 
 
 def test_phrase_edit_refuses_what_it_cannot_read_without_guessing():
-    from legal_crawler.extraction.wording import phrase_edits
+    from vilexgraph.build.extraction.wording import phrase_edits
 
     assert phrase_edits("Sửa đổi, bổ sung khoản 2 Điều 17 như sau:") == []
     # three quoted runs: which one replaces which is not determined
@@ -90,7 +90,7 @@ def test_phrase_edit_refuses_what_it_cannot_read_without_guessing():
 
 
 def test_apply_phrase_demands_the_phrase_be_present_verbatim():
-    from legal_crawler.extraction.wording import apply_phrase
+    from vilexgraph.build.extraction.wording import apply_phrase
 
     assert apply_phrase("Do Cục Con nuôi quyết định.", [("Cục Con nuôi", "Bộ Tư pháp")]) == "Do Bộ Tư pháp quyết định."
     assert apply_phrase("Do Bộ Tư pháp quyết định.", [("Cục Con nuôi", "Bộ Tư pháp")]) is None
@@ -99,7 +99,7 @@ def test_apply_phrase_demands_the_phrase_be_present_verbatim():
 
 
 def test_apply_phrase_matches_a_phrase_whatever_its_case():
-    from legal_crawler.extraction.wording import apply_phrase
+    from vilexgraph.build.extraction.wording import apply_phrase
 
     # 104/2022/NĐ-CP quotes "trong giai đoạn…" where 123/2015/NĐ-CP opens a sentence with it
     assert apply_phrase("1. Trong giai đoạn chuyển tiếp, cơ quan cấp giấy.", [("trong giai đoạn chuyển tiếp, ", "")]) \
@@ -112,7 +112,7 @@ def test_apply_phrase_matches_a_phrase_whatever_its_case():
 
 
 def test_apply_phrase_refuses_a_deletion_that_strands_punctuation():
-    from legal_crawler.extraction.wording import apply_phrase
+    from vilexgraph.build.extraction.wording import apply_phrase
 
     # "… cấp tỉnh, <phrase>; tổ chức …" would be left as "cấp tỉnh, ; tổ chức"
     assert apply_phrase("Đại hội cấp tỉnh, cấp huyện; tổ chức hoạt động.",

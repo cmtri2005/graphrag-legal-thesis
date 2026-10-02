@@ -2,7 +2,7 @@
 from datetime import date
 
 from enrich_vilextime import MARGIN, changed_span, check_short_answer, mid_date, references, twin_of
-from legal_crawler.temporal.models import ProvisionLevel as L
+from vilexgraph.build.temporal.models import ProvisionLevel as L
 
 VERSIONS = [
     {"id": "version:p:1", "ordinal": 1, "text": "Bộ Tài nguyên và Môi trường cấp phép.",

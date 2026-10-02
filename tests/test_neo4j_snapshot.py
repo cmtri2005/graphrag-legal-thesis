@@ -3,7 +3,7 @@ from datetime import date
 
 import pytest
 
-from legal_crawler.graph.neo4j_snapshot import (
+from vilexgraph.build.graph.neo4j_snapshot import (
     GraphSnapshotError, SNAPSHOT_CYPHER, graph_snapshot, snapshot_from_record,
 )
 

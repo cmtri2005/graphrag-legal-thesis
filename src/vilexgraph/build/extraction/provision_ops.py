@@ -27,7 +27,7 @@ import re
 import unicodedata
 from dataclasses import dataclass
 
-from legal_crawler.temporal.models import LegalOperation, ProvisionLevel
+from vilexgraph.build.temporal.models import LegalOperation, ProvisionLevel
 
 from .models import ProvisionLocator, ProvisionReferencePart
 from .wording import wording_blocks

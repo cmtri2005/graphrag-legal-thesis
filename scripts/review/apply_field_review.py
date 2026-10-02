@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from legal_crawler.storage.documents import read_json
+from vilexgraph.build.storage.documents import read_json
 
 REVIEW_PATH = Path("data/field_filter_review.txt")
 OUT_PATH = Path("data/excluded_ids.txt")

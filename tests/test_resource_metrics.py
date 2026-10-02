@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from legal_crawler.graph.resource_metrics import (
+from vilexgraph.build.graph.resource_metrics import (
     parse_inspect, parse_size, parse_stats_lines, summarize_samples,
 )
 

@@ -14,8 +14,8 @@ from collections import Counter
 from dataclasses import dataclass
 from typing import Iterable
 
-from legal_crawler.provisions.text import Paragraph
-from legal_crawler.temporal import Provision, ProvisionLevel
+from vilexgraph.build.provisions.text import Paragraph
+from vilexgraph.build.temporal import Provision, ProvisionLevel
 
 
 _ARTICLE = re.compile(

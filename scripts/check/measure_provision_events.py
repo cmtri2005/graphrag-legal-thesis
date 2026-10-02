@@ -33,8 +33,8 @@ import json
 import random
 from pathlib import Path
 
-from legal_crawler.index import TemporalIndex
-from legal_crawler.temporal import make_document_id, make_provision_id
+from vilexgraph.build.index import TemporalIndex
+from vilexgraph.build.temporal import make_document_id, make_provision_id
 
 # 20260918–20 and 20260922 drew the samples the error classes were found on; 20260921
 # measured v4 (56/60, all resolved events). From 20260923 section 3 samples only the

@@ -81,7 +81,7 @@ def test_an_earlier_mid_document_mention_of_the_heading_is_not_the_anchor():
 
 def test_only_the_exact_one_year_slip_is_a_typing_error():
     from datetime import date
-    from legal_crawler.vocab.status_codes import year_typo
+    from vilexgraph.build.vocab.status_codes import year_typo
 
     assert year_typo(date(2021, 2, 15), date(2022, 2, 15))
     assert not year_typo(date(2011, 3, 19), date(2011, 9, 19))      # month differs: a human decides

@@ -38,8 +38,8 @@ import collections
 import json
 from pathlib import Path
 
-from legal_crawler.storage.documents import DocumentStore
-from legal_crawler.vocab.status_codes import (
+from vilexgraph.build.storage.documents import DocumentStore
+from vilexgraph.build.vocab.status_codes import (
     EMPTY_INTERVAL,
     NO_EFF_FROM,
     REPEALED_WITHOUT_EFF_TO,

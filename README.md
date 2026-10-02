@@ -75,7 +75,7 @@ check whether Stage 4's postmortem already tells you not to.
 ## Architecture
 
 ```
-src/legal_crawler/
+src/vilexgraph/
   config.py       per-domain seed keywords, API base URL, sitemap shard range
   models.py       Edge and SitemapEntry dataclasses
 
@@ -178,7 +178,7 @@ python3 scripts/check/verify_pipeline.py
 ```
 
 Adding a domain, or widening an existing one: edit `KEYWORDS_BY_DOMAIN` in
-`src/legal_crawler/config.py`, then re-run Stage 1 and Stage 2+3 — both are
+`src/vilexgraph/build/config.py`, then re-run Stage 1 and Stage 2+3 — both are
 additive and won't touch already-crawled documents. Keywords match whole
 dash-separated words, so a short keyword already covers longer phrases
 containing it (`su-dung-dat` covers `quy-hoach-su-dung-dat`).

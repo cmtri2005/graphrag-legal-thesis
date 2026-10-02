@@ -21,9 +21,9 @@ from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from legal_crawler.sources.api_client import ApiClient, ApiClientError
-from legal_crawler.vocab.reference_types import DEFAULT_MAP_PATH
-from legal_crawler.storage.documents import read_json
+from vilexgraph.build.sources.api_client import ApiClient, ApiClientError
+from vilexgraph.build.vocab.reference_types import DEFAULT_MAP_PATH
+from vilexgraph.build.storage.documents import read_json
 
 MAX_EXAMPLES_PER_CODE = 5
 

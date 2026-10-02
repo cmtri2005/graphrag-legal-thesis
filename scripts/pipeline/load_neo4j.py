@@ -30,9 +30,9 @@ from pathlib import Path
 from typing import Any
 
 from init_neo4j_schema import SHOW_CONSTRAINTS
-from legal_crawler.graph.neo4j_schema import verify_constraints
-from legal_crawler.storage.documents import DocumentStore
-from legal_crawler.temporal import make_document_id, make_provision_id, make_version_id
+from vilexgraph.build.graph.neo4j_schema import verify_constraints
+from vilexgraph.build.storage.documents import DocumentStore
+from vilexgraph.build.temporal import make_document_id, make_provision_id, make_version_id
 
 
 DOCUMENTS = """

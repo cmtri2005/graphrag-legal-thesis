@@ -13,8 +13,8 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from enum import Enum
 
-from legal_crawler.index import TemporalIndex
-from legal_crawler.temporal import ExtractionMethod, Provision, ProvisionLevel
+from vilexgraph.build.index import TemporalIndex
+from vilexgraph.build.temporal import ExtractionMethod, Provision, ProvisionLevel
 
 from .models import (
     ProvisionLocator,

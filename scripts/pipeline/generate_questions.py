@@ -41,7 +41,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
-from legal_crawler.llm import Completion, LLMError, complete, configured, pick  # noqa: E402
+from vilexgraph.llm import Completion, LLMError, complete, configured, pick  # noqa: E402
 
 PROMPTS = Path(__file__).resolve().parents[2] / "prompts/vilextime"
 INSUFFICIENT = "KHONG_DU_NGU_CANH"

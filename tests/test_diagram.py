@@ -1,9 +1,9 @@
-from legal_crawler.graph.diagram import (
+from vilexgraph.build.graph.diagram import (
     REVERSE_EXPANDABLE,
     expandable_targets,
     parse_reverse_edges,
 )
-from legal_crawler.models import Edge
+from vilexgraph.build.models import Edge
 
 # Shape from a real /doc/133959/diagram response, trimmed.
 _DIAGRAM = {

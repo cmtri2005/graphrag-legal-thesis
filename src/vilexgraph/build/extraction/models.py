@@ -11,7 +11,7 @@ from datetime import date
 from enum import Enum
 from typing import Any, Mapping
 
-from legal_crawler.temporal.models import (
+from vilexgraph.build.temporal.models import (
     EventStatus,
     ExtractionMethod,
     LegalEvent,

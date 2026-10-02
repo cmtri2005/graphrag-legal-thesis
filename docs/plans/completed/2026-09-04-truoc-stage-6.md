@@ -27,7 +27,7 @@ dạng dữ liệu* mà Stage 6 sẽ đọc. Biết sớm thì thiết kế B kh
 ## A. Bảng mã trạng thái hiệu lực — ✅ ĐÃ XONG (2026-09-04)
 
 **Kết quả**: `data/eff_status_map.json` (13 mã, đều verified) +
-`src/legal_crawler/status_codes.py` (loader fail-loud) +
+`src/vilexgraph/status_codes.py` (loader fail-loud) +
 `scripts/explore/collect_status_codes.py` + 6 test. `verify_pipeline.py` có thêm kiểm
 tra "mọi mã trong `data/history/` đều nằm trong bảng". Tổng 38 test PASS.
 
@@ -113,7 +113,7 @@ và chọn cách xử lý không phụ thuộc vào phần chưa biết.
 
 ## B. Stage 5b — ghép text vào cây điều khoản — ✅ ĐÃ XONG
 
-**Kết quả**: `src/legal_crawler/provision_text.py` +
+**Kết quả**: `src/vilexgraph/provision_text.py` +
 `scripts/pipeline/attach_provision_text.py` + `data/provisions/{id}.json` + 6 test.
 `verify_pipeline.py` có thêm 4 kiểm tra Stage 5b.
 

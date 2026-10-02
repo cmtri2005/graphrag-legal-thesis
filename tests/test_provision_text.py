@@ -1,4 +1,4 @@
-from legal_crawler.provisions.text import align, align_by_marker, flatten, parse_paragraphs
+from vilexgraph.build.provisions.text import align, align_by_marker, flatten, parse_paragraphs
 
 # Shape of a modern record: the server tags each paragraph with the tree node's
 # own uuid, so the join is exact rather than inferred.
@@ -158,7 +158,7 @@ def test_good_id_coverage_is_left_alone():
 
 
 def test_visible_text_ignores_shells_and_entities():
-    from legal_crawler.provisions.text import has_visible_text
+    from vilexgraph.build.provisions.text import has_visible_text
 
     assert not has_visible_text("")
     assert not has_visible_text("<html><head><title>x</title><style>p{}</style></head><body>&nbsp; </body></html>")

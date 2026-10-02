@@ -184,7 +184,7 @@ hình thức nhưng có gold không duy nhất. "Những hành vi nào bị ph�
 cả danh sách chứ không phải mục được giao. Prompt dạy tránh; chỉ đợt kiểm tay
 mới chặn được. Đây là rủi ro lớn nhất còn lại của Gói C.
 
-Nhà cung cấp LLM: `src/legal_crawler/llm.py`, đa nhà cung cấp qua giao thức
+Nhà cung cấp LLM: `src/vilexgraph/llm.py`, đa nhà cung cấp qua giao thức
 `chat/completions`, ưu tiên Groq. Không thêm dependency — `requests` đủ.
 Anthropic không có trong bảng vì API khác hình dạng; thêm khi nào cần thật.
 

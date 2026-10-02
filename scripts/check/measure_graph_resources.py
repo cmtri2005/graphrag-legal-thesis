@@ -22,7 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from legal_crawler.graph.resource_metrics import (
+from vilexgraph.build.graph.resource_metrics import (
     parse_inspect, parse_stats_lines, summarize_samples,
 )
 

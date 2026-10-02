@@ -108,7 +108,7 @@ văn bản Y trở thành `Edge(source=văn bản sửa, target=Y, type=10)`, đ
 dạng mà `references[]` của văn bản sửa sẽ tạo ra. Nhờ vậy **phần code phía sau
 không cần biết tới khái niệm "chiều ngược"**.
 
-**Mở rộng qua cạnh nào?** (`REVERSE_EXPANDABLE` trong `src/legal_crawler/diagram.py`)
+**Mở rộng qua cạnh nào?** (`REVERSE_EXPANDABLE` trong `src/vilexgraph/diagram.py`)
 
 - ✅ **1, 5, 6, 10, 11, 12** — bãi bỏ / đình chỉ / đính chính / sửa đổi bổ sung /
   tạm ngưng / thay thế. Đây là các quan hệ **thay đổi hiệu lực**, và hữu hạn tự
@@ -175,7 +175,7 @@ Không dùng taxonomy API (401, và phải tải hết chi tiết mới biết f
    - Giao thông: `giao-thong`, `duong-bo`, `duong-sat`, `duong-thuy`, `hang-khong`, `hang-hai`, `van-tai`
 
    Danh sách này là nguồn duy nhất, sống trong `KEYWORDS_BY_DOMAIN`
-   (`src/legal_crawler/config.py`) — sửa ở đó, không chép lại vào script.
+   (`src/vilexgraph/build/config.py`) — sửa ở đó, không chép lại vào script.
 
    **Vì sao có Giao thông (thêm sau, có chủ đích)**: ba lĩnh vực đầu chọn theo
    giá trị ứng dụng. Giao thông được thêm vào vì đây là lĩnh vực **thay đổi
@@ -233,7 +233,7 @@ Kế hoạch ban đầu định dùng chúng làm bộ lọc tinh tự động �
   Lọc tự động theo lĩnh vực sẽ vứt nhầm cả hai văn bản này — mà đây đều là văn
   bản thuế, tức đúng ngay lĩnh vực đang cần.
 
-Vì vậy quy trình đã chốt (đang chạy trong `src/legal_crawler/field_filter.py`):
+Vì vậy quy trình đã chốt (đang chạy trong `src/vilexgraph/field_filter.py`):
 
 1. Một văn bản chỉ bị coi là **khả nghi** khi **TẤT CẢ** lĩnh vực/ngành của nó
    đều nằm trong danh sách chặn (`data/field_filter_map.json`). Chỉ cần có
@@ -345,7 +345,7 @@ body    ["{id}"]
 ```
 
 Phản hồi là React Flight (không phải JSON thuần); cây nằm ở dòng bắt đầu bằng
-`1:`. Code: `src/legal_crawler/provision_tree.py`,
+`1:`. Code: `src/vilexgraph/provision_tree.py`,
 chạy bằng `scripts/pipeline/fetch_provision_trees.py` → `data/trees/{id}.json`.
 
 Bốn điều đã kiểm chứng, cần nhớ:

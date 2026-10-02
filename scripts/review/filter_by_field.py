@@ -20,8 +20,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from legal_crawler.vocab.field_filter import DEFAULT_MAP_PATH, FieldFilterMap
-from legal_crawler.storage.documents import read_json
+from vilexgraph.build.vocab.field_filter import DEFAULT_MAP_PATH, FieldFilterMap
+from vilexgraph.build.storage.documents import read_json
 
 
 def load_seed_ids_by_domain(seeds_path: Path) -> dict[str, str]:

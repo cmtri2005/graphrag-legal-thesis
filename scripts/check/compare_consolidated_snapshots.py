@@ -17,13 +17,13 @@ from pathlib import Path
 from typing import Any
 
 from compare_neo4j_snapshots import load_states
-from legal_crawler.graph.consolidation_validation import (
+from vilexgraph.build.graph.consolidation_validation import (
     article_marker, normalized_text, select_base_target, source_units, target_units,
 )
-from legal_crawler.index import TemporalIndex
-from legal_crawler.provisions.text import has_visible_text, parse_paragraphs
-from legal_crawler.storage.documents import DocumentStore
-from legal_crawler.temporal import SnapshotService, make_document_id
+from vilexgraph.build.index import TemporalIndex
+from vilexgraph.build.provisions.text import has_visible_text, parse_paragraphs
+from vilexgraph.build.storage.documents import DocumentStore
+from vilexgraph.build.temporal import SnapshotService, make_document_id
 
 
 def consolidation_edges(path: Path) -> dict[str, tuple[str, ...]]:

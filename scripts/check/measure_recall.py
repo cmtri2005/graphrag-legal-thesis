@@ -35,9 +35,9 @@ from pathlib import Path
 import requests
 
 
-from legal_crawler.config import KEYWORDS_BY_DOMAIN
-from legal_crawler.sources.sitemap import fetch_central_entries, matches_any_keyword
-from legal_crawler.storage.documents import read_json
+from vilexgraph.build.config import KEYWORDS_BY_DOMAIN
+from vilexgraph.build.sources.sitemap import fetch_central_entries, matches_any_keyword
+from vilexgraph.build.storage.documents import read_json
 
 # Wider than config.KEYWORDS_BY_DOMAIN on purpose — this is a measuring stick,
 # not a crawl filter. Terms a domain expert would accept as in-scope but which

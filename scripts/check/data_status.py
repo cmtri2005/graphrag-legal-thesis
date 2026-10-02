@@ -25,8 +25,8 @@ import datetime as dt
 import json
 from pathlib import Path
 
-from legal_crawler.storage.documents import PER_DOCUMENT_DIRS, DocumentStore, read_json
-from legal_crawler.vocab.status_codes import anchor_problem
+from vilexgraph.build.storage.documents import PER_DOCUMENT_DIRS, DocumentStore, read_json
+from vilexgraph.build.vocab.status_codes import anchor_problem
 
 
 def _mtime_range(directory: Path) -> str:

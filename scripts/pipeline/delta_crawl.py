@@ -46,10 +46,10 @@ from pathlib import Path
 
 import requests
 
-from legal_crawler.config import KEYWORDS_BY_DOMAIN
-from legal_crawler.storage.manifest import CrawlManifest
-from legal_crawler.sources.sitemap import fetch_central_entries, matches_any_keyword
-from legal_crawler.storage.documents import DocumentStore
+from vilexgraph.build.config import KEYWORDS_BY_DOMAIN
+from vilexgraph.build.storage.manifest import CrawlManifest
+from vilexgraph.build.sources.sitemap import fetch_central_entries, matches_any_keyword
+from vilexgraph.build.storage.documents import DocumentStore
 
 
 def domain_of(slug: str) -> str | None:

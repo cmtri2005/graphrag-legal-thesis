@@ -8,7 +8,7 @@ from load_neo4j import (
     EVENT_CAUSED_BY_DOCUMENT, _batches, _event_actor_rows, _version_rows,
     _write_batch, _write_report, read_event_nodes,
 )
-from legal_crawler.temporal import make_version_id
+from vilexgraph.build.temporal import make_version_id
 
 
 def _line(path, rows):

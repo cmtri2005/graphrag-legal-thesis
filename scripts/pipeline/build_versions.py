@@ -46,10 +46,10 @@ from datetime import date, timedelta
 from pathlib import Path
 from typing import Any, Iterable
 
-from legal_crawler.extraction.wording import apply_phrase
-from legal_crawler.index import TemporalIndex
-from legal_crawler.storage.documents import DocumentStore
-from legal_crawler.temporal import (
+from vilexgraph.build.extraction.wording import apply_phrase
+from vilexgraph.build.index import TemporalIndex
+from vilexgraph.build.storage.documents import DocumentStore
+from vilexgraph.build.temporal import (
     EventApplier,
     EventStatus,
     ExtractionMethod,
@@ -67,10 +67,10 @@ from legal_crawler.temporal import (
     make_provision_id,
     make_version_id,
 )
-from legal_crawler.temporal.event_applier import EventApplicationError
-from legal_crawler.temporal.effective_intervals import effective_intervals_by_version
-from legal_crawler.temporal.state import TemporalState, TemporalStateError
-from legal_crawler.temporal.validity import ValidityService
+from vilexgraph.build.temporal.event_applier import EventApplicationError
+from vilexgraph.build.temporal.effective_intervals import effective_intervals_by_version
+from vilexgraph.build.temporal.state import TemporalState, TemporalStateError
+from vilexgraph.build.temporal.validity import ValidityService
 
 
 @dataclass(frozen=True, slots=True)

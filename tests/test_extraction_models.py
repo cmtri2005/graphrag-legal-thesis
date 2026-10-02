@@ -2,7 +2,7 @@ from datetime import date
 
 import pytest
 
-from legal_crawler.extraction import (
+from vilexgraph.build.extraction import (
     EventMaterializationError,
     ExtractionModelError,
     ExtractionResult,
@@ -20,7 +20,7 @@ from legal_crawler.extraction import (
     WarningCode,
     WarningSeverity,
 )
-from legal_crawler.temporal import (
+from vilexgraph.build.temporal import (
     EventStatus,
     ExtractionMethod,
     LegalOperation,

@@ -33,10 +33,10 @@ import json
 from datetime import date
 from pathlib import Path
 
-from legal_crawler.provisions.text import has_visible_text
-from legal_crawler.storage.documents import DocumentStore, read_json
-from legal_crawler.vocab.scope import QPPL, document_class
-from legal_crawler.vocab.status_codes import anchor_problem
+from vilexgraph.build.provisions.text import has_visible_text
+from vilexgraph.build.storage.documents import DocumentStore, read_json
+from vilexgraph.build.vocab.scope import QPPL, document_class
+from vilexgraph.build.vocab.status_codes import anchor_problem
 
 FULLY_REPEALED = "HHL"
 

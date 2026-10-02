@@ -3,7 +3,7 @@ import os
 
 import pytest
 
-from legal_crawler.llm import (LLMError, PROVIDERS, _load_env_file, configured, model_for, pick)
+from vilexgraph.llm import (LLMError, PROVIDERS, _load_env_file, configured, model_for, pick)
 
 
 @pytest.fixture(autouse=True)
@@ -46,7 +46,7 @@ def test_the_env_file_fills_gaps_but_never_overrides(monkeypatch, tmp_path):
     env_file = tmp_path / ".env"
     env_file.write_text('# comment\n\nGROQ_API_KEY="from-file"\nGROQ_MODEL=also-from-file\nmalformed\n',
                         encoding="utf-8")
-    monkeypatch.setattr("legal_crawler.llm._ENV_FILE", env_file)
+    monkeypatch.setattr("vilexgraph.llm._ENV_FILE", env_file)
     monkeypatch.setenv("GROQ_MODEL", "from-environment")
 
     _load_env_file()
@@ -56,13 +56,13 @@ def test_the_env_file_fills_gaps_but_never_overrides(monkeypatch, tmp_path):
 
 
 def test_a_missing_env_file_is_not_an_error(monkeypatch, tmp_path):
-    monkeypatch.setattr("legal_crawler.llm._ENV_FILE", tmp_path / "nope")
+    monkeypatch.setattr("vilexgraph.llm._ENV_FILE", tmp_path / "nope")
     _load_env_file()          # must not raise; the file is a convenience
 
 
 def test_a_truncated_answer_is_an_error_not_a_bad_question(monkeypatch):
     """gpt-oss spends max_tokens thinking; a cut-off reply must not be scored as the model's question."""
-    from legal_crawler.llm import complete
+    from vilexgraph.llm import complete
 
     class Cut:
         ok, status_code, headers = True, 200, {}

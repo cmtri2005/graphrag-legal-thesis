@@ -391,7 +391,7 @@ T4 và T5 chạy song song được sau T3.
        text}]` trong mỗi file `data/derived/subtrees/{doc_id}.json`, tách
        biệt với `nodes` — không gắn nhầm vào Khoản 1, không lẫn vào list
        `nodes` khiến consumer giả định sai level.
-     - Sửa `split_document()` (`src/legal_crawler/provisions/subtree.py`):
+     - Sửa `split_document()` (`src/vilexgraph/build/provisions/subtree.py`):
        thêm field `Split.preambles`, capture ở cả 3 nhánh (Điều→Khoản,
        Khoản→Điểm lồng trong Điều, Khoản→Điểm trực tiếp). 2 test mới.
      - Chạy lại `build_subtrees.py`: **10.302 preamble** được cứu (nhiều hơn

@@ -10,7 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Mapping, Sequence
 
-from legal_crawler.temporal import NodeKind, RelationType
+from vilexgraph.build.temporal import NodeKind, RelationType
 
 
 @dataclass(frozen=True, slots=True)

@@ -6,7 +6,7 @@ binds the two without interpreting Vietnamese labels at load time.
 """
 from __future__ import annotations
 
-from legal_crawler.temporal import RelationType
+from vilexgraph.build.temporal import RelationType
 
 
 REFERENCE_RELATION_TYPES: dict[int, RelationType] = {

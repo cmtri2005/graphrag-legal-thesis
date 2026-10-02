@@ -12,10 +12,10 @@ from load_neo4j_references import (
     plan_references,
     write_reports,
 )
-from legal_crawler.graph.neo4j_references import REFERENCE_RELATION_TYPES, relationship_type
-from legal_crawler.storage.documents import REPO_DATA_DIR
-from legal_crawler.temporal import RelationType
-from legal_crawler.vocab.reference_types import ReferenceTypeMap, UnknownReferenceTypeError
+from vilexgraph.build.graph.neo4j_references import REFERENCE_RELATION_TYPES, relationship_type
+from vilexgraph.build.storage.documents import REPO_DATA_DIR
+from vilexgraph.build.temporal import RelationType
+from vilexgraph.build.vocab.reference_types import ReferenceTypeMap, UnknownReferenceTypeError
 
 
 def _fixture(tmp_path, edges, *, raw_ids=("1", "2")):

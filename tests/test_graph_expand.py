@@ -6,9 +6,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from legal_crawler.graph.expand import expand
-from legal_crawler.models import Edge
-from legal_crawler.vocab.reference_types import ReferenceTypeMap, UnknownReferenceTypeError
+from vilexgraph.build.graph.expand import expand
+from vilexgraph.build.models import Edge
+from vilexgraph.build.vocab.reference_types import ReferenceTypeMap, UnknownReferenceTypeError
 
 MAP_JSON = {
     "codes": {

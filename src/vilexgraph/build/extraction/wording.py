@@ -22,7 +22,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from legal_crawler.temporal.models import Provision, ProvisionLevel
+from vilexgraph.build.temporal.models import Provision, ProvisionLevel
 
 _INTRO = re.compile(r"(?i:như sau)\s*:\s*(?P<tail>.*)$")
 _OPEN = ("“", '"')

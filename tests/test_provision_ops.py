@@ -1,11 +1,11 @@
-from legal_crawler.extraction.provision_ops import (
+from vilexgraph.build.extraction.provision_ops import (
     extract_mentions,
     normalize_number,
     parse_locators,
     title_document,
 )
-from legal_crawler.temporal.models import LegalOperation as Op
-from legal_crawler.temporal.models import ProvisionLevel as L
+from vilexgraph.build.temporal.models import LegalOperation as Op
+from vilexgraph.build.temporal.models import ProvisionLevel as L
 
 
 def paths(mention):
@@ -241,7 +241,7 @@ def test_parts_of_an_appendix_are_not_the_bodys_provisions():
 
 def test_the_displayed_number_loses_the_portal_s_quoting_artefacts():
     """9 documents carry a spreadsheet's text marker inside `docNum` itself."""
-    from legal_crawler.ingest import document_number
+    from vilexgraph.build.ingest import document_number
 
     assert document_number("'42/2022/TT-BCT") == "42/2022/TT-BCT"
     assert document_number("24/2025/TT-BCT'") == "24/2025/TT-BCT"

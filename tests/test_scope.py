@@ -1,5 +1,5 @@
 from build_eligibility import manual_text_priority
-from legal_crawler.vocab.scope import (
+from vilexgraph.build.vocab.scope import (
     CONSOLIDATED,
     LOCAL,
     NON_NORMATIVE,

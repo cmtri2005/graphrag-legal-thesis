@@ -1,4 +1,4 @@
-from legal_crawler.provisions.subtree import split_document
+from vilexgraph.build.provisions.subtree import split_document
 
 ARTICLE_ONLY_TREE = [
     {"id": "a1", "title": "Điều 1", "level": "Article"},

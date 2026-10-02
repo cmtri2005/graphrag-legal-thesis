@@ -26,8 +26,8 @@ import argparse
 from collections import Counter
 from pathlib import Path
 
-from legal_crawler.provisions.text import REVIEW_THRESHOLD, align, flatten
-from legal_crawler.storage.documents import DocumentStore
+from vilexgraph.build.provisions.text import REVIEW_THRESHOLD, align, flatten
+from vilexgraph.build.storage.documents import DocumentStore
 
 REVIEW_HEADER = "# doc_id\tmethod\tcoverage\tmatched/total — below threshold, need a look\n"
 

@@ -1,7 +1,7 @@
 [project]
-name = "legal-crawler"
+name = "vilexgraph"
 version = "0.1.0"
-description = "vbpl.vn crawler for temporal-aware Vietnamese legal knowledge graph"
+description = "Temporal-aware GraphRAG for Vietnamese legal text: vbpl.vn crawler, versioned legal graph, retrieval and ViLexTime benchmark"
 requires-python = ">=3.10"
 dependencies = [
     "requests>=2.31",

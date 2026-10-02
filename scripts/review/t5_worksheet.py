@@ -31,7 +31,7 @@ import json
 import re
 from pathlib import Path
 
-from legal_crawler.vocab.status_codes import effective_clause_dates
+from vilexgraph.build.vocab.status_codes import effective_clause_dates
 
 KIND = {"stated_retroactive": "hồi tố, cần luật sư xét",
         "guidance_in_sync": "hướng dẫn cùng ngày hiệu lực với văn bản được hướng dẫn (cố vấn: loại)",

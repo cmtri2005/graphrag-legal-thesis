@@ -13,8 +13,8 @@ from pathlib import Path
 import pytest
 
 from build_versions import build_version_files
-from legal_crawler.index import TemporalIndex
-from legal_crawler.temporal import (
+from vilexgraph.build.index import TemporalIndex
+from vilexgraph.build.temporal import (
     EventStatus,
     InvalidityReason,
     LegalEvent,

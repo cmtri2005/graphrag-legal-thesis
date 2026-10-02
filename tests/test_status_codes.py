@@ -1,6 +1,6 @@
 import pytest
 
-from legal_crawler.vocab.status_codes import (
+from vilexgraph.build.vocab.status_codes import (
     StatusCodeMap,
     UnknownStatusCodeError,
     is_legal_date,
@@ -56,7 +56,7 @@ def test_only_job_rows_date_a_legal_event():
 def test_job_dates_are_normalised_by_their_clock_time():
     from datetime import date
 
-    from legal_crawler.vocab.status_codes import legal_date
+    from vilexgraph.build.vocab.status_codes import legal_date
 
     job = {"createdBy": "Job", "content": "DATE_HL"}
     # T00:00 rows are one day late; T07:00 rows are the date itself.
@@ -73,7 +73,7 @@ def test_job_dates_are_normalised_by_their_clock_time():
 def test_anchor_problem_counts_an_empty_interval():
     from datetime import date
 
-    from legal_crawler.vocab.status_codes import (
+    from vilexgraph.build.vocab.status_codes import (
         EMPTY_INTERVAL, IN_FORCE_PAST_EFF_TO, NO_EFF_FROM, NO_STATUS,
         REPEALED_WITHOUT_EFF_TO, anchor_problem,
     )

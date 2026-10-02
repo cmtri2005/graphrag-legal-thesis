@@ -2,7 +2,7 @@
 import json
 from datetime import date
 
-from legal_crawler.ingest import IngestReport, accepted_corrections, build_document
+from vilexgraph.build.ingest import IngestReport, accepted_corrections, build_document
 
 RAW = {"docNum": "41/2021/TT-BGTVT", "issueDate": "2021-12-31T00:00:00", "effFrom": "2021-02-15T00:00:00"}
 

@@ -30,13 +30,13 @@ import sys
 import time
 from pathlib import Path
 
-from legal_crawler.provisions.tree import (
+from vilexgraph.build.provisions.tree import (
     MissingPayloadRowError,
     count_by_level,
     fetch_tree,
     make_session,
 )
-from legal_crawler.storage.documents import load_permanent_failures
+from vilexgraph.build.storage.documents import load_permanent_failures
 
 # Consecutive payload-less responses before we stop blaming individual
 # documents and conclude NEXT_ACTION_ID itself rotated.

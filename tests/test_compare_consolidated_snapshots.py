@@ -2,8 +2,8 @@ import json
 from datetime import date
 
 from compare_consolidated_snapshots import compare, consolidation_edges
-from legal_crawler.index import TemporalIndex
-from legal_crawler.temporal import LegalDocument, Provision, ProvisionLevel
+from vilexgraph.build.index import TemporalIndex
+from vilexgraph.build.temporal import LegalDocument, Provision, ProvisionLevel
 
 
 def _write_json(path, value):

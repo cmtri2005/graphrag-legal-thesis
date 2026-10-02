@@ -37,14 +37,14 @@ from pathlib import Path
 
 from datetime import date
 
-from legal_crawler.extraction import TargetReference, TargetResolver, TargetScope
-from legal_crawler.extraction.provision_ops import extract_mentions, normalize_number, title_document
-from legal_crawler.extraction.wording import apply_phrase, fit, parse_items, phrase_edits, wording_blocks
-from legal_crawler.index import TemporalIndex
-from legal_crawler.ingest import document_number
-from legal_crawler.provisions.text import parse_paragraphs
-from legal_crawler.storage.documents import DocumentStore
-from legal_crawler.temporal.ids import make_document_id, make_event_id, make_provision_id
+from vilexgraph.build.extraction import TargetReference, TargetResolver, TargetScope
+from vilexgraph.build.extraction.provision_ops import extract_mentions, normalize_number, title_document
+from vilexgraph.build.extraction.wording import apply_phrase, fit, parse_items, phrase_edits, wording_blocks
+from vilexgraph.build.index import TemporalIndex
+from vilexgraph.build.ingest import document_number
+from vilexgraph.build.provisions.text import parse_paragraphs
+from vilexgraph.build.storage.documents import DocumentStore
+from vilexgraph.build.temporal.ids import make_document_id, make_event_id, make_provision_id
 
 
 def evidence_of(mention, paragraphs: list[str], limit: int = 400) -> str:

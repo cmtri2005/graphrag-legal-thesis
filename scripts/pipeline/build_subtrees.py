@@ -16,8 +16,8 @@ import random
 import shutil
 from pathlib import Path
 
-from legal_crawler.provisions.subtree import METHOD, split_document
-from legal_crawler.storage.documents import DocumentStore
+from vilexgraph.build.provisions.subtree import METHOD, split_document
+from vilexgraph.build.storage.documents import DocumentStore
 
 SAMPLE_SIZE = 100
 SAMPLE_SEED = 20260914

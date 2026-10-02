@@ -13,8 +13,8 @@ import argparse
 import time
 from pathlib import Path
 
-from legal_crawler.ingest import ingest
-from legal_crawler.index import TemporalIndex
+from vilexgraph.build.ingest import ingest
+from vilexgraph.build.index import TemporalIndex
 
 
 def main() -> None:

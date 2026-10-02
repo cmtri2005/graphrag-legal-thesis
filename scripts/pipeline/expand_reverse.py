@@ -5,7 +5,7 @@ Stage 2's BFS walks `references[]`, which only points outward — so documents
 that acted ON our corpus (amended, repealed, replaced it) were never
 discovered. This fetches /doc/{id}/diagram for everything we hold, reads the
 inbound relations, pulls in the missing actors, and repeats until nothing new
-turns up. See src/legal_crawler/diagram.py for the direction rules and for
+turns up. See src/vilexgraph/diagram.py for the direction rules and for
 which relations are deliberately NOT followed.
 
 Writes:
@@ -33,14 +33,14 @@ from datetime import datetime, timezone
 from hashlib import sha256
 from pathlib import Path
 
-from legal_crawler.sources.api_client import ApiClient, DocumentNotFoundError
-from legal_crawler.graph.diagram import (
+from vilexgraph.build.sources.api_client import ApiClient, DocumentNotFoundError
+from vilexgraph.build.graph.diagram import (
     REVERSE_EXPANDABLE,
     expandable_targets,
     parse_reverse_edges,
 )
-from legal_crawler.storage.manifest import CrawlManifest
-from legal_crawler.storage.documents import read_json
+from vilexgraph.build.storage.manifest import CrawlManifest
+from vilexgraph.build.storage.documents import read_json
 
 
 def fetch_diagram_cached(client: ApiClient, out_dir: Path, doc_id: str) -> dict | None:

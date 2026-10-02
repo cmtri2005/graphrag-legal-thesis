@@ -384,7 +384,7 @@ Không có gói nào khác bắt đầu đúng trước khi T1–T6 có định 
 
 | Bước | Việc | Xong khi |
 |---|---|---|
-| C1 | ✅ 21/09 Prompt sinh câu hỏi từ bộ ba, cấm model tự thêm số liệu hoặc mốc thời gian không có trong bộ ba | `prompts/vilextime/base.md` + một file mỗi nhóm (T1, T2, T3, T4, T6). `question_source` ghi provider/model/temperature/prompt_sha trên từng dòng. Client đa nhà cung cấp `src/legal_crawler/llm.py` (Groq trước), không thêm dependency |
+| C1 | ✅ 21/09 Prompt sinh câu hỏi từ bộ ba, cấm model tự thêm số liệu hoặc mốc thời gian không có trong bộ ba | `prompts/vilextime/base.md` + một file mỗi nhóm (T1, T2, T3, T4, T6). `question_source` ghi provider/model/temperature/prompt_sha trên từng dòng. Client đa nhà cung cấp `src/vilexgraph/llm.py` (Groq trước), không thêm dependency |
 | C2 | ✅ 21/09 Kiểm tra tự động sau sinh: mọi số và mốc trong câu hỏi phải có trong bộ ba gốc | `generate_questions.validate()`, 9 mã lý do (ADR 0003 §10). Chặt hơn plan: thêm `copies_the_answer` (trùng 8-gram với đáp án), `cites_a_provision`, `conversational_filler`. Câu bị loại ghi kèm nguyên văn, không thử lại ngầm. 9 test |
 | C3 | ✅ 21/09 (phần cơ chế) Cặp tương phản T2 dùng chung một câu hỏi, chỉ khác mốc t | Sinh theo **lineage**, không theo dòng: một câu cho mọi `as_of`. `lineage_id` giữ vai trò `question_id`. Mốc thời gian không nằm trong câu hỏi, nên một câu phục vụ được mọi mốc. Chờ T2 tồn tại mới chạy thật được |
 
@@ -445,7 +445,7 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   T2/T4 ngay; trước D4 kiểm tay vế "trước sửa đổi" trên mẫu, ghi tỷ lệ sai vào
   Risks. Đổi lại, gold T2/T4 chưa đóng băng cho tới khi có con số này.
 - 2026-09-24 (CMT, C1): nhà cung cấp LLM sinh câu hỏi là **Groq** (mặc định của
-  `src/legal_crawler/llm.py`). Chỉ gửi text văn bản luật công khai.
+  `src/vilexgraph/llm.py`). Chỉ gửi text văn bản luật công khai.
   Model `openai/gpt-oss-120b` (Groq không có model mặc định, Q5). Chạy thử
   10 lineage T1: 5/10 qua C2 (loại: 2 `cites_a_provision`, 2
   `copies_the_answer`, 1 `insufficient_context`). Lượt đầu 1/5 vì

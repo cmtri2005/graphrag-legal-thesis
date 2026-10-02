@@ -2,7 +2,7 @@ from datetime import date
 
 import pytest
 
-from legal_crawler.temporal import (
+from vilexgraph.build.temporal import (
     EventApplicationError,
     EventApplier,
     EventStatus,

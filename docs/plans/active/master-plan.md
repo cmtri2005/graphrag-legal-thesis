@@ -60,7 +60,7 @@ P3.1 hạ tầng Docker ─► P3.4 loader Neo4j ─► P3.9 lưu event ─► P
       ─► L4/L5 (M5) ─► ablation (M6)
 ```
 
-Lõi logic L3 (`src/legal_crawler/temporal/`) và chuỗi phiên bản offline trên dữ
+Lõi logic L3 (`src/vilexgraph/build/temporal/`) và chuỗi phiên bản offline trên dữ
 liệu thật đã có; Gói C (C1–C6) của plan Phase 3 đã hoàn thành, gồm khoảng
 hiệu lực thực và test chuỗi thật. D1–D3 đã nạp full corpus và 13 loại cạnh
 văn bản lên Neo4j hai lượt với số đếm ổn định; D5–D6 đã kiểm parity Cypher và
@@ -317,7 +317,7 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-14 | Backfill T2: phạm vi QPPL trung ương (20.318), hàng đợi điền tay 308, phát hiện 1.626 QPPL có chữ nhưng không có cấu trúc | `../completed/2026-09-17-backfill-corpus-v2.md` |
 | 2026-09-17 | Backfill T3.1: closure genealogy hội tụ (115→40→0 target chưa tải), vá bug `attach_provision_text.py` không ghi nhận `no_content` | `../completed/2026-09-17-backfill-corpus-v2.md` |
 | 2026-09-17 | Backfill T4.3: 381/388 candidate `effective_to` quyết định qua đối chiếu văn bản gốc (không chỉ tin referenceType); sửa 5 lỗi thuật toán so khớp; bắt thêm 2 candidate sai (`3639`, cùng lớp lỗi với `46742`) | `../completed/2026-09-17-backfill-corpus-v2.md` |
-| 2026-09-17 | Backfill T5.2: kiểm tra tính đầy đủ toàn bộ 65.216 Điều/Khoản phát hiện 15% mất câu dẫn nhập (2,57M ký tự) → thêm field `preambles`; 100/100 mẫu kiểm tay đúng | `src/legal_crawler/provisions/subtree.py`, `../completed/2026-09-17-backfill-corpus-v2.md` |
+| 2026-09-17 | Backfill T5.2: kiểm tra tính đầy đủ toàn bộ 65.216 Điều/Khoản phát hiện 15% mất câu dẫn nhập (2,57M ký tự) → thêm field `preambles`; 100/100 mẫu kiểm tay đúng | `src/vilexgraph/build/provisions/subtree.py`, `../completed/2026-09-17-backfill-corpus-v2.md` |
 | 2026-09-17 | Backfill T5.4: tái lập đúng phương pháp v1 — 243 văn bản một tác nhân, 919 bộ ba gold (v1: 228/843) | `../completed/2026-09-17-backfill-corpus-v2.md` |
 | 2026-09-17 | Backfill T3.3: commit code (`7794627`), đóng băng snapshot v2, đẩy HF (`7d8ab0c`), tải về thư mục khác kiểm chứng `verify_pipeline.py` pass — **M1 đạt trước hạn** | `../completed/2026-09-17-backfill-corpus-v2.md` |
 | 2026-09-18 | L2: event có `id`/`status`/lời văn mới; 16.804 event áp được (2.819 `verified`), 96,7% chạy qua `EventApplier`; precision 58/60. P3.10 xong qua mức `verified`; P3.9, P3.11, P3.13 🟡 | [`l2-event-store.md`](l2-event-store.md) |

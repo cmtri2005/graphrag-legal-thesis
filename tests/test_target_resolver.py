@@ -2,8 +2,8 @@ from dataclasses import replace
 
 import pytest
 
-from legal_crawler.index import TemporalIndex
-from legal_crawler.extraction import (
+from vilexgraph.build.index import TemporalIndex
+from vilexgraph.build.extraction import (
     ProvisionLocator,
     ProvisionReferencePart,
     ResolutionStatus,
@@ -14,7 +14,7 @@ from legal_crawler.extraction import (
     TargetResolver,
     TargetScope,
 )
-from legal_crawler.temporal import LegalDocument, Provision, ProvisionLevel
+from vilexgraph.build.temporal import LegalDocument, Provision, ProvisionLevel
 
 
 LAW_A = "document:law-a"

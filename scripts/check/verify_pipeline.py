@@ -22,17 +22,17 @@ import argparse
 import json
 from pathlib import Path
 
-from legal_crawler.config import KEYWORDS_BY_DOMAIN
-from legal_crawler.storage.manifest import CrawlManifest
-from legal_crawler.vocab.reference_types import (
+from vilexgraph.build.config import KEYWORDS_BY_DOMAIN
+from vilexgraph.build.storage.manifest import CrawlManifest
+from vilexgraph.build.vocab.reference_types import (
     DEFAULT_MAP_PATH,
     EdgeGroup,
     ReferenceTypeMap,
 )
-from legal_crawler.provisions.text import REVIEW_THRESHOLD
-from legal_crawler.sources.sitemap import matches_any_keyword
-from legal_crawler.vocab.status_codes import StatusCodeMap, parse_transition
-from legal_crawler.storage.documents import DocumentStore, read_json
+from vilexgraph.build.provisions.text import REVIEW_THRESHOLD
+from vilexgraph.build.sources.sitemap import matches_any_keyword
+from vilexgraph.build.vocab.status_codes import StatusCodeMap, parse_transition
+from vilexgraph.build.storage.documents import DocumentStore, read_json
 
 failures: list[str] = []
 
