@@ -11,12 +11,20 @@ first configured one in `PROVIDERS` order, so Groq wins when its key is set:
 generating a question for every candidate is thousands of calls, and Groq is
 the one whose throughput makes that affordable.
 
+`$LLM_PROVIDER` pins which one is used, so a second key left in `.env` cannot
+quietly move generation somewhere else — the provider and model are published
+per row, so that choice is data, not a convenience.
+
 Model ids move faster than this file, so none is guessed: pass `--model`, or
 set `<PROVIDER>_MODEL`. `list_models()` asks the provider what it currently
 serves, which is quicker than reading a changelog.
 
-    export GROQ_API_KEY=...
-    python -c "from vilexgraph.llm import list_models; print(list_models())"
+    export DEEPSEEK_API_KEY=...
+    python -c "from vilexgraph.llm import list_models; print(list_models('deepseek'))"
+
+A reasoning model (deepseek-reasoner, gpt-oss, qwen3) spends `max_tokens` on
+hidden thinking before it answers, and a one-line question does not need any:
+prefer the plain chat model, or raise `max_tokens`.
 """
 from __future__ import annotations
 
@@ -87,6 +95,14 @@ def configured() -> list[str]:
 
 
 def pick(provider: str | None = None) -> str:
+    """The provider to call: the argument, else `$LLM_PROVIDER`, else the first keyed one.
+
+    `$LLM_PROVIDER` exists because which model wrote a question is published data
+    (the datasheet names it per row), and "whichever key happens to be set, in
+    this file's order" is the wrong way to decide that. Keeping a second key in
+    `.env` must not silently move generation to another provider.
+    """
+    provider = provider or os.environ.get("LLM_PROVIDER") or None
     if provider:
         if provider not in PROVIDERS:
             raise LLMError(f"unknown provider {provider!r}; known: {', '.join(PROVIDERS)}")

@@ -198,6 +198,45 @@ def changes(old: str, new: str) -> str:
     return "; ".join(parts) or "(chỉ khác dấu câu hoặc khoảng trắng)"
 
 
+# Why a rejected question is rejected, in the words the model needs to fix it.
+# `insufficient_context` is deliberately absent: it is the model declining, and
+# 123 of the 129 declines measured on 05/10 already had the parent lead-in and no
+# ancestor topic beyond "Phần Thứ Hai" — they are the bare list items base.md
+# tells it to decline, so asking again argues with a correct judgement.
+RETRY_HINTS = {
+    "not_one_line": "Chỉ in đúng một dòng, không thêm dòng nào khác.",
+    "not_a_question": "Câu phải kết thúc bằng dấu hỏi.",
+    "conversational_filler": "Bỏ lời chào, 'cho em hỏi', 'ạ', 'nhé'. Văn phong trung tính.",
+    "presumes_the_present": "Bỏ 'hiện hành', 'hiện nay', 'mới nhất', 'đang có hiệu lực': "
+                            "câu hỏi sẽ được hỏi ở nhiều mốc thời gian khác nhau.",
+    "cites_a_provision": "Bỏ mọi số hiệu văn bản và mọi 'Điều/Khoản/Điểm/Chương/Mục' kèm số, "
+                         "kể cả ký hiệu mục như 'a)'. Hỏi nội dung quy định, không hỏi vị trí.",
+    "mentions_a_date": "Bỏ mọi ngày, tháng, năm. Mốc thời gian là một trường riêng.",
+    "unsourced_number": "Con số này không có trong ngữ cảnh được cung cấp. Bỏ nó, "
+                        "hoặc chỉ dùng số xuất hiện nguyên văn trong TÊN VĂN BẢN, CÂU DẪN hay ĐÁP ÁN.",
+    "copies_the_answer": "Câu hỏi đang bê nguyên một mệnh đề dài từ ĐÁP ÁN, nên nó tự trả lời chính nó. "
+                         "Hãy ghim đúng mục bằng chủ đề của nó, đừng nhắc lại nội dung của nó.",
+    "too_short": "Câu hỏi quá ngắn để ghim đúng một đáp án. Dựng lại khung bằng CÂU DẪN.",
+}
+
+
+def retry_message(message: str, written: str, reason: str) -> str | None:
+    """The same input plus what went wrong, or None when asking again is pointless.
+
+    Temperature is 0 so re-sending the input unchanged returns the identical text:
+    a retry only means anything if the rejection goes back with it. Before this,
+    one rejection lost the lineage for good — it is recorded in
+    `questions.jsonl` and so skipped by the next run (0 retries in the 951 rows
+    written up to 05/10).
+    """
+    hint = RETRY_HINTS.get(reason.split(":")[0])
+    if hint is None:
+        return None
+    return (f"{message}\n\n---\nCâu bạn vừa viết bị bộ kiểm tự động loại:\n«{written}»\n\n"
+            f"Lý do: {hint}\n\nViết lại một câu hỏi khác, giữ nguyên mọi ràng buộc ở trên "
+            f"(kể cả DẠNG CÂU HỎI và MỞ ĐẦU đã giao). Chỉ in câu hỏi.")
+
+
 def system_prompt(group: str) -> str:
     base = (PROMPTS / "base.md").read_text(encoding="utf-8").strip()
     per_group = PROMPTS / f"{group}.md"
@@ -241,6 +280,9 @@ def main() -> None:
     parser.add_argument("--provider", help="default: first configured, Groq first")
     parser.add_argument("--model", help="default: $<PROVIDER>_MODEL")
     parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--retries", type=int, default=2,
+                        help="extra tries for a question the validator rejects, with the reason "
+                             "sent back (default 2); a `insufficient_context` decline is never retried")
     parser.add_argument("--limit", type=int, help="stop after this many lineages")
     parser.add_argument("--dry-run", action="store_true", help="print the prompts, call nothing")
     parser.add_argument("--answers", type=Path,
@@ -317,19 +359,41 @@ def main() -> None:
         pending = [(lid, recs) for lid, recs in pending if lid in written]
     provider = "claude-code" if args.answers else pick(args.provider)
     stats: collections.Counter[str] = collections.Counter()
+    retried: collections.Counter[str] = collections.Counter()   # kept out of `stats`: not outcomes
+    # `style_of` hands each lineage a form and an opening so the release does not
+    # repeat one template (JUDGE V4: 5 openings held 55% of the questions). Nothing
+    # rejects a question for ignoring it, because clustering is a property of the
+    # set and not of any one row — so it is watched instead. Claude kept the top 5
+    # at 16.6% over 771 questions; a model that ignores the instruction shows up
+    # here within the first 20 calls rather than after the whole run.
+    openings: collections.Counter[str] = collections.Counter()
     with out_path.open("a", encoding="utf-8") as out:
         for n, (lid, records) in enumerate(pending, 1):
             message, context, answer = user_prompt(records)
+            attempts, prompt = 0, message
             try:
-                done_completion = (Completion(written[lid].strip(), provider, args.model, None) if args.answers
-                                   else complete(system, message, provider=provider, model=args.model,
-                                                 temperature=args.temperature))
+                while True:
+                    attempts += 1
+                    done_completion = (Completion(written[lid].strip(), provider, args.model, None)
+                                       if args.answers
+                                       else complete(system, prompt, provider=provider, model=args.model,
+                                                     temperature=args.temperature))
+                    reason = validate(done_completion.text, context, answer)
+                    # `--answers` has no model to ask again, and a decline is final.
+                    if reason is None or args.answers or attempts > args.retries:
+                        break
+                    again = retry_message(message, done_completion.text, reason)
+                    if again is None:
+                        break
+                    prompt = again
+                    retried[reason.split(":")[0]] += 1
             except LLMError as error:
                 print(f"\n{error}")
                 print(f"dừng ở {n - 1}/{len(pending)}; chạy lại để tiếp tục từ đây")
                 break
-            reason = validate(done_completion.text, context, answer)
             stats["ok" if reason is None else reason.split(":")[0]] += 1
+            if reason is None:
+                openings[" ".join(done_completion.text.split()[:4]).lower()] += 1
             out.write(json.dumps({
                 "lineage_id": lid,
                 "group": args.group,
@@ -339,6 +403,7 @@ def main() -> None:
                 "provider": done_completion.provider,
                 "model": done_completion.model,
                 "temperature": done_completion.temperature,
+                "attempts": attempts,
                 "prompt_sha": prompt_sha,
                 "generated_at": datetime.now(timezone.utc).date().isoformat(),
             }, ensure_ascii=False) + "\n")
@@ -354,6 +419,17 @@ def main() -> None:
         for reason, count in stats.most_common():
             if reason != "ok":
                 print(f"   loại {count:>5,}  {reason}")
+        if retried:
+            print(f"   đã gửi lại {sum(retried.values()):,} lượt kèm lý do: "
+                  + ", ".join(f"{k}={v}" for k, v in retried.most_common()))
+    if kept:
+        top = openings.most_common(5)
+        share = sum(n for _, n in top) / kept
+        print(f"\n  đa dạng câu mở đầu: {len(openings):,} cụm khác nhau trên {kept:,} câu · "
+              f"5 cụm đầu chiếm {share:.1%}"
+              + ("   << LẶP KHUÔN, xem lại MỞ ĐẦU trong prompt" if share > 0.35 else ""))
+        for text, count in top:
+            print(f"    {count:>4}  {text}")
 
 
 if __name__ == "__main__":

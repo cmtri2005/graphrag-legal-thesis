@@ -101,12 +101,13 @@ def part_of(row: dict) -> str | None:
     return "ancestor" if row.get("repeal_mode") == "ancestor" else "direct"
 
 
-def parts(group: str, records: list[dict], need: int) -> list[tuple[str | None, list[dict], int]]:
+def parts(group: str, records: list[dict], need: int,
+          ancestor_rows: int = T6_ANCESTOR_ROWS) -> list[tuple[str | None, list[dict], int]]:
     if group != "T6":
         return [(None, records, need)]
     anc = [r for r in records if r.get("repeal_mode") == "ancestor"]
     return [("direct", [r for r in records if r.get("repeal_mode") != "ancestor"], need),
-            ("ancestor", anc, T6_ANCESTOR_ROWS * 2)]
+            ("ancestor", anc, ancestor_rows * 2)]
 
 
 def select(ranked: list[dict], passed: set[str], quota: int) -> list[str]:
@@ -137,6 +138,14 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--data", type=Path, default=Path("data"))
     parser.add_argument("--select", action="store_true", help="pick the release rows from sample.jsonl")
+    # H3 is the hypothesis T6 "ancestor" carries, and at 24 rows / 12 lineages its
+    # interval is about +-25 pp, so it can only illustrate. The pool now holds
+    # thousands of candidates (build_question_pool.py --ancestor-quota), so this is
+    # the only number left between H3 and a testable hypothesis — but raising it
+    # takes rows from T6 "direct" or past Bảng 1's T6 = 100, which is the team's
+    # call (report decision 2), so the default is what the release already has.
+    parser.add_argument("--ancestor-rows", type=int, default=T6_ANCESTOR_ROWS,
+                        help=f"T6 'ancestor' rows in the release (default {T6_ANCESTOR_ROWS})")
     args = parser.parse_args()
 
     base = args.data / "derived/vilextime"
@@ -157,8 +166,8 @@ def main() -> None:
                     record = json.loads(line)
                     records[record["lineage_id"]].append(record)
                 passed = {lid for lid, recs in records.items() if recs[0]["question_source"]["kind"] == "llm"} - dropped
-                quotas = ({"ancestor": T6_ANCESTOR_ROWS, "direct": quota - T6_ANCESTOR_ROWS} if group == "T6"
-                          else {None: quota})
+                quotas = ({"ancestor": args.ancestor_rows, "direct": quota - args.ancestor_rows}
+                          if group == "T6" else {None: quota})
                 chosen = [lid for part, q in quotas.items()
                           for lid in select([p for p in ranked if p["group"] == group and part_of(p) == part],
                                             passed, q)]
@@ -180,7 +189,7 @@ def main() -> None:
     lines = []
     for group, quota in QUOTA.items():
         records = [json.loads(line) for line in (base / f"{group}.jsonl").open(encoding="utf-8")]
-        for part, part_records, need in parts(group, records, quota * OVERSAMPLE[group]):
+        for part, part_records, need in parts(group, records, quota * OVERSAMPLE[group], args.ancestor_rows):
             picked = sample(part_records, need, prior=prior[(group, part)])
             rows = sum(p["rows"] for p in picked)
             short = "  << THIẾU" if rows < need else ""

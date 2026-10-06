@@ -20,11 +20,25 @@ facts that judgement needs, and nothing here decides it.
       says how: "direct" (an event ended it) or "ancestor" (it lost force
       because its Điều, Khoản, Mục or Chương was repealed — H3, decided 28/09)
 
-A provision lands in exactly one group, scarcest first (T5, then T3, T6, T4,
-T2, T1), so no node — and so no text — can appear twice in the benchmark. T5
-is taken *after* the other groups are capped, so moving a provision into it
-removes that one row and leaves every other group's sample as it was. The
-dev/test split is by document for the same reason (Q6) and is left to P4.9.
+A provision lands in exactly one group, scarcest first (T5, then T6 "ancestor",
+T3, T6 "direct", T4, T2, T1), so no node — and so no text — can appear twice in
+the benchmark. The dev/test split is by document for the same reason (Q6) and is
+left to P4.9.
+
+The order matters most for T6 "ancestor", which is H3. 10,055 provisions qualify
+across 484 documents, and 9,929 of them are *also* T1 candidates — T1 is exactly
+where `classify` sends a one-version chain — so while ancestor was written last
+its yield was whatever T1's seeded sample happened to leave behind, which was 264
+candidates for a 24-row quota. It is written before the cascade's groups now and
+takes `--ancestor-quota` x `--per-group-cap`.
+
+Every row also carries the difficulty covariates (`n_versions`, `similarity`,
+`similarities`, `substantive_transitions`) rather than only the group whose
+definition needs one, and every gold entry says which gap a missing answer is
+(`no_answer_reason`) and whether a later version was already signed but not yet
+in force at that date (`pending`). Those are facets, not groups: the T2/T4 cut at
+NEAR_IDENTICAL is a threshold on a continuous variable, and reporting the
+variable lets the analysis slice it without another rebuild.
 
 A candidate must also have a *different* answer at each of its dates, which
 11.1% of consecutive version pairs do not: their amendment left the text
@@ -44,6 +58,7 @@ from __future__ import annotations
 import argparse
 import collections
 import difflib
+import hashlib
 import json
 import random
 import re
@@ -52,13 +67,23 @@ from datetime import date, timedelta
 from pathlib import Path
 
 ONE_DAY = timedelta(days=1)
+# Both from enrich_vilextime.py, which owns them: no row may be asked after the
+# corpus snapshot (check_release.py rejects it), and MARGIN is the distance a
+# mid-interval twin keeps from a boundary, so a boundary row must stay inside it.
+SNAPSHOT = date(2026, 9, 17)
+MARGIN = 30
 # Quota from the proposal; the pool keeps `cap` times as many candidates so the
 # hand-check and the adviser can reject freely without starving a group.
 QUOTA = {"T1": 250, "T2": 400, "T3": 200, "T4": 150, "T5": 50, "T6": 100}
 PRIORITY = ("T3", "T6", "T4", "T2", "T1")  # scarcest first; T5 is taken out after capping
 NEAR_IDENTICAL = 0.90
 SEED = 20260920
-ANCESTOR_CAP = 300     # T6 "ancestor" candidates kept; 10,249 exist (28/09) for a 24-row quota
+# T6 "ancestor" — the H3 case — is a part with its own quota, not a leftover.
+# 10,055 provisions in 484 documents qualify (measured 05/10, read-only replay of
+# classify + repealed_by_ancestor), so the old ANCESTOR_CAP = 300 was the only
+# thing holding H3 at 12 lineages. 200 is the target at which a paired MDE lands
+# near 8-9 pp; `--per-group-cap` multiplies it like every other group's.
+ANCESTOR_QUOTA = 200
 
 
 def _d(value: str | None) -> date | None:
@@ -72,6 +97,62 @@ def in_force_at(versions: list[dict], at: date) -> dict | None:
         if start and start <= at and (end is None or at < end):
             return v
     return None
+
+
+def _words(text: str | None) -> str:
+    """Case, spacing and punctuation removed — what `cosmetic_only` compares on."""
+    return " ".join(re.findall(r"\w+", (text or "").casefold()))
+
+
+def facets_of(versions: list[dict]) -> dict:
+    """Difficulty covariates, on every row rather than only where a group needs one.
+
+    `similarity` used to be written for T4 alone, which is the same number that
+    decides T4 membership: the cut at NEAR_IDENTICAL is a threshold on a
+    continuous variable, so the group boundary is arbitrary while the variable
+    is not. Written for every chain it becomes a covariate the analysis can slice
+    on, and the 275 released pairs stay one population instead of 150 + 125.
+
+    `substantive_transitions` is the text half of rule R2: a transition whose two
+    texts differ only in case, spacing or punctuation ("Trung ương" -> "trung
+    ương") cannot carry a question, and 18.4% of T3's transitions are that or an
+    agency rename. The full rule is a property of the *question* — whether it
+    touches every change — so this is an upper bound and the row is kept, not
+    dropped: which definition T3 ships with is still open (report decision 6).
+    """
+    texts = [v["text"] for v in versions]
+    ratios = [round(difflib.SequenceMatcher(None, a, b).ratio(), 4)
+              for a, b in zip(texts, texts[1:])]
+    normed = [_words(t) for t in texts]
+    return {
+        "n_versions": len(versions),
+        # kept under its old name and old meaning for the two-version chains
+        # `build_vilextime.py` already reads it from
+        "similarity": ratios[0] if len(ratios) == 1 else None,
+        "similarities": ratios,
+        "substantive_transitions": sum(a != b for a, b in zip(normed, normed[1:])),
+    }
+
+
+def spread_as_of(provision_id: str, start: date, bound: date) -> date:
+    """A deterministic as_of in [start + 1, start + MARGIN], not fixed at start + 1.
+
+    Asking every one-version lineage at exactly start + 1 leaks through the
+    *marginal* distribution rather than through any single row: across the release
+    it teaches that `as_of - 1` is a version boundary, which a system can then use
+    on the groups that do have a choice without reading anything. JUDGE N3 found
+    this on T3 and T3 was moved on 29/09; T1 was left behind.
+
+    The spread stays inside MARGIN so the row keeps its `ranh_gioi` meaning — near
+    the start of the version — and so it cannot land on the mid-interval twin
+    `enrich_vilextime.mid_date` builds for the same lineage, which holds MARGIN
+    days off both boundaries. Seeded on the lineage id: a rebuild reproduces it.
+    """
+    span = min((bound - start).days, MARGIN)
+    if span <= 0:
+        return start
+    offset = int(hashlib.sha1(provision_id.encode()).hexdigest(), 16) % span
+    return start + timedelta(days=1 + offset)
 
 
 def classify(versions: list[dict], document_ends: date | None, level: str, today: date) -> str | None:
@@ -97,11 +178,19 @@ def classify(versions: list[dict], document_ends: date | None, level: str, today
     return "T1"
 
 
-def ask_dates(group: str, versions: list[dict], today: date) -> list[date]:
+def ask_dates(group: str, versions: list[dict], today: date,
+              provision_id: str = "", document_ends: date | None = None) -> list[date]:
     """The dates a question is asked at — chosen so the answers differ."""
     starts = [_d(v["effective_from"]) for v in versions]
     if group == "T1":
-        return [starts[0] + ONE_DAY]
+        # Anywhere in the one version's window, so the answer is the same wherever
+        # it lands; the date is spread rather than fixed at start + 1 (see
+        # `spread_as_of`). Bounded by the document's own end as well, because a
+        # version whose `effective_to` is null inside a document that already
+        # ended is exactly the metadata gap JUDGE C1 is about.
+        ends = [d for d in (_d(versions[0]["effective_to"]), document_ends) if d]
+        bound = min([*ends, min(today, SNAPSHOT) + ONE_DAY]) - ONE_DAY
+        return [spread_as_of(provision_id, starts[0], bound)]
     if group == "T6":
         end = _d(versions[-1]["effective_to"])
         return [end - ONE_DAY, end]
@@ -120,9 +209,49 @@ def repealed_by_ancestor(last: dict, level: str, document_ends: date | None, tod
             and (document_ends is None or document_ends > today))
 
 
+def pending_version(versions: list[dict], at: date, issued_on: dict[str, str]) -> dict | None:
+    """A later version already signed at `at` but not yet in force.
+
+    The amending act is on the portal, retrievable and textually authoritative,
+    and it is not law yet — so every retrieval signal points at the answer that
+    is wrong. `not_yet_in_force` was a schema value with no rows behind it; this
+    names the case where it already occurs, which is most of T2's "before" row,
+    instead of carving out a seventh group for it.
+    """
+    for v in versions:
+        start, event = _d(v["effective_from"]), v["created_by_event_id"]
+        if not start or start <= at or not event:
+            continue
+        actor = f"document:{event.split(':')[1]}"
+        signed = _d(issued_on.get(actor))
+        if signed and signed <= at:
+            return {"version_id": v["id"], "actor_document_id": actor,
+                    "signed_on": signed.isoformat(), "effective_from": v["effective_from"],
+                    "days_until_effect": (start - at).days}
+    return None
+
+
+def why_no_answer(versions: list[dict], at: date) -> str:
+    """Before the first version opens is not the same gap as after the last one closes."""
+    first = _d(versions[0]["effective_from"])
+    return "not_yet_in_force" if first and at < first else "provision_repealed"
+
+
+def after_snapshot(row: dict) -> bool:
+    """A date past the corpus snapshot, which nothing in the corpus can answer.
+
+    `check_release.py` rejects these, so shipping them in the pool only defers the
+    failure: JUDGE V2 found 6 in the release reaching to 2027-03-01. A transition
+    or an expiry dated in the future produces them, which is why the test is on
+    the built row rather than on any one group.
+    """
+    return any(g["as_of"] > SNAPSHOT.isoformat() for g in row["gold"])
+
+
 def build_row(group: str, provision: dict, versions: list[dict], today: date,
-              evidence: dict[str, dict]) -> dict:
-    dates = ask_dates(group, versions, today)
+              evidence: dict[str, dict], document_ends: date | None = None,
+              issued_on: dict[str, str] | None = None) -> dict:
+    dates = ask_dates(group, versions, today, provision["id"], document_ends)
     gold = []
     for at in dates:
         hit = in_force_at(versions, at)
@@ -131,6 +260,8 @@ def build_row(group: str, provision: dict, versions: list[dict], today: date,
             "in_force": hit is not None,
             "version_id": hit["id"] if hit else None,
             "text": hit["text"] if hit else None,
+            "no_answer_reason": None if hit else why_no_answer(versions, at),
+            "pending": pending_version(versions, at, issued_on or {}),
         })
     events = [v["created_by_event_id"] for v in versions if v["created_by_event_id"]]
     events += [v["ended_by_event_id"] for v in versions if v["ended_by_event_id"]]
@@ -157,10 +288,7 @@ def build_row(group: str, provision: dict, versions: list[dict], today: date,
     }
     if group == "T6":
         row["repeal_mode"] = "direct"
-    if group == "T4":
-        row["similarity"] = round(
-            difflib.SequenceMatcher(None, versions[0]["text"], versions[1]["text"]).ratio(), 4
-        )
+    row.update(facets_of(versions))
     return row
 
 
@@ -170,6 +298,8 @@ def build_row(group: str, provision: dict, versions: list[dict], today: date,
 # not guessed from wording: the act its title cites by number takes effect on
 # the same day. They are named for the audit rather than silently dropped.
 _CITED_NUMBER = re.compile(r"\b(\d+/\d{4}/[A-ZĐ][A-ZĐa-z0-9\-]*)")
+# Read before parsing, so the ancestor pass json.loads only the lines it wants.
+_PROVISION_ID = re.compile(r'"provision_id"\s*:\s*"([^"]+)"')
 
 
 def retro_kind(number: str, title: str, effective: str, effective_by_number: dict[str, str]) -> str:
@@ -184,7 +314,7 @@ def retro_kind(number: str, title: str, effective: str, effective_by_number: dic
 
 
 def build_t5_row(provision: dict, versions: list[dict], evidence: dict[str, dict],
-                 actors: dict[str, tuple]) -> dict | None:
+                 actors: dict[str, tuple], issued_on: dict[str, str] | None = None) -> dict | None:
     """Either side of the first change made by a retroactive document.
 
     `actors` maps a retroactive document to (number, title, issued_on,
@@ -204,11 +334,13 @@ def build_t5_row(provision: dict, versions: list[dict], evidence: dict[str, dict
         for at in dates:
             hit = in_force_at(versions, at)
             gold.append({"as_of": at.isoformat(), "in_force": hit is not None,
-                         "version_id": hit["id"] if hit else None, "text": hit["text"] if hit else None})
+                         "version_id": hit["id"] if hit else None, "text": hit["text"] if hit else None,
+                         "no_answer_reason": None if hit else why_no_answer(versions, at),
+                         "pending": pending_version(versions, at, issued_on or {})})
         if len({(g["in_force"], g["text"]) for g in gold}) != 2:
             return None
         events = sorted({x for w in versions for x in (w["created_by_event_id"], w["ended_by_event_id"]) if x})
-        return {
+        row = {
             "schema_version": 1,
             "id": f"vilextime:T5:{provision['id']}",
             "group": "T5",
@@ -230,6 +362,8 @@ def build_t5_row(provision: dict, versions: list[dict], evidence: dict[str, dict
                 "kind": kind, "event_id": event,
             },
         }
+        row.update(facets_of(versions))
+        return row
     return None
 
 
@@ -254,6 +388,9 @@ def main() -> None:
     parser.add_argument("--data", type=Path, default=Path("data"))
     parser.add_argument("--per-group-cap", type=int, default=10,
                         help="keep this many times each group's quota (default 10)")
+    parser.add_argument("--ancestor-quota", type=int, default=ANCESTOR_QUOTA,
+                        help=f"T6 'ancestor' (H3) release target, also scaled by --per-group-cap "
+                             f"(default {ANCESTOR_QUOTA}; 10,055 provisions qualify)")
     parser.add_argument("--today", type=date.fromisoformat, default=date(2026, 9, 20))
     args = parser.parse_args()
     data = args.data
@@ -274,6 +411,9 @@ def main() -> None:
         for pid, doc, lvl, title in db.execute("SELECT id, document_id, level, title FROM provisions")
     }
     document_ends = {doc: _d(end) for doc, end in db.execute("SELECT id, effective_to FROM documents")}
+    # When each document was signed, so a version that is on the portal but not
+    # yet law at `as_of` can be named (`pending_version`).
+    issued_on = {doc: issued for doc, issued in db.execute("SELECT id, issued_on FROM documents") if issued}
     effective_by_number = {n: e for n, e in db.execute("SELECT number, effective_from FROM documents") if n}
     retro_actors = {
         doc: (number, title, issued, effective, retro_kind(number, title, effective, effective_by_number))
@@ -300,21 +440,41 @@ def main() -> None:
         if provision is None or provision["document_id"] not in eligible:
             return
         rows.sort(key=lambda v: v["ordinal"])
-        if (t5 := build_t5_row(provision, rows, evidence, retro_actors)) is not None:
+        ends = document_ends.get(provision["document_id"])
+        if (t5 := build_t5_row(provision, rows, evidence, retro_actors, issued_on)) is not None:
             t5_rows.append(t5)
-        if all(v["effective_from"] for v in rows) and repealed_by_ancestor(
-                rows[-1], provision["level"], document_ends.get(provision["document_id"]), args.today):
-            row = build_row("T6", provision, rows, args.today, evidence)
+        is_ancestor = all(v["effective_from"] for v in rows) and repealed_by_ancestor(
+            rows[-1], provision["level"], ends, args.today)
+        if is_ancestor:
+            row = build_row("T6", provision, rows, args.today, evidence, ends, issued_on)
             row.update(id=f"vilextime:T6:{provision['id']}", repeal_mode="ancestor")
-            ancestor_rows.append(row)
-        group = classify(rows, document_ends.get(provision["document_id"]), provision["level"], args.today)
+            if after_snapshot(row):
+                counts["bỏ T6/anc: hỏi sau ngày chụp corpus"] += 1
+            else:
+                ancestor_rows.append(row)
+        group = classify(rows, ends, provision["level"], args.today)
         if group is None:
             counts["bỏ: phiên bản không có ngày"] += 1
             return
-        row = build_row(group, provision, rows, args.today, evidence)
+        if is_ancestor:
+            # Which group classify() would otherwise hand an H3 lineage to. The
+            # ancestor part is written first now, so this is a monitor, not a loss:
+            # if it ever stops being T1-dominated the allocation needs revisiting.
+            counts[f"ancestor cũng là ứng viên {group}"] += 1
+        # A chain classify() sends to T3 that also satisfies the direct-T6 test
+        # would be a confound: T6 would hold only short chains. Measured 05/10 on
+        # the whole store it is 0, which is why the cascade is left as it is.
+        last = rows[-1]
+        if (group == "T3" and last["effective_to"] and last["ended_by_event_id"]
+                and provision["level"] in ("Clause", "Point") and (ends is None or ends > args.today)):
+            counts["CẢNH BÁO: T3 ăn mất một ứng viên T6-direct"] += 1
+        row = build_row(group, provision, rows, args.today, evidence, ends, issued_on)
         answers = [(g["in_force"], g["text"]) for g in row["gold"]]
         if len(answers) > 1 and len(set(answers)) != len(answers):
             counts[f"bỏ {group}: đáp án trùng nhau ở các mốc"] += 1
+            return
+        if after_snapshot(row):
+            counts[f"bỏ {group}: hỏi sau ngày chụp corpus"] += 1
             return
         counts[group] += 1
         buckets[group].append(row)
@@ -327,9 +487,14 @@ def main() -> None:
         current.append(v)
     flush(current)
 
-    # T6 "ancestor": a seeded sample, never a provision another group already holds
-    # (the groups above are written unchanged), and the repeal it inherits named.
-    ancestor_rows = stable_sample(sorted(ancestor_rows, key=lambda r: r["id"]), ANCESTOR_CAP, ranked["T6"])
+    # T6 "ancestor": a seeded sample with the repeal it inherits named. It is
+    # written *before* the other groups now (see the write loop): 9,929 of the
+    # 10,055 qualifying provisions are also T1 candidates, and T1 is where
+    # classify() puts them, so leaving ancestor last made its yield a function of
+    # whichever T1 rows happened to be sampled rather than of the quota.
+    ancestor_cap = args.ancestor_quota * args.per_group_cap
+    counts["T6 ancestor (đủ điều kiện)"] = len(ancestor_rows)
+    ancestor_rows = stable_sample(sorted(ancestor_rows, key=lambda r: r["id"]), ancestor_cap, ranked["T6"])
     parent_of = {pid: parent for pid, parent in db.execute("SELECT id, parent_id FROM provisions")}
     chains = {r["provision_id"]: [] for r in ancestor_rows}
     for pid in list(chains):
@@ -340,44 +505,62 @@ def main() -> None:
     wanted = {a for chain in chains.values() for a in chain}
     last_of: dict[str, dict] = {}
     for line in (data / "derived/versions.jsonl").open(encoding="utf-8"):
-        found = re.search(r'"provision_id"\s*:\s*"([^"]+)"', line)
+        found = _PROVISION_ID.search(line)
         if found and found.group(1) in wanted:
             v = json.loads(line)
-            if v["provision_id"] not in last_of or v["ordinal"] > last_of[v["provision_id"]]["ordinal"]:
-                last_of[v["provision_id"]] = v
+            keep = last_of.get(v["provision_id"])
+            if keep is None or v["ordinal"] > keep["ordinal"]:
+                # Only the three fields the repeal lookup below reads. Holding the
+                # whole version meant holding every ancestor's text, which was
+                # affordable at 300 H3 candidates and is not at thousands.
+                last_of[v["provision_id"]] = {
+                    "ordinal": v["ordinal"], "effective_to": v["effective_to"],
+                    "ended_by_event_id": v["ended_by_event_id"]}
     for row in ancestor_rows:
         end = row["versions"][-1]["effective_to"]
         hit = next((a for a in chains[row["provision_id"]] if (v := last_of.get(a))
                     and v["ended_by_event_id"] and v["effective_to"] == end), None)
         row["repealed_by"] = ({"ancestor_id": hit, "event_id": last_of[hit]["ended_by_event_id"]} if hit else None)
-    counts["T6 ancestor (ứng viên)"] = len(ancestor_rows)
+    counts["T6 ancestor (đã lấy mẫu)"] = len(ancestor_rows)
 
     out_path = data / "derived/vilextime_pool.jsonl"
     written: collections.Counter[str] = collections.Counter()
     documents: set[str] = set()
-    in_t5 = {r["provision_id"] for r in t5_rows}
-    taken = set(in_t5)                 # provisions already written for another group
+    taken = {r["provision_id"] for r in t5_rows}   # provisions already written for another group
+    facet_stats: collections.Counter[str] = collections.Counter()
+    t3_substantive: collections.Counter[int] = collections.Counter()
     with out_path.open("w", encoding="utf-8") as out:
-        for row in sorted(t5_rows, key=lambda r: r["id"]):
+        def emit(row: dict) -> None:
             out.write(json.dumps(row, ensure_ascii=False) + "\n")
             documents.add(row["document_id"])
+            taken.add(row["provision_id"])
+            facet_stats["dòng"] += len(row["gold"])
+            facet_stats["dòng có phiên bản đã ký chưa hiệu lực"] += sum(
+                1 for g in row["gold"] if g["pending"])
+            facet_stats["dòng không đáp án: chưa có hiệu lực"] += sum(
+                1 for g in row["gold"] if g["no_answer_reason"] == "not_yet_in_force")
+            if row["group"] == "T3":
+                t3_substantive[row["substantive_transitions"]] += 1
+
+        for row in sorted(t5_rows, key=lambda r: r["id"]):
+            emit(row)
         written["T5"] = counts["T5"] = len(t5_rows)
+        # Scarcest first, and T6 "ancestor" is the scarcest of all once the
+        # collision with T1 is counted: it goes before the cascade's groups so a
+        # provision that can only serve H3 is never spent on T1.
+        ancestor_rows = [r for r in ancestor_rows if r["provision_id"] not in taken and r["repealed_by"]]
+        for row in ancestor_rows:
+            emit(row)
+        written["T6 ancestor"] = len(ancestor_rows)
         for group in PRIORITY:
             rows = sorted(buckets[group], key=lambda r: r["id"])
             cap = QUOTA[group] * args.per_group_cap
             if len(rows) > cap:
                 rows = stable_sample(rows, cap, ranked[group])
-            rows = [r for r in rows if r["provision_id"] not in in_t5]   # T5 is scarcer
+            rows = [r for r in rows if r["provision_id"] not in taken]   # T5 and H3 are scarcer
             for row in rows:
-                out.write(json.dumps(row, ensure_ascii=False) + "\n")
-                documents.add(row["document_id"])
-                taken.add(row["provision_id"])
+                emit(row)
             written[group] = len(rows)
-        ancestor_rows = [r for r in ancestor_rows if r["provision_id"] not in taken and r["repealed_by"]]
-        for row in ancestor_rows:
-            out.write(json.dumps(row, ensure_ascii=False) + "\n")
-            documents.add(row["document_id"])
-        written["T6 ancestor"] = len(ancestor_rows)
 
     print(f"{sum(written.values()):,} ứng viên -> {out_path}\n")
     print(f"  {'nhóm':<5} {'quota':>6} {'có':>9} {'giữ':>8}   dư")
@@ -386,12 +569,24 @@ def main() -> None:
         margin = have / QUOTA[group]
         print(f"  {group:<5} {QUOTA[group]:>6,} {have:>9,} {written[group]:>8,}   {margin:>5.1f}x")
     kinds = collections.Counter(r["retroactive"]["kind"] for r in t5_rows)
-    print(f"  T6 ancestor: {written['T6 ancestor']:,} ứng viên ghi (mất hiệu lực do nút cha bị bãi bỏ)")
+    have_anc = counts["T6 ancestor (đủ điều kiện)"]
+    print(f"  {'T6/anc':<5} {args.ancestor_quota:>6,} {have_anc:>9,} {written['T6 ancestor']:>8,}"
+          f"   {have_anc / max(1, args.ancestor_quota):>5.1f}x  (H3: mất hiệu lực do nút cha bị bãi bỏ)")
     print(f"\n  T5 là ứng viên, chờ cố vấn luật theo Điều 152: {dict(kinds)}")
     for key, value in counts.items():
-        if key.startswith("bỏ"):
+        if key.startswith("bỏ") or key.startswith("CẢNH BÁO") or key.startswith("ancestor cũng"):
             print(f"  {value:,} {key}")
     print(f"\n  văn bản khác nhau trong pool đã ghi: {len(documents):,}")
+    print("\n  Trường độ khó (mọi nhóm):")
+    for key, value in facet_stats.most_common():
+        print(f"    {value:>9,}  {key}")
+    # Rule R2's text half: a T3 chain needs two transitions that are not merely
+    # cosmetic. The split here is the number report decision 6 has to choose on.
+    if t3_substantive:
+        total = sum(t3_substantive.values())
+        ok = sum(n for k, n in t3_substantive.items() if k >= 2)
+        print(f"    T3 theo số lần sửa thực chất: {dict(sorted(t3_substantive.items()))}"
+              f" -> {ok:,}/{total:,} chuỗi đạt R2 (>=2)")
 
 
 if __name__ == "__main__":

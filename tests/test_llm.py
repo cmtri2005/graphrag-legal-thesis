@@ -11,6 +11,8 @@ def _clean_env(monkeypatch):
     for _, key, model in PROVIDERS.values():
         monkeypatch.delenv(key, raising=False)
         monkeypatch.delenv(model, raising=False)
+    # `.env` is read at import, so a pinned provider there would decide these tests
+    monkeypatch.delenv("LLM_PROVIDER", raising=False)
 
 
 def test_groq_is_preferred_when_several_keys_are_present(monkeypatch):
@@ -20,6 +22,22 @@ def test_groq_is_preferred_when_several_keys_are_present(monkeypatch):
     assert configured()[0] == "groq"
     assert pick() == "groq"
     assert pick("openai") == "openai"      # an explicit choice still wins
+
+
+def test_llm_provider_pins_the_choice_over_the_table_order(monkeypatch):
+    """Which model wrote a question is published, so a leftover key must not decide it."""
+    monkeypatch.setenv("GROQ_API_KEY", "x")
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "x")
+    assert pick() == "groq", "the table order is still the fallback"
+
+    monkeypatch.setenv("LLM_PROVIDER", "deepseek")
+    assert pick() == "deepseek"
+    assert pick("groq") == "groq", "an explicit argument still wins"
+
+    monkeypatch.setenv("LLM_PROVIDER", "deepseek")
+    monkeypatch.delenv("DEEPSEEK_API_KEY")
+    with pytest.raises(LLMError, match="DEEPSEEK_API_KEY"):
+        pick()                             # pinned but unusable is an error, not a silent fallback
 
 
 def test_a_missing_key_says_which_variable_to_set(monkeypatch):

@@ -207,7 +207,11 @@ def records_of(row: dict, documents: dict[str, tuple], chains: dict[str, list],
             },
             "answer": gold["text"],
             "answerable": gold["in_force"],
-            "no_answer_reason": None if gold["in_force"] else "provision_repealed",
+            # The pool says *which* gap it is: before the first version opens is
+            # `not_yet_in_force`, after the last one closes is `provision_repealed`.
+            # Older pools carry no reason, so the old constant is the fallback.
+            "no_answer_reason": (None if gold["in_force"]
+                                 else gold.get("no_answer_reason") or "provision_repealed"),
             "in_force": gold["in_force"],
             "version_id": gold["version_id"],
             "valid_from": version["effective_from"] if version else None,
@@ -225,7 +229,16 @@ def records_of(row: dict, documents: dict[str, tuple], chains: dict[str, list],
                        "guideline_version": GUIDELINE_VERSION, "note": ""},
             "flags": flags_of(row["level"], cite, gold["text"], chain,
                               row["provision_id"] in with_children) + (["cosmetic_change"] if cosmetic else []),
+            # Difficulty covariates, carried for every group rather than only where
+            # a group is defined by one: `similarity` decides T4 membership, so
+            # reporting it per row is what lets the analysis slice the threshold
+            # instead of inheriting it. `pending` names a version already signed at
+            # `as_of` but not yet in force — the trap where every retrieval signal
+            # points at the wrong answer.
             "similarity": row.get("similarity"),
+            "similarities": row.get("similarities"),
+            "substantive_transitions": row.get("substantive_transitions"),
+            "pending": gold.get("pending"),
             # T5 only: when the change took effect against when it was signed, and
             # what kind of document made it — the facts the Điều 152 judgement needs.
             "retroactive": row.get("retroactive"),
