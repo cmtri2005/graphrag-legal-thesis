@@ -1,0 +1,263 @@
+{
+ "guideline_version": "1.2",
+ "labelled_by_both": 300,
+ "total": 300,
+ "n": 300,
+ "agreement": 0.7,
+ "ac1": 0.5199999999999999,
+ "ac1_ci95": [
+  0.417,
+  0.613
+ ],
+ "p_pos": 0.8,
+ "p_neg": 0.4,
+ "kappa": 0.23551729996036005,
+ "kappa_ci95": [
+  0.137,
+  0.35
+ ],
+ "agreement_needed_for_kappa_target": 0.8430311111111111,
+ "per_group": {
+  "T2": {
+   "n": 50,
+   "agreement": 0.84,
+   "ac1": 0.797160243407708,
+   "ac1_ci95": [
+    0.635,
+    0.931
+   ],
+   "p_pos": 0.9090909090909091,
+   "p_neg": 0.3333333333333333,
+   "kappa": 0.25373134328358204,
+   "kappa_ci95": [
+    -0.096,
+    0.611
+   ],
+   "agreement_needed_for_kappa_target": 0.9142399999999999
+  },
+  "T3": {
+   "n": 50,
+   "agreement": 0.84,
+   "ac1": 0.6845425867507886,
+   "ac1_ci95": [
+    0.49,
+    0.88
+   ],
+   "p_pos": 0.8181818181818182,
+   "p_neg": 0.8571428571428571,
+   "kappa": 0.6835443037974682,
+   "kappa_ci95": [
+    0.49,
+    0.876
+   ],
+   "agreement_needed_for_kappa_target": 0.79776
+  },
+  "T4": {
+   "n": 50,
+   "agreement": 0.76,
+   "ac1": 0.6838777660695469,
+   "ac1_ci95": [
+    0.471,
+    0.859
+   ],
+   "p_pos": 0.8604651162790697,
+   "p_neg": 0.14285714285714285,
+   "kappa": 0.053627760252366145,
+   "kappa_ci95": [
+    -0.129,
+    0.359
+   ],
+   "agreement_needed_for_kappa_target": 0.89856
+  },
+  "T5": {
+   "n": 38,
+   "agreement": 0.9210526315789473,
+   "ac1": 0.90998815633636,
+   "ac1_ci95": [
+    0.779,
+    1.0
+   ],
+   "p_pos": 0.9577464788732394,
+   "p_neg": 0.4,
+   "kappa": 0.35955056179775285,
+   "kappa_ci95": [
+    -0.075,
+    1.0
+   ],
+   "agreement_needed_for_kappa_target": 0.9506925207756233
+  },
+  "T6": {
+   "n": 112,
+   "agreement": 0.4732142857142857,
+   "ac1": 0.11569086651053861,
+   "ac1_ci95": [
+    -0.099,
+    0.315
+   ],
+   "p_pos": 0.6335403726708074,
+   "p_neg": 0.06349206349206349,
+   "kappa": -0.020382952439777627,
+   "kappa_ci95": [
+    -0.091,
+    0.054
+   ],
+   "agreement_needed_for_kappa_target": 0.7934948979591837
+  }
+ },
+ "per_lineage": {
+  "n": 141,
+  "agreement": 0.6808510638297872,
+  "ac1": 0.4879141277591703,
+  "ac1_ci95": [
+   0.324,
+   0.633
+  ],
+  "p_pos": 0.7867298578199052,
+  "p_neg": 0.36619718309859156,
+  "kappa": 0.20398946179902136,
+  "kappa_ci95": [
+   0.059,
+   0.37
+  ],
+  "agreement_needed_for_kappa_target": 0.8396257733514411
+ },
+ "preregistered": {
+  "primary": "ac1",
+  "ac1_target": 0.8,
+  "p_neg_target": 0.6,
+  "kappa_reported_target": 0.6
+ },
+ "disagreements": [
+  "vilextime:T3:provision:472123d4-eb8f-11f0-a8f3-9755d866bd6e#k13:2019-11-30",
+  "vilextime:T3:provision:472123d4-eb8f-11f0-a8f3-9755d866bd6e#k13:2024-05-31",
+  "vilextime:T3:provision:472123d4-eb8f-11f0-a8f3-9755d866bd6e#k13:2024-06-01",
+  "vilextime:T5:provision:ce41cbb0-2d53-11f1-9760-dfbbd139e1ee:2014-12-31",
+  "vilextime:T5:provision:ce41cbb0-2d53-11f1-9760-dfbbd139e1ee:2015-01-01",
+  "vilextime:T6:provision:770f078c-df3c-11f0-a269-1d91061d04ad:2018-12-09",
+  "vilextime:T6:provision:770f078c-df3c-11f0-a269-1d91061d04ad:2018-12-10",
+  "vilextime:T6:provision:58afcc00-2d47-11f1-99ba-c96eeb361ed3:2022-01-09",
+  "vilextime:T6:provision:58afcc00-2d47-11f1-99ba-c96eeb361ed3:2022-01-10",
+  "vilextime:T6:provision:8c6a16a2-df47-11f0-8aef-ed9986be6f2a:2018-11-08",
+  "vilextime:T6:provision:8c6a16a2-df47-11f0-8aef-ed9986be6f2a:2018-11-09",
+  "vilextime:T6:provision:a16f5710-2d53-11f1-b007-adb8632b2f51:2019-02-28",
+  "vilextime:T6:provision:a16f5710-2d53-11f1-b007-adb8632b2f51:2019-03-01",
+  "vilextime:T4:provision:72791358-eb7a-11f0-9b96-75a5da9f38f2:2025-06-30",
+  "vilextime:T4:provision:72791358-eb7a-11f0-9b96-75a5da9f38f2:2025-07-01",
+  "vilextime:T4:provision:a82f6a30-2f43-11f1-bdf8-174088e09e7e:2026-01-25",
+  "vilextime:T4:provision:a82f6a30-2f43-11f1-bdf8-174088e09e7e:2026-01-26",
+  "vilextime:T6:provision:b45f1dd0-29c3-11f1-8545-efdceb9772be:2012-02-01",
+  "vilextime:T5:provision:e8520f90-2fee-11f1-8558-9fcf21fd73bc:2025-06-30",
+  "vilextime:T6:provision:3b8c6ac6-eb7e-11f0-9852-0f2e6d198bbc:2026-02-28",
+  "vilextime:T6:provision:26ee4c5a-df59-11f0-bed7-032447f5e3d1:2022-12-21",
+  "vilextime:T6:provision:26ee4c5a-df59-11f0-bed7-032447f5e3d1:2022-12-22",
+  "vilextime:T6:provision:4eb7a400-2d44-11f1-b6c2-cfc6b2705ad3:2026-01-28",
+  "vilextime:T6:provision:4eb7a400-2d44-11f1-b6c2-cfc6b2705ad3:2026-01-29",
+  "vilextime:T6:provision:a9ca77f0-2d53-11f1-b9f1-49d27f31db55:2016-11-17",
+  "vilextime:T6:provision:a9ca77f0-2d53-11f1-b9f1-49d27f31db55:2016-11-18",
+  "vilextime:T6:provision:3ca796b0-2c83-11f1-b17e-db63bfd9b631:2021-12-31",
+  "vilextime:T6:provision:3ca796b0-2c83-11f1-b17e-db63bfd9b631:2022-01-01",
+  "vilextime:T2:provision:4720fdaa-eb8f-11f0-a133-519646dc02ef#k2#b:2019-11-30",
+  "vilextime:T2:provision:4720fdaa-eb8f-11f0-a133-519646dc02ef#k2#b:2019-12-01",
+  "vilextime:T6:provision:e3892244-2d43-11f1-9d52-4165844a6537:2026-04-07",
+  "vilextime:T6:provision:705320a0-2d47-11f1-8f1c-192fda9aad11:2025-04-09",
+  "vilextime:T6:provision:705320a0-2d47-11f1-8f1c-192fda9aad11:2025-04-10",
+  "vilextime:T6:provision:cc5693f0-2d47-11f1-b8cb-2da65d80305d:2018-09-16",
+  "vilextime:T6:provision:cc5693f0-2d47-11f1-b8cb-2da65d80305d:2018-09-17",
+  "vilextime:T4:provision:dcefc3f0-3b96-11f1-8a9e-67d0123abfb3:2026-08-09",
+  "vilextime:T4:provision:dcefc3f0-3b96-11f1-8a9e-67d0123abfb3:2026-08-10",
+  "vilextime:T6:provision:6d0aa000-1edb-11f1-b6ca-25219d220fae:2026-02-08",
+  "vilextime:T6:provision:6d0aa000-1edb-11f1-b6ca-25219d220fae:2026-02-09",
+  "vilextime:T3:provision:64015f1e-2c85-11f1-bf18-f11eea13dfa4:2021-01-14",
+  "vilextime:T6:provision:9768e944-eb9e-11f0-a888-2d2272d172e2:2025-02-28",
+  "vilextime:T6:provision:9768e944-eb9e-11f0-a888-2d2272d172e2:2025-03-01",
+  "vilextime:T6:provision:8affd30c-2c85-11f1-82ba-edfb41c9dfe7:2018-01-14",
+  "vilextime:T6:provision:8affd30c-2c85-11f1-82ba-edfb41c9dfe7:2018-01-15",
+  "vilextime:T2:provision:5602ce50-eab5-11f0-8621-0b17b9302f68:2022-09-14",
+  "vilextime:T2:provision:5602ce50-eab5-11f0-8621-0b17b9302f68:2022-09-15",
+  "vilextime:T2:provision:a8ca7672-eb7f-11f0-b9ce-57ba0193493c:2023-08-14",
+  "vilextime:T2:provision:a8ca7672-eb7f-11f0-b9ce-57ba0193493c:2023-08-15",
+  "vilextime:T6:provision:693d0c20-2d53-11f1-bc97-c1fffc43d982:2016-06-30",
+  "vilextime:T6:provision:693d0c20-2d53-11f1-bc97-c1fffc43d982:2016-07-01",
+  "vilextime:T6:provision:26e1e40a-eba3-11f0-ab79-e98953651327:2018-12-31",
+  "vilextime:T6:provision:26e1e40a-eba3-11f0-ab79-e98953651327:2019-01-01",
+  "vilextime:T4:provision:61aed800-295a-11f1-af03-2b96afde5209:2025-07-01",
+  "vilextime:T6:provision:7dd23e96-e157-11f0-9ff6-2f1cec3635ba:2019-11-30",
+  "vilextime:T6:provision:7dd23e96-e157-11f0-9ff6-2f1cec3635ba:2019-12-01",
+  "vilextime:T6:provision:b1931290-2d52-11f1-b7a3-7b193d9edef9:2018-09-16",
+  "vilextime:T4:provision:cf94c7b0-2c86-11f1-8d38-83d067dcee90:2025-08-28",
+  "vilextime:T4:provision:cf94c7b0-2c86-11f1-8d38-83d067dcee90:2025-08-29",
+  "vilextime:T2:provision:8632bf0a-df47-11f0-a32e-d3482c4dd70e:2017-06-15",
+  "vilextime:T6:provision:77481942-df40-11f0-9d92-13ba62e2cf22:2025-07-01",
+  "vilextime:T6:provision:03bb9430-31c1-11f1-a700-4395665be151:2025-11-02",
+  "vilextime:T6:provision:03bb9430-31c1-11f1-a700-4395665be151:2025-11-03",
+  "vilextime:T6:provision:331b16d0-2d46-11f1-bf45-619ee805e0c6:2021-12-31",
+  "vilextime:T6:provision:331b16d0-2d46-11f1-bf45-619ee805e0c6:2022-01-01",
+  "vilextime:T6:provision:83928ec0-4b6b-11f1-899d-ff4e98a3623c:2025-09-10",
+  "vilextime:T6:provision:83928ec0-4b6b-11f1-899d-ff4e98a3623c:2025-09-11",
+  "vilextime:T6:provision:36175100-eac5-11f0-8682-6378809d27f4:2018-01-14",
+  "vilextime:T6:provision:36175100-eac5-11f0-8682-6378809d27f4:2018-01-15",
+  "vilextime:T4:provision:5dc6c73a-eb7e-11f0-892a-e1b047e6c303#k1#b:2019-09-16",
+  "vilextime:T6:provision:41522558-2d42-11f1-be12-85fe9520288d:2025-12-31",
+  "vilextime:T6:provision:41522558-2d42-11f1-be12-85fe9520288d:2026-01-01",
+  "vilextime:T6:provision:406007e6-2c7f-11f1-9115-7df974991dee:2025-02-20",
+  "vilextime:T6:provision:406007e6-2c7f-11f1-9115-7df974991dee:2025-02-21",
+  "vilextime:T4:provision:52a226e0-3171-11f1-8988-7d076da223fa:2025-05-01",
+  "vilextime:T4:provision:52a226e0-3171-11f1-8988-7d076da223fa:2025-05-02",
+  "vilextime:T6:provision:3cd78050-2c83-11f1-97cf-f7b11dc5b09e:2021-12-31",
+  "vilextime:T6:provision:3cd78050-2c83-11f1-97cf-f7b11dc5b09e:2022-01-01",
+  "vilextime:T6:provision:0914d210-39fb-11f1-a4fd-576fa3866626:2024-11-19",
+  "vilextime:T6:provision:0914d210-39fb-11f1-a4fd-576fa3866626:2024-11-20",
+  "vilextime:T6:provision:04059580-31c1-11f1-93f9-ddf7cedfba20:2025-11-02",
+  "vilextime:T6:provision:04059580-31c1-11f1-93f9-ddf7cedfba20:2025-11-03",
+  "vilextime:T6:provision:e0ac20c0-209c-11f1-a5e5-736005c41f12:2026-06-30",
+  "vilextime:T6:provision:e0ac20c0-209c-11f1-a5e5-736005c41f12:2026-07-01",
+  "vilextime:T2:provision:629631b4-eb70-11f0-8bbb-fb885191f324:2023-08-10",
+  "vilextime:T6:provision:3b8ce0dc-eb7e-11f0-929b-d3e366ad8e85:2026-02-28",
+  "vilextime:T6:provision:3b8ce0dc-eb7e-11f0-929b-d3e366ad8e85:2026-03-01",
+  "vilextime:T3:provision:9fdf67fa-2d53-11f1-ada7-1d7897c0d878:2017-10-15",
+  "vilextime:T3:provision:9fdf67fa-2d53-11f1-ada7-1d7897c0d878:2022-01-07",
+  "vilextime:T3:provision:9fdf67fa-2d53-11f1-ada7-1d7897c0d878:2025-05-18",
+  "vilextime:T3:provision:9fdf67fa-2d53-11f1-ada7-1d7897c0d878:2025-05-19"
+ ],
+ "labelled_before_d4": {
+  "vilextime:T2:provision:0229e920-2d0a-11f1-ba51-2f75b282c383:2018-10-09": [
+   "human:excel"
+  ],
+  "vilextime:T2:provision:0229e920-2d0a-11f1-ba51-2f75b282c383:2018-10-10": [
+   "human:excel"
+  ],
+  "vilextime:T2:provision:0aefcb44-df4c-11f0-95be-8f329e05cc50#k3:2023-06-07": [
+   "human:excel"
+  ],
+  "vilextime:T2:provision:0aefcb44-df4c-11f0-95be-8f329e05cc50#k3:2023-06-08": [
+   "human:excel"
+  ],
+  "vilextime:T2:provision:0b3ee050-df54-11f0-8251-51e41737034b:2021-03-14": [
+   "human:excel"
+  ],
+  "vilextime:T2:provision:0b3ee050-df54-11f0-8251-51e41737034b:2021-03-15": [
+   "human:excel"
+  ],
+  "vilextime:T2:provision:0ba724e0-2d46-11f1-8ed8-234f646704e4:2023-09-13": [
+   "human:excel"
+  ],
+  "vilextime:T2:provision:0ba724e0-2d46-11f1-8ed8-234f646704e4:2023-09-14": [
+   "human:excel"
+  ],
+  "vilextime:T3:provision:64015f1e-2c85-11f1-bf18-f11eea13dfa4:2021-01-14": [
+   "claude-opus-5-5"
+  ],
+  "vilextime:T3:provision:64015f1e-2c85-11f1-bf18-f11eea13dfa4:2025-08-06": [
+   "claude-opus-5-5"
+  ],
+  "vilextime:T3:provision:64015f1e-2c85-11f1-bf18-f11eea13dfa4:2025-08-07": [
+   "claude-opus-5-5"
+  ],
+  "vilextime:T4:provision:9d44166a-2e81-11f1-8975-ef6a7728f53c:2025-07-20": [
+   "claude-opus-5-5"
+  ],
+  "vilextime:T4:provision:9d44166a-2e81-11f1-8975-ef6a7728f53c:2025-07-21": [
+   "claude-opus-5-5"
+  ]
+ }
+}

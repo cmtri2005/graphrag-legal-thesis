@@ -6,6 +6,12 @@ release (T6 absorbs T5's shortfall, so together they stay 150) plus a random
 50 rows from each of T2, T3 and T4, drawn by lineage so a pair or chain is
 judged whole. Labels follow docs/vilextime-annotation.md (version GUIDELINE).
 
+Both files live in data/review/ — the directory .gitignore whitelists because
+losing a human label means labelling it again by hand — and every reader
+(labels.py, check_validity.py, crosscheck_evidence.py, check_release.py's
+manifest) expects them there. A labelled copy kept anywhere else is outside
+version control and makes `kappa` read the empty originals.
+
     build   writes data/review/crosscheck_A.tsv and crosscheck_B.tsv: the same
             rows, lineages in a shuffled order, empty `verdict`, `reasons`,
             `note` (and `adjudicated` on A). Refuses to overwrite a file that
@@ -233,6 +239,13 @@ def kappa(data: Path) -> None:
     if bad:
         raise SystemExit(f"nhãn ngoài từ vựng (docs/vilextime-annotation.md §2): {bad[:10]}")
     both = [i for i in a if i in b and a[i]["verdict"] and b[i]["verdict"]]
+    if not both:
+        # Writing a result file of nulls looks like a finished run and is worse than
+        # stopping: the labelled copies have lived outside `--data` before, and a
+        # silent zero is how that goes unnoticed.
+        raise SystemExit(
+            f"0/{len(a)} dòng có nhãn ở cả hai phía trong {data}/review/crosscheck_{{A,B}}.tsv — "
+            "chưa gán nhãn, hoặc bản có nhãn nằm ở thư mục khác (truyền --data)")
     def scores(ids: list[str]) -> dict:
         return pair_scores([a[i]["verdict"] for i in ids], [b[i]["verdict"] for i in ids])
 
