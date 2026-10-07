@@ -22,9 +22,13 @@ serves, which is quicker than reading a changelog.
     export DEEPSEEK_API_KEY=...
     python -c "from vilexgraph.llm import list_models; print(list_models('deepseek'))"
 
-A reasoning model (deepseek-reasoner, gpt-oss, qwen3) spends `max_tokens` on
-hidden thinking before it answers, and a one-line question does not need any:
-prefer the plain chat model, or raise `max_tokens`.
+A reasoning model spends `max_tokens` on hidden thinking before it answers, and
+a one-line question does not need any — it just truncates, which arrives as
+"hit max_tokens". Where a provider offers a plain chat model, prefer it. Where it
+does not — DeepSeek served only `deepseek-flash` and `deepseek-v4-pro` on
+07/10/2026, both reasoning, both defaulting to effort "high" — pass
+`effort="low"` instead of raising `max_tokens`, so the budget is not spent to be
+thrown away.
 """
 from __future__ import annotations
 
@@ -78,6 +82,21 @@ _load_env_file()
 class LLMError(RuntimeError):
     """The provider refused, and the caller should see why verbatim."""
 
+
+
+class Truncated(LLMError):
+    """The reply was cut off at `max_tokens`, so what came back is a fragment.
+
+    Separate from every other LLMError because the cause is this *one* request —
+    its input, the model's effort level — not the provider being down or rate
+    limiting. A caller walking a batch can record the item and keep going, where
+    stopping would mean stalling on the same item on every rerun. The fragment is
+    carried along: nothing the model writes is trusted, and nothing is thrown away.
+    """
+
+    def __init__(self, message: str, text: str = ""):
+        super().__init__(message)
+        self.text = text
 
 @dataclass(frozen=True, slots=True)
 class Completion:
@@ -136,11 +155,16 @@ def list_models(provider: str | None = None) -> list[str]:
 
 def complete(system: str, user: str, *, provider: str | None = None, model: str | None = None,
              temperature: float = 0.0, max_tokens: int = 4096, timeout: int = 90,
-             retries: int = 5, session: requests.Session | None = None) -> Completion:
+             retries: int = 5, session: requests.Session | None = None,
+             effort: str | None = None) -> Completion:
     """One completion, retrying only what is worth retrying.
 
     Temperature defaults to 0: a benchmark whose questions cannot be
     regenerated is a benchmark whose questions cannot be audited.
+
+    `effort` is sent only when given, so a provider that does not know the field
+    never sees it. It is the lever for a reasoning model on a task that needs no
+    reasoning: the models list reports which levels a model takes.
     """
     provider = pick(provider)
     base, key, _ = PROVIDERS[provider]
@@ -149,6 +173,8 @@ def complete(system: str, user: str, *, provider: str | None = None, model: str 
     payload = {"model": model, "temperature": temperature, "max_tokens": max_tokens,
                "messages": [{"role": "system", "content": system},
                             {"role": "user", "content": user}]}
+    if effort:
+        payload["effort"] = effort
 
     for attempt in range(retries):
         response = post(f"{base}/chat/completions", json=payload, timeout=timeout,
@@ -168,6 +194,8 @@ def complete(system: str, user: str, *, provider: str | None = None, model: str 
         # Reasoning models (gpt-oss, qwen3) spend max_tokens on hidden thinking
         # first, so a cut-off answer looks like a bad one. Never pass it on.
         if choices[0].get("finish_reason") == "length":
-            raise LLMError(f"{provider} {model}: hit max_tokens={max_tokens}; the answer is truncated")
+            raise Truncated(f"{provider} {model}: hit max_tokens={max_tokens}; the answer is truncated"
+                            + ("" if effort else " (a reasoning model? try effort='low')"),
+                            (choices[0]["message"].get("content") or "").strip())
         return Completion((choices[0]["message"]["content"] or "").strip(), provider, model, temperature)
     raise LLMError(f"{provider} still failing after {retries} attempts")

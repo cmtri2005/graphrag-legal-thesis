@@ -53,13 +53,21 @@ RELEASE = {**QUOTA, "T6": 100}   # T6 absorbs whatever T5 falls short of 50 once
 # 29/09 (CMT): after the review's drops, every T3 chain still available is 3 rows long,
 # so T3 lands on 199 or 202, never 200; T1 (one row a lineage) takes the odd row.
 RELEASE.update(T1=251, T3=199)
+# 07/10 (CMT): H3 — a unit losing force only because an ancestor was repealed — is
+# the mechanism behind 14,157 units, 2.4x the directly repealed ones, and it was
+# shipping 24 rows (~12 lineages, MDE ~25 pp), which is an illustration and not a
+# testable hypothesis. Raising the pool's ANCESTOR_QUOTA alone did nothing: this
+# release cap was the binding one. T1's control role needs 150, not 251 (+-7.9 pp),
+# and T2 keeps 450 of its 550, so the rows move to T6 without leaving the
+# proposal's 1,100-1,300 envelope: 150 + 450 + 199 + 50 + 376 = 1,225.
+RELEASE.update(T1=150, T2=450, T6=376)
 OVERSAMPLE = {"T1": 2, "T2": 2, "T3": 3, "T5": 2, "T6": 2}   # T3 kept 9 of 22 in the first run
 PER_DOCUMENT = 2
 # T6 has two parts (decided 28/09): "ancestor" — lost force because its Điều,
 # Khoản, Mục or Chương was repealed, the case H3 is about — is ranked on its own,
 # so the "direct" ranking already on disk is untouched, and takes this many rows
 # out of T6's release quota.
-T6_ANCESTOR_ROWS = 24
+T6_ANCESTOR_ROWS = 300   # of RELEASE["T6"]; ~150 lineages, paired MDE ~8-9 pp
 SEED = 20260924
 # T5 kinds the adviser excluded on 20/09: corrections, and guidance taking effect
 # with the act it details. They stay in the worksheet, not in the release.

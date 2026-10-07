@@ -492,7 +492,12 @@ def main() -> None:
     ranked: dict[str, set[str]] = collections.defaultdict(set)     # group -> its ranked lineages
     for line in ranking.open(encoding="utf-8") if ranking.exists() else ():
         entry = json.loads(line)
-        ranked[entry["group"]].add(entry["lineage_id"])
+        # A ranking line written before T4 was merged says "T4", and `stable_sample`
+        # looks the group up by name — so without this the former T4 lineages lose
+        # the protection that keeps a rebuild from dropping lineages the release
+        # already holds. 71 of them, each with a question already paid for, fell out
+        # of the pool on the 07/10 rebuild that way.
+        ranked["T2" if entry["group"] == "T4" else entry["group"]].add(entry["lineage_id"])
 
     eligible = {
         f"document:{row['doc_id']}"

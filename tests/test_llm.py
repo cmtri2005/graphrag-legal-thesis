@@ -3,7 +3,8 @@ import os
 
 import pytest
 
-from vilexgraph.llm import (LLMError, PROVIDERS, _load_env_file, configured, model_for, pick)
+from vilexgraph.llm import (LLMError, PROVIDERS, Truncated, _load_env_file, complete,
+                            configured, model_for, pick)
 
 
 @pytest.fixture(autouse=True)
@@ -95,3 +96,74 @@ def test_a_truncated_answer_is_an_error_not_a_bad_question(monkeypatch):
     monkeypatch.setenv("GROQ_API_KEY", "x")
     with pytest.raises(LLMError, match="truncated"):
         complete("s", "u", provider="groq", model="m", session=Session())
+
+
+class _Reply:
+    """Just enough of requests.Response for `complete` — no network in this file."""
+
+    def __init__(self, payload):
+        self.status_code, self._payload, self.headers, self.text = 200, payload, {}, ""
+        self.ok = True
+
+    def json(self):
+        return self._payload
+
+
+class _Session:
+    """Records the payload `complete` posts and replies with `finish_reason`."""
+
+    def __init__(self, finish_reason="stop"):
+        self.sent, self._finish = [], finish_reason
+
+    def post(self, url, json, timeout, headers):
+        self.sent.append(json)
+        return _Reply({"choices": [{"message": {"content": "Quy định về X là gì?"},
+                                    "finish_reason": self._finish}]})
+
+
+def test_effort_is_sent_only_when_asked_for(monkeypatch):
+    """DeepSeek served only reasoning models on 07/10/2026, both defaulting to "high".
+
+    Writing one question needs no reasoning, and "high" spends max_tokens on hidden
+    thinking and then truncates — so the lever is effort, not a bigger budget. The
+    field is omitted entirely when unset, so a provider that does not know it never
+    sees it.
+    """
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "k")
+
+    plain = _Session()
+    complete("s", "u", provider="deepseek", model="deepseek-flash", session=plain)
+    assert "effort" not in plain.sent[-1]
+
+    low = _Session()
+    complete("s", "u", provider="deepseek", model="deepseek-flash", effort="low", session=low)
+    assert low.sent[-1]["effort"] == "low"
+
+
+def test_a_truncated_reply_names_effort_as_the_fix_when_none_was_set(monkeypatch):
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "k")
+
+    with pytest.raises(LLMError, match="effort='low'"):
+        complete("s", "u", provider="deepseek", model="deepseek-flash",
+                 session=_Session(finish_reason="length"))
+    with pytest.raises(LLMError) as caught:
+        complete("s", "u", provider="deepseek", model="deepseek-flash", effort="low",
+                 session=_Session(finish_reason="length"))
+    assert "effort" not in str(caught.value)      # already set: the hint would be noise
+
+
+def test_truncated_is_an_llm_error_that_still_carries_the_fragment(monkeypatch):
+    """The contract generate_questions depends on to keep a batch moving.
+
+    It must stay catchable as LLMError, so callers that do not care keep working,
+    while a caller walking a batch can catch it on its own and record the item
+    instead of stalling on the same one at every rerun. The fragment comes with it
+    because the model's text is kept whether or not it passed.
+    """
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "k")
+
+    with pytest.raises(Truncated) as caught:
+        complete("s", "u", provider="deepseek", model="deepseek-flash",
+                 session=_Session(finish_reason="length"))
+    assert isinstance(caught.value, LLMError)
+    assert caught.value.text == "Quy định về X là gì?"

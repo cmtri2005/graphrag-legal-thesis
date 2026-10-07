@@ -41,7 +41,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
-from vilexgraph.llm import Completion, LLMError, complete, configured, pick  # noqa: E402
+from vilexgraph.llm import Completion, LLMError, Truncated, complete, configured, pick  # noqa: E402
 
 PROMPTS = Path(__file__).resolve().parents[2] / "prompts/vilextime"
 INSUFFICIENT = "KHONG_DU_NGU_CANH"
@@ -280,6 +280,13 @@ def main() -> None:
     parser.add_argument("--provider", help="default: first configured, Groq first")
     parser.add_argument("--model", help="default: $<PROVIDER>_MODEL")
     parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--max-tokens", type=int, default=4096,
+                        help="budget for one reply (default 4096); a truncated reply is retried "
+                             "once at twice this, because truncation tracks the length of the "
+                             "provision and losing those rows would thin out the long ones")
+    parser.add_argument("--effort", default="low",
+                        help="reasoning effort for a model that takes one (default low: writing one "
+                             "question needs none, and 'high' truncates at max_tokens); '' to omit")
     parser.add_argument("--retries", type=int, default=2,
                         help="extra tries for a question the validator rejects, with the reason "
                              "sent back (default 2); a `insufficient_context` decline is never retried")
@@ -370,14 +377,16 @@ def main() -> None:
     with out_path.open("a", encoding="utf-8") as out:
         for n, (lid, records) in enumerate(pending, 1):
             message, context, answer = user_prompt(records)
-            attempts, prompt = 0, message
+            attempts, prompt, budget = 0, message, args.max_tokens
             try:
                 while True:
                     attempts += 1
                     done_completion = (Completion(written[lid].strip(), provider, args.model, None)
                                        if args.answers
                                        else complete(system, prompt, provider=provider, model=args.model,
-                                                     temperature=args.temperature))
+                                                     temperature=args.temperature,
+                                                     max_tokens=budget,
+                                                     effort=args.effort or None))
                     reason = validate(done_completion.text, context, answer)
                     # `--answers` has no model to ask again, and a decline is final.
                     if reason is None or args.answers or attempts > args.retries:
@@ -387,6 +396,27 @@ def main() -> None:
                         break
                     prompt = again
                     retried[reason.split(":")[0]] += 1
+            except Truncated as error:
+                # Truncation tracks how long this provision is, not how the provider
+                # is doing, so two things follow. One round at twice the budget,
+                # because dropping these would quietly thin the long clauses out of
+                # the benchmark — 6 of 60 on the 07/10 T6 run, every one a long one.
+                # Then record it like any other rejection and carry on: stopping here
+                # would stall the same lineage on every rerun.
+                try:
+                    if budget == args.max_tokens:
+                        budget *= 2
+                        attempts += 1
+                        done_completion = complete(system, prompt, provider=provider,
+                                                   model=args.model, temperature=args.temperature,
+                                                   max_tokens=budget, effort=args.effort or None)
+                        reason = validate(done_completion.text, context, answer)
+                    else:
+                        raise error
+                except Truncated as still:
+                    print(f"\n  {lid}: {still}", flush=True)
+                    done_completion = Completion(still.text, provider, args.model, args.temperature)
+                    reason = "truncated"
             except LLMError as error:
                 print(f"\n{error}")
                 print(f"dừng ở {n - 1}/{len(pending)}; chạy lại để tiếp tục từ đây")
