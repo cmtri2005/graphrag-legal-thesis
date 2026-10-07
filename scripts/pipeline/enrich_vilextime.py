@@ -87,14 +87,14 @@ from vilexgraph.build.extraction.target_resolver import TargetResolver  # noqa: 
 from vilexgraph.build.index import TemporalIndex  # noqa: E402
 from vilexgraph.build.temporal.models import ProvisionLevel as L  # noqa: E402
 
-SCHEMA_VERSION = "1.2.0"
+SCHEMA_VERSION = "1.3.0"   # MINOR: min_repr, norm_continuity, chance_accuracy, near_identical
 SNAPSHOT = date(2026, 9, 17)   # corpus snapshot v2, frozen at M1
 MARGIN = 30                    # days a mid-interval date keeps from either boundary
 SEED = "vilextime-twin-v1"
 SPLIT_SEED = "vilextime-split-v1"
 DEV_SHARE = 0.2
 AFTER_END = "sau_het_hieu_luc"
-AFTER_END_GROUPS = ("T1", "T2", "T3", "T4", "T5")     # T6 is already unanswerable
+AFTER_END_GROUPS = ("T1", "T2", "T3", "T5")     # T6 is already unanswerable; T4 merged into T2
 # the proposal's four fields, by the words of the portal's own classification
 _FIELD_WORDS = (
     ("thue", ("thuế", "phí", "hải quan", "xuất nhập khẩu")),

@@ -79,3 +79,36 @@ def test_the_two_kinds_of_missing_answer_are_told_apart():
     versions = [version(1, "2020-01-01", "2021-01-01")]
     assert why_no_answer(versions, date(2019, 1, 1)) == "not_yet_in_force"
     assert why_no_answer(versions, date(2022, 1, 1)) == "provision_repealed"
+
+
+def test_a_one_version_row_is_not_always_asked_the_day_after_its_version_opens():
+    """JUDGE N3's leak, the marginal kind: fix T3's and T1 keeps it.
+
+    Asking every one-version lineage at start + 1 teaches the release that
+    `as_of - 1` is a version boundary, which a system can then apply to the groups
+    that do have a choice without reading anything — the probe scored 1.000 on
+    every T1 row. The guard is on the spread, not on any single date.
+    """
+    start, after = date(2020, 1, 1), date(2020, 1, 2)
+    asked = {ask_dates("T1", [version(1, start.isoformat())], date(2026, 9, 20), f"p{i}", None)[0]
+             for i in range(40)}
+
+    assert len(asked) > 1, "mọi lineage T1 vẫn bị hỏi ở cùng một khoảng cách so với mốc bắt đầu"
+    assert asked != {after}
+    assert all(start < at <= start + timedelta(days=MARGIN) for at in asked)
+
+
+def test_chance_accuracy_separates_a_pair_from_a_three_step_chain():
+    """Why T2's 0.500 and T3's 0.325 were never comparable: the chance level differs."""
+    pair = facets_of([version(1, "2020-01-01"), version(2, "2021-01-01")])
+    chain = facets_of([version(1, "2020-01-01"), version(2, "2021-01-01"), version(3, "2022-01-01")])
+
+    assert pair["chance_accuracy"] == 0.5
+    assert chain["chance_accuracy"] == round(1 / 3, 4)
+
+
+def test_near_identical_keeps_the_old_T4_cut_as_a_facet():
+    same = facets_of([version(1, "2020-01-01", text="a b c d e"), version(2, "2021-01-01", text="a b c d e")])
+    differs = facets_of([version(1, "2020-01-01", text="a b c"), version(2, "2021-01-01", text="x y z")])
+
+    assert same["near_identical"] is True and differs["near_identical"] is False

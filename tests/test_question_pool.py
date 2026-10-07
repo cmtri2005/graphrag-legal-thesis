@@ -1,6 +1,8 @@
 from datetime import date
 
-from build_question_pool import ask_dates, classify, in_force_at, repealed_by_ancestor, stable_sample
+from build_question_pool import (
+    ask_dates, classify, in_force_at, min_repr, norm_continuity, repealed_by_ancestor, stable_sample,
+)
 
 
 def _v(ordinal, start, end=None, ended_by=None):
@@ -105,3 +107,52 @@ def test_a_capped_group_keeps_its_ranked_lineages_when_the_candidates_change():
     after = stable_sample([r for r in rows if r["id"] != "r05"], 10, ranked)   # one candidate left the group
     assert len(before) == len(after) == 10
     assert ranked <= {r["provision_id"] for r in before} and ranked <= {r["provision_id"] for r in after}
+
+
+def test_a_clause_whose_sibling_gained_a_rule_the_same_day_is_kept_out_of_T6():
+    """The 05/10 adviser ruling: T6 gold asserts the content is gone, not just the clause.
+
+    Measured on the pool the same day: 645/1,000 T6 "direct" candidates and
+    1,045/2,000 "ancestor" ones have an amend, supplement or replace landing in
+    their own document on the day they ended, and annotator B rejected 45 of the
+    54 contested T6 rows for exactly this. Such a chain still ships — asked inside
+    a version's window, where its gold is the text — just not as T6.
+    """
+    today = date(2026, 9, 20)
+    repealed = [_v(1, "2015-01-01", "2020-01-01", ended_by="event:x")]
+
+    assert classify(repealed, None, "Clause", today) == "T6"
+    assert classify(repealed, None, "Clause", today, moved=True) == "T1"
+    pair = [_v(1, "2015-01-01", "2020-01-01"), _v(2, "2020-01-01", "2022-01-01", ended_by="event:x")]
+    assert classify(pair, None, "Clause", today, moved=True) == "T2"
+
+
+def test_norm_continuity_flags_only_a_change_co_dated_in_the_same_document():
+    co_dated = {("document:7", "2020-01-01")}
+
+    assert norm_continuity("document:7", "2020-01-01", co_dated) == "unclear"
+    assert norm_continuity("document:7", "2021-06-01", co_dated) == "none"   # another day
+    assert norm_continuity("document:8", "2020-01-01", co_dated) == "none"   # another document
+    assert norm_continuity("document:7", None, co_dated) == "none"           # never ended
+
+
+def _repr_row(n_versions, in_force=True, as_of="2020-01-01", events=(), **extra):
+    return {"n_versions": n_versions, "event_ids": list(events),
+            "gold": [{"as_of": as_of, "in_force": in_force}], **extra}
+
+
+def test_min_repr_names_the_weakest_representation_that_can_decide_the_row():
+    """graph_justification.md §3: I1 the version chain, I2 the ancestors, I3 the closure."""
+    assert min_repr(_repr_row(1), {}) == "doc_metadata"          # B7's reach
+    assert min_repr(_repr_row(2), {}) == "clause_version"        # I1
+    assert min_repr(_repr_row(1, in_force=False), {}) == "clause_version"
+    assert min_repr(_repr_row(1, repeal_mode="ancestor"), {}) == "ancestor_chain"   # I2
+    # I3 either way: a successor may hold the rule, or the acting document has
+    # itself been amended before the date asked, so its text is not what applies.
+    assert min_repr(_repr_row(2, norm_continuity="unclear"), {}) == "cross_document"
+    acted = _repr_row(2, as_of="2020-01-01", events=["event:d9:aa"])
+    assert min_repr(acted, {"document:d9": "2019-01-01"}) == "cross_document"
+    assert min_repr(acted, {"document:d9": "2021-01-01"}) == "clause_version"   # acted on later
+    # precedence: the ancestor case is I2 only while nothing crossed a document
+    assert min_repr(_repr_row(1, repeal_mode="ancestor", norm_continuity="unclear"),
+                    {}) == "cross_document"

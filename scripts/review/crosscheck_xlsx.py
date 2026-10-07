@@ -62,7 +62,7 @@ REASON_HELP = [
     ("question_ambiguous", "Câu hỏi khớp nhiều điều khoản hoặc nhiều mục trong danh sách; đáp án chuẩn chỉ là một trong số đó."),
     ("question_leaks", "Câu hỏi đã nói ra đáp án, nêu số hiệu/Điều/Khoản, ký hiệu mục (\"c)\"), hoặc để lộ phiên bản nào."),
     ("gold_wrong", "Cột đáp án không đúng là điều khoản có hiệu lực tại as_of: sai phiên bản, vế \"trước sửa đổi\" thực ra đã là bản sửa, hoặc text bị cắt mất phần được hỏi."),
-    ("group_mismatch", "Câu hỏi không làm được việc của nhóm. T2/T4 không chạm chỗ thay đổi (hai mốc trả lời như nhau); T3 chỉ chạm một lần sửa; T6 hỏi kiểu có/không; T5 hỏi vào phần không đổi."),
+    ("group_mismatch", "Câu hỏi không làm được việc của nhóm. T2 không chạm chỗ thay đổi (hai mốc trả lời như nhau); T3 chỉ chạm một lần sửa; T6 hỏi kiểu có/không; T5 hỏi vào phần không đổi."),
     ("unanswerable_as_asked", "Đúng chủ đề nhưng không thể trả lời bằng đáp án: hỏi \"khi nào\" mà đáp án không nói thời hạn, hỏi \"ai\" mà đáp án không nêu chủ thể."),
     ("transitional_rule", "Điều khoản chuyển tiếp của văn bản sửa đổi giữ quy định cũ cho đúng quan hệ trong câu hỏi, nên cột đáp án không phải quy định được áp dụng. Ghi Điều chuyển tiếp vào note."),
     ("other", "Lỗi khác. Bắt buộc mô tả ở cột note."),
@@ -71,7 +71,6 @@ REASON_HELP = [
 GROUP_HELP = [
     ("T2", "Cặp tương phản. Hai dòng cùng lineage, hai mốc. Kiểm xem đáp án hai mốc có THẬT SỰ khác nhau ở chỗ câu hỏi chạm tới. Giống nhau thì group_mismatch."),
     ("T3", "Chuỗi từ ba phiên bản. Câu hỏi phải chạm vào phần đổi qua NHIỀU lần sửa, không chỉ một lần."),
-    ("T4", "Bẫy trích dẫn. Hai phiên bản gần như trùng nội dung. Kiểm xem câu hỏi có chạm đúng chỗ khác biệt nhỏ đó."),
     ("T5", "Hiệu lực hồi tố: văn bản có hiệu lực TRƯỚC ngày ký. Cột note_for_annotator ghi ngày ký và ngày hiệu lực. Kiểm xem câu hỏi có hỏi vào phần thực sự thay đổi."),
     ("T6", "Hết hiệu lực một phần ở cấp Khoản/Điểm. Đáp án đúng thường là \"không còn hiệu lực\" kèm lý do, nên cột đáp án ghi \"(không có đáp án: ...)\". Câu hỏi không được là dạng có/không."),
 ]

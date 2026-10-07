@@ -34,7 +34,9 @@ import sqlite3
 from datetime import date
 from pathlib import Path
 
-SCHEMA_VERSION = "1.0.0"
+# MINOR under ADR 0003: four added facets (`near_identical`, `chance_accuracy`,
+# `min_repr`, `norm_continuity`), no field removed and none changed in meaning.
+SCHEMA_VERSION = "1.1.0"
 QUESTION_TEMPLATE_ID = "as_of_provision_text.v1"
 GUIDELINE_VERSION = "1.2"   # docs/vilextime-annotation.md; scripts/review/labels.py GUIDELINE
 # "Điểm đ" -> "đ", "Khoản 3" -> "3", "Điều 23" -> "23". The label is the whole
@@ -239,6 +241,18 @@ def records_of(row: dict, documents: dict[str, tuple], chains: dict[str, list],
             "similarities": row.get("similarities"),
             "substantive_transitions": row.get("substantive_transitions"),
             "pending": gold.get("pending"),
+            # `near_identical` is the old T4 cut, kept as the boundary of the
+            # reported slice now that T4 is not a group; `chance_accuracy` is this
+            # row's own chance level, without which T2's and T3's raw accuracies
+            # are not comparable (1/2 against 1/3).
+            "near_identical": row.get("near_identical"),
+            "chance_accuracy": row.get("chance_accuracy"),
+            # The stratum RQ3 is answered on: the weakest representation that can
+            # decide this row (graph_justification.md §3). `doc_metadata` is what
+            # B7 reaches; every tier above names an edge a metadata filter cannot
+            # follow. Derived, never hand-labelled — see build_question_pool.min_repr.
+            "min_repr": row.get("min_repr"),
+            "norm_continuity": row.get("norm_continuity"),
             # T5 only: when the change took effect against when it was signed, and
             # what kind of document made it — the facts the Điều 152 judgement needs.
             "retroactive": row.get("retroactive"),

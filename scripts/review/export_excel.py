@@ -25,12 +25,11 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 FONT = "Arial"
-QUOTA = {"T1": 250, "T2": 400, "T3": 200, "T4": 150, "T5": 50, "T6": 100}
+QUOTA = {"T1": 250, "T2": 550, "T3": 200, "T5": 50, "T6": 100}
 GROUPS = {
     "T1": "Một phiên bản (điều khoản chưa từng bị sửa)",
     "T2": "Hai phiên bản khác rõ (cặp tương phản trước/sau sửa đổi)",
     "T3": "Chuỗi ≥ 3 phiên bản",
-    "T4": "Hai phiên bản gần giống (bẫy phiên bản cũ)",
     "T5": "Hiệu lực trở về trước (chờ luật sư)",
     "T6": "Hết hiệu lực một phần ở cấp khoản, điểm",
 }

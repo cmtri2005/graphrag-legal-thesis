@@ -74,8 +74,15 @@ SNAPSHOT = date(2026, 9, 17)
 MARGIN = 30
 # Quota from the proposal; the pool keeps `cap` times as many candidates so the
 # hand-check and the adviser can reject freely without starving a group.
-QUOTA = {"T1": 250, "T2": 400, "T3": 200, "T4": 150, "T5": 50, "T6": 100}
-PRIORITY = ("T3", "T6", "T4", "T2", "T1")  # scarcest first; T5 is taken out after capping
+# T4 is no longer a group: its 150 rows are T2's, and `similarity` tells them
+# apart as a facet (see `facets_of`). Two humans could not apply the cut — the D4
+# cross-check scored kappa 0.054 on T4 against 0.684 on T3, whose "3+ versions"
+# is a fact on the page rather than a threshold inside the pipeline — and a pair
+# at 0.91 and one at 0.89 landing in separate quotas could not be compared at all.
+QUOTA = {"T1": 250, "T2": 550, "T3": 200, "T5": 50, "T6": 100}
+PRIORITY = ("T3", "T6", "T2", "T1")  # scarcest first; T5 is taken out after capping
+# Kept as the boundary of the *reported* T4 slice, so the proposal's Bang 1 still
+# has its row, and as the `near_identical` facet below.
 NEAR_IDENTICAL = 0.90
 SEED = 20260920
 # T6 "ancestor" — the H3 case — is a part with its own quota, not a leftover.
@@ -126,12 +133,91 @@ def facets_of(versions: list[dict]) -> dict:
     normed = [_words(t) for t in texts]
     return {
         "n_versions": len(versions),
+        # This row's own chance level: the odds of being right by picking a version
+        # uniformly at random. 1/2 for a pair, 1/3 for a three-step chain — which is
+        # why T2's and T3's raw accuracies were never comparable (the "newest
+        # version" probe scores 0.500 on T2 and 0.325 on T3, and the gap is the
+        # chance level, not the difficulty). Normalise on this before tabling them.
+        "chance_accuracy": round(1 / len(versions), 4) if versions else None,
+        # What used to decide T4 membership, kept as the boundary of the reported
+        # slice so Bang 1 still has a T4 row to show.
+        "near_identical": bool(ratios) and max(ratios) >= NEAR_IDENTICAL,
         # kept under its old name and old meaning for the two-version chains
         # `build_vilextime.py` already reads it from
         "similarity": ratios[0] if len(ratios) == 1 else None,
         "similarities": ratios,
         "substantive_transitions": sum(a != b for a, b in zip(normed, normed[1:])),
     }
+
+
+# An operation that can put a successor norm in place. Co-dated with another
+# unit's ending, in the same document, this is the shape the adviser's 05/10
+# ruling is about: the clause is gone, the rule it carried may not be.
+SUCCESSOR_OPS = ("amend", "supplement", "replace")
+# graph_justification.md S3: valid(u, t) needs, beyond u's own text, the version
+# chain (I1), the ancestor chain (I2), and the acting documents with their
+# transitive closure (I3). These name the weakest tier that holds each.
+REPR_TIERS = ("doc_metadata", "clause_version", "ancestor_chain", "cross_document")
+
+
+def norm_continuity(document_id: str, ended_on: str | None, co_dated: set[tuple[str, str]]) -> str:
+    """Whether this unit's rule is known to have simply ended, or may have moved.
+
+    `valid(u, t)` says the clause is out of force. It does not say the *content*
+    is, and the adviser ruled on 05/10 that every ViLexTime question is a content
+    question: a repealed clause whose rule now lives elsewhere must not ship gold
+    "(khong co dap an)". That gold is what annotator B rejected on 45 of the 54
+    contested T6 rows, every one of them flagged `group_mismatch`, with notes
+    naming the successor ("khoan 4 bi bai bo nhung khoan 5 duoc bo sung").
+
+    The test is a proxy and over-triggers on purpose: an amendment landing in the
+    same document on the same day is a *candidate* successor, not a proven one, so
+    this returns "unclear" and never "moved". Only a person reading the target
+    text may write "moved", in data/inter-annotator-agreement/audit_queue_relocation.tsv,
+    and the 18 unchecked rows there are what measures this proxy's precision.
+    """
+    if not ended_on:
+        return "none"
+    return "unclear" if (document_id, ended_on[:10]) in co_dated else "none"
+
+
+def min_repr(row: dict, acted_on: dict[str, str]) -> str:
+    """The weakest representation that can decide this row — graph_justification.md S3.
+
+    A row the containing document's own effective dates settle is one B7 (metadata
+    filter, no graph) can serve. A row that needs an edge followed is not. That
+    gap is exactly what RQ3 asks about ("loi ich den tu do thi, hay chi tu loc
+    sieu du lieu"), and H2 is called the decisive test of the representation — so
+    the tier belongs on every row as a stratum, not in a group definition.
+
+    It is *derived*, never hand-labelled: S3 proves valid(u, t) is a computation
+    over (1)-(3). This is also the repair for the D4 cross-check, where the two
+    verdicts humans could not agree on — is this T4, is this T6 — were both
+    properties of the pipeline rather than of the text in front of them.
+
+    Two limits, both to be reported. A tier says what is *necessary*, so a system
+    holding the whole graph can still answer wrongly and one below the tier can
+    still guess right; the claim is about the gap between tiers, not about any
+    single tier's score. And it inherits the extraction's own recall, so it has to
+    be re-derived by hand on the independent gold subset (W5).
+    """
+    last_as_of = max(g["as_of"] for g in row["gold"])
+    actors = {f"document:{e.split(':')[1]}" for e in row["event_ids"] if ":" in e}
+    if row.get("norm_continuity") == "unclear" or any(
+            (on := acted_on.get(a)) is not None and on <= last_as_of for a in actors):
+        return "cross_document"     # I3: an edge leaving this document decides it
+    if row.get("repeal_mode") == "ancestor":
+        return "ancestor_chain"     # I2: 14,157 units end with no event of their own
+    if row["n_versions"] > 1 or any(not g["in_force"] for g in row["gold"]):
+        return "clause_version"     # I1: the document's own dates do not say
+    return "doc_metadata"           # B7's reach: the containing document settles it
+
+
+def add_repr_fields(row: dict, continuity: str, acted_on: dict[str, str]) -> dict:
+    """`norm_continuity` then `min_repr`, in that order — the second reads the first."""
+    row["norm_continuity"] = continuity
+    row["min_repr"] = min_repr(row, acted_on)
+    return row
 
 
 def spread_as_of(provision_id: str, start: date, bound: date) -> date:
@@ -155,8 +241,16 @@ def spread_as_of(provision_id: str, start: date, bound: date) -> date:
     return start + timedelta(days=1 + offset)
 
 
-def classify(versions: list[dict], document_ends: date | None, level: str, today: date) -> str | None:
-    """Which group this provision's chain can serve, or None."""
+def classify(versions: list[dict], document_ends: date | None, level: str, today: date,
+             moved: bool = False) -> str | None:
+    """Which group this provision's chain can serve, or None.
+
+    `moved` is `norm_continuity(...) == "unclear"`: a sibling unit in the same
+    document gained or changed a rule on the very day this one ended. Such a chain
+    is kept out of T6, whose gold asserts the content is simply gone, and falls
+    through to the group its dated versions allow — where it is asked *inside* a
+    version's window, so its gold is the version text and stays correct.
+    """
     dated = [v for v in versions if v["effective_from"]]
     if len(dated) != len(versions) or not dated:
         return None  # an undated version can never be an answer
@@ -170,11 +264,11 @@ def classify(versions: list[dict], document_ends: date | None, level: str, today
         and last["ended_by_event_id"]
         and level in ("Clause", "Point")
         and (document_ends is None or document_ends > today)
+        and not moved
     ):
-        return "T6"  # ended while its document still stands
+        return "T6"  # ended while its document still stands, with nothing taking over
     if len(dated) == 2:
-        ratio = difflib.SequenceMatcher(None, dated[0]["text"], dated[1]["text"]).ratio()
-        return "T4" if ratio >= NEAR_IDENTICAL else "T2"
+        return "T2"  # T4 merged in: `similarity` is a facet, not a group
     return "T1"
 
 
@@ -424,9 +518,25 @@ def main() -> None:
     t5_rows: list[dict] = []
     ancestor_rows: list[dict] = []
     evidence = {}
+    # (document, date) pairs where something was amended, supplemented or replaced:
+    # a unit ending on that same day in that same document may have handed its rule
+    # over rather than lost it (`norm_continuity`). And, per document, the earliest
+    # day it was itself acted on — an acting document that has since been amended is
+    # I3, the transitive case, so a row depending on it cannot be settled inside one
+    # document (`min_repr`).
+    co_dated: set[tuple[str, str]] = set()
+    acted_on: dict[str, str] = {}
     for line in (data / "derived/provision_events.jsonl").read_text(encoding="utf-8").splitlines():
         e = json.loads(line)
         evidence[e["id"]] = {"evidence": e["evidence"], "actor_number": e["actor_number"]}
+        target, on = e.get("target_document_id"), e.get("effective_on")
+        if not target or not on:
+            continue
+        on = on[:10]
+        if e.get("operation") in SUCCESSOR_OPS:
+            co_dated.add((target, on))
+        if on < acted_on.get(target, "9999-99-99"):
+            acted_on[target] = on
 
     # One streaming pass: every version of a provision is adjacent in the file.
     buckets: dict[str, list[dict]] = collections.defaultdict(list)
@@ -441,18 +551,28 @@ def main() -> None:
             return
         rows.sort(key=lambda v: v["ordinal"])
         ends = document_ends.get(provision["document_id"])
+        continuity = norm_continuity(provision["document_id"], rows[-1]["effective_to"], co_dated)
+        moved = continuity == "unclear"
         if (t5 := build_t5_row(provision, rows, evidence, retro_actors, issued_on)) is not None:
-            t5_rows.append(t5)
+            t5_rows.append(add_repr_fields(t5, continuity, acted_on))
         is_ancestor = all(v["effective_from"] for v in rows) and repealed_by_ancestor(
             rows[-1], provision["level"], ends, args.today)
         if is_ancestor:
             row = build_row("T6", provision, rows, args.today, evidence, ends, issued_on)
             row.update(id=f"vilextime:T6:{provision['id']}", repeal_mode="ancestor")
+            add_repr_fields(row, continuity, acted_on)
             if after_snapshot(row):
                 counts["bỏ T6/anc: hỏi sau ngày chụp corpus"] += 1
+            elif moved:
+                # Same reason as direct T6: the H3 gold also asserts the content is
+                # gone. Nothing is lost — the cascade below still places this chain,
+                # asked inside a version's window, where its gold is the text.
+                counts["bỏ T6/anc: nghi chuyển chỗ quy phạm, chờ người kiểm"] += 1
             else:
                 ancestor_rows.append(row)
-        group = classify(rows, ends, provision["level"], args.today)
+        group = classify(rows, ends, provision["level"], args.today, moved)
+        if moved and group != "T6":
+            counts["T6 -> nhóm khác: nghi chuyển chỗ quy phạm, chờ người kiểm"] += 1
         if group is None:
             counts["bỏ: phiên bản không có ngày"] += 1
             return
@@ -468,7 +588,8 @@ def main() -> None:
         if (group == "T3" and last["effective_to"] and last["ended_by_event_id"]
                 and provision["level"] in ("Clause", "Point") and (ends is None or ends > args.today)):
             counts["CẢNH BÁO: T3 ăn mất một ứng viên T6-direct"] += 1
-        row = build_row(group, provision, rows, args.today, evidence, ends, issued_on)
+        row = add_repr_fields(build_row(group, provision, rows, args.today, evidence, ends, issued_on),
+                              continuity, acted_on)
         answers = [(g["in_force"], g["text"]) for g in row["gold"]]
         if len(answers) > 1 and len(set(answers)) != len(answers):
             counts[f"bỏ {group}: đáp án trùng nhau ở các mốc"] += 1
@@ -529,6 +650,7 @@ def main() -> None:
     taken = {r["provision_id"] for r in t5_rows}   # provisions already written for another group
     facet_stats: collections.Counter[str] = collections.Counter()
     t3_substantive: collections.Counter[int] = collections.Counter()
+    tiers: collections.Counter[str] = collections.Counter()
     with out_path.open("w", encoding="utf-8") as out:
         def emit(row: dict) -> None:
             out.write(json.dumps(row, ensure_ascii=False) + "\n")
@@ -541,6 +663,9 @@ def main() -> None:
                 1 for g in row["gold"] if g["no_answer_reason"] == "not_yet_in_force")
             if row["group"] == "T3":
                 t3_substantive[row["substantive_transitions"]] += 1
+            tiers[row["min_repr"]] += 1
+            if row["group"] == "T2" and row["near_identical"]:
+                facet_stats["lineage lát cắt T4 (độ giống >= 0,90)"] += 1
 
         for row in sorted(t5_rows, key=lambda r: r["id"]):
             emit(row)
@@ -564,7 +689,7 @@ def main() -> None:
 
     print(f"{sum(written.values()):,} ứng viên -> {out_path}\n")
     print(f"  {'nhóm':<5} {'quota':>6} {'có':>9} {'giữ':>8}   dư")
-    for group in ("T1", "T2", "T3", "T4", "T5", "T6"):
+    for group in ("T1", "T2", "T3", "T5", "T6"):
         have = counts[group]
         margin = have / QUOTA[group]
         print(f"  {group:<5} {QUOTA[group]:>6,} {have:>9,} {written[group]:>8,}   {margin:>5.1f}x")
@@ -574,7 +699,7 @@ def main() -> None:
           f"   {have_anc / max(1, args.ancestor_quota):>5.1f}x  (H3: mất hiệu lực do nút cha bị bãi bỏ)")
     print(f"\n  T5 là ứng viên, chờ cố vấn luật theo Điều 152: {dict(kinds)}")
     for key, value in counts.items():
-        if key.startswith("bỏ") or key.startswith("CẢNH BÁO") or key.startswith("ancestor cũng"):
+        if key.startswith(("bỏ", "CẢNH BÁO", "ancestor cũng", "T6 ->")):
             print(f"  {value:,} {key}")
     print(f"\n  văn bản khác nhau trong pool đã ghi: {len(documents):,}")
     print("\n  Trường độ khó (mọi nhóm):")
@@ -587,6 +712,12 @@ def main() -> None:
         ok = sum(n for k, n in t3_substantive.items() if k >= 2)
         print(f"    T3 theo số lần sửa thực chất: {dict(sorted(t3_substantive.items()))}"
               f" -> {ok:,}/{total:,} chuỗi đạt R2 (>=2)")
+    # The stratum RQ3 is answered on: B7 reaches `doc_metadata`, and every tier
+    # above it names an edge a metadata filter cannot follow.
+    print("\n  Biểu diễn yếu nhất đủ để quyết (min_repr, graph_justification §3):")
+    shipped = max(1, sum(tiers.values()))
+    for tier in REPR_TIERS:
+        print(f"    {tiers[tier]:>9,}  {tier:<16} {tiers[tier] / shipped:>5.1%}")
 
 
 if __name__ == "__main__":

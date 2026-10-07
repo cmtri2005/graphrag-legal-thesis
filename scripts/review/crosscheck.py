@@ -42,7 +42,18 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "pipeline"))
 from sample_vilextime import select  # noqa: E402  exact row totals without splitting a lineage
 
 SEED = 20260925
-SAMPLED = {"T2": 50, "T3": 50, "T4": 50}
+# T4 is no longer a group (build_question_pool.QUOTA): its rows are T2's, told
+# apart by the `near_identical` facet, so T2 takes the 50 that were T4's.
+SAMPLED = {"T2": 100, "T3": 50}
+# Pre-registered before the production overlap batch, which is what makes them
+# usable as a pass/fail (ARR checklist D). AC1 is the primary measure and kappa is
+# reported beside it, never instead of it — see `agreement_needed` for why kappa
+# cannot be the gate at this label distribution. p_neg is the one specific
+# agreement that matters: `khong_dat` is the verdict that removes a row.
+AC1_TARGET = 0.80
+PNEG_TARGET = 0.60
+KAPPA_PROPOSAL = 0.60          # the figure the submitted de cuong names, reported as-is
+BOOTSTRAP_DRAWS = 1000
 WHOLE = ("T5", "T6")
 GUIDELINE = "1.2"   # docs/vilextime-annotation.md; labels.py and check_release.py read it from here
 VERDICTS = {"dat", "khong_dat"}
@@ -75,6 +86,80 @@ def gwet_ac1(a: list[str], b: list[str]) -> float | None:
     share = {c: (a.count(c) + b.count(c)) / (2 * n) for c in cats}
     expected = sum(p * (1 - p) for p in share.values()) / (len(cats) - 1)
     return (observed - expected) / (1 - expected)
+
+
+def specific_agreement(a: list[str], b: list[str]) -> dict[str, float | None]:
+    """Agreement within each verdict on its own (Cicchetti & Feinstein 1990).
+
+    One number cannot say *which* category two raters agree on, and here that is
+    the whole question: `dat` holds ~85% of the rows, so p_pos is nearly free while
+    p_neg — agreement on the verdict that drops a row from the release — is the
+    claim the dataset's quality rests on.
+    """
+    out: dict[str, float | None] = {}
+    for c in sorted(set(a) | set(b)):
+        total = a.count(c) + b.count(c)
+        out[c] = (2 * sum(x == c == y for x, y in zip(a, b)) / total) if total else None
+    return out
+
+
+def agreement_needed(a: list[str], b: list[str], target: float) -> float | None:
+    """The p_o these marginals would need for kappa to reach `target`.
+
+    kappa = (p_o - p_e) / (1 - p_e), so p_o = target * (1 - p_e) + p_e. Measured on
+    the D4 set (07/10): A called 84.3% of rows `dat`, and reaching kappa 0.60 there
+    takes p_o >= 0.843; two raters who both settle near 85% `dat` need p_o >= 0.898,
+    at most ~30 disagreements in 300. That is a property of the label distribution,
+    not of how carefully anyone labelled — no amount of extra calibration moves it —
+    which is why AC1 is the pre-registered gate (Gwet 2008, the prevalence paradox).
+    Printed next to kappa so the choice of measure carries its own justification.
+    """
+    n = len(a)
+    if n == 0:
+        return None
+    ca, cb = collections.Counter(a), collections.Counter(b)
+    expected = sum(ca[k] * cb[k] for k in set(ca) | set(cb)) / (n * n)
+    return None if expected >= 1 else target * (1 - expected) + expected
+
+
+def bootstrap_ci(a: list[str], b: list[str], stat, draws: int = BOOTSTRAP_DRAWS) -> list[float] | None:
+    """Percentile bootstrap over items, seeded so a rerun reproduces the interval.
+
+    Resampling is by *row* here because that is the unit the two annotators judged.
+    The release-level figures resample by lineage instead (scorer `--ci`), since
+    rows of one lineage share a question and are not independent.
+    """
+    if len(a) < 2:
+        return None
+    rng = random.Random(SEED)
+    size = len(a)
+    values = []
+    for _ in range(draws):
+        idx = [rng.randrange(size) for _ in range(size)]
+        value = stat([a[i] for i in idx], [b[i] for i in idx])
+        if value is not None:
+            values.append(value)
+    if not values:
+        return None
+    values.sort()
+    return [round(values[int(0.025 * len(values))], 3),
+            round(values[min(len(values) - 1, int(0.975 * len(values)))], 3)]
+
+
+def pair_scores(va: list[str], vb: list[str]) -> dict:
+    """Every agreement figure for one pair of label vectors, AC1 first."""
+    specific = specific_agreement(va, vb)
+    return {
+        "n": len(va),
+        "agreement": sum(x == y for x, y in zip(va, vb)) / len(va) if va else None,
+        "ac1": gwet_ac1(va, vb),
+        "ac1_ci95": bootstrap_ci(va, vb, gwet_ac1),
+        "p_pos": specific.get("dat"),
+        "p_neg": specific.get("khong_dat"),
+        "kappa": cohen_kappa(va, vb),
+        "kappa_ci95": bootstrap_ci(va, vb, cohen_kappa),
+        "agreement_needed_for_kappa_target": agreement_needed(va, vb, KAPPA_PROPOSAL),
+    }
 
 
 def pick(rows: list[dict], prior: set[str] = frozenset()) -> list[dict]:
@@ -149,9 +234,7 @@ def kappa(data: Path) -> None:
         raise SystemExit(f"nhãn ngoài từ vựng (docs/vilextime-annotation.md §2): {bad[:10]}")
     both = [i for i in a if i in b and a[i]["verdict"] and b[i]["verdict"]]
     def scores(ids: list[str]) -> dict:
-        va, vb = [a[i]["verdict"] for i in ids], [b[i]["verdict"] for i in ids]
-        return {"n": len(ids), "agreement": sum(x == y for x, y in zip(va, vb)) / len(ids) if ids else None,
-                "kappa": cohen_kappa(va, vb), "ac1": gwet_ac1(va, vb)}
+        return pair_scores([a[i]["verdict"] for i in ids], [b[i]["verdict"] for i in ids])
 
     lineage: dict[str, list[str]] = collections.defaultdict(list)
     for i in both:
@@ -166,8 +249,9 @@ def kappa(data: Path) -> None:
         "labelled_by_both": len(both), "total": len(a),
         **scores(both),
         "per_group": {g: scores([i for i in both if a[i]["group"] == g]) for g in sorted({a[i]["group"] for i in both})},
-        "per_lineage": {"n": len(lids), "agreement": sum(x == y for x, y in zip(lva, lvb)) / len(lids) if lids else None,
-                        "kappa": cohen_kappa(lva, lvb), "ac1": gwet_ac1(lva, lvb)},
+        "per_lineage": pair_scores(lva, lvb),
+        "preregistered": {"primary": "ac1", "ac1_target": AC1_TARGET, "p_neg_target": PNEG_TARGET,
+                          "kappa_reported_target": KAPPA_PROPOSAL},
         "disagreements": [i for i in both if a[i]["verdict"] != b[i]["verdict"]],
         "labelled_before_d4": {i: sorted({x["labeler"] for x in outside if x["id"] == i})
                                for i in sorted({x["id"] for x in outside if x["id"] in a})},
@@ -175,13 +259,22 @@ def kappa(data: Path) -> None:
     (data / "review/crosscheck_result.json").write_text(json.dumps(result, ensure_ascii=False, indent=1) + "\n",
                                                         encoding="utf-8")
     fmt = lambda x: f"{x:.3f}" if x is not None else "—"
-    print(f"{len(both)}/{len(a)} dòng cả hai đã gán · đồng ý {fmt(result['agreement'])} · "
-          f"κ {fmt(result['kappa'])} · AC1 {fmt(result['ac1'])}")
+    ci = lambda x: f"[{x[0]:.3f}; {x[1]:.3f}]" if x else "—"
+    line = lambda label, v: (f"{label}  n={v['n']:>3}  AC1={fmt(v['ac1'])} {ci(v['ac1_ci95'])}  "
+                             f"p_neg={fmt(v['p_neg'])}  đồng ý={fmt(v['agreement'])}  κ={fmt(v['kappa'])}")
+    print(f"{len(both)}/{len(a)} dòng cả hai đã gán · chỉ số chính AC1 (đăng ký trước)")
+    print(line("  toàn tập:   ", result))
     for g, v in result["per_group"].items():
-        print(f"  {g}: n={v['n']:>3}  đồng ý={fmt(v['agreement'])}  κ={fmt(v['kappa'])}  AC1={fmt(v['ac1'])}")
-    v = result["per_lineage"]
-    print(f"  theo lineage: n={v['n']}  đồng ý={fmt(v['agreement'])}  κ={fmt(v['kappa'])}  AC1={fmt(v['ac1'])}")
-    print(f"  {len(result['disagreements'])} dòng lệch cần hoà giải · mục tiêu κ ≥ 0,6")
+        print(line(f"  {g}:         "[:14], v))
+    print(line("  lineage:    ", result["per_lineage"]))
+    ok = result["ac1"] is not None and result["ac1"] >= AC1_TARGET and (
+        result["p_neg"] is not None and result["p_neg"] >= PNEG_TARGET)
+    need = result["agreement_needed_for_kappa_target"]
+    print(f"  ngưỡng đăng ký trước: AC1 >= {AC1_TARGET:.2f} và p_neg >= {PNEG_TARGET:.2f} -> "
+          f"{'ĐẠT' if ok else 'CHƯA ĐẠT'}")
+    print(f"  κ chỉ báo kèm: ở biên nhãn này κ >= {KAPPA_PROPOSAL:.2f} đòi p_o >= {fmt(need)}"
+          f" (tối đa {round((1 - need) * result['n']) if need else '—'} dòng lệch / {result['n']})")
+    print(f"  {len(result['disagreements'])} dòng lệch cần hoà giải")
     seen = collections.Counter(lab for labs in result["labelled_before_d4"].values() for lab in labs)
     print(f"  {len(result['labelled_before_d4'])} dòng đã có nhãn ngoài D4 trước khi gán (ghi vào biên bản D5): {dict(seen)}")
 
