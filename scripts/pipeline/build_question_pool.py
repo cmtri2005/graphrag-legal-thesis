@@ -173,7 +173,7 @@ def norm_continuity(document_id: str, ended_on: str | None, co_dated: set[tuple[
     The test is a proxy and over-triggers on purpose: an amendment landing in the
     same document on the same day is a *candidate* successor, not a proven one, so
     this returns "unclear" and never "moved". Only a person reading the target
-    text may write "moved", in data/inter-annotator-agreement/audit_queue_relocation.tsv,
+    text may write "moved", in data/review/audit_queue_relocation.tsv,
     and the 18 unchecked rows there are what measures this proxy's precision.
     """
     if not ended_on:

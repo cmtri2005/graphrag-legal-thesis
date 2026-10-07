@@ -275,7 +275,7 @@ nếu quy định mới thực sự tiếp tục điều chỉnh nội dung cũ.
 `substantive_change` **không gán tay**, suy từ so sánh văn bản khi phân tích.
 
 **Trạng thái.** 25 dòng / **20 lineage** nghi chuyển chỗ, trong đó **2 đã đối chiếu văn bản thô**,
-18 chưa kiểm (`data/inter-annotator-agreement/audit_queue_relocation.tsv`). Con số 25 là lọc từ
+18 chưa kiểm (`data/review/audit_queue_relocation.tsv`). Con số 25 là lọc từ
 khoá trên ghi chú của người gán B, chưa kiểm từng dòng, và hàng audit chỉ phủ 61/112 dòng T6 nên
 **số thật có thể cao hơn**. Hệ quả: số dòng T6 "xoá hẳn thật" có thể thấp hơn 112 nhiều, và phép
 thử từ chối của T6 yếu đi tương ứng.
