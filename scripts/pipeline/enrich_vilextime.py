@@ -142,6 +142,25 @@ def in_force_at(versions: list[dict], at: date) -> dict | None:
     return None
 
 
+def pending_at(transitions: list[dict], versions: list[dict], at: date,
+               issued_on: dict[str, str]) -> dict | None:
+    """A later version already signed at `at` but not yet in force (build_question_pool.pending_version).
+
+    Recomputed for every row, because it depends on the date and a twin is a copy
+    of its boundary row: copied, 273 of 277 mid-interval twins named an amending
+    act that was not even signed yet at their date (found 11/10).
+    """
+    ids = {v["ordinal"]: v["id"] for v in versions}
+    for t in transitions:
+        start, actor = _d(t["on"]), t["actor"]["document_id"]
+        signed = _d(issued_on.get(actor)) if actor else None
+        if start and start > at and signed and signed <= at:
+            return {"version_id": ids.get(t["to_version"]), "actor_document_id": actor,
+                    "signed_on": signed.isoformat(), "effective_from": t["on"],
+                    "days_until_effect": (start - at).days}
+    return None
+
+
 def window(record: dict, versions: list[dict], document_end: date | None,
            caps: tuple[date, ...] = ()) -> tuple[date, date | None] | None:
     """The stretch of time over which this row's gold stays the same.
@@ -387,6 +406,8 @@ def main() -> None:
             pool[row["provision_id"]] = sorted(row["versions"], key=lambda v: v["ordinal"])
     db = sqlite3.connect(data / "temporal.sqlite")
     document_end = {doc: _d(end) for doc, end in db.execute("SELECT id, effective_to FROM documents")}
+    issued_on = {doc: issued for doc, issued in db.execute("SELECT id, issued_on FROM documents") if issued}
+    steps = {r["lineage_id"]: r["derivation"]["transitions"] for r in rows}   # after_end() empties the row's own
 
     # Same-document references, resolved once per (document, locator).
     resolver = TargetResolver(TemporalIndex(data / "temporal.sqlite"))
@@ -450,6 +471,7 @@ def main() -> None:
         if parent and r["as_of_strategy"] == "giua_khoang":         # the lead-in in force at the twin's date
             hit = in_force_at(chains.get(parent, []), date.fromisoformat(r["as_of"]))
             r["target"]["lead_in"] = hit["text"] if hit else None
+        r["pending"] = pending_at(steps[lid], versions, date.fromisoformat(r["as_of"]), issued_on)
         texts = [v["text"] for v in versions]
         k = next((i for i, v in enumerate(versions) if v["id"] == r["version_id"]), None)
         r["changed_span"] = changed_span(texts, k) if k is not None else None

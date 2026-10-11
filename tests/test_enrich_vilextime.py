@@ -1,7 +1,7 @@
 """The release file: mid-interval twins and the schema 1.1 fields (plan phase-4, 28/09)."""
 from datetime import date
 
-from enrich_vilextime import MARGIN, changed_span, check_short_answer, mid_date, references, twin_of
+from enrich_vilextime import MARGIN, changed_span, check_short_answer, mid_date, pending_at, references, twin_of
 from vilexgraph.build.temporal.models import ProvisionLevel as L
 
 VERSIONS = [
@@ -39,6 +39,17 @@ def test_a_twin_the_chain_disagrees_with_is_not_made():
     overlapping = [dict(VERSIONS[0], effective_to=None), VERSIONS[1]]
     assert twin_of(_row("2025-03-01", "version:p:2"), overlapping, None) is None
     assert twin_of(_row("2025-03-01", "version:p:2"), VERSIONS, None)["version_id"] == "version:p:2"
+
+
+def test_pending_is_judged_at_each_rows_own_date():
+    # Version 2's act was signed 15/01/2025: pending the day before it applies, not yet signed mid-interval.
+    steps = [{"on": "2025-03-01", "to_version": 2, "actor": {"document_id": "document:a"}}]
+    signed = {"document:a": "2025-01-15"}
+    assert pending_at(steps, VERSIONS, date(2025, 2, 28), signed) == {
+        "version_id": "version:p:2", "actor_document_id": "document:a", "signed_on": "2025-01-15",
+        "effective_from": "2025-03-01", "days_until_effect": 1}
+    assert pending_at(steps, VERSIONS, date(2022, 6, 1), signed) is None      # not signed yet
+    assert pending_at(steps, VERSIONS, date(2025, 3, 1), signed) is None      # already in force
 
 
 def test_retroactive_and_repealed_twins_stay_in_their_windows():
