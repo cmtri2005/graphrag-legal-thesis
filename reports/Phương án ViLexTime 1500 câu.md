@@ -14,15 +14,17 @@ Dữ liệu thật không đủ cho hai nhóm:
 
 ## Phân bổ
 
-| Nhóm | Số lineage | Ghi chú |
-|---|---:|---|
-| T1 (đối chứng) | 300 | Rẻ nhất, cần để biết lợi ích đến từ "hiểu thời gian" hay chỉ từ truy xuất tốt |
-| T2 | 300 | Nhóm cốt lõi, không cắt |
-| T3 | ~200 (sàn 130) | Chỉ tính khi có ≥3 phiên bản cho đáp án khác nhau với chính câu hỏi đó |
-| T4 | 300 | |
-| T6 | ~400 | ~200 trực tiếp + ~200 do đơn vị cấp trên bị bãi bỏ |
-| **Tổng** | **1.500** | ≈ 3.000 dòng ranh giới |
-| T5 (chẩn đoán) | 30–45 | Cố vấn luật ký từng câu, không tính vào trung bình |
+
+| Nhóm           | Số lineage     | Ghi chú                                                                       |
+| -------------- | --------------: | ----------------------------------------------------------------------------- |
+| T1 (đối chứng) | 300            | Rẻ nhất, cần để biết lợi ích đến từ "hiểu thời gian" hay chỉ từ truy xuất tốt |
+| T2             | 300            | Nhóm cốt lõi, không cắt                                                       |
+| T3             | ~200 (sàn 130) | Chỉ tính khi có ≥3 phiên bản cho đáp án khác nhau với chính câu hỏi đó        |
+| T4             | 300            |                                                                               |
+| T6             | ~400           | ~200 trực tiếp + ~200 do đơn vị cấp trên bị bãi bỏ                            |
+| **Tổng**       | **1.500**      | ≈ 3.000 dòng ranh giới                                                        |
+| T5 (chẩn đoán) | 30–45          | Cố vấn luật ký từng câu, không tính vào trung bình                            |
+
 
 ## Cách làm nhãn
 
@@ -38,7 +40,7 @@ Dữ liệu thật không đủ cho hai nhóm:
 - **Cổng go/no-go ngày 18/10:** đo số phút trung vị cho mỗi dòng ở pilot 2.
   - ≤3 phút: giữ 1.500.
   - 3–4 phút: giữ 1.500 chỉ khi đã gác bớt M2.
-  - \>4 phút: cắt theo thứ tự T1 → T4 → T3. Không cắt T2, T6-ancestor (dưới 150) và phần gán đôi.
+  - Trên 4 phút: cắt theo thứ tự T1 → T4 → T3. Không cắt T2, T6-ancestor (dưới 150) và phần gán đôi.
 - Nếu phải chọn: **~1.200 câu có độ đồng thuận giữa người với người** tốt hơn 1.500 câu chỉ kiểm một lượt.
 
 ## Lưu ý về đo đồng thuận
@@ -61,12 +63,15 @@ Dữ liệu thật không đủ cho hai nhóm:
 
 ## Lộ trình
 
-| Mốc | Việc chính |
-|---|---|
-| 05–11/10 | Đổi quota sang lineage, viết guideline, LLM soạn nháp, pilot 1 |
-| 12–18/10 | Pilot 2, buổi cố vấn 1, **cổng go/no-go 18/10** |
-| 19/10–08/11 | Gán nhãn theo lô; M2 ngày 26/10; buổi cố vấn 2 |
-| 09–15/11 | Hoà giải, audit lỗi, **đóng băng v1.0 ngày 13–14/11** |
-| 16/11 | Nộp mốc M3 |
+
+| Mốc         | Việc chính                                                     |
+| ----------- | -------------------------------------------------------------- |
+| 05–11/10    | Đổi quota sang lineage, viết guideline, LLM soạn nháp, pilot 1 |
+| 12–18/10    | Pilot 2, buổi cố vấn 1, **cổng go/no-go 18/10**                |
+| 19/10–08/11 | Gán nhãn theo lô; M2 ngày 26/10; buổi cố vấn 2                 |
+| 09–15/11    | Hoà giải, audit lỗi, **đóng băng v1.0 ngày 13–14/11**          |
+| 16/11       | Nộp mốc M3                                                     |
+
 
 > Bản đầy đủ (kèm số liệu, nguồn trích dẫn và so sánh benchmark) đã được lược bỏ khỏi file này.
+

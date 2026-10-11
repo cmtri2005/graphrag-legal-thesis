@@ -15,19 +15,19 @@ Mục 8 gom mọi thứ chưa xác minh.
 ## 0. Kết luận trước
 
 1. **T2 giữ nguyên là nhóm lõi và đã có tên chuẩn cho chỉ số của nó.** TCS chính là *contrast consistency* của Gardner et al. 2020 với nhóm cỡ 2.
-   Trích nguồn thay vì tự đặt tên. Tránh gọi "pair accuracy" vì từ đó mang nghĩa khác trong dịch máy và BLiMP.
+ Trích nguồn thay vì tự đặt tên. Tránh gọi "pair accuracy" vì từ đó mang nghĩa khác trong dịch máy và BLiMP.
 2. **T2 gần như không bị phân cụm** `[đo]`: 225 lineage đến từ 191 văn bản đích, 157 văn bản chỉ có 1 lineage. Design effect chỉ 1,02–1,15 kể cả khi giả định ρ = 0,5.
-   Nghĩa là phần thống kê khắt khe về phân cụm **không phải gánh nặng của T2**. Dùng bootstrap theo lineage, báo MDE 5,9–10,2 điểm phần trăm cho 225 cặp.
+ Nghĩa là phần thống kê khắt khe về phân cụm **không phải gánh nặng của T2**. Dùng bootstrap theo lineage, báo MDE 5,9–10,2 điểm phần trăm cho 225 cặp.
 3. **T5 tệ hơn mọi con số đã nêu** `[đo]`: 19 lineage có câu hỏi, 38 dòng, thuộc **3 văn bản tác động**, một văn bản chiếm 10/19 lineage. Với 3 cụm, wild cluster bootstrap
-   chỉ cho 4 giá trị |t| khác nhau, p nhỏ nhất đạt được là **0,25**. T5 **không thể** được dùng để kết luận hay xếp hạng hệ thống. Nó chỉ mô tả được.
+ chỉ cho 4 giá trị |t| khác nhau, p nhỏ nhất đạt được là **0,25**. T5 **không thể** được dùng để kết luận hay xếp hạng hệ thống. Nó chỉ mô tả được.
 4. **Không có luật venue nào cấm ship T5 ở cỡ này.** ARR, checklist trách nhiệm NLP và NeurIPS 2026 E&D đều **không đặt sàn cỡ mẫu**. Thứ bị cưỡng chế là *công bố*
-   (mục Limitations, thống kê số lượng). Phản biện nào bảo n = 38 dưới mức bắt buộc là đang phát minh ra luật.
+ (mục Limitations, thống kê số lượng). Phản biện nào bảo n = 38 dưới mức bắt buộc là đang phát minh ra luật.
 5. **Hồi tố chưa từng được đánh giá** trong point-in-time QA, theo mọi thứ nhánh nghiên cứu tìm được. Ít nhất hai công trình 2026 nêu tên nó trong động cơ rồi không đánh giá, và một benchmark thứ ba không bàn tới.
-   Claim được, nhưng phải claim hẹp: "đầu tiên *đánh giá* hồi tố", không phải "đầu tiên nhận ra". Chuẩn legal informatics (Akoma Ntoso) đã tách hai cặp ngày từ lâu, đó là thế bất đối xứng để dựng động cơ.
+ Claim được, nhưng phải claim hẹp: "đầu tiên *đánh giá* hồi tố", không phải "đầu tiên nhận ra". Chuẩn legal informatics (Akoma Ntoso) đã tách hai cặp ngày từ lâu, đó là thế bất đối xứng để dựng động cơ.
 6. **Khuyến nghị cho T5 là (c) + (a), và (b) làm chế độ `as_of` bổ sung chứ không thay suất quota.**
-   Hồi tố thành *trường* trên mọi dòng, 38 dòng T5 hiện có ship như *tập chẩn đoán có tên, không điểm tổng*.
-   Còn `not_yet_in_force` (bẫy mạnh nhất, đã có tên "future-law leakage" trong văn liệu) dựng thêm như chế độ `as_of` thứ tư cho **155 lineage T2 đã có**,
-   không cần câu hỏi mới. Mục 5 giải thích và nêu rõ chỗ mình **sửa lại một điều đã nói trước đó trong phiên**.
+ Hồi tố thành *trường* trên mọi dòng, 38 dòng T5 hiện có ship như *tập chẩn đoán có tên, không điểm tổng*.
+ Còn `not_yet_in_force` (bẫy mạnh nhất, đã có tên "future-law leakage" trong văn liệu) dựng thêm như chế độ `as_of` thứ tư cho **155 lineage T2 đã có**,
+ không cần câu hỏi mới. Mục 5 giải thích và nêu rõ chỗ mình **sửa lại một điều đã nói trước đó trong phiên**.
 7. **Một phát hiện chặn việc nghĩ rằng T2 đã chứa sẵn bẫy "chưa hiệu lực"** `[đo]`: 172/450 dòng T2 mang `pending`, nhưng khoảng cách tới ngày hiệu lực **luôn đúng 1 ngày**. Đó là bẫy biên, không phải bẫy thật.
 
 ---
@@ -47,7 +47,7 @@ Hai tính chất thiết kế đáng nói rõ trong bài, vì chúng trả lời
 
 - **Không có văn phong người gán để model bắt bài.** Nhiễu là một lần sửa luật thật cộng một thay đổi ngày, không phải annotator viết lại câu. (Phê bình gốc về annotator artifact không áp dụng.)
 - **Hoàn hảo tối thiểu về phía câu hỏi, không tối thiểu về phía bằng chứng.** Chuỗi câu hỏi giống hệt, văn bản luật khác. Mức khác đó chính là `similarity`, nên phải báo `similarity` như một trường chứ không giấu.
-  Bằng chứng cho thấy độ giống bề mặt và khác biệt pháp lý quyết định cùng tồn tại: NLLP 2025 báo chuỗi sửa đổi giống nhau 93–99% nhưng chỉ 50,3% khớp chính xác cho sửa đổi một bước và 20,51% cho nhiều bước `[snippet, chưa mở bài]`.
+Bằng chứng cho thấy độ giống bề mặt và khác biệt pháp lý quyết định cùng tồn tại: NLLP 2025 báo chuỗi sửa đổi giống nhau 93–99% nhưng chỉ 50,3% khớp chính xác cho sửa đổi một bước và 20,51% cho nhiều bước `[snippet, chưa mở bài]`.
 
 ### 1.2 Chỉ số: *contrast consistency*
 
@@ -83,10 +83,12 @@ Cũng báo **mức ngẫu nhiên**: chọn phiên bản ngẫu nhiên cho `chanc
 
 **MDE cho so sánh hai hệ thống trên cùng các cặp** (công thức mục 2.5; 80% lực, α = 0,05 hai phía), điểm phần trăm, `[đo — mình chạy cả công thức xấp xỉ lẫn Connor đầy đủ, lệch ≤ 0,1]`:
 
-| N cặp | p_d = 0,10 | p_d = 0,20 | p_d = 0,30 |
-|---:|---:|---:|---:|
-| 150 | 7,2 | 10,1 | 12,4 |
-| **225** | **5,9** | **8,3** | **10,2** |
+
+| N cặp   | p_d = 0,10 | p_d = 0,20 | p_d = 0,30 |
+| -------: | ----------: | ----------: | ----------: |
+| 150     | 7,2        | 10,1       | 12,4       |
+| **225** | **5,9**    | **8,3**    | **10,2**   |
+
 
 `p_d` là tỷ lệ cặp mà đúng một trong hai hệ thống đạt TCS ("discordant"). Chưa có kết quả hệ thống nên chưa biết `p_d` thật; bảng cho dải hợp lý.
 Đọc: với 225 cặp, hai hệ cách nhau dưới ~6–10 điểm TCS thì **không phân biệt được**. Đừng viết câu kết luận nào dựa trên chênh lệch nhỏ hơn.
@@ -95,11 +97,13 @@ Cũng báo **mức ngẫu nhiên**: chọn phiên bản ngẫu nhiên cho `chanc
 
 `[đo]` 225 lineage (225 đầu theo hạng, có câu hỏi) từ 191 văn bản đích. Cỡ cụm trung bình 1,18, lớn nhất 2, CV = 0,32. `m_adj = m̄(CV² + 1) = 1,30`.
 
-| giả định ρ | DE = 1 + (m_adj − 1)ρ | n_eff | √DE |
-|---:|---:|---:|---:|
-| 0,05 | 1,02 | 222 | 1,01 |
-| 0,20 | 1,06 | 212 | 1,03 |
-| 0,50 | 1,15 | 195 | 1,07 |
+
+| giả định ρ | DE = 1 + (m_adj − 1)ρ | n_eff | √DE  |
+| ----------: | ---------------------: | -----: | ----: |
+| 0,05       | 1,02                  | 222   | 1,01 |
+| 0,20       | 1,06                  | 212   | 1,03 |
+| 0,50       | 1,15                  | 195   | 1,07 |
+
 
 Hệ quả thực hành: **MDE của T2 gần như là MDE độc lập**, nhân cùng lắm 1,07. Với K = 191 cụm, các phương pháp dựa trên K → ∞ là hợp lệ ở đây (ngưỡng đồng thuận trong tài liệu là G ≈ 50, mục 2.2).
 ρ thật chưa ước được vì chưa có kết quả hệ thống; ước sau bằng estimator ANOVA (mục 2.1) và báo kèm.
@@ -110,14 +114,14 @@ Hệ quả thực hành: **MDE của T2 gần như là MDE độc lập**, nhân
 
 - McNemar thường là hợp lệ **khi các cặp độc lập**; mẫu số `b + c` chính là giả định độc lập (mục 2.4).
 - Vì cụm của T2 gần như đơn lẻ, thống kê cluster-robust của Durkalski (2003) co về McNemar (khi mọi cụm có đúng một cặp thì chúng trùng khít, chứng minh đại số ở mục 2.4 `[tự suy ra]`).
-  Đề nghị: báo McNemar chính xác, và báo thêm Durkalski/Yang như kiểm tra độ bền. Hai kết quả gần nhau là điều **dự kiến** `[tự suy ra từ m̄ = 1,18]`, và chỗ chúng khác nhau sẽ đáng chú ý.
+Đề nghị: báo McNemar chính xác, và báo thêm Durkalski/Yang như kiểm tra độ bền. Hai kết quả gần nhau là điều **dự kiến** `[tự suy ra từ m̄ = 1,18]`, và chỗ chúng khác nhau sẽ đáng chú ý.
 - Nhiều nhóm so sánh cùng lúc: sửa Holm hoặc Benjamini–Hochberg (Dror et al. 2018 `[toàn văn]`).
 - Không tìm được bài contrast-set nào dùng McNemar. Đây là nâng cấp phương pháp chứ không phải tiền lệ.
 
 ### 1.6 Điều T2 **không** phải tự hào
 
 - **Bẫy "chưa hiệu lực" trong T2 chỉ là bẫy biên** `[đo]`. 172/450 dòng (225 lineage đầu) mang `pending`, nhưng `days_until_effect` luôn bằng 1, không dòng nào ≥ 30 ngày.
-  Lý do: dòng "trước" của cặp hỏi ở `start − 1`. Một hệ lọc theo ngày hiệu lực giải được trivially. Đừng mô tả T2 là "đo future-law leakage".
+Lý do: dòng "trước" của cặp hỏi ở `start − 1`. Một hệ lọc theo ngày hiệu lực giải được trivially. Đừng mô tả T2 là "đo future-law leakage".
 - 36/450 dòng T2 (8%) có `min_repr = cross_document`, 414 là `clause_version`. T2 gần như chỉ cần chuỗi phiên bản cấp khoản (I1), đúng với vai trò "nhóm lõi", nhưng nghĩa là T2 **không** phân biệt được biểu diễn đồ thị với lọc siêu dữ liệu ở cấp văn bản nhiều như T6.
 - Định nghĩa cặp theo chế độ `as_of` (biên so với giữa khoảng) cần chốt trong guideline; datasheet đang lấy bảng `giua_khoang` làm bảng chính.
 
@@ -150,13 +154,17 @@ Chưa tìm được nguồn nói ρ nhị phân bị chặn bởi tần suất �
 
 Cameron & Miller 2015 `[toàn văn]` không đưa ngưỡng cứng ("càng nhiều càng tốt"; đồng thuận G = 50) nhưng báo hai bộ mô phỏng, tỷ lệ bác bỏ sai so với danh nghĩa 0,05:
 
-| G | 50 | 20 | 10 | 6 |
-|---|---:|---:|---:|---:|
+
+| G        | 50    | 20    | 10    | 6     |
+| -------- | -----: | -----: | -----: | -----: |
 | BDM 2004 | 0,063 | 0,058 | 0,080 | 0,115 |
 
-| G | 30 | 20 | 10 | 5 |
-|---|---:|---:|---:|---:|
+
+
+| G        | 30    | 20    | 10    | 5     |
+| -------- | -----: | -----: | -----: | -----: |
 | CGM 2008 | 0,068 | 0,081 | 0,118 | 0,208 |
+
 
 Carter, Schnepel & Steigerwald (2013): "số cụm hiệu dụng" `G* = G/(1+δ)`, méo kích thước đáng kể khi **G\* < 20** `[trang]`. T5 vi phạm điều này ngay từ cấu trúc.
 
@@ -225,17 +233,19 @@ NLP không có quy ước. Y tế công cộng và khảo sát có: báo **số 
 
 ### 3.1 Cấu trúc thật `[đo]`
 
-| Đo | Giá trị |
-|---|---:|
-| Ứng viên toàn kho | 194 lineage / 8 văn bản tác động |
-| Sạch | 148 lineage / 4 văn bản |
-| Xếp hạng được | 21 lineage / 42 dòng |
-| **Có câu hỏi** | **19 lineage / 38 dòng** |
-| Cụm theo **văn bản tác động** | **3** |
-| Phân bố | 65/2025/TT-BQP: 10 · 12/2015/NĐ-CP: 7 · 119/2026/NĐ-CP: 2 |
-| Cụm theo văn bản đích | 10 (lớn nhất 2) |
-| Loại hồi tố | 19/19 `stated_retroactive`, 0 `guidance_in_sync` |
-| `min_repr` | 28 `clause_version`, 10 `cross_document` |
+
+| Đo                            | Giá trị                                                   |
+| ----------------------------- | ---------------------------------------------------------: |
+| Ứng viên toàn kho             | 194 lineage / 8 văn bản tác động                          |
+| Sạch                          | 148 lineage / 4 văn bản                                   |
+| Xếp hạng được                 | 21 lineage / 42 dòng                                      |
+| **Có câu hỏi**                | **19 lineage / 38 dòng**                                  |
+| Cụm theo **văn bản tác động** | **3**                                                     |
+| Phân bố                       | 65/2025/TT-BQP: 10 · 12/2015/NĐ-CP: 7 · 119/2026/NĐ-CP: 2 |
+| Cụm theo văn bản đích         | 10 (lớn nhất 2)                                           |
+| Loại hồi tố                   | 19/19 `stated_retroactive`, 0 `guidance_in_sync`          |
+| `min_repr`                    | 28 `clause_version`, 10 `cross_document`                  |
+
 
 Cụm đúng về mặt pháp lý là **văn bản tác động** (một hồi tố thường áp cho nhiều điều khoản cùng lúc, cùng chung cửa sổ hồi tố), không phải văn bản đích. Con số "8 văn bản" và "4 văn bản" trong các báo cáo trước là của *kho*; sau xếp hạng và sinh câu hỏi còn **3**.
 Hơn một nửa lineage đến từ một văn bản. Datasheet đã ghi 12/2015/NĐ-CP không nêu ngày hồi tố trong câu hiệu lực và 65/2025/TT-BQP có cửa sổ hồi tố chỉ 2 ngày nên không đặt được câu giữa khoảng.
@@ -282,7 +292,7 @@ Truyền thống có bốn vai, mạnh dần về mức khẳng định: *case s
 
 - Khảo sát temporal QA 2025–26 (arXiv 2505.20243) liệt kê 30+ bộ (TimeQA, SituatedQA, StreamingQA, ArchivalQA, RealTimeQA, ComplexTempQA, ChroniclingAmericaQA…) và **không nhắc hồi tố, commencement hay hiệu lực lùi ở đâu**; coi thời điểm tạo văn bản và thời điểm sự kiện là hai mốc trùng nhau `[toàn văn của nhánh]`.
 - Các công trình 2026 có kho theo phiên bản trong tay: **LexKairos** (arXiv 2608.09106) nêu retroactivity trong động cơ nhưng viết là "acknowledged but not systematically benchmarked" · **"When Do LLMs Apply the Wrong Law?"** (2608.14610) coi không hồi tố là nguyên tắc nền, hồi tố chỉ là ngoại lệ ở phụ lục, không thành một loại · **"Asking For An Old Friend"** (2605.23497) không bàn tới hồi tố.
-  Ngoài benchmark, de Martim (2606.09724) là đặc tả kiến trúc, có nêu hồi tố nhưng **không đánh giá định lượng**. LegalBench chỉ có `cuad_effective_date`, một tác vụ phát hiện điều khoản hợp đồng.
+Ngoài benchmark, de Martim (2606.09724) là đặc tả kiến trúc, có nêu hồi tố nhưng **không đánh giá định lượng**. LegalBench chỉ có `cuad_effective_date`, một tác vụ phát hiện điều khoản hợp đồng.
 - Cách viết đứng được: *"đầu tiên **đánh giá** hồi tố trong point-in-time legal QA"*. Không viết "đầu tiên nhận ra". Việc nhiều công trình độc lập đều không dựng nhóm này cũng là một tín hiệu cần cân: nó có thể là hiện tượng rất hiếm hoặc khó đóng gói thành tác vụ, và **chính T5 với 3 cụm là bằng chứng nội tại cho điều đó**.
 
 **Chuẩn legal informatics đã hình thức hoá phân biệt này từ lâu.** Akoma Ntoso / OASIS LegalDocML (nháp 2006; chuẩn OASIS 29/08/2018) cho mỗi mảnh văn bản **hai cặp ngày độc lập**:
@@ -300,14 +310,16 @@ de Martim (2606.09724, Thượng viện Liên bang Brazil, 2026) viết các chu
 
 ### 5.1 Ba lựa chọn, đặt cạnh nhau
 
-| | (a) Giữ T5, chẩn đoán 30–45 | (b) `not_yet_in_force` | (c) Hồi tố thành trường |
-|---|---|---|---|
-| **Cái gì** | 19 lineage / 38 dòng hiện có, có tên, không điểm tổng | Hỏi ở ≥30 ngày trước ngày hiệu lực, khi bản mới đã ký mà bản cũ mới đúng | `retroactive` trên mọi dòng của mọi nhóm |
-| **Tiền lệ** | GLUE diagnostic, SuperGLUE AX-g, LegalBench slice (mục 3.4) | **"future-law leakage"** (French tax, arXiv 2608.09393): *"remains unexercised in the scored benchmark, reserved for future work"* `[trang]` | Robustness Gym, CheckList, HELM, TimelyQABench `[trang]`; Akoma Ntoso `[trang]` |
-| **Lực thống kê** | **3 cụm. Không suy luận được** | **155 lineage / 129 văn bản tác động** `[đo]`, DE ≈ 1,0x | Phụ thuộc phủ của trường; cho phép nói về *độ phổ biến* chứ không về độ khó |
-| **Chi phí** | Gần 0 (đã có) | ~1 chế độ `as_of` mới, **không cần câu hỏi mới**, gold tất định | Gần 0 |
-| **Rủi ro chính** | Phản biện "nhóm quá nhỏ" | Cần kiểm kho "như công bố" có chứa văn bản đã ký chưa hiệu lực không (mục 8) | Mất "nhóm" để vẽ vào Bảng 1 |
-| **Đứng trước phản biện** | Chỉ khi khai thẳng là chẩn đoán | **Mạnh nhất** | Sạch nhất |
+
+|                          | (a) Giữ T5, chẩn đoán 30–45                                 | (b) `not_yet_in_force`                                                                                                                       | (c) Hồi tố thành trường                                                         |
+| ------------------------ | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| **Cái gì**               | 19 lineage / 38 dòng hiện có, có tên, không điểm tổng       | Hỏi ở ≥30 ngày trước ngày hiệu lực, khi bản mới đã ký mà bản cũ mới đúng                                                                     | `retroactive` trên mọi dòng của mọi nhóm                                        |
+| **Tiền lệ**              | GLUE diagnostic, SuperGLUE AX-g, LegalBench slice (mục 3.4) | **"future-law leakage"** (French tax, arXiv 2608.09393): *"remains unexercised in the scored benchmark, reserved for future work"* `[trang]` | Robustness Gym, CheckList, HELM, TimelyQABench `[trang]`; Akoma Ntoso `[trang]` |
+| **Lực thống kê**         | **3 cụm. Không suy luận được**                              | **155 lineage / 129 văn bản tác động** `[đo]`, DE ≈ 1,0x                                                                                     | Phụ thuộc phủ của trường; cho phép nói về *độ phổ biến* chứ không về độ khó     |
+| **Chi phí**              | Gần 0 (đã có)                                               | ~1 chế độ `as_of` mới, **không cần câu hỏi mới**, gold tất định                                                                              | Gần 0                                                                           |
+| **Rủi ro chính**         | Phản biện "nhóm quá nhỏ"                                    | Cần kiểm kho "như công bố" có chứa văn bản đã ký chưa hiệu lực không (mục 8)                                                                 | Mất "nhóm" để vẽ vào Bảng 1                                                     |
+| **Đứng trước phản biện** | Chỉ khi khai thẳng là chẩn đoán                             | **Mạnh nhất**                                                                                                                                | Sạch nhất                                                                       |
+
 
 Điểm cộng thêm của (b) (nhánh nghiên cứu): chiến lược mặc định của lĩnh vực cho xung đột thời gian là *xếp theo độ mới*, nên kho có văn bản chưa hiệu lực là **đối kháng với heuristic mặc định** ngay từ thiết kế. Trong văn liệu, hướng lỗi được nghiên cứu nhiều là hướng ngược lại — *current-law substitution* / *recency bias* / *newest-law bias* (chênh lệch đo được 0,70–0,84 ở ca bản mới so với dưới 0,25 ở ca bản cũ) `[snippet]`.
 
@@ -317,10 +329,10 @@ de Martim (2606.09724, Thượng viện Liên bang Brazil, 2026) viết các chu
 
 1. **(c)**: thêm trường `retroactive` (đã có sẵn trên bản ghi T5, cần mở rộng ra mọi dòng) — tính từ cặp (ngày ký, ngày hiệu lực) của văn bản tác động. Rẻ, bám chuẩn, và cho phép một phát hiện cấp kho mà 19 lineage không bao giờ cho được (độ phổ biến của hồi tố).
 2. **(a)**: 38 dòng T5 ship như **tập chẩn đoán có tên, cột riêng, không điểm tổng, không vào macro**, báo bằng số đếm theo văn bản tác động. T6 hấp thu 12 dòng thiếu đã có trong thiết kế (`quota += RELEASE["T5"] − got["T5"]`).
-3. **(b)**: một chế độ `as_of` mới, đặt tên theo khuôn của `sau_het_hieu_luc` (ví dụ `truoc_hieu_luc`), dựng bằng `twin_of` từ dòng "trước" của cặp T2: hỏi ở `effective_from − 30` ngày với lineage có `signed_on ≤ ` mốc đó.
-   - **Đo `[đo]`**: trong 233 lineage T2 có câu hỏi, **155 đủ điều kiện**; khoảng ký→hiệu lực trung vị 48 ngày, nhỏ nhất 36, lớn nhất 554. Trên toàn pool T2: 3.373/4.149 dòng có `pending` đủ điều kiện (81,3%).
-   - **Cụm `[đo]`**: 129 văn bản tác động, 104 cụm chỉ một lineage, `m̄ = 1,20`, `CV = 0,35`. Phân cụm nhẹ, nên khác T5 ở chỗ có thể suy luận thống kê bình thường. Nửa độ rộng KTC 95% tệ nhất cho n = 155 là ±7,9 điểm.
-   - **Không cần câu hỏi mới và không cần gán nhãn câu hỏi mới**: câu hỏi và phiên bản đáp án (bản cũ) giữ nguyên, ngày đổi. Như dòng anh em `giua_khoang`, theo cách datasheet đang đếm nó **không tính vào hạn ngạch dòng ranh giới** `[tự suy ra từ datasheet]`.
+3. **(b)**: một chế độ `as_of` mới, đặt tên theo khuôn của `sau_het_hieu_luc` (ví dụ `truoc_hieu_luc`), dựng bằng `twin_of` từ dòng "trước" của cặp T2: hỏi ở `effective_from − 30` ngày với lineage có `signed_on ≤` mốc đó.
+  - **Đo `[đo]`**: trong 233 lineage T2 có câu hỏi, **155 đủ điều kiện**; khoảng ký→hiệu lực trung vị 48 ngày, nhỏ nhất 36, lớn nhất 554. Trên toàn pool T2: 3.373/4.149 dòng có `pending` đủ điều kiện (81,3%).
+  - **Cụm `[đo]`**: 129 văn bản tác động, 104 cụm chỉ một lineage, `m̄ = 1,20`, `CV = 0,35`. Phân cụm nhẹ, nên khác T5 ở chỗ có thể suy luận thống kê bình thường. Nửa độ rộng KTC 95% tệ nhất cho n = 155 là ±7,9 điểm.
+  - **Không cần câu hỏi mới và không cần gán nhãn câu hỏi mới**: câu hỏi và phiên bản đáp án (bản cũ) giữ nguyên, ngày đổi. Như dòng anh em `giua_khoang`, theo cách datasheet đang đếm nó **không tính vào hạn ngạch dòng ranh giới** `[tự suy ra từ datasheet]`.
 
 ### 5.3 Chỗ mình sửa lại một điều đã nói trong phiên
 
@@ -392,31 +404,36 @@ Checklist rút ra từ trên, theo thứ tự:
 ## 9. Trích dẫn chính (kiểm thông tin thư mục trước khi in)
 
 **Contrast sets**
-- Gardner, M. et al. 2020. *Evaluating Models' Local Decision Boundaries via Contrast Sets.* Findings of EMNLP 2020, tr. 1307–1323. https://aclanthology.org/2020.findings-emnlp.117/ · arXiv:2004.02709 `[toàn văn]`
-- Ning, Q. et al. 2020. TORQUE. EMNLP 2020. https://aclanthology.org/2020.emnlp-main.88/ `[theo ghi chú: Bảng 4 chép nguyên văn]`
-- Kaushik, D., Hovy, E., Lipton, Z. 2020. Counterfactually-augmented data. · Ribeiro, M. T. et al. 2020. CheckList. ACL 2020. https://aclanthology.org/2020.acl-main.442/ `[trang]`
+
+- Gardner, M. et al. 2020. *Evaluating Models' Local Decision Boundaries via Contrast Sets.* Findings of EMNLP 2020, tr. 1307–1323. [https://aclanthology.org/2020.findings-emnlp.117/](https://aclanthology.org/2020.findings-emnlp.117/) · arXiv:2004.02709 `[toàn văn]`
+- Ning, Q. et al. 2020. TORQUE. EMNLP 2020. [https://aclanthology.org/2020.emnlp-main.88/](https://aclanthology.org/2020.emnlp-main.88/) `[theo ghi chú: Bảng 4 chép nguyên văn]`
+- Kaushik, D., Hovy, E., Lipton, Z. 2020. Counterfactually-augmented data. · Ribeiro, M. T. et al. 2020. CheckList. ACL 2020. [https://aclanthology.org/2020.acl-main.442/](https://aclanthology.org/2020.acl-main.442/) `[trang]`
 - Elazar, Y. et al. 2021. Consistency of factual knowledge in pre-trained language models. `[snippet]`
 - Card, D. et al. 2020 (EMNLP) · Bowman, S., Dahl, G. 2021 (NAACL) — lực của tập test. `[trang]`
 
 **Thống kê**
-- Killip, S., Mahfoud, Z., Pearce, K. 2004. *Ann Fam Med* 2(3):204–208. https://pmc.ncbi.nlm.nih.gov/articles/PMC1466680/ `[toàn văn]`
-- Cameron, A. C., Miller, D. L. 2015. A practitioner's guide to cluster-robust inference. *J. Human Resources.* http://cameron.econ.ucdavis.edu/research/Cameron_Miller_JHR_2015_February.pdf `[toàn văn]`
-- Dror, R. et al. 2018. The Hitchhiker's Guide to Testing Statistical Significance in NLP. ACL 2018. https://aclanthology.org/P18-1128/ `[toàn văn]`
+
+- Killip, S., Mahfoud, Z., Pearce, K. 2004. *Ann Fam Med* 2(3):204–208. [https://pmc.ncbi.nlm.nih.gov/articles/PMC1466680/](https://pmc.ncbi.nlm.nih.gov/articles/PMC1466680/) `[toàn văn]`
+- Cameron, A. C., Miller, D. L. 2015. A practitioner's guide to cluster-robust inference. *J. Human Resources.* [http://cameron.econ.ucdavis.edu/research/Cameron_Miller_JHR_2015_February.pdf](http://cameron.econ.ucdavis.edu/research/Cameron_Miller_JHR_2015_February.pdf) `[toàn văn]`
+- Dror, R. et al. 2018. The Hitchhiker's Guide to Testing Statistical Significance in NLP. ACL 2018. [https://aclanthology.org/P18-1128/](https://aclanthology.org/P18-1128/) `[toàn văn]`
 - Eliasziw & Donner 1991 · Obuchowski 1998 · Durkalski et al. 2003 (*Stat Med* 22:2417–2428, DOI 10.1002/sim.1438) · Yang, Sun & Hardin 2010 · gói R `clust.bin.pair` (CRAN) `[trang]`
-- Connor, R. J. 1987 · Miettinen, O. 1968 · SAS/STAT PROC POWER, PAIREDFREQ. https://support.sas.com/documentation/cdl/en/statug/65328/HTML/default/statug_power_details55.htm `[trang]`
-- Søgaard, A. et al. 2014. CoNLL. https://aclanthology.org/W14-1601/ `[trang]`
+- Connor, R. J. 1987 · Miettinen, O. 1968 · SAS/STAT PROC POWER, PAIREDFREQ. [https://support.sas.com/documentation/cdl/en/statug/65328/HTML/default/statug_power_details55.htm](https://support.sas.com/documentation/cdl/en/statug/65328/HTML/default/statug_power_details55.htm) `[trang]`
+- Søgaard, A. et al. 2014. CoNLL. [https://aclanthology.org/W14-1601/](https://aclanthology.org/W14-1601/) `[trang]`
 
 **Tập chẩn đoán và venue**
+
 - Wang, A. et al. 2019. GLUE · SuperGLUE (arXiv:1804.07461, arXiv:1905.00537) `[trang]`
 - Guha, N. et al. 2023. LegalBench. NeurIPS D&B. arXiv:2308.11462 `[trang]`
 - Liang, P. et al. 2022. HELM. arXiv:2211.09110 `[trang]`
 - Gebru, T. et al. Datasheets for Datasets · Bender, E., Friedman, B. Data Statements `[trang]`
-- ARR: https://aclrollingreview.org/cfp · https://aclrollingreview.org/responsibleNLPresearch/ · https://aclrollingreview.org/authors `[trang]`
+- ARR: [https://aclrollingreview.org/cfp](https://aclrollingreview.org/cfp) · [https://aclrollingreview.org/responsibleNLPresearch/](https://aclrollingreview.org/responsibleNLPresearch/) · [https://aclrollingreview.org/authors](https://aclrollingreview.org/authors) `[trang]`
 
 **Hồi tố và trường-hay-nhóm**
+
 - Khảo sát temporal QA. arXiv:2505.20243 `[toàn văn của nhánh]`
 - LexKairos. arXiv:2608.09106 · "When Do LLMs Apply the Wrong Law?" arXiv:2608.14610 · "Asking For An Old Friend". arXiv:2605.23497 `[toàn văn của nhánh]`
 - Temporal misgrounding trong luật thuế Pháp. arXiv:2608.09393 `[trang]`
-- OASIS LegalDocML / Akoma Ntoso v1.0 Part 1 vocabulary. https://docs.oasis-open.org/legaldocml/akn-core/v1.0/akn-core-v1.0-part1-vocabulary.html `[trang, đọc 100k đầu]`
+- OASIS LegalDocML / Akoma Ntoso v1.0 Part 1 vocabulary. [https://docs.oasis-open.org/legaldocml/akn-core/v1.0/akn-core-v1.0-part1-vocabulary.html](https://docs.oasis-open.org/legaldocml/akn-core/v1.0/akn-core-v1.0-part1-vocabulary.html) `[trang, đọc 100k đầu]`
 - LRMoo/ELI diachronic norms. arXiv:2506.07853 `[toàn văn]` · de Martim. arXiv:2606.09724 `[toàn văn]`
 - Robustness Gym. arXiv:2101.04840 · BenchScope. arXiv:2603.29357 · TimelyQABench. arXiv:2609.11572 `[trang]`
+
