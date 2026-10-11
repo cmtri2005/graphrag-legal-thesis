@@ -1134,3 +1134,73 @@ vilextime:T3:provision:95cff300-2c82-11f1-8832-ed73839b00a1:2018-04-26	T3	claude
 vilextime:T3:provision:95cff300-2c82-11f1-8832-ed73839b00a1:2018-04-27	T3	claude-opus-5-5	1.2	dat			lineage thay thế 29/09; câu hỏi và đáp án ngắn do cùng model viết			có			
 vilextime:T4:provision:5cc8108c-ec41-11f0-8296-c3595dfdbe4b#k1#a:2015-06-30	T4	claude-opus-5-5	1.2	dat			lineage thay thế 29/09; câu hỏi và đáp án ngắn do cùng model viết			có			
 vilextime:T4:provision:5cc8108c-ec41-11f0-8296-c3595dfdbe4b#k1#a:2015-07-01	T4	claude-opus-5-5	1.2	dat			lineage thay thế 29/09; câu hỏi và đáp án ngắn do cùng model viết			có			
+vilextime:T2:provision:0877aa6c-eb86-11f0-8def-170d9bd3acd0#k1:2017-02-09	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:0877aa6c-eb86-11f0-8def-170d9bd3acd0#k1:2017-02-10	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:0ca261aa-df50-11f0-b211-35ac2560fd1c:2024-11-21	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:0ca261aa-df50-11f0-b211-35ac2560fd1c:2024-11-22	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:0e32b77c-e176-11f0-ac1c-cf915b5c59c3:2022-02-14	T2	claude-opus-5-5	1.2	khong_dat	group_mismatch		Nghị định này -> Nghị định số 27/2019/NĐ-CP: cùng một văn bản, hai mốc trả lời như nhau			có			
+vilextime:T2:provision:0e32b77c-e176-11f0-ac1c-cf915b5c59c3:2022-02-15	T2	claude-opus-5-5	1.2	khong_dat	group_mismatch		Nghị định này -> Nghị định số 27/2019/NĐ-CP: cùng một văn bản, hai mốc trả lời như nhau			có			
+vilextime:T2:provision:10ca9a90-250a-11f1-98b4-b7c32e15b876:2026-03-30	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:10ca9a90-250a-11f1-98b4-b7c32e15b876:2026-03-31	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:211ddf7c-ec36-11f0-a442-7f2caee495dd#k1:2011-08-04	T2	claude-opus-5-5	1.2	dat			vế trước không quy định hình thức gửi; đáp án là 'không giới hạn hình thức' — audit xem có cần unanswerable_as_asked			có			
+vilextime:T2:provision:211ddf7c-ec36-11f0-a442-7f2caee495dd#k1:2011-08-05	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:2449b7fa-df4a-11f0-9607-69212f39380e#k1#m:2017-12-14	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:2449b7fa-df4a-11f0-9607-69212f39380e#k1#m:2017-12-15	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:27e75a50-294d-11f1-8192-f3a2ce5e7cb7:2019-12-31	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:27e75a50-294d-11f1-8192-f3a2ce5e7cb7:2020-01-01	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:29b3fada-eb74-11f0-81bd-275d43d2d3dd:2025-07-07	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:29b3fada-eb74-11f0-81bd-275d43d2d3dd:2025-07-08	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:29ccbc10-2c82-11f1-9060-57517afe119d:2026-01-24	T2	claude-opus-5-5	1.2	khong_dat	group_mismatch		câu hỏi hỏi đơn vị xử lý hồ sơ (cả hai mốc: theo Điều 20); chỗ đổi Vụ -> Cục chỉ ở vế đơn vị đã xác nhận đăng ký			có			
+vilextime:T2:provision:29ccbc10-2c82-11f1-9060-57517afe119d:2026-01-25	T2	claude-opus-5-5	1.2	khong_dat	group_mismatch		câu hỏi hỏi đơn vị xử lý hồ sơ (cả hai mốc: theo Điều 20); chỗ đổi Vụ -> Cục chỉ ở vế đơn vị đã xác nhận đăng ký			có			
+vilextime:T2:provision:2c9a2dd0-30bd-11f1-8b7a-bda98e87fd84:2026-08-26	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:2c9a2dd0-30bd-11f1-8b7a-bda98e87fd84:2026-08-27	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:2f1dd510-2c86-11f1-816b-6917ac5a340f:2020-12-14	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:2f1dd510-2c86-11f1-816b-6917ac5a340f:2020-12-15	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:3dd811b6-eb7b-11f0-b8cc-35ce724bdc8f:2023-06-19	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:3dd811b6-eb7b-11f0-b8cc-35ce724bdc8f:2023-06-20	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:3ec35eda-2d54-11f1-8f2a-e79e446db919:2025-01-07	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:3ec35eda-2d54-11f1-8f2a-e79e446db919:2025-01-08	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:4eb2a108-eb77-11f0-a29a-4fcc88144917#k4:2015-01-31	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:4eb2a108-eb77-11f0-a29a-4fcc88144917#k4:2015-02-01	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:514d55ba-eb87-11f0-92cd-3993a7aae9e5#k4:2014-02-28	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:514d55ba-eb87-11f0-92cd-3993a7aae9e5#k4:2014-03-01	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:58fce644-df53-11f0-9bca-a9db4826ae61#k1#%C4%91:2024-05-31	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:58fce644-df53-11f0-9bca-a9db4826ae61#k1#%C4%91:2024-06-01	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:5b0498d0-2d44-11f1-a8e6-b72613656ab8:2025-06-30	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:5b0498d0-2d44-11f1-a8e6-b72613656ab8:2025-07-01	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:5bd3edf0-303d-11f1-b898-e5b6c4404a5e:2020-03-21	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:5bd3edf0-303d-11f1-b898-e5b6c4404a5e:2020-03-22	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:5d4ba0bc-df41-11f0-925a-bf6277faa5a2:2025-06-30	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:5d4ba0bc-df41-11f0-925a-bf6277faa5a2:2025-07-01	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:66235f90-2f41-11f1-a0bf-f367bbf171b7:2024-11-14	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:66235f90-2f41-11f1-a0bf-f367bbf171b7:2024-11-15	T2	claude-opus-5-5	1.2	dat			chỗ đổi là tên biện pháp (Hủy -> Buộc hủy bỏ); audit xem có chỉ là đổi cách gọi			có			
+vilextime:T2:provision:6d2c7284-ec3b-11f0-83d6-a9a902554981:2024-11-21	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:6d2c7284-ec3b-11f0-83d6-a9a902554981:2024-11-22	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:77015092-eb9e-11f0-a4cb-eb53acf0e691:2024-11-21	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:77015092-eb9e-11f0-a4cb-eb53acf0e691:2024-11-22	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:893ad5a2-e181-11f0-9b48-9de49cfd73ea:2025-06-30	T2	claude-opus-5-5	1.2	khong_dat	question_leaks		câu hỏi nêu sẵn 'xã, phường, thị trấn' = đáp án vế trước			có			
+vilextime:T2:provision:893ad5a2-e181-11f0-9b48-9de49cfd73ea:2025-07-01	T2	claude-opus-5-5	1.2	dat			câu hỏi còn chữ 'thị trấn' của vế trước; đúng vai bẫy ở mốc sau			có			
+vilextime:T2:provision:a8228d80-2dc5-11f1-b49f-2dfc2852bb4d:2026-08-14	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:a8228d80-2dc5-11f1-b49f-2dfc2852bb4d:2026-08-15	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:a8495740-2c84-11f1-bf78-1fdf1f87d888:2024-11-21	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:a8495740-2c84-11f1-bf78-1fdf1f87d888:2024-11-22	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:ac194d4c-df42-11f0-9c63-5ba3751dc33d:2026-05-19	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:ac194d4c-df42-11f0-9c63-5ba3751dc33d:2026-05-20	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:ada0a6f2-eb76-11f0-996b-5bdac24015e5#k4:2017-07-17	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:ada0a6f2-eb76-11f0-996b-5bdac24015e5#k4:2017-07-18	T2	claude-opus-5-5	1.2	khong_dat	gold_wrong		từ 18/07/2017 Điều 21 là nhiệm vụ của Cục Thú y (câu dẫn đổi); đáp án mốc sau không còn là vai trò của Cục Quản lý Chất lượng Nông Lâm sản và Thủy sản được hỏi			có			
+vilextime:T2:provision:aeb04d30-272c-11f1-8efb-b3a4f362bef5:2022-01-09	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:aeb04d30-272c-11f1-8efb-b3a4f362bef5:2022-01-10	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:d3fcad12-eb78-11f0-89f6-19b067f5077b:2026-01-30	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:d3fcad12-eb78-11f0-89f6-19b067f5077b:2026-01-31	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:d7f48974-e161-11f0-8fb5-d504002d3cba:2025-12-04	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:d7f48974-e161-11f0-8fb5-d504002d3cba:2025-12-05	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:e9ef58d0-2ca1-11f1-a4ed-8bbc66dfca6d:2023-06-30	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:e9ef58d0-2ca1-11f1-a4ed-8bbc66dfca6d:2023-07-01	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:ec77b880-2108-11f1-b92e-7b55de167c69:2025-07-06	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:ec77b880-2108-11f1-b92e-7b55de167c69:2025-07-07	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:ee5a1d20-df52-11f0-b7c8-97e0fbc29771:2023-09-04	T2	claude-opus-5-5	1.2	dat			vế trước không giới hạn phạm vi quản lý cơ sở; audit xem có cần unanswerable_as_asked			có			
+vilextime:T2:provision:ee5a1d20-df52-11f0-b7c8-97e0fbc29771:2023-09-05	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:f03de34e-df41-11f0-83db-457bb2c7028c:2026-04-19	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:f03de34e-df41-11f0-83db-457bb2c7028c:2026-04-20	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:f7f5b8d0-20ed-11f1-b643-07ad51ef0fb7:2020-02-29	T2	claude-opus-5-5	1.2	dat						có			
+vilextime:T2:provision:f7f5b8d0-20ed-11f1-b643-07ad51ef0fb7:2020-03-01	T2	claude-opus-5-5	1.2	dat						có			

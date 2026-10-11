@@ -27,7 +27,8 @@ vocabulary, so free-text codes cannot creep back in.
                        and the amending documents, since guideline 1.2 asks the
                        auditor to check the gold at those dates too;
                        a row whose lineage was dropped (data/vilextime/dropped.jsonl)
-                       is still there, read from its group file, with the drop in `fix`
+                       is still there, read from its group file, with the drop in `fix`;
+                       a label on any other row the release no longer ships is left out
     import-audit XLSX  writes `audit`, `auditor`, `audit_note` filled in that
                        workbook back into labels.tsv; the auditor is a person
                        (`human:<code>`), never a model
@@ -297,11 +298,14 @@ def audit_sheet(data: Path, out: Path, group: str | None) -> None:
         group_file = data / f"derived/vilextime/{x['group']}.jsonl"
         return next((r for r in map(json.loads, group_file.open(encoding="utf-8")) if r["id"] == x["id"]), None)
 
+    written = skipped = 0
     for x in sorted(todo, key=lambda x: (x["group"], x["id"])):
         r = row(x)
-        if r is None:        # the lineage changed group or gold since it was labelled (29/09 rebuild)
-            ws.append([{**x, "fix": "dòng không còn trong bộ dữ liệu: lineage đổi nhóm hoặc gold sau khi dựng lại"}.get(c, "")
-                       for c in SHEET])
+        # A label on a row the release no longer ships (rebuilt away, or not selected
+        # after a quota change) has nothing left to audit; a dropped lineage stays, so
+        # the drop itself gets a second look (11/10: 185 such labels were filling sheets).
+        if r is None or (x["id"] not in released and r.get("lineage_id") not in dropped):
+            skipped += 1
             continue
         drop = dropped.get(r.get("lineage_id"))
         answer = r["answer"] if r["answer"] is not None else f"(không có đáp án: {r['no_answer_reason']})"
@@ -314,8 +318,10 @@ def audit_sheet(data: Path, out: Path, group: str | None) -> None:
                "validity_flags": "; ".join(sorted(flags.get(r.get("lineage_id"), ()))),
                "fix": f"loại lineage ({drop['reason']}): {drop['note']}" if drop else ""}
         ws.append([{**x, **ctx}.get(c, "") for c in SHEET])
+        written += 1
     wb.save(out)
-    print(f"{len(todo)} nhãn cần audit -> {out}  (điền audit: dong_y | khong_dong_y, auditor: human:<mã giả danh>)")
+    print(f"{written} nhãn cần audit -> {out}  ({skipped} nhãn của dòng không còn phát hành bỏ qua; "
+          f"điền audit: dong_y | khong_dong_y, auditor: human:<mã giả danh>)")
 
 
 def import_audit(data: Path, xlsx: Path) -> None:
