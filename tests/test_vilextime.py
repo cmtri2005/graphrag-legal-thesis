@@ -254,4 +254,16 @@ def test_t6_ranks_its_ancestor_part_apart_and_old_ranking_lines_read_as_direct()
     split = {part: [r["lineage_id"] for r in recs] for part, recs, _ in parts("T6", records, 300)}
     assert split == {"direct": ["a"], "ancestor": ["b"]}
     assert dict((p, n) for p, _, n in parts("T6", records, 300))["ancestor"] == 2 * T6_ANCESTOR_ROWS
-    assert part_of({"group": "T6"}) == "direct" and part_of({"group": "T2"}) is None
+    assert part_of({"group": "T6"}) == "direct" and part_of({"group": "T3"}) is None
+
+
+def test_t2_ranks_its_near_identical_slice_apart_and_a_pair_stays_in_one_part():
+    from sample_vilextime import OVERSAMPLE, T2_NEAR_ROWS, part_of, parts
+
+    # one row of a pair carries the facet: the whole lineage is "near"
+    records = [{"lineage_id": "a", "near_identical": False}, {"lineage_id": "a", "near_identical": False},
+               {"lineage_id": "b", "near_identical": True}, {"lineage_id": "b", "near_identical": False}]
+    split = {part: sorted({r["lineage_id"] for r in recs}) for part, recs, _ in parts("T2", records, 900)}
+    assert split == {"regular": ["a"], "near": ["b"]}
+    assert dict((p, n) for p, _, n in parts("T2", records, 900))["near"] == T2_NEAR_ROWS * OVERSAMPLE["T2"]
+    assert part_of({"group": "T2"}) == "regular" and part_of({"group": "T2", "near_identical": True}) == "near"

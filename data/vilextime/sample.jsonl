@@ -947,107 +947,257 @@
 {"group": "T2", "rank": 446, "lineage_id": "provision:a09fba90-df43-11f0-a8f9-7f047f2e4674#k3#b", "document_id": "document:27801", "rows": 2}
 {"group": "T2", "rank": 447, "lineage_id": "provision:ca28b2c0-2c1b-11f1-9045-85d78d82eb7c", "document_id": "document:162664", "rows": 2}
 {"group": "T2", "rank": 448, "lineage_id": "provision:08ffe262-eb7a-11f0-8925-31fabe1bc5fb#k4", "document_id": "document:25416", "rows": 2}
-{"group": "T2", "rank": 449, "lineage_id": "provision:0877aa6c-eb86-11f0-8def-170d9bd3acd0#k1", "document_id": "document:107307", "rows": 2}
-{"group": "T2", "rank": 450, "lineage_id": "provision:36525e30-eac5-11f0-875a-f1e35e7aff97", "document_id": "document:37012", "rows": 2}
-{"group": "T2", "rank": 451, "lineage_id": "provision:26f8f0b0-1dde-11f1-bb3d-7bd9a7e477b5", "document_id": "document:135727", "rows": 2}
-{"group": "T2", "rank": 452, "lineage_id": "provision:9118e86c-eb73-11f0-8645-6f5ada41bc79#k5", "document_id": "document:44701", "rows": 2}
-{"group": "T2", "rank": 453, "lineage_id": "provision:514d55ba-eb87-11f0-92cd-3993a7aae9e5#k4", "document_id": "document:25242", "rows": 2}
-{"group": "T2", "rank": 454, "lineage_id": "provision:0341cb82-e167-11f0-9fcc-9bfc2dc5e3b8", "document_id": "document:129436", "rows": 2}
-{"group": "T2", "rank": 455, "lineage_id": "provision:aae8a0ca-eb78-11f0-aca1-0703955d4c36#k3#b", "document_id": "document:11618", "rows": 2}
-{"group": "T2", "rank": 456, "lineage_id": "provision:5b0498d0-2d44-11f1-a8e6-b72613656ab8", "document_id": "document:168421", "rows": 2}
-{"group": "T2", "rank": 457, "lineage_id": "provision:c4b07694-e165-11f0-b583-174b13473f30", "document_id": "document:25472", "rows": 2}
-{"group": "T2", "rank": 458, "lineage_id": "provision:2d2f0c04-eb7e-11f0-bd8b-9f5af309b635#k4", "document_id": "document:23714", "rows": 2}
-{"group": "T2", "rank": 459, "lineage_id": "provision:ae80eb68-eb8f-11f0-a16d-2d1b08477a76#k6#a", "document_id": "document:143465", "rows": 2}
-{"group": "T2", "rank": 460, "lineage_id": "provision:c9edb4d2-e17e-11f0-b9d8-853be48628f3#k1#b", "document_id": "document:24580", "rows": 2}
-{"group": "T2", "rank": 461, "lineage_id": "provision:0aa0f2da-ec3f-11f0-93d3-81695a0f09d1", "document_id": "document:67271", "rows": 2}
-{"group": "T2", "rank": 462, "lineage_id": "provision:64ab9fee-df3f-11f0-af32-59d1738d0234", "document_id": "document:70803", "rows": 2}
-{"group": "T2", "rank": 463, "lineage_id": "provision:a8228d80-2dc5-11f1-b49f-2dfc2852bb4d", "document_id": "document:173920", "rows": 2}
-{"group": "T2", "rank": 464, "lineage_id": "provision:2c9a2dd0-30bd-11f1-8b7a-bda98e87fd84", "document_id": "document:187357", "rows": 2}
-{"group": "T2", "rank": 465, "lineage_id": "provision:86d9acf0-2c7e-11f1-a35f-87076455d281", "document_id": "document:120623", "rows": 2}
-{"group": "T2", "rank": 466, "lineage_id": "provision:6eb5f88a-eba7-11f0-8b0e-ad837c990d96", "document_id": "document:27414", "rows": 2}
-{"group": "T2", "rank": 467, "lineage_id": "provision:0bd8196a-df3f-11f0-8933-5bedca54c5c8#k2#b", "document_id": "document:32501", "rows": 2}
-{"group": "T2", "rank": 468, "lineage_id": "provision:2449b7fa-df4a-11f0-9607-69212f39380e#k1#m", "document_id": "document:67848", "rows": 2}
-{"group": "T2", "rank": 469, "lineage_id": "provision:a92bf070-2cc3-11f1-9f43-cd4b1467abff", "document_id": "document:146457", "rows": 2}
-{"group": "T2", "rank": 470, "lineage_id": "provision:9621b6d0-28f0-11f1-8a73-dfb3ff745c34", "document_id": "document:172735", "rows": 2}
-{"group": "T2", "rank": 471, "lineage_id": "provision:cf886ba0-2c86-11f1-9190-0f017a3f0cd1", "document_id": "document:28005", "rows": 2}
-{"group": "T2", "rank": 472, "lineage_id": "provision:bd044ba0-eade-11f0-afd6-f5db16019b45#k2", "document_id": "document:25743", "rows": 2}
-{"group": "T2", "rank": 473, "lineage_id": "provision:27e75a50-294d-11f1-8192-f3a2ce5e7cb7", "document_id": "document:118562", "rows": 2}
-{"group": "T2", "rank": 474, "lineage_id": "provision:7a143a70-2d47-11f1-8e90-d1acce803547", "document_id": "document:119757", "rows": 2}
-{"group": "T2", "rank": 475, "lineage_id": "provision:1387d362-eb7e-11f0-8f27-d3cf5c1f34ab#k2#d", "document_id": "document:129499", "rows": 2}
-{"group": "T2", "rank": 476, "lineage_id": "provision:5d4ba0bc-df41-11f0-925a-bf6277faa5a2", "document_id": "document:169027", "rows": 2}
-{"group": "T2", "rank": 477, "lineage_id": "provision:081c22a8-df4e-11f0-b430-d78d5dc0d9c2", "document_id": "document:118372", "rows": 2}
-{"group": "T2", "rank": 478, "lineage_id": "provision:6d2c7284-ec3b-11f0-83d6-a9a902554981", "document_id": "document:37199", "rows": 2}
-{"group": "T2", "rank": 479, "lineage_id": "provision:fc8fcce0-2c7e-11f1-ad30-d13195451afa", "document_id": "document:160095", "rows": 2}
-{"group": "T2", "rank": 480, "lineage_id": "provision:c2aee3a4-1f67-11f1-86aa-1532f5ac65e4", "document_id": "document:30473", "rows": 2}
-{"group": "T2", "rank": 481, "lineage_id": "provision:d3fcad12-eb78-11f0-89f6-19b067f5077b", "document_id": "document:169363", "rows": 2}
-{"group": "T2", "rank": 482, "lineage_id": "provision:f26a7b8a-eb6e-11f0-a5bc-6f58f58685cf#k1", "document_id": "document:25487", "rows": 2}
-{"group": "T2", "rank": 483, "lineage_id": "provision:6dde6ac0-1edb-11f1-b653-1bec72885b72", "document_id": "document:136309", "rows": 2}
-{"group": "T2", "rank": 484, "lineage_id": "provision:ad6f5350-eb84-11f0-9d8b-95851f1cdb87#k9", "document_id": "document:97152", "rows": 2}
-{"group": "T2", "rank": 485, "lineage_id": "provision:ac194d4c-df42-11f0-9c63-5ba3751dc33d", "document_id": "document:146199", "rows": 2}
-{"group": "T2", "rank": 486, "lineage_id": "provision:8fbd8ac0-1d57-11f1-8a97-fb5095481cea", "document_id": "document:145776", "rows": 2}
-{"group": "T2", "rank": 487, "lineage_id": "provision:cc6e3ec0-2e04-11f1-b370-5bcd43dfa409", "document_id": "document:124688", "rows": 2}
-{"group": "T2", "rank": 488, "lineage_id": "provision:fe389670-df4a-11f0-ba83-4d8d6de3a092", "document_id": "document:158959", "rows": 2}
-{"group": "T2", "rank": 489, "lineage_id": "provision:3dd811b6-eb7b-11f0-b8cc-35ce724bdc8f", "document_id": "document:128613", "rows": 2}
-{"group": "T2", "rank": 490, "lineage_id": "provision:e9ef58d0-2ca1-11f1-a4ed-8bbc66dfca6d", "document_id": "document:145897", "rows": 2}
-{"group": "T2", "rank": 491, "lineage_id": "provision:579988dc-df41-11f0-874a-07d729c7b5c9", "document_id": "document:133214", "rows": 2}
-{"group": "T2", "rank": 492, "lineage_id": "provision:2f1dd510-2c86-11f1-816b-6917ac5a340f", "document_id": "document:30463", "rows": 2}
-{"group": "T2", "rank": 493, "lineage_id": "provision:77015092-eb9e-11f0-a4cb-eb53acf0e691", "document_id": "document:37524", "rows": 2}
-{"group": "T2", "rank": 494, "lineage_id": "provision:211ddf7c-ec36-11f0-a442-7f2caee495dd#k1", "document_id": "document:25497", "rows": 2}
-{"group": "T2", "rank": 495, "lineage_id": "provision:96104690-483d-11f1-8917-a514a6c6a0eb", "document_id": "document:179096", "rows": 2}
-{"group": "T2", "rank": 496, "lineage_id": "provision:d7f48974-e161-11f0-8fb5-d504002d3cba", "document_id": "document:157717", "rows": 2}
-{"group": "T2", "rank": 497, "lineage_id": "provision:29ccbc10-2c82-11f1-9060-57517afe119d", "document_id": "document:156124", "rows": 2}
-{"group": "T2", "rank": 498, "lineage_id": "provision:dc10ac22-eb70-11f0-9b25-b15bbc8cad28", "document_id": "document:26981", "rows": 2}
-{"group": "T2", "rank": 499, "lineage_id": "provision:e08497f0-2d47-11f1-8459-05c31d70aaf5", "document_id": "document:112021", "rows": 2}
-{"group": "T2", "rank": 500, "lineage_id": "provision:16cc9100-2d43-11f1-ab97-63117747ed4f", "document_id": "document:177792", "rows": 2}
-{"group": "T2", "rank": 501, "lineage_id": "provision:c5309aa0-2c87-11f1-9f5c-c38cadcd62e5", "document_id": "document:27099", "rows": 2}
-{"group": "T2", "rank": 502, "lineage_id": "provision:aa89990c-eb84-11f0-8c39-e30673af9154#k2", "document_id": "document:97151", "rows": 2}
-{"group": "T2", "rank": 503, "lineage_id": "provision:893ad5a2-e181-11f0-9b48-9de49cfd73ea", "document_id": "document:151904", "rows": 2}
-{"group": "T2", "rank": 504, "lineage_id": "provision:0ca261aa-df50-11f0-b211-35ac2560fd1c", "document_id": "document:37201", "rows": 2}
-{"group": "T2", "rank": 505, "lineage_id": "provision:ee5a1d20-df52-11f0-b7c8-97e0fbc29771", "document_id": "document:153972", "rows": 2}
-{"group": "T2", "rank": 506, "lineage_id": "provision:3e2cc4dc-df3b-11f0-8894-2740c9708aee", "document_id": "document:27376", "rows": 2}
-{"group": "T2", "rank": 507, "lineage_id": "provision:5779af40-2d42-11f1-8202-79a5a996b7c0", "document_id": "document:178549", "rows": 2}
-{"group": "T2", "rank": 508, "lineage_id": "provision:71c5b90a-eb7c-11f0-b1a8-355880c809c7#k3", "document_id": "document:111953", "rows": 2}
-{"group": "T2", "rank": 509, "lineage_id": "provision:b6ec1668-df48-11f0-98b2-ffe4a9201a0d#k1", "document_id": "document:46758", "rows": 2}
-{"group": "T2", "rank": 510, "lineage_id": "provision:29b3fada-eb74-11f0-81bd-275d43d2d3dd", "document_id": "document:165542", "rows": 2}
-{"group": "T2", "rank": 511, "lineage_id": "provision:e6c5d584-df40-11f0-948d-c52fe1e4a683", "document_id": "document:27855", "rows": 2}
-{"group": "T2", "rank": 512, "lineage_id": "provision:f7f5b8d0-20ed-11f1-b643-07ad51ef0fb7", "document_id": "document:119123", "rows": 2}
-{"group": "T2", "rank": 513, "lineage_id": "provision:9d329540-210f-11f1-8701-a9a87c7bd95c", "document_id": "document:133208", "rows": 2}
-{"group": "T2", "rank": 514, "lineage_id": "provision:384955bc-eb70-11f0-9d46-a1dd976771a5", "document_id": "document:141825", "rows": 2}
-{"group": "T2", "rank": 515, "lineage_id": "provision:d8c800b0-2d47-11f1-af32-c3528c509ff1", "document_id": "document:112023", "rows": 2}
-{"group": "T2", "rank": 516, "lineage_id": "provision:3ec35eda-2d54-11f1-8f2a-e79e446db919", "document_id": "document:26222", "rows": 2}
-{"group": "T2", "rank": 517, "lineage_id": "provision:6678a7e0-2d46-11f1-999e-19c9dd572437", "document_id": "document:138989", "rows": 2}
-{"group": "T2", "rank": 518, "lineage_id": "provision:0f1d93f0-eacc-11f0-b3d0-3ddd0a92e9e1", "document_id": "document:70801", "rows": 2}
-{"group": "T2", "rank": 519, "lineage_id": "provision:c27014a0-2d43-11f1-9b81-67976003136e", "document_id": "document:174001", "rows": 2}
-{"group": "T2", "rank": 520, "lineage_id": "provision:a83b7490-2c84-11f1-8cd2-2d195785c558", "document_id": "document:37198", "rows": 2}
-{"group": "T2", "rank": 521, "lineage_id": "provision:04e401f0-2c0b-11f1-af6a-73f2c1e39f87", "document_id": "document:179217", "rows": 2}
-{"group": "T2", "rank": 522, "lineage_id": "provision:f03de34e-df41-11f0-83db-457bb2c7028c", "document_id": "document:177735", "rows": 2}
-{"group": "T2", "rank": 523, "lineage_id": "provision:0bd52b26-eb77-11f0-a3f2-0f4f100411d0", "document_id": "document:72689", "rows": 2}
-{"group": "T2", "rank": 524, "lineage_id": "provision:20db2ce4-df44-11f0-88bf-2578fb46c784#k2#a", "document_id": "document:92577", "rows": 2}
-{"group": "T2", "rank": 525, "lineage_id": "provision:3e49ae40-2c83-11f1-a26a-53026176ed04", "document_id": "document:140152", "rows": 2}
-{"group": "T2", "rank": 526, "lineage_id": "provision:161126e0-2609-11f1-9c5c-a1b867911624", "document_id": "document:32547", "rows": 2}
-{"group": "T2", "rank": 527, "lineage_id": "provision:7b4ac124-eb76-11f0-8fdf-0bb59ee9a0fb", "document_id": "document:135705", "rows": 2}
-{"group": "T2", "rank": 528, "lineage_id": "provision:68affa4a-2d46-11f1-9a51-1105efb3344b", "document_id": "document:138844", "rows": 2}
-{"group": "T2", "rank": 529, "lineage_id": "provision:4b672240-df46-11f0-8d05-d5242a1013e3", "document_id": "document:14463", "rows": 2}
-{"group": "T2", "rank": 530, "lineage_id": "provision:82cd3a10-2f6b-11f1-8ceb-c151b7a0b324", "document_id": "document:150959", "rows": 2}
-{"group": "T2", "rank": 531, "lineage_id": "provision:58fce644-df53-11f0-9bca-a9db4826ae61#k1#%C4%91", "document_id": "document:152830", "rows": 2}
-{"group": "T2", "rank": 532, "lineage_id": "provision:3f9179b0-2d53-11f1-a776-1bab977dc407", "document_id": "document:59427", "rows": 2}
-{"group": "T2", "rank": 533, "lineage_id": "provision:cee9b71c-df56-11f0-b331-5f815fe5ffb9#k2", "document_id": "document:47434", "rows": 2}
-{"group": "T2", "rank": 534, "lineage_id": "provision:29a5e36a-1efe-11f1-a6b0-5de023d0238d", "document_id": "document:92540", "rows": 2}
-{"group": "T2", "rank": 535, "lineage_id": "provision:bcf53d50-2b51-11f1-8ec0-cd732f39bc5a", "document_id": "document:114261", "rows": 2}
-{"group": "T2", "rank": 536, "lineage_id": "provision:aeb04d30-272c-11f1-8efb-b3a4f362bef5", "document_id": "document:139903", "rows": 2}
-{"group": "T2", "rank": 537, "lineage_id": "provision:dd1ed490-2c7f-11f1-bf07-23cef82af352", "document_id": "document:66655", "rows": 2}
-{"group": "T2", "rank": 538, "lineage_id": "provision:62121088-eb74-11f0-b439-c9cb9600ded3#k1#b", "document_id": "document:30676", "rows": 2}
-{"group": "T2", "rank": 539, "lineage_id": "provision:2152b20e-df45-11f0-ae8e-1520309ade0b#k1", "document_id": "document:35012", "rows": 2}
-{"group": "T2", "rank": 540, "lineage_id": "provision:55ac5d54-df4d-11f0-8780-b93aadba2826#k2#b", "document_id": "document:128193", "rows": 2}
-{"group": "T2", "rank": 541, "lineage_id": "provision:b9d99f80-2d40-11f1-9264-3ba66d9d77ae", "document_id": "document:179992", "rows": 2}
-{"group": "T2", "rank": 542, "lineage_id": "provision:434697a0-2d41-11f1-8d18-f1aeca91c912", "document_id": "document:180107", "rows": 2}
-{"group": "T2", "rank": 543, "lineage_id": "provision:578f9dc0-2a0c-11f1-bb4c-5346eb7ff178", "document_id": "document:151002", "rows": 2}
-{"group": "T2", "rank": 544, "lineage_id": "provision:77012888-eb9e-11f0-873b-1f640536fe86", "document_id": "document:37524", "rows": 2}
-{"group": "T2", "rank": 545, "lineage_id": "provision:aca3f430-2d47-11f1-8fd9-a36ae91d9616", "document_id": "document:114576", "rows": 2}
-{"group": "T2", "rank": 546, "lineage_id": "provision:ada0a6f2-eb76-11f0-996b-5bdac24015e5#k4", "document_id": "document:25842", "rows": 2}
-{"group": "T2", "rank": 547, "lineage_id": "provision:a09fba18-df43-11f0-8d75-4d7b7a746e44#k1#c", "document_id": "document:27801", "rows": 2}
-{"group": "T2", "rank": 548, "lineage_id": "provision:66d0e400-31ba-11f1-8513-5f24d42ce133", "document_id": "document:187275", "rows": 2}
-{"group": "T2", "rank": 549, "lineage_id": "provision:172b6180-3a36-11f1-ba11-1d0a92ab628d", "document_id": "document:169712", "rows": 2}
+{"group": "T2", "rank": 449, "lineage_id": "provision:36525e30-eac5-11f0-875a-f1e35e7aff97", "document_id": "document:37012", "rows": 2}
+{"group": "T2", "rank": 450, "lineage_id": "provision:9118e86c-eb73-11f0-8645-6f5ada41bc79#k5", "document_id": "document:44701", "rows": 2}
+{"group": "T2", "rank": 451, "lineage_id": "provision:0341cb82-e167-11f0-9fcc-9bfc2dc5e3b8", "document_id": "document:129436", "rows": 2}
+{"group": "T2", "rank": 452, "lineage_id": "provision:aae8a0ca-eb78-11f0-aca1-0703955d4c36#k3#b", "document_id": "document:11618", "rows": 2}
+{"group": "T2", "rank": 453, "lineage_id": "provision:c4b07694-e165-11f0-b583-174b13473f30", "document_id": "document:25472", "rows": 2}
+{"group": "T2", "rank": 454, "lineage_id": "provision:2d2f0c04-eb7e-11f0-bd8b-9f5af309b635#k4", "document_id": "document:23714", "rows": 2}
+{"group": "T2", "rank": 455, "lineage_id": "provision:ae80eb68-eb8f-11f0-a16d-2d1b08477a76#k6#a", "document_id": "document:143465", "rows": 2}
+{"group": "T2", "rank": 456, "lineage_id": "provision:c9edb4d2-e17e-11f0-b9d8-853be48628f3#k1#b", "document_id": "document:24580", "rows": 2}
+{"group": "T2", "rank": 457, "lineage_id": "provision:0aa0f2da-ec3f-11f0-93d3-81695a0f09d1", "document_id": "document:67271", "rows": 2}
+{"group": "T2", "rank": 458, "lineage_id": "provision:86d9acf0-2c7e-11f1-a35f-87076455d281", "document_id": "document:120623", "rows": 2}
+{"group": "T2", "rank": 459, "lineage_id": "provision:6eb5f88a-eba7-11f0-8b0e-ad837c990d96", "document_id": "document:27414", "rows": 2}
+{"group": "T2", "rank": 460, "lineage_id": "provision:0bd8196a-df3f-11f0-8933-5bedca54c5c8#k2#b", "document_id": "document:32501", "rows": 2}
+{"group": "T2", "rank": 461, "lineage_id": "provision:a92bf070-2cc3-11f1-9f43-cd4b1467abff", "document_id": "document:146457", "rows": 2}
+{"group": "T2", "rank": 462, "lineage_id": "provision:cf886ba0-2c86-11f1-9190-0f017a3f0cd1", "document_id": "document:28005", "rows": 2}
+{"group": "T2", "rank": 463, "lineage_id": "provision:bd044ba0-eade-11f0-afd6-f5db16019b45#k2", "document_id": "document:25743", "rows": 2}
+{"group": "T2", "rank": 464, "lineage_id": "provision:7a143a70-2d47-11f1-8e90-d1acce803547", "document_id": "document:119757", "rows": 2}
+{"group": "T2", "rank": 465, "lineage_id": "provision:1387d362-eb7e-11f0-8f27-d3cf5c1f34ab#k2#d", "document_id": "document:129499", "rows": 2}
+{"group": "T2", "rank": 466, "lineage_id": "provision:c2aee3a4-1f67-11f1-86aa-1532f5ac65e4", "document_id": "document:30473", "rows": 2}
+{"group": "T2", "rank": 467, "lineage_id": "provision:f26a7b8a-eb6e-11f0-a5bc-6f58f58685cf#k1", "document_id": "document:25487", "rows": 2}
+{"group": "T2", "rank": 468, "lineage_id": "provision:6dde6ac0-1edb-11f1-b653-1bec72885b72", "document_id": "document:136309", "rows": 2}
+{"group": "T2", "rank": 469, "lineage_id": "provision:ad6f5350-eb84-11f0-9d8b-95851f1cdb87#k9", "document_id": "document:97152", "rows": 2}
+{"group": "T2", "rank": 470, "lineage_id": "provision:8fbd8ac0-1d57-11f1-8a97-fb5095481cea", "document_id": "document:145776", "rows": 2}
+{"group": "T2", "rank": 471, "lineage_id": "provision:cc6e3ec0-2e04-11f1-b370-5bcd43dfa409", "document_id": "document:124688", "rows": 2}
+{"group": "T2", "rank": 472, "lineage_id": "provision:fe389670-df4a-11f0-ba83-4d8d6de3a092", "document_id": "document:158959", "rows": 2}
+{"group": "T2", "rank": 473, "lineage_id": "provision:579988dc-df41-11f0-874a-07d729c7b5c9", "document_id": "document:133214", "rows": 2}
+{"group": "T2", "rank": 474, "lineage_id": "provision:dc10ac22-eb70-11f0-9b25-b15bbc8cad28", "document_id": "document:26981", "rows": 2}
+{"group": "T2", "rank": 475, "lineage_id": "provision:16cc9100-2d43-11f1-ab97-63117747ed4f", "document_id": "document:177792", "rows": 2}
+{"group": "T2", "rank": 476, "lineage_id": "provision:aa89990c-eb84-11f0-8c39-e30673af9154#k2", "document_id": "document:97151", "rows": 2}
+{"group": "T2", "rank": 477, "lineage_id": "provision:3e2cc4dc-df3b-11f0-8894-2740c9708aee", "document_id": "document:27376", "rows": 2}
+{"group": "T2", "rank": 478, "lineage_id": "provision:5779af40-2d42-11f1-8202-79a5a996b7c0", "document_id": "document:178549", "rows": 2}
+{"group": "T2", "rank": 479, "lineage_id": "provision:71c5b90a-eb7c-11f0-b1a8-355880c809c7#k3", "document_id": "document:111953", "rows": 2}
+{"group": "T2", "rank": 480, "lineage_id": "provision:b6ec1668-df48-11f0-98b2-ffe4a9201a0d#k1", "document_id": "document:46758", "rows": 2}
+{"group": "T2", "rank": 481, "lineage_id": "provision:e6c5d584-df40-11f0-948d-c52fe1e4a683", "document_id": "document:27855", "rows": 2}
+{"group": "T2", "rank": 482, "lineage_id": "provision:9d329540-210f-11f1-8701-a9a87c7bd95c", "document_id": "document:133208", "rows": 2}
+{"group": "T2", "rank": 483, "lineage_id": "provision:384955bc-eb70-11f0-9d46-a1dd976771a5", "document_id": "document:141825", "rows": 2}
+{"group": "T2", "rank": 484, "lineage_id": "provision:d8c800b0-2d47-11f1-af32-c3528c509ff1", "document_id": "document:112023", "rows": 2}
+{"group": "T2", "rank": 485, "lineage_id": "provision:0f1d93f0-eacc-11f0-b3d0-3ddd0a92e9e1", "document_id": "document:70801", "rows": 2}
+{"group": "T2", "rank": 486, "lineage_id": "provision:a83b7490-2c84-11f1-8cd2-2d195785c558", "document_id": "document:37198", "rows": 2}
+{"group": "T2", "rank": 487, "lineage_id": "provision:04e401f0-2c0b-11f1-af6a-73f2c1e39f87", "document_id": "document:179217", "rows": 2}
+{"group": "T2", "rank": 488, "lineage_id": "provision:0bd52b26-eb77-11f0-a3f2-0f4f100411d0", "document_id": "document:72689", "rows": 2}
+{"group": "T2", "rank": 489, "lineage_id": "provision:20db2ce4-df44-11f0-88bf-2578fb46c784#k2#a", "document_id": "document:92577", "rows": 2}
+{"group": "T2", "rank": 490, "lineage_id": "provision:161126e0-2609-11f1-9c5c-a1b867911624", "document_id": "document:32547", "rows": 2}
+{"group": "T2", "rank": 491, "lineage_id": "provision:7b4ac124-eb76-11f0-8fdf-0bb59ee9a0fb", "document_id": "document:135705", "rows": 2}
+{"group": "T2", "rank": 492, "lineage_id": "provision:4b672240-df46-11f0-8d05-d5242a1013e3", "document_id": "document:14463", "rows": 2}
+{"group": "T2", "rank": 493, "lineage_id": "provision:82cd3a10-2f6b-11f1-8ceb-c151b7a0b324", "document_id": "document:150959", "rows": 2}
+{"group": "T2", "rank": 494, "lineage_id": "provision:cee9b71c-df56-11f0-b331-5f815fe5ffb9#k2", "document_id": "document:47434", "rows": 2}
+{"group": "T2", "rank": 495, "lineage_id": "provision:29a5e36a-1efe-11f1-a6b0-5de023d0238d", "document_id": "document:92540", "rows": 2}
+{"group": "T2", "rank": 496, "lineage_id": "provision:bcf53d50-2b51-11f1-8ec0-cd732f39bc5a", "document_id": "document:114261", "rows": 2}
+{"group": "T2", "rank": 497, "lineage_id": "provision:dd1ed490-2c7f-11f1-bf07-23cef82af352", "document_id": "document:66655", "rows": 2}
+{"group": "T2", "rank": 498, "lineage_id": "provision:62121088-eb74-11f0-b439-c9cb9600ded3#k1#b", "document_id": "document:30676", "rows": 2}
+{"group": "T2", "rank": 499, "lineage_id": "provision:2152b20e-df45-11f0-ae8e-1520309ade0b#k1", "document_id": "document:35012", "rows": 2}
+{"group": "T2", "rank": 500, "lineage_id": "provision:55ac5d54-df4d-11f0-8780-b93aadba2826#k2#b", "document_id": "document:128193", "rows": 2}
+{"group": "T2", "rank": 501, "lineage_id": "provision:b9d99f80-2d40-11f1-9264-3ba66d9d77ae", "document_id": "document:179992", "rows": 2}
+{"group": "T2", "rank": 502, "lineage_id": "provision:434697a0-2d41-11f1-8d18-f1aeca91c912", "document_id": "document:180107", "rows": 2}
+{"group": "T2", "rank": 503, "lineage_id": "provision:578f9dc0-2a0c-11f1-bb4c-5346eb7ff178", "document_id": "document:151002", "rows": 2}
+{"group": "T2", "rank": 504, "lineage_id": "provision:aca3f430-2d47-11f1-8fd9-a36ae91d9616", "document_id": "document:114576", "rows": 2}
+{"group": "T2", "rank": 505, "lineage_id": "provision:a09fba18-df43-11f0-8d75-4d7b7a746e44#k1#c", "document_id": "document:27801", "rows": 2}
+{"group": "T2", "rank": 506, "lineage_id": "provision:79f139cc-df3f-11f0-8384-332072aa2888#k2", "document_id": "document:36945", "rows": 2}
+{"group": "T2", "rank": 507, "lineage_id": "provision:f9ad3d68-df3b-11f0-a059-07549b34fd5c", "document_id": "document:117760", "rows": 2}
+{"group": "T2", "rank": 508, "lineage_id": "provision:f63a820a-df4d-11f0-a592-6ff3156619b8", "document_id": "document:62272", "rows": 2}
+{"group": "T2", "rank": 509, "lineage_id": "provision:ef77a3dc-df4b-11f0-b516-3fb8c38a027e", "document_id": "document:76318", "rows": 2}
+{"group": "T2", "rank": 510, "lineage_id": "provision:687a9260-2d46-11f1-88b6-09ce5c351857", "document_id": "document:138844", "rows": 2}
+{"group": "T2", "rank": 511, "lineage_id": "provision:0877a9e0-eb86-11f0-97fb-5732e501e960#k1", "document_id": "document:107307", "rows": 2}
+{"group": "T2", "rank": 512, "lineage_id": "provision:72e31eb2-df48-11f0-a3d1-1768b469a629", "document_id": "document:32512", "rows": 2}
+{"group": "T2", "rank": 513, "lineage_id": "provision:58856d92-df41-11f0-9471-59aa2525df75#k2", "document_id": "document:25408", "rows": 2}
+{"group": "T2", "rank": 514, "lineage_id": "provision:74364230-2c1e-11f1-9c47-1d3bb12505c3", "document_id": "document:137805", "rows": 2}
+{"group": "T2", "rank": 515, "lineage_id": "provision:80268470-2d44-11f1-a38b-bf895bbef6fd", "document_id": "document:168089", "rows": 2}
+{"group": "T2", "rank": 516, "lineage_id": "provision:f4d4bee0-2e84-11f1-89d1-4394c4d07baf", "document_id": "document:130982", "rows": 2}
+{"group": "T2", "rank": 517, "lineage_id": "provision:393dc8e0-eac6-11f0-bb51-7b4ee690de15#k3", "document_id": "document:130871", "rows": 2}
+{"group": "T2", "rank": 518, "lineage_id": "provision:7d7f2f06-ec3a-11f0-9a76-779803711611", "document_id": "document:96035", "rows": 2}
+{"group": "T2", "rank": 519, "lineage_id": "provision:3384e000-2d47-11f1-9feb-13a7718edef7", "document_id": "document:127395", "rows": 2}
+{"group": "T2", "rank": 520, "lineage_id": "provision:5a1602be-eb78-11f0-a1f0-17da45415d12", "document_id": "document:138493", "rows": 2}
+{"group": "T2", "rank": 521, "lineage_id": "provision:67b3eba0-eada-11f0-84da-c3c552a3e8a3#k2", "document_id": "document:144776", "rows": 2}
+{"group": "T2", "rank": 522, "lineage_id": "provision:69393452-eb76-11f0-99be-a53099ecb91a#k2", "document_id": "document:60427", "rows": 2}
+{"group": "T2", "rank": 523, "lineage_id": "provision:0a0c5ca0-213d-11f1-a552-d58fd659f81f", "document_id": "document:112894", "rows": 2}
+{"group": "T2", "rank": 524, "lineage_id": "provision:660b7c86-eba3-11f0-ad6d-85f4e2522d4a#k2#%C4%91", "document_id": "document:11611", "rows": 2}
+{"group": "T2", "rank": 525, "lineage_id": "provision:da406e20-ead3-11f0-8bf7-ddff60fa7f28#k2#a", "document_id": "document:14193", "rows": 2}
+{"group": "T2", "rank": 526, "lineage_id": "provision:80ce9210-2c85-11f1-a1ee-f3d3545dc2ff", "document_id": "document:32581", "rows": 2}
+{"group": "T2", "rank": 527, "lineage_id": "provision:8a31dbc8-df3c-11f0-ade2-834b5e77a7ca#k2", "document_id": "document:28041", "rows": 2}
+{"group": "T2", "rank": 528, "lineage_id": "provision:f4d18a90-2e84-11f1-a8bd-e5e672089068", "document_id": "document:130982", "rows": 2}
+{"group": "T2", "rank": 529, "lineage_id": "provision:8834bd90-1e2f-11f1-858c-cf4ac1ba0927", "document_id": "document:61040", "rows": 2}
+{"group": "T2", "rank": 530, "lineage_id": "provision:0a89df6e-eb9f-11f0-a31a-17b2438b91bf", "document_id": "document:67551", "rows": 2}
+{"group": "T2", "rank": 531, "lineage_id": "provision:1be21c80-2692-11f1-bbd2-4bbabd871335", "document_id": "document:133921", "rows": 2}
+{"group": "T2", "rank": 532, "lineage_id": "provision:d3a1ba3a-2c85-11f1-8f45-51f70f128a81", "document_id": "document:32506", "rows": 2}
+{"group": "T2", "rank": 533, "lineage_id": "provision:63911910-e172-11f0-8126-971029154019#k7#a", "document_id": "document:12291", "rows": 2}
+{"group": "T2", "rank": 534, "lineage_id": "provision:9fdde150-2d53-11f1-8f6f-f166d9302f0e", "document_id": "document:44209", "rows": 2}
+{"group": "T2", "rank": 535, "lineage_id": "provision:b02190c4-df52-11f0-99c7-656bc1c49b5c", "document_id": "document:147628", "rows": 2}
+{"group": "T2", "rank": 536, "lineage_id": "provision:a605b450-1e98-11f1-bcc0-05bd427be73f", "document_id": "document:173695", "rows": 2}
+{"group": "T2", "rank": 537, "lineage_id": "provision:8760c760-eacc-11f0-8976-e7ca374c7eb7#k1", "document_id": "document:47418", "rows": 2}
+{"group": "T2", "rank": 538, "lineage_id": "provision:d3fb9c42-eb78-11f0-91e7-dbe5390d65d0", "document_id": "document:169363", "rows": 2}
+{"group": "T2", "rank": 539, "lineage_id": "provision:43d796a0-2c89-11f1-b407-df43aed4f580", "document_id": "document:25151", "rows": 2}
+{"group": "T2", "rank": 540, "lineage_id": "provision:43655d40-28ee-11f1-8205-6360b0424406", "document_id": "document:58050", "rows": 2}
+{"group": "T2", "rank": 541, "lineage_id": "provision:71c5debc-eb7c-11f0-94e3-1f1d9a240bba#k1#b", "document_id": "document:111953", "rows": 2}
+{"group": "T2", "rank": 542, "lineage_id": "provision:4fbef990-2a1d-11f1-b070-5149faa09616", "document_id": "document:98424", "rows": 2}
+{"group": "T2", "rank": 543, "lineage_id": "provision:8cf10f9e-eb73-11f0-ab73-8dc37640338a#k1", "document_id": "document:34094", "rows": 2}
+{"group": "T2", "rank": 544, "lineage_id": "provision:2c6f1e30-29c2-11f1-930b-63033df9ad28", "document_id": "document:17741", "rows": 2}
+{"group": "T2", "rank": 545, "lineage_id": "provision:8fd11b6e-df57-11f0-a0a4-591321cd84f8", "document_id": "document:24875", "rows": 2}
+{"group": "T2", "rank": 546, "lineage_id": "provision:f27e2f54-eb8c-11f0-814b-db91cbff9025", "document_id": "document:25806", "rows": 2}
+{"group": "T2", "rank": 547, "lineage_id": "provision:76b5b9ac-eb99-11f0-8d04-bbf09e3ccf26#k1", "document_id": "document:23776", "rows": 2}
+{"group": "T2", "rank": 548, "lineage_id": "provision:6d2c4a52-ec3b-11f0-a710-e714eec838d1", "document_id": "document:37199", "rows": 2}
+{"group": "T2", "rank": 549, "lineage_id": "provision:96c50892-eb9e-11f0-bc8f-d34019047100#k12", "document_id": "document:23109", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 0, "lineage_id": "provision:13f26650-2df0-11f1-aa8a-83f37d2cd5b7", "document_id": "document:146467", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 1, "lineage_id": "provision:17c1edb0-2d68-11f1-8971-71ec8b16352c", "document_id": "document:159255", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 2, "lineage_id": "provision:23541e4a-e160-11f0-9afe-63b9eb562899", "document_id": "document:72266", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 3, "lineage_id": "provision:2e215050-2c5a-11f1-bffc-87937ed4c1aa", "document_id": "document:146676", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 4, "lineage_id": "provision:2e2bfeb0-2c5a-11f1-ae59-fb94f0483635", "document_id": "document:146676", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 5, "lineage_id": "provision:31904fe0-1f97-11f1-8e84-2dec611fd43c", "document_id": "document:110915", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 6, "lineage_id": "provision:3376be48-df46-11f0-9e9d-a330b920f907", "document_id": "document:15651", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 7, "lineage_id": "provision:3570fec0-2474-11f1-9738-f31dbb552ae2", "document_id": "document:134555", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 8, "lineage_id": "provision:3b4128da-2d47-11f1-98ce-1bf21bf5f6be", "document_id": "document:127076", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 9, "lineage_id": "provision:514d54fc-eb87-11f0-a373-fbb45b37008d#k2#a", "document_id": "document:25242", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 10, "lineage_id": "provision:52a226e0-3171-11f1-8988-7d076da223fa", "document_id": "document:110836", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 11, "lineage_id": "provision:60e5a770-2c82-11f1-91d8-05743c0a6064", "document_id": "document:86534", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 12, "lineage_id": "provision:6d2c7130-ec3b-11f0-a3da-1bb00a0e4d9a", "document_id": "document:37199", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 13, "lineage_id": "provision:72791358-eb7a-11f0-9b96-75a5da9f38f2", "document_id": "document:173708", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 14, "lineage_id": "provision:880d1c80-2c81-11f1-85bb-991f3788b048", "document_id": "document:151943", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 15, "lineage_id": "provision:893ab108-e181-11f0-9c94-73075fabab2e", "document_id": "document:151904", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 16, "lineage_id": "provision:9395fe30-eabb-11f0-b95f-553220e945dc#k3#b", "document_id": "document:46720", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 17, "lineage_id": "provision:a324f2cc-df4c-11f0-894a-8ddf853d159d", "document_id": "document:133923", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 18, "lineage_id": "provision:abdc9b84-e15b-11f0-8e24-6d13b1bd9f6b", "document_id": "document:162590", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 19, "lineage_id": "provision:adaff7e0-2d45-11f1-b065-b3402f7a0a1e", "document_id": "document:152575", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 20, "lineage_id": "provision:bdb196ac-df3f-11f0-a53b-49fbe419b389", "document_id": "document:141668", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 21, "lineage_id": "provision:dcefc3f0-3b96-11f1-8a9e-67d0123abfb3", "document_id": "document:173412", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 22, "lineage_id": "provision:dcf457d0-3b96-11f1-b174-b5c1cf7b0c30", "document_id": "document:173412", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 23, "lineage_id": "provision:fc79fb04-2c7e-11f1-9a1a-67adfcf2b37c", "document_id": "document:160095", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 24, "lineage_id": "provision:0877aa6c-eb86-11f0-8def-170d9bd3acd0#k1", "document_id": "document:107307", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 25, "lineage_id": "provision:26f8f0b0-1dde-11f1-bb3d-7bd9a7e477b5", "document_id": "document:135727", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 26, "lineage_id": "provision:514d55ba-eb87-11f0-92cd-3993a7aae9e5#k4", "document_id": "document:25242", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 27, "lineage_id": "provision:5b0498d0-2d44-11f1-a8e6-b72613656ab8", "document_id": "document:168421", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 28, "lineage_id": "provision:64ab9fee-df3f-11f0-af32-59d1738d0234", "document_id": "document:70803", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 29, "lineage_id": "provision:a8228d80-2dc5-11f1-b49f-2dfc2852bb4d", "document_id": "document:173920", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 30, "lineage_id": "provision:2c9a2dd0-30bd-11f1-8b7a-bda98e87fd84", "document_id": "document:187357", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 31, "lineage_id": "provision:2449b7fa-df4a-11f0-9607-69212f39380e#k1#m", "document_id": "document:67848", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 32, "lineage_id": "provision:9621b6d0-28f0-11f1-8a73-dfb3ff745c34", "document_id": "document:172735", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 33, "lineage_id": "provision:27e75a50-294d-11f1-8192-f3a2ce5e7cb7", "document_id": "document:118562", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 34, "lineage_id": "provision:5d4ba0bc-df41-11f0-925a-bf6277faa5a2", "document_id": "document:169027", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 35, "lineage_id": "provision:081c22a8-df4e-11f0-b430-d78d5dc0d9c2", "document_id": "document:118372", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 36, "lineage_id": "provision:6d2c7284-ec3b-11f0-83d6-a9a902554981", "document_id": "document:37199", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 37, "lineage_id": "provision:fc8fcce0-2c7e-11f1-ad30-d13195451afa", "document_id": "document:160095", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 38, "lineage_id": "provision:d3fcad12-eb78-11f0-89f6-19b067f5077b", "document_id": "document:169363", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 39, "lineage_id": "provision:ac194d4c-df42-11f0-9c63-5ba3751dc33d", "document_id": "document:146199", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 40, "lineage_id": "provision:3dd811b6-eb7b-11f0-b8cc-35ce724bdc8f", "document_id": "document:128613", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 41, "lineage_id": "provision:e9ef58d0-2ca1-11f1-a4ed-8bbc66dfca6d", "document_id": "document:145897", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 42, "lineage_id": "provision:2f1dd510-2c86-11f1-816b-6917ac5a340f", "document_id": "document:30463", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 43, "lineage_id": "provision:77015092-eb9e-11f0-a4cb-eb53acf0e691", "document_id": "document:37524", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 44, "lineage_id": "provision:211ddf7c-ec36-11f0-a442-7f2caee495dd#k1", "document_id": "document:25497", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 45, "lineage_id": "provision:96104690-483d-11f1-8917-a514a6c6a0eb", "document_id": "document:179096", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 46, "lineage_id": "provision:d7f48974-e161-11f0-8fb5-d504002d3cba", "document_id": "document:157717", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 47, "lineage_id": "provision:29ccbc10-2c82-11f1-9060-57517afe119d", "document_id": "document:156124", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 48, "lineage_id": "provision:e08497f0-2d47-11f1-8459-05c31d70aaf5", "document_id": "document:112021", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 49, "lineage_id": "provision:c5309aa0-2c87-11f1-9f5c-c38cadcd62e5", "document_id": "document:27099", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 50, "lineage_id": "provision:893ad5a2-e181-11f0-9b48-9de49cfd73ea", "document_id": "document:151904", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 51, "lineage_id": "provision:0ca261aa-df50-11f0-b211-35ac2560fd1c", "document_id": "document:37201", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 52, "lineage_id": "provision:ee5a1d20-df52-11f0-b7c8-97e0fbc29771", "document_id": "document:153972", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 53, "lineage_id": "provision:29b3fada-eb74-11f0-81bd-275d43d2d3dd", "document_id": "document:165542", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 54, "lineage_id": "provision:f7f5b8d0-20ed-11f1-b643-07ad51ef0fb7", "document_id": "document:119123", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 55, "lineage_id": "provision:3ec35eda-2d54-11f1-8f2a-e79e446db919", "document_id": "document:26222", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 56, "lineage_id": "provision:6678a7e0-2d46-11f1-999e-19c9dd572437", "document_id": "document:138989", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 57, "lineage_id": "provision:c27014a0-2d43-11f1-9b81-67976003136e", "document_id": "document:174001", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 58, "lineage_id": "provision:f03de34e-df41-11f0-83db-457bb2c7028c", "document_id": "document:177735", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 59, "lineage_id": "provision:3e49ae40-2c83-11f1-a26a-53026176ed04", "document_id": "document:140152", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 60, "lineage_id": "provision:68affa4a-2d46-11f1-9a51-1105efb3344b", "document_id": "document:138844", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 61, "lineage_id": "provision:58fce644-df53-11f0-9bca-a9db4826ae61#k1#%C4%91", "document_id": "document:152830", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 62, "lineage_id": "provision:3f9179b0-2d53-11f1-a776-1bab977dc407", "document_id": "document:59427", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 63, "lineage_id": "provision:aeb04d30-272c-11f1-8efb-b3a4f362bef5", "document_id": "document:139903", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 64, "lineage_id": "provision:77012888-eb9e-11f0-873b-1f640536fe86", "document_id": "document:37524", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 65, "lineage_id": "provision:ada0a6f2-eb76-11f0-996b-5bdac24015e5#k4", "document_id": "document:25842", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 66, "lineage_id": "provision:66d0e400-31ba-11f1-8513-5f24d42ce133", "document_id": "document:187275", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 67, "lineage_id": "provision:172b6180-3a36-11f1-ba11-1d0a92ab628d", "document_id": "document:169712", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 68, "lineage_id": "provision:907c1530-ead5-11f0-97d2-6d01ea7f7633", "document_id": "document:16748", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 69, "lineage_id": "provision:66235f90-2f41-11f1-a0bf-f367bbf171b7", "document_id": "document:143024", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 70, "lineage_id": "provision:6fb11bb0-2c80-11f1-82d5-9347a4bf3938", "document_id": "document:43247", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 71, "lineage_id": "provision:ec77b880-2108-11f1-b92e-7b55de167c69", "document_id": "document:151168", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 72, "lineage_id": "provision:4eb2a108-eb77-11f0-a29a-4fcc88144917#k4", "document_id": "document:67760", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 73, "lineage_id": "provision:0e32b77c-e176-11f0-ac1c-cf915b5c59c3", "document_id": "document:134555", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 74, "lineage_id": "provision:5bd3edf0-303d-11f1-b898-e5b6c4404a5e", "document_id": "document:124987", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 75, "lineage_id": "provision:10ca9a90-250a-11f1-98b4-b7c32e15b876", "document_id": "document:163441", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 76, "lineage_id": "provision:a8495740-2c84-11f1-bf78-1fdf1f87d888", "document_id": "document:37198", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 77, "lineage_id": "provision:51a7aa60-eadd-11f0-8be2-038674d00fb9", "document_id": "document:157034", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 78, "lineage_id": "provision:427f9304-2d95-11f1-9d34-1bbdc306e371", "document_id": "document:169032", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 79, "lineage_id": "provision:404ee9ec-df3c-11f0-8c2d-551982df7c63#k2", "document_id": "document:12634", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 80, "lineage_id": "provision:a27540f0-2d46-11f1-914c-65fd77d895d0", "document_id": "document:133900", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 81, "lineage_id": "provision:8fcc5362-2c7e-11f1-87df-3bcf787c6e54", "document_id": "document:119091", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 82, "lineage_id": "provision:0b647370-df4e-11f0-a38b-2385e5a95ce3#k6#c", "document_id": "document:115625", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 83, "lineage_id": "provision:3975e9a6-df58-11f0-98f1-930fd244b9fc", "document_id": "document:168859", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 84, "lineage_id": "provision:46a6bece-e157-11f0-bfad-2fe04ab37f53#k5#a", "document_id": "document:103581", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 85, "lineage_id": "provision:064f49d0-26bd-11f1-aea8-d7d7fdbd020b", "document_id": "document:135360", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 86, "lineage_id": "provision:2c9f5df0-30bd-11f1-91a0-5b232b2495f4", "document_id": "document:187357", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 87, "lineage_id": "provision:29a6f61c-e17b-11f0-a042-eb765b17a4a4", "document_id": "document:26800", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 88, "lineage_id": "provision:20548c48-e174-11f0-a493-1bb114c8b6dc#k5#b", "document_id": "document:159372", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 89, "lineage_id": "provision:9fff4c00-2d53-11f1-8ac3-bbe25b382ba1", "document_id": "document:44209", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 90, "lineage_id": "provision:b07bd03a-df47-11f0-b955-11812632ee73", "document_id": "document:30420", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 91, "lineage_id": "provision:eb3e7b90-2d45-11f1-af32-8da99373a4ef", "document_id": "document:148195", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 92, "lineage_id": "provision:4d0dc830-eae3-11f0-94aa-4b632eb29262#k2", "document_id": "document:25860", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 93, "lineage_id": "provision:68c67c90-2d53-11f1-9f8a-13dbe23b2a9a", "document_id": "document:48921", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 94, "lineage_id": "provision:4cfaf990-2c78-11f1-ba27-6da1ada500f1", "document_id": "document:74580", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 95, "lineage_id": "provision:7439ebb0-2c1e-11f1-a8e3-1bf3957eda64", "document_id": "document:137805", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 96, "lineage_id": "provision:9a689750-33bc-11f1-ac4f-011df9a6b1a9", "document_id": "document:14779", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 97, "lineage_id": "provision:cffe6480-ead3-11f0-a9a1-77cccf41e51a#k4#c", "document_id": "document:14191", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 98, "lineage_id": "provision:6eb5cf5e-eba7-11f0-b69a-b1b97deb720f", "document_id": "document:27414", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 99, "lineage_id": "provision:e6081fa0-eace-11f0-aa11-b58ad86b5107", "document_id": "document:25731", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 100, "lineage_id": "provision:5400af84-df55-11f0-8692-89ff21eeafeb#k2#a", "document_id": "document:14188", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 101, "lineage_id": "provision:2ad81540-2db9-11f1-8178-bfc3a14009ff", "document_id": "document:173920", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 102, "lineage_id": "provision:0635f57a-26bd-11f1-9d31-df7c26d98385", "document_id": "document:135360", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 103, "lineage_id": "provision:6f603ad2-e177-11f0-bf0e-694f7ad40548", "document_id": "document:92155", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 104, "lineage_id": "provision:d9ab81e0-2d52-11f1-b407-db3ec5b5569f", "document_id": "document:92897", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 105, "lineage_id": "provision:ef563ad0-2d52-11f1-add3-3562f92ad62e", "document_id": "document:92052", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 106, "lineage_id": "provision:5bc520e0-303d-11f1-8ebb-d39e27fdfd9a", "document_id": "document:124987", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 107, "lineage_id": "provision:70604000-2d47-11f1-8bf6-77aae28181b5", "document_id": "document:122558", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 108, "lineage_id": "provision:b02bdf60-df53-11f0-880e-eb42fef4cfd4#k1", "document_id": "document:12192", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 109, "lineage_id": "provision:0b3edcc2-df54-11f0-b4ee-df3368484a41", "document_id": "document:135450", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 110, "lineage_id": "provision:e0ad55a0-2d47-11f1-9e91-3324bb153ad8", "document_id": "document:112021", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 111, "lineage_id": "provision:584ec220-2c48-11f1-ae45-ab9467171d38", "document_id": "document:152528", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 112, "lineage_id": "provision:d97cb050-ead0-11f0-8245-7744bab045c1", "document_id": "document:128180", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 113, "lineage_id": "provision:1387f82e-eb7e-11f0-9909-4db0ca5268aa#k2#a", "document_id": "document:129499", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 114, "lineage_id": "provision:aacc579a-2d53-11f1-8dd3-27d74dd0c713", "document_id": "document:44140", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 115, "lineage_id": "provision:3e3f4dba-2c83-11f1-ad06-c5edb3a213b5", "document_id": "document:140152", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 116, "lineage_id": "provision:4721247e-eb8f-11f0-a552-7daa406aeb93#k2#b", "document_id": "document:121449", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 117, "lineage_id": "provision:ca83627a-eb7e-11f0-ba93-bfc75e302ec8", "document_id": "document:18724", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 118, "lineage_id": "provision:f13a1ca0-2cbb-11f1-9842-af047e999f05", "document_id": "document:150991", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 119, "lineage_id": "provision:96a4e360-2478-11f1-95f6-55b92facf06a", "document_id": "document:135401", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 120, "lineage_id": "provision:82f0f670-2d41-11f1-bea9-ebe86a9a788b", "document_id": "document:179708", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 121, "lineage_id": "provision:52a61e80-3171-11f1-82de-016086d781a5", "document_id": "document:110836", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 122, "lineage_id": "provision:3eb4b8d0-2d54-11f1-9586-c7fce1fa2bea", "document_id": "document:26222", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 123, "lineage_id": "provision:9fe70910-2d53-11f1-88c9-3994c1744749", "document_id": "document:44209", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 124, "lineage_id": "provision:cf72d8e0-1dc1-11f1-985c-c3d08e2f7ea1", "document_id": "document:179258", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 125, "lineage_id": "provision:592f6e64-e171-11f0-88ed-ff9450fdb79b#k2", "document_id": "document:26385", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 126, "lineage_id": "provision:e80fcac4-eb77-11f0-85e3-9f3076200bd2", "document_id": "document:166482", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 127, "lineage_id": "provision:7cc65bb0-26b0-11f1-85a8-f5bbe2fb7082", "document_id": "document:98960", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 128, "lineage_id": "provision:328776e6-df58-11f0-911d-9fa24d767ab8#k2#%C4%91", "document_id": "document:26875", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 129, "lineage_id": "provision:b6442dca-eb7f-11f0-895d-618d16ddb87f", "document_id": "document:104326", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 130, "lineage_id": "provision:77b70840-1deb-11f1-a9fd-4b88d9619783", "document_id": "document:132712", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 131, "lineage_id": "provision:743753a0-2c1e-11f1-86f2-f7a1b1e785c2", "document_id": "document:137805", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 132, "lineage_id": "provision:c913ccb8-eb7e-11f0-8e75-13c281fbed40", "document_id": "document:174932", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 133, "lineage_id": "provision:64f1df10-ead2-11f0-aa65-d5c14e346c56", "document_id": "document:114683", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 134, "lineage_id": "provision:28824c80-2444-11f1-8d67-837ef7850891", "document_id": "document:168381", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 135, "lineage_id": "provision:af40fcc0-ead9-11f0-8d21-79e02f104bab", "document_id": "document:174892", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 136, "lineage_id": "provision:4721247e-eb8f-11f0-a552-7daa406aeb93#k1", "document_id": "document:121449", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 137, "lineage_id": "provision:3eb85700-ead4-11f0-9f18-1b3b0b0a710e", "document_id": "document:157077", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 138, "lineage_id": "provision:70750080-2d47-11f1-aa03-c35d18bbdccb", "document_id": "document:122558", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 139, "lineage_id": "provision:c2f95e5e-df55-11f0-9a0d-f553ff6998b3#k2", "document_id": "document:14053", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 140, "lineage_id": "provision:0b734932-df39-11f0-8df5-c137bea958f7", "document_id": "document:118726", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 141, "lineage_id": "provision:46a6bece-e157-11f0-bfad-2fe04ab37f53#k3", "document_id": "document:103581", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 142, "lineage_id": "provision:d4455ed6-df48-11f0-9d4e-bd2da04c6d7d", "document_id": "document:94331", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 143, "lineage_id": "provision:eaad2f3a-df45-11f0-bbb4-57b95ae394a7", "document_id": "document:118563", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 144, "lineage_id": "provision:b3cee6a0-21be-11f1-80d8-eb916719509e", "document_id": "document:152647", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 145, "lineage_id": "provision:b02190a6-df52-11f0-88d8-7fb09b16bad1", "document_id": "document:147628", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 146, "lineage_id": "provision:5dc6c8a2-eb7e-11f0-89ef-4b33eadf5c5f#k3#d", "document_id": "document:36907", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 147, "lineage_id": "provision:c1514870-1ef0-11f1-aea6-4b83f0a676cf", "document_id": "document:136645", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 148, "lineage_id": "provision:4cb4275c-eb84-11f0-bccd-2d71c0f047ae", "document_id": "document:174961", "rows": 2}
+{"group": "T2", "near_identical": true, "rank": 149, "lineage_id": "provision:eb4cd370-2d45-11f1-8bfc-015baf7fcbca", "document_id": "document:148195", "rows": 2}
 {"group": "T3", "rank": 0, "lineage_id": "provision:ec4a7a6e-df40-11f0-9161-ff81534d3941", "document_id": "document:46098", "rows": 3}
 {"group": "T3", "rank": 1, "lineage_id": "provision:40778740-2c7f-11f1-abee-c9b7a53cf5c7", "document_id": "document:143881", "rows": 3}
 {"group": "T3", "rank": 2, "lineage_id": "provision:668dd970-27a7-11f1-9c9e-79133f92d44d", "document_id": "document:146468", "rows": 3}

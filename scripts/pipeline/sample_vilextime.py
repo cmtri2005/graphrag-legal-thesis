@@ -68,6 +68,11 @@ PER_DOCUMENT = 2
 # so the "direct" ranking already on disk is untouched, and takes this many rows
 # out of T6's release quota.
 T6_ANCESTOR_ROWS = 300   # of RELEASE["T6"]; ~150 lineages, paired MDE ~8-9 pp
+# T2 has two parts too (decided 11/10): "near" — a pair whose texts are near-identical
+# (`near_identical`, the citation trap T4 was) — is ranked on its own and takes this
+# many rows out of T2's quota. Merged into T2 on 07/10 without a quota of its own,
+# it sat at the tail of T2's ranking and the release shipped none of it.
+T2_NEAR_ROWS = 150       # of RELEASE["T2"]; 75 pairs, the proposal's T4 150
 SEED = 20260924
 # T5 kinds the adviser excluded on 20/09: corrections, and guidance taking effect
 # with the act it details. They stay in the worksheet, not in the release.
@@ -106,14 +111,20 @@ def sample(records: list[dict], target: int, seed: int = SEED, prior: list[str] 
 
 
 def part_of(row: dict) -> str | None:
-    """T6's two parts; every other group has one. Old ranking lines carry no mode: direct."""
-    if row["group"] != "T6":
-        return None
-    return "ancestor" if row.get("repeal_mode") == "ancestor" else "direct"
+    """T6's and T2's two parts; every other group has one. Old ranking lines carry neither mark."""
+    if row["group"] == "T6":
+        return "ancestor" if row.get("repeal_mode") == "ancestor" else "direct"
+    if row["group"] == "T2":
+        return "near" if row.get("near_identical") else "regular"
+    return None
 
 
 def parts(group: str, records: list[dict], need: int,
           ancestor_rows: int = T6_ANCESTOR_ROWS) -> list[tuple[str | None, list[dict], int]]:
+    if group == "T2":
+        near = {r["lineage_id"] for r in records if r.get("near_identical")}
+        return [("regular", [r for r in records if r["lineage_id"] not in near], need),
+                ("near", [r for r in records if r["lineage_id"] in near], T2_NEAR_ROWS * OVERSAMPLE["T2"])]
     if group != "T6":
         return [(None, records, need)]
     anc = [r for r in records if r.get("repeal_mode") == "ancestor"]
@@ -177,8 +188,9 @@ def main() -> None:
                     record = json.loads(line)
                     records[record["lineage_id"]].append(record)
                 passed = {lid for lid, recs in records.items() if recs[0]["question_source"]["kind"] == "llm"} - dropped
-                quotas = ({"ancestor": args.ancestor_rows, "direct": quota - args.ancestor_rows}
-                          if group == "T6" else {None: quota})
+                quotas = ({"ancestor": args.ancestor_rows, "direct": quota - args.ancestor_rows} if group == "T6"
+                          else {"near": T2_NEAR_ROWS, "regular": quota - T2_NEAR_ROWS} if group == "T2"
+                          else {None: quota})
                 chosen = [lid for part, q in quotas.items()
                           for lid in select([p for p in ranked if p["group"] == group and part_of(p) == part],
                                             passed, q)]
@@ -206,7 +218,8 @@ def main() -> None:
             short = "  << THIẾU" if rows < need else ""
             print(f"{group}{'/' + part if part else ''}: {len(picked):>4} lineage · {rows:>4} dòng (cần {need})"
                   f" · {len({p['document_id'] for p in picked})} văn bản{short}")
-            lines += [json.dumps({"group": group, **({"repeal_mode": part} if part == "ancestor" else {}), **p},
+            mark = {"ancestor": {"repeal_mode": "ancestor"}, "near": {"near_identical": True}}.get(part, {})
+            lines += [json.dumps({"group": group, **mark, **p},
                                  ensure_ascii=False) + "\n" for p in picked]
     ranking.parent.mkdir(parents=True, exist_ok=True)
     ranking.write_text("".join(lines), encoding="utf-8")

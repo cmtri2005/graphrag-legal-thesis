@@ -183,27 +183,28 @@ Số liệu tính trên bản phát hành dựng lại ngày 29/09 (schema 1.2.0
 
 ### Kích thước và split
 
-Bản phát hành dựng ngày 11/10 có 2.745 dòng, 653 lineage (tức 653 câu hỏi khác nhau) và 498 văn bản đích. Chia theo lineage:
-dev 116, test 537.
+Bản phát hành dựng ngày 11/10 có 2.730 dòng, 653 lineage (tức 653 câu hỏi khác nhau) và 503 văn bản đích. Chia theo lineage:
+dev 119, test 534.
 
-Số dòng theo nhóm, chế độ `as_of` và split (dev / test). T4 đã gộp vào T2 từ 07/10 (`similarity` là facet):
+Số dòng theo nhóm, chế độ `as_of` và split (dev / test). T4 đã gộp vào T2 từ 07/10; từ 11/10 lát `near_identical` (T4 cũ) có suất riêng 150 dòng trong 450 dòng T2:
 
 | Nhóm | Lineage | `ranh_gioi` | `giua_khoang` | `truoc_hieu_luc` | `sau_het_hieu_luc` |
 |---|---:|---:|---:|---:|---:|
 | T1 | 150 | 20 / 130 | 20 / 130 | – | 5 / 44 |
-| T2 | 225 | 90 / 360 | 90 / 360 | 30 / 123 | 11 / 60 |
+| T2 | 225 | 96 / 354 | 96 / 354 | 34 / 119 | 10 / 46 |
 | T3 | 65 | 39 / 160 | 39 / 160 | – | 1 / 14 |
 | T5 | 19 | 0 / 38 | 0 / 38 | – | 0 / 7 |
 | T6 | 194 | 76 / 312 | 76 / 312 | – | – |
-| **Tổng** | **653** | **1.225** | **1.225** | **153** | **142** |
+| **Tổng** | **653** | **1.225** | **1.225** | **153** | **127** |
 
 **Quota.** Chế độ `ranh_gioi` có 1.225 dòng (07/10, trong khung 1.100–1.300 của đề cương):
-- T1 150, T2 450, T3 199;
+- T1 150, T3 199;
+- T2 450 = 300 dòng thường + 150 dòng gần giống (75 cặp, `near_identical`, T4 150 của Bảng 1). Gộp T4 ngày 07/10 không chừa suất, nên lát này đứng cuối bảng xếp hạng và bản 11/10 đầu tiên không có dòng nào;
 - T5 có 38 dòng, T6 nhận phần thiếu (quyết định Q3): T6 388 = 300 dòng H3 (bãi bỏ qua nút cha) + 88 dòng bãi bỏ trực tiếp.
 
-**Dòng không có đáp án:** 388 dòng `provision_repealed` (T6) và 142 dòng `document_repealed`. Có 65 lineage không có dòng `sau_het_hieu_luc` vì không tìm được câu chấm dứt trong corpus.
+**Dòng không có đáp án:** 388 dòng `provision_repealed` (T6) và 127 dòng `document_repealed`. Có 66 lineage không có dòng `sau_het_hieu_luc` vì không tìm được câu chấm dứt trong corpus.
 
-**Tỷ lệ dev trên dòng ranh giới:** T1 13,3% · T2 20,0% · T3 19,6% · T5 0% (luôn vào test) · T6 19,6%.
+**Tỷ lệ dev trên dòng ranh giới:** T1 13,3% · T2 21,3% · T3 19,6% · T5 0% (luôn vào test) · T6 19,6%.
 
 ### Ai viết gì (dòng ranh giới)
 
