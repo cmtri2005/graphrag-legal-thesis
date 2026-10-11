@@ -180,7 +180,7 @@ def sheet_labels(wb: Workbook, columns: list[str], rows: list[dict]) -> None:
             c.alignment = Alignment(vertical="top", wrap_text=name in
                                     ("question", "answer", "lead_in", "changed_span",
                                      "note_for_annotator", "note", "reasons", "suggestion"))
-            if name in LABEL_COLS:
+            if name in LABEL_COLS and not row.get("verdict"):   # a carried raw label stays as it was
                 c.protection, c.fill = Protection(locked=False), editable
             else:
                 c.protection = Protection(locked=True)
@@ -218,8 +218,18 @@ def export(data: Path) -> None:
     for who in ("A", "B"):
         tsv = data / f"review/crosscheck_{who}.tsv"
         rows = read(tsv)
-        if any((r.get("verdict") or "").strip() for r in rows):
-            raise SystemExit(f"{tsv} đã có nhãn; không xuất lại để tránh ghi đè")
+        # TSV labels are fine (crosscheck.py build carries an earlier draw's labels over);
+        # what must not be overwritten is labelling done in the workbook and not imported yet.
+        xlsx = data / f"review/crosscheck_{who}.xlsx"
+        if xlsx.exists():
+            have = {r["id"]: (r.get("verdict") or "").strip() for r in rows}
+            ws = load_workbook(xlsx, data_only=True)[SHEET]
+            head = [c.value for c in ws[1]]
+            pending = [row[head.index("id")] for row in ws.iter_rows(min_row=2, values_only=True)
+                       if row[head.index("id")] and str(row[head.index("verdict")] or "").strip()
+                       and have.get(row[head.index("id")]) != str(row[head.index("verdict")]).strip()]
+            if pending:
+                raise SystemExit(f"{xlsx} có {len(pending)} nhãn chưa nạp về TSV (chạy import trước); không xuất lại")
         with tsv.open(encoding="utf-8", newline="") as f:
             columns = next(csv.reader(f, delimiter="\t"))
         if "suggestion" not in columns:

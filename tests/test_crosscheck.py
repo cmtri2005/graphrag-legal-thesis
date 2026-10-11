@@ -78,3 +78,81 @@ def test_perfect_agreement_passes_the_preregistered_gate_and_a_skewed_split_does
     missed = pair_scores(["dat"] * 40 + ["khong_dat"] * 10, ["dat"] * 50)
     assert missed["agreement"] == 0.8 and missed["p_neg"] == 0.0
     assert missed["p_neg"] < PNEG_TARGET
+
+
+def _release_row(lid, group, as_of, question="Hỏi?", **extra):
+    return {"id": f"vilextime:{group}:{lid}:{as_of}", "group": group, "lineage_id": lid, "question": question,
+            "as_of": as_of, "as_of_strategy": "ranh_gioi", "answer": "Đáp.", "no_answer_reason": None,
+            "changed_span": "", "valid_from": "2020-01-01", "valid_to": None, "source_url": "u",
+            "target": {"lead_in": "", "citation": "Điều 1", "law_id": "1/2020/TT"}, **extra}
+
+
+def test_t6_takes_what_t5_leaves_of_150_in_the_release_proportion():
+    from crosscheck import targets
+
+    rows = {"t5": [{"group": "T5"}] * 38,
+            **{f"a{i}": [{"group": "T6", "repeal_mode": "ancestor"}] * 2 for i in range(150)},
+            **{f"d{i}": [{"group": "T6", "repeal_mode": "direct"}] * 2 for i in range(44)}}
+    t = targets(rows)
+    assert (t[("T6", "ancestor")], t[("T6", "direct")]) == (86, 26) and t[("T5", None)] is None
+
+
+def test_build_keeps_a_label_only_with_its_question_and_answer_and_saves_the_old_files(tmp_path):
+    import csv
+    import json
+
+    import pytest
+    from crosscheck import COLUMNS, build
+
+    (tmp_path / "derived/vilextime").mkdir(parents=True)
+    (tmp_path / "review").mkdir()
+    rows = [_release_row("p", "T2", "2021-01-01"), _release_row("p", "T2", "2021-01-02"),
+            _release_row("q", "T3", "2021-01-01", question="Mới?")]
+    (tmp_path / "derived/vilextime/release.jsonl").write_text(
+        "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
+    for name, extra in (("crosscheck_A.tsv", ["adjudicated"]), ("crosscheck_B.tsv", [])):
+        with (tmp_path / "review" / name).open("w", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, COLUMNS + extra, delimiter="\t", lineterminator="\n", restval="")
+            w.writeheader()
+            # p was T4 when it was labelled: the id changed, the lineage and date did not
+            w.writerow({"id": "vilextime:T4:p:2021-01-01", "lineage_id": "p", "as_of": "2021-01-01",
+                        "question": "Hỏi?", "answer": "Đáp.", "verdict": "dat"})
+            w.writerow({"id": rows[2]["id"], "lineage_id": "q", "as_of": "2021-01-01", "question": "Cũ?",
+                        "answer": "Đáp.", "verdict": "khong_dat"})
+    build(tmp_path, today="20261011")
+    for name in ("crosscheck_A", "crosscheck_B"):
+        assert (tmp_path / f"review/{name}.20261011.tsv").exists()
+        got = {r["id"]: r["verdict"] for r in csv.DictReader((tmp_path / f"review/{name}.tsv").open(), delimiter="\t")}
+        assert got == {rows[0]["id"]: "dat", rows[1]["id"]: "", rows[2]["id"]: ""}   # q's question changed
+    with pytest.raises(SystemExit):
+        build(tmp_path, today="20261011")                                             # never overwrite a saved copy
+
+
+def test_export_refuses_only_when_the_workbook_holds_labels_not_yet_imported(tmp_path):
+    import csv
+
+    import pytest
+    from openpyxl import load_workbook
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts" / "review"))
+    from crosscheck import COLUMNS
+    from crosscheck_xlsx import SHEET, export
+
+    (tmp_path / "review").mkdir()
+    for who, extra in (("A", ["adjudicated"]), ("B", [])):
+        with (tmp_path / f"review/crosscheck_{who}.tsv").open("w", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, COLUMNS + extra, delimiter="\t", lineterminator="\n", restval="")
+            w.writeheader()
+            w.writerow({"id": "r1", "lineage_id": "p", "question": "Hỏi?", "verdict": "dat"})   # carried over
+            w.writerow({"id": "r2", "lineage_id": "q", "question": "Hỏi?"})
+    export(tmp_path)                                   # a label in the TSV alone does not block
+    path = tmp_path / "review/crosscheck_A.xlsx"
+    wb = load_workbook(path)
+    ws = wb[SHEET]
+    col = [c.value for c in ws[1]].index("verdict") + 1
+    rows = {ws.cell(r, 1).value: r for r in range(2, ws.max_row + 1)}
+    assert ws.cell(rows["r1"], col).protection.locked and not ws.cell(rows["r2"], col).protection.locked
+    ws.cell(rows["r2"], col, "khong_dat")             # labelled in the workbook, not imported yet
+    wb.save(path)
+    with pytest.raises(SystemExit):
+        export(tmp_path)

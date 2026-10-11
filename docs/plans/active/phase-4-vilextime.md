@@ -676,6 +676,18 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   30 dòng ngày ký chờ kiểm tay ở `data/review/audit_truoc_hieu_luc.tsv`. Bản phát hành
   nay có 2.745 dòng. Còn mở: bộ D4 (158/300 dòng còn trong bản phát hành), luật sư
   xác nhận 19 lineage T5, audit 490 nhãn model.
+  **Tiếp cùng ngày:** (6) phát hiện bản phát hành có 0 cặp T2 gần giống (lát T4 cũ
+  không có suất từ khi gộp 07/10); CMT chốt 150 dòng gần giống trong 450 dòng T2
+  (`T2_NEAR_ROWS`). Bản phát hành còn 2.730 dòng. (7) **Dựng lại D4** (CMT chốt): 300
+  dòng = T2 50 thường + 50 gần giống (giữ cơ cấu T2/T4 của Q2), T3 50, T5 38, T6 112
+  chia theo tỷ lệ bản phát hành (86 ancestor + 26 direct). Không đặt thêm tầng theo dự
+  báo `khong_dat`: đo trên 188 dòng có nhãn đôi ngoài T6, tỷ lệ "ít nhất một người nói
+  `khong_dat`" đã là 31%, mạnh nhất ở T3 (64%) và `near_identical` (62% so với 18%),
+  nên cơ cấu Q2 tự cho lượng dòng âm cần thiết. Nhãn người của 166 dòng (A) / 165 dòng
+  (B) được giữ vì câu hỏi và đáp án không đổi; bộ cũ lưu ở
+  `data/review/crosscheck_{A,B}.20261011.tsv`. Còn phải gán: A 134 dòng, B 135 dòng
+  (T2 42–43, T6 92). `crosscheck_result.json` vẫn là kết quả 07/10 trên bộ cũ cho đến
+  lần `kappa` tiếp theo.
 
 ## Risks And Recovery
 

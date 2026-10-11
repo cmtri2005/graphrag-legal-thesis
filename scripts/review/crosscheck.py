@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 """ViLexTime D4 — the independent cross-check and its Cohen κ.
 
-Scope, decided 20/09 (plan phase-4, Q2): 300 rows = every T5 and T6 row of the
-release (T6 absorbs T5's shortfall, so together they stay 150) plus a random
-50 rows from each of T2, T3 and T4, drawn by lineage so a pair or chain is
-judged whole. Labels follow docs/vilextime-annotation.md (version GUIDELINE).
+Scope, decided 20/09 (plan phase-4, Q2) and re-cut 11/10: 300 rows drawn by
+lineage, so a pair or chain is judged whole —
+  * every T5 row, and T6 up to CORE rows together with T5, split between its
+    "ancestor" and "direct" parts in the release's own proportion (T6 grew from
+    112 to 388 rows on 07/10, so "every T6 row" no longer fits in 300);
+  * T2 50 + 50: the half that was T2 and the half that was T4, now T2's
+    `near_identical` slice;
+  * T3 50.
+Labels follow docs/vilextime-annotation.md (version GUIDELINE).
 
 Both files live in data/review/ — the directory .gitignore whitelists because
 losing a human label means labelling it again by hand — and every reader
@@ -13,9 +18,11 @@ manifest) expects them there. A labelled copy kept anywhere else is outside
 version control and makes `kappa` read the empty originals.
 
     build   writes data/review/crosscheck_A.tsv and crosscheck_B.tsv: the same
-            rows, lineages in a shuffled order, empty `verdict`, `reasons`,
-            `note` (and `adjudicated` on A). Refuses to overwrite a file that
-            already carries labels.
+            rows, lineages in a shuffled order, `verdict`, `reasons`, `note`
+            (and `adjudicated` on A) empty except on a row labelled in the
+            earlier draw whose question and answer are unchanged, which keeps
+            its labels. A file that carries labels is first copied to
+            crosscheck_X.<YYYYMMDD>.tsv; build stops if that copy exists.
     kappa   reads both files and reports, over the rows both annotators
             filled: raw agreement, Cohen κ and Gwet's AC1 on `verdict` (κ drops
             when nearly every row is `dat` even if the two agree; AC1 does not),
@@ -41,7 +48,9 @@ import collections
 import csv
 import json
 import random
+import shutil
 import sys
+from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "pipeline"))
@@ -50,7 +59,9 @@ from sample_vilextime import select  # noqa: E402  exact row totals without spli
 SEED = 20260925
 # T4 is no longer a group (build_question_pool.QUOTA): its rows are T2's, told
 # apart by the `near_identical` facet, so T2 takes the 50 that were T4's.
-SAMPLED = {"T2": 100, "T3": 50}
+# Rows per stratum; T5 is taken whole and T6 sized from it (CORE), see `strata`.
+SAMPLED = {("T2", "regular"): 50, ("T2", "near"): 50, ("T3", None): 50}
+CORE = 150   # T5 + T6 rows (Q2: T6 absorbs T5's shortfall)
 # Pre-registered before the production overlap batch, which is what makes them
 # usable as a pass/fail (ARR checklist D). AC1 is the primary measure and kappa is
 # reported beside it, never instead of it — see `agreement_needed` for why kappa
@@ -60,7 +71,6 @@ AC1_TARGET = 0.80
 PNEG_TARGET = 0.60
 KAPPA_PROPOSAL = 0.60          # the figure the submitted de cuong names, reported as-is
 BOOTSTRAP_DRAWS = 1000
-WHOLE = ("T5", "T6")
 GUIDELINE = "1.2"   # docs/vilextime-annotation.md; labels.py and check_release.py read it from here
 VERDICTS = {"dat", "khong_dat"}
 REASONS = {"question_ambiguous", "question_leaks", "gold_wrong", "group_mismatch",
@@ -168,27 +178,48 @@ def pair_scores(va: list[str], vb: list[str]) -> dict:
     }
 
 
+def stratum(rows: list[dict]) -> tuple[str, str | None]:
+    """A lineage's stratum: its group, and T2's or T6's part."""
+    group = rows[0]["group"]
+    if group == "T2":
+        return group, "near" if any(r.get("near_identical") for r in rows) else "regular"
+    if group == "T6":
+        return group, rows[0].get("repeal_mode") or "direct"
+    return group, None
+
+
+def targets(by_lineage: dict[str, list[dict]]) -> dict[tuple[str, str | None], int | None]:
+    """Rows per stratum; None takes the stratum whole (T5)."""
+    size = collections.Counter()
+    for rows in by_lineage.values():
+        size[stratum(rows)] += len(rows)
+    t6 = CORE - size[("T5", None)]
+    share = size[("T6", "ancestor")] / ((size[("T6", "ancestor")] + size[("T6", "direct")]) or 1)
+    ancestor = 2 * round(t6 * share / 2)   # T6 lineages are pairs
+    return {**SAMPLED, ("T5", None): None, ("T6", "ancestor"): ancestor, ("T6", "direct"): t6 - ancestor}
+
+
 def pick(rows: list[dict], prior: set[str] = frozenset()) -> list[dict]:
     """The cross-check rows; lineages of an earlier draw (`prior`) still in the release come first.
 
     A seeded shuffle of a list that gained or lost lineages draws a different
     sample, and a lineage new to the set would arrive carrying the model labels
     it got outside D4 (29/09 rebuild: 35 of 141 lineages moved). Keeping the
-    earlier draw and topping it up keeps D4 human-only.
+    earlier draw and topping it up keeps D4 human-only, and keeps its labels.
     """
     by_lineage: dict[str, list[dict]] = collections.defaultdict(list)
     for r in rows:
         by_lineage[r["lineage_id"]].append(r)
     chosen = []
-    for group in ("T2", "T3", "T4", *WHOLE):
-        lineages = sorted(lid for lid, rs in by_lineage.items() if rs[0]["group"] == group)
-        if group in WHOLE:
+    for (group, part), need in targets(by_lineage).items():
+        lineages = sorted(lid for lid, rs in by_lineage.items() if stratum(rs) == (group, part))
+        if need is None:
             chosen += lineages
             continue
-        random.Random(f"{SEED}:{group}").shuffle(lineages)
+        random.Random(f"{SEED}:{group}" + (f":{part}" if part else "")).shuffle(lineages)
         lineages = [lid for lid in lineages if lid in prior] + [lid for lid in lineages if lid not in prior]
         ranked = [{"rank": i, "lineage_id": lid, "rows": len(by_lineage[lid])} for i, lid in enumerate(lineages)]
-        chosen += select(ranked, set(lineages), SAMPLED[group])
+        chosen += select(ranked, set(lineages), need)
     random.Random(SEED).shuffle(chosen)                    # groups interleaved, pairs kept together
     return [r for lid in chosen for r in sorted(by_lineage[lid], key=lambda r: r["as_of"])]
 
@@ -209,24 +240,44 @@ def read(path: Path) -> list[dict]:
         return list(csv.DictReader(f, delimiter="\t"))
 
 
-def build(data: Path) -> None:
+LABEL_CELLS = ("verdict", "reasons", "note", "adjudicated")
+
+
+def build(data: Path, today: str | None = None) -> None:
     out = data / "review"
+    stamp = today or date.today().strftime("%Y%m%d")
+    earlier = {}
     for name in ("crosscheck_A.tsv", "crosscheck_B.tsv"):
         path = out / name
-        if path.exists() and any(r.get("verdict") for r in read(path)):
-            raise SystemExit(f"{path} already carries labels; refusing to overwrite")
-    before = out / "crosscheck_A.tsv"
-    prior = {r["lineage_id"] for r in read(before)} if before.exists() else set()
+        rows = read(path) if path.exists() else []
+        earlier[name] = {(r["lineage_id"], r["as_of"]): r for r in rows}   # T4 rows became T2: id changed
+        if any(r.get("verdict") for r in rows):
+            keep = path.with_name(f"{path.stem}.{stamp}.tsv")
+            if keep.exists():
+                raise SystemExit(f"{keep} đã có; không ghi đè bản lưu nhãn cũ")
+            shutil.copyfile(path, keep)
+            print(f"lưu nhãn cũ -> {keep}")
+    prior = {r["lineage_id"] for r in earlier["crosscheck_A.tsv"].values()}
     rows = pick([r for r in map(json.loads, (data / "derived/vilextime/release.jsonl").open(encoding="utf-8"))
                  if r["as_of_strategy"] == "ranh_gioi"], prior)
+    kept = collections.Counter()
     for name, extra in (("crosscheck_A.tsv", ["adjudicated"]), ("crosscheck_B.tsv", [])):
+        columns = COLUMNS + extra
         with (out / name).open("w", encoding="utf-8", newline="") as f:
             w = csv.writer(f, delimiter="\t", lineterminator="\n")
-            w.writerow(COLUMNS + extra)
+            w.writerow(columns)
             for r in rows:
-                w.writerow(row_cells(r) + [""] * len(extra))
-    counts = collections.Counter(r["group"] for r in rows)
-    print(f"{len(rows)} dòng -> {out}/crosscheck_A.tsv, crosscheck_B.tsv  {dict(sorted(counts.items()))}")
+                cells = dict(zip(columns, row_cells(r) + [""] * len(extra)))
+                old = earlier[name].get((r["lineage_id"], r["as_of"]))
+                # a label judged a question and an answer; it travels only with both unchanged
+                if old and old.get("verdict") and all(old[c] == cells[c] for c in ("question", "answer")):
+                    cells.update({c: old.get(c, "") for c in LABEL_CELLS if c in cells})
+                    kept[name] += 1
+                w.writerow([cells[c] for c in columns])
+    counts = collections.Counter(stratum([r]) for r in rows)
+    print(f"{len(rows)} dòng -> {out}/crosscheck_A.tsv, crosscheck_B.tsv  "
+          f"{ {f'{g}/{p}' if p else g: n for (g, p), n in sorted(counts.items(), key=str)} }")
+    print(f"giữ nhãn cũ: A {kept['crosscheck_A.tsv']} dòng, B {kept['crosscheck_B.tsv']} dòng")
 
 
 def kappa(data: Path) -> None:
