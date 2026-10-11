@@ -49,7 +49,9 @@ provision, so |E*| = 1:
                 (formula 8); tcs_lenient uses accuracy_lenient
 
 Every metric is reported per `as_of_strategy` (giua_khoang is the main table,
-ranh_gioi the boundary test) and per group. Only `test` is scored by default
+ranh_gioi the boundary test) and per group. "all" leaves out the diagnostic groups
+(DIAGNOSTIC): T5 is 19 lineages from 3 amending documents, so it is reported on its
+own row and never averaged in (decided 11/10). Only `test` is scored by default
 (ADR 0003 §7); until the release is split, every row is, and the header says so.
 Rows whose split is "excluded" are never scored.
 
@@ -209,6 +211,9 @@ def score(rows: list[dict], preds: dict[str, dict], units: dict, ks=KS) -> dict:
     return out
 
 
+DIAGNOSTIC = ("T5",)   # named diagnostic sets: scored per group, never in "all"
+
+
 def default_split(rows: list[dict]) -> str | None:
     """`test` once the release is split (ADR 0003 §7: only test is seen by default); before that, everything."""
     return "test" if any(r.get("split") for r in rows) else None
@@ -219,7 +224,7 @@ def report(rows: list[dict], preds: dict[str, dict], units: dict, split: str | N
     out = {}
     for strategy in sorted({r["as_of_strategy"] for r in rows}):
         these = [r for r in rows if r["as_of_strategy"] == strategy]
-        out[strategy] = {"all": score(these, preds, units, ks)}
+        out[strategy] = {"all": score([r for r in these if r["group"] not in DIAGNOSTIC], preds, units, ks)}
         for group in sorted({r["group"] for r in these}):
             out[strategy][group] = score([r for r in these if r["group"] == group], preds, units, ks)
     return out

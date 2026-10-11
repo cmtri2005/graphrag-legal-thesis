@@ -190,3 +190,14 @@ def test_citing_accepted_evidence_is_never_a_validity_error():
     row = {**ROWS[2], "id": "late", "as_of": "2022-06-01", "accepted_evidence": ["asis:provision:S"]}
     s = score([row], {"late": _pred(None, ["asis:provision:S"], answerable=False)}, ended_actor)
     assert (s["tver"], s["accuracy"]) == (0, 1)       # the sentence that ended it, though its own document ended
+
+
+def test_t5_is_scored_on_its_own_row_and_left_out_of_all():
+    from score_vilextime import report
+
+    t5 = {**ROWS[0], "id": "r5", "group": "T5"}
+    preds = {"r1": _pred("từ 1 … 2 triệu đồng", ["asis:provision:P"]), "r5": _pred("sai", [])}
+    rep = report([ROWS[0], t5], preds, UNITS, None)["giua_khoang"]
+    assert rep["all"] == rep["T2"] and rep["all"]["accuracy"] == 1.0
+    assert rep["T5"]["accuracy"] == 0.0
+    assert report([t5], preds, UNITS, None)["giua_khoang"]["T5"]["accuracy"] == 0.0   # a T5-only strategy

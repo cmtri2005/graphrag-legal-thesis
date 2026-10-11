@@ -94,6 +94,9 @@ khác chủ đề chung số thứ tự, khoảng 7% ở T2) bị loại ở bư
 - **EM** gần như bằng 0 với câu trả lời sinh tự do (oracle đạt EM 0, F1 0,589), nên báo F1.
 - **Tách số theo nhóm và chế độ `as_of`.** Riêng T3 và T5 phải báo riêng theo chế độ,
   kèm bảng probe theo nhóm (G3; `score_vilextime.py --probes --out`).
+- **T5 là tập chẩn đoán, không vào con số chung** (11/10). Con số "all" của scorer bỏ
+  T5 (`DIAGNOSTIC`). T5 báo trên dòng riêng, bằng số đếm theo văn bản tác động; không
+  báo phần trăm, không kiểm định, không xếp hạng hệ thống.
 - **Khoảng tin cậy:** bootstrap theo lineage, không theo dòng, vì các dòng của một
   lineage không độc lập.
 - **TV-Recall@k** là định nghĩa lại của công thức 9: trúng khi lấy được đúng
@@ -109,12 +112,12 @@ khác chủ đề chung số thứ tự, khoảng 7% ở T2) bị loại ở bư
   không thấy được lần sửa đổi mà L2 không trích ra event nào.
 - **Độ phủ hiện tượng** (N4):
   - mọi transition là `amend` hoặc `repeal`, không có dòng nào kiểm `supplement` hay `replace`;
-  - H3 (mất hiệu lực vì nút cha bị bãi bỏ) chỉ có 12 lineage;
+  - H3 (mất hiệu lực vì nút cha bị bãi bỏ) có 150 lineage từ bản phát hành 11/10 (trước đó 12);
   - T5 đến từ 3 văn bản tác động.
 
-  Kết luận về T5 và H3 chỉ ở mức minh họa.
+  Kết luận về T5 chỉ ở mức minh họa.
 - **Ngày ranh giới để lộ thông tin** (N3):
-  - T1 hỏi ở ngày bắt đầu + 1;
+  - T1 từng hỏi ở ngày bắt đầu + 1; từ 07/10 ngày hỏi rải trong 30 ngày đầu (`spread_as_of`);
   - T5 ở chế độ giữa khoảng thường nằm sát một lần chuyển;
   - từ 29/09, T3 hỏi ở ngày trước mỗi lần chuyển, như T2 và T4.
 - **Đáp án ở câu dẫn** (V3): ở một số dòng, đáp án ngắn nằm ở câu dẫn của khoản cha chứ
