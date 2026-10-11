@@ -18,8 +18,9 @@ non-empty prediction. A recited-all-versions answer is marked `hedged` and is
 never `correct`, whatever it contains — that is the probe the scorer's `hedge`
 checks, and the judge has to catch it.
 
-**Use a judge outside the Claude family** for the same reason as the generator
-(ADR 0004 §3): the gold was written by a Claude model.
+**Use a judge outside the Claude and DeepSeek families** for the same reason as the
+generator (ADR 0004 §3, extended 11/10): Claude wrote the short answers and most
+questions, DeepSeek the rest of the questions.
 
 Usage:
     python scripts/eval/judge_vilextime.py judge preds.jsonl --split dev

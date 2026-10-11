@@ -70,9 +70,11 @@ Vai trò của LLM **rộng hơn** câu "LLM chỉ hỗ trợ diễn đạt câu
 | Phân xử cờ hiệu lực, ngày hết hiệu lực của văn bản | model đề xuất kèm câu nguồn (`method: llm_reviewed`), người audit | `data/review/validity_queue.tsv`, `data/review/temporal_candidates.jsonl` |
 
 Hệ quả: nếu một baseline dùng model họ Claude, nó trả lời câu hỏi do chính Claude viết
-và bị chấm bằng đáp án ngắn do Claude chọn; với DeepSeek cũng vậy ở các câu nó viết. Cột
-kết quả chính nên dùng LLM không thuộc họ Claude và không thuộc họ DeepSeek, hoặc báo
-tách theo người viết câu hỏi (`question_source`).
+và bị chấm bằng đáp án ngắn do Claude chọn; với DeepSeek cũng vậy ở các câu nó viết. Người
+viết lại trùng gần khít với nhóm (H3: 144/150 lineage do DeepSeek viết; T1, T2 thường, T3,
+T5 do Claude viết hết), nên thiên lệch này hiện ra như khác biệt giữa các nhóm. **Chốt
+11/10 (ADR 0004 §3):** cột kết quả chính và LLM giám khảo dùng LLM không thuộc họ Claude
+và không thuộc họ DeepSeek; hai họ này chỉ chạy ở bảng phụ, báo tách theo `question_source`.
 
 **Phễu chọn lineage** (G2, đếm lại 11/10): 1.490 lineage được viết câu hỏi → 299 bị bộ kiểm
 tự động loại (249 `insufficient_context` do chính người viết đánh, 38 `copies_the_answer`,

@@ -3,9 +3,11 @@
 The generator is `vilexgraph.llm.complete` — already multi-provider over the
 `chat/completions` shape, already retrying, already refusing a truncated
 answer, and configured entirely from `.env`. Anthropic is deliberately absent
-from that table, which happens to satisfy the standing conflict-of-interest
-rule: ViLexTime's questions and short answers were written by a Claude model,
-so the main results column must not be one (master plan P5.1, datasheet §3).
+from that table, which keeps out half of the standing conflict-of-interest rule:
+ViLexTime's short answers and about two thirds of its questions were written by a
+Claude model, and the rest of the questions — nearly all of H3 — by DeepSeek, so the
+main results column must be neither family (ADR 0004 §3, extended 11/10). DeepSeek
+stays in the table because it writes questions and may run in a side table.
 
 **Citations are tags, not prose.** Each retrieved unit is labelled `[n]` and the
 model is asked to cite labels, which map back to exact unit ids. The scorer also

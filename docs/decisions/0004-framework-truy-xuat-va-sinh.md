@@ -58,9 +58,22 @@ Dùng `src/vilexgraph/llm.py` nguyên trạng: `chat/completions`, 6 nhà cung
 cấp, không thêm dependency, Anthropic cố ý vắng mặt. Chọn nhà cung cấp và model
 bằng `<PROVIDER>_API_KEY` / `<PROVIDER>_MODEL` trong `.env`, không hardcode.
 
-**Cột kết quả chính phải dùng model không thuộc họ Claude** (master plan P5.1,
-datasheet §3): câu hỏi và đáp án ngắn của ViLexTime do `claude-opus-5-5` viết,
-và `question_source` của từng dòng release ghi lại điều đó để kiểm chéo được.
+**Cột kết quả chính và LLM giám khảo phải dùng model không thuộc họ Claude và không
+thuộc họ DeepSeek** (master plan P5.1, datasheet §3; mở rộng 11/10, CMT). Người viết
+câu hỏi không được làm thí sinh chính, vì nó quen cách hỏi và chỗ được hỏi:
+- đáp án ngắn đều do `claude-opus-5-5` viết; câu hỏi do Claude viết khoảng 2/3 lineage;
+- từ 07/10, `deepseek-flash` viết 225/653 lineage, và người viết trùng gần khít với
+  nhóm: H3 (T6 bãi bỏ qua nút cha) 144/150 lineage do DeepSeek viết, còn T1, T2 thường,
+  T3, T5 do Claude viết hết. Lợi thế "tự viết, tự trả lời" vì vậy hiện ra như một khác
+  biệt giữa các nhóm, và báo tách theo người viết không gỡ được, vì H3 gần như không có
+  câu Claude viết để so.
+
+Claude hoặc DeepSeek chỉ được chạy ở bảng phụ, báo tách theo `question_source`;
+bảng đó đo luôn độ lớn của thiên lệch ở các nhóm có cả hai người viết (T2 gần giống,
+T6 trực tiếp). Họ Claude bị loại ngay trong code (bảng nhà cung cấp của
+`vilexgraph.llm` không có Anthropic); họ DeepSeek thì không, vì nó vẫn sinh câu hỏi và
+vẫn được chạy ở bảng phụ, nên quy tắc này giữ bằng tài liệu và bằng `provider`/`model`
+ghi trong file kết quả.
 
 `answerable=false` trong file nộp chỉ được sinh từ một **khẳng định** của model
 ("HIỆU LỰC: không"), không phải từ việc model từ chối trả lời. Format có ba
@@ -142,6 +155,8 @@ Tradeoffs:
 
 ## Follow-Up
 
+- 11/10 (CMT): mở rộng quy tắc ở §3 sang họ DeepSeek, cho cả generator cột chính và
+  LLM giám khảo.
 - Chốt phần 4 và phần 5; chuyển Status sang Accepted khi xong.
 - Đo lại RAM theo giao thức D6 khi Milvus có vector thật (P0.3b).
 - Ghi amendment vào ADR 0001 cho quyết định M4: đồ thị đóng góp ở tầng kiến tạo

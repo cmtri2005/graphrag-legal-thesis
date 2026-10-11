@@ -114,6 +114,10 @@ Neo4j vào ở P3/P5 cho bước xác nhận top-k của ADR 0001 §3.
 
 ## Decisions
 
+- 2026-10-11: **Cột kết quả chính và LLM giám khảo không thuộc họ Claude và không thuộc
+  họ DeepSeek** (CMT, ADR 0004 §3). DeepSeek viết 225/653 lineage câu hỏi, gần như cả H3
+  (144/150), nên dùng nó làm thí sinh chính sẽ biến thiên lệch "tự viết, tự trả lời"
+  thành khác biệt giữa các nhóm. Hai họ này chỉ chạy ở bảng phụ, tách theo `question_source`.
 - 2026-10-02: **Verifier: cấu hình chính là `reject` với một lần sinh lại; A3 là `off`** (CMT, ADR 0004 §5).
   Abstain trả `answerable=True` với câu trả lời rỗng + nguyên nhân trong `verification`, không bao giờ
   `answerable=False` (ADR 0003 §3). `graphx.expand` áp tier của hệ lên cả láng giềng (công thức 4),

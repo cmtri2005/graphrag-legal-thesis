@@ -173,7 +173,7 @@ Kế hoạch chi tiết đến M3, bắt đầu sớm từ 21/09 vì 3 tuần kh
 
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
-| P5.1 | Chốt LLM sinh và embedding model | CMT, NMT | ⬜ | Ghi thành decision. Câu hỏi và đáp án ngắn ViLexTime do `claude-opus-5-5` viết: cột kết quả chính dùng LLM không thuộc họ Claude (JUDGE, RQ1) |
+| P5.1 | Chốt LLM sinh và embedding model | CMT, NMT | 🟡 | Ghi ở ADR 0004 §3–§4. Cột kết quả chính và LLM giám khảo dùng LLM **không thuộc họ Claude và không thuộc họ DeepSeek** (chốt 11/10): Claude viết đáp án ngắn và khoảng 2/3 câu hỏi, DeepSeek viết 225/653 lineage, gần như cả H3. Embedding đã chốt cài đặt 02/10; chưa chọn model LLM cụ thể |
 | P5.2 | Collection Milvus theo phiên bản: vector, `eff_from`/`eff_to` thực, level, doc | CMT | ⬜ | Kiểm chứng analyzer BM25 tiếng Việt trước |
 | P5.3 | Embedding khoảng 1,14 triệu nút có text | CMT | ⬜ | ⚠ CPU có thể mất nhiều ngày; ghi thời gian thực tế |
 | P5.4 | Chỉ số Recall@k, MRR, TV-Recall@k, Accuracy, EM/F1 | NMT | ✅ | `scripts/eval/score_vilextime.py` (V7 28/09, J1 29/09: Accuracy tương phản, trích dẫn chữ); `tests/test_score_vilextime.py` |
