@@ -1,8 +1,8 @@
 # Hướng dẫn gán nhãn ViLexTime: bản thảo v2.0, phần T6 và chuyển chỗ nội dung
 
 **Trạng thái: BẢN THẢO, ghi nhận 05/10/2026.** Chưa thay `docs/vilextime-annotation.md` (v1.2) và
-chưa đổi `GUIDELINE` trong `scripts/review/crosscheck.py`. Mới có phần T6 và chuyển chỗ. Chưa có
-tiêu chí `khong_dat` cho T2, T3, T4, và chưa có phần T5; các phần đó vẫn theo v1.2.
+chưa đổi `GUIDELINE` trong `scripts/review/crosscheck.py`. Có phần T6, chuyển chỗ và tiêu chí
+`khong_dat` cho T2 và cặp gần giống (§5, 11/10). T3, T5 vẫn theo v1.2.
 
 ## 1. Nguồn quyết định
 
@@ -85,10 +85,30 @@ Thay cho đoạn T6 của §3 trong v1.2.
 - **Bài học:** con trỏ của người gán cần được kiểm với văn bản đích; con trỏ đúng một nửa vẫn có thể
   dẫn tới đúng quy phạm.
 
-## 5. Còn mở
+## 5. Tiêu chí `khong_dat` cho T2 và cặp gần giống (CMT xác nhận 11/10)
 
-- Tiêu chí `khong_dat` cho T2, T3, T4. Hướng lệch giữa hai người đổi chiều theo nhóm nên mỗi nhóm cần
-  tiêu chí riêng.
+Cặp gần giống (`near_identical`, T4 cũ) kiểm như T2. T3 và T5 giữ như v1.2. Mỗi **dòng** (mỗi ngày
+hỏi) được gán nhãn riêng; một cặp có thể có một dòng `dat` và một dòng `khong_dat`.
+
+1. **Câu hỏi phải chạm đúng chỗ đã đổi.** Nếu một luật sư trả lời giống nhau ở cả hai ngày thì
+   `khong_dat` với `group_mismatch`.
+   - Không đạt: "Điều 42 *Nghị định này*" đổi thành "Điều 42 *Nghị định số 27/2019/NĐ-CP*" (27/2019/NĐ-CP):
+     cùng một điều của cùng một văn bản, chỉ khác cách viết.
+   - Đạt: đổi tên cơ quan ("Tổng cục" thành "Ủy ban"); câu trả lời khác thật.
+2. **Câu hỏi chứa sẵn vế trước của đáp án**: dòng ngày trước `khong_dat` với `question_leaks`
+   (120/2021/NĐ-CP: đề đã nêu "xã, phường, thị trấn"). Dòng ngày sau vẫn có thể `dat`, vì chữ
+   cũ trong đề là cái bẫy kéo về bản cũ.
+3. **Đổi chủ thể giữa hai mốc** (25/2010/TT-BNNPTNT Điều 21: từ 18/07/2017 điều này nói về Cục Thú y,
+   không còn là Cục được hỏi): đáp án ngày sau không trả lời câu hỏi, đánh `gold_wrong` kèm
+   `note`. Ca này hiếm (khoảng 1 trong 290 lineage T2 và T3), nên chỉ cần ví dụ trong mục `gold_wrong`.
+
+Xử lý sau gán nhãn: dòng `khong_dat` sau hoà giải thì viết lại câu hỏi hoặc loại lineage, không sửa
+gold âm thầm (v1.2 §5.5). Hai ca đầu viết lại được nếu còn chạm được chỗ đổi; ca 1 kiểu cùng văn bản
+đổi cách viết và ca 3 phải loại.
+
+## 6. Còn mở
+
+- Luật sư xác nhận phần pháp lý (T6, chuyển chỗ, chuyển tiếp) trước khi gộp vào `vilextime-annotation.md`.
 - Phát hiện tự động: bộ dò cùng đợt sửa vừa bãi bỏ đoạn A vừa bổ sung đoạn trùng nhiều từ với A bắt
   được kiểu 1; chuyển sang văn bản khác (ví dụ 2) cần so khớp nội dung giữa văn bản, vì **kho không
   có cạnh quan hệ** giữa hai văn bản.
