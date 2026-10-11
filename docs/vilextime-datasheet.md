@@ -39,7 +39,9 @@ mọi mốc.
 - **Chế độ `as_of`:**
   - `ranh_gioi`: sát lần chuyển phiên bản;
   - `giua_khoang`: cách hai đầu khoảng hiệu lực ≥ 30 ngày. Đây là **bảng kết quả chính**;
-  - `sau_het_hieu_luc`: sau khi văn bản đích hết hiệu lực toàn bộ, không có đáp án.
+  - `sau_het_hieu_luc`: sau khi văn bản đích hết hiệu lực toàn bộ, không có đáp án;
+  - `truoc_hieu_luc` (chỉ T2, từ 11/10): dòng trước của cặp, hỏi lại 30 ngày trước khi
+    phiên bản sau có hiệu lực, khi văn bản sửa đổi đã ký. Đáp án vẫn là phiên bản cũ.
 - **Split:**
   - chia theo văn bản đích: dev khoảng 20%, test khoảng 80%;
   - văn bản có dòng T5 luôn vào test;
@@ -79,7 +81,11 @@ khác chủ đề chung số thứ tự, khoảng 7% ở T2) bị loại ở bư
 ## 4. Khuyến nghị khi dùng và báo kết quả
 
 - Báo **bảng `giua_khoang`** làm kết quả chính. `ranh_gioi` là phép thử ngày chuyển;
-  `sau_het_hieu_luc` là phép thử siêu dữ liệu cấp văn bản.
+  `sau_het_hieu_luc` là phép thử siêu dữ liệu cấp văn bản. `truoc_hieu_luc` là phép thử
+  luật đã ký mà chưa có hiệu lực: câu lệnh sửa đổi tương lai nằm trong lớp A ở cả 153
+  dòng, nên baseline không xét ngày bị lừa; bộ lọc cấp văn bản của B7 loại cả 153, nên
+  chế độ này không tách B7 với hệ thống đề xuất. Ngày ký lấy từ cổng, 30 dòng đang chờ
+  kiểm tay (`data/review/audit_truoc_hieu_luc.tsv`).
 - **Accuracy và TCS dùng bản tương phản** (chốt 29/09): câu trả lời phải chứa đoạn gold
   và không được chứa đoạn chỉ phiên bản khác có. Câu trả lời liệt kê mọi phiên bản
   (probe `hedge`) đạt 0,951 theo định nghĩa cũ nhưng thấp hẳn theo định nghĩa mới.
@@ -177,28 +183,27 @@ Số liệu tính trên bản phát hành dựng lại ngày 29/09 (schema 1.2.0
 
 ### Kích thước và split
 
-Bản phát hành có 2.481 dòng, 666 lineage (tức 666 câu hỏi khác nhau) và 517 văn bản đích. Chia theo lineage:
-dev 131, test 535.
+Bản phát hành dựng ngày 11/10 có 2.745 dòng, 653 lineage (tức 653 câu hỏi khác nhau) và 498 văn bản đích. Chia theo lineage:
+dev 116, test 537.
 
-Số dòng theo nhóm, chế độ `as_of` và split (dev / test):
+Số dòng theo nhóm, chế độ `as_of` và split (dev / test). T4 đã gộp vào T2 từ 07/10 (`similarity` là facet):
 
-| Nhóm | Lineage | `ranh_gioi` | `giua_khoang` | `sau_het_hieu_luc` |
-|---|---:|---:|---:|---:|
-| T1 | 251 | 40 / 211 | 40 / 211 | 13 / 65 |
-| T2 | 200 | 84 / 316 | 84 / 316 | 10 / 51 |
-| T3 | 65 | 39 / 160 | 39 / 160 | 1 / 14 |
-| T4 | 75 | 42 / 108 | 42 / 108 | 6 / 14 |
-| T5 | 19 | 0 / 38 | 0 / 38 | 0 / 7 |
-| T6 | 56 | 30 / 82 | 30 / 82 | – |
-| **Tổng** | **666** | **1.150** | **1.150** | **181** |
+| Nhóm | Lineage | `ranh_gioi` | `giua_khoang` | `truoc_hieu_luc` | `sau_het_hieu_luc` |
+|---|---:|---:|---:|---:|---:|
+| T1 | 150 | 20 / 130 | 20 / 130 | – | 5 / 44 |
+| T2 | 225 | 90 / 360 | 90 / 360 | 30 / 123 | 11 / 60 |
+| T3 | 65 | 39 / 160 | 39 / 160 | – | 1 / 14 |
+| T5 | 19 | 0 / 38 | 0 / 38 | – | 0 / 7 |
+| T6 | 194 | 76 / 312 | 76 / 312 | – | – |
+| **Tổng** | **653** | **1.225** | **1.225** | **153** | **142** |
 
-**Quota.** Chế độ `ranh_gioi` có 1.150 dòng theo Bảng 1, với hai điều chỉnh đã chốt:
-- T5 có 38 dòng, T6 nhận phần thiếu (quyết định Q3);
-- T3 có 199 dòng và T1 có 251 dòng (29/09). Sau đợt loại, mọi chuỗi T3 còn dùng được dài 3 dòng.
+**Quota.** Chế độ `ranh_gioi` có 1.225 dòng (07/10, trong khung 1.100–1.300 của đề cương):
+- T1 150, T2 450, T3 199;
+- T5 có 38 dòng, T6 nhận phần thiếu (quyết định Q3): T6 388 = 300 dòng H3 (bãi bỏ qua nút cha) + 88 dòng bãi bỏ trực tiếp.
 
-**Dòng không có đáp án:** 112 dòng `provision_repealed` (T6) và 181 dòng `document_repealed`. Có 91 lineage không có dòng `sau_het_hieu_luc` vì không tìm được câu chấm dứt trong corpus.
+**Dòng không có đáp án:** 388 dòng `provision_repealed` (T6) và 142 dòng `document_repealed`. Có 65 lineage không có dòng `sau_het_hieu_luc` vì không tìm được câu chấm dứt trong corpus.
 
-**Tỷ lệ dev trên dòng ranh giới:** T1 15,9% · T2 21,0% · T3 19,6% · T4 28,0% · T5 0% (luôn vào test) · T6 26,8%.
+**Tỷ lệ dev trên dòng ranh giới:** T1 13,3% · T2 20,0% · T3 19,6% · T5 0% (luôn vào test) · T6 19,6%.
 
 ### Ai viết gì (dòng ranh giới)
 

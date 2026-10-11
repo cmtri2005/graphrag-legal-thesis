@@ -667,6 +667,15 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   lệnh sửa đổi tương lai trong lớp A, nên bẫy có thật với baseline phẳng. Bộ lọc cấp
   văn bản của B7 loại 153/153, nên chế độ này tách được "có xét ngày hay không",
   nhưng không tách được B7 với hệ thống đề xuất.
+  **Cùng ngày, CMT duyệt và đã làm:** (1) `pending` của dòng anh em được tính lại theo
+  ngày của chính nó; trước đó 273/277 dòng `giua_khoang` chép `pending` từ dòng ranh
+  giới. (2) Nối lại 247 nhãn T1 mồ côi (104 nhãn người) theo (lineage, phiên bản, câu
+  hỏi). (3) Viết `short_answer` cho 234 phiên bản (`claude-opus-5-5`): 2.062/2.062 dòng
+  có đáp án đều có đáp án ngắn. (4) T5 là tập chẩn đoán: con số "all" của scorer bỏ T5.
+  (5) Thêm chế độ `truoc_hieu_luc` cho T2: 153 dòng; `check_release` đòi `pending` thật;
+  30 dòng ngày ký chờ kiểm tay ở `data/review/audit_truoc_hieu_luc.tsv`. Bản phát hành
+  nay có 2.745 dòng. Còn mở: bộ D4 (158/300 dòng còn trong bản phát hành), luật sư
+  xác nhận 19 lineage T5, audit 490 nhãn model.
 
 ## Risks And Recovery
 

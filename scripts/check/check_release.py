@@ -6,6 +6,9 @@
     date lies inside the gold version's window (T5: inside the retroactive one);
   * a row asked after its document ended ("sau_het_hieu_luc") has its boundary
     row's question, no answer (`document_repealed`) and a date after the end;
+  * a row asked before the next version applies ("truoc_hieu_luc") carries the
+    trap it exists for: `pending` names an act signed on or before as_of that
+    takes effect after it;
   * no boundary row is asked after the corpus snapshot;
   * every row has a split, and a lineage or a document never sits in two; no T5
     row is in dev (ADR 0003 §7, decided 28/09);
@@ -80,6 +83,9 @@ def problems(release: list[dict], selected: dict[str, dict], layer_a: set[str], 
             if r["valid_from"] and not (date.fromisoformat(r["valid_from"]) <= at
                                         and (not r["valid_to"] or at < date.fromisoformat(r["valid_to"]))):
                 out.append(f"{r['id']}: as_of ngoài khoảng hiệu lực của đáp án")
+            p = r.get("pending")
+            if r["as_of_strategy"] == "truoc_hieu_luc" and not (p and p["signed_on"] <= r["as_of"] < p["effective_from"]):
+                out.append(f"{r['id']}: dòng trước hiệu lực không có văn bản đã ký mà chưa có hiệu lực")
             retro = r.get("retroactive")
             if retro and r["valid_from"] == retro["effective_from"] and at >= date.fromisoformat(retro["issued_on"]):
                 out.append(f"{r['id']}: ra ngoài khoảng hồi tố")

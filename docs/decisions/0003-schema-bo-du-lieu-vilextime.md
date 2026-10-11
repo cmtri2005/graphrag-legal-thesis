@@ -230,6 +230,13 @@ Tradeoffs:
 
 ## Follow-Up
 
+- **11/10 (CMT), schema 1.4.0 (MINOR).**
+  - Thêm `as_of_strategy` `truoc_hieu_luc`, chỉ cho T2: dòng trước của cặp hỏi lại 30
+    ngày trước khi phiên bản sau có hiệu lực, khi văn bản sửa đổi đã ký; `twin_of` trỏ
+    về dòng ranh giới, gold giữ nguyên. Lý do và giới hạn: `reports/Phương án T2 và T5
+    ViLexTime.md`, phương án (b).
+  - `pending` được tính theo `as_of` của chính dòng. Trước đó dòng anh em chép giá trị
+    của dòng ranh giới. Đây là facet, không phải gold, và v1.0 chưa đóng băng.
 - **29/09 (CMT), schema 1.2.0 (MINOR), sau phản biện `docs/reports/JUDGE_DATASET.md`.**
   Các thay đổi:
   - Thêm `retrieved_at`, trục thứ hai của §6. Giá trị là ngày chụp corpus.

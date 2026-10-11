@@ -21,6 +21,9 @@ and picks boundary rows as before; this step reads `selected.jsonl` and writes
       A lineage whose document ended before the snapshot gets a third row,
       "sau_het_hieu_luc": asked after the end, no answer (`document_repealed`),
       the ending sentence as accepted evidence (29/09, JUDGE N2).
+      The earlier row of a T2 pair gets one more, "truoc_hieu_luc": asked 30 days
+      before the next version applies, once its amending act is signed — same
+      question and gold, the trap of law signed but not yet in force (11/10).
   changed_span
       The words this version has and its neighbouring versions do not.
   evidence_set
@@ -87,7 +90,7 @@ from vilexgraph.build.extraction.target_resolver import TargetResolver  # noqa: 
 from vilexgraph.build.index import TemporalIndex  # noqa: E402
 from vilexgraph.build.temporal.models import ProvisionLevel as L  # noqa: E402
 
-SCHEMA_VERSION = "1.3.0"   # MINOR: min_repr, norm_continuity, chance_accuracy, near_identical
+SCHEMA_VERSION = "1.4.0"   # MINOR: as_of_strategy truoc_hieu_luc (1.3.0: min_repr, norm_continuity, chance_accuracy, near_identical)
 SNAPSHOT = date(2026, 9, 17)   # corpus snapshot v2, frozen at M1
 MARGIN = 30                    # days a mid-interval date keeps from either boundary
 SEED = "vilextime-twin-v1"
@@ -95,6 +98,8 @@ SPLIT_SEED = "vilextime-split-v1"
 DEV_SHARE = 0.2
 AFTER_END = "sau_het_hieu_luc"
 AFTER_END_GROUPS = ("T1", "T2", "T3", "T5")     # T6 is already unanswerable; T4 merged into T2
+BEFORE_EFFECT = "truoc_hieu_luc"
+BEFORE_EFFECT_DAYS = 30        # how long before the next version applies a before_effect row is asked
 # the proposal's four fields, by the words of the portal's own classification
 _FIELD_WORDS = (
     ("thue", ("thuế", "phí", "hải quan", "xuất nhập khẩu")),
@@ -217,6 +222,40 @@ def after_end(record: dict, document_end: date | None, evidence: list[str]) -> d
     row["target"]["lead_in"] = None
     row["derivation"] = {"transitions": [], "query": f"as_of({record['lineage_id']}, {at.isoformat()})"}
     row["_ending_units"] = evidence
+    return row
+
+
+def before_effect(record: dict, versions: list[dict], document_end: date | None,
+                  caps: tuple[date, ...], issued_on: dict[str, str]) -> dict | None:
+    """The earlier row of a T2 pair asked BEFORE_EFFECT_DAYS before the next version applies.
+
+    By then the amending act is signed and on the portal, so a system reading it
+    answers with law that is not in force yet (future-law leakage); the gold stays
+    the boundary row's version. At the boundary the same trap is one day wide and
+    mixed with an off-by-one, and mid-interval it almost never exists (4/1,225 rows
+    on 11/10), so it gets a date of its own (reports/Phương án T2 và T5, option b).
+    None when the act is not signed by then, the date leaves the gold window, or
+    the chain disagrees.
+    """
+    k = next((i for i, v in enumerate(versions) if v["id"] == record["version_id"]), None)
+    if k is None or k + 1 >= len(versions) or not versions[k + 1]["effective_from"]:
+        return None
+    nxt = versions[k + 1]
+    at = _d(nxt["effective_from"]) - timedelta(days=BEFORE_EFFECT_DAYS)
+    step = next((s for s in record["derivation"]["transitions"] if s["to_version"] == nxt["ordinal"]), None)
+    actor = step["actor"]["document_id"] if step else None
+    signed = _d(issued_on.get(actor)) if actor else None
+    span = window(record, versions, document_end, caps)
+    if (not signed or signed > at or not span or at < span[0] or (span[1] and at >= span[1])
+            or at.isoformat() == record["as_of"]):
+        return None
+    hit = in_force_at(versions, at)
+    if (hit["id"] if hit else None) != record["version_id"]:
+        return None
+    row = json.loads(json.dumps(record))
+    row.update(id=f"{record['id'].rsplit(':', 1)[0]}:{at.isoformat()}", as_of=at.isoformat(),
+               as_of_strategy=BEFORE_EFFECT, twin_of=record["id"])
+    row["derivation"]["query"] = f"as_of({record['lineage_id']}, {at.isoformat()})"
     return row
 
 
@@ -468,7 +507,7 @@ def main() -> None:
         r["schema_version"] = SCHEMA_VERSION
         r.setdefault("as_of_strategy", "ranh_gioi")
         r.setdefault("twin_of", None)
-        if parent and r["as_of_strategy"] == "giua_khoang":         # the lead-in in force at the twin's date
+        if parent and r["as_of_strategy"] in ("giua_khoang", BEFORE_EFFECT):   # the lead-in in force at its date
             hit = in_force_at(chains.get(parent, []), date.fromisoformat(r["as_of"]))
             r["target"]["lead_in"] = hit["text"] if hit else None
         r["pending"] = pending_at(steps[lid], versions, date.fromisoformat(r["as_of"]), issued_on)
@@ -535,11 +574,18 @@ def main() -> None:
             asked_after.add(r["lineage_id"])
             late = after_end(r, ended[doc][1], ending.get(doc, []))
             stats["sau hết hiệu lực: " + ("có dòng" if late else "không tìm được câu chấm dứt")] += 1
+        early = None
+        if r["group"] == "T2":
+            early = before_effect(r, pool[r["lineage_id"]], document_end.get(doc),
+                                  tuple(caps.get(r["lineage_id"], ())), issued_on)
+            if early and twin and early["as_of"] == twin["as_of"]:
+                early = None
+            if r["version_id"] != pool[r["lineage_id"]][-1]["id"]:
+                stats["trước hiệu lực: " + ("có dòng" if early else "không (chưa ký, ra ngoài khoảng hoặc chuỗi lệch)")] += 1
         out.append(enrich(r))
-        if twin:
-            out.append(enrich(twin))
-        if late:
-            out.append(enrich(late))
+        for extra in (twin, early, late):
+            if extra:
+                out.append(enrich(extra))
     ids = [r["id"] for r in out]
     if len(ids) != len(set(ids)):
         raise SystemExit("id trùng trong release.jsonl")
@@ -547,7 +593,7 @@ def main() -> None:
     with target.open("w", encoding="utf-8") as f:
         for r in out:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
-    print(f"{len(out):,} dòng ({len(rows):,} ranh giới + {len(out) - len(rows):,} giữa khoảng/sau hết hiệu lực) -> {target}")
+    print(f"{len(out):,} dòng ({len(rows):,} ranh giới + {len(out) - len(rows):,} giữa khoảng/trước/sau hiệu lực) -> {target}")
     for key, value in sorted(stats.items()):
         print(f"  {key}: {value:,}")
     print("  domain_source:", dict(collections.Counter(r["domain_source"] for r in out)))

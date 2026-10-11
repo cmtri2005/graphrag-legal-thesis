@@ -1,7 +1,8 @@
 """The release file: mid-interval twins and the schema 1.1 fields (plan phase-4, 28/09)."""
 from datetime import date
 
-from enrich_vilextime import MARGIN, changed_span, check_short_answer, mid_date, pending_at, references, twin_of
+from enrich_vilextime import (MARGIN, before_effect, changed_span, check_short_answer, mid_date, pending_at,
+                              references, twin_of)
 from vilexgraph.build.temporal.models import ProvisionLevel as L
 
 VERSIONS = [
@@ -123,3 +124,15 @@ def test_split_is_by_document_stable_and_keeps_T5_in_test():
     assert splits == [split_of(d, {"document:unrelated"}) for d in docs]      # never depends on other documents
     dev = next(d for d, s in zip(docs, splits) if s == "dev")
     assert split_of(dev, {dev}) == "test"
+
+
+def test_the_earlier_row_of_a_pair_is_asked_again_before_the_signed_change_applies():
+    steps = [{"on": "2025-03-01", "to_version": 2, "actor": {"document_id": "document:a"}}]
+    before = {**_row("2025-02-28", "version:p:1"), "derivation": {"transitions": steps, "query": ""}}
+    early = before_effect(before, VERSIONS, None, (), {"document:a": "2025-01-15"})
+    assert early["as_of"] == "2025-01-30" and early["version_id"] == "version:p:1"
+    assert early["as_of_strategy"] == "truoc_hieu_luc" and early["twin_of"] == before["id"]
+    assert before_effect(before, VERSIONS, None, (), {"document:a": "2025-02-10"}) is None   # signed later
+    assert before_effect(before, VERSIONS, None, (), {}) is None                              # date unknown
+    after = {**_row("2025-03-01", "version:p:2"), "derivation": {"transitions": steps, "query": ""}}
+    assert before_effect(after, VERSIONS, None, (), {"document:a": "2025-01-15"}) is None    # last version
