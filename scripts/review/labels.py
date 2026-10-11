@@ -259,8 +259,11 @@ def report(data: Path) -> None:
         agree = sum(h["verdict"] == m["verdict"] for h, m in pairs)
         print(f"model–người cùng gán {len(pairs)} dòng: đồng ý {agree} ({agree / len(pairs):.1%})")
     done = [x for x in labels if x["audit"]]
-    need = sum(bool(x["audit_required"]) for x in labels)
-    print(f"audit: {len(done)} đã làm / {need} bắt buộc")
+    shipped = release(data) if (data / "derived/vilextime/release.jsonl").exists() else {}
+    need = [x for x in labels if x["audit_required"]]
+    live = [x for x in need if x["id"] in shipped]
+    print(f"audit: {sum(bool(x['audit']) for x in live)} đã làm / {len(live)} bắt buộc trên dòng đang phát hành"
+          f" (tổng mọi nhãn: {len(done)} / {len(need)})")
     for stratum, keep in (("khong_dat/meta", lambda x: x["verdict"] == "khong_dat" or x["meta_issues"]),
                           ("mẫu 20% dat", lambda x: x["verdict"] == "dat" and not x["meta_issues"])):
         rows = [x for x in done if keep(x)]

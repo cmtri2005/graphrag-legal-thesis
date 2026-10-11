@@ -1,7 +1,7 @@
 # ViLexTime — Datasheet
 
 Theo khung *Datasheets for Datasets* (Gebru và cộng sự, 2021). Tài liệu này mô tả bản
-phát hành `data/derived/vilextime/release.jsonl` (schema 1.2.0). Mã băm của bản phát
+phát hành `data/derived/vilextime/release.jsonl` (schema 1.4.0). Mã băm của bản phát
 hành và của mọi đầu vào đã commit nằm ở `data/vilextime/manifest.json`, file này do
 `scripts/check/check_release.py --manifest` ghi.
 
@@ -20,8 +20,8 @@ Bộ dữ liệu phục vụ ba câu hỏi nghiên cứu:
 - RQ2: đồ thị tri thức thời gian có giảm lỗi đó không;
 - RQ3: lợi ích đến từ đồ thị hay chỉ từ lọc thời gian.
 
-Người làm là hai sinh viên của khóa luận (mã A, B) và model `claude-opus-5-5`. Vai trò
-của model ghi ở mục 3.
+Người làm là hai sinh viên của khóa luận (mã A, B) và hai model: `claude-opus-5-5` và
+`deepseek-flash` (DeepSeek). Vai trò của model ghi ở mục 3.
 
 ## 2. Thành phần
 
@@ -33,7 +33,8 @@ mọi mốc.
   - T1: một phiên bản;
   - T2: cặp tương phản;
   - T3: chuỗi ≥ 3 phiên bản;
-  - T4: hai phiên bản gần giống;
+  - T4: hai phiên bản gần giống. Từ 07/10 là lát `near_identical` của T2, có suất riêng
+    150 dòng từ 11/10;
   - T5: hiệu lực trở về trước theo Điều 152;
   - T6: hết hiệu lực một phần ở cấp Khoản/Điểm.
 - **Chế độ `as_of`:**
@@ -61,7 +62,7 @@ Vai trò của LLM **rộng hơn** câu "LLM chỉ hỗ trợ diễn đạt câu
 
 | Phần | Ai làm | Ghi ở đâu |
 |---|---|---|
-| Câu hỏi | `claude-opus-5-5` viết gần hết. Một số câu model tự viết lại, một số câu người sửa, vài câu do `gpt-oss-120b` (Groq) viết (số liệu ở mục 8) | `question_source`, `data/vilextime/questions.jsonl` |
+| Câu hỏi | `claude-opus-5-5` viết khoảng hai phần ba, `deepseek-flash` khoảng một phần ba (các lô 07/10 và 11/10: T6 mới, lát gần giống của T2). Một số câu model tự viết lại, một số câu người sửa, một câu do `gpt-oss-120b` (Groq) viết (số liệu ở mục 8) | `question_source`, `data/vilextime/questions.jsonl` |
 | Đáp án ngắn (`short_answer`, được Accuracy/EM/F1/TCS chấm) | `claude-opus-5-5` viết, phải là một đoạn của lời văn gold | `data/vilextime/short_answers.jsonl`, trường `by` |
 | Nhãn ngoài bộ kiểm chéo | model gán trước, người audit theo mẫu và theo luật bắt buộc | `data/review/labels.tsv` |
 | Quyết định loại lineage | model đề xuất, người xác nhận khi audit | `data/vilextime/dropped.jsonl` |
@@ -69,12 +70,14 @@ Vai trò của LLM **rộng hơn** câu "LLM chỉ hỗ trợ diễn đạt câu
 | Phân xử cờ hiệu lực, ngày hết hiệu lực của văn bản | model đề xuất kèm câu nguồn (`method: llm_reviewed`), người audit | `data/review/validity_queue.tsv`, `data/review/temporal_candidates.jsonl` |
 
 Hệ quả: nếu một baseline dùng model họ Claude, nó trả lời câu hỏi do chính Claude viết
-và bị chấm bằng đáp án ngắn do Claude chọn. Cột kết quả chính nên dùng LLM không thuộc
-họ Claude.
+và bị chấm bằng đáp án ngắn do Claude chọn; với DeepSeek cũng vậy ở các câu nó viết. Cột
+kết quả chính nên dùng LLM không thuộc họ Claude và không thuộc họ DeepSeek, hoặc báo
+tách theo người viết câu hỏi (`question_source`).
 
-**Phễu chọn lineage** (G2): 930 lineage được viết câu hỏi → 179 bị bộ kiểm tự động loại
-(145 `insufficient_context` do chính người viết đánh, 34 `copies_the_answer`) → 751 qua →
-20 bị loại sau khi gán nhãn → số lineage trong bản phát hành ở mục 8. Như vậy có thiên
+**Phễu chọn lineage** (G2, đếm lại 11/10): 1.490 lineage được viết câu hỏi → 299 bị bộ kiểm
+tự động loại (249 `insufficient_context` do chính người viết đánh, 38 `copies_the_answer`,
+12 bị cắt cụt) → 1.191 qua → 32 bị loại sau khi gán nhãn → số lineage trong bản phát
+hành ở mục 8 (chọn theo thứ hạng đến khi đủ quota). Như vậy có thiên
 lệch chọn về phía điều khoản dễ diễn đạt thành câu hỏi. Lineage bị nối nhầm (hai quy định
 khác chủ đề chung số thứ tự, khoảng 7% ở T2) bị loại ở bước viết câu.
 
@@ -97,7 +100,7 @@ khác chủ đề chung số thứ tự, khoảng 7% ở T2) bị loại ở bư
   - báo `citation_coverage` và `tver_strict` cạnh TVER, vì không trích dẫn thì né được TVER;
   - trích dẫn dạng chữ được quy về điều khoản;
   - trích dẫn dạng chữ không mang phiên bản, nên VCR không xác định được cho B1.
-- **EM** gần như bằng 0 với câu trả lời sinh tự do (oracle đạt EM 0, F1 0,589), nên báo F1.
+- **EM** gần như bằng 0 với câu trả lời sinh tự do (oracle đạt EM 0, F1 0,586), nên báo F1.
 - **Tách số theo nhóm và chế độ `as_of`.** Riêng T3 và T5 phải báo riêng theo chế độ,
   kèm bảng probe theo nhóm (G3; `score_vilextime.py --probes --out`).
 - **T5 là tập chẩn đoán, không vào con số chung** (11/10). Con số "all" của scorer bỏ
@@ -125,11 +128,11 @@ khác chủ đề chung số thứ tự, khoảng 7% ở T2) bị loại ở bư
 - **Ngày ranh giới để lộ thông tin** (N3):
   - T1 từng hỏi ở ngày bắt đầu + 1; từ 07/10 ngày hỏi rải trong 30 ngày đầu (`spread_as_of`);
   - T5 ở chế độ giữa khoảng thường nằm sát một lần chuyển;
-  - từ 29/09, T3 hỏi ở ngày trước mỗi lần chuyển, như T2 và T4.
+  - từ 29/09, T3 hỏi ở ngày trước mỗi lần chuyển, như T2.
 - **Đáp án ở câu dẫn** (V3): ở một số dòng, đáp án ngắn nằm ở câu dẫn của khoản cha chứ
   không ở chính đơn vị gold (khung phạt của nghị định xử phạt). Recall@k chỉ tính đơn vị gold.
-- **Khuôn câu lặp** (V4): câu mở đầu được gán theo hash lineage, nên 5 cụm mở đầu chiếm
-  khoảng 55% câu hỏi. Không có câu trùng hay gần trùng.
+- **Khuôn câu lặp** (V4): đo 11/10 trên 653 câu hỏi của bản phát hành, 5 cụm mở đầu
+  (4 từ đầu) chiếm 19%, riêng "theo quy định về" 13%. Bản 29/09 là khoảng 55%.
 - **Điều khoản chuyển tiếp** (V5) có thể giữ quy định cũ cho một số quan hệ. Audit có bước
   kiểm riêng, và mọi dòng có dấu hiệu này đều bắt buộc audit.
 - **Bỏ cấp huyện từ 01/07/2025** (V6) được xử lý bằng văn bản chuyển tiếp liên ngành,
@@ -150,10 +153,10 @@ Bản UIT đã nộp không sửa được, nên khóa luận phải công bố 
 
 | Đề cương | Bộ dữ liệu | Căn cứ |
 |---|---|---|
-| "1.150 câu hỏi" | 1.150 **dòng** (câu hỏi, mốc) ở chế độ ranh giới; số câu hỏi khác nhau bằng số lineage (mục 8) | ADR 0003 Follow-Up 24/09 |
+| "1.150 câu hỏi" | 1.225 **dòng** (câu hỏi, mốc) ở chế độ ranh giới, trong khung 1.100–1.300; số câu hỏi khác nhau bằng số lineage (653, mục 8). Còn chờ khoa xác nhận "câu" là dòng | ADR 0003 Follow-Up 24/09; plan GĐ4 07/10 |
 | "LLM chỉ hỗ trợ diễn đạt câu hỏi" | model viết câu hỏi, đáp án ngắn, nhãn đầu, đề xuất loại (mục 3) | plan GĐ4, 24/09 và 28/09 |
 | T5 "có lợi cho đối tượng áp dụng", 50 câu | T5 theo Điều 152, bỏ vế "có lợi"; số câu là số ca luật sư xác nhận, phần thiếu chuyển sang T6 | quyết định Q3, 20/09 |
-| κ ≥ 0,6 trên "toàn bộ T3, T4, T5, T6" | 300 dòng: toàn bộ T5 và T6, mỗi nhóm T2/T3/T4 lấy 50 | quyết định Q2, 20/09 |
+| κ ≥ 0,6 trên "toàn bộ T3, T4, T5, T6" | 300 dòng: T2 50 + lát gần giống 50, T3 50, toàn bộ T5, T6 phần còn lại tới 150 chia theo tỷ lệ H3/trực tiếp. Thước đo chính đăng ký trước là AC1 ≥ 0,80 và p_neg ≥ 0,60; κ báo kèm | quyết định Q2 20/09, dựng lại 11/10 |
 | Công thức 9 (TV-Recall@k) | định nghĩa lại theo `version_id`/`accepted_evidence` (mục 4) | plan GĐ4, V7 |
 | Accuracy dạng "â = a*" | Accuracy tương phản trên đáp án ngắn | quyết định 29/09 |
 | Kiểm định thủ công | κ giữa hai người; nhãn model có audit của người | hướng dẫn §5–§6 |
@@ -168,18 +171,22 @@ Bản UIT đã nộp không sửa được, nên khóa luận phải công bố 
   Mã băm của mọi thứ dùng để dựng nằm ở `data/vilextime/manifest.json`.
 - **Phiên bản:** theo ADR 0003 §8. Đổi gold hay chuyển dòng giữa các split là MAJOR; thêm
   trường hay thêm mã là MINOR.
-- **Chưa xong** (plan GĐ4, J6–J8):
-  - κ trên bộ kiểm chéo;
-  - audit các nhãn bắt buộc;
-  - luật sư chốt T5;
-  - phân xử các cờ hiệu lực của lineage κ sau D4;
+- **Chưa xong** (plan GĐ4, J6–J8; cập nhật 11/10):
+  - hướng dẫn v2.0 (T6 theo phán quyết chuyển chỗ 05/10), trước khi gán T6;
+  - gán bộ kiểm chéo (A 134 dòng, B 135 dòng còn trống), AC1/κ, hoà giải D5;
+  - nhãn cho 276 dòng T6 chưa có nhãn nào (chờ hướng dẫn v2.0);
+  - audit 375 nhãn bắt buộc trên dòng đang phát hành;
+  - luật sư chốt T5 (8 văn bản) và nhận định giấy phép;
+  - phân xử các cờ hiệu lực của lineage κ sau D4, hàng đợi chuyển chỗ (20 dòng);
+  - kiểm 30 dòng ngày ký của `truoc_hieu_luc`;
   - tập con gold độc lập;
   - tag `vilextime-v1.0`.
 
 ## 8. Số liệu
 
-Số liệu tính trên bản phát hành dựng lại ngày 29/09 (schema 1.2.0, ngày chụp corpus 17/09/2026).
-`data/vilextime/manifest.json` ghi mã băm của bản này.
+Số liệu tính trên bản phát hành dựng lại ngày 11/10 (schema 1.4.0, ngày chụp corpus 17/09/2026),
+trừ mục "Bộ dò hiệu lực" là kết quả đợt 29/09. `data/vilextime/manifest.json` ghi mã băm
+của bản này.
 
 ### Kích thước và split
 
@@ -208,14 +215,16 @@ Số dòng theo nhóm, chế độ `as_of` và split (dev / test). T4 đã gộp
 
 ### Ai viết gì (dòng ranh giới)
 
-- **Câu hỏi:**
-  - `claude-opus-5-5` viết 1.039 câu;
-  - model tự viết lại 99 câu;
-  - người sửa 9 câu;
-  - `gpt-oss-120b` viết 3 câu.
-- **Đáp án ngắn:** 1.094 phiên bản, đều do `claude-opus-5-5` viết.
-- **Nhãn:** 923 nhãn model và 210 nhãn người (bản Excel). 490 nhãn bắt buộc audit, 0 đã audit.
-- **Lineage bị loại:** 32 lineage, đều do model đề xuất.
+- **Câu hỏi** (theo lineage, 653):
+  - `claude-opus-5-5` viết 389 câu, tự viết lại 35 câu;
+  - `deepseek-flash` viết 225 câu (450 dòng ranh giới);
+  - người sửa 3 câu;
+  - `gpt-oss-120b` viết 1 câu.
+- **Đáp án ngắn:** 1.031 phiên bản dùng trong bản phát hành, đều do `claude-opus-5-5` viết.
+- **Nhãn trên dòng ranh giới ngoài bộ kiểm chéo:** 662 nhãn model, 98 nhãn người (bản
+  Excel). 375 nhãn bắt buộc audit, 0 đã audit. T6 có 276 dòng chưa có nhãn nào.
+- **Lineage bị loại:** 32 lineage, đều do model đề xuất (other 11, group_mismatch 9,
+  gold_wrong 6, question_ambiguous 4, question_leaks 1, unanswerable_as_asked 1).
 
 ### Bộ dò hiệu lực (J2) và sửa gốc (J3)
 
@@ -238,45 +247,50 @@ Số dòng theo nhóm, chế độ `as_of` và split (dev / test). T4 đã gộp
 
 ### Hiện tượng
 
-- Transition của dòng ranh giới: 1.008 transition, đều là `amend`. Việc bãi bỏ được thể hiện bằng dòng không có đáp án.
-- H3 (mất hiệu lực theo nút cha): 12 lineage.
+- Transition của dòng ranh giới: 906 transition, đều là `amend`. Việc bãi bỏ được thể hiện bằng dòng không có đáp án.
+- H3 (mất hiệu lực theo nút cha): 150 lineage (300 dòng); bãi bỏ trực tiếp: 44 lineage (88 dòng).
 - T5: 19 lineage, đến từ 3 văn bản tác động là 65/2025/TT-BQP, 12/2015/NĐ-CP và 119/2026/NĐ-CP. Câu hiệu lực của 12/2015/NĐ-CP không nêu ngày hồi tố.
-- Có 21 dòng ranh giới mà đáp án ngắn nằm ở câu dẫn, không nằm trong đơn vị gold: T1 14, T6 6, T2 1.
+- Có 8 dòng ranh giới mà đáp án ngắn nằm ở câu dẫn, không nằm trong đơn vị gold: T1 7, T2 1.
 
 ### Miền (theo lineage)
 
 **Nguồn nhãn:**
-- `portal_field`: 223 lineage;
-- `seed`: 215 lineage;
-- `portal_major`: 135 lineage;
-- `khong_ro`: 93 lineage.
+- `portal_field`: 228 lineage;
+- `seed`: 199 lineage;
+- `portal_major`: 132 lineage;
+- `khong_ro`: 94 lineage.
 
 **Nhãn** (một lineage có thể mang nhiều nhãn):
-- ngoài bốn miền của đề cương: 422;
-- giao thông: 99;
-- doanh nghiệp – đầu tư: 83;
+- ngoài bốn miền của đề cương: 425;
+- giao thông: 92;
+- doanh nghiệp – đầu tư: 72;
 - thuế: 56;
-- đất đai: 15.
+- đất đai: 16.
 
 ### Corpus
 
 - Có 78 cặp văn bản cùng số hiệu và cùng ngày ký, tức cổng lưu một văn bản hai lần.
-- 21/666 trích dẫn chữ của chính điều khoản đích không phân giải được: `citation` không có Điều, hoặc số hiệu cũ trùng mà không có năm.
+- 15/653 trích dẫn chữ của chính điều khoản đích không phân giải được: `citation` không có Điều, hoặc số hiệu cũ trùng mà không có năm.
 
 ### Probe theo nhóm (G3; split test)
 
 Mỗi probe biết sẵn điều khoản gold và chỉ chọn phiên bản. Chỉ số là TV-Recall@1; riêng dòng `hedge` là Accuracy tương phản.
 
-Bảng `giua_khoang` (bảng chính):
+Bảng `giua_khoang` (bảng chính). Cột "T2" là cả nhóm; "gần giống" là lát `near_identical` của T2 (T4 cũ):
 
-| Probe | T1 | T2 | T3 | T4 | T5 | T6 | TCS |
+| Probe | T1 | T2 | gần giống | T3 | T5 | T6 | TCS |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| mới nhất | 1,000 | 0,500 | 0,325 | 0,500 | 0,500 | 0,500 | 0,000 |
-| đầu tiên | 1,000 | 0,500 | 0,325 | 0,500 | 0,447 | 0,488 | 0,000 |
-| ngày gần nhất | 1,000 | 0,772 | 0,713 | 0,741 | 0,789 | 0,500 | 0,544 |
-| rào đón, Accuracy tương phản | 1,000 | 0,057 | 0,000 | 0,028 | 0,026 | 0,500 | 0,000 |
+| mới nhất | 1,000 | 0,500 | 0,500 | 0,325 | 0,500 | 0,500 | 0,000 |
+| đầu tiên | 1,000 | 0,500 | 0,500 | 0,325 | 0,447 | 0,500 | 0,000 |
+| ngày gần nhất | 1,000 | 0,788 | 0,772 | 0,713 | 0,789 | 0,500 | 0,576 |
+| rào đón, Accuracy tương phản | 1,000 | 0,065 | 0,061 | 0,000 | 0,026 | 0,500 | 0,000 |
 | rào đón, Accuracy lỏng | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 | 0,500 | 0,000 |
 
-Bảng `ranh_gioi`: probe "ngày gần nhất" đạt T3 0,325, bằng các probe khác, so với 1,000 trước khi dời ngày ranh giới T3.
+Bảng `ranh_gioi`: probe "ngày gần nhất" đạt T3 0,325 và T2 0,500, bằng các probe khác.
 
-Oracle đạt trần ở mọi chỉ số và mọi chế độ. Riêng EM/F1 thì không: oracle đạt F1 0,589 vì câu trả lời là cả điều khoản.
+Bảng `truoc_hieu_luc` (chỉ T2): "mới nhất" và "ngày gần nhất" đạt TV-Recall@1 0,000, vì
+phiên bản sắp có hiệu lực là bản mới nhất và cũng gần ngày hỏi nhất; "đầu tiên" đạt 1,000,
+vì mọi cặp T2 chỉ có hai phiên bản. Chế độ này vì vậy bắt được heuristic "lấy bản mới",
+không bắt được heuristic "lấy bản đầu".
+
+Oracle đạt trần ở mọi chỉ số và mọi chế độ. Riêng EM/F1 thì không: oracle đạt F1 0,586 vì câu trả lời là cả điều khoản.

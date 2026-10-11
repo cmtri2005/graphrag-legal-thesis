@@ -688,6 +688,14 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   `data/review/crosscheck_{A,B}.20261011.tsv`. Còn phải gán: A 134 dòng, B 135 dòng
   (T2 42–43, T6 92). `crosscheck_result.json` vẫn là kết quả 07/10 trên bộ cũ cho đến
   lần `kappa` tiếp theo.
+  (8) Model gán 70 dòng T2 chưa có nhãn (64 dat, 6 khong_dat). Phiếu audit dựng lại, chỉ
+  còn dòng đang phát hành: T1 55, T2 223, T3 107; `labels.py report` đếm 375 nhãn bắt buộc
+  trên dòng đang phát hành. Datasheet và master plan (GĐ4) cập nhật theo bản 11/10.
+  **Phát hiện:** `deepseek-flash` viết câu hỏi cho 225/653 lineage, nên điều kiện chọn LLM
+  cho cột kết quả chính ở P5.1 ("không thuộc họ Claude") cần thêm "không thuộc họ DeepSeek",
+  hoặc báo tách theo người viết câu hỏi.
+  **J7 chưa rút mẫu:** còn phải chốt người đọc có thấy gold KG hay không (gold độc lập
+  thật sự là mù), và rút mẫu trước hay sau khi gold T6 ổn định theo hướng dẫn v2.0.
 
 ## Risks And Recovery
 

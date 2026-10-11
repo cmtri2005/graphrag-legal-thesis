@@ -1,6 +1,6 @@
 # Master Plan — Khóa luận Temporal-Aware KG RAG
 
-Date: 2026-09-14 · Cập nhật gần nhất: 2026-09-22
+Date: 2026-09-14 · Cập nhật gần nhất: 2026-10-11 (chỉ GĐ4)
 
 > **Nguồn sự thật về tiến độ dự án.** Timeline bám theo mục "Kế hoạch thực hiện"
 > trong `DeCuongKLTN_23521635_23521643.docx` (01/09/2026 – 01/02/2027).
@@ -28,13 +28,13 @@ Active. Giai đoạn 2 hoàn thành; Giai đoạn 3 đang đi trước kế ho�
 | 1 | 01/09 – 14/09 | Hoàn thiện đề cương | 🟡 | 2/6 | **Quá hạn 6 ngày** (P1.2, P1.5) |
 | 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | ✅ | 12/12 | Backfill v2 xong, snapshot đóng băng trước M1 |
 | 3 | 06/10 – 26/10 | Xây dựng đồ thị tri thức (L0–L3) | 🟡 | 13/19 | Bắt đầu sớm; **đường găng** |
-| 4 | 27/10 – 16/11 | Bộ dữ liệu ViLexTime | 🟡 | 0/9 | Bắt đầu sớm từ 21/09 ([plan](phase-4-vilextime.md)) |
+| 4 | 27/10 – 16/11 | Bộ dữ liệu ViLexTime | 🟡 | 5/9 | Bắt đầu sớm từ 21/09 ([plan](phase-4-vilextime.md)); còn nhãn người, luật sư, gold độc lập |
 | 5 | 17/11 – 30/11 | Cài đặt & đánh giá đường cơ sở | ⬜ | 0/14 | — |
 | 6 | 01/12 – 21/12 | Hệ thống đề xuất (L4–L5) | ⬜ | 0/7 | — |
 | 7 | 22/12 – 04/01 | Thực nghiệm & phân tích | ⬜ | 0/5 | — |
 | 8 | 05/01 – 11/01 | Viết bài báo khoa học | ⬜ | 0/3 | — |
 | 9 | 12/01 – 01/02 | Hoàn thiện khóa luận | ⬜ | 0/5 | — |
-| | | **Tổng** | | **27/80** | |
+| | | **Tổng** | | **32/80** | |
 
 ### Mốc kiểm tra
 
@@ -42,7 +42,7 @@ Active. Giai đoạn 2 hoàn thành; Giai đoạn 3 đang đi trước kế ho�
 |---|---|---|---|
 | M1 | 05/10 | **Snapshot v2** đóng băng sau backfill, tải về kiểm tra được ([plan](../completed/2026-09-17-backfill-corpus-v2.md)) | ✅ (17/09, trước hạn) |
 | M2 | 26/10 | Chuỗi phiên bản thật trong Neo4j; `snapshot(u,t)` đúng trên 100 truy vấn đối chiếu tay | ⬜ |
-| M3 | 16/11 | ViLexTime đủ 1.150 câu; Cohen κ ≥ 0,6 trên 300 câu | ⬜ |
+| M3 | 16/11 | ViLexTime đủ 1.150 câu; Cohen κ ≥ 0,6 trên 300 câu | 🟡 1.225 dòng ranh giới / 653 câu hỏi (chờ khoa chốt "câu"); bộ kiểm chéo dựng lại 11/10, chưa gán xong; thước đo chính đăng ký trước là AC1 |
 | M4 | 30/11 | **Điểm quyết định B7**: chọn hướng đóng góp phương pháp hay tài nguyên–phân tích | ⬜ |
 | M5 | 21/12 | Hệ thống end-to-end trả lời (x, t) kèm trích dẫn đã qua Verifier | ⬜ |
 | M6 | 04/01 | Đủ kết quả A1–A7, phân rã theo T1–T6 | ⬜ |
@@ -157,15 +157,15 @@ Kế hoạch chi tiết đến M3, bắt đầu sớm từ 21/09 vì 3 tuần kh
 
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
-| P4.1 | Hướng dẫn gán nhãn; thống nhất định nghĩa T1–T6 | NMT | ⬜ | Tài liệu hướng dẫn; hết mâu thuẫn T6/T7 |
-| P4.2 | So khớp phiên bản: cặp `snapshot(u,t₁) ≠ snapshot(u,t₂)` | NMT | ⬜ | Hết chặn từ 20/09: `data/derived/versions.jsonl` có 15.070 nút ≥ 2 phiên bản trong VB đủ điều kiện |
-| P4.3 | Trích khác biệt thành bộ ba (trước, sau, mốc chuyển) | NMT | ⬜ | Mỗi bộ ba truy ngược được về nút và event |
-| P4.4 | Sinh câu hỏi bằng LLM (chỉ để diễn đạt) | NMT | ⬜ | Nhãn vàng không phụ thuộc LLM |
-| P4.5 | Đủ số lượng: T1 250 · T2 400 · T3 200 · T4 150 · T5 50 · T6 100 | NMT | ⬜ | Tổng 1.150 |
-| P4.6 | Loại VB không neo thời gian khỏi benchmark | NMT | ⬜ | Cần P2.8 |
-| P4.7 | Kiểm định chéo 300 câu, Cohen κ | CMT | ⬜ | κ ≥ 0,6; nếu thấp hơn thì viết lại hướng dẫn và kiểm lại |
-| P4.8 | Cố vấn chuyên môn luật cho T5, T6 | CMT | ⬜ | Có người kiểm và biên bản |
-| P4.9 | Chia tập dev/test | NMT | ⬜ | λ, μ chỉ tinh chỉnh trên dev |
+| P4.1 | Hướng dẫn gán nhãn; thống nhất định nghĩa T1–T6 | NMT | 🟡 | `docs/vilextime-annotation.md` v1.2 (29/09); v2.0 cho T6 theo phán quyết chuyển chỗ 05/10 còn là nháp (`docs/vilextime-annotation-v2-draft.md`) |
+| P4.2 | So khớp phiên bản: cặp `snapshot(u,t₁) ≠ snapshot(u,t₂)` | NMT | ✅ | `scripts/pipeline/build_question_pool.py` → `data/derived/vilextime_pool.jsonl`: mỗi ngày hỏi có đáp án khác nhau; 11,1% cặp giống hệt nhau bị loại |
+| P4.3 | Trích khác biệt thành bộ ba (trước, sau, mốc chuyển) | NMT | ✅ | Mỗi dòng có `derivation.transitions` (ngày, phiên bản, `event_id`, văn bản tác động) và `changed_span`; `check_release.py` OK |
+| P4.4 | Sinh câu hỏi bằng LLM (chỉ để diễn đạt) | NMT | ✅ | `generate_questions.py` + bộ kiểm C2; gold dẫn xuất từ chuỗi phiên bản. Người viết: `claude-opus-5-5` khoảng 2/3, `deepseek-flash` khoảng 1/3 (datasheet §3) |
+| P4.5 | Đủ số lượng: T1 250 · T2 400 · T3 200 · T4 150 · T5 50 · T6 100 | NMT | 🟡 | 11/10: T1 150 · T2 450 (gồm 150 gần giống = T4) · T3 199 · T5 38 · T6 388; tổng 1.225 dòng ranh giới. T5 chờ luật sư; 276 dòng T6 chưa có nhãn |
+| P4.6 | Loại VB không neo thời gian khỏi benchmark | NMT | ✅ | `build_eligibility.py` (`benchmark_eligible`); pool chỉ lấy văn bản đủ điều kiện |
+| P4.7 | Kiểm định chéo 300 câu, Cohen κ | CMT | 🟡 | Lần đo 07/10 trên bộ cũ: κ 0,236 (T6 −0,02 do lỗi pool). Dựng lại 11/10, giữ 166 nhãn người; còn A 134, B 135 dòng |
+| P4.8 | Cố vấn chuyên môn luật cho T5, T6 | CMT | 🟡 | T6: phán quyết chuyển chỗ 05/10. T5: phiếu 8 văn bản chưa điền |
+| P4.9 | Chia tập dev/test | NMT | ✅ | Chia theo văn bản đích (dev ~20%), T5 luôn vào test; `check_release.py` kiểm không lineage/văn bản nào nằm ở hai tập |
 
 ## 6. Giai đoạn 5 — Cài đặt & đánh giá đường cơ sở (17/11 – 30/11)
 
@@ -332,3 +332,4 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 | 2026-09-21 | Phase 3 D6: công cụ timing + Docker metrics; cold load 704,0s, full MERGE đo chi tiết 573,9s; Neo4j peak 3.813,4 MiB/4 GiB, toàn stack 3,95 GiB; 4 container healthy, 0 OOM/restart; 268 test pass. P3.1–P3.2 ✅; D4 tạm hoãn, P3.18 còn mở | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d6--21092026) |
 | 2026-09-21 | Phase 3 E1 phép đo đầu: kiểm kê đủ 356 VBHN; 51 đủ điều kiện, 7.201 cặp text so được, 5.762 khớp (80,02%). 299 VBHN thiếu body hiển thị nên E1 chưa phủ đủ phạm vi; 1.393 sai khác text vào hàng đợi điều tra. Report có provenance/hash từng cặp; 275 test pass. P3.18 🟡, E2–E3 chưa làm, M2 chưa đạt | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#e1--21092026) |
 | 2026-09-22 | Hợp nhất `main` và `feature/phase3-v2` (C7): hai nhánh đã cài trùng P3.15–P3.17 nên 11 file xung đột. Giữ khoảng hiệu lực dạng nhiều khoảng rời (giữ được gap) và quy tắc §11 nút không text là trong suốt; P3.16 phải đo lại | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#c7--22092026) |
+| 2026-10-11 | GĐ4: bản phát hành 11/10 (1.225 dòng ranh giới, 2.730 dòng; schema 1.4.0); lát T2 gần giống có suất 150 dòng; chế độ `truoc_hieu_luc`; T5 là tập chẩn đoán; bộ kiểm chéo dựng lại giữ 166 nhãn người. P4.2, P4.3, P4.4, P4.6, P4.9 ✅; P4.1, P4.5, P4.7, P4.8 🟡. Mục này chỉ cập nhật GĐ4, các giai đoạn khác giữ trạng thái 22/09 | [`phase-4-vilextime.md`](phase-4-vilextime.md), commit `3e19c94` → `85eec88` |
