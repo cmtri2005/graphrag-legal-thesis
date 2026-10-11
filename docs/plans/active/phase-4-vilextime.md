@@ -648,6 +648,26 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   hồ (63/2007 điểm b khoản 5 Điều 18). T1 của model nay 228 `dat` / 22
   `khong_dat`, đồng ý với người 86,5% (141 dòng), 91 nhãn cần audit.
 
+- 2026-10-11 (CMT duyệt gọi DeepSeek): **dựng lại bản phát hành từ pool 07/10.**
+  Commit `e542de4` ghi T6 "396/384 đủ" vì đếm gộp hai nhánh, nhưng `--select` chia
+  quota theo nhánh (ancestor 300 dòng): ancestor mới có 109 lineage đạt, tức
+  218/300 dòng. Sinh nốt 166 lineage T6 đã xếp hạng (158 ancestor, 8 direct) qua
+  DeepSeek: giữ 122 (73,5%); loại 41 `insufficient_context`, 2 `copies_the_answer`,
+  1 `truncated`. Bản phát hành: 1.225 dòng ranh giới (T1 150, T2 450, T3 199, T5
+  38, T6 388 = 300 ancestor + 88 direct), 1.225 dòng giữa khoảng và 142 dòng sau hết
+  hiệu lực, tổng 2.592. `check_release.py` OK; chạy lại `--select` + enrich cho
+  sha256 trùng; 492 test pass.
+  **Còn hở:** (1) `short_answer` phủ 1.594/2.592 dòng: 386 dòng có đáp án còn thiếu
+  (T2 100, T6 286; 193 phiên bản). (2) `spread_as_of` (JUDGE N3) đổi `as_of` của 143
+  dòng T1, và `id` có chứa ngày nên nhãn cũ mồ côi. Nối theo (lineage, phiên bản,
+  câu hỏi) thì nối lại được 104 nhãn người và 143 nhãn model; chưa làm. (3) Bộ D4
+  còn 158/300 dòng nằm trong bản phát hành (T2 50, T3 50, T5 38, T6 20).
+  **§8.1 của `reports/Phương án T2 và T5 ViLexTime.md`:** 153/225 lineage T2 đủ
+  điều kiện hỏi ở `effective_from − 30` (đã ký, chưa hiệu lực). Cả 153/153 có câu
+  lệnh sửa đổi tương lai trong lớp A, nên bẫy có thật với baseline phẳng. Bộ lọc cấp
+  văn bản của B7 loại 153/153, nên chế độ này tách được "có xét ngày hay không",
+  nhưng không tách được B7 với hệ thống đề xuất.
+
 ## Risks And Recovery
 
 - **11,1% cặp phiên bản liền nhau có chữ giống hệt nhau** (2.132/19.192, đo
