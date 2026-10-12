@@ -1,0 +1,254 @@
+{
+ "counts": {
+  "versions": 1033
+ },
+ "mismatches": {},
+ "tiers": {
+  "dev · giua_khoang · T1 · answerable": {
+   "rows": 20,
+   "document": 20,
+   "document_alone": 20,
+   "version": 20,
+   "version_alone": 20,
+   "propagated": 20,
+   "propagated_alone": 20
+  },
+  "dev · giua_khoang · T2 · answerable": {
+   "rows": 96,
+   "document": 96,
+   "document_alone": 0,
+   "version": 96,
+   "version_alone": 96,
+   "propagated": 96,
+   "propagated_alone": 96
+  },
+  "dev · giua_khoang · T3 · answerable": {
+   "rows": 39,
+   "document": 39,
+   "document_alone": 0,
+   "version": 39,
+   "version_alone": 39,
+   "propagated": 39,
+   "propagated_alone": 39
+  },
+  "dev · giua_khoang · T6 · answerable": {
+   "rows": 38,
+   "document": 38,
+   "document_alone": 38,
+   "version": 38,
+   "version_alone": 38,
+   "propagated": 38,
+   "propagated_alone": 38
+  },
+  "dev · giua_khoang · T6 · unanswerable": {
+   "rows": 38,
+   "document": 0,
+   "version": 9,
+   "propagated": 38
+  },
+  "dev · ranh_gioi · T1 · answerable": {
+   "rows": 20,
+   "document": 20,
+   "document_alone": 20,
+   "version": 20,
+   "version_alone": 20,
+   "propagated": 20,
+   "propagated_alone": 20
+  },
+  "dev · ranh_gioi · T2 · answerable": {
+   "rows": 96,
+   "document": 96,
+   "document_alone": 0,
+   "version": 96,
+   "version_alone": 96,
+   "propagated": 96,
+   "propagated_alone": 96
+  },
+  "dev · ranh_gioi · T3 · answerable": {
+   "rows": 39,
+   "document": 39,
+   "document_alone": 0,
+   "version": 39,
+   "version_alone": 39,
+   "propagated": 39,
+   "propagated_alone": 39
+  },
+  "dev · ranh_gioi · T6 · answerable": {
+   "rows": 38,
+   "document": 38,
+   "document_alone": 38,
+   "version": 38,
+   "version_alone": 38,
+   "propagated": 38,
+   "propagated_alone": 38
+  },
+  "dev · ranh_gioi · T6 · unanswerable": {
+   "rows": 38,
+   "document": 0,
+   "version": 9,
+   "propagated": 38
+  },
+  "dev · sau_het_hieu_luc · T1 · unanswerable": {
+   "rows": 5,
+   "document": 5,
+   "version": 5,
+   "propagated": 5
+  },
+  "dev · sau_het_hieu_luc · T2 · unanswerable": {
+   "rows": 10,
+   "document": 10,
+   "version": 10,
+   "propagated": 10
+  },
+  "dev · sau_het_hieu_luc · T3 · unanswerable": {
+   "rows": 1,
+   "document": 1,
+   "version": 1,
+   "propagated": 1
+  },
+  "dev · truoc_hieu_luc · T2 · answerable": {
+   "rows": 34,
+   "document": 34,
+   "document_alone": 0,
+   "version": 34,
+   "version_alone": 34,
+   "propagated": 34,
+   "propagated_alone": 34
+  },
+  "test · giua_khoang · T1 · answerable": {
+   "rows": 130,
+   "document": 130,
+   "document_alone": 130,
+   "version": 130,
+   "version_alone": 130,
+   "propagated": 130,
+   "propagated_alone": 130
+  },
+  "test · giua_khoang · T2 · answerable": {
+   "rows": 354,
+   "document": 354,
+   "document_alone": 0,
+   "version": 354,
+   "version_alone": 354,
+   "propagated": 354,
+   "propagated_alone": 354
+  },
+  "test · giua_khoang · T3 · answerable": {
+   "rows": 160,
+   "document": 160,
+   "document_alone": 0,
+   "version": 160,
+   "version_alone": 160,
+   "propagated": 160,
+   "propagated_alone": 160
+  },
+  "test · giua_khoang · T5 · answerable": {
+   "rows": 38,
+   "document": 38,
+   "document_alone": 0,
+   "version": 38,
+   "version_alone": 38,
+   "propagated": 38,
+   "propagated_alone": 38
+  },
+  "test · giua_khoang · T6 · answerable": {
+   "rows": 156,
+   "document": 156,
+   "document_alone": 156,
+   "version": 156,
+   "version_alone": 156,
+   "propagated": 156,
+   "propagated_alone": 156
+  },
+  "test · giua_khoang · T6 · unanswerable": {
+   "rows": 156,
+   "document": 0,
+   "version": 35,
+   "propagated": 156
+  },
+  "test · ranh_gioi · T1 · answerable": {
+   "rows": 130,
+   "document": 130,
+   "document_alone": 130,
+   "version": 130,
+   "version_alone": 130,
+   "propagated": 130,
+   "propagated_alone": 130
+  },
+  "test · ranh_gioi · T2 · answerable": {
+   "rows": 354,
+   "document": 354,
+   "document_alone": 0,
+   "version": 354,
+   "version_alone": 354,
+   "propagated": 354,
+   "propagated_alone": 354
+  },
+  "test · ranh_gioi · T3 · answerable": {
+   "rows": 160,
+   "document": 160,
+   "document_alone": 0,
+   "version": 160,
+   "version_alone": 160,
+   "propagated": 160,
+   "propagated_alone": 160
+  },
+  "test · ranh_gioi · T5 · answerable": {
+   "rows": 38,
+   "document": 38,
+   "document_alone": 0,
+   "version": 38,
+   "version_alone": 38,
+   "propagated": 38,
+   "propagated_alone": 38
+  },
+  "test · ranh_gioi · T6 · answerable": {
+   "rows": 156,
+   "document": 156,
+   "document_alone": 156,
+   "version": 156,
+   "version_alone": 156,
+   "propagated": 156,
+   "propagated_alone": 156
+  },
+  "test · ranh_gioi · T6 · unanswerable": {
+   "rows": 156,
+   "document": 0,
+   "version": 35,
+   "propagated": 156
+  },
+  "test · sau_het_hieu_luc · T1 · unanswerable": {
+   "rows": 44,
+   "document": 44,
+   "version": 44,
+   "propagated": 44
+  },
+  "test · sau_het_hieu_luc · T2 · unanswerable": {
+   "rows": 46,
+   "document": 46,
+   "version": 46,
+   "propagated": 46
+  },
+  "test · sau_het_hieu_luc · T3 · unanswerable": {
+   "rows": 14,
+   "document": 14,
+   "version": 14,
+   "propagated": 14
+  },
+  "test · sau_het_hieu_luc · T5 · unanswerable": {
+   "rows": 7,
+   "document": 7,
+   "version": 7,
+   "propagated": 7
+  },
+  "test · truoc_hieu_luc · T2 · answerable": {
+   "rows": 119,
+   "document": 119,
+   "document_alone": 0,
+   "version": 119,
+   "version_alone": 119,
+   "propagated": 119,
+   "propagated_alone": 119
+  }
+ }
+}

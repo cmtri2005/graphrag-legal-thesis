@@ -1,0 +1,18 @@
+wrote 27,978 versions -> /tmp/claude-1000/-home-trica-UIT-Thesis-graphrag-legal-thesis/f7b7e705-b8fe-4d0d-aaef-2c4d289d038b/scratchpad/e0/versions.jsonl
+wrote 1,987 event outcomes -> /tmp/claude-1000/-home-trica-UIT-Thesis-graphrag-legal-thesis/f7b7e705-b8fe-4d0d-aaef-2c4d289d038b/scratchpad/e0/event_log.jsonl
+  versions sha256: aef9289a54d63901d282e8e1dd7d1080a251f646de66260f6c980709b65d370b
+  event log sha256: 522bb9a65c596f7be2bbce2c6470003b8f0941308e1889d3aaf6b03f70486913
+         135  documents
+           2  effective empty
+       1,463  events applied
+         524  events rejected
+      27,197  initial versions
+           1  provisions without text
+          47  review rows not written
+         135  verified documents
+         485  verified pairs
+      27,978  versions
+
+real	0m40.377s
+user	0m21.696s
+sys	0m8.641s

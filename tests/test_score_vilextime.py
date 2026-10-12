@@ -201,3 +201,28 @@ def test_t5_is_scored_on_its_own_row_and_left_out_of_all():
     assert rep["all"] == rep["T2"] and rep["all"]["accuracy"] == 1.0
     assert rep["T5"]["accuracy"] == 0.0
     assert report([t5], preds, UNITS, None)["giua_khoang"]["T5"]["accuracy"] == 0.0   # a T5-only strategy
+
+
+def test_wrong_version_reads_another_versions_content_from_the_text():
+    rows = _contrast([{**r, "answer": a} for r, a in zip(ROWS, ("từ 1 đến 2 triệu đồng", "3 triệu đồng", None))])
+    hedge = _pred("Trước 2021: từ 1 đến 2 triệu đồng; sau đó 3 triệu đồng.")   # no citation: VCR cannot see it
+    s = score(rows, {"r1": hedge, "r2": hedge, "r3": _pred(None, answerable=False)}, UNITS)
+    assert (s["wrong_version"], s["vcr"]) == (1, None)
+    s = score(rows, {"r1": _pred("từ 1 đến 2 triệu đồng"), "r2": _pred(None, answerable=False)}, UNITS)
+    assert s["wrong_version"] == 0         # the right version, and an abstention, recite no other version
+
+
+def test_intervals_resample_whole_lineages_and_two_systems_are_paired():
+    from score_vilextime import difference
+
+    rows = [_row(f"{p}{d}", "T1", f"provision:{p}", f"version:{p}:1", "2020-01-01", [], "x") for p in "AB" for d in "12"]
+    right = {r["id"]: _pred("x") for r in rows}
+    half = {r["id"]: _pred("x" if r["lineage_id"] == "provision:A" else "y") for r in rows}
+    a, b = score(rows, right, {}, draws=300), score(rows, half, {}, draws=300)
+    assert {d["accuracy"] for d in b["_draws"]} == {0, 0.5, 1}   # never 0.25 or 0.75: a lineage moves whole
+    assert (a["ci95"]["accuracy"], b["ci95"]["accuracy"]) == ([1, 1], [0, 1])
+    d = difference(a, b)
+    assert (d["accuracy"], d["ci95"]["accuracy"]) == (-0.5, [-1, 0])
+    assert 0.3 < d["p"]["accuracy"] < 0.7               # a quarter of the resamples draw lineage A twice
+    same = difference(b, score(rows, half, {}, draws=300))
+    assert (same["ci95"]["accuracy"], same["p"]["accuracy"]) == ([0, 0], 1)   # the same resamples

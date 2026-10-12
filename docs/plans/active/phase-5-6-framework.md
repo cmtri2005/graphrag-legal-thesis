@@ -98,6 +98,8 @@ Neo4j vào ở P3/P5 cho bước xác nhận top-k của ADR 0001 §3.
       (2.978.024 đơn vị, các stage đều `done`). **Chưa chạy bảng chính** (b2ctx, b7, b7plus, proposed
       trên dev): b7/b7plus/proposed khai báo `dense=True` nên cần `--no-dense` cho tới khi P4 xong.
       Còn thiếu: đối chiếu tier `propagated` với `ValidityService` trên ≥200 cặp.
+      11/10: đã đối chiếu, 485 cặp trên 135 văn bản đích của T6, 0 lệch (`runs/E0/`). Thang 5 nấc
+      chạy chỉ truy xuất trên dev (`runs/E1_ladder/dev/`).
 - [x] P3 `verify.py` (off|warn|reject, sinh lại 1 lần, abstain có nguyên nhân), nối vào
       `run_vilextime.py` (ghi `verification` từng dòng). 7 test. Với hệ đề xuất Verifier là
       no-op theo cấu trúc (retrieval và expansion đã dùng cùng tier) — báo cáo phải nói thẳng.
@@ -111,9 +113,17 @@ Neo4j vào ở P3/P5 cho bước xác nhận top-k của ADR 0001 §3.
       luật của scorer, hàng còn lại do judge đọc, rào đón luôn sai. **Chưa hiệu chuẩn**: cần người
       gán nhãn 100 mẫu (`sample` → điền cột `human` → `agree`).
 - [ ] P5 còn lại: A1–A7 chạy thật, B5 trên tập con (LightRAG), phân tích kết quả
+- [x] 11/10 hạ tầng thực nghiệm: `runs/` kèm sổ chạy; runner ghi `<out>.run.json`; scorer có
+      `wrong_version` (B5), `--ci` (bootstrap theo lineage), chấm nhiều file một lần kèm hiệu ghép cặp
+      và p; `confirm_vilextime.py` tính XN1–XN9 cùng Holm theo ADR 0005 (Proposed); cache truy xuất bỏ
+      ngày khỏi khóa khi hệ không lọc và không mở rộng; `check_tier_windows.py` (E0).
 
 ## Decisions
 
+- 2026-10-11: **Thang 5 nấc** `b2ctx → b7 → b7v → b7plus → b7pp` (K-07, MASTER_RESEARCH_GUIDE §7.4):
+  trên truy xuất từ vựng, hai nấc liền nhau khác đúng một trường; `proposed` = `b7pp` cộng mở rộng và
+  Verifier. `b7v` tách lời văn đã hợp nhất khỏi cửa sổ phiên bản, `b7pp` tách lan truyền khỏi
+  thành phần trực tuyến.
 - 2026-10-11: **Cột kết quả chính và LLM giám khảo không thuộc họ Claude và không thuộc
   họ DeepSeek** (CMT, ADR 0004 §3). DeepSeek viết 225/653 lineage câu hỏi, gần như cả H3
   (144/150), nên dùng nó làm thí sinh chính sẽ biến thiên lệch "tự viết, tự trả lời"

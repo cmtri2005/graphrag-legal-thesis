@@ -45,8 +45,18 @@ provision, so |E*| = 1:
                 (formula 7). A written citation names no version, so a row citing
                 only in writing has no VCR
   citation_coverage  rows with at least one resolved citation
+  wrong_version answerable rows whose lineage has another version with spans of its own:
+                the answer contains one of those spans. Version confusion read from the
+                text, so it is defined for a system that cites in writing (B1), where VCR
+                is not (decided 11/10, B5)
   TCS           T2 pairs (same lineage, same as_of_strategy): Accuracy on both
                 (formula 8); tcs_lenient uses accuracy_lenient
+
+`--ci DRAWS` adds a 95% percentile interval to each headline metric, resampling whole
+lineages: the rows of a lineage share their question and evidence, so resampling rows
+would overstate the precision (datasheet §4). Given several prediction files, each is
+also compared with the one before it: the difference of each metric, and its interval
+over the same resamples, so the comparison is paired.
 
 Every metric is reported per `as_of_strategy` (giua_khoang is the main table,
 ranh_gioi the boundary test) and per group. "all" leaves out the diagnostic groups
@@ -64,7 +74,8 @@ instruction. Three more check the scorer itself: hedge (recites every version),
 no_cite (oracle without citations), text_cite (oracle citing in writing).
 
 Usage:
-    python scripts/eval/score_vilextime.py predictions.jsonl [--split test] [--ids ids.txt] [--out report.json]
+    python scripts/eval/score_vilextime.py predictions.jsonl [more.jsonl ...] [--split test] [--ids ids.txt]
+        [--ci 2000] [--out report.json]
     python scripts/eval/score_vilextime.py --probes
 """
 from __future__ import annotations
@@ -72,9 +83,13 @@ from __future__ import annotations
 import argparse
 import collections
 import json
+import operator
+import random
 import re
 import sqlite3
+import statistics
 import unicodedata
+import zlib
 from datetime import date
 from pathlib import Path
 
@@ -82,6 +97,8 @@ KS = (1, 5, 10)
 PROBES = ("oracle", "latest", "first", "nearest", "hedge", "no_cite", "text_cite")
 UNIT_PREFIXES = ("version:", "asis:")
 ANY_VERSION = "any"      # what a written citation stands for: the provision, no version
+HEADLINE = ("recall@1", "tv_recall@1", "mrr", "accuracy", "accuracy_lenient", "f1", "tver", "tver_strict",
+            "vcr", "citation_coverage", "wrong_version", "tcs")
 
 
 def norm(text: str | None) -> str:
@@ -183,6 +200,11 @@ def row_scores(row: dict, pred: dict, units: dict, ks=KS) -> dict:
         out["tver"] = None
     out["tver_strict"] = float(not cites or unresolved or bool(out["tver"]))
     out["citation_coverage"] = float(any(s is not None for s in stands))
+    if row["answerable"] and row.get("_distractors"):
+        said = f" {norm(pred.get('answer') if pred.get('answerable') is not False else '')} "
+        out["wrong_version"] = float(any(f" {s} " in said for s in row["_distractors"]))
+    else:
+        out["wrong_version"] = None
     versioned = [s for s in stands if s is None or any(n != ANY_VERSION for _, n, _ in s)]
     if versioned:
         mine = {(p, n) for s in versioned if s for p, n, _ in s if p == gold_p}
@@ -192,22 +214,85 @@ def row_scores(row: dict, pred: dict, units: dict, ks=KS) -> dict:
     return out
 
 
-def score(rows: list[dict], preds: dict[str, dict], units: dict, ks=KS) -> dict:
-    """Mean of each metric over the rows in its denominator, plus TCS over T2 pairs and the counts."""
+def pairs(rows: list[dict]) -> dict[tuple[str, str], list[str]]:
+    """T2 pairs: (lineage, as_of_strategy) -> the ids of its two dates (formula 8)."""
+    out = collections.defaultdict(list)
+    for r in rows:
+        if r["group"] == "T2":
+            out[(r["lineage_id"], r["as_of_strategy"])].append(r["id"])
+    return {key: ids for key, ids in out.items() if len(ids) == 2}
+
+
+def score(rows: list[dict], preds: dict[str, dict], units: dict, ks=KS, draws: int = 0, seed: int = 0) -> dict:
+    """Mean of each metric over the rows in its denominator, plus TCS over T2 pairs and the counts.
+
+    With `draws`, also each headline metric's 95% interval (`ci95`) and the resamples
+    behind it (`_draws`, for `difference`).
+    """
     per_row = {r["id"]: row_scores(r, preds.get(r["id"], {}), units, ks) for r in rows}
     out: dict = {"rows": len(rows), "cited_rows": sum(s["tver"] is not None for s in per_row.values()),
                  "contrast_rows": sum(bool(r.get("_distractors")) for r in rows)}
     for metric in next(iter(per_row.values()), {}):
         values = [s[metric] for s in per_row.values() if s[metric] is not None]
         out[metric] = sum(values) / len(values) if values else None
-    pairs = collections.defaultdict(list)
-    for r in rows:
-        if r["group"] == "T2":
-            pairs[(r["lineage_id"], r["as_of_strategy"])].append(r["id"])
-    both = [ids for ids in pairs.values() if len(ids) == 2]
+    both = list(pairs(rows).values())
     for name, metric in (("tcs", "accuracy"), ("tcs_lenient", "accuracy_lenient")):
         out[name] = sum(all(per_row[i][metric] for i in ids) for ids in both) / len(both) if both else None
     out["tcs_pairs"] = len(both)
+    if draws:
+        out["_draws"] = bootstrap(rows, per_row, draws, seed)
+        out["ci95"] = {m: interval([d[m] for d in out["_draws"] if d[m] is not None]) for m in HEADLINE}
+    return out
+
+
+def bootstrap(rows: list[dict], per_row: dict[str, dict], draws: int, seed: int = 0) -> list[dict]:
+    """Each headline metric on `draws` resamples of whole lineages, drawn with replacement.
+
+    Seeded, and drawn over the sorted lineages of `rows` alone: two systems scored on the
+    same rows see the same resamples, so their difference is paired.
+    """
+    lineages = sorted({r["lineage_id"] for r in rows})
+    at = {lineage: i for i, lineage in enumerate(lineages)}
+    sums = {m: ([0.0] * len(lineages), [0] * len(lineages)) for m in HEADLINE}   # per lineage: sum, count
+    for r in rows:
+        for m, v in per_row[r["id"]].items():
+            if m in sums and v is not None:
+                sums[m][0][at[r["lineage_id"]]] += v
+                sums[m][1][at[r["lineage_id"]]] += 1
+    for (lineage, _), ids in pairs(rows).items():
+        sums["tcs"][0][at[lineage]] += all(per_row[i]["accuracy"] for i in ids)
+        sums["tcs"][1][at[lineage]] += 1
+    rng, out = random.Random(seed), []
+    for _ in range(draws):
+        weight = [0] * len(lineages)
+        for i in rng.choices(range(len(lineages)), k=len(lineages)):
+            weight[i] += 1
+        draw = {}
+        for m, (total, count) in sums.items():
+            n = sum(map(operator.mul, weight, count))
+            draw[m] = sum(map(operator.mul, weight, total)) / n if n else None
+        out.append(draw)
+    return out
+
+
+def interval(values: list[float]) -> list[float] | None:
+    """The 2.5th and 97.5th percentiles."""
+    if len(values) < 2:
+        return None
+    q = statistics.quantiles(values, n=40, method="inclusive")
+    return [q[0], q[-1]]
+
+
+def difference(base: dict, other: dict) -> dict:
+    """other − base on each headline metric: the interval of the paired resamples, and the
+    two-sided bootstrap p (twice the share of resamples on the far side of 0), for Holm."""
+    out: dict = {"ci95": {}, "p": {}}
+    for m in HEADLINE:
+        both = base[m] is not None and other[m] is not None
+        out[m] = other[m] - base[m] if both else None
+        d = [o[m] - b[m] for b, o in zip(base["_draws"], other["_draws"]) if b[m] is not None and o[m] is not None]
+        out["ci95"][m] = interval(d) if both else None
+        out["p"][m] = min(1.0, 2 * min(sum(x <= 0 for x in d), sum(x >= 0 for x in d)) / len(d)) if both and d else None
     return out
 
 
@@ -219,14 +304,21 @@ def default_split(rows: list[dict]) -> str | None:
     return "test" if any(r.get("split") for r in rows) else None
 
 
-def report(rows: list[dict], preds: dict[str, dict], units: dict, split: str | None, ks=KS) -> dict:
+def report(rows: list[dict], preds: dict[str, dict], units: dict, split: str | None, ks=KS,
+           draws: int = 0) -> dict:
+    """Every metric per as_of_strategy and per group. Each (strategy, group) draws from its own
+    seed: the same cell of two systems is paired, two cells are independent samples, so a
+    difference between groups (H2) is a two-sample comparison."""
     rows = [r for r in rows if r.get("split") != "excluded" and (split is None or r.get("split") == split)]
+    seed = lambda strategy, group: zlib.crc32(f"{strategy}/{group}".encode())  # noqa: E731
     out = {}
     for strategy in sorted({r["as_of_strategy"] for r in rows}):
         these = [r for r in rows if r["as_of_strategy"] == strategy]
-        out[strategy] = {"all": score([r for r in these if r["group"] not in DIAGNOSTIC], preds, units, ks)}
+        out[strategy] = {"all": score([r for r in these if r["group"] not in DIAGNOSTIC], preds, units, ks,
+                                      draws, seed(strategy, "all"))}
         for group in sorted({r["group"] for r in these}):
-            out[strategy][group] = score([r for r in these if r["group"] == group], preds, units, ks)
+            out[strategy][group] = score([r for r in these if r["group"] == group], preds, units, ks,
+                                         draws, seed(strategy, group))
     return out
 
 
@@ -361,6 +453,20 @@ def resolve(data: Path, ids: set[str], written: dict[str, list[str]] | None = No
     return {u: s for u, s in out.items() if s}
 
 
+def units_of(data: Path, runs: dict[str, dict[str, dict]]) -> tuple[dict, set[str], set[str]]:
+    """What every unit id and written citation of these runs stands for (`resolve`), and the
+    unit ids and written citations themselves. Read once for all runs: it scans ~1 GB."""
+    cited = {u for preds in runs.values() for p in preds.values()
+             for u in (p.get("citations") or []) + (p.get("retrieved") or [])}
+    ids = {u for u in cited if u.startswith(UNIT_PREFIXES)}
+    texts = cited - ids
+    written = {}
+    if texts:
+        documents, trees = citation_index(data, texts)
+        written = {t: pid for t in texts if (pid := resolve_written(t, documents, trees))}
+    return resolve(data, ids, written), ids, texts
+
+
 # ------------------------------------------------------------------ probes
 
 def nearest(chain: list[dict], when: str) -> dict:
@@ -399,28 +505,36 @@ def probe(name: str, rows: list[dict], chains: dict[str, list[dict]]) -> dict[st
 
 
 def table(title: str, results: dict[str, dict]) -> str:
-    cols = ("recall@1", "tv_recall@1", "mrr", "accuracy", "accuracy_lenient", "f1", "tver", "tver_strict",
-            "vcr", "citation_coverage", "tcs")
-    heads = ("R@1", "TV-R@1", "MRR", "Acc", "Acc(lỏng)", "F1", "TVER", "TVER(ng)", "VCR", "phủ tr.d", "TCS")
-    fmt = lambda x: "   —  " if x is None else f"{x:6.3f}"
-    lines = [title, f"{'':<26}" + "".join(f"{h:>10}" for h in heads)]
+    heads = ("R@1", "TV-R@1", "MRR", "Acc", "Acc(lỏng)", "F1", "TVER", "TVER(ng)", "VCR", "phủ tr.d",
+             "sai b.bản", "TCS")
+    fmt = lambda x: "—" if x is None else f"{x:.3f}"
+    span = lambda iv: "—" if iv is None else f"{iv[0]:.2f}…{iv[1]:.2f}"
+    lines = [title, f"{'':<34}" + "".join(f"{h:>12}" for h in heads)]
     for name, rep in results.items():
         for strategy, groups in rep.items():
-            lines.append(f"{name + ' · ' + strategy:<26}" + "".join(f"{fmt(groups['all'][c]):>10}" for c in cols))
+            row = groups["all"]
+            lines.append(f"{name + ' · ' + strategy:<34}" + "".join(f"{fmt(row[c]):>12}" for c in HEADLINE))
+            if "ci95" in row:
+                lines.append(f"{'  95%':<34}" + "".join(f"{span(row['ci95'][c]):>12}" for c in HEADLINE))
     return "\n".join(lines)
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("predictions", type=Path, nargs="?")
+    ap.add_argument("predictions", type=Path, nargs="*")
     ap.add_argument("--probes", action="store_true", help="score the version-choice and scorer-check probes")
     ap.add_argument("--data", type=Path, default=Path("data"))
     ap.add_argument("--split", help="score only this split (default: test, or every row before the split)")
     ap.add_argument("--ids", type=Path, help="score only the row ids listed in this file, one per line")
     ap.add_argument("--out", type=Path, help="write the full report (per strategy and group) as JSON")
+    ap.add_argument("--ci", type=int, default=0, metavar="DRAWS",
+                    help="95%% intervals from DRAWS lineage resamples; several prediction files are "
+                         "also compared, each with the one before it")
     args = ap.parse_args()
     if bool(args.predictions) == args.probes:
-        ap.error("give a predictions file or --probes")
+        ap.error("give prediction files or --probes")
+    if len({p.stem for p in args.predictions}) < len(args.predictions):
+        ap.error("prediction files are named by their stem, so the stems must differ")
     rows = [json.loads(line) for line in (args.data / "derived/vilextime/release.jsonl").open(encoding="utf-8")]
     extra = distractors(rows)
     for r in rows:
@@ -437,19 +551,22 @@ def main() -> None:
             chains[v["provision_id"]].append(v)
         runs = {name: probe(name, rows, chains) for name in PROBES}
     else:
-        runs = {args.predictions.stem: {p["id"]: p for p in map(json.loads, args.predictions.open(encoding="utf-8"))}}
-    cited = {u for preds in runs.values() for p in preds.values() for u in (p.get("citations") or []) + (p.get("retrieved") or [])}
-    ids = {u for u in cited if u.startswith(UNIT_PREFIXES)}
-    texts = cited - ids
-    written = {}
-    if texts:
-        documents, trees = citation_index(args.data, texts)
-        written = {t: pid for t in texts if (pid := resolve_written(t, documents, trees))}
-    units = resolve(args.data, ids, written)
-    results = {name: report(rows, preds, units, split) for name, preds in runs.items()}
+        runs = {path.stem: {p["id"]: p for p in map(json.loads, path.open(encoding="utf-8"))}
+                for path in args.predictions}
+    units, ids, texts = units_of(args.data, runs)
+    results = {name: report(rows, preds, units, split, draws=args.ci) for name, preds in runs.items()}
+    if args.ci and args.predictions:
+        names = list(results)
+        for base, other in zip(names, names[1:]):
+            results[f"{other} − {base}"] = {s: {g: difference(results[base][s][g], results[other][s][g])
+                                               for g in results[base][s]} for s in results[base]}
+    for rep in results.values():
+        for groups in rep.values():
+            for scores in groups.values():
+                scores.pop("_draws", None)
     print(table(f"ViLexTime · {len(rows):,} dòng · split {split or 'tất cả (chưa chia)'} · "
                 f"{len(ids - units.keys())} mã đơn vị không có trong corpus · "
-                f"{len(texts) - len(written)}/{len(texts)} trích dẫn chữ không phân giải được", results))
+                f"{len(texts - units.keys())}/{len(texts)} trích dẫn chữ không phân giải được", results))
     if args.out:
         args.out.write_text(json.dumps(results, ensure_ascii=False, indent=1), encoding="utf-8")
         print(f"-> {args.out}")

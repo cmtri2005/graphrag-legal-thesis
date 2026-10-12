@@ -1,0 +1,40 @@
+# Sổ chạy thực nghiệm
+
+Mỗi thí nghiệm có một thư mục `runs/<mã thí nghiệm>/<split>/` (mã theo MASTER_RESEARCH_GUIDE §8.2).
+Mỗi hệ để lại ba file:
+
+| File | Ai viết | Nội dung |
+|---|---|---|
+| `<hệ>.jsonl` | `scripts/eval/run_vilextime.py` | Dự đoán, mỗi dòng release một dòng. Đây là bằng chứng và đắt để sinh lại, nên không sửa tay |
+| `<hệ>.run.json` | runner, tự động | Mỗi lần gọi một bản ghi: spec, tham số, commit, hash của diff chưa commit, sha256 của release, manifest và prompt, model đã trả lời, số dòng. Chạy tiếp thì nối thêm bản ghi, chạy lại từ đầu thì bắt đầu danh sách mới |
+| `<tên>.score.json` | `scripts/eval/score_vilextime.py --out` | Báo cáo theo chế độ `as_of` và nhóm. Với `--ci`, có thêm khoảng tin cậy và hiệu ghép cặp |
+
+Quy tắc:
+
+1. Mọi lựa chọn (cấu hình, prompt, model, `k`) chỉ được quyết trên `dev`.
+2. Không chạy hệ nào trên `test` trước khi ADR 0005 được Accepted và commit. Mỗi cấu hình chạy trên
+   `test` một lần, và mỗi lần đó có một dòng trong bảng dưới, ghi lý do.
+3. Luôn truyền `--split`. Không dùng `--fast-retrieval` cho số được báo.
+4. Chấm nhiều hệ trong một lệnh: scorer chỉ đọc `derived/versions.jsonl` (khoảng 1 GB) một lần, và
+   với `--ci` thì so mỗi file với file đứng trước nó (ghép cặp theo lineage).
+
+Ví dụ, E1 trên `dev`:
+
+```bash
+for s in b2ctx b7 b7v b7plus b7pp; do
+  python scripts/eval/run_vilextime.py --system $s --no-dense --retrieval-only \
+      --split dev --out runs/E1_ladder/dev/$s.jsonl
+done
+python scripts/eval/score_vilextime.py runs/E1_ladder/dev/{b2ctx,b7,b7v,b7plus,b7pp}.jsonl \
+    --split dev --ci 2000 --out runs/E1_ladder/dev/ladder.score.json
+```
+
+## Nhật ký
+
+| Ngày | Thí nghiệm | Split | Hệ | Commit | Mục đích | Kết quả tóm tắt | Ghi chú |
+|---|---|---|---|---|---|---|---|
+| 11/10/2026 | E0 | dev | probe (`--probes --ci 1000`) | `2213f44` + diff chưa commit | Kiểm scorer trước khi tin số | `giua_khoang`: oracle đạt trần mọi nhóm (Acc 1,000; TVER, VCR, `wrong_version` 0); `hedge` Acc 0,031 ở T2 nhưng Acc lỏng 1,000; `nearest` 0,708 ở T2 | `E0/probes_dev.score.json`. Probe trên test chạy lại ở W3-01 |
+| 11/10/2026 | E0 | — | `build_versions.py --verify-pairs 200` trên 135 văn bản đích của T6 | như trên | Tier `propagated` so với `ValidityService` | 485 cặp (nút, ngày) khớp, kể cả mốc của nút cha. Dựng lại ra trùng 27.978/27.978 phiên bản đã công bố | `E0/build_versions_verify.txt`; đầu ra dựng lại để ở thư mục tạm, không ghi đè `data/derived` |
+| 11/10/2026 | E0 | cả release | `scripts/check/check_tier_windows.py` | như trên | Cửa sổ trong index so với nguồn; tier để lại gì của gold | 1.033 phiên bản, 0 lệch. Dòng có đáp án ở T2, T3, T5: tier `document` còn để phiên bản khác lọt qua ở 100% dòng, tier `version` và `propagated` thì 0%. Dòng không có đáp án ở T6: `document` lộ việc bãi bỏ ở 0%, `version` 22,4% (bãi bỏ trực tiếp), `propagated` 100% | `E0/index_windows.json`. Cửa sổ là của KG, nên đây là kiểm index và bộ lọc, không kiểm KG |
+| 11/10/2026 | E1 | dev | `b2ctx`, `b7`, `b7v`, `b7plus`, `b7pp` (từ vựng, chỉ truy xuất) | như trên | Kiểm thang 5 nấc trước khi khóa cấu hình | `giua_khoang`, 193 dòng có đáp án (119 lineage), TV-R@1: `b2ctx` 0,254 → `b7` 0,389 → `b7v` 0,321 → `b7plus` 0,513 → `b7pp` 0,513. Hiệu ghép cặp (KTC 95%): `b7` − `b2ctx` +0,135 [0,091; 0,182]; `b7plus` − `b7` +0,124 [0,067; 0,179]; `b7v` − `b7` âm. 38 dòng đã bị bãi bỏ: điều khoản đã hết hiệu lực còn lọt vào top-20 ở `b2ctx` 78,9%, `b7` 81,6%, `b7plus` 63,2%, `b7pp` 0% | `E1_ladder/dev/ladder.score.json` (cả 4 chế độ, `--ci 2000`), `confirm_dev.json` (XN1, XN3, XN4 chạy thử). Dev chỉ để kiểm đường ống, không dùng để kết luận. R@1 tính cả phiên bản đã hết hiệu lực, nên ở dòng đã bị bãi bỏ nó thưởng cho việc lấy phải điều khoản chết; đọc R@1 trên dòng có đáp án |
+| 11/10/2026 | W1-08 | — | `AITeamVN/Vietnamese_Embedding` trên CPU 4 nhân (máy rảnh) | như trên | Đo tốc độ embed trước khi chạy cả corpus | 1.000 lời văn lớp A có header: trung vị 110 token, p99 350, chỉ 0,2% dài hơn 512. Tốc độ 1,1 đoạn/giây với `max_seq_length` 256, 1,2 với 512, tức khoảng 300 giờ (12,5 ngày) cho 1.247.953 lời văn. `dangvantuan/vietnamese-embedding` (PhoBERT-base): 3,5 đoạn/giây, khoảng 100 giờ | Vượt ngưỡng 4 ngày của K-09, nên cần nhóm chọn lại phương án (GPU một lần, model nhỏ, hoặc bỏ B3, B4). Script `scripts/eval/embed_corpus.py` đã chạy thử: tiếp tục được sau khi dừng, chặn khi đổi cấu hình |

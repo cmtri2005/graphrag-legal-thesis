@@ -84,6 +84,12 @@ _PROPOSED = SystemSpec(
     name="proposed", layer="version", lexical=True, dense=True, rerank=True,
     temporal="propagated", context=True, expand=1, expand_edges="rel", verify="reject",
     note="L4–L5: 𝒰ₜ by formula (3), hybrid ranking, citation-constrained answer, Verifier")
+_B7 = SystemSpec(name="b7", layer="asis", lexical=True, dense=True, rerank=True,
+                 temporal="document", context=True,
+                 note="B7 — document-level date filter, no graph (the main control)")
+_B7PLUS = SystemSpec(name="b7plus", layer="version", lexical=True, dense=True, rerank=True,
+                     temporal="version", context=True,
+                     note="B7+ — version-level filter; the proposed system minus the online graph")
 
 REGISTRY: dict[str, SystemSpec] = {s.name: s for s in (
     SystemSpec(name="b1", note="B1 — the generator alone, no retrieval"),
@@ -100,12 +106,13 @@ REGISTRY: dict[str, SystemSpec] = {s.name: s for s in (
     SystemSpec(name="b6", layer="asis", lexical=True, dense=True, context=True,
                expand=1, expand_edges="part",
                note="B6 — hierarchical legal KG, structure only"),
-    SystemSpec(name="b7", layer="asis", lexical=True, dense=True, rerank=True,
-               temporal="document", context=True,
-               note="B7 — document-level date filter, no graph (the main control)"),
-    SystemSpec(name="b7plus", layer="version", lexical=True, dense=True, rerank=True,
-               temporal="version", context=True,
-               note="B7+ — version-level filter; the proposed system minus the online graph"),
+    _B7,
+    _B7.variant("b7v", layer="version",
+                note="B7 over layer B: consolidated version texts, still the document filter. "
+                     "Separates the wording L3 consolidated from the version window (K-07)"),
+    _B7PLUS,
+    _B7PLUS.variant("b7pp", temporal="propagated",
+                    note="B7+ with propagated windows: the ladder's top rung, no online graph (K-07)"),
     _PROPOSED,
     _PROPOSED.variant("a1", temporal="none", note="A1 — drop the effectivity constraint"),
     _PROPOSED.variant("a2", expand=0, expand_edges="none", note="A2 — drop graph expansion"),
@@ -115,8 +122,12 @@ REGISTRY: dict[str, SystemSpec] = {s.name: s for s in (
                            "variant H3 actually needs; the proposal's A4 is only a proxy"),
 )}
 
-#: The main table of the paper: one retriever, one generator, only ρ changes.
-LADDER = ("b2ctx", "b7", "b7plus", "proposed")
+#: The main table: one retriever, one generator, and each rung changes exactly one thing
+#: (decided 11/10, K-07): the tier, then the layer, then the tier twice. That holds on
+#: lexical retrieval (`--no-dense`, which also drops the reranker); with dense retrieval
+#: the first rung is b4, not b2ctx. `proposed` = b7pp + the online graph (expansion,
+#: Verifier), reported on its own line.
+LADDER = ("b2ctx", "b7", "b7v", "b7plus", "b7pp")
 
 
 def get(name: str) -> SystemSpec:

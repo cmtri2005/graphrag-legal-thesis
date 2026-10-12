@@ -17,14 +17,24 @@ not show up as an error — it would show up as a good score.
 A run resumes by default: ids already present in `--out` are skipped, which is
 what a rate-limited provider and a 2.481-row split require. `--restart` forgets
 them.
+
+Each invocation is logged to `<out>.run.json` (decided 11/10, B9): the system's
+spec, the arguments, the git commit and a hash of any uncommitted diff, the hashes
+of the release, the corpus manifest and the prompt, which models answered, and the
+counts. A resumed run appends to that list, so a file assembled over several
+sessions says so; a run started afresh starts a fresh list.
 """
 from __future__ import annotations
 
 import argparse
+import collections
+import hashlib
 import json
+import subprocess
 import sys
 import time
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
@@ -70,6 +80,26 @@ def done_ids(out: Path) -> set[str]:
         except (json.JSONDecodeError, KeyError):
             continue
     return found
+
+
+def provenance(args, spec: systems.SystemSpec, corpus: Corpus | None) -> dict:
+    """What a reader needs to trust or redo this run: code, data, prompt, configuration."""
+    git = lambda *a: subprocess.run(["git", *a], capture_output=True, text=True).stdout  # noqa: E731
+    sha = lambda b: hashlib.sha256(b).hexdigest()  # noqa: E731
+    manifest = args.index.parent / "manifest.json"
+    return {
+        "spec": asdict(spec),
+        "argv": sys.argv[1:],
+        "commit": git("rev-parse", "HEAD").strip(),
+        # the hash of `git diff HEAD`, so two runs from the same uncommitted state match
+        "uncommitted": sha(git("diff", "HEAD").encode()) if git("status", "--porcelain",
+                                                                "--untracked-files=no") else None,
+        "release_sha256": sha(args.release.read_bytes()),
+        "corpus_manifest_sha256": sha(manifest.read_bytes()) if manifest.exists() else None,
+        "index_counts": corpus.counts() if corpus else None,
+        "prompt_sha256": sha((generate.SYSTEM + generate.NO_EVIDENCE).encode()),
+        "python": sys.version.split()[0],
+    }
 
 
 def retriever(spec: systems.SystemSpec, corpus: Corpus | None, hits: Path | None,
@@ -130,48 +160,61 @@ def main() -> None:
     args.out.parent.mkdir(parents=True, exist_ok=True)
 
     written = failed = cached = 0
+    models: collections.Counter[str] = collections.Counter()
+    mode = "a" if skip and not args.restart else "w"
+    record = {**provenance(args, spec, corpus),
+              "started": datetime.now(timezone.utc).isoformat(timespec="seconds"), "finished": False}
     started = time.monotonic()
-    with args.out.open("a" if skip and not args.restart else "w", encoding="utf-8") as sink:
-        for n, q in enumerate(todo, 1):
-            try:
-                hits = search(q.question, q.as_of) if search else []
-                verdict = None
-                if args.retrieval_only:
-                    got = generate.Answer("", True, (), "", "none", "none")
-                else:
-                    units = corpus.units([h.unit_id for h in hits]) if corpus and hits else []
-                    ask = lambda evidence: generate.answer(  # noqa: E731
-                        q.question, q.as_of, evidence, with_context=spec.context,
-                        provider=args.provider, model=args.model, cache=cache)
-                    got = ask(units)
-                    if corpus and spec.verify != "off":
-                        got, verdict = verify.verify(
-                            corpus, mode=spec.verify, tier=spec.temporal, as_of=q.as_of,
-                            units=units, answer=got, regenerate=ask)
-            except LLMError as exc:
-                # A missing key or a dead model must not look like 2.000 wrong answers.
-                if written == 0:
-                    raise SystemExit(f"first row failed, stopping: {exc}") from None
-                failed += 1
-                print(f"  row {q.id} failed: {exc}", file=sys.stderr)
-                continue
-            cached += got.cached
-            line = {"id": q.id, "answer": got.text, "answerable": got.answerable,
-                    "citations": list(got.citations),
-                    "retrieved": [h.unit_id for h in hits]}
-            if verdict is not None:
-                line["verification"] = verdict.as_dict()
-            if hits:
-                # Kept per candidate so A1–A4 can be re-read without re-running the grid
-                # (plan: store each signal separately). The scorer ignores extra keys.
-                line["signals"] = {h.unit_id: h.signals for h in hits}
-            sink.write(json.dumps(line, ensure_ascii=False) + "\n")
-            sink.flush()
-            written += 1
-            if n % 50 == 0:
-                rate = n / max(time.monotonic() - started, 1e-9)
-                print(f"  {n}/{len(todo)} · {rate:.1f} rows/s · {cached} cached · {failed} failed",
-                      file=sys.stderr)
+    try:
+        with args.out.open(mode, encoding="utf-8") as sink:
+            for n, q in enumerate(todo, 1):
+                try:
+                    hits = search(q.question, q.as_of) if search else []
+                    verdict = None
+                    if args.retrieval_only:
+                        got = generate.Answer("", True, (), "", "none", "none")
+                    else:
+                        units = corpus.units([h.unit_id for h in hits]) if corpus and hits else []
+                        ask = lambda evidence: generate.answer(  # noqa: E731
+                            q.question, q.as_of, evidence, with_context=spec.context,
+                            provider=args.provider, model=args.model, cache=cache)
+                        got = ask(units)
+                        if corpus and spec.verify != "off":
+                            got, verdict = verify.verify(
+                                corpus, mode=spec.verify, tier=spec.temporal, as_of=q.as_of,
+                                units=units, answer=got, regenerate=ask)
+                except LLMError as exc:
+                    # A missing key or a dead model must not look like 2.000 wrong answers.
+                    if written == 0:
+                        raise SystemExit(f"first row failed, stopping: {exc}") from None
+                    failed += 1
+                    print(f"  row {q.id} failed: {exc}", file=sys.stderr)
+                    continue
+                cached += got.cached
+                models[f"{got.provider}/{got.model}"] += 1
+                line = {"id": q.id, "answer": got.text, "answerable": got.answerable,
+                        "citations": list(got.citations),
+                        "retrieved": [h.unit_id for h in hits]}
+                if verdict is not None:
+                    line["verification"] = verdict.as_dict()
+                if hits:
+                    # Kept per candidate so A1–A4 can be re-read without re-running the grid
+                    # (plan: store each signal separately). The scorer ignores extra keys.
+                    line["signals"] = {h.unit_id: h.signals for h in hits}
+                sink.write(json.dumps(line, ensure_ascii=False) + "\n")
+                sink.flush()
+                written += 1
+                if n % 50 == 0:
+                    rate = n / max(time.monotonic() - started, 1e-9)
+                    print(f"  {n}/{len(todo)} · {rate:.1f} rows/s · {cached} cached · {failed} failed",
+                          file=sys.stderr)
+        record["finished"] = True
+    finally:
+        log = args.out.with_suffix(".run.json")
+        history = json.loads(log.read_text(encoding="utf-8")) if mode == "a" and log.exists() else []
+        history.append({**record, "ended": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                        "written": written, "cached": cached, "failed": failed, "models": dict(models)})
+        log.write_text(json.dumps(history, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 
     print(f"\n{args.out}: {written} written, {cached} from cache, {failed} failed "
           f"in {time.monotonic() - started:.1f}s", file=sys.stderr)

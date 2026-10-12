@@ -64,7 +64,8 @@ class RetrievalCache:
     makes every re-score free.
 
     Keyed by the configuration, so changing a tier or `k` cannot return a stale
-    ranking.
+    ranking. Without a filter or an expansion the date reaches no query, so it is
+    left out of the key: the four dates of a question then cost one search.
     """
 
     def __init__(self, path: Path | str | None) -> None:
@@ -80,7 +81,8 @@ class RetrievalCache:
     def key(spec: SystemSpec, question: str, as_of: str) -> str:
         signature = json.dumps([spec.layer, spec.temporal, spec.context, spec.k, spec.lexical,
                                 spec.dense, spec.rerank, spec.expand, spec.expand_edges,
-                                question, as_of], ensure_ascii=False)
+                                question, as_of if spec.temporal != "none" or spec.expand else None],
+                               ensure_ascii=False)
         return hashlib.sha256(signature.encode()).hexdigest()
 
     def get(self, key: str) -> list[Hit] | None:

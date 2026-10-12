@@ -6,12 +6,27 @@ import pytest
 from vilexgraph.framework.systems import LADDER, REGISTRY, SystemError_, SystemSpec, get
 
 
-def test_the_ladder_walks_the_tiers_in_order() -> None:
-    """The main result: one retriever, one generator, only ρ changes."""
-    tiers = [REGISTRY[name].temporal for name in LADDER]
-    assert tiers == ["none", "document", "version", "propagated"]
-    shared = {(REGISTRY[n].lexical, REGISTRY[n].context) for n in LADDER}
-    assert shared == {(True, True)}, "the ladder must differ only in its tier"
+AXES = ("layer", "lexical", "dense", "rerank", "temporal", "context", "expand",
+        "expand_edges", "verify", "k")
+
+
+def _lexical(name: str) -> SystemSpec:
+    """What `run_vilextime.py --no-dense` runs for this system."""
+    return REGISTRY[name].variant(name, dense=False, rerank=False)
+
+
+def test_each_ladder_rung_changes_exactly_one_thing() -> None:
+    """RQ3 asks where the gain comes from, so no rung may move two things at once (K-07)."""
+    rungs = [_lexical(name) for name in LADDER]
+    changed = [[a for a in AXES if getattr(x, a) != getattr(y, a)] for x, y in zip(rungs, rungs[1:])]
+    assert changed == [["temporal"], ["layer"], ["temporal"], ["temporal"]]
+    assert [r.temporal for r in rungs] == ["none", "document", "document", "version", "propagated"]
+
+
+def test_proposed_is_the_top_rung_plus_the_online_graph() -> None:
+    top, proposed = REGISTRY[LADDER[-1]], REGISTRY["proposed"]
+    differing = [a for a in AXES if getattr(top, a) != getattr(proposed, a)]
+    assert differing == ["expand", "expand_edges", "verify"]
 
 
 def test_b7plus_is_the_proposed_system_without_the_online_graph() -> None:
@@ -48,7 +63,7 @@ def test_b2_is_registered_with_and_without_the_header() -> None:
 
 
 def test_every_retrieval_baseline_may_use_the_header() -> None:
-    for name in ("b3", "b4", "b5", "b6", "b7", "b7plus", "proposed"):
+    for name in ("b3", "b4", "b5", "b6", "b7", "b7v", "b7plus", "b7pp", "proposed"):
         assert REGISTRY[name].context is True, f"{name} must not be denied a chunk header"
 
 

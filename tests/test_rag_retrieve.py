@@ -142,6 +142,9 @@ def test_retrieval_cache_key_tracks_the_configuration() -> None:
         assert RetrievalCache.key(changed, "q", "2021-01-01") != key, \
             "a configuration change must not return a stale ranking"
     assert RetrievalCache.key(base, "q", "2022-01-01") != key
+    # no filter and no expansion: the date reaches no query, so one search serves every date
+    assert RetrievalCache.key(REGISTRY["b2ctx"], "q", "2021-01-01") == RetrievalCache.key(REGISTRY["b2ctx"], "q", "2022-01-01")
+    assert RetrievalCache.key(REGISTRY["b5"], "q", "2021-01-01") != RetrievalCache.key(REGISTRY["b5"], "q", "2022-01-01")
 
 
 def test_searcher_serves_the_second_call_from_cache(indexed: Corpus, tmp_path: Path) -> None:

@@ -1,0 +1,52 @@
+[
+ {
+  "spec": {
+   "name": "b7-lex",
+   "layer": "asis",
+   "lexical": true,
+   "dense": false,
+   "rerank": false,
+   "temporal": "document",
+   "context": true,
+   "expand": 0,
+   "expand_edges": "none",
+   "verify": "off",
+   "k": 20,
+   "note": "B7 — document-level date filter, no graph (the main control)"
+  },
+  "argv": [
+   "--system",
+   "b7",
+   "--no-dense",
+   "--retrieval-only",
+   "--split",
+   "dev",
+   "--out",
+   "runs/E1_ladder/dev/b7.jsonl"
+  ],
+  "commit": "2213f44b952f623d3f4fa11c57b1f1eb629b002d",
+  "uncommitted": "a3ed007b84d41170d8f57c316617bf031deadc7be06c1f923e9d77e83807254c",
+  "release_sha256": "118e0a2689487cd30a39f98c5e387de3ad68757f83ee90663f68cb633de3dc44",
+  "corpus_manifest_sha256": "36d040907f35165b7b919e40660d83c9e7ccc60c4ec57c5f4eb144669b660975",
+  "index_counts": {
+   "documents": 17307,
+   "units_asis": 1503700,
+   "units_version": 1474324,
+   "instructions": 48328,
+   "propagated_windows": 1474184,
+   "versions_with_local_window": 1474324,
+   "provisions_with_context": 1700484
+  },
+  "prompt_sha256": "88e5bb0e72eefae70be63d72ea8b1e6be04abb1c8fd9d12c4d23dfe609af4006",
+  "python": "3.12.3",
+  "started": "2026-10-11T14:37:26+00:00",
+  "finished": true,
+  "ended": "2026-10-11T15:53:21+00:00",
+  "written": 512,
+  "cached": 0,
+  "failed": 0,
+  "models": {
+   "none/none": 512
+  }
+ }
+]
