@@ -1,0 +1,87 @@
+{
+ "guideline_version": "2.0",
+ "labelled_by_both": 20,
+ "total": 20,
+ "n": 20,
+ "agreement": 0.85,
+ "ac1": 0.7505197505197504,
+ "ac1_ci95": [
+  0.45,
+  1.0
+ ],
+ "p_pos": 0.896551724137931,
+ "p_neg": 0.7272727272727273,
+ "kappa": 0.625,
+ "kappa_ci95": [
+  0.138,
+  1.0
+ ],
+ "agreement_needed_for_kappa_target": 0.84,
+ "per_group": {
+  "T6": {
+   "n": 20,
+   "agreement": 0.85,
+   "ac1": 0.7505197505197504,
+   "ac1_ci95": [
+    0.45,
+    1.0
+   ],
+   "p_pos": 0.896551724137931,
+   "p_neg": 0.7272727272727273,
+   "kappa": 0.625,
+   "kappa_ci95": [
+    0.138,
+    1.0
+   ],
+   "agreement_needed_for_kappa_target": 0.84
+  }
+ },
+ "per_lineage": {
+  "n": 10,
+  "agreement": 0.8,
+  "ac1": 0.6153846153846155,
+  "ac1_ci95": [
+   0.2,
+   1.0
+  ],
+  "p_pos": 0.8333333333333334,
+  "p_neg": 0.75,
+  "kappa": 0.5833333333333334,
+  "kappa_ci95": [
+   -0.071,
+   1.0
+  ],
+  "agreement_needed_for_kappa_target": 0.808
+ },
+ "per_guideline": {
+  "2.0": {
+   "n": 20,
+   "agreement": 0.85,
+   "ac1": 0.7505197505197504,
+   "ac1_ci95": [
+    0.45,
+    1.0
+   ],
+   "p_pos": 0.896551724137931,
+   "p_neg": 0.7272727272727273,
+   "kappa": 0.625,
+   "kappa_ci95": [
+    0.138,
+    1.0
+   ],
+   "agreement_needed_for_kappa_target": 0.84
+  }
+ },
+ "preregistered": {
+  "primary": "ac1",
+  "ac1_target": 0.8,
+  "p_neg_target": 0.6,
+  "kappa_reported_target": 0.6
+ },
+ "disagreements": [
+  "vilextime:T6:provision:78b5ad60-2cae-11f1-be1a-29baacadb302:2018-03-31",
+  "vilextime:T6:provision:3ebc8100-2d54-11f1-9f9c-173afda016a4:2023-12-18",
+  "vilextime:T6:provision:651e1cc0-2118-11f1-8084-97fc16eb22b8:2026-04-15"
+ ],
+ "labelled_before_d4": {}
+}
