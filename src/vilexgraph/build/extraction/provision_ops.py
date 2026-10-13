@@ -97,6 +97,10 @@ _AT = re.compile(r"(?<!\w)(?i:tại)(?!\w)")
 _EXCEPT = re.compile(r"(?<!\w)(?i:trừ)(?!\w)")
 _MARKER = re.compile(r"^(?P<num>\d+[a-zđ]?\.(?!\d))\s*|^(?P<letter>[a-zđ]\))\s*|^(?P<dash>[-–+•])\s*")
 _ARTICLE_HEAD = re.compile(r"^Điều\s+\d+[a-zđ]?\s*[.:\-–]\s*")
+# The acting document's own "Chương II" / "Mục 2" / "Phần C: TỔ CHỨC THỰC HIỆN" line
+# closes the list above it; under "Điều 3. Bãi bỏ … Nghị định số X:" it would
+# otherwise read as "bãi bỏ Chương II của X". A listed "a) Chương III (…)" is marked.
+_STRUCTURE_HEAD = re.compile(r"^(?:Chương|Mục|Phần)\s+(?:[IVXLC]+|\d+|[A-Z])(?:\s*[.:\-–](?:\s.*)?)?\s*$")
 _SENTENCE = re.compile(r"(?<=\.)\s+(?=[A-ZĐ])")
 _QUOTE_MARK = "«Q»"
 _WHOLE_DOC_OPS = (LegalOperation.REPEAL, LegalOperation.REPLACE, LegalOperation.SUSPEND)
@@ -368,6 +372,10 @@ def extract_mentions(paragraphs: list[str], title_doc: str | None = None) -> lis
             kind = marker.lastgroup if marker else "plain"
             if marker:
                 line = line[marker.end():]
+        if kind == "plain" and _STRUCTURE_HEAD.match(line) and not _CITE.search(line):
+            level0 = level1 = article_doc = None
+            pending = []
+            continue
         if kind == "head":
             level0 = level1 = None
             pending = []

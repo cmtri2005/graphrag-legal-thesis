@@ -1,4 +1,5 @@
 from vilexgraph.build.extraction.provision_ops import (
+    _STRUCTURE_HEAD,
     extract_mentions,
     normalize_number,
     parse_locators,
@@ -126,6 +127,27 @@ def test_citation_only_at_the_end_of_a_letter_list():
                    (Op.REPEAL, "6/2010/tt/nhnn", [(("Article", "21"),)], "forward"),
                    (Op.REPEAL, "6/2010/tt/nhnn",
                     [(("Article", "43"), ("Clause", "1")), (("Article", "43"), ("Clause", "2"))], "explicit")]
+
+
+def test_the_acting_documents_own_chapter_heading_is_not_a_target():
+    # Pilot T6 row 6: 151/2018 repealed points b, đ, g only; its next "Chương II" is its own heading.
+    got = summary([
+        "Điều 3. Bãi bỏ một số điều của Nghị định số 17/2012/NĐ-CP như sau:",
+        "2. Bãi bỏ các điểm b, đ, g khoản 1 Điều 11.",
+        "Chương II",
+        "LĨNH VỰC XỔ SỐ",
+        "Phần C: TỔ CHỨC THỰC HIỆN",
+    ])
+    assert [p for _, _, p, _ in got if p] == [[(("Article", "11"), ("Clause", "1"), ("Point", p)) for p in "bđg"]]
+    # A listed chapter is still a target.
+    got = summary([
+        "1. Bãi bỏ các quy định sau của Thông tư số 07/2014/TT-BTP:",
+        "c) Chương III (bao gồm tên chương; Điều 11; Điều 12);",
+    ])
+    assert [(("Chapter", "III"),)] in [p for _, _, p, _ in got]
+    # "Mục II.3.a - …" is a path into the old text, not a heading.
+    assert _STRUCTURE_HEAD.match("Phần C: TỔ CHỨC THỰC HIỆN") and _STRUCTURE_HEAD.match("Mục VI.")
+    assert not _STRUCTURE_HEAD.match("Mục II.3.a - Chi phí khấu hao") and not _STRUCTURE_HEAD.match("Chương 2.002")
 
 
 def test_a_documents_amendment_history_is_not_the_current_act():
