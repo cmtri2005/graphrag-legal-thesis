@@ -156,10 +156,15 @@ def problems(label: dict, rows: dict[str, dict], blind: set[str]) -> list[str]:
 
 
 def blind_rows(data: Path) -> set[str]:
-    """Cross-check rows a model must not see labelled before both people have labelled them."""
-    a = {r["id"]: r for r in read(data / "review/crosscheck_A.tsv")}
-    b = {r["id"]: r for r in read(data / "review/crosscheck_B.tsv")}
-    return {i for i in a if not (a[i].get("verdict") and b.get(i, {}).get("verdict"))}
+    """Cross-check and T6 pilot rows a model must not see labelled before both people have labelled them."""
+    out = set()
+    for name in ("crosscheck", "pilot_T6"):
+        if not (data / f"review/{name}_A.tsv").exists():
+            continue
+        a = {r["id"]: r for r in read(data / f"review/{name}_A.tsv")}
+        b = {r["id"]: r for r in read(data / f"review/{name}_B.tsv")}
+        out |= {i for i in a if not (a[i].get("verdict") and b.get(i, {}).get("verdict"))}
+    return out
 
 
 def add(data: Path, batch: Path) -> None:

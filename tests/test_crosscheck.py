@@ -124,6 +124,9 @@ def test_build_keeps_a_label_only_with_its_question_and_answer_and_saves_the_old
         assert (tmp_path / f"review/{name}.20261011.tsv").exists()
         got = {r["id"]: r["verdict"] for r in csv.DictReader((tmp_path / f"review/{name}.tsv").open(), delimiter="\t")}
         assert got == {rows[0]["id"]: "dat", rows[1]["id"]: "", rows[2]["id"]: ""}   # q's question changed
+        version = {r["id"]: r["guideline_version"] for r in csv.DictReader((tmp_path / f"review/{name}.tsv").open(),
+                                                                              delimiter="\t")}
+        assert version[rows[0]["id"]] == "1.2"                                       # labelled before versions
     with pytest.raises(SystemExit):
         build(tmp_path, today="20261011")                                             # never overwrite a saved copy
 
@@ -156,3 +159,58 @@ def test_export_refuses_only_when_the_workbook_holds_labels_not_yet_imported(tmp
     wb.save(path)
     with pytest.raises(SystemExit):
         export(tmp_path)
+
+
+def test_import_stamps_todays_guideline_only_on_labels_made_now(tmp_path):
+    import csv
+
+    from openpyxl import load_workbook
+
+    from crosscheck import COLUMNS, GUIDELINE, read
+    from crosscheck_xlsx import SHEET, export, ingest
+
+    (tmp_path / "review").mkdir()
+    for who, extra in (("A", ["adjudicated"]), ("B", [])):
+        with (tmp_path / f"review/crosscheck_{who}.tsv").open("w", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, COLUMNS + extra, delimiter="\t", lineterminator="\n", restval="")
+            w.writeheader()
+            w.writerow({"id": "r1", "lineage_id": "p", "question": "Hỏi?", "verdict": "dat"})   # a 1.2 label
+            w.writerow({"id": "r2", "lineage_id": "q", "question": "Hỏi?"})
+    export(tmp_path)
+    path = tmp_path / "review/crosscheck_A.xlsx"
+    wb = load_workbook(path)
+    ws = wb[SHEET]
+    col = [c.value for c in ws[1]].index("verdict") + 1
+    ws.cell({ws.cell(r, 1).value: r for r in range(2, ws.max_row + 1)}["r2"], col, "dat")
+    wb.save(path)
+    ingest(tmp_path, "A")
+    got = {r["id"]: r["guideline_version"] for r in read(tmp_path / "review/crosscheck_A.tsv")}
+    assert got == {"r1": "1.2", "r2": GUIDELINE}
+
+
+def test_pilot_takes_whole_unlabelled_t6_lineages_outside_d4_and_never_overwrites(tmp_path):
+    import csv
+    import json
+
+    import pytest
+    from crosscheck import COLUMNS, PILOT_ROWS, pilot, read
+
+    (tmp_path / "derived/vilextime").mkdir(parents=True)
+    (tmp_path / "review").mkdir()
+    rows = [_release_row(f"{mode[0]}{i}", "T6", day, repeal_mode=mode)
+            for mode, n in (("ancestor", 30), ("direct", 10)) for i in range(n) for day in ("2021-01-01", "2021-06-01")]
+    (tmp_path / "derived/vilextime/release.jsonl").write_text(
+        "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
+    with (tmp_path / "review/crosscheck_A.tsv").open("w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, COLUMNS, delimiter="\t", lineterminator="\n", restval="")
+        w.writeheader()
+        w.writerow({"id": rows[0]["id"]})                                  # a0 is in D4
+    (tmp_path / "review/labels.tsv").write_text(f"id\tlabeler\n{rows[3]['id']}\tclaude\n", encoding="utf-8")   # a1
+    pilot(tmp_path)
+    got = read(tmp_path / "review/pilot_T6_A.tsv")
+    lineages = {r["lineage_id"] for r in got}
+    assert len(got) == PILOT_ROWS and not {"a0", "a1"} & lineages
+    assert sum(lid.startswith("a") for lid in lineages) == 7                # 28 of 38 free pairs -> 14.7 -> 14 rows
+    assert got == read(tmp_path / "review/pilot_T6_B.tsv")
+    with pytest.raises(SystemExit):
+        pilot(tmp_path)

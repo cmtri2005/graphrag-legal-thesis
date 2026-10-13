@@ -1848,6 +1848,19 @@ Bám phân công trong đề cương UIT; nhóm đổi tùy ý.
 - W1-17 có bản đầu: `references.bib` 27 mục lấy siêu dữ liệu từ bản ghi gốc; [4], [6], [7] của đề cương
   vẫn chưa xác minh được, nên chưa có trong file.
 
+**Tiến độ 12/10 (chưa commit):**
+
+- W1-01 xong: `docs/vilextime-annotation.md` lên 2.0, `GUIDELINE = "2.0"`, xlsx D4 xuất lại. Nhãn D4 có cột
+  `guideline_version` (166 + 165 nhãn cũ là 1.2), `kappa` báo riêng theo phiên bản. Dòng T6 `unclear`
+  gán `dat` kèm `note` (CMT chốt 12/10). `check_release.py` báo lệch phiên bản trên cả 2.730 dòng cho tới
+  khi dựng lại bản phát hành ở W2-09.
+- W1-02 gần xong: luật sư trả lời ngày 12/10 phần pháp lý v2.0 (gồm bảy yếu tố chuyển chỗ, khoảng trống,
+  điều khoản chuyển tiếp), giấy phép, cả 8 văn bản T5 (7 hồi tố, loại 2714/QĐ-BTC) và 19 lineage T5
+  (`data/review/t5_luat_su.xlsx`): 14 đạt; 5 lỗi câu hỏi, loại 2, viết lại 3 (chờ luật sư xem lại). Nhãn D4 trên
+  6 dòng của 3 câu viết lại đo câu cũ: tính đồng thuận (W2-02) trước khi dựng lại, vì `crosscheck.py build` bỏ
+  nhãn khi câu hỏi đổi.
+- W1-11 đã xuất: `data/review/pilot_T6_{A,B}.xlsx` (20 dòng, 16 `ancestor` + 4 `direct`), chờ hai người gán.
+
 **Tuần 2 (19–25/10): kiểm định xong, đóng băng**
 
 | Mã | Việc | Người | Hạn | Cần trước | Xong khi |

@@ -247,6 +247,20 @@ def test_t5_worksheet_quotes_an_undated_from_signing_clause():
     assert "01 tháng 7 năm 2026" in words
 
 
+def test_t5_worksheet_rerun_keeps_the_lawyers_answers(tmp_path):
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts" / "review"))
+    from t5_worksheet import answers
+
+    sheet = tmp_path / "t5_documents.tsv"
+    sheet.write_text("văn bản\tlink\tLUẬT SƯ: có/không\tLUẬT SƯ: ghi chú\n"
+                     "119/2026/NĐ-CP\thttp://x\tcó\tĐiều 55\n"
+                     "2714/QĐ-BTC\thttp://y\t\t\n", encoding="utf-8")
+    assert answers(sheet) == {"119/2026/NĐ-CP": ["có", "Điều 55"]}
+    assert answers(tmp_path / "missing.tsv") == {}
+
+
 def test_t6_ranks_its_ancestor_part_apart_and_old_ranking_lines_read_as_direct():
     from sample_vilextime import T6_ANCESTOR_ROWS, part_of, parts
 

@@ -59,6 +59,14 @@ def cell(value: object) -> str:
     return " ".join(str(value if value is not None else "").split())
 
 
+def answers(path: Path) -> dict[str, list[str]]:
+    """The lawyer's two columns already filled in, by first column, so a re-run keeps them."""
+    if not path.exists():
+        return {}
+    rows = [line.rstrip("\n").split("\t") for line in path.open(encoding="utf-8")][1:]
+    return {r[0]: (r[-2:] + ["", ""])[:2] for r in rows if any(r[-2:])}
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--data", type=Path, default=Path("data"))
@@ -80,6 +88,7 @@ def main() -> None:
         pairs[retro["actor_document_id"]] += lid in released
 
     out = d / "review"
+    kept_docs, kept_items = answers(out / "t5_documents.tsv"), answers(out / "t5_items.tsv")
     with (out / "t5_documents.tsv").open("w", encoding="utf-8") as f:
         f.write("\t".join(["văn bản tác động", "tên", "ngày ký", "ngày hiệu lực", "số ngày hồi tố",
                            "phân loại (máy đoán)", "câu hiệu lực trong văn bản", "số điều khoản ứng viên",
@@ -96,7 +105,8 @@ def main() -> None:
                 retro["actor_law_id"], raw.get("title"), retro["issued_on"], retro["effective_from"],
                 retro["window_days"], kind, words,
                 candidates[doc_id], pairs[doc_id],
-                f"https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID={doc_id.split(':', 1)[1]}", "", "",
+                f"https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID={doc_id.split(':', 1)[1]}",
+                *kept_docs.get(cell(retro["actor_law_id"]), ["", ""]),
             ]) + "\n")
 
     with (out / "t5_items.tsv").open("w", encoding="utf-8") as f:
@@ -112,7 +122,7 @@ def main() -> None:
             f.write("\t".join(cell(v) for v in [
                 lid, "có" if lid in released else "không", before["retroactive"]["actor_law_id"],
                 KIND[before["retroactive"]["kind"]], t["law_id"], t["citation"], before["question"],
-                before["as_of"], before["answer"], after["as_of"], after["answer"], "", "",
+                before["as_of"], before["answer"], after["as_of"], after["answer"], *kept_items.get(lid, ["", ""]),
             ]) + "\n")
 
     print(f"{len(actors)} văn bản -> {out / 't5_documents.tsv'}")

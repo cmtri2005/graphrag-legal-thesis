@@ -27,6 +27,7 @@ khi đó mệt mỏi và trôi dạt xảy ra ở cùng vị trí, làm κ bị 
 Usage:
     python scripts/review/crosscheck_xlsx.py export
     python scripts/review/crosscheck_xlsx.py import --who A
+    python scripts/review/crosscheck_xlsx.py export --set pilot_T6     # pilot T6 (crosscheck.py pilot)
 """
 from __future__ import annotations
 
@@ -61,26 +62,30 @@ WIDTHS = {"id": 34, "group": 7, "lineage_id": 30, "question": 62, "as_of": 11, "
 REASON_HELP = [
     ("question_ambiguous", "Câu hỏi khớp nhiều điều khoản hoặc nhiều mục trong danh sách; đáp án chuẩn chỉ là một trong số đó."),
     ("question_leaks", "Câu hỏi đã nói ra đáp án, nêu số hiệu/Điều/Khoản, ký hiệu mục (\"c)\"), hoặc để lộ phiên bản nào."),
-    ("gold_wrong", "Cột đáp án không đúng là điều khoản có hiệu lực tại as_of: sai phiên bản, vế \"trước sửa đổi\" thực ra đã là bản sửa, hoặc text bị cắt mất phần được hỏi."),
+    ("gold_wrong", "Cột đáp án không đúng là điều khoản có hiệu lực tại as_of: sai phiên bản, vế \"trước sửa đổi\" thực ra đã là bản sửa, text bị cắt mất phần được hỏi, hoặc (T6) đáp án rỗng trong khi nội dung đã chuyển chỗ."),
     ("group_mismatch", "Câu hỏi không làm được việc của nhóm. T2 không chạm chỗ thay đổi (hai mốc trả lời như nhau); T3 chỉ chạm một lần sửa; T6 hỏi kiểu có/không; T5 hỏi vào phần không đổi."),
     ("unanswerable_as_asked", "Đúng chủ đề nhưng không thể trả lời bằng đáp án: hỏi \"khi nào\" mà đáp án không nói thời hạn, hỏi \"ai\" mà đáp án không nêu chủ thể."),
-    ("transitional_rule", "Điều khoản chuyển tiếp của văn bản sửa đổi giữ quy định cũ cho đúng quan hệ trong câu hỏi, nên cột đáp án không phải quy định được áp dụng. Ghi Điều chuyển tiếp vào note."),
+    ("transitional_rule", "Điều khoản chuyển tiếp giữ quy định cũ cho đúng quan hệ câu hỏi tự nêu (ví dụ hồ sơ nộp trước ngày hiệu lực), hoặc cho chính sự việc phát sinh tại as_of. Câu hỏi không nêu gì thì hiểu sự việc phát sinh tại as_of: điều khoản chỉ giữ bản cũ cho việc đang thực hiện KHÔNG phải lỗi. Ghi Điều chuyển tiếp vào note."),
     ("other", "Lỗi khác. Bắt buộc mô tả ở cột note."),
 ]
 
 GROUP_HELP = [
-    ("T2", "Cặp tương phản. Hai dòng cùng lineage, hai mốc. Kiểm xem đáp án hai mốc có THẬT SỰ khác nhau ở chỗ câu hỏi chạm tới. Giống nhau thì group_mismatch."),
+    ("T2", "Cặp tương phản (gồm cả cặp gần giống). Hai dòng cùng lineage, hai mốc. Luật sư trả lời giống nhau ở cả hai ngày thì group_mismatch, kể cả khi chỉ đổi cách viết cùng một điều. Câu hỏi chứa sẵn vế trước của đáp án: dòng ngày trước question_leaks. Đổi chủ thể giữa hai mốc: dòng ngày sau gold_wrong, ghi note."),
     ("T3", "Chuỗi từ ba phiên bản. Câu hỏi phải chạm vào phần đổi qua NHIỀU lần sửa, không chỉ một lần."),
     ("T5", "Hiệu lực hồi tố: văn bản có hiệu lực TRƯỚC ngày ký. Cột note_for_annotator ghi ngày ký và ngày hiệu lực. Kiểm xem câu hỏi có hỏi vào phần thực sự thay đổi."),
-    ("T6", "Hết hiệu lực một phần ở cấp Khoản/Điểm. Đáp án đúng thường là \"không còn hiệu lực\" kèm lý do, nên cột đáp án ghi \"(không có đáp án: ...)\". Câu hỏi không được là dạng có/không."),
+    ("T6", "Hết hiệu lực một phần ở cấp Khoản/Điểm. Cột đáp án ghi \"(không có đáp án: ...)\". Câu hỏi không được là dạng có/không. Nếu nội dung đã CHUYỂN CHỖ (đạt đủ 7 yếu tố, hướng dẫn §3) thì đáp án rỗng là sai: khong_dat, gold_wrong, ghi chỗ mới vào note. Không chắc thì vẫn dat (nếu không có lỗi khác) và ghi \"unclear\" vào note."),
 ]
 
 
-def guide_lines(who: str, n: int, non_blind: list[str]) -> list[tuple[str, int, bool]]:
+def guide_lines(who: str, n: int, non_blind: list[str], name: str = "crosscheck") -> list[tuple[str, int, bool]]:
     """(text, cỡ chữ, in đậm) cho trang Đọc trước."""
     L: list[tuple[str, int, bool]] = []
     add = lambda t="", s=10, b=False: L.append((t, s, b))
-    add(f"Kiểm chéo ViLexTime — người gán nhãn {who}", 15, True)
+    pilot = name == "pilot_T6"
+    add(f"{'Pilot T6' if pilot else 'Kiểm chéo'} ViLexTime — người gán nhãn {who}", 15, True)
+    if pilot:
+        add("Gán thử T6 theo hướng dẫn 2.0 trước khi gán 92 dòng T6 của bộ kiểm chéo. Mọi dòng là T6:", 10, True)
+        add("đọc kỹ quy trình bảy yếu tố chuyển chỗ ở trang này và ở docs/vilextime-annotation.md §3.", 10, True)
     add(f"Hướng dẫn phiên bản {GUIDELINE} · {n} dòng · bản đầy đủ: docs/vilextime-annotation.md", 9)
     add()
     add("Bạn đang kiểm cái gì", 12, True)
@@ -117,14 +122,17 @@ def guide_lines(who: str, n: int, non_blind: list[str]) -> list[tuple[str, int, 
     add()
     add("Quy tắc của đợt kiểm chéo", 12, True)
     add("· Làm độc lập. KHÔNG trao đổi với người gán nhãn còn lại trong lúc làm.", 10, True)
-    add("· Điền đủ cả 300 dòng. Bỏ trống dòng nào thì dòng đó không vào κ.", 10)
+    add(f"· Điền đủ cả {n} dòng. Bỏ trống dòng nào thì dòng đó không vào κ.", 10)
     add("· Chỉ ba cột verdict, reasons, note mở để sửa. Các cột khác đã khóa — nếu Excel", 10)
     add("  chặn bạn gõ vào đâu đó, đấy là cố ý, không phải lỗi file.", 10)
     add("· Đừng sắp xếp lại hay xóa dòng. Thứ tự hai file khác nhau là cố ý.", 10)
     add()
     add("Sau khi xong", 12, True)
     add("Gửi lại đúng file này. Hai bộ nhãn được nạp về TSV rồi tính Cohen κ và Gwet AC1.", 10)
-    add("Ngưỡng của khóa luận là κ ≥ 0,6. Thấp hơn thì viết lại hướng dẫn và kiểm lại,", 10)
+    if pilot:
+        add("Cổng pilot: hai người trùng ít nhất 17/20 dòng. Thấp hơn thì sửa hướng dẫn và thử thêm 10 dòng,", 10)
+    else:
+        add("Ngưỡng đăng ký trước là AC1 ≥ 0,80 và p_neg ≥ 0,60. Thấp hơn thì viết lại hướng dẫn và kiểm lại,", 10)
     add("nên nhãn trung thực quan trọng hơn nhãn đẹp.", 10)
     if non_blind:
         add()
@@ -135,10 +143,10 @@ def guide_lines(who: str, n: int, non_blind: list[str]) -> list[tuple[str, int, 
     return L
 
 
-def sheet_guide(wb: Workbook, who: str, n: int, non_blind: list[str]) -> None:
+def sheet_guide(wb: Workbook, who: str, n: int, non_blind: list[str], name: str = "crosscheck") -> None:
     ws = wb.active
     ws.title = "Đọc trước"
-    for i, (text, size, bold) in enumerate(guide_lines(who, n, non_blind), 1):
+    for i, (text, size, bold) in enumerate(guide_lines(who, n, non_blind, name), 1):
         c = ws.cell(i, 1, text)
         c.font = Font(name=FONT, size=size, bold=bold)
         c.alignment = Alignment(vertical="top")
@@ -212,15 +220,15 @@ def ordered(rows: list[dict], who: str) -> list[dict]:
     return [r for lid in lineages for r in groups[lid]]
 
 
-def export(data: Path) -> None:
+def export(data: Path, name: str = "crosscheck") -> None:
     labels = data / "review/labels.tsv"
     known = {r.get("id") for r in read(labels)} if labels.exists() else set()
     for who in ("A", "B"):
-        tsv = data / f"review/crosscheck_{who}.tsv"
+        tsv = data / f"review/{name}_{who}.tsv"
         rows = read(tsv)
         # TSV labels are fine (crosscheck.py build carries an earlier draw's labels over);
         # what must not be overwritten is labelling done in the workbook and not imported yet.
-        xlsx = data / f"review/crosscheck_{who}.xlsx"
+        xlsx = data / f"review/{name}_{who}.xlsx"
         if xlsx.exists():
             have = {r["id"]: (r.get("verdict") or "").strip() for r in rows}
             ws = load_workbook(xlsx, data_only=True)[SHEET]
@@ -239,17 +247,17 @@ def export(data: Path) -> None:
             columns = columns[:at] + ["suggestion"] + columns[at:]
         non_blind = [r["id"] for r in rows if r["id"] in known]
         wb = Workbook()
-        sheet_guide(wb, who, len(rows), non_blind)
+        sheet_guide(wb, who, len(rows), non_blind, name)
         sheet_reasons(wb)
         sheet_labels(wb, columns, ordered(rows, who))
-        out = data / f"review/crosscheck_{who}.xlsx"
+        out = data / f"review/{name}_{who}.xlsx"
         wb.save(out)
         print(f"{out}  {len(rows)} dòng · {len(non_blind)} dòng không còn mù · "
               f"thứ tự {'như TSV' if who == 'A' else 'xáo theo lineage'}")
 
 
-def ingest(data: Path, who: str) -> None:
-    xlsx, tsv = data / f"review/crosscheck_{who}.xlsx", data / f"review/crosscheck_{who}.tsv"
+def ingest(data: Path, who: str, name: str = "crosscheck") -> None:
+    xlsx, tsv = data / f"review/{name}_{who}.xlsx", data / f"review/{name}_{who}.tsv"
     ws = load_workbook(xlsx, data_only=True)[SHEET]
     head = [c.value for c in ws[1]]
     got = {}
@@ -259,7 +267,7 @@ def ingest(data: Path, who: str) -> None:
             got[cells["id"]] = cells
     rows = read(tsv)
     errors: list[str] = []
-    out_columns = list(head)
+    out_columns = list(head) + [c for c in ("guideline_version",) if c not in head]
     if len(got) != len(rows):
         errors.append(f"xlsx có {len(got)} dòng, tsv có {len(rows)}")
     for r in rows:
@@ -293,8 +301,12 @@ def ingest(data: Path, who: str) -> None:
             print(f"  {e}", file=sys.stderr)
         raise SystemExit(1)
     for r in rows:
-        for col in LABEL_COLS:
-            r[col] = str(got[r["id"]].get(col) or "").strip()
+        new = {col: str(got[r["id"]].get(col) or "").strip() for col in LABEL_COLS}
+        if any(new[c] != (r.get(c) or "") for c in LABEL_COLS):
+            r["guideline_version"] = GUIDELINE if new["verdict"] else ""   # labelled now, under today's guide
+        else:                                    # unchanged: keeps its version; no version means 1.2 (crosscheck.py)
+            r["guideline_version"] = (r.get("guideline_version") or "1.2") if new["verdict"] else ""
+        r.update(new)
     with tsv.open("w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=out_columns, delimiter="\t", lineterminator="\n")
         w.writeheader()
@@ -302,7 +314,7 @@ def ingest(data: Path, who: str) -> None:
     filled = sum(1 for r in rows if r["verdict"])
     print(f"{tsv}: nạp {filled}/{len(rows)} nhãn "
           f"({dict(collections.Counter(r['verdict'] for r in rows if r['verdict']))})")
-    print("tiếp: python scripts/review/crosscheck.py kappa")
+    print(f"tiếp: python scripts/review/crosscheck.py kappa --set {name}")
 
 
 def main() -> None:
@@ -311,13 +323,14 @@ def main() -> None:
     ap.add_argument("command", choices=("export", "import"))
     ap.add_argument("--data", type=Path, default=Path("data"))
     ap.add_argument("--who", choices=("A", "B"), help="bắt buộc với import")
+    ap.add_argument("--set", default="crosscheck", choices=("crosscheck", "pilot_T6"))
     args = ap.parse_args()
     if args.command == "export":
-        export(args.data)
+        export(args.data, args.set)
     else:
         if not args.who:
             ap.error("import cần --who A hoặc --who B")
-        ingest(args.data, args.who)
+        ingest(args.data, args.who, args.set)
 
 
 if __name__ == "__main__":

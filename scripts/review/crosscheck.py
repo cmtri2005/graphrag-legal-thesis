@@ -32,6 +32,13 @@ version control and makes `kappa` read the empty originals.
             Excel preview, or a model label from before the row joined the set)
             — they were not blind to whoever labelled them, and the record of D5
             must say so. Writes data/review/crosscheck_result.json.
+            `--set pilot_T6` reads the pilot files instead and writes pilot_T6_result.json.
+    pilot   writes data/review/pilot_T6_A.tsv and pilot_T6_B.tsv: PILOT_ROWS T6
+            boundary rows outside D4 that carry no label anywhere, whole
+            lineages, split ancestor/direct in the release's proportion (B8,
+            MASTER_RESEARCH_GUIDE §5.3.4). Calibrates guideline 2.0 on T6 before
+            the 92 T6 rows of D4 are labelled; the gate is PILOT_GATE of 20 agreeing.
+            Stops if either file exists.
 
 Rows come from release.jsonl (enrich_vilextime.py), boundary rows only: a
 mid-interval twin shares its row's question and gold version, so it is judged
@@ -39,7 +46,8 @@ with it.
 
 Usage:
     python scripts/review/crosscheck.py build
-    python scripts/review/crosscheck.py kappa
+    python scripts/review/crosscheck.py kappa [--set pilot_T6]
+    python scripts/review/crosscheck.py pilot
 """
 from __future__ import annotations
 
@@ -71,12 +79,14 @@ AC1_TARGET = 0.80
 PNEG_TARGET = 0.60
 KAPPA_PROPOSAL = 0.60          # the figure the submitted de cuong names, reported as-is
 BOOTSTRAP_DRAWS = 1000
-GUIDELINE = "1.2"   # docs/vilextime-annotation.md; labels.py and check_release.py read it from here
+PILOT_ROWS, PILOT_GATE = 20, 17   # B8: >= 17/20 agree, else revise the guideline and try 10 more
+GUIDELINE = "2.0"   # docs/vilextime-annotation.md; labels.py and check_release.py read it from here
 VERDICTS = {"dat", "khong_dat"}
 REASONS = {"question_ambiguous", "question_leaks", "gold_wrong", "group_mismatch",
            "unanswerable_as_asked", "transitional_rule", "other"}   # transitional_rule: guideline v1.1
 COLUMNS = ["id", "group", "lineage_id", "question", "as_of", "lead_in", "answer", "changed_span", "citation",
-           "law_id", "valid_from", "valid_to", "source_url", "note_for_annotator", "verdict", "reasons", "note"]
+           "law_id", "valid_from", "valid_to", "source_url", "note_for_annotator", "verdict", "reasons", "note",
+           "suggestion", "guideline_version"]   # guideline_version: the one the row was labelled under (B8)
 
 
 def cohen_kappa(a: list[str], b: list[str]) -> float | None:
@@ -232,7 +242,7 @@ def row_cells(r: dict) -> list[str]:
     answer = r["answer"] if r["answer"] is not None else f"(không có đáp án: {r['no_answer_reason']})"
     return [r["id"], r["group"], r["lineage_id"], r["question"], r["as_of"], r["target"].get("lead_in") or "",
             answer, r.get("changed_span") or "", r["target"]["citation"], r["target"]["law_id"],
-            r["valid_from"] or "", r["valid_to"] or "", r["source_url"], hint, "", "", ""]
+            r["valid_from"] or "", r["valid_to"] or "", r["source_url"], hint, "", "", "", "", ""]
 
 
 def read(path: Path) -> list[dict]:
@@ -240,7 +250,9 @@ def read(path: Path) -> list[dict]:
         return list(csv.DictReader(f, delimiter="\t"))
 
 
-LABEL_CELLS = ("verdict", "reasons", "note", "adjudicated")
+# A label made before guideline_version existed was made under 1.2: D4 started on 1.2 and stopped
+# there until 2.0 (12/10).
+LABEL_CELLS = ("verdict", "reasons", "note", "suggestion", "guideline_version", "adjudicated")
 
 
 def build(data: Path, today: str | None = None) -> None:
@@ -272,6 +284,7 @@ def build(data: Path, today: str | None = None) -> None:
                 # a label judged a question and an answer; it travels only with both unchanged
                 if old and old.get("verdict") and all(old[c] == cells[c] for c in ("question", "answer")):
                     cells.update({c: old.get(c, "") for c in LABEL_CELLS if c in cells})
+                    cells["guideline_version"] = cells["guideline_version"] or "1.2"
                     kept[name] += 1
                 w.writerow([cells[c] for c in columns])
     counts = collections.Counter(stratum([r]) for r in rows)
@@ -280,9 +293,45 @@ def build(data: Path, today: str | None = None) -> None:
     print(f"giữ nhãn cũ: A {kept['crosscheck_A.tsv']} dòng, B {kept['crosscheck_B.tsv']} dòng")
 
 
-def kappa(data: Path) -> None:
-    a = {r["id"]: r for r in read(data / "review/crosscheck_A.tsv")}
-    b = {r["id"]: r for r in read(data / "review/crosscheck_B.tsv")}
+def pilot(data: Path) -> None:
+    out = [data / f"review/pilot_T6_{who}.tsv" for who in "AB"]
+    if any(p.exists() for p in out):
+        raise SystemExit(f"{out[0].parent}/pilot_T6_*.tsv đã có; không ghi đè nhãn pilot")
+    d4 = {r["id"] for r in read(data / "review/crosscheck_A.tsv")}
+    labels = data / "review/labels.tsv"
+    labelled = {r["id"] for r in read(labels)} if labels.exists() else set()
+    t6 = [r for r in map(json.loads, (data / "derived/vilextime/release.jsonl").open(encoding="utf-8"))
+          if r["group"] == "T6" and r["as_of_strategy"] == "ranh_gioi"]
+    by_lineage: dict[str, list[dict]] = collections.defaultdict(list)
+    for r in t6:
+        by_lineage[r["lineage_id"]].append(r)
+    free = {lid: rs for lid, rs in by_lineage.items() if not any(r["id"] in d4 | labelled for r in rs)}
+    size = collections.Counter(stratum(rs) for rs in free.values() for _ in rs)
+    ancestor = 2 * round(PILOT_ROWS * size[("T6", "ancestor")] / (sum(size.values()) or 1) / 2)   # pairs
+    chosen = []
+    for part, need in (("ancestor", ancestor), ("direct", PILOT_ROWS - ancestor)):
+        lineages = sorted(lid for lid, rs in free.items() if stratum(rs) == ("T6", part))
+        random.Random(f"{SEED}:pilot:{part}").shuffle(lineages)
+        got = 0
+        for lid in lineages:
+            if got >= need:
+                break
+            chosen.append(lid)
+            got += len(free[lid])
+    random.Random(f"{SEED}:pilot").shuffle(chosen)
+    rows = [r for lid in chosen for r in sorted(free[lid], key=lambda r: r["as_of"])]
+    for path in out:
+        with path.open("w", encoding="utf-8", newline="") as f:
+            w = csv.writer(f, delimiter="\t", lineterminator="\n")
+            w.writerow(COLUMNS)
+            w.writerows(row_cells(r) for r in rows)
+    print(f"{len(rows)} dòng T6 ({collections.Counter(r.get('repeal_mode') or 'direct' for r in rows)}) "
+          f"trong {sum(map(len, free.values()))} dòng chưa có nhãn -> {out[0]}, {out[1].name}")
+
+
+def kappa(data: Path, name: str = "crosscheck") -> None:
+    a = {r["id"]: r for r in read(data / f"review/{name}_A.tsv")}
+    b = {r["id"]: r for r in read(data / f"review/{name}_B.tsv")}
     bad = [(who, r["id"], r["verdict"]) for who, rows in (("A", a), ("B", b)) for r in rows.values()
            if r["verdict"] and r["verdict"] not in VERDICTS]
     bad += [(who, r["id"], code) for who, rows in (("A", a), ("B", b)) for r in rows.values()
@@ -295,8 +344,12 @@ def kappa(data: Path) -> None:
         # stopping: the labelled copies have lived outside `--data` before, and a
         # silent zero is how that goes unnoticed.
         raise SystemExit(
-            f"0/{len(a)} dòng có nhãn ở cả hai phía trong {data}/review/crosscheck_{{A,B}}.tsv — "
+            f"0/{len(a)} dòng có nhãn ở cả hai phía trong {data}/review/{name}_{{A,B}}.tsv — "
             "chưa gán nhãn, hoặc bản có nhãn nằm ở thư mục khác (truyền --data)")
+    def version(i: str) -> str:
+        va, vb = (x[i].get("guideline_version") or "1.2" for x in (a, b))
+        return va if va == vb else "mixed"
+
     def scores(ids: list[str]) -> dict:
         return pair_scores([a[i]["verdict"] for i in ids], [b[i]["verdict"] for i in ids])
 
@@ -314,13 +367,15 @@ def kappa(data: Path) -> None:
         **scores(both),
         "per_group": {g: scores([i for i in both if a[i]["group"] == g]) for g in sorted({a[i]["group"] for i in both})},
         "per_lineage": pair_scores(lva, lvb),
+        # A row labelled under two versions by A and B is "mixed": neither version's agreement.
+        "per_guideline": {v: scores([i for i in both if version(i) == v]) for v in sorted({version(i) for i in both})},
         "preregistered": {"primary": "ac1", "ac1_target": AC1_TARGET, "p_neg_target": PNEG_TARGET,
                           "kappa_reported_target": KAPPA_PROPOSAL},
         "disagreements": [i for i in both if a[i]["verdict"] != b[i]["verdict"]],
         "labelled_before_d4": {i: sorted({x["labeler"] for x in outside if x["id"] == i})
                                for i in sorted({x["id"] for x in outside if x["id"] in a})},
     }
-    (data / "review/crosscheck_result.json").write_text(json.dumps(result, ensure_ascii=False, indent=1) + "\n",
+    (data / f"review/{name}_result.json").write_text(json.dumps(result, ensure_ascii=False, indent=1) + "\n",
                                                         encoding="utf-8")
     fmt = lambda x: f"{x:.3f}" if x is not None else "—"
     ci = lambda x: f"[{x[0]:.3f}; {x[1]:.3f}]" if x else "—"
@@ -331,6 +386,8 @@ def kappa(data: Path) -> None:
     for g, v in result["per_group"].items():
         print(line(f"  {g}:         "[:14], v))
     print(line("  lineage:    ", result["per_lineage"]))
+    for v, s in result["per_guideline"].items():
+        print(line(f"  v{v}:".ljust(14), s))
     ok = result["ac1"] is not None and result["ac1"] >= AC1_TARGET and (
         result["p_neg"] is not None and result["p_neg"] >= PNEG_TARGET)
     need = result["agreement_needed_for_kappa_target"]
@@ -339,16 +396,24 @@ def kappa(data: Path) -> None:
     print(f"  κ chỉ báo kèm: ở biên nhãn này κ >= {KAPPA_PROPOSAL:.2f} đòi p_o >= {fmt(need)}"
           f" (tối đa {round((1 - need) * result['n']) if need else '—'} dòng lệch / {result['n']})")
     print(f"  {len(result['disagreements'])} dòng lệch cần hoà giải")
+    if name == "pilot_T6":
+        agree = result["n"] - len(result["disagreements"])
+        print(f"  cổng pilot: trùng {agree}/{result['n']}, cần >= {PILOT_GATE}/{PILOT_ROWS} -> "
+              f"{'ĐẠT' if result['n'] == PILOT_ROWS and agree >= PILOT_GATE else 'CHƯA ĐẠT'}")
     seen = collections.Counter(lab for labs in result["labelled_before_d4"].values() for lab in labs)
     print(f"  {len(result['labelled_before_d4'])} dòng đã có nhãn ngoài D4 trước khi gán (ghi vào biên bản D5): {dict(seen)}")
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("command", choices=("build", "kappa"))
+    ap.add_argument("command", choices=("build", "kappa", "pilot"))
     ap.add_argument("--data", type=Path, default=Path("data"))
+    ap.add_argument("--set", default="crosscheck", choices=("crosscheck", "pilot_T6"), help="kappa only")
     args = ap.parse_args()
-    (build if args.command == "build" else kappa)(args.data)
+    if args.command == "kappa":
+        kappa(args.data, args.set)
+    else:
+        (build if args.command == "build" else pilot)(args.data)
 
 
 if __name__ == "__main__":

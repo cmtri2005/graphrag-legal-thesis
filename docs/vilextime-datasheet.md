@@ -35,7 +35,8 @@ mọi mốc.
   - T3: chuỗi ≥ 3 phiên bản;
   - T4: hai phiên bản gần giống. Từ 07/10 là lát `near_identical` của T2, có suất riêng
     150 dòng từ 11/10;
-  - T5: hiệu lực trở về trước theo Điều 152;
+  - T5: hiệu lực trở về trước theo Điều 152 Luật 80/2015/QH13, hoặc Điều 55 Luật 64/2025/QH15
+    với văn bản ký từ 01/04/2025 (nguyên tắc không đổi, luật sư 12/10);
   - T6: hết hiệu lực một phần ở cấp Khoản/Điểm.
 - **Chế độ `as_of`:**
   - `ranh_gioi`: sát lần chuyển phiên bản;
@@ -167,8 +168,9 @@ Bản UIT đã nộp không sửa được, nên khóa luận phải công bố 
 ## 7. Phân phối, giấy phép, bảo trì
 
 - **Giấy phép:** CC BY 4.0 cho câu hỏi, đáp án ngắn, nhãn và các trường dẫn xuất
-  (`data/vilextime/LICENSE`). Lời văn pháp luật không thuộc đối tượng bảo hộ theo Điều 15
-  Luật SHTT; nhận định này cần luật sư xác nhận.
+  (`data/vilextime/LICENSE`). Lời văn pháp luật lấy từ vbpl.vn, kể cả văn bản hợp nhất, không
+  thuộc đối tượng bảo hộ theo Điều 15 Luật SHTT; phát hành phần nhóm viết theo CC BY 4.0 và thu
+  thập tự động từ vbpl.vn không vướng quy định nào (luật sư xác nhận 12/10/2026).
 - **Tái lập:** `release.jsonl` là file dẫn xuất (gitignore). Chuỗi dựng ghi ở plan GĐ4 (J3).
   Mã băm của mọi thứ dùng để dựng nằm ở `data/vilextime/manifest.json`.
 - **Phiên bản:** theo ADR 0003 §8. Đổi gold hay chuyển dòng giữa các split là MAJOR; thêm
@@ -178,7 +180,10 @@ Bản UIT đã nộp không sửa được, nên khóa luận phải công bố 
   - gán bộ kiểm chéo (A 134 dòng, B 135 dòng còn trống), AC1/κ, hoà giải D5;
   - nhãn cho 276 dòng T6 chưa có nhãn nào (chờ hướng dẫn v2.0);
   - audit 375 nhãn bắt buộc trên dòng đang phát hành;
-  - luật sư chốt T5 (8 văn bản) và nhận định giấy phép;
+  - T5: luật sư chốt cả 8 văn bản và 19 lineage trong bản phát hành ngày 12/10. Cả 19 đúng về
+    mốc hồi tố; 5 lineage có lỗi câu hỏi: loại 2 (`dropped.jsonl`), viết lại 3 câu hỏi
+    (`questions.jsonl`, `edited_at` 12/10) chờ luật sư xem lại. T5 còn 17 lineage, 34 dòng ranh
+    giới sau khi dựng lại; T6 nhận 4 dòng thiếu theo quy tắc chọn;
   - phân xử các cờ hiệu lực của lineage κ sau D4, hàng đợi chuyển chỗ (20 dòng);
   - kiểm 30 dòng ngày ký của `truoc_hieu_luc`;
   - tập con gold độc lập;
