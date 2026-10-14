@@ -15,6 +15,8 @@ units are read in rowid order, and each shard records the last rowid it covers.
 Usage:
     python scripts/eval/embed_corpus.py --layer asis --max-seq-length 512
     python scripts/eval/embed_corpus.py --layer asis --limit 2000 --out /tmp/embed-test   # timing
+    python scripts/eval/embed_corpus.py --layer asis --max-seq-length 256 \
+        --model dangvantuan/vietnamese-embedding      # -> data/derived/embed/asis-vietnamese-embedding
 """
 from __future__ import annotations
 
@@ -31,8 +33,22 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from vilexgraph.framework.corpus import Corpus, Unit  # noqa: E402
 
 MODEL = "AITeamVN/Vietnamese_Embedding"     # ADR 0004 §4
+# PhoBERT-base (docs/plans/active/embed-phobert-cpu.md): reads word-segmented text, 256 positions
+PHOBERT = "dangvantuan/vietnamese-embedding"
 INDEX = Path("data/derived/corpus/index.sqlite")
 READ = 5_000
+
+
+def prepare(model: str, text: str) -> str:
+    """What the model is fed. The sha (and dedup) stays on the unsegmented text."""
+    if model == PHOBERT:
+        from pyvi.ViTokenizer import tokenize
+        return tokenize(text)
+    return text
+
+
+def default_out(layer: str, model: str) -> Path:
+    return Path("data/derived/embed") / (layer if model == MODEL else f"{layer}-{model.split('/')[-1]}")
 
 
 def main() -> None:
@@ -44,8 +60,11 @@ def main() -> None:
     ap.add_argument("--shard", type=int, default=20_000, help="distinct texts per shard")
     ap.add_argument("--batch", type=int, default=16)
     ap.add_argument("--limit", type=int, help="stop after this many units (a timing run)")
+    ap.add_argument("--model", choices=(MODEL, PHOBERT), default=MODEL)
     args = ap.parse_args()
-    out = args.out or Path("data/derived/embed") / args.layer
+    if args.model == PHOBERT and args.max_seq_length > 256:
+        raise SystemExit(f"{PHOBERT} has 258 positions: --max-seq-length must be <= 256")
+    out = args.out or default_out(args.layer, args.model)
     out.mkdir(parents=True, exist_ok=True)
 
     db = sqlite3.connect(out / "texts.sqlite")
@@ -53,8 +72,8 @@ def main() -> None:
         CREATE TABLE IF NOT EXISTS unit (unit_id TEXT PRIMARY KEY, sha TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS text (sha TEXT PRIMARY KEY, shard INTEGER NOT NULL, row INTEGER NOT NULL);
         CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);""")
-    want = {"model": MODEL, "layer": args.layer, "max_seq_length": str(args.max_seq_length),
-            "text": "Unit.retrieval_text(True)"}
+    want = {"model": args.model, "layer": args.layer, "max_seq_length": str(args.max_seq_length),
+            "text": "pyvi(Unit.retrieval_text(True))" if args.model == PHOBERT else "Unit.retrieval_text(True)"}
     have = dict(db.execute("SELECT key, value FROM meta WHERE key IN (?,?,?,?)", list(want)))
     if have and have != want:
         raise SystemExit(f"{out} was built with {have}; this run asks for {want}. Use another --out.")
@@ -65,8 +84,9 @@ def main() -> None:
 
     import numpy as np
     from sentence_transformers import SentenceTransformer
-    model = SentenceTransformer(MODEL, device="cpu")
+    model = SentenceTransformer(args.model)     # CUDA when present, else CPU
     model.max_seq_length = args.max_seq_length
+    print(f"device {model.device}", flush=True)
 
     corpus = Corpus(args.index)
     select = Corpus._SELECT.replace("SELECT ", "SELECT u.rowid AS rid, ", 1) + \
@@ -80,7 +100,7 @@ def main() -> None:
         nonlocal shard, pending, owners, embedded
         order = sorted(pending, key=lambda sha: len(pending[sha]))    # less padding per batch
         if order:
-            vectors = model.encode([pending[sha] for sha in order], batch_size=args.batch,
+            vectors = model.encode([prepare(args.model, pending[sha]) for sha in order], batch_size=args.batch,
                                    normalize_embeddings=True, convert_to_numpy=True)
             np.save(out / f"shard-{shard:05d}.npy", vectors.astype(np.float16))
             db.executemany("INSERT INTO text VALUES (?,?,?)", [(sha, shard, i) for i, sha in enumerate(order)])
