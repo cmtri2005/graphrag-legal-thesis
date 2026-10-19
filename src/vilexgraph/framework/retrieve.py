@@ -15,6 +15,10 @@ Lexical retrieval is SQLite FTS5. One contentless table carries `ctx` and
 `body`, so `context=False` is a column filter plus a zero weight rather than a
 second index — which is what lets B2 and B2+ctx be the same build and makes the
 chunk-header gain a reported number.
+
+Dense retrieval reads the vectors `scripts/eval/embed_corpus.py` wrote and
+scores every text exhaustively, then walks candidates best-first keeping only
+what the tier admits: exactly the top k of 𝒰ₜ, without materialising 𝒰ₜ.
 """
 from __future__ import annotations
 
@@ -193,8 +197,93 @@ def lexical(corpus, question: str, as_of: str, *, layer: str, tier: str,
     return [Hit(unit_id, {"lexical": -score}) for unit_id, score in rows]
 
 
+class Dense:
+    """Cosine search over one layer's embeddings (W2-12, B3).
+
+    `encode` maps a question to an L2-normalised vector; by default it loads the
+    model named in the embeddings' own meta, so a query is encoded exactly as
+    the corpus was (including pyvi word segmentation for PhoBERT).
+    """
+
+    POOL = 500      # candidate texts looked up per round trip
+
+    def __init__(self, path: Path | str, encode=None) -> None:
+        import numpy as np
+        path = Path(path)
+        self.db = sqlite3.connect(path / "texts.sqlite")
+        # one-off: reverse lookups the embedding run did not need
+        self.db.execute("CREATE INDEX IF NOT EXISTS unit_sha ON unit(sha)")
+        self.db.execute("CREATE INDEX IF NOT EXISTS text_pos ON text(shard, row)")
+        self.db.commit()
+        self.meta = dict(self.db.execute("SELECT key, value FROM meta"))
+        # read into RAM (2.3 GB for layer A): an mmap is re-read from disk on every
+        # question once the page cache cannot hold it, which made a search take ~16 s
+        self.shards = [np.load(f) for f in sorted(path.glob("shard-*.npy"))]
+        if not self.shards:
+            raise RuntimeError(f"{path} has no shard-*.npy; run scripts/eval/embed_corpus.py")
+        self.starts = np.cumsum([0] + [len(x) for x in self.shards])
+        self.encode = encode or self._model()
+
+    def _model(self):
+        from sentence_transformers import SentenceTransformer
+        model = SentenceTransformer(self.meta["model"])
+        model.max_seq_length = int(self.meta["max_seq_length"])
+        segment = self.meta["text"].startswith("pyvi(")
+
+        def encode(text: str):
+            if segment:
+                from pyvi.ViTokenizer import tokenize
+                text = tokenize(text)
+            return model.encode([text], normalize_embeddings=True, convert_to_numpy=True)[0]
+        return encode
+
+    def search(self, corpus, question: str, as_of: str, *, layer: str, tier: str,
+               k: int) -> list[Hit]:
+        import numpy as np
+        if layer != self.meta["layer"]:
+            raise ValueError(f"embeddings are of layer {self.meta['layer']!r}, not {layer!r}")
+        import torch     # ships with sentence-transformers
+        # fp16 -> fp32 per shard, then an exact fp32 dot: torch converts ~5x faster than
+        # numpy here (2.3 s vs 11 s over 1.48M vectors on the 4-core dev box); a pure fp16
+        # product is faster still but moves scores by ~1e-3, enough to reorder near-ties.
+        q = torch.from_numpy(np.asarray(self.encode(question), dtype=np.float32))
+        scores = torch.cat([torch.from_numpy(shard).float() @ q for shard in self.shards]).numpy()
+        order = np.argsort(-scores, kind="stable")
+        clause, params = predicate(tier, as_of)
+        where = f" AND {clause}" if clause else ""
+        hits: list[Hit] = []
+        for start in range(0, len(order), self.POOL):
+            batch = order[start:start + self.POOL]
+            shard_of = np.searchsorted(self.starts, batch, side="right") - 1
+            sha_at = {}
+            for shard in set(shard_of.tolist()):
+                rows = [int(i - self.starts[shard]) for i, s in zip(batch, shard_of) if s == shard]
+                sha_at.update(((shard, row), sha) for row, sha in self.db.execute(
+                    f"SELECT row, sha FROM text WHERE shard=? AND row IN ({','.join('?' * len(rows))})",
+                    [shard, *rows]))
+            shas = [sha_at[(int(s), int(i - self.starts[s]))] for i, s in zip(batch, shard_of)]
+            owners: dict[str, list[str]] = {}
+            for unit_id, sha in self.db.execute(
+                    f"SELECT unit_id, sha FROM unit WHERE sha IN ({','.join('?' * len(shas))})", shas):
+                owners.setdefault(sha, []).append(unit_id)
+            candidates = [u for sha in shas for u in sorted(owners.get(sha, ()))]
+            if not candidates:
+                continue
+            admitted = {row[0] for row in corpus.db.execute(
+                "SELECT u.unit_id FROM units u LEFT JOIN documents d ON d.document_id = u.document_id"
+                f" WHERE u.unit_id IN ({','.join('?' * len(candidates))}) AND u.layer = ?{where}",
+                [*candidates, layer, *params])}
+            for i, sha in zip(batch, shas):
+                for unit_id in sorted(owners.get(sha, ())):
+                    if unit_id in admitted:
+                        hits.append(Hit(unit_id, {"dense": float(scores[i])}))
+                        if len(hits) == k:
+                            return hits
+        return hits
+
+
 def searcher(corpus, spec: SystemSpec, cache: "RetrievalCache | None" = None, *,
-             fast: bool = False):
+             fast: bool = False, dense: Dense | None = None):
     """The search callable for one system: `(question, as_of) -> [Hit, ...]`."""
     if not spec.retrieves:
         raise ValueError(f"{spec.name} does not retrieve")
@@ -202,11 +291,12 @@ def searcher(corpus, spec: SystemSpec, cache: "RetrievalCache | None" = None, *,
         raise RuntimeError(
             "this index has no BM25 table; build it with "
             "`python scripts/eval/index_corpus.py --lexical`")
-    if spec.dense:
+    if spec.dense and (spec.lexical or spec.rerank):
         raise NotImplementedError(
-            f"{spec.name} wants dense retrieval, which is not built yet (plan P4). "
-            f"Run it on lexical retrieval alone with --no-dense, or build the "
-            f"embeddings first.")
+            f"{spec.name} wants hybrid retrieval: the fusion of formula (5) and the reranker "
+            f"are not built yet. Run it on lexical retrieval alone with --no-dense.")
+    if spec.dense and dense is None:
+        raise RuntimeError(f"{spec.name} needs the embeddings: pass --embed <dir>")
     graph = None
     if spec.expand:
         from .graphx import Graph  # late: graphx imports Hit from this module
@@ -218,8 +308,12 @@ def searcher(corpus, spec: SystemSpec, cache: "RetrievalCache | None" = None, *,
             hit = cache.get(key)
             if hit is not None:
                 return hit
-        found = lexical(corpus, question, as_of, layer=spec.layer, tier=spec.temporal,
-                        context=spec.context, k=spec.k, fast=fast)
+        if spec.dense:
+            found = dense.search(corpus, question, as_of, layer=spec.layer,
+                                 tier=spec.temporal, k=spec.k)
+        else:
+            found = lexical(corpus, question, as_of, layer=spec.layer, tier=spec.temporal,
+                            context=spec.context, k=spec.k, fast=fast)
         if graph is not None:
             from .graphx import expand
             found = expand(graph, spec, found, as_of)

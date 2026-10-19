@@ -175,9 +175,11 @@ không có NaN, đúng index, và 100 mẫu embed lại có cosine ≥ 0,99.
       model một thư mục riêng); `verify_embed.py` đọc model từ meta; thêm `pyvi` vào nhóm `embed`.
       Chạy thử 300 đơn vị: 6,3 lời văn/giây, cosine 1,0000; 513 test qua — 14/10
 - [x] Đo tốc độ, độ dài, tỷ lệ bị cắt; đếm 1.484.106 lời văn khác nhau — 14/10
-- [ ] Bước 0: nhóm duyệt amendment ADR 0004 §4
-- [ ] Bước 1–3: cài đặt, giữ máy thức, chạy cả kho
-- [ ] Bước 4: `verify_embed.py` in `OK`
+- [ ] Bước 0: nhóm duyệt amendment ADR 0004 §4 — CMT đã cho chạy, **amendment chưa viết vào ADR**
+- [x] Bước 1–3: CMT chạy cả kho trên máy khác: 1.503.700 đơn vị, 1.484.106 lời văn, 61 shard,
+      217.756 giây (6,8 lời văn/giây); log ở `data/derived/embed/logs/` — 19/10
+- [x] Bước 4: chép về `data/derived/embed/asis-vietnamese-embedding/`, `sha256sum -c` 62/62 OK,
+      `verify_embed.py` trên máy chính in `OK` (cosine CPU so với vector lưu: 1,0000 trên 100 mẫu) — 19/10
 - [ ] Bước 5: sổ chạy, C1, W1-08
 
 ## Decisions

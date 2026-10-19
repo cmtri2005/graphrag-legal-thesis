@@ -96,8 +96,10 @@ def test_searcher_builds_a_callable_for_a_lexical_system(indexed: Corpus) -> Non
     assert all(isinstance(h, Hit) for h in search("nội dung khoản", "2021-01-01"))
 
 
-def test_searcher_refuses_dense_until_it_is_built(indexed: Corpus) -> None:
-    with pytest.raises(NotImplementedError, match="dense"):
+def test_searcher_refuses_hybrid_until_fusion_is_built(indexed: Corpus) -> None:
+    with pytest.raises(NotImplementedError, match="hybrid"):
+        searcher(indexed, REGISTRY["b4"])
+    with pytest.raises(RuntimeError, match="--embed"):
         searcher(indexed, REGISTRY["b3"])
     with pytest.raises(ValueError, match="does not retrieve"):
         searcher(indexed, REGISTRY["b1"])
@@ -161,3 +163,64 @@ def test_searcher_serves_the_second_call_from_cache(indexed: Corpus, tmp_path: P
         assert calls == [], "a cached configuration must not hit the index again"
     finally:
         module.lexical = real
+
+
+def fake_embeddings(corpus: Corpus, layer: str, out: Path) -> dict[str, list[float]]:
+    """One one-hot vector per distinct text, laid out as embed_corpus.py writes it."""
+    import hashlib
+    import sqlite3
+
+    import numpy as np
+    from vilexgraph.framework.corpus import Unit
+
+    out.mkdir()
+    db = sqlite3.connect(out / "texts.sqlite")
+    db.executescript("CREATE TABLE unit (unit_id TEXT PRIMARY KEY, sha TEXT NOT NULL);"
+                     "CREATE TABLE text (sha TEXT PRIMARY KEY, shard INTEGER, row INTEGER);"
+                     "CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);")
+    rows = {}
+    for row in corpus.db.execute(f"{Corpus._SELECT} WHERE u.layer=?", (layer,)):
+        sha = hashlib.sha256(Unit(**dict(row)).retrieval_text(True).encode()).hexdigest()
+        rows.setdefault(sha, len(rows))
+        db.execute("INSERT INTO unit VALUES (?,?)", (row["unit_id"], sha))
+    db.executemany("INSERT INTO text VALUES (?,0,?)", rows.items())
+    db.executemany("INSERT INTO meta VALUES (?,?)", [("layer", layer), ("model", "fake"),
+                                                      ("max_seq_length", "8"), ("text", "fake")])
+    db.commit()
+    np.save(out / "shard-00000.npy", np.eye(len(rows), dtype=np.float16))
+    owner = dict(db.execute("SELECT unit_id, sha FROM unit"))
+    return {u: np.eye(len(rows))[rows[sha]].tolist() for u, sha in owner.items()}
+
+
+def test_dense_ranks_the_nearest_text_first_and_respects_k(indexed: Corpus, tmp_path: Path) -> None:
+    from vilexgraph.framework.retrieve import Dense
+
+    vectors = fake_embeddings(indexed, "version", tmp_path / "emb")
+    dense = Dense(tmp_path / "emb", encode=lambda q: vectors[VERSION_UNIT])
+    hits = dense.search(indexed, "q", "2021-01-01", layer="version", tier="none", k=10)
+    assert hits[0] == Hit(VERSION_UNIT, {"dense": 1.0})
+    assert len(dense.search(indexed, "q", "2021-01-01", layer="version", tier="none", k=1)) == 1
+    with pytest.raises(ValueError, match="layer"):
+        dense.search(indexed, "q", "2021-01-01", layer="asis", tier="none", k=1)
+
+
+def test_dense_filters_before_the_top_k(indexed: Corpus, tmp_path: Path) -> None:
+    """Formula (4) for dense: the best match is dropped when the tier excludes it,
+    and the k slots go to admitted units instead."""
+    from vilexgraph.framework.retrieve import Dense
+
+    vectors = fake_embeddings(indexed, "version", tmp_path / "emb")
+    dense = Dense(tmp_path / "emb", encode=lambda q: vectors[VERSION_UNIT])
+    kept = dense.search(indexed, "q", "2023-01-01", layer="version", tier="version", k=10)
+    dropped = dense.search(indexed, "q", "2023-01-01", layer="version", tier="propagated", k=10)
+    assert kept[0].unit_id == VERSION_UNIT
+    assert VERSION_UNIT not in [h.unit_id for h in dropped]
+
+
+def test_searcher_runs_a_dense_system(indexed: Corpus, tmp_path: Path) -> None:
+    from vilexgraph.framework.retrieve import Dense
+
+    vectors = fake_embeddings(indexed, "asis", tmp_path / "emb")
+    target = next(iter(vectors))
+    search = searcher(indexed, REGISTRY["b3"], dense=Dense(tmp_path / "emb", encode=lambda q: vectors[target]))
+    assert search("q", "2021-01-01")[0].unit_id == target

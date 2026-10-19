@@ -47,6 +47,7 @@ RELEASE = Path("data/derived/vilextime/release.jsonl")
 INDEX = Path("data/derived/corpus/index.sqlite")
 CACHE = Path("data/derived/rag/completions.sqlite")
 HITS = Path("data/derived/rag/retrieval.sqlite")
+EMBED = Path("data/derived/embed/asis-vietnamese-embedding")   # docs/plans/active/embed-phobert-cpu.md
 
 
 @dataclass(frozen=True, slots=True)
@@ -89,6 +90,7 @@ def provenance(args, spec: systems.SystemSpec, corpus: Corpus | None) -> dict:
     manifest = args.index.parent / "manifest.json"
     return {
         "spec": asdict(spec),
+        "embed": str(args.embed) if spec.dense else None,
         "argv": sys.argv[1:],
         "commit": git("rev-parse", "HEAD").strip(),
         # the hash of `git diff HEAD`, so two runs from the same uncommitted state match
@@ -103,12 +105,14 @@ def provenance(args, spec: systems.SystemSpec, corpus: Corpus | None) -> dict:
 
 
 def retriever(spec: systems.SystemSpec, corpus: Corpus | None, hits: Path | None,
-              fast: bool = False):
+              fast: bool = False, embed: Path | None = None):
     """The search callable for this system, or None when it does not retrieve."""
     if not spec.retrieves:
         return None
     from vilexgraph.framework import retrieve  # imported late: P1 ships without it
-    return retrieve.searcher(corpus, spec, retrieve.RetrievalCache(hits), fast=fast)
+    # ponytail: the hits cache key does not name the embedding model; clear it if the model changes
+    dense = retrieve.Dense(embed) if spec.dense and embed else None
+    return retrieve.searcher(corpus, spec, retrieve.RetrievalCache(hits), fast=fast, dense=dense)
 
 
 def main() -> None:
@@ -125,6 +129,8 @@ def main() -> None:
     ap.add_argument("--model")
     ap.add_argument("--no-dense", action="store_true",
                     help="run a dense-capable system on lexical retrieval alone")
+    ap.add_argument("--embed", type=Path, default=EMBED,
+                    help="embeddings written by scripts/eval/embed_corpus.py (dense systems)")
     ap.add_argument("--cache", type=Path, default=CACHE)
     ap.add_argument("--hits-cache", type=Path, default=HITS,
                     help="cache of ranked retrieval results, keyed by configuration")
@@ -155,7 +161,7 @@ def main() -> None:
 
     corpus = Corpus(args.index) if spec.retrieves else None
     search = retriever(spec, corpus, None if args.no_cache else args.hits_cache,
-                       fast=args.fast_retrieval)
+                       fast=args.fast_retrieval, embed=args.embed)
     cache = generate.Cache(None if args.no_cache else args.cache)
     args.out.parent.mkdir(parents=True, exist_ok=True)
 
