@@ -173,7 +173,17 @@ def main() -> None:
             effective_on = actor.effective_from.isoformat() if actor and actor.effective_from else None
             mentions = extract_mentions(paragraphs, title_document(raw.get("title") or ""))
             blocks = wording_blocks(paragraphs)
+            quoted = {j for k, b in blocks.items() for j in range(b.start, b.end + 1) if j != k}
+            deferred = deferred_dates(paragraphs, quoted)
+            positions = paragraph_positions(paragraphs, quoted) if deferred else []
             for n, mention in enumerate(mentions):
+                on = effective_on
+                if deferred:
+                    article, clause = positions[mention.paragraph]
+                    later = deferred.get((article, clause)) or deferred.get((article, None))
+                    if later:
+                        on = later.isoformat()
+                        stats["deferred effective date"] += 1
                 candidates = [c for c in by_number.get(normalize_number(mention.document_number), []) if c != actor_id]
                 narrowed = [c for c in candidates if c in targets_of[actor_id]]
                 candidates = narrowed or candidates
@@ -184,7 +194,7 @@ def main() -> None:
                     "method": mention.method,
                     "document_number": mention.document_number,
                     "candidate_document_ids": candidates,
-                    "effective_on": effective_on,
+                    "effective_on": on,
                     "evidence": evidence_of(mention, paragraphs),
                 }
                 references = (
@@ -240,7 +250,7 @@ def main() -> None:
                     row["id"] = make_event_id(
                         actor_id, row["operation"],
                         [row["target_provision_id"]] if row["target_provision_id"] else [],
-                        date.fromisoformat(effective_on) if effective_on else None,
+                        date.fromisoformat(on) if on else None,
                         target_document_id=row["target_document_id"],
                         evidence_text=f"{mention.evidence}|{row['locator']}|{mention.document_number}",
                     )
@@ -259,6 +269,7 @@ def main() -> None:
     print(f"  skipped: {stats['actor out of scope']:,} not central normative, {stats['actor without body']:,} without body, "
           f"{len(skipped_mismatch):,} whose body carries another document's number: {skipped_mismatch[:12]}")
     print(f"  {stats['duplicate mention']:,} repeated mentions written once")
+    print(f"  {stats['deferred effective date']:,} mentions dated by a part of the act starting later")
     for key, count in sorted(rows.items()):
         print(f"  {count:>7,}  {key}")
     for key, count in sorted((k, v) for k, v in stats.items() if k.startswith("status ")):
@@ -286,6 +297,69 @@ def _status(row: dict, quoted: bool, gold: set[tuple[str, str]],
     if any((row["target_document_id"], pid) in gold for pid in row["affected_provision_ids"]):
         return "verified", None
     return "auto_accepted", None
+
+
+_SELF = r"(?:Bộ luật|Luật|Pháp lệnh|Nghị định|Nghị quyết|Thông tư(?: liên tịch)?|Quyết định)\s+này"
+# "Các khoản 4, khoản 5 và khoản 12 Điều 1 Thông tư này có hiệu lực thi hành từ ngày 01 tháng 01
+# năm 2024": part of an act starting later than the act (TT 17/2023/TT-BGTVT, D5 §5.1)
+# The sentence must open on the provisions themselves: "Thẩm quyền … quy định tại Điều 1" or
+# "… từ ngày 01/6/2022 đối với thủ tục …" dates only part of what those provisions say.
+_DEFERRED = re.compile(
+    r"(?i)^(?:\d+\s*\.\s*)?(?:riêng\s+)?(?:(?:các\s+)?(?:quy định|nội dung quy định)\s+tại\s+)?"
+    rf"((?:các\s+)?(?:khoản|điều|điểm)\s+[^.;]*?)\s+(?:của\s+)?{_SELF}\s+"
+    r"(?:sẽ\s+)?có hiệu lực(?: thi hành)?(?: kể)? từ ngày (\d{1,2})\s*(?:tháng|/)\s*(\d{1,2})\s*(?:năm|/)\s*(\d{4})"
+    r"(?!\s*,?\s*đối với)")
+_RANGE = re.compile(r"(?i)từ\s+Điều\s+(\d+)\s+đến\s+Điều\s+(\d+)")
+_PART = re.compile(r"(?i)(khoản|điều|điểm)?\s*\b(\d+[a-zđ]?)\b")
+_ARTICLE_HEAD = re.compile(r"(?i)^Điều\s+(\d+[a-zđ]?)\s*[.:\-–]")
+_CLAUSE_HEAD = re.compile(r"^(\d+)\s*\.\s")
+
+
+def deferred_dates(paragraphs: list[str], quoted: set[int]) -> dict[tuple[str, str | None], date]:
+    """(Điều, khoản or None for the whole Điều) of the act -> the later date it takes effect on.
+
+    Read only outside quoted wording, where "Khoản 2 Điều 24 Thông tư này có hiệu lực…"
+    belongs to the act being amended. A sentence naming an Điểm is skipped: a date for
+    part of a khoản cannot be told apart at khoản level, so the act's date stays.
+    """
+    out: dict[tuple[str, str | None], date] = {}
+    for i, text in enumerate(paragraphs):
+        if i in quoted:
+            continue
+        for sentence in re.split(r"(?<=[.;])\s+", text):
+            m = _DEFERRED.match(sentence.strip())
+            if not m or re.search(r"(?i)\bđiểm\b", m.group(1)):
+                continue
+            try:
+                when = date(int(m[4]), int(m[3]), int(m[2]))
+            except ValueError:
+                continue
+            subject = _RANGE.sub(lambda r: "Điều " + ", ".join(
+                str(n) for n in range(int(r[1]), int(r[2]) + 1)), m.group(1))
+            pending, kind = [], None
+            for word, number in _PART.findall(subject):
+                kind = (word or kind or "").lower()
+                if kind == "khoản":
+                    pending.append(number)
+                elif kind == "điều":
+                    for clause in pending or [None]:
+                        out[(number, clause)] = when
+                    pending = []
+    return out
+
+
+def paragraph_positions(paragraphs: list[str], quoted: set[int]) -> list[tuple[str | None, str | None]]:
+    """(Điều, khoản) of the act each paragraph sits in; quoted wording keeps its instruction's."""
+    article = clause = None
+    out = []
+    for i, text in enumerate(paragraphs):
+        if i not in quoted:
+            if m := _ARTICLE_HEAD.match(text.strip()):
+                article, clause = m[1], None
+            elif m := _CLAUSE_HEAD.match(text.strip()):
+                clause = m[1]
+        out.append((article, clause))
+    return out
 
 
 _BODY_NUMBER = re.compile(r"Số\s*:?\s*(\d[^\s,;]*(?:\s?[/\-]\s?[^\s,;]+)*)")

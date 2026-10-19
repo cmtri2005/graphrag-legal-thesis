@@ -59,6 +59,8 @@ def block(ls: list[str], i: int, stop, cap: int) -> str:
 
 def base_passage(ls: list[str], target: dict) -> str:
     article, clause = target["article_id"], target.get("clause_id")
+    if not article:     # a row on a document-level unit: nothing to cut out
+        return ""
     chapter = re.search(r"Chương\s+([IVXLCDM\d]+)", target.get("provision_path") or "")
     start = 0
     if chapter:     # a decision can carry a second "Điều 1." in the regulation it issues

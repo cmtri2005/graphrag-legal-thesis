@@ -1898,7 +1898,14 @@ Bám phân công trong đề cương UIT; nhóm đổi tùy ý.
   thay nội dung mà không bãi bỏ (NĐ 76/2020 với TT 41/2011; NQ 111/2025 với NĐ 33/2025); (4) đích bãi bỏ sai
   (TT 01/2023/TT-BCT nhắm hợp đồng mẫu, đồ thị nhận thành định nghĩa); (5) `valid_to` sai (#50, Điều 59 NĐ 05/2021).
 - W1-08 xong: vector CMT chạy ở máy khác đã chép về, `verify_embed.py` OK. W2-12: B3 chạy trên dev, R@1 0,260 so với
-  `b2ctx` 0,420 (hiệu −0,160 [−0,25; −0,06]); xem `runs/README.md`. Còn B4 (lai + reranker) và amendment ADR 0004 §4.
+  `b2ctx` 0,420 (hiệu −0,160 [−0,25; −0,06]); xem `runs/README.md`. Còn B4 (lai + reranker); amendment ADR 0004 §4 đã ghi.
+- W2-09 chuẩn bị, lỗi D5 §5.1 đã sửa ở `extract_provision_events.py` (chưa dựng lại): khoản/điều có ngày hiệu lực
+  riêng ("Các khoản 4, … 12 Điều 1 Thông tư này có hiệu lực từ…") nay mang ngày đó. Chạy thử vào thư mục tạm: 160 sự
+  kiện của 26 văn bản đổi ngày (66 sớm hơn, ví dụ Điều 248 Luật Đất đai 2024 từ 01/04/2024), 75 sự kiện được áp;
+  23 dòng release thuộc lineage bị chạm, 4 dòng có ngày hỏi rơi giữa ngày cũ và mới (1 dòng D4, 3 test). Không đọc
+  câu chỉ hẹn ngày cho một phần nội dung ("Thẩm quyền … tại Điều 1 …", "… đối với thủ tục …") hay có Điểm.
+- W2-04: bốn phiếu `audit_T{1,2,3,6}.xlsx` thêm hai cột `trich_van_ban_goc`, `trich_van_ban_tac_dong` (468 dòng, trích
+  từ `data/raw` bằng `crosscheck_evidence.py --ids`); `labels.py import-audit` vẫn đọc được.
 
 **Tuần 2 (19–25/10): kiểm định xong, đóng băng**
 

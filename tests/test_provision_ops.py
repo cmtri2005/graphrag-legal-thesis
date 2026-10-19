@@ -292,3 +292,46 @@ def test_a_phrase_edit_keeps_its_quoted_payload_in_the_evidence():
         evidence, paragraph = "Bãi bỏ Điều 5.", 0
 
     assert evidence_of(_Plain(), ["Bãi bỏ Điều 5."]) == "Bãi bỏ Điều 5."
+
+
+def test_a_part_of_the_act_starting_later_dates_only_its_own_mentions():
+    """TT 17/2023/TT-BGTVT: khoản 12 Điều 1 (sửa Điều 18) starts 01/01/2024, the act 15/08/2023 (D5 §5.1)."""
+    from datetime import date
+
+    from extract_provision_events import deferred_dates, paragraph_positions
+    from vilexgraph.build.extraction.wording import wording_blocks
+
+    body = ["Điều 1. Sửa đổi, bổ sung một số điều của Thông tư số 40/2016/TT-BGTVT",
+            "11. Sửa đổi khoản 2 Điều 16 như sau:",
+            "“2. Khoản 2 Điều 24 Thông tư này có hiệu lực từ ngày 01 tháng 3 năm 2030.”",
+            "12. Sửa đổi, bổ sung Điều 18 như sau:",
+            "d) Sửa đổi, bổ sung khoản 5 Điều 18 như sau:",
+            "“5. Chi cục Đăng kiểm cấp Giấy chứng nhận.”",
+            "Điều 2. Bãi bỏ Điều 7 Thông tư số 51/2017/TT-BGTVT.",
+            "Điều 3. Hiệu lực thi hành",
+            "1. Thông tư này có hiệu lực thi hành từ ngày 15 tháng 8 năm 2023. Các khoản 4, khoản 5, "
+            "khoản 11 và khoản 12 Điều 1 Thông tư này có hiệu lực thi hành từ ngày 01 tháng 01 năm 2024."]
+    blocks = wording_blocks(body)
+    quoted = {j for k, b in blocks.items() for j in range(b.start, b.end + 1) if j != k}
+    later = deferred_dates(body, quoted)
+    assert later == {("1", c): date(2024, 1, 1) for c in ("4", "5", "11", "12")}, \
+        "a sentence inside quoted wording belongs to the amended act"
+    where = paragraph_positions(body, quoted)
+    assert where[4] == ("1", "12")          # the point d) under khoản 12
+    assert where[6] == ("2", None)          # Điều 2 keeps the act's own date
+
+
+def test_a_date_for_part_of_what_a_provision_says_is_not_read_as_the_provisions_date():
+    """Seen in the corpus (19/10): 21/2026/TT-BKHCN, 107/2021/NĐ-CP, 188/2025/NĐ-CP."""
+    from datetime import date
+
+    from extract_provision_events import deferred_dates
+
+    partial = ["Thẩm quyền giải quyết các thủ tục hành chính quy định tại Điều 1, Điều 2 Thông tư này "
+               "có hiệu lực kể từ ngày 29 tháng 5 năm 2026.",
+               "Khoản 11 Điều 1 của Nghị định này có hiệu lực thi hành kể từ ngày 01 tháng 6 năm 2022 "
+               "đối với thủ tục hành chính thuộc phạm vi tiếp nhận của Bộ phận Một cửa cấp bộ;"]
+    assert deferred_dates(partial, set()) == {}
+    ranged = ["Các điều từ Điều 1 đến Điều 3, các điều 14 và 15 của Nghị định này có hiệu lực từ ngày "
+              "01 tháng 7 năm 2025."]
+    assert deferred_dates(ranged, set()) == {(str(n), None): date(2025, 7, 1) for n in (1, 2, 3, 14, 15)}

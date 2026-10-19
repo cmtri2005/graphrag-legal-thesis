@@ -163,3 +163,19 @@ Tradeoffs:
   biểu diễn, B7+ là một tier của hệ đề xuất chứ không phải baseline đối thủ.
 - Nếu nâng Milvus 2.5 ở P4, đo analyzer tiếng Việt và xem có nên gộp BM25 về
   Milvus để chỉ còn một engine.
+
+## Amendment 2026-10-19 (§4, embedding)
+
+Model dense đổi sang `dangvantuan/vietnamese-embedding` (PhoBERT-base, 768 chiều), đầu vào tách
+từ bằng `pyvi` ở cả lời văn và câu hỏi, `max_seq_length` 256 (CMT cho chạy 14/10). Lý do: máy duy
+nhất của nhóm là CPU 4 nhân; `AITeamVN/Vietnamese_Embedding` cần khoảng 15 ngày, model mới chạy
+xong 1.484.106 lời văn lớp A trong 217.756 giây (khoảng 2,5 ngày, máy khác). `verify_embed.py` trên
+máy chính in `OK` ngày 19/10 (`docs/plans/active/embed-phobert-cpu.md`).
+
+Truy xuất dense không qua Milvus: `retrieve.Dense` quét hết vector trong RAM (khoảng 2,3 GB,
+khoảng 7 giây/câu), nên kết quả là top-k chính xác, không xấp xỉ, và lọc theo tier trước top-k
+như công thức (4).
+
+Hệ quả: B3, B4 là baseline dense yếu hơn mức có thể đạt (1,5% lời văn bị cắt ở 256 token). Bảng
+chính không đổi vì chỉ dùng truy xuất từ vựng. Trên dev, B3 có R@1 0,260 so với `b2ctx` 0,420
+(`runs/README.md`, 19/10).
