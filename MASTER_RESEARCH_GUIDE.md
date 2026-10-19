@@ -1871,6 +1871,35 @@ Bám phân công trong đề cương UIT; nhóm đổi tùy ý.
   trong số đó rơi vào phiếu audit. Bằng chứng trích từ văn bản thô bằng `crosscheck_evidence.py --ids`.
   `data/review/audit_T6.xlsx` có 93 nhãn bắt buộc audit (W2-04).
 
+**Tiến độ 19/10:**
+
+- Phần 16/10 đã commit (`564b741`). Còn trễ: D4 T2 (A 42, B 43), gold độc lập đợt 1 (0/75 mỗi người).
+- W1-08: CMT đã embed xong ở máy khác, sẽ chép `data/derived/embed/asis-vietnamese-embedding/` về.
+- W1-09 bị chặn: khóa Groq là gói miễn phí, giới hạn 8.000 token/phút, trong khi prompt `b7plus` của dòng
+  dev đầu tiên đã 18.325 token. Cần nâng Groq lên Dev Tier hoặc thêm khóa OpenRouter.
+- W2-12 phần B3: `retrieve.Dense` (quét hết vector, lọc theo tier trước top-k), `run_vilextime.py --embed`.
+  Lai B4 (công thức (5), reranker) chưa làm. Chạy thật trên 200 đoạn với `dangvantuan/vietnamese-embedding`:
+  lấy lời văn một đoạn làm câu hỏi thì đoạn đó đứng hạng 1.
+- W2-01 xong: A, B đủ 300/300 (B gán lại 64 dòng cũ theo 2.0; một ô `reasons` của B chứa lời giải thích,
+  đã chuyển sang `note` và đặt `gold_wrong`, chờ B xác nhận). W2-02: AC1 0,612 [0,511; 0,697], p_neg 0,460,
+  κ 0,323, **chưa đạt** ngưỡng (AC1 ≥ 0,80, p_neg ≥ 0,60). 75 dòng lệch: 26 dòng T6 cùng 2.0 A `dat`, B
+  `khong_dat` (25 `gold_wrong`, B ghi chỗ mới ở `note`, A để `note` trống); 31 dòng lệch do A gán theo 1.2,
+  B gán lại theo 2.0 (`vmixed` AC1 0,053).
+- W2-03 sẵn phiếu: `data/review/hoa_giai_D4.xlsx` (75 dòng, `scripts/review/adjudicate.py export`). Điền xong
+  chạy `adjudicate.py import`: ghi `hoa_giai_D4.tsv` và cột `adjudicated`, không đụng nhãn thô.
+- W2-03 đã chốt 75/75 (14 `dat`, 61 `khong_dat`), cột `adjudicator` ghi đúng người chốt: bản nháp do AI viết
+  (36 dòng ghi "chưa đối chiếu"), sau đó `claude-opus-5-5` đối chiếu từng dòng với văn bản gốc trong kho; CMT
+  xác nhận 19/10. Biên bản: `docs/reports/D5_bien_ban.md` (đủ 7 loại lỗi dựng dữ liệu). Lật lại 2 dòng so với bản nháp: #13 về `dat` (khoản 5 Điều 8
+  NĐ 126/2020 trùng gold), #71 về `khong_dat` (định nghĩa hệ thống AI chuyển sang khoản 2 Điều 3 Luật
+  134/2025/QH15). Quy tắc dùng nhất quán: đổi tên cơ quan kế thừa (NQ 190/2025) không tạo tương phản T2/T3.
+- Lỗi đồ thị lộ ra khi hòa giải, cần sửa ở khâu dựng (W2-09): (1) khoản có ngày hiệu lực riêng muộn hơn văn bản
+  (TT 17/2023/TT-BGTVT khoản 12 Điều 1 hiệu lực 01/01/2024) bị áp từ ngày văn bản; (2) điều khoản tự cập nhật
+  dẫn chiếu (TT 84/2018 khoản 3 Điều 7, TT 241/2017 khoản 2 Điều 27) không được tính; (3) văn bản cấp cao hơn
+  thay nội dung mà không bãi bỏ (NĐ 76/2020 với TT 41/2011; NQ 111/2025 với NĐ 33/2025); (4) đích bãi bỏ sai
+  (TT 01/2023/TT-BCT nhắm hợp đồng mẫu, đồ thị nhận thành định nghĩa); (5) `valid_to` sai (#50, Điều 59 NĐ 05/2021).
+- W1-08 xong: vector CMT chạy ở máy khác đã chép về, `verify_embed.py` OK. W2-12: B3 chạy trên dev, R@1 0,260 so với
+  `b2ctx` 0,420 (hiệu −0,160 [−0,25; −0,06]); xem `runs/README.md`. Còn B4 (lai + reranker) và amendment ADR 0004 §4.
+
 **Tuần 2 (19–25/10): kiểm định xong, đóng băng**
 
 | Mã | Việc | Người | Hạn | Cần trước | Xong khi |
