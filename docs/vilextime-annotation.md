@@ -15,6 +15,10 @@ ngày 12/10/2026. Bản thảo kèm các ví dụ đối chiếu với văn bả
 - mỗi nhãn kiểm chéo ghi phiên bản hướng dẫn đã dùng (cột `guideline_version`). 166 nhãn
   của A và 165 nhãn của B gán trước 12/10 mang phiên bản 1.2.
 
+Làm rõ ngày 14/10/2026 (vẫn là 2.0, nhóm chốt sau pilot T6, chưa hỏi luật sư), từ hai dòng
+pilot lệch: câu ghép có/không với nội dung (§2 `group_mismatch`, §3 T6), và cơ quan kế
+thừa, địa danh đổi do sáp nhập trong quy trình chuyển chỗ (§3 T6, bước 3).
+
 Thay đổi của 1.2 (29/09/2026) so với 1.1, đều là hệ quả của phản biện
 `docs/reports/JUDGE_DATASET.md`:
 - dòng anh em không còn mặc định đúng theo nhãn của dòng ranh giới (§5.1);
@@ -73,7 +77,7 @@ Mã lý do:
 | `question_ambiguous` | Câu hỏi khớp **nhiều điều khoản** hoặc nhiều mục trong danh sách; đáp án chuẩn chỉ là một trong số đó |
 | `question_leaks` | Câu hỏi đã nói ra đáp án, nêu số hiệu/Điều/Khoản, ký hiệu mục ("c)"), hoặc để lộ phiên bản nào |
 | `gold_wrong` | Nội dung ở cột đáp án **không đúng** là điều khoản có hiệu lực tại `as_of` (sai phiên bản, vế "trước sửa đổi" thực ra đã là bản sửa, text bị cắt mất phần được hỏi). Từ v2.0, gồm cả dòng T6 có đáp án rỗng trong khi nội dung đã chuyển chỗ (§3) |
-| `group_mismatch` | Câu hỏi không làm được việc của nhóm: T2 (kể cả cặp gần giống) không chạm chỗ thay đổi (hai mốc trả lời như nhau); T3 chỉ chạm một lần sửa; T6 hỏi kiểu có/không; T5 hỏi vào phần không đổi |
+| `group_mismatch` | Câu hỏi không làm được việc của nhóm: T2 (kể cả cặp gần giống) không chạm chỗ thay đổi (hai mốc trả lời như nhau); T3 chỉ chạm một lần sửa; T6 chỉ hỏi có/không (câu ghép có thêm vế hỏi nội dung thì không tính, §3); T5 hỏi vào phần không đổi |
 | `unanswerable_as_asked` | Câu hỏi đúng chủ đề nhưng không thể trả lời bằng đáp án (hỏi "khi nào" mà đáp án không nói thời hạn, hỏi "ai" mà đáp án không nêu chủ thể...) |
 | `transitional_rule` | **v1.1.** Điều khoản chuyển tiếp của văn bản sửa đổi giữ quy định cũ cho đúng quan hệ trong câu hỏi (ví dụ hồ sơ nộp trước ngày hiệu lực), nên nội dung ở cột đáp án không phải quy định được áp dụng. Ghi Điều chuyển tiếp ở `note`. **v2.0:** chỉ dùng khi câu hỏi tự nêu quan hệ đó, hoặc khi điều khoản chuyển tiếp buộc chính sự việc phát sinh tại `as_of` theo bản cũ. Điều khoản chỉ giữ bản cũ cho việc *đang thực hiện* thì không phải lỗi: đáp án vẫn là bản mới (§1) |
 | `other` | Lỗi khác — mô tả ở `note` |
@@ -118,7 +122,9 @@ lực của văn bản sửa đổi ở dòng T5.
   gán nhãn. Luật sư đã chốt cả 8 văn bản ngày 12/10/2026.
 - **T6** (hết hiệu lực một phần): mốc sau có đáp án rỗng và
   `no_answer_reason = provision_repealed`. Câu hỏi không được giả định quy định đang
-  tồn tại. Quy trình v2.0:
+  tồn tại. Câu **chỉ** hỏi có/không là `group_mismatch`. Câu ghép có thêm vế hỏi nội
+  dung ("… có áp dụng … hay không, **và quy định cụ thể thế nào**?") không tính là câu
+  có/không: chấm theo vế nội dung (làm rõ 14/10). Quy trình v2.0:
   1. **Khoản có thật bị bãi bỏ không?** Chỉ đúng khi điều khoản bị bãi bỏ trong khi văn
      bản vẫn còn hiệu lực.
   2. **Nội dung còn ở đâu không?** Tìm theo thứ tự: (a) cùng văn bản sửa đổi, cụm "Bổ
@@ -135,6 +141,15 @@ lực của văn bản sửa đổi ở dòng T5.
      | 5 | Chế tài, hậu quả pháp lý | cùng loại chế tài; **mức** được đổi, không dùng ngưỡng. Đổi loại chế tài hay thêm hình thức phạt bổ sung: không đạt |
      | 6 | Thẩm quyền, hiệu lực pháp lý kế thừa | cùng cơ quan ban hành, hiệu lực pháp lý không thấp hơn. Chuyển sang văn bản thấp hơn hoặc của cơ quan khác: không đạt |
      | 7 | Dẫn chiếu, kỹ thuật chuyển tiếp | có dấu vết nối hai quy định: cùng đợt "Bãi bỏ … Bổ sung …", câu "thay thế", điều khoản chuyển tiếp |
+
+     **Sáp nhập cơ quan, đơn vị hành chính** (làm rõ 14/10): cơ quan ở chỗ mới là cơ quan
+     **kế thừa** cơ quan cũ theo văn bản sắp xếp bộ máy (ví dụ Bộ Giao thông vận tải hợp
+     nhất vào Bộ Xây dựng: thông tư BXD thay thông tư BGTVT) thì yếu tố 6 đạt. Đối tượng chỉ
+     đổi **tên** địa danh do sáp nhập tỉnh, xã mà phạm vi, ranh giới được hỏi giữ nguyên
+     (ví dụ "vùng nước cảng biển Bến Tre trên sông Tiền" thành vùng nước thuộc tỉnh Vĩnh
+     Long, cùng ranh giới, cùng tọa độ) thì yếu tố 2 đạt. Không xác định được cơ quan mới có
+     đúng là cơ quan kế thừa không, hoặc phạm vi, ranh giới có đổi → theo bước 4 là "không
+     chắc": `dat` kèm `unclear` ở `note`.
 
   4. **Gán nhãn:**
      - đạt đủ bảy yếu tố → đáp án rỗng là sai: `khong_dat`, `gold_wrong`, ghi chỗ mới

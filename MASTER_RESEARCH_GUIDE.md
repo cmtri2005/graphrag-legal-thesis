@@ -1861,6 +1861,16 @@ Bám phân công trong đề cương UIT; nhóm đổi tùy ý.
   nhãn khi câu hỏi đổi.
 - W1-11 đã xuất: `data/review/pilot_T6_{A,B}.xlsx` (20 dòng, 16 `ancestor` + 4 `direct`), chờ hai người gán.
 
+**Tiến độ 16/10 (chưa commit):**
+
+- W1-11 xong (`9e4b3a4`): trùng 17/20, đạt cổng; AC1 0,751, p_neg 0,727, κ 0,625. Ba dòng lệch (#1, #9, #18) chờ hòa giải.
+- W1-13 xong phần model: 256 nhãn `claude-opus-5-5` theo v2.0 cho 128 lineage T6 `ranh_gioi` ngoài D4 và pilot
+  (207 `dat`, 49 `khong_dat`: 37 `gold_wrong`, gồm 33 chuyển chỗ và 4 điều khoản không thật bị bãi bỏ: hai điểm
+  Điều 80 Luật 24/2000/QH10 (còn hiệu lực đến 31/12/2027), điểm a khoản 1 Điều 1 TT 64/2025/TT-BTC, khoản 4 Điều 15
+  NĐ 17/2012/NĐ-CP (lỗi giống pilot #6); 8 `question_leaks`, 8 `question_ambiguous`). 19 nhãn ghi `unclear` ở `note` để chuyển cố vấn, chỉ 5
+  trong số đó rơi vào phiếu audit. Bằng chứng trích từ văn bản thô bằng `crosscheck_evidence.py --ids`.
+  `data/review/audit_T6.xlsx` có 93 nhãn bắt buộc audit (W2-04).
+
 **Tuần 2 (19–25/10): kiểm định xong, đóng băng**
 
 | Mã | Việc | Người | Hạn | Cần trước | Xong khi |

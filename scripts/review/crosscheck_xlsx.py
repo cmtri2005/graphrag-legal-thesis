@@ -63,7 +63,7 @@ REASON_HELP = [
     ("question_ambiguous", "Câu hỏi khớp nhiều điều khoản hoặc nhiều mục trong danh sách; đáp án chuẩn chỉ là một trong số đó."),
     ("question_leaks", "Câu hỏi đã nói ra đáp án, nêu số hiệu/Điều/Khoản, ký hiệu mục (\"c)\"), hoặc để lộ phiên bản nào."),
     ("gold_wrong", "Cột đáp án không đúng là điều khoản có hiệu lực tại as_of: sai phiên bản, vế \"trước sửa đổi\" thực ra đã là bản sửa, text bị cắt mất phần được hỏi, hoặc (T6) đáp án rỗng trong khi nội dung đã chuyển chỗ."),
-    ("group_mismatch", "Câu hỏi không làm được việc của nhóm. T2 không chạm chỗ thay đổi (hai mốc trả lời như nhau); T3 chỉ chạm một lần sửa; T6 hỏi kiểu có/không; T5 hỏi vào phần không đổi."),
+    ("group_mismatch", "Câu hỏi không làm được việc của nhóm. T2 không chạm chỗ thay đổi (hai mốc trả lời như nhau); T3 chỉ chạm một lần sửa; T6 CHỈ hỏi có/không (câu ghép có thêm vế hỏi nội dung thì không tính); T5 hỏi vào phần không đổi."),
     ("unanswerable_as_asked", "Đúng chủ đề nhưng không thể trả lời bằng đáp án: hỏi \"khi nào\" mà đáp án không nói thời hạn, hỏi \"ai\" mà đáp án không nêu chủ thể."),
     ("transitional_rule", "Điều khoản chuyển tiếp giữ quy định cũ cho đúng quan hệ câu hỏi tự nêu (ví dụ hồ sơ nộp trước ngày hiệu lực), hoặc cho chính sự việc phát sinh tại as_of. Câu hỏi không nêu gì thì hiểu sự việc phát sinh tại as_of: điều khoản chỉ giữ bản cũ cho việc đang thực hiện KHÔNG phải lỗi. Ghi Điều chuyển tiếp vào note."),
     ("other", "Lỗi khác. Bắt buộc mô tả ở cột note."),
@@ -73,7 +73,7 @@ GROUP_HELP = [
     ("T2", "Cặp tương phản (gồm cả cặp gần giống). Hai dòng cùng lineage, hai mốc. Luật sư trả lời giống nhau ở cả hai ngày thì group_mismatch, kể cả khi chỉ đổi cách viết cùng một điều. Câu hỏi chứa sẵn vế trước của đáp án: dòng ngày trước question_leaks. Đổi chủ thể giữa hai mốc: dòng ngày sau gold_wrong, ghi note."),
     ("T3", "Chuỗi từ ba phiên bản. Câu hỏi phải chạm vào phần đổi qua NHIỀU lần sửa, không chỉ một lần."),
     ("T5", "Hiệu lực hồi tố: văn bản có hiệu lực TRƯỚC ngày ký. Cột note_for_annotator ghi ngày ký và ngày hiệu lực. Kiểm xem câu hỏi có hỏi vào phần thực sự thay đổi."),
-    ("T6", "Hết hiệu lực một phần ở cấp Khoản/Điểm. Cột đáp án ghi \"(không có đáp án: ...)\". Câu hỏi không được là dạng có/không. Nếu nội dung đã CHUYỂN CHỖ (đạt đủ 7 yếu tố, hướng dẫn §3) thì đáp án rỗng là sai: khong_dat, gold_wrong, ghi chỗ mới vào note. Không chắc thì vẫn dat (nếu không có lỗi khác) và ghi \"unclear\" vào note."),
+    ("T6", "Hết hiệu lực một phần ở cấp Khoản/Điểm. Cột đáp án ghi \"(không có đáp án: ...)\". Câu CHỈ hỏi có/không là group_mismatch; câu ghép có thêm vế hỏi nội dung (\"... có áp dụng không, và quy định cụ thể thế nào?\") thì chấm theo vế nội dung. Nếu nội dung đã CHUYỂN CHỖ (đạt đủ 7 yếu tố, hướng dẫn §3) thì đáp án rỗng là sai: khong_dat, gold_wrong, ghi chỗ mới vào note. Sáp nhập: cơ quan kế thừa (Bộ GTVT vào Bộ Xây dựng) đạt yếu tố 6; địa danh chỉ đổi tên do sáp nhập tỉnh/xã, phạm vi và ranh giới giữ nguyên (Bến Tre thành Vĩnh Long) đạt yếu tố 2. Không chắc thì vẫn dat (nếu không có lỗi khác) và ghi \"unclear\" vào note."),
 ]
 
 

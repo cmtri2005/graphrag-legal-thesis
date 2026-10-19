@@ -21,6 +21,7 @@ parser matched). A passage that cannot be found stays empty and is named in
 
 Usage:
     python scripts/review/crosscheck_evidence.py
+    python scripts/review/crosscheck_evidence.py --ids ids.txt --out evidence.jsonl   # any release rows
 """
 from __future__ import annotations
 
@@ -99,7 +100,10 @@ def articles(ls: list[str], wanted, cap: int) -> str:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--data", type=Path, default=Path("data"))
-    d = ap.parse_args().data
+    ap.add_argument("--ids", type=Path, help="one row id per line, instead of the rows of crosscheck_A.tsv")
+    ap.add_argument("--out", type=Path, help="default: <data>/review/crosscheck_evidence.jsonl")
+    args = ap.parse_args()
+    d = args.data
 
     @lru_cache(maxsize=None)
     def doc(document_id: str) -> dict | None:
@@ -113,12 +117,15 @@ def main() -> None:
                          "status_today": (raw.get("effStatus") or {}).get("name")},   # at crawl time, not at as_of
                 "lines": lines((raw.get("documentContent") or {}).get("content"))}
 
-    with (d / "review/crosscheck_A.tsv").open(encoding="utf-8", newline="") as f:
-        order = [r["id"] for r in csv.DictReader(f, delimiter="\t")]
+    if args.ids:
+        order = [x.strip() for x in args.ids.read_text(encoding="utf-8").splitlines() if x.strip()]
+    else:
+        with (d / "review/crosscheck_A.tsv").open(encoding="utf-8", newline="") as f:
+            order = [r["id"] for r in csv.DictReader(f, delimiter="\t")]
     wanted = set(order)
     rows = {r["id"]: r for r in map(json.loads, (d / "derived/vilextime/release.jsonl").open(encoding="utf-8"))
             if r["id"] in wanted}
-    assert len(rows) == len(order), f"{len(order) - len(rows)} dòng crosscheck không còn trong release.jsonl"
+    assert len(rows) == len(order), f"{len(order) - len(rows)} dòng không còn trong release.jsonl"
 
     closers = collections.defaultdict(list)     # provision -> applied events that closed one of its versions
     for line in (d / "derived/event_log.jsonl").open(encoding="utf-8"):
@@ -142,7 +149,7 @@ def main() -> None:
         if e["id"] in need:
             events[e["id"]] = e
 
-    out, sizes, stats = d / "review/crosscheck_evidence.jsonl", [], {"actors": 0, "passage": 0, "transitional": 0}
+    out, sizes, stats = args.out or d / "review/crosscheck_evidence.jsonl", [], {"actors": 0, "passage": 0, "transitional": 0}
     with out.open("w", encoding="utf-8") as f:
         for rid in order:
             r, missing = rows[rid], []
