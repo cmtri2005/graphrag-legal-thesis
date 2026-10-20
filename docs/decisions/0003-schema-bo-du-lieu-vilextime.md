@@ -230,6 +230,15 @@ Tradeoffs:
 
 ## Follow-Up
 
+- **20/10 (CMT): định nghĩa bộ dữ liệu chốt ở `docs/vilextime-dinh-nghia.md`**, thay mọi định
+  nghĩa nhóm trước đó. Hệ quả cho schema, áp ở lần dựng lại tới (W2-09):
+  - T5 tách hai lát: `retroactive` (T5a, chẩn đoán) và `delayed` (T5b, dòng `truoc_hieu_luc`);
+    T6 tách `direct` (T6a) và `ancestor` (T6b), dựa trên `repeal_mode` đã có;
+  - `sau_het_hieu_luc` ra khỏi phần chấm điểm, vì văn bản thay thế thường quy định tiếp nội dung;
+  - thêm danh sách mã loại dòng đóng (mục 7 của tài liệu định nghĩa), gồm `relocated`,
+    `superseded_by_other_norm`, `restructuring_2025`, `reference_only`, `pending_event`, `not_verified`;
+  - tập test chỉ gồm dòng người đã kiểm; dòng chưa kiểm phát hành ở phần silver.
+  v1.0 chưa đóng băng, nên các thay đổi này chưa là MAJOR theo §8.
 - **11/10 (CMT), schema 1.4.0 (MINOR).**
   - Thêm `as_of_strategy` `truoc_hieu_luc`, chỉ cho T2: dòng trước của cặp hỏi lại 30
     ngày trước khi phiên bản sau có hiệu lực, khi văn bản sửa đổi đã ký; `twin_of` trỏ

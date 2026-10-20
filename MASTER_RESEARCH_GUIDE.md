@@ -1906,6 +1906,10 @@ Bám phân công trong đề cương UIT; nhóm đổi tùy ý.
   câu chỉ hẹn ngày cho một phần nội dung ("Thẩm quyền … tại Điều 1 …", "… đối với thủ tục …") hay có Điểm.
 - W2-04: bốn phiếu `audit_T{1,2,3,6}.xlsx` thêm hai cột `trich_van_ban_goc`, `trich_van_ban_tac_dong` (468 dòng, trích
   từ `data/raw` bằng `crosscheck_evidence.py --ids`); `labels.py import-audit` vẫn đọc được.
+- **20/10: định nghĩa bộ dữ liệu chốt** ở `docs/vilextime-dinh-nghia.md` (thay bản nháp 06/10): T5a/T5b, T6a/T6b,
+  T3 chặt ở cấp câu hỏi, T4 là lát của T2, quy tắc R1–R7, 17 mã loại, test chỉ gồm dòng người đã kiểm, bỏ
+  `sau_het_hieu_luc` khỏi phần chấm. Phiếu luật sư ký 7 quy tắc: `data/review/gui_luat_su_dinh_nghia.xlsx`.
+  Kế hoạch dựng lại: `docs/plans/active/vilextime-dinh-nghia-chot.md`.
 
 **Tuần 2 (19–25/10): kiểm định xong, đóng băng**
 

@@ -1,5 +1,7 @@
 # ViLexTime: định nghĩa sáu nhóm, bản chốt đề xuất
 
+**Đã được thay bằng `docs/vilextime-dinh-nghia.md` (bản chốt 20/10/2026). Chỉ giữ để tra lịch sử.**
+
 **Trạng thái: BẢN THẢO chờ ký, 06/10/2026.** Chưa thay `classify()` trong
 `build_question_pool.py`, chưa thay `docs/vilextime-annotation.md` (v1.2), chưa đổi datasheet.
 Mục 8 liệt kê những gì cần nhóm hoặc khoa quyết định trước khi đóng băng.
