@@ -1917,8 +1917,8 @@ Bám phân công trong đề cương UIT; nhóm đổi tùy ý.
   hết hiệu lực 15/01/2026), bãi bỏ một phần chuyển sang chờ người xem, bỏ 887 sự kiện giả "sửa cả Điều".
 - 20/10, bước 5 xong: dựng lại toàn bộ (sự kiện 56.624, corpus và BM25 mới, embed PhoBERT bù 6.340 đoạn); bản
   phát hành 1.120 dòng ranh giới theo quota định nghĩa §9, 2.383 dòng tổng, `check_release.py` OK. Phiếu kiểm
-  100% `data/review/kiem_{A,B}.xlsx` (A 700, B 698, 25% gán đôi, có trích văn bản gốc). Kết quả B2/B3 trên dev
-  (W2-12) dựng trên corpus cũ: chạy lại trước khi báo. DeepSeek hết số dư: còn 375 câu hỏi dự trữ T1/T2 chưa sinh.
+  100% `data/review/kiem_{A,B}.xlsx` (A 700, B 698, 25% gán đôi, có trích văn bản gốc). B2/B3 trên dev chạy
+  lại trên corpus mới (`runs/W2-12_rerun/dev`): R@1 `b3` 0,253 so với `b2ctx` 0,409, hiệu −0,156 [−0,26; −0,05]. DeepSeek hết số dư: còn 375 câu hỏi dự trữ T1/T2 chưa sinh.
 
 **Tuần 2 (19–25/10): kiểm định xong, đóng băng**
 

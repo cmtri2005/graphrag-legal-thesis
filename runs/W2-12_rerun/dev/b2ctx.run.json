@@ -1,0 +1,53 @@
+[
+ {
+  "spec": {
+   "name": "b2ctx",
+   "layer": "asis",
+   "lexical": true,
+   "dense": false,
+   "rerank": false,
+   "temporal": "none",
+   "context": true,
+   "expand": 0,
+   "expand_edges": "none",
+   "verify": "off",
+   "k": 20,
+   "note": "B2 with the hierarchy header: isolates the ordinary chunk-header gain"
+  },
+  "embed": null,
+  "argv": [
+   "--system",
+   "b2ctx",
+   "--no-dense",
+   "--retrieval-only",
+   "--split",
+   "dev",
+   "--out",
+   "runs/W2-12_rerun/dev/b2ctx.jsonl"
+  ],
+  "commit": "2140f6883a2351c31b352e87430c94d2950e8722",
+  "uncommitted": null,
+  "release_sha256": "eef46d575eac6963049a480c4856be0efa8173f654c3ffc0692a8206d80e0fbf",
+  "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+  "index_counts": {
+   "documents": 17333,
+   "units_asis": 1509363,
+   "units_version": 1477089,
+   "instructions": 53991,
+   "propagated_windows": 1476957,
+   "versions_with_local_window": 1477089,
+   "provisions_with_context": 1700484
+  },
+  "prompt_sha256": "88e5bb0e72eefae70be63d72ea8b1e6be04abb1c8fd9d12c4d23dfe609af4006",
+  "python": "3.12.3",
+  "started": "2026-10-20T23:26:59+00:00",
+  "finished": true,
+  "ended": "2026-10-20T23:34:08+00:00",
+  "written": 399,
+  "cached": 0,
+  "failed": 0,
+  "models": {
+   "none/none": 399
+  }
+ }
+]
