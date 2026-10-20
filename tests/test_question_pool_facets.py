@@ -123,6 +123,25 @@ def test_r1_tells_a_rename_or_a_reformat_from_a_change_of_content():
                            "do Bộ trưởng Bộ Xây dựng ban hành.") == "rename_only"
     assert transition_kind("Ngân hàng Nhà nước chi nhánh", "Ngân hàng Nhà nước Khu vực") == "rename_only"
     assert transition_kind("Trung ương hoá.", "trung ương hóa;") == "cosmetic_only"
+    # selected on 20/10 and caught only by reading them: three 2025 renames, and list letters added
+    assert transition_kind("phải báo cáo Ngân hàng Nhà nước chi nhánh tỉnh, thành phố trực thuộc trung ương nơi",
+                           "phải báo cáo Ngân hàng Nhà nước chi nhánh tại các Khu vực nơi") == "rename_only"
+    assert transition_kind("trang thông tin điện tử của Tổng cục Tiêu chuẩn Đo lường Chất lượng danh sách",
+                           "trang thông tin điện tử của Ủy ban Tiêu chuẩn Đo lường Chất lượng Quốc gia danh sách"
+                           ) == "rename_only"
+    assert transition_kind("Công an tỉnh và Cục Thuế địa phương nơi", "Công an tỉnh và cơ quan thuế cấp tỉnh nơi") \
+        == "rename_only"
+    assert transition_kind("bao gồm: hợp đồng từ một năm, hợp đồng dưới một năm",
+                           "bao gồm: a) Hợp đồng từ một năm; b) Hợp đồng dưới một năm") == "cosmetic_only"
+    assert transition_kind("quy định tại Điều 5.", "quy định tại Điều 6.") == "substantive"
+    # the amendment renamed one occurrence and left the other
+    assert transition_kind("thông báo của Tổng cục Tiêu chuẩn Đo lường Chất lượng; gửi Tổng cục Tiêu chuẩn Đo lường "
+                           "Chất lượng hồ sơ", "thông báo của Tổng cục Tiêu chuẩn Đo lường Chất lượng; gửi Ủy ban "
+                           "Tiêu chuẩn Đo lường Chất lượng hồ sơ") == "rename_only"
+    assert transition_kind("1. Cục Đường thủy nội địa Việt Nam tổ chức quản lý",
+                           "1. Cục Hàng hải và Đường thủy Việt Nam tổ chức quản lý") == "rename_only"
+    # two receiving ministries swapped is a change, not a rename
+    assert transition_kind("Bộ Nội vụ và Bộ Y tế phối hợp", "Bộ Y tế và Bộ Nội vụ phối hợp") == "substantive"
     # NĐ 355/2025 điểm n k1 Đ30, by k5 Đ43 NĐ 170/2026: a number is content
     assert transition_kind("n) 800 ml dầu gội đầu/năm;", "n) 1000 ml dầu gội đầu/năm;") == "substantive"
     # a rename plus a real change is a real change

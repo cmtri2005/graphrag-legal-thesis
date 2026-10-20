@@ -214,3 +214,105 @@ def test_pilot_takes_whole_unlabelled_t6_lineages_outside_d4_and_never_overwrite
     assert got == read(tmp_path / "review/pilot_T6_B.tsv")
     with pytest.raises(SystemExit):
         pilot(tmp_path)
+
+
+def test_kiem_covers_every_boundary_row_overlaps_a_quarter_and_carries_d4_only_unchanged(tmp_path):
+    import csv
+    import json
+
+    from crosscheck import COLUMNS, kiem, read
+
+    (tmp_path / "derived/vilextime").mkdir(parents=True)
+    (tmp_path / "review").mkdir()
+    rows = [_release_row(f"p{i}", "T2", day, version_id=f"version:p{i}:{k}")
+            for i in range(8) for k, day in enumerate(("2021-01-01", "2021-06-01"), 1)]
+    rows.append({**_release_row("p0", "T2", "2021-03-01", version_id="version:p0:1"),
+                 "as_of_strategy": "giua_khoang"})                                       # a twin: judged with its row
+    rows[2]["short_answer"] = "Đáp"                    # p1's two versions read alike: no contrast to score
+    (tmp_path / "derived/vilextime/release.jsonl").write_text(
+        "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
+    for name, extra in (("crosscheck_A.tsv", ["adjudicated"]), ("crosscheck_B.tsv", [])):
+        with (tmp_path / "review" / name).open("w", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, COLUMNS + extra, delimiter="\t", lineterminator="\n", restval="")
+            w.writeheader()
+            for day in ("2021-01-01", "2021-06-01"):    # D4 labelled p0 alike on both sides
+                w.writerow({"id": f"vilextime:T2:p0:{day}", "lineage_id": "p0", "as_of": day,
+                            "question": "Hỏi?", "answer": "Đáp.", "verdict": "dat", "guideline_version": "2.0"})
+            w.writerow({"id": "vilextime:T2:p1:2021-01-01", "lineage_id": "p1", "as_of": "2021-01-01",
+                        "question": "Cũ?", "answer": "Đáp.", "verdict": "dat"})            # question changed since
+    kiem(tmp_path, today="20261020")
+    a, b = read(tmp_path / "review/kiem_A.tsv"), read(tmp_path / "review/kiem_B.tsv")
+    ids_a, ids_b = {r["id"] for r in a}, {r["id"] for r in b}
+    assert ids_a | ids_b == {r["id"] for r in rows if r["as_of_strategy"] == "ranh_gioi"}
+    assert len(ids_a & ids_b) == 4                                  # 25% of 16 rows, whole lineages
+    assert not {"vilextime:T2:p0:2021-01-01"} & ids_a & ids_b       # D4 cannot measure agreement again
+    labelled = {r["id"]: (r["verdict"], r["guideline_version"]) for r in a + b if r["verdict"]}
+    assert labelled == {f"vilextime:T2:p0:{d}": ("dat", "2.0") for d in ("2021-01-01", "2021-06-01")}
+    assert {r["lo"] for r in a} == {"1"}
+    hints = {r["id"]: r["note_for_annotator"] for r in a + b}
+    assert "đáp án ngắn cũng nằm trong phiên bản 2" in hints[rows[2]["id"]] and not hints[rows[3]["id"]]
+    kiem(tmp_path, today="20261021")                               # a re-run keeps who has which lineage
+    assert {r["id"] for r in read(tmp_path / "review/kiem_A.tsv")} == ids_a
+
+
+def test_kiem_import_refuses_a_new_label_without_the_required_fields(tmp_path):
+    import csv
+
+    import pytest
+    from openpyxl import load_workbook
+
+    from crosscheck import GUIDELINE, KIEM_COLUMNS, read
+    from crosscheck_xlsx import SHEET, export, ingest
+
+    (tmp_path / "review").mkdir()
+    for who in "AB":
+        with (tmp_path / f"review/kiem_{who}.tsv").open("w", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, KIEM_COLUMNS, delimiter="\t", lineterminator="\n", restval="")
+            w.writeheader()
+            w.writerow({"lo": "1", "id": "r1", "group": "T6", "lineage_id": "p", "question": "Hỏi?",
+                        "verdict": "dat", "guideline_version": "2.0"})        # carried from D4, left alone
+            w.writerow({"lo": "1", "id": "r2", "group": "T6", "lineage_id": "q", "question": "Hỏi?"})
+    export(tmp_path, "kiem")
+    path = tmp_path / "review/kiem_A.xlsx"
+
+    def fill(**cells):
+        wb = load_workbook(path)
+        ws = wb[SHEET]
+        head = [c.value for c in ws[1]]
+        row = {ws.cell(r, 2).value: r for r in range(2, ws.max_row + 1)}["r2"]
+        for k, v in cells.items():
+            ws.cell(row, head.index(k) + 1, v)
+        wb.save(path)
+
+    fill(verdict="dat", da_xem_van_ban_tac_dong="12/2020/NĐ-CP", phut="6")
+    with pytest.raises(SystemExit):
+        ingest(tmp_path, "A", "kiem")                              # T6 needs noi_dung_con_o_dau
+    fill(noi_dung_con_o_dau="không có")
+    ingest(tmp_path, "A", "kiem")
+    got = {r["id"]: (r["verdict"], r["guideline_version"]) for r in read(tmp_path / "review/kiem_A.tsv")}
+    assert got == {"r1": ("dat", "2.0"), "r2": ("dat", GUIDELINE)}
+
+
+def test_drop_adds_each_d4_lineage_with_a_final_khong_dat_once(tmp_path):
+    import csv
+    import json
+
+    from adjudicate import drop
+    from crosscheck import COLUMNS
+
+    (tmp_path / "review").mkdir()
+    (tmp_path / "vilextime").mkdir()
+    for name, extra in (("crosscheck_A.tsv", ["adjudicated"]), ("crosscheck_B.tsv", [])):
+        with (tmp_path / "review" / name).open("w", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, COLUMNS + extra, delimiter="\t", lineterminator="\n", restval="")
+            w.writeheader()
+            w.writerow({"id": "r1", "group": "T2", "lineage_id": "p", "as_of": "2021-01-01",
+                        "verdict": "khong_dat", "reasons": "gold_wrong"})                 # agreed
+            w.writerow({"id": "r2", "group": "T2", "lineage_id": "q", "as_of": "2021-01-01",
+                        "verdict": "dat" if name.endswith("A.tsv") else "khong_dat"})     # adjudicated below
+            w.writerow({"id": "r3", "group": "T2", "lineage_id": "s", "as_of": "2021-01-01", "verdict": "dat"})
+    (tmp_path / "review/hoa_giai_D4.tsv").write_text("id\tverdict\treasons\tnote\tadjudicator\nr2\tdat\t\t\thuman:C\n")
+    drop(tmp_path, today="2026-10-20")
+    drop(tmp_path, today="2026-10-21")
+    got = [json.loads(x) for x in (tmp_path / "vilextime/dropped.jsonl").read_text().splitlines()]
+    assert [(d["lineage_id"], d["reason"]) for d in got] == [("p", "gold_wrong")]

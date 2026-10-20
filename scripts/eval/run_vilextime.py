@@ -110,9 +110,20 @@ def retriever(spec: systems.SystemSpec, corpus: Corpus | None, hits: Path | None
     if not spec.retrieves:
         return None
     from vilexgraph.framework import retrieve  # imported late: P1 ships without it
-    # ponytail: the hits cache key does not name the embedding model; clear it if the model changes
     dense = retrieve.Dense(embed) if spec.dense and embed else None
-    return retrieve.searcher(corpus, spec, retrieve.RetrievalCache(hits), fast=fast, dense=dense)
+    return retrieve.searcher(corpus, spec, retrieve.RetrievalCache(hits, cache_scope(corpus, dense)),
+                             fast=fast, dense=dense)
+
+
+def cache_scope(corpus: Corpus | None, dense) -> str:
+    """The corpus build and the vectors a ranking came from, for the hits cache key."""
+    manifest = corpus.path.parent / "manifest.json" if corpus else None
+    scope = hashlib.sha256(manifest.read_bytes()).hexdigest() if manifest and manifest.exists() else ""
+    if dense is not None:
+        meta = dict(dense.db.execute("SELECT key, value FROM meta"))
+        texts = dense.db.execute("SELECT COUNT(*) FROM text").fetchone()[0]
+        scope += f"|{meta.get('model')}|{meta.get('max_seq_length')}|{texts}"
+    return scope
 
 
 def main() -> None:

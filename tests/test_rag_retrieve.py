@@ -131,6 +131,9 @@ def test_retrieval_cache_round_trip(indexed: Corpus, tmp_path: Path) -> None:
     got = cache.get(key)
     assert got == [Hit("version:x:1", {"lexical": 2.5})]
     cache.close()
+    rebuilt = RetrievalCache(tmp_path / "hits.sqlite", scope="corpus built again")
+    assert rebuilt.get(key) is None, "a rebuilt corpus must not return the old ranking"
+    rebuilt.close()
 
 
 def test_retrieval_cache_key_tracks_the_configuration() -> None:

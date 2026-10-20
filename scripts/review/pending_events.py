@@ -14,7 +14,8 @@ instruction sentence and empty `decision` / `note` columns. `decision` is one of
   stale      the event did change this provision before as_of: gold is wrong
   no_effect  the event does not change this provision's content (wrong target,
              phrase edit elsewhere, document-level act already reflected)
-It only reads; re-run after build_vilextime.py.
+It only reads; re-run after enrich_vilextime.py. `sample_vilextime.py --select` skips a
+lineage `blocked` finds, so the next ranked one takes its rows.
 
 Usage:
     python scripts/review/pending_events.py
@@ -38,6 +39,41 @@ def ancestors(lineage_id: str, parent_of: dict[str, str]) -> list[str]:
         out.append(up)
     return out
 
+# R6 names amendments and repeals: adding a sibling changes no wording of the row's provision
+OPERATIONS = {"amend", "replace", "repeal", "correct", "suspend"}
+
+
+def load_pending(data: Path) -> dict[str, list[dict]]:
+    """Provision id -> the dated `needs_review` amendments and repeals that touch it."""
+    pending: dict[str, list[dict]] = collections.defaultdict(list)
+    for line in (data / "derived/provision_events.jsonl").open(encoding="utf-8"):
+        ev = json.loads(line)
+        if ev.get("status") == "needs_review" and ev.get("effective_on") and ev["operation"] in OPERATIONS:
+            for pid in ev.get("affected_provision_ids") or ():
+                pending[pid].append(ev)
+    return pending
+
+
+def hits(row: dict, pending: dict[str, list[dict]], parent_of: dict[str, str]):
+    """(node, event) for every pending event on the row's provision or an ancestor, on or before as_of."""
+    for node in ancestors(row["lineage_id"], parent_of):
+        for ev in pending.get(node, ()):
+            if ev["effective_on"] <= row["as_of"]:
+                yield node, ev
+
+
+def blocked(rows: list[dict], data: Path) -> set[str]:
+    """Lineages with a row R6 keeps out of test: a hit nobody has judged `no_effect`."""
+    pending = load_pending(data)
+    db = sqlite3.connect(f"file:{data / 'temporal.sqlite'}?mode=ro", uri=True)
+    parent_of = {pid: parent for pid, parent in db.execute("SELECT id, parent_id FROM provisions") if parent}
+    path = data / "review/pending_events.tsv"
+    cleared = {(o["id"], o["event_id"]) for o in csv.DictReader(path.open(encoding="utf-8"), delimiter="\t")
+               if o["decision"] == "no_effect"} if path.exists() else set()
+    return {r["lineage_id"] for r in rows for _, ev in hits(r, pending, parent_of)
+            if (r["id"], ev["id"]) not in cleared}
+
+
 COLUMNS = ("id", "group", "as_of", "valid_from", "question", "answer", "via", "event_id", "actor_number",
            "operation", "effective_on", "status_reason", "evidence", "after_valid_from", "decision", "note")
 
@@ -47,22 +83,13 @@ def main() -> None:
     ap.add_argument("--data", type=Path, default=Path("data"))
     args = ap.parse_args()
 
-    pending: dict[str, list[dict]] = collections.defaultdict(list)
-    for line in (args.data / "derived/provision_events.jsonl").open(encoding="utf-8"):
-        ev = json.loads(line)
-        if ev.get("status") == "needs_review" and ev.get("effective_on"):
-            for pid in ev.get("affected_provision_ids") or ():
-                pending[pid].append(ev)
-
+    pending = load_pending(args.data)
     db = sqlite3.connect(f"file:{args.data / 'temporal.sqlite'}?mode=ro", uri=True)
     parent_of = {pid: parent for pid, parent in db.execute("SELECT id, parent_id FROM provisions") if parent}
     out = []
     for line in (args.data / "derived/vilextime/release.jsonl").open(encoding="utf-8"):
         r = json.loads(line)
-        for node in ancestors(r["lineage_id"], parent_of):
-            for ev in pending.get(node, ()):
-                if ev["effective_on"] > r["as_of"]:
-                    continue
+        for node, ev in hits(r, pending, parent_of):
                 out.append({
                     "id": r["id"], "group": r["group"], "as_of": r["as_of"], "valid_from": r.get("valid_from") or "",
                     "question": r.get("question") or "", "answer": " ".join((r.get("answer") or "").split())[:300],

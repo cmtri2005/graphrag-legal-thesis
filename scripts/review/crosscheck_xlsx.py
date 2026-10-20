@@ -28,6 +28,12 @@ Usage:
     python scripts/review/crosscheck_xlsx.py export
     python scripts/review/crosscheck_xlsx.py import --who A
     python scripts/review/crosscheck_xlsx.py export --set pilot_T6     # pilot T6 (crosscheck.py pilot)
+    python scripts/review/crosscheck_xlsx.py export --set kiem         # kiểm 100% (crosscheck.py kiem)
+    python scripts/review/crosscheck_xlsx.py import --set kiem --who A
+
+Phiếu `kiem` mở thêm bốn ô bắt buộc của hướng dẫn 3.0 (KIEM_FIELDS); `import` từ
+chối một dòng vừa gán mà thiếu ô bắt buộc. Nhãn mang sang (D4, đợt trước) vẫn mở
+để người kiểm xác nhận lại theo 3.0; giữ nguyên thì dòng giữ phiên bản cũ.
 """
 from __future__ import annotations
 
@@ -44,7 +50,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from crosscheck import GUIDELINE, REASONS, VERDICTS, read  # noqa: E402  một từ vựng cho cả hai
+from crosscheck import GUIDELINE, KIEM_FIELDS, REASONS, VERDICTS, read  # noqa: E402  một từ vựng cho cả hai
 
 FONT = "Calibri"
 SHEET = "Gán nhãn"
@@ -53,11 +59,19 @@ SHEET = "Gán nhãn"
 # thì vai trò tác giả lẫn vai trò người phán, và κ không còn đo cùng một item.
 # Một lượt viết lại riêng sau D4 sẽ xử lý, kèm tăng phiên bản release.
 LABEL_COLS = ("verdict", "reasons", "note", "suggestion")
+
+
+def label_cols(name: str) -> tuple[str, ...]:
+    return LABEL_COLS + tuple(KIEM_FIELDS) if name == "kiem" else LABEL_COLS
+
+
 ORDER_SEED = 20261001          # chỉ xáo thứ tự hiển thị của B, không đổi tập dòng
 WIDTHS = {"id": 34, "group": 7, "lineage_id": 30, "question": 62, "as_of": 11, "lead_in": 40,
           "answer": 62, "changed_span": 34, "citation": 20, "law_id": 16, "valid_from": 11,
           "valid_to": 11, "source_url": 30, "note_for_annotator": 30,
-          "verdict": 13, "reasons": 26, "note": 34, "suggestion": 46, "adjudicated": 12}
+          "verdict": 13, "reasons": 26, "note": 34, "suggestion": 46, "adjudicated": 12,
+          "lo": 5, "subgroup": 8, "short_answer": 34, "trich_van_ban_goc": 70, "trich_van_ban_tac_dong": 70,
+          "da_xem_van_ban_tac_dong": 24, "cham_lan_sua": 18, "noi_dung_con_o_dau": 28, "phut": 7}
 
 REASON_HELP = [   # docs/vilextime-annotation.md §2, hướng dẫn 3.0
     ("question_ambiguous", "Câu hỏi khớp nhiều điều khoản hoặc nhiều mục trong danh sách; đáp án chuẩn chỉ là một trong số đó."),
@@ -90,6 +104,8 @@ def guide_lines(who: str, n: int, non_blind: list[str], name: str = "crosscheck"
     """(text, cỡ chữ, in đậm) cho trang Đọc trước."""
     L: list[tuple[str, int, bool]] = []
     add = lambda t="", s=10, b=False: L.append((t, s, b))
+    if name == "kiem":
+        return kiem_guide(who, n, add, L)
     pilot = name == "pilot_T6"
     add(f"{'Pilot T6' if pilot else 'Kiểm chéo'} ViLexTime — người gán nhãn {who}", 15, True)
     if pilot:
@@ -152,6 +168,46 @@ def guide_lines(who: str, n: int, non_blind: list[str], name: str = "crosscheck"
     return L
 
 
+def kiem_guide(who: str, n: int, add, L: list) -> list[tuple[str, int, bool]]:
+    add(f"Kiểm 100% tập test ViLexTime — người kiểm {who}", 15, True)
+    add(f"Hướng dẫn phiên bản {GUIDELINE} · {n} dòng · bản đầy đủ: docs/vilextime-annotation.md · "
+        "định nghĩa: docs/vilextime-dinh-nghia.md", 9)
+    add()
+    add("Bạn đang kiểm cái gì", 12, True)
+    add("Mỗi dòng: một câu hỏi, một mốc as_of, một đáp án chuẩn. Chỉ dòng bạn kiểm xong mới vào tập test.", 10)
+    add("Câu hỏi: một luật sư đọc câu hỏi, biết ngày as_of, tra đúng văn bản — có trả lời đúng bằng cột", 10)
+    add("answer không, và chỉ một cách không? Có → dat. Không → khong_dat + mã lý do.", 10)
+    add()
+    add("Quy trình mỗi dòng", 12, True)
+    add("1. Đọc câu hỏi, mốc as_of, đáp án (answer, cùng câu dẫn lead_in) và đáp án ngắn (short_answer).", 10)
+    add("2. Đối chiếu với trich_van_ban_goc (văn bản bị sửa) và trich_van_ban_tac_dong (văn bản sửa, bãi bỏ:", 10)
+    add("   đoạn tác động, điều khoản chuyển tiếp, điều hiệu lực). Thiếu thì mở source_url.", 10)
+    add("3. Điền verdict (dropdown). khong_dat thì điền reasons (trang \"Mã lý do\"), nhiều mã cách bằng dấu phẩy.", 10)
+    add("4. Điền đủ ô bắt buộc (dưới đây). Thiếu thì file không nạp được.", 10)
+    add("5. Đáp án ngắn sai hoặc thiếu: khong_dat, mã other, ghi đáp án ngắn đúng vào note.", 10)
+    add()
+    add("Ô bắt buộc", 12, True)
+    add("da_xem_van_ban_tac_dong   Số hiệu các văn bản tác động bạn đã xem, hoặc \"không có\". Mọi dòng.", 10)
+    add("cham_lan_sua              T2, T3: ngày chuyển mà câu hỏi chạm tới (vd 2019-12-01; 2024-06-01).", 10)
+    add("noi_dung_con_o_dau        T6: \"không có\", hoặc chỗ mới (văn bản, Điều, Khoản), hoặc \"không chắc\".", 10)
+    add("phut                      Số phút bạn dùng cho dòng này (số nguyên).", 10)
+    add("note                      Bắt buộc khi có gold_wrong, relocated, superseded_by_other_norm hoặc other.", 10)
+    add()
+    add("Cách kiểm từng nhóm", 12, True)
+    for g, h in GROUP_HELP:
+        add(f"{g}   {h}", 10)
+    add()
+    add("Quy tắc", 12, True)
+    add("· Làm độc lập, không trao đổi với người kiểm còn lại. Một phần dòng do cả hai người cùng kiểm để đo", 10, True)
+    add("  đồng thuận (AC1 ≥ 0,80 và p_neg ≥ 0,60); bạn không biết là dòng nào, cứ làm như nhau.", 10, True)
+    add("· Làm theo lô (cột lo, 40 dòng). Xong lô 1 thì gửi để đo phút mỗi dòng và lập lại kế hoạch.", 10)
+    add("· Dòng đã có nhãn từ D4 (cột guideline_version 1.2 hoặc 2.0): xác nhận lại theo 3.0 và điền ô", 10)
+    add("  bắt buộc. Để nguyên thì dòng vẫn tính là chưa kiểm theo 3.0.", 10)
+    add("· Không sửa câu hỏi, đáp án; câu hỏi nên viết lại thì ghi vào suggestion. Đừng sắp xếp hay xóa dòng.", 10)
+    add("· Model chỉ trích dẫn chứng (hai cột trich_...), không có kết luận nào của model trong phiếu.", 10)
+    return L
+
+
 def sheet_guide(wb: Workbook, who: str, n: int, non_blind: list[str], name: str = "crosscheck") -> None:
     ws = wb.active
     ws.title = "Đọc trước"
@@ -181,28 +237,31 @@ def sheet_reasons(wb: Workbook) -> None:
     ws.freeze_panes = "A2"
 
 
-def sheet_labels(wb: Workbook, columns: list[str], rows: list[dict]) -> None:
+def sheet_labels(wb: Workbook, columns: list[str], rows: list[dict], set_name: str = "crosscheck") -> None:
+    labels = label_cols(set_name)
     ws = wb.create_sheet(SHEET)
     for col, name in enumerate(columns, 1):
         c = ws.cell(1, col, name)
         c.font = Font(name=FONT, bold=True, color="FFFFFF")
-        c.fill = PatternFill("solid", fgColor="44546A" if name not in LABEL_COLS else "2F6B3A")
+        c.fill = PatternFill("solid", fgColor="44546A" if name not in labels else "2F6B3A")
         c.alignment = Alignment(vertical="center", wrap_text=True)
         ws.column_dimensions[get_column_letter(col)].width = WIDTHS.get(name, 18)
     editable = PatternFill("solid", fgColor="EAF3EC")
+    reopen = labels != LABEL_COLS          # kiem: a carried label is re-confirmed under 3.0
     for r, row in enumerate(rows, 2):
-        for col, name in enumerate(columns, 1):
-            c = ws.cell(r, col, row.get(name) or "")
+        for col, field in enumerate(columns, 1):
+            c = ws.cell(r, col, row.get(field) or "")
             c.font = Font(name=FONT, size=10)
-            c.alignment = Alignment(vertical="top", wrap_text=name in
-                                    ("question", "answer", "lead_in", "changed_span",
+            c.alignment = Alignment(vertical="top", wrap_text=field in
+                                    ("question", "answer", "lead_in", "changed_span", "short_answer",
+                                     "trich_van_ban_goc", "trich_van_ban_tac_dong",
                                      "note_for_annotator", "note", "reasons", "suggestion"))
-            if name in LABEL_COLS and not row.get("verdict"):   # a carried raw label stays as it was
+            if field in labels and (reopen or not row.get("verdict")):   # a carried raw label stays as it was
                 c.protection, c.fill = Protection(locked=False), editable
             else:
                 c.protection = Protection(locked=True)
-            if name == "source_url" and row.get(name):
-                c.hyperlink = row[name]
+            if field == "source_url" and row.get(field):
+                c.hyperlink = row[field]
                 c.font = Font(name=FONT, size=10, color="0563C1", underline="single")
     verdict = DataValidation(type="list", formula1='"' + ",".join(sorted(VERDICTS)) + '"',
                              allow_blank=True, showErrorMessage=True)
@@ -217,9 +276,9 @@ def sheet_labels(wb: Workbook, columns: list[str], rows: list[dict]) -> None:
     ws.protection.enable()
 
 
-def ordered(rows: list[dict], who: str) -> list[dict]:
-    """Thứ tự hiển thị. B xáo theo lineage; cùng tập dòng, khác thứ tự đọc."""
-    if who == "A":
+def ordered(rows: list[dict], who: str, name: str = "crosscheck") -> list[dict]:
+    """Thứ tự hiển thị. B xáo theo lineage; cùng tập dòng, khác thứ tự đọc. `kiem` đã xáo riêng từng file."""
+    if who == "A" or name == "kiem":
         return list(rows)
     groups = collections.defaultdict(list)
     for r in rows:
@@ -249,7 +308,7 @@ def export(data: Path, name: str = "crosscheck") -> None:
                 raise SystemExit(f"{xlsx} có {len(pending)} nhãn chưa nạp về TSV (chạy import trước); không xuất lại")
         with tsv.open(encoding="utf-8", newline="") as f:
             columns = next(csv.reader(f, delimiter="\t"))
-        if "suggestion" not in columns:
+        if name != "kiem" and "suggestion" not in columns:
             # Ngay sau `note`, để bốn cột người gán nhãn điền nằm liền nhau và
             # `adjudicated` (của bước hoà giải, không phải của họ) ở sau cùng.
             at = columns.index("note") + 1
@@ -258,11 +317,24 @@ def export(data: Path, name: str = "crosscheck") -> None:
         wb = Workbook()
         sheet_guide(wb, who, len(rows), non_blind, name)
         sheet_reasons(wb)
-        sheet_labels(wb, columns, ordered(rows, who))
+        sheet_labels(wb, columns, ordered(rows, who, name), name)
         out = data / f"review/{name}_{who}.xlsx"
         wb.save(out)
         print(f"{out}  {len(rows)} dòng · {len(non_blind)} dòng không còn mù · "
-              f"thứ tự {'như TSV' if who == 'A' else 'xáo theo lineage'}")
+              f"thứ tự {'như TSV' if who == 'A' or name == 'kiem' else 'xáo theo lineage'}")
+
+
+def missing_fields(group: str, cells: dict) -> list[str]:
+    """Guideline 3.0 §5: what a row just labelled in a `kiem` sheet still lacks."""
+    has = lambda c: str(cells.get(c) or "").strip()
+    out = [] if has("da_xem_van_ban_tac_dong") else ["thiếu da_xem_van_ban_tac_dong"]
+    if group in ("T2", "T3") and not has("cham_lan_sua"):
+        out.append("T2/T3 thiếu cham_lan_sua")
+    if group == "T6" and not has("noi_dung_con_o_dau"):
+        out.append("T6 thiếu noi_dung_con_o_dau")
+    if not has("phut").isdigit():
+        out.append("phut phải là số phút (số nguyên)")
+    return out
 
 
 def ingest(data: Path, who: str, name: str = "crosscheck") -> None:
@@ -275,6 +347,7 @@ def ingest(data: Path, who: str, name: str = "crosscheck") -> None:
         if cells.get("id"):
             got[cells["id"]] = cells
     rows = read(tsv)
+    labels = label_cols(name)
     errors: list[str] = []
     out_columns = list(head) + [c for c in ("guideline_version",) if c not in head]
     if len(got) != len(rows):
@@ -286,7 +359,7 @@ def ingest(data: Path, who: str, name: str = "crosscheck") -> None:
             continue
         # Dữ liệu phải y nguyên: nhãn không được nạp lên một nội dung đã khác.
         for col in head:
-            if col in LABEL_COLS or col == "adjudicated":
+            if col in labels or col == "adjudicated":
                 continue
             if (str(src.get(col) or "").strip()) != (r.get(col) or "").strip():
                 errors.append(f"{r['id']}: cột `{col}` đã bị sửa trong xlsx")
@@ -302,16 +375,20 @@ def ingest(data: Path, who: str, name: str = "crosscheck") -> None:
             errors.append(f"{r['id']}: khong_dat nhưng thiếu reasons")
         if verdict == "dat" and codes:
             errors.append(f"{r['id']}: dat nhưng vẫn có reasons")
-        if {"gold_wrong", "other"} & set(codes) and not note:
-            errors.append(f"{r['id']}: gold_wrong/other bắt buộc có note")
+        needs_note = {"gold_wrong", "other"} | ({"relocated", "superseded_by_other_norm"} if name == "kiem" else set())
+        if needs_note & set(codes) and not note:
+            errors.append(f"{r['id']}: {'/'.join(sorted(needs_note & set(codes)))} bắt buộc có note")
+        if name == "kiem" and verdict and any(str(src.get(c) or "").strip() != (r.get(c) or "").strip()
+                                              for c in labels):
+            errors += [f"{r['id']}: {m}" for m in missing_fields(r["group"], src)]
     if errors:
         print(f"{len(errors)} lỗi — KHÔNG ghi gì vào {tsv}:", file=sys.stderr)
         for e in errors[:40]:
             print(f"  {e}", file=sys.stderr)
         raise SystemExit(1)
     for r in rows:
-        new = {col: str(got[r["id"]].get(col) or "").strip() for col in LABEL_COLS}
-        if any(new[c] != (r.get(c) or "") for c in LABEL_COLS):
+        new = {col: str(got[r["id"]].get(col) or "").strip() for col in labels}
+        if any(new[c] != (r.get(c) or "") for c in labels):
             r["guideline_version"] = GUIDELINE if new["verdict"] else ""   # labelled now, under today's guide
         else:                                    # unchanged: keeps its version; no version means 1.2 (crosscheck.py)
             r["guideline_version"] = (r.get("guideline_version") or "1.2") if new["verdict"] else ""
@@ -332,7 +409,7 @@ def main() -> None:
     ap.add_argument("command", choices=("export", "import"))
     ap.add_argument("--data", type=Path, default=Path("data"))
     ap.add_argument("--who", choices=("A", "B"), help="bắt buộc với import")
-    ap.add_argument("--set", default="crosscheck", choices=("crosscheck", "pilot_T6"))
+    ap.add_argument("--set", default="crosscheck", choices=("crosscheck", "pilot_T6", "kiem"))
     args = ap.parse_args()
     if args.command == "export":
         export(args.data, args.set)

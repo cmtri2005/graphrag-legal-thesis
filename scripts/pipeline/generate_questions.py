@@ -325,6 +325,9 @@ def main() -> None:
         for row in rows:
             if row["group"] != args.group:
                 continue
+            if row["lineage_id"] not in by_lineage:   # left the group on a rebuild: nothing to judge against
+                moved["(rời nhóm)", "giữ nguyên"] += 1
+                continue
             text = row["question"] or row["raw"] or ""
             _, context, versions = user_prompt(by_lineage[row["lineage_id"]])
             reason = validate(text, context, versions)

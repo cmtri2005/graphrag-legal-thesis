@@ -7,7 +7,9 @@ once however many units carry it, keyed by sha256: 1,455,372 layer-A units carry
 1,247,953 distinct texts before the header is added.
 
 The run is meant to take days on a CPU, so it can be killed and restarted at any point:
-units are read in rowid order, and each shard records the last rowid it covers.
+units are read in rowid order, and each shard records the last rowid it covers. After the
+corpus is rebuilt, `--rescan` reads every unit again: a text already embedded is skipped by
+its sha, so only new wording reaches the model, and each unit is re-pointed at its text.
 
     <out>/texts.sqlite       unit_id -> sha256; sha256 -> (shard, row); meta
     <out>/shard-00000.npy    float16, L2-normalised, one row per distinct text
@@ -17,6 +19,8 @@ Usage:
     python scripts/eval/embed_corpus.py --layer asis --limit 2000 --out /tmp/embed-test   # timing
     python scripts/eval/embed_corpus.py --layer asis --max-seq-length 256 \
         --model dangvantuan/vietnamese-embedding      # -> data/derived/embed/asis-vietnamese-embedding
+    python scripts/eval/embed_corpus.py --layer asis --max-seq-length 256 \
+        --model dangvantuan/vietnamese-embedding --rescan   # after build_corpus + index_corpus
 """
 from __future__ import annotations
 
@@ -61,6 +65,7 @@ def main() -> None:
     ap.add_argument("--batch", type=int, default=16)
     ap.add_argument("--limit", type=int, help="stop after this many units (a timing run)")
     ap.add_argument("--model", choices=(MODEL, PHOBERT), default=MODEL)
+    ap.add_argument("--rescan", action="store_true", help="read every unit again after the corpus is rebuilt")
     args = ap.parse_args()
     if args.model == PHOBERT and args.max_seq_length > 256:
         raise SystemExit(f"{PHOBERT} has 258 positions: --max-seq-length must be <= 256")
@@ -79,7 +84,10 @@ def main() -> None:
         raise SystemExit(f"{out} was built with {have}; this run asks for {want}. Use another --out.")
     db.executemany("INSERT OR REPLACE INTO meta VALUES (?,?)", want.items())
     db.commit()
-    last = int((db.execute("SELECT value FROM meta WHERE key='last_rowid'").fetchone() or ["0"])[0])
+    if args.rescan:   # units the rebuilt corpus dropped must not keep a vector; the scan re-adds the rest
+        db.execute("DELETE FROM unit")
+        db.commit()
+    last = 0 if args.rescan else int((db.execute("SELECT value FROM meta WHERE key='last_rowid'").fetchone() or ["0"])[0])
     shard = db.execute("SELECT COALESCE(MAX(shard) + 1, 0) FROM text").fetchone()[0]
 
     import numpy as np
@@ -106,7 +114,7 @@ def main() -> None:
             db.executemany("INSERT INTO text VALUES (?,?,?)", [(sha, shard, i) for i, sha in enumerate(order)])
             shard += 1
             embedded += len(order)
-        db.executemany("INSERT OR IGNORE INTO unit VALUES (?,?)", owners)
+        db.executemany("INSERT OR REPLACE INTO unit VALUES (?,?)", owners)   # a reworded unit takes its new text
         db.execute("INSERT OR REPLACE INTO meta VALUES ('last_rowid', ?)", (str(upto),))
         db.commit()
         rate = embedded / max(time.monotonic() - started, 1e-9)

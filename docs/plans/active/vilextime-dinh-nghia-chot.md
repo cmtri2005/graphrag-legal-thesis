@@ -4,8 +4,8 @@ Date: 2026-10-20
 
 ## Status
 
-Active. Chờ luật sư ký phiếu `data/review/gui_luat_su_dinh_nghia.xlsx` (bước 1); các bước máy
-(2–5) làm song song được.
+Active. Bước máy 2–5 xong (20/10). Chờ luật sư ký (bước 1) và người kiểm theo lô phiếu
+`data/review/kiem_{A,B}.xlsx` (bước 6).
 
 ## Outcome
 
@@ -84,7 +84,19 @@ Out of scope:
   nhận 16.970 → 19.295, đã đối chiếu 3.049 → 3.262, chờ người xem 30.568 → 34.067). `build_versions.py
   --target-document document:146845`: điểm a khoản 5 Điều 59 NĐ 05/2021 hết hiệu lực 15/01/2026 (trước là
   01/07/2026). `pytest` 528 qua. Dữ liệu thật chưa đổi: dựng lại ở bước 5.
-- [ ] Bước 5: dựng lại, xuất phiếu
+- [x] Bước 5: dựng lại, xuất phiếu — 20/10. Trích sự kiện, chuỗi phiên bản, kho, corpus (BM25 + embed bù
+  6.340 đoạn PhoBERT trên CPU, `verify_embed.py` OK) dựng lại trên dữ liệu thật; bản cũ lưu ở thư mục tạm.
+  R1 thêm đổi tên NHNN chi nhánh, Tổng cục TĐC, Cục Thuế địa phương, Cục Hàng hải / Đường thủy nội địa,
+  đổi tên một phần, chữ cái đầu dòng (948 + 2.503 ứng viên bỏ). 53 lineage D4 `khong_dat` vào `dropped.jsonl`
+  (`adjudicate.py drop`); R6 chặn ngay khi xếp hạng và chọn. Quota mục 9 (`sample_vilextime.RELEASE`): T1 150,
+  T2 450 (T4 150), T3 150, T5a 20 (10 lineage luật sư xác nhận, còn lại sau R6 và D4), T6a 100, T6b 250 →
+  1.120 dòng ranh giới, 2.383 dòng cả dòng giữa khoảng và trước hiệu lực; `check_release.py` OK. Câu hỏi mới
+  do DeepSeek viết (hết số dư ở T2 205/401, T1 0/179: chỉ thiếu câu dự trữ sau dòng chọn cuối, tập chọn
+  không đổi); 123 đáp án ngắn mới do Claude viết (`short_answers.jsonl`). Phiếu `data/review/kiem_{A,B}.xlsx`
+  (`crosscheck.py kiem`): A 700, B 698 dòng, 278 dòng (25%) gán đôi ngoài D4, 139 dòng mang nhãn D4,
+  1.120/1.120 dòng có trích văn bản gốc, 18 lô 40 dòng; gợi ý máy ở 74 dòng của A (cờ validity, R6, đáp án
+  ngắn nằm trong bản khác). Sửa kèm: `transitions_of` đọc sự kiện của phiên bản; đáp án ngắn lệch lời văn
+  sau dựng lại thành "hết hạn" thay vì dừng; khóa cache truy xuất theo corpus và bộ vector.
 - [ ] Bước 6: kiểm định người
 - [ ] Bước 7: gold độc lập
 - [ ] Bước 8: đóng băng

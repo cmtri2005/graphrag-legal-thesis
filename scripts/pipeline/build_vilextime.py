@@ -128,7 +128,8 @@ def transitions_of(row: dict, documents: dict[str, tuple]) -> list[dict]:
     another once a chain has three amendments. The join is already in the data:
     an event id is `event:<portal id>:<digest>`, that portal id names the
     acting document, and that document's `effective_from` is the date the new
-    version opens.
+    version opens — unless a part of the act starts on its own date, which is
+    why a version's own `created_by_event_id` wins when the pool carries it.
     """
     acting = {}
     for event_id in row["event_ids"]:
@@ -140,6 +141,9 @@ def transitions_of(row: dict, documents: dict[str, tuple]) -> list[dict]:
     out = []
     for before, after in zip(row["versions"], row["versions"][1:]):
         event_id, actor_id = acting.get(after["effective_from"], (None, None))
+        if after.get("created_by_event_id"):   # the version names its event: no date join needed
+            event_id = after["created_by_event_id"]
+            actor_id = f"document:{event_id.split(':', 2)[1]}"
         number, _, _, _, effective_from, _ = documents.get(actor_id, (None,) * 6)
         out.append({
             "on": after["effective_from"],

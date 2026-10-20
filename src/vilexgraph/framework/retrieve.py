@@ -72,8 +72,10 @@ class RetrievalCache:
     left out of the key: the four dates of a question then cost one search.
     """
 
-    def __init__(self, path: Path | str | None) -> None:
-        self.db = None
+    def __init__(self, path: Path | str | None, scope: str = "") -> None:
+        # `scope` names what the configuration does not: the corpus and the vectors searched.
+        # A rebuilt corpus under the same key would otherwise hand back the old ranking.
+        self.db, self.scope = None, scope
         if path is None:
             return
         Path(path).parent.mkdir(parents=True, exist_ok=True)
@@ -92,7 +94,7 @@ class RetrievalCache:
     def get(self, key: str) -> list[Hit] | None:
         if self.db is None:
             return None
-        row = self.db.execute("SELECT payload FROM hits WHERE key=?", (key,)).fetchone()
+        row = self.db.execute("SELECT payload FROM hits WHERE key=?", (self._scoped(key),)).fetchone()
         if row is None:
             return None
         return [Hit(unit_id, signals) for unit_id, signals in json.loads(row[0])]
@@ -101,8 +103,11 @@ class RetrievalCache:
         if self.db is None:
             return
         payload = json.dumps([[h.unit_id, h.signals] for h in hits], ensure_ascii=False)
-        self.db.execute("INSERT OR REPLACE INTO hits VALUES (?,?)", (key, payload))
+        self.db.execute("INSERT OR REPLACE INTO hits VALUES (?,?)", (self._scoped(key), payload))
         self.db.commit()
+
+    def _scoped(self, key: str) -> str:
+        return hashlib.sha256(f"{self.scope}|{key}".encode()).hexdigest() if self.scope else key
 
     def close(self) -> None:
         if self.db is not None:

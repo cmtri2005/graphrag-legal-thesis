@@ -66,7 +66,8 @@ and picks boundary rows as before; this step reads `selected.jsonl` and writes
       From `data/vilextime/short_answers.jsonl`, keyed by (lineage, version),
       its writer in `by` (a person or a model, audited with the row's label);
       it must be a span of the answer or lead-in,
-      or several such spans joined by " … ".
+      or several such spans joined by " … ". One that no longer is — a rebuild
+      gave its version id other wording — is dropped and counted, not shipped.
 
 Usage:
     python scripts/pipeline/enrich_vilextime.py
@@ -446,7 +447,7 @@ def main() -> None:
     actor_markers = {a: markers(nodes) for a, nodes in actor_nodes.items()}
     fields = domains(data, {r["target"]["document_id"] for r in rows})
 
-    shorts = {}
+    shorts, stale_shorts = {}, []
     path = data / "vilextime/short_answers.jsonl"
     if path.exists():
         for line in path.open(encoding="utf-8"):
@@ -501,7 +502,9 @@ def main() -> None:
         r["legal_markers"] = sorted({m for a in acts for m in actor_markers.get(a, ())})
         s = shorts.get((lid, r["version_id"]))
         if s and not check_short_answer(s["short_answer"], r["answer"], r["target"].get("lead_in")):
-            raise SystemExit(f"{r['id']}: short_answer không phải một đoạn của đáp án/câu dẫn: {s['short_answer']!r}")
+            # written for the wording this version id held before a rebuild changed it: stale, not wrong
+            stale_shorts.append(r["id"])
+            s = None
         r["short_answer"] = s["short_answer"] if s else None
         return r
 
@@ -542,7 +545,8 @@ def main() -> None:
     print("  domain_source:", dict(collections.Counter(r["domain_source"] for r in out)))
     print("  split:", dict(collections.Counter((r["split"], r["group"]) for r in out if r["as_of_strategy"] == "ranh_gioi")))
     print("  legal_markers:", dict(collections.Counter(m for r in out for m in r["legal_markers"])))
-    print(f"  short_answer: {sum(1 for r in out if r['short_answer'])}/{len(out)}")
+    print(f"  short_answer: {sum(1 for r in out if r['short_answer'])}/{len(out)}"
+          f" ({len(stale_shorts)} bỏ vì lời văn của phiên bản đã đổi khi dựng lại: {stale_shorts[:3]})")
 
 
 if __name__ == "__main__":

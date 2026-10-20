@@ -281,3 +281,14 @@ def test_t2_ranks_its_near_identical_slice_apart_and_a_pair_stays_in_one_part():
     assert split == {"regular": ["a"], "near": ["b"]}
     assert dict((p, n) for p, _, n in parts("T2", records, 900))["near"] == T2_NEAR_ROWS * OVERSAMPLE["T2"]
     assert part_of({"group": "T2"}) == "regular" and part_of({"group": "T2", "near_identical": True}) == "near"
+
+
+def test_a_version_dated_by_part_of_its_act_still_names_that_act():
+    """TT 13/2019/TT-NHNN: khoản 1 Điều 12 changed on 26/08/2019, the act took effect on 05/10/2019."""
+    row = _t3_row()
+    row["versions"] = [dict(v, created_by_event_id=None) for v in row["versions"]]
+    row["versions"][1].update(effective_from="2016-01-01", created_by_event_id="event:96223:3d6c034aa9aa475d54ac2874")
+    got = transitions_of(row, DOCUMENTS)
+    assert got[0]["event_id"] == "event:96223:3d6c034aa9aa475d54ac2874"
+    assert got[0]["actor"]["law_id"] == "38/2015/TT-NHNN"
+    assert got[1]["actor"]["law_id"] == "15/2021/TT-NHNN"          # no event on the version: the date join

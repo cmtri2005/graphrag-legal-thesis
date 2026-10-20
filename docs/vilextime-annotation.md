@@ -161,8 +161,10 @@ chấm theo vế nội dung. Quy trình:
 
 ## 5. Quy trình kiểm
 
-1. **Phiếu kiểm** có đoạn trích văn bản gốc và văn bản tác động (`crosscheck_evidence.py`). Model
-   chỉ được trích dẫn chứng, không được điền kết luận.
+1. **Phiếu kiểm** `data/review/kiem_{A,B}.xlsx` (`crosscheck.py kiem`, rồi `crosscheck_xlsx.py export
+   --set kiem`) có mọi dòng `ranh_gioi` của bản phát hành, đoạn trích văn bản gốc và văn bản tác động
+   (`crosscheck_evidence.py`), cờ của máy và cột `lo`. Model chỉ được trích dẫn chứng, không được
+   điền kết luận. Nạp lại: `crosscheck_xlsx.py import --set kiem --who A`.
 2. **Ô bắt buộc** cho mỗi dòng, ngoài `verdict`, `reasons`, `note`:
    - `da_xem_van_ban_tac_dong`: liệt kê số hiệu các văn bản tác động đã xem (hoặc "không có");
    - `cham_lan_sua` (T2, T3, T4): những ngày chuyển mà câu hỏi chạm tới;

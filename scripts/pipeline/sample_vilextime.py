@@ -18,20 +18,18 @@ Rules, in order:
   documents do not collapse into a handful of decrees;
 * a lineage is never cut between its dates.
 
-T6 is sampled for 150 rows, not 100: its quota also absorbs whatever T5 falls
-short of 50 once the legal advisor has ruled (plan, Q3).
-
 Writes `data/vilextime/sample.jsonl`, committed: it is the ranking of record, and
 a re-run keeps it (see `sample`). Offline and deterministic given that file.
 
 `--select` is the second half, run after `generate_questions.py --sample` and
 `build_vilextime.py`: it walks the same ranks and writes the records of the
 first lineages whose question is the model's (not the template) and whose rows
-still fit, to exactly the release quota. T6 is selected at 100 until T5 exists;
-its shortfall is added once the legal advisor rules. A lineage listed in
+still fit, to exactly the release quota (`RELEASE`); T5 takes only the pairs the
+lawyer confirmed. A lineage listed in
 `data/vilextime/dropped.jsonl` (review found it unfixable: not a norm, a
 truncated source, too few distinct answers) is skipped as if its question had
-failed, so the next ranked lineage takes its rows.
+failed, so the next ranked lineage takes its rows; so is one rule R6 keeps out of test
+(`pending_events.blocked`).
 
 Usage:
     python scripts/pipeline/sample_vilextime.py
@@ -41,33 +39,30 @@ from __future__ import annotations
 
 import argparse
 import collections
+import csv
 import json
 import random
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "review"))
+from pending_events import blocked  # noqa: E402  rule R6
 
 # T4 merged into T2 (build_question_pool.QUOTA): the same 150 rows ship, told
 # apart by the `near_identical` facet instead of by a quota of their own, so the
 # release total is unchanged at 1,150.
 QUOTA = {"T1": 250, "T2": 550, "T3": 200, "T5": 50, "T6": 150}
-RELEASE = {**QUOTA, "T6": 100}   # T6 absorbs whatever T5 falls short of 50 once the adviser rules
-# 29/09 (CMT): after the review's drops, every T3 chain still available is 3 rows long,
-# so T3 lands on 199 or 202, never 200; T1 (one row a lineage) takes the odd row.
-RELEASE.update(T1=251, T3=199)
-# 07/10 (CMT): H3 — a unit losing force only because an ancestor was repealed — is
-# the mechanism behind 14,157 units, 2.4x the directly repealed ones, and it was
-# shipping 24 rows (~12 lineages, MDE ~25 pp), which is an illustration and not a
-# testable hypothesis. Raising the pool's ANCESTOR_QUOTA alone did nothing: this
-# release cap was the binding one. T1's control role needs 150, not 251 (+-7.9 pp),
-# and T2 keeps 450 of its 550, so the rows move to T6 without leaving the
-# proposal's 1,100-1,300 envelope: 150 + 450 + 199 + 50 + 376 = 1,225.
-RELEASE.update(T1=150, T2=450, T6=376)
+# Release rows per group, docs/vilextime-dinh-nghia.md §9 (20/10, CMT): T2 450 is 300 regular
+# + T4's 150 near-identical; T6 350 is T6a 100 (direct) + T6b 250 (ancestor, H3). T5 has no
+# number: T5a is every pair the lawyer confirmed in data/review/t5_items.tsv, nothing else.
+RELEASE = {"T1": 150, "T2": 450, "T3": 150, "T5": None, "T6": 350}
 OVERSAMPLE = {"T1": 2, "T2": 2, "T3": 3, "T5": 2, "T6": 2}   # T3 kept 9 of 22 in the first run
 PER_DOCUMENT = 2
 # T6 has two parts (decided 28/09): "ancestor" — lost force because its Điều,
 # Khoản, Mục or Chương was repealed, the case H3 is about — is ranked on its own,
 # so the "direct" ranking already on disk is untouched, and takes this many rows
 # out of T6's release quota.
-T6_ANCESTOR_ROWS = 300   # of RELEASE["T6"]; ~150 lineages, paired MDE ~8-9 pp
+T6_ANCESTOR_ROWS = 250   # of RELEASE["T6"]: T6b
 # T2 has two parts too (decided 11/10): "near" — a pair whose texts are near-identical
 # (`near_identical`, the citation trap T4 was) — is ranked on its own and takes this
 # many rows out of T2's quota. Merged into T2 on 07/10 without a quota of its own,
@@ -79,13 +74,16 @@ SEED = 20260924
 EXCLUDED_T5 = {"correction", "guidance_in_sync"}
 
 
-def sample(records: list[dict], target: int, seed: int = SEED, prior: list[str] = ()) -> list[dict]:
+def sample(records: list[dict], target: int, seed: int = SEED, prior: list[str] = (),
+           skip: set[str] = frozenset()) -> list[dict]:
     """Ranked lineages whose rows add up to at least `target`.
 
     `prior` is the ranking already on disk. It is kept: a lineage that left the
     group is skipped, and only what lies past it comes from the seeded shuffle.
     Reshuffling instead would reorder the whole group whenever one lineage
-    moved, and orphan the questions already written for the old order.
+    moved, and orphan the questions already written for the old order. `skip`
+    (dropped, or kept out of test by R6) is left out like a flagged lineage, so no
+    question is written for a lineage `--select` would pass over.
     """
     lineages: dict[str, list[dict]] = collections.defaultdict(list)
     for record in records:
@@ -102,7 +100,7 @@ def sample(records: list[dict], target: int, seed: int = SEED, prior: list[str] 
         recs = lineages[lid]
         doc = recs[0]["target"]["document_id"]
         excluded = (recs[0].get("retroactive") or {}).get("kind") in EXCLUDED_T5
-        if any(r["flags"] for r in recs) or excluded or per_doc[doc] >= PER_DOCUMENT:
+        if any(r["flags"] for r in recs) or excluded or lid in skip or per_doc[doc] >= PER_DOCUMENT:
             continue
         per_doc[doc] += 1
         rows += len(recs)
@@ -172,22 +170,29 @@ def main() -> None:
 
     base = args.data / "derived/vilextime"
     ranking = args.data / "vilextime/sample.jsonl"
+    dropfile = args.data / "vilextime/dropped.jsonl"
+    dropped = ({json.loads(line)["lineage_id"] for line in dropfile.open(encoding="utf-8")}
+               if dropfile.exists() else set())
     if args.select:
         ranked = [json.loads(line) for line in ranking.open(encoding="utf-8")]
-        dropfile = args.data / "vilextime/dropped.jsonl"
-        dropped = ({json.loads(line)["lineage_id"] for line in dropfile.open(encoding="utf-8")}
-                   if dropfile.exists() else set())
+        with (args.data / "review/t5_items.tsv").open(encoding="utf-8") as f:
+            confirmed = {r["lineage_id"] for r in csv.DictReader(f, delimiter="\t")
+                         if r["LUẬT SƯ: đáp án mốc sau đúng? (có/không)"].strip().lower() == "có"}
+        by_group = {group: [json.loads(line) for line in (base / f"{group}.jsonl").open(encoding="utf-8")]
+                    for group in RELEASE}
+        stale = blocked([r for rows in by_group.values() for r in rows], args.data)
         total = 0
         with (base / "selected.jsonl").open("w", encoding="utf-8") as out:
-            got: dict[str, int] = {}
             for group, quota in RELEASE.items():
-                if group == "T6":   # T6 takes what T5 could not fill (plan phase-4, decision 20/09)
-                    quota += RELEASE["T5"] - got.get("T5", RELEASE["T5"])
                 records = collections.defaultdict(list)
-                for line in (base / f"{group}.jsonl").open(encoding="utf-8"):
-                    record = json.loads(line)
+                for record in by_group[group]:
                     records[record["lineage_id"]].append(record)
-                passed = {lid for lid, recs in records.items() if recs[0]["question_source"]["kind"] == "llm"} - dropped
+                llm = {lid for lid, recs in records.items() if recs[0]["question_source"]["kind"] == "llm"}
+                passed = llm - dropped - stale
+                print(f"{group}: R6 bỏ {len(llm & stale)} lineage có sự kiện chưa áp")
+                if group == "T5":
+                    passed &= confirmed
+                    quota = sum(len(records[lid]) for lid in passed)
                 quotas = ({"ancestor": args.ancestor_rows, "direct": quota - args.ancestor_rows} if group == "T6"
                           else {"near": T2_NEAR_ROWS, "regular": quota - T2_NEAR_ROWS} if group == "T2"
                           else {None: quota})
@@ -195,7 +200,6 @@ def main() -> None:
                           for lid in select([p for p in ranked if p["group"] == group and part_of(p) == part],
                                             passed, q)]
                 rows = [r for lid in chosen for r in sorted(records[lid], key=lambda r: r["as_of"])]
-                got[group] = len(rows)
                 total += len(rows)
                 print(f"{group}: {len(rows):>4}/{quota} dòng · {len(chosen)} lineage"
                       + ("  << THIẾU, sinh thêm mẫu" if len(rows) < quota else ""))
@@ -210,10 +214,13 @@ def main() -> None:
             r = json.loads(line)
             prior[(r["group"], part_of(r))].append(r["lineage_id"])
     lines = []
+    by_group = {group: [json.loads(line) for line in (base / f"{group}.jsonl").open(encoding="utf-8")]
+                for group in QUOTA}
+    skip = dropped | blocked([r for rows in by_group.values() for r in rows], args.data)
     for group, quota in QUOTA.items():
-        records = [json.loads(line) for line in (base / f"{group}.jsonl").open(encoding="utf-8")]
+        records = by_group[group]
         for part, part_records, need in parts(group, records, quota * OVERSAMPLE[group], args.ancestor_rows):
-            picked = sample(part_records, need, prior=prior[(group, part)])
+            picked = sample(part_records, need, prior=prior[(group, part)], skip=skip)
             rows = sum(p["rows"] for p in picked)
             short = "  << THIẾU" if rows < need else ""
             print(f"{group}{'/' + part if part else ''}: {len(picked):>4} lineage · {rows:>4} dòng (cần {need})"

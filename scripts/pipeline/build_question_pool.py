@@ -93,6 +93,11 @@ SEED = 20260920
 ANCESTOR_QUOTA = 200
 
 
+# The event that opened each version travels with it: joining by the acting document's own
+# effective_from misses an amendment dated by a part of the act (5877a5a, TT 13/2019/TT-NHNN).
+VERSION_FIELDS = ("id", "ordinal", "text", "effective_from", "effective_to", "created_by_event_id")
+
+
 def _d(value: str | None) -> date | None:
     return date.fromisoformat(value) if value else None
 
@@ -108,15 +113,17 @@ def in_force_at(versions: list[dict], at: date) -> dict | None:
 
 # Old and new Vietnamese tone placement ("hoá"/"hóa", "uỷ"/"ủy") are the same word.
 _OLD_TONE = re.compile("o[àáảãạ]|o[èéẻẽẹ]|u[ỳýỷỹỵ]")
+_LIST_LETTER = re.compile(r"(?<!\w)[a-zđ]\)")
 _NEW_TONE = {"oà": "òa", "oá": "óa", "oả": "ỏa", "oã": "õa", "oạ": "ọa",
              "oè": "òe", "oé": "óe", "oẻ": "ỏe", "oẽ": "õe", "oẹ": "ọe",
              "uỳ": "ùy", "uý": "úy", "uỷ": "ủy", "uỹ": "ũy", "uỵ": "ụy"}
 
 
 def _words(text: str | None) -> str:
-    """Case, spacing, punctuation and tone placement removed — what `cosmetic_only` compares on."""
+    """Case, spacing, punctuation, tone placement and list letters ("a)") removed — what
+    `cosmetic_only` compares on. A number is kept: "tại Điều 5." is not a list marker."""
     folded = _OLD_TONE.sub(lambda m: _NEW_TONE[m[0]], (text or "").casefold())
-    return " ".join(re.findall(r"\w+", folded))
+    return " ".join(re.findall(r"\w+", _LIST_LETTER.sub(" ", folded)))
 
 
 # R1-ii (docs/vilextime-dinh-nghia.md): renames from the 2025 reorganisation, in `_words`
@@ -126,6 +133,7 @@ def _words(text: str | None) -> str:
 # that only rewrites the name does not change the legal answer. Where a function was
 # split, every receiving agency is listed: the rename is recognised only if the new
 # text names one of them in its place.
+# The more specific name first: `_renamed` replaces in this order.
 RENAMES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("bộ kế hoạch và đầu tư", ("bộ tài chính",)),
     ("bộ giao thông vận tải", ("bộ xây dựng",)),
@@ -140,7 +148,16 @@ RENAMES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("sở nông nghiệp và phát triển nông thôn", ("sở nông nghiệp và môi trường",)),
     ("sở thông tin và truyền thông", ("sở khoa học và công nghệ",)),
     ("sở lao động thương binh và xã hội", ("sở nội vụ", "sở y tế")),
+    # NHNN: 63 provincial branches became regional ones from 01/03/2025
+    ("ngân hàng nhà nước chi nhánh tỉnh thành phố trực thuộc trung ương",
+     ("ngân hàng nhà nước chi nhánh tại các khu vực", "ngân hàng nhà nước chi nhánh khu vực",
+      "ngân hàng nhà nước khu vực")),
     ("ngân hàng nhà nước chi nhánh", ("ngân hàng nhà nước khu vực",)),
+    ("tổng cục tiêu chuẩn đo lường chất lượng", ("ủy ban tiêu chuẩn đo lường chất lượng quốc gia",
+                                                 "ủy ban tiêu chuẩn đo lường chất lượng")),
+    ("cục thuế địa phương", ("cơ quan thuế cấp tỉnh", "thuế tỉnh")),
+    ("cục đường thủy nội địa việt nam", ("cục hàng hải và đường thủy việt nam",)),
+    ("cục hàng hải việt nam", ("cục hàng hải và đường thủy việt nam",)),
     ("tổng cục", ("cục",)),
 )
 # R1-iii: a citation changed and nothing else. Counts only in a document that says a
@@ -160,7 +177,23 @@ def _renamed(a: str, b: str) -> bool:
             new = next((s for s in successors if s in b), None)
             if new:
                 out = out.replace(old, new)
-    return out != a and out == b
+    return (out != a and out == b) or _renamed_somewhere(a, b)
+
+
+def _renamed_somewhere(a: str, b: str) -> bool:
+    """An amendment that renames some occurrences and leaves others ("tổng cục … ủy ban …").
+
+    Every old name, in either text, and every successor in `b` become one tag per pair; a
+    successor already in `a` stays as written, so a real swap of two agencies still differs.
+    """
+    tagged_a, tagged_b, hit = f" {a} ", f" {b} ", False
+    for k, (old, successors) in enumerate(RENAMES):
+        tag = f" #{k}# "
+        hit = hit or f" {old} " in tagged_a
+        tagged_a = tagged_a.replace(f" {old} ", tag).replace(f" {old} ", tag)   # twice: adjacent names
+        for name in (old, *successors):
+            tagged_b = tagged_b.replace(f" {name} ", tag).replace(f" {name} ", tag)
+    return hit and a != b and tagged_a.split() == tagged_b.split()
 
 
 def transition_kind(before: str | None, after: str | None, auto_update: bool = False) -> str:
@@ -475,7 +508,7 @@ def build_row(group: str, provision: dict, versions: list[dict], today: date,
                           else versions[-1]["effective_from"] if len(versions) > 1 else None),
         "gold": gold,
         "versions": [
-            {k: v[k] for k in ("id", "ordinal", "text", "effective_from", "effective_to")}
+            {k: v[k] for k in VERSION_FIELDS}
             for v in versions
         ],
         "event_ids": sorted(set(events)),
@@ -549,8 +582,7 @@ def build_t5_row(provision: dict, versions: list[dict], evidence: dict[str, dict
             "title": provision["title"],
             "transition_on": v["effective_from"],
             "gold": gold,
-            "versions": [{k: w[k] for k in ("id", "ordinal", "text", "effective_from", "effective_to")}
-                         for w in versions],
+            "versions": [{k: w[k] for k in VERSION_FIELDS} for w in versions],
             "event_ids": events,
             "evidence": [evidence[e]["evidence"] for e in events if e in evidence],
             "actor_numbers": sorted({evidence[e]["actor_number"] for e in events if e in evidence}),

@@ -7,6 +7,9 @@
                data/review/hoa_giai_D4.tsv (id, verdict, reasons, note đã chốt) và
                cột `adjudicated` của crosscheck_A.tsv (= verdict đã chốt).
                Không ghi gì nếu còn một lỗi hoặc còn dòng chưa chốt.
+    drop     thêm vào data/vilextime/dropped.jsonl mọi lineage D4 có dòng mang nhãn
+             cuối `khong_dat` (đã chốt, hoặc A và B cùng nhãn), để lineage xếp hạng
+             kế tiếp thế chỗ (hướng dẫn §5 bước 6). Lineage đã có trong file thì bỏ qua.
 
 Nhãn thô `verdict` của A và B không bị đụng tới: chúng được phát hành nguyên vẹn
 (ADR 0003 §9), và AC1 đã đo trên chúng.
@@ -14,6 +17,7 @@ Nhãn thô `verdict` của A và B không bị đụng tới: chúng được ph
 Usage:
     python scripts/review/adjudicate.py export
     python scripts/review/adjudicate.py import --by "human:A+B"
+    python scripts/review/adjudicate.py drop
 
 `--by` ghi ai chốt vào cột `adjudicator` (người, hoặc model kèm người xác nhận):
 biên bản D5 phải nói đúng điều đó.
@@ -22,7 +26,9 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import sys
+from datetime import date
 from pathlib import Path
 
 from openpyxl import Workbook, load_workbook
@@ -31,7 +37,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from crosscheck import REASONS, VERDICTS, read  # noqa: E402
+from crosscheck import REASONS, VERDICTS, d4_final, read  # noqa: E402
 from crosscheck_xlsx import FONT, sheet_reasons  # noqa: E402
 
 SHEET = "Hoà giải"
@@ -197,14 +203,34 @@ def ingest(data: Path, by: str) -> None:
           f"-> data/review/hoa_giai_D4.tsv, cột adjudicated của {tsv}")
 
 
+def drop(data: Path, today: str | None = None) -> None:
+    path = data / "vilextime/dropped.jsonl"
+    old = [json.loads(line) for line in path.open(encoding="utf-8")] if path.exists() else []
+    known = {d["lineage_id"] for d in old}
+    new = {}
+    for (lid, _), r in sorted(d4_final(data).items()):
+        if r["verdict"] == "khong_dat" and lid not in known and lid not in new:
+            new[lid] = {"lineage_id": lid, "group": r["group"],
+                        "reason": (r["reasons"].split(",")[0].strip() or "other"),
+                        "note": f"D4 {r['as_of']}: {r['note']}".strip(),
+                        "by": "D4 (nhãn cuối của người, xem hoa_giai_D4.tsv)",
+                        "at": today or date.today().isoformat()}
+    with path.open("a", encoding="utf-8") as f:
+        for d in new.values():
+            f.write(json.dumps(d, ensure_ascii=False) + "\n")
+    print(f"thêm {len(new)} lineage D4 khong_dat -> {path} (đã có {len(old)})")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("command", choices=("export", "import"))
+    ap.add_argument("command", choices=("export", "import", "drop"))
     ap.add_argument("--data", type=Path, default=Path("data"))
     ap.add_argument("--by", help="bắt buộc với import: ai chốt")
     args = ap.parse_args()
     if args.command == "export":
         export(args.data)
+    elif args.command == "drop":
+        drop(args.data)
     elif not args.by:
         ap.error("import cần --by")
     else:

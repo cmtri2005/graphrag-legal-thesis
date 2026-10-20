@@ -1915,6 +1915,10 @@ Bám phân công trong đề cương UIT; nhóm đổi tùy ý.
   chuỗi đều ≥ 2 lần sửa thực chất; sửa lỗi D5 §5.4–5.6: đọc thêm 562 văn bản sửa đổi chỉ nhận ra qua tên, nghị
   định sửa nhiều nghị định (tên văn bản bị sửa ở tiêu đề Chương, NĐ 14/2026: 6 → 155 sự kiện, Điều 59 NĐ 05/2021
   hết hiệu lực 15/01/2026), bãi bỏ một phần chuyển sang chờ người xem, bỏ 887 sự kiện giả "sửa cả Điều".
+- 20/10, bước 5 xong: dựng lại toàn bộ (sự kiện 56.624, corpus và BM25 mới, embed PhoBERT bù 6.340 đoạn); bản
+  phát hành 1.120 dòng ranh giới theo quota định nghĩa §9, 2.383 dòng tổng, `check_release.py` OK. Phiếu kiểm
+  100% `data/review/kiem_{A,B}.xlsx` (A 700, B 698, 25% gán đôi, có trích văn bản gốc). Kết quả B2/B3 trên dev
+  (W2-12) dựng trên corpus cũ: chạy lại trước khi báo. DeepSeek hết số dư: còn 375 câu hỏi dự trữ T1/T2 chưa sinh.
 
 **Tuần 2 (19–25/10): kiểm định xong, đóng băng**
 

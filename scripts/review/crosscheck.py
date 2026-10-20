@@ -33,6 +33,17 @@ version control and makes `kappa` read the empty originals.
             — they were not blind to whoever labelled them, and the record of D5
             must say so. Writes data/review/crosscheck_result.json.
             `--set pilot_T6` reads the pilot files instead and writes pilot_T6_result.json.
+    kiem    writes data/review/kiem_A.tsv and kiem_B.tsv: every boundary row of the
+            release, the check of docs/vilextime-dinh-nghia.md §8 that decides the test
+            split. KIEM_OVERLAP of each group's rows, whole lineages, go to both files
+            (labelled blind, `kappa --set kiem`); the rest alternate A/B. A D4 lineage
+            goes to one file with its final D4 label (adjudicated, or agreed) when the
+            question and answer are unchanged — both have seen its adjudication, so it
+            cannot measure agreement. Each row carries the cut of the raw text
+            (`kiem_evidence.jsonl` from crosscheck_evidence.py --ids), the machine's
+            flags, a batch number `lo`, and the guideline 3.0 fields KIEM_FIELDS. A
+            re-run keeps who has which lineage and every label still on an unchanged
+            row; a file carrying labels is first copied to kiem_X.<YYYYMMDD>.tsv.
     pilot   writes data/review/pilot_T6_A.tsv and pilot_T6_B.tsv: PILOT_ROWS T6
             boundary rows outside D4 that carry no label anywhere, whole
             lineages, split ancestor/direct in the release's proportion (B8,
@@ -48,6 +59,7 @@ Usage:
     python scripts/review/crosscheck.py build
     python scripts/review/crosscheck.py kappa [--set pilot_T6]
     python scripts/review/crosscheck.py pilot
+    python scripts/review/crosscheck.py kiem
 """
 from __future__ import annotations
 
@@ -62,6 +74,7 @@ from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "pipeline"))
+from enrich_vilextime import norm  # noqa: E402  the span comparison check_short_answer uses
 from sample_vilextime import select  # noqa: E402  exact row totals without splitting a lineage
 
 SEED = 20260925
@@ -92,6 +105,18 @@ REASONS = {"question_ambiguous", "question_leaks", "gold_wrong", "group_mismatch
 COLUMNS = ["id", "group", "lineage_id", "question", "as_of", "lead_in", "answer", "changed_span", "citation",
            "law_id", "valid_from", "valid_to", "source_url", "note_for_annotator", "verdict", "reasons", "note",
            "suggestion", "guideline_version"]   # guideline_version: the one the row was labelled under (B8)
+
+
+# The 100% check (definition §8): 25% of rows labelled by both, batches of 30-50 rows.
+KIEM_OVERLAP = 0.25
+KIEM_BATCH = 40
+# guideline 3.0 §5: required besides verdict/reasons/note (`cham_lan_sua` on T2/T3, `noi_dung_con_o_dau` on T6)
+KIEM_FIELDS = ["da_xem_van_ban_tac_dong", "cham_lan_sua", "noi_dung_con_o_dau", "phut"]
+KIEM_COLUMNS = ["lo", "id", "group", "subgroup", "lineage_id", "question", "as_of", "lead_in", "answer",
+                "short_answer", "changed_span", "citation", "law_id", "valid_from", "valid_to", "source_url",
+                "trich_van_ban_goc", "trich_van_ban_tac_dong", "note_for_annotator",
+                "verdict", "reasons", "note", "suggestion", *KIEM_FIELDS, "guideline_version"]
+CELL_MAX = 32000   # an Excel cell holds 32,767 characters
 
 
 def cohen_kappa(a: list[str], b: list[str]) -> float | None:
@@ -298,6 +323,146 @@ def build(data: Path, today: str | None = None) -> None:
     print(f"giữ nhãn cũ: A {kept['crosscheck_A.tsv']} dòng, B {kept['crosscheck_B.tsv']} dòng")
 
 
+def evidence_cells(e: dict | None) -> tuple[str, str]:
+    """(trich_van_ban_goc, trich_van_ban_tac_dong) from one crosscheck_evidence.py record."""
+    if not e:
+        return "", ""
+    b = e.get("base") or {}
+    base = (f"{b.get('document')} · ký {b.get('issued')} · hiệu lực {b.get('effective_from')} đến "
+            f"{b.get('effective_to') or 'nay'} · {b.get('status_today')}\n{b.get('passage') or '(không tìm thấy đoạn)'}")
+    acts = []
+    for a in e.get("actors") or ():
+        parts = [f"[{a.get('op')}] {a.get('document')} · ký {a.get('issued')} · hiệu lực {a.get('effective_from')}",
+                 a.get("passage") or "(không tìm thấy đoạn tác động)"]
+        parts += [f"— Chuyển tiếp: {a['transitional']}"] if a.get("transitional") else []
+        parts += [f"— Hiệu lực: {a['in_force']}"] if a.get("in_force") else []
+        acts.append("\n".join(parts))
+    missing = f"\n(thiếu: {', '.join(e['missing'])})" if e.get("missing") else ""
+    return base[:CELL_MAX], ("\n\n".join(acts) + missing)[:CELL_MAX]
+
+
+def d4_final(data: Path) -> dict[tuple[str, str], dict]:
+    """(lineage_id, as_of) -> the D4 row with its final label: adjudicated, else the label both gave."""
+    a = {r["id"]: r for r in read(data / "review/crosscheck_A.tsv")}
+    b = {r["id"]: r for r in read(data / "review/crosscheck_B.tsv")}
+    adj = {r["id"]: r for r in read(data / "review/hoa_giai_D4.tsv")} if (data / "review/hoa_giai_D4.tsv").exists() else {}
+    out = {}
+    for i, ra in a.items():
+        rb = b.get(i, {})
+        if i in adj and adj[i]["verdict"]:
+            label = {c: adj[i][c] for c in ("verdict", "reasons", "note")}
+            label["note"] = f"[D4 hoà giải, {adj[i].get('adjudicator')}] {label['note']}".strip()
+        elif ra["verdict"] and ra["verdict"] == rb.get("verdict"):
+            label = {"verdict": ra["verdict"], "reasons": ra["reasons"] or rb.get("reasons", ""),
+                     "note": "[D4: A và B cùng nhãn] " + " | ".join(filter(None, (ra["note"], rb.get("note"))))}
+        else:
+            continue
+        label["guideline_version"] = ra.get("guideline_version") or rb.get("guideline_version") or "1.2"
+        out[(ra["lineage_id"], ra["as_of"])] = {**ra, **label}
+    return out
+
+
+def kiem(data: Path, today: str | None = None) -> None:
+    out = data / "review"
+    stamp = today or date.today().strftime("%Y%m%d")
+    released = [json.loads(line) for line in (data / "derived/vilextime/release.jsonl").open(encoding="utf-8")]
+    rows = [r for r in released if r["as_of_strategy"] == "ranh_gioi"]
+    wordings = collections.defaultdict(dict)   # lineage -> version -> answer, for the contrast hint
+    for r in released:
+        if r["answer"]:
+            wordings[r["lineage_id"]][r["version_id"]] = r["answer"]
+    by_lineage: dict[str, list[dict]] = collections.defaultdict(list)
+    for r in rows:
+        by_lineage[r["lineage_id"]].append(r)
+    earlier, who_had = {}, collections.defaultdict(set)
+    for who in "AB":
+        path = out / f"kiem_{who}.tsv"
+        old = read(path) if path.exists() else []
+        earlier[who] = {(r["lineage_id"], r["as_of"]): r for r in old}
+        for r in old:
+            who_had[r["lineage_id"]].add(who)
+        if any(r.get("verdict") for r in old):
+            keep = path.with_name(f"{path.stem}.{stamp}.tsv")
+            if keep.exists():
+                raise SystemExit(f"{keep} đã có; không ghi đè bản lưu nhãn cũ")
+            shutil.copyfile(path, keep)
+            print(f"lưu nhãn cũ -> {keep}")
+    d4 = d4_final(data)
+    d4_lineages = {lid for lid, _ in d4} & set(by_lineage)
+
+    # who labels which lineage: kept from the last run, else D4 to one person, else overlap/alternate
+    assign: dict[str, set[str]] = {lid: who_had[lid] for lid in by_lineage if who_had.get(lid)}
+    free_d4 = sorted(d4_lineages - set(assign))
+    random.Random(f"{SEED}:kiem:d4").shuffle(free_d4)
+    for k, lid in enumerate(free_d4):
+        assign[lid] = {"AB"[k % 2]}
+    for group in sorted({r["group"] for r in rows}):
+        lineages = sorted(lid for lid, rs in by_lineage.items() if rs[0]["group"] == group)
+        need = round(KIEM_OVERLAP * sum(len(by_lineage[lid]) for lid in lineages))
+        have = sum(len(by_lineage[lid]) for lid in lineages if assign.get(lid) == {"A", "B"})
+        free = [lid for lid in lineages if lid not in assign]
+        random.Random(f"{SEED}:kiem:{group}").shuffle(free)
+        for k, lid in enumerate(free):
+            if have < need:
+                assign[lid], have = {"A", "B"}, have + len(by_lineage[lid])
+            else:
+                assign[lid] = {"AB"[k % 2]}
+
+    evidence_path = out / "kiem_evidence.jsonl"
+    evidence = ({e["id"]: e for e in map(json.loads, evidence_path.open(encoding="utf-8"))}
+                if evidence_path.exists() else {})
+    flags = collections.defaultdict(set)
+    if (out / "validity_queue.tsv").exists():
+        for q in read(out / "validity_queue.tsv"):
+            if q["active"] == "co" and q["decision"] != "bao_dong_gia":
+                flags[q["id"]].add(f"{q['kind']} {q['ref']}".strip())
+    if (out / "pending_events.tsv").exists():   # rule R6: undecided, the row stays out of test
+        for q in read(out / "pending_events.tsv"):
+            if not q["decision"]:
+                flags[q["id"]].add(f"R6 sự kiện chưa áp: {q['actor_number']} {q['operation']} {q['effective_on']}")
+    for r in rows:   # definition §4 T2: a version's short answer must not sit inside another version
+        spans = [f" {norm(x)} " for x in (r.get("short_answer") or "").split("…") if x.strip()]
+        for vid, text in wordings[r["lineage_id"]].items():
+            if spans and vid != r["version_id"] and all(x in f" {norm(text)} " for x in spans):
+                flags[r["id"]].add(f"đáp án ngắn cũng nằm trong phiên bản {vid.rsplit(':', 1)[1]}: câu hỏi có tách được hai mốc?")
+    kept, carried, sizes = collections.Counter(), collections.Counter(), collections.Counter()
+    for who in "AB":
+        mine = sorted(lid for lid, w in assign.items() if who in w)
+        random.Random(f"{SEED}:kiem:order:{who}").shuffle(mine)   # A and B read the overlap in different orders
+        lines = []
+        for lid in mine:
+            for r in sorted(by_lineage[lid], key=lambda r: r["as_of"]):
+                cells = dict(zip(COLUMNS, row_cells(r)))
+                goc, tac = evidence_cells(evidence.get(r["id"]))
+                hint = "; ".join(filter(None, [cells["note_for_annotator"], *sorted(flags.get(r["id"], ()))]))
+                cells.update(subgroup=r.get("subgroup") or "", short_answer=r.get("short_answer") or "",
+                             trich_van_ban_goc=goc, trich_van_ban_tac_dong=tac, note_for_annotator=hint)
+                key = (lid, r["as_of"])
+                old = earlier[who].get(key)
+                same = lambda x: x and all(x[c] == cells[c] for c in ("question", "answer"))
+                if old and old.get("verdict") and same(old):
+                    cells.update({c: old.get(c, "") for c in ("verdict", "reasons", "note", "suggestion",
+                                                              *KIEM_FIELDS, "guideline_version")})
+                    kept[who] += 1
+                elif key in d4 and len(assign[lid]) == 1 and same(d4[key]):
+                    cells.update({c: d4[key][c] for c in ("verdict", "reasons", "note", "guideline_version")})
+                    carried[who] += 1
+                lines.append(cells)
+        for k, cells in enumerate(lines):
+            cells["lo"] = str(1 + k // KIEM_BATCH)
+        sizes[who] = len(lines)
+        with (out / f"kiem_{who}.tsv").open("w", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, KIEM_COLUMNS, delimiter="\t", lineterminator="\n", extrasaction="ignore")
+            w.writeheader()
+            w.writerows(lines)
+    both = sum(len(rs) for lid, rs in by_lineage.items() if assign[lid] == {"A", "B"})
+    print(f"{len(rows)} dòng ranh_gioi: A {sizes['A']}, B {sizes['B']}, gán đôi {both} ({both / len(rows):.0%}) "
+          f"-> {out}/kiem_A.tsv, kiem_B.tsv")
+    print(f"  nhãn D4 mang sang (câu hỏi, đáp án không đổi): A {carried['A']}, B {carried['B']}; "
+          f"giữ nhãn đợt kiểm trước: A {kept['A']}, B {kept['B']}")
+    print(f"  {sum(1 for r in rows if r['id'] in evidence)}/{len(rows)} dòng có trích văn bản gốc ({evidence_path.name})")
+
+
 def pilot(data: Path) -> None:
     out = [data / f"review/pilot_T6_{who}.tsv" for who in "AB"]
     if any(p.exists() for p in out):
@@ -411,14 +576,14 @@ def kappa(data: Path, name: str = "crosscheck") -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("command", choices=("build", "kappa", "pilot"))
+    ap.add_argument("command", choices=("build", "kappa", "pilot", "kiem"))
     ap.add_argument("--data", type=Path, default=Path("data"))
-    ap.add_argument("--set", default="crosscheck", choices=("crosscheck", "pilot_T6"), help="kappa only")
+    ap.add_argument("--set", default="crosscheck", choices=("crosscheck", "pilot_T6", "kiem"), help="kappa only")
     args = ap.parse_args()
     if args.command == "kappa":
         kappa(args.data, args.set)
     else:
-        (build if args.command == "build" else pilot)(args.data)
+        {"build": build, "pilot": pilot, "kiem": kiem}[args.command](args.data)
 
 
 if __name__ == "__main__":
