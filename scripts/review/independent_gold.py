@@ -49,6 +49,7 @@ import csv
 import hashlib
 import json
 import random
+import re
 from pathlib import Path
 
 SEED = 20261011
@@ -125,10 +126,44 @@ def actors(data: Path, document_id: str) -> str:
     if not path.exists():
         return "(không có dữ liệu Lược đồ — tra trực tiếp trên cổng)"
     diagram = json.loads(path.read_text(encoding="utf-8"))
-    found = [f"{ACTS[int(code)]}: {' '.join(item['name'].split())[:140]} ({URL.format(item['id'])})"
-             for code, items in (diagram.get("documentNamesBySource") or {}).items() if int(code) in ACTS
-             for item in items or []]
-    return " | ".join(found) or "(cổng không liệt kê văn bản tác động nào)"
+    acts: dict[str, dict] = {}      # one entry per acting document, however many relations it has
+    for code, items in (diagram.get("documentNamesBySource") or {}).items():
+        if int(code) not in ACTS:
+            continue
+        for item in items or []:
+            entry = acts.setdefault(item["id"], {"name": " ".join(item["name"].split()), "ops": []})
+            if ACTS[int(code)] not in entry["ops"]:
+                entry["ops"].append(ACTS[int(code)])
+    if not acts:
+        return "(cổng không liệt kê văn bản tác động nào)"
+    lines = []
+    for portal_id, entry in acts.items():
+        number = re.search(r"số\s+(\S+)", entry["name"])
+        label = number[1] if number and "/" in number[1] else entry["name"][:90]
+        if entry["ops"] == ["hợp nhất"]:     # a consolidation acts on nothing: a reading aid, last
+            lines.append(("9999", f"• {label} — văn bản hợp nhất, chỉ để tham khảo lời văn\n  {URL.format(portal_id)}"))
+            continue
+        when = effective_from(data, portal_id, number[1] if number else None)
+        lines.append((when or "9998", f"• {label} — {', '.join(entry['ops'])}"
+                      f" — hiệu lực {'/'.join(reversed(when.split('-'))) if when else '? (tra trên cổng)'}"
+                      f"\n  {URL.format(portal_id)}"))
+    return "\n".join(text for _, text in sorted(lines))
+
+
+def effective_from(data: Path, portal_id: str, number: str | None) -> str | None:
+    """The acting document's own start, from its crawl, else from the corpus index by number."""
+    raw = data / "raw" / f"{portal_id}.json"
+    if raw.exists():
+        day = (json.loads(raw.read_text(encoding="utf-8")).get("effFrom") or "")[:10]
+        if day:
+            return day
+    index = data / "derived/corpus/index.sqlite"
+    if number and index.exists():
+        import sqlite3
+        row = sqlite3.connect(index).execute(
+            "SELECT effective_from FROM documents WHERE law_id = ?", (number,)).fetchone()
+        return row[0] if row and row[0] else None
+    return None
 
 
 def read(path: Path) -> list[dict]:
