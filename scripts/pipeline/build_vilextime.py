@@ -38,7 +38,7 @@ from pathlib import Path
 # `min_repr`, `norm_continuity`), no field removed and none changed in meaning.
 SCHEMA_VERSION = "1.1.0"
 QUESTION_TEMPLATE_ID = "as_of_provision_text.v1"
-GUIDELINE_VERSION = "2.0"   # docs/vilextime-annotation.md; scripts/review/labels.py GUIDELINE
+GUIDELINE_VERSION = "3.0"   # docs/vilextime-annotation.md; scripts/review/labels.py GUIDELINE
 # "Điểm đ" -> "đ", "Khoản 3" -> "3", "Điều 23" -> "23". The label is the whole
 # tail because an article can be "23a" and a point can be "đ".
 _LABEL = re.compile(r"^(?:Điều|Khoản|Điểm)\s+(?P<label>\S+)$")

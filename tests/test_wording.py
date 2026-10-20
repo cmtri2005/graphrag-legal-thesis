@@ -119,3 +119,16 @@ def test_apply_phrase_refuses_a_deletion_that_strands_punctuation():
                         [("cấp huyện", "")]) is None
     # a clean deletion still goes through
     assert apply_phrase("Cấm thi hoặc kiểm tra.", [("thi hoặc ", "")]) == "Cấm kiểm tra."
+
+
+def test_an_omnibus_heading_without_nhu_sau_opens_its_wording():
+    # NĐ 14/2026/NĐ-CP Điều 123: the heading is the instruction.
+    paragraphs = [
+        "Điều 123. Sửa đổi, bổ sung khoản 2 Điều 43",
+        "“2. Thủ tục đóng tạm thời cảng hàng không, sân bay:",
+        "a) Cục Hàng không Việt Nam thẩm định.”.",
+        "Điều 124. Hiệu lực thi hành",
+        "“Ghi chú” không phải lời văn mới.",
+    ]
+    blocks = wording_blocks(paragraphs)
+    assert list(blocks) == [0] and blocks[0].lines[-1] == "a) Cục Hàng không Việt Nam thẩm định."

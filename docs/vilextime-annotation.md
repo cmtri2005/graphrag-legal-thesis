@@ -1,277 +1,189 @@
 # Hướng dẫn gán nhãn ViLexTime
 
-Phiên bản hướng dẫn: **2.0** (12/10/2026). Phần pháp lý của bản này đã được luật sư xác nhận
-ngày 12/10/2026. Bản thảo kèm các ví dụ đối chiếu với văn bản thô nằm ở
-`docs/vilextime-annotation-v2-draft.md`. Thay đổi so với 1.2:
-- câu hỏi về nội dung được trả lời bằng quy phạm đang điều chỉnh nội dung đó, kể cả khi
-  quy phạm đã chuyển chỗ. Với T6, nội dung bị bãi bỏ có thể đã chuyển chỗ: kiểm bảy yếu tố,
-  áp quy tắc khoảng trống (§3);
-- ngày hỏi được hiểu là ngày sự việc phát sinh. Điều khoản chuyển tiếp cho việc đang thực
-  hiện không làm câu hỏi mơ hồ (§1, mã `transitional_rule` ở §2);
-- tiêu chí `khong_dat` cho T2, kể cả lát gần giống (T4 cũ) (§3);
-- T5 xét theo Điều 152 Luật 80/2015/QH13, hoặc theo Điều 55 Luật 64/2025/QH15 với văn bản
-  ký từ 01/04/2025 (§3);
-- ngưỡng đồng thuận là AC1 và p_neg, κ chỉ báo kèm (§5);
-- mỗi nhãn kiểm chéo ghi phiên bản hướng dẫn đã dùng (cột `guideline_version`). 166 nhãn
-  của A và 165 nhãn của B gán trước 12/10 mang phiên bản 1.2.
+Phiên bản hướng dẫn: **3.0** (20/10/2026). Bản này cài đặt `docs/vilextime-dinh-nghia.md`
+(định nghĩa bộ dữ liệu, bản chốt). Hai tài liệu mâu thuẫn thì định nghĩa đúng. Các quy tắc pháp
+lý đánh dấu ⚖ ở định nghĩa đang chờ luật sư ký (`data/review/gui_luat_su_dinh_nghia.xlsx`).
 
-Làm rõ ngày 14/10/2026 (vẫn là 2.0, nhóm chốt sau pilot T6, chưa hỏi luật sư), từ hai dòng
-pilot lệch: câu ghép có/không với nội dung (§2 `group_mismatch`, §3 T6), và cơ quan kế
-thừa, địa danh đổi do sáp nhập trong quy trình chuyển chỗ (§3 T6, bước 3).
+Thay đổi so với 2.0:
+- **đổi tên cơ quan, đơn vị do sắp xếp bộ máy không còn là thay đổi** (định nghĩa R1). Ví dụ
+  "đổi tên cơ quan → `dat`" của bản 2.0 bị bỏ;
+- T6 **không chắc** về chuyển chỗ thì `khong_dat`, mã `relocation_unclear` (bản 2.0: `dat` kèm
+  `unclear`). Chuyển chỗ rõ ràng dùng mã `relocated` (bản 2.0: `gold_wrong`);
+- T3 phải ra **≥ 3 đáp án khác nhau** cho chính câu hỏi;
+- T5 tách **T5a** (hồi tố) và **T5b** (đã ký, chưa có hiệu lực);
+- bỏ loại dòng `sau_het_hieu_luc`;
+- thêm mã `superseded_by_other_norm`, `restructuring_2025`, `reference_only`, `relocated`,
+  `relocation_unclear` và các mã máy (mục 2);
+- mỗi dòng kiểm có **ô bắt buộc** (mục 5): người kiểm ghi đã xem gì, không chỉ ghi kết luận;
+- tập test chỉ gồm dòng người đã kiểm; nhãn model không còn được tính là kiểm định (mục 6).
 
-Thay đổi của 1.2 (29/09/2026) so với 1.1, đều là hệ quả của phản biện
-`docs/reports/JUDGE_DATASET.md`:
-- dòng anh em không còn mặc định đúng theo nhãn của dòng ranh giới (§5.1);
-- audit có thêm bước kiểm hiệu lực tại mọi ngày hỏi, và các luật audit bắt buộc
-  mới (§6);
-- có loại dòng mới `sau_het_hieu_luc` (§3);
-- người audit phải là người.
-
-So với 1.0: câu dẫn là một phần của đáp án (§1), có mã `transitional_rule` (§2), có
-lớp `meta_issues` và quy trình cho nhãn do model gán (§6). `review.guideline_version`
-của bản ghi phát hành và `data/review/labels.tsv` (trên từng nhãn) ghi phiên bản
-hướng dẫn đã dùng.
-Áp dụng cho đợt kiểm chéo D4 (Cohen κ) và mọi lượt kiểm tay sau đó.
+Bản 2.0 (12/10/2026) và 1.2 (29/09/2026) còn trong lịch sử git. Mỗi nhãn ghi phiên bản hướng dẫn
+đã dùng (cột `guideline_version`).
 
 ## 1. Bạn đang kiểm cái gì
 
-Mỗi dòng là **một câu hỏi được hỏi ở một mốc thời gian** (`as_of`), kèm **đáp án
-chuẩn**: nội dung điều khoản có hiệu lực tại mốc đó. Đáp án do máy dựng từ chuỗi
-phiên bản, không do LLM viết. Câu hỏi do LLM viết và chưa ai đọc.
+Mỗi dòng là **một câu hỏi được hỏi ở một mốc thời gian** (`as_of`), kèm **đáp án chuẩn**: nội
+dung điều khoản có hiệu lực tại mốc đó. Đáp án do máy dựng từ chuỗi phiên bản. Câu hỏi do model
+viết nháp.
 
-Bạn trả lời **một câu duy nhất cho mỗi dòng**:
+Bạn trả lời **một câu cho mỗi dòng**:
 
-> Một luật sư đọc câu hỏi, biết ngày `as_of`, và tra đúng văn bản — người đó có
-> trả lời **đúng bằng nội dung trong cột đáp án** không, và có trả lời được **chỉ
-> một cách** không?
+> Một luật sư đọc câu hỏi, biết ngày `as_of`, tra đúng văn bản — người đó có trả lời **đúng
+> bằng nội dung trong cột đáp án** không, và trả lời được **chỉ một cách** không?
 
-Có → `dat`. Không → `khong_dat` và ghi lý do.
+Có → `dat`. Không → `khong_dat` và ghi mã lý do.
 
-**Câu hỏi hỏi nội dung, không hỏi vị trí** (v2.0). Câu hỏi không dẫn số Điều, Khoản
-(`prompts/vilextime/base.md`), nên đáp án là **quy phạm đang điều chỉnh nội dung được
-hỏi** tại `as_of`, kể cả khi quy phạm đó đã chuyển sang khoản khác hay văn bản khác.
-Một khoản đã bị bãi bỏ thì vẫn là đã bị bãi bỏ, dù ở chỗ khác có quy định tương tự. Chỉ
-đổi mức phạt thì vẫn là cùng một quy phạm.
+Ba quy tắc nền:
 
-**Ngày hỏi là ngày sự việc phát sinh** (v2.0). Câu hỏi chỉ nêu `as_of` mà không nói sự
-việc phát sinh khi nào thì hiểu là sự việc phát sinh tại `as_of`, và trả lời theo bản có
-hiệu lực tại ngày đó.
+- **Mốc `as_of` là ngày tính hiệu lực pháp lý** ⚖. Đáp án là phiên bản có hiệu lực tại `as_of`
+  theo khoảng hiệu lực mà chính các văn bản quy định, **kể cả hiệu lực trở về trước**. Sự việc
+  hiểu là phát sinh tại `as_of`. Điều khoản chuyển tiếp chỉ giữ bản cũ cho việc **đang thực
+  hiện** thì không đổi đáp án.
+- **Câu hỏi hỏi nội dung, không hỏi vị trí.** Đáp án là quy phạm đang điều chỉnh nội dung được
+  hỏi tại `as_of`. Chỉ đổi mức phạt thì vẫn là cùng một quy phạm.
+- **Câu dẫn là một phần của đáp án.** Với mục trong danh sách, đọc điểm cùng câu dẫn của nút
+  cha tại `as_of` (cột `lead_in`). Ở nghị định xử phạt, mức phạt nằm ở câu dẫn của khoản.
 
-**Câu dẫn là một phần của đáp án** (v1.1). Với mục trong danh sách, luật sư đọc
-điểm cùng câu dẫn của nút cha tại `as_of` (cột `lead_in`). Ở nghị định xử phạt,
-mức phạt nằm ở câu dẫn của khoản còn điểm chỉ nêu hành vi: câu hỏi "bị phạt bao
-nhiêu" với đáp án là một điểm là `dat` nếu câu dẫn nêu mức phạt.
-
-## 2. Nhãn (từ vựng đóng, không thêm mã mới trong đợt kiểm)
+## 2. Nhãn
 
 | Cột | Giá trị | Ghi chú |
 |---|---|---|
-| `verdict` | `dat` · `khong_dat` | Cohen κ tính trên cột này |
+| `verdict` | `dat` · `khong_dat` | Đồng thuận tính trên cột này |
 | `reasons` | một hoặc nhiều mã bên dưới, cách nhau bằng dấu phẩy | Chỉ điền khi `khong_dat` |
-| `note` | tự do | Bắt buộc khi có `gold_wrong` hoặc `other` |
+| `note` | tự do | Bắt buộc khi có `gold_wrong`, `relocated`, `superseded_by_other_norm` hoặc `other` |
 
-Mã lý do:
+Mã lý do (danh sách đóng, không thêm mã trong đợt kiểm):
 
-| Mã | Khi nào dùng |
+| Mã | Khi nào |
 |---|---|
-| `question_ambiguous` | Câu hỏi khớp **nhiều điều khoản** hoặc nhiều mục trong danh sách; đáp án chuẩn chỉ là một trong số đó |
-| `question_leaks` | Câu hỏi đã nói ra đáp án, nêu số hiệu/Điều/Khoản, ký hiệu mục ("c)"), hoặc để lộ phiên bản nào |
-| `gold_wrong` | Nội dung ở cột đáp án **không đúng** là điều khoản có hiệu lực tại `as_of` (sai phiên bản, vế "trước sửa đổi" thực ra đã là bản sửa, text bị cắt mất phần được hỏi). Từ v2.0, gồm cả dòng T6 có đáp án rỗng trong khi nội dung đã chuyển chỗ (§3) |
-| `group_mismatch` | Câu hỏi không làm được việc của nhóm: T2 (kể cả cặp gần giống) không chạm chỗ thay đổi (hai mốc trả lời như nhau); T3 chỉ chạm một lần sửa; T6 chỉ hỏi có/không (câu ghép có thêm vế hỏi nội dung thì không tính, §3); T5 hỏi vào phần không đổi |
-| `unanswerable_as_asked` | Câu hỏi đúng chủ đề nhưng không thể trả lời bằng đáp án (hỏi "khi nào" mà đáp án không nói thời hạn, hỏi "ai" mà đáp án không nêu chủ thể...) |
-| `transitional_rule` | **v1.1.** Điều khoản chuyển tiếp của văn bản sửa đổi giữ quy định cũ cho đúng quan hệ trong câu hỏi (ví dụ hồ sơ nộp trước ngày hiệu lực), nên nội dung ở cột đáp án không phải quy định được áp dụng. Ghi Điều chuyển tiếp ở `note`. **v2.0:** chỉ dùng khi câu hỏi tự nêu quan hệ đó, hoặc khi điều khoản chuyển tiếp buộc chính sự việc phát sinh tại `as_of` theo bản cũ. Điều khoản chỉ giữ bản cũ cho việc *đang thực hiện* thì không phải lỗi: đáp án vẫn là bản mới (§1) |
-| `other` | Lỗi khác — mô tả ở `note` |
+| `question_ambiguous` | Câu hỏi khớp **nhiều điều khoản** hoặc nhiều mục; đáp án chuẩn chỉ là một trong số đó |
+| `question_leaks` | Câu hỏi nói sẵn đáp án, nêu số hiệu, Điều, Khoản, ký hiệu mục ("c)"), hoặc để lộ phiên bản |
+| `unanswerable_as_asked` | Đúng chủ đề nhưng đáp án không trả lời được điều câu hỏi hỏi (hỏi "khi nào" mà đáp án không có thời hạn…) |
+| `group_mismatch` | Câu hỏi không làm được việc của nhóm (mục 3) |
+| `gold_wrong` | Cột đáp án không phải phiên bản có hiệu lực tại `as_of`: sai phiên bản, lời văn thiếu hay thừa so với văn bản gốc, vế "trước sửa đổi" thực ra đã là bản sửa |
+| `transitional_rule` | Điều khoản chuyển tiếp giữ bản cũ cho đúng quan hệ câu hỏi **tự nêu**, hoặc buộc chính sự việc phát sinh tại `as_of` theo bản cũ. Ghi Điều chuyển tiếp ở `note` |
+| `relocated` | (T6) Nội dung bị bãi bỏ đã chuyển chỗ, đạt đủ 7 yếu tố (mục 3). Ghi chỗ mới ở `note` |
+| `relocation_unclear` | (T6) Không chắc có chuyển chỗ hay không. Ghi chỗ nghi ở `note` |
+| `superseded_by_other_norm` | ⚖ Văn bản cấp cao hơn, hoặc văn bản cùng cơ quan ban hành sau, quy định khác về cùng vấn đề mà không sửa điều khoản này. Ghi văn bản ở `note` |
+| `restructuring_2025` | ⚖ `as_of` sau ngày sắp xếp bộ máy (bộ: 01/03/2025; cấp huyện, tỉnh: 01/07/2025) mà đáp án vẫn nêu cơ quan, cấp, địa danh cũ chưa được sửa lời văn |
+| `reference_only` | Đáp án chỉ là dẫn chiếu ("thực hiện theo Thông tư X"), không có nội dung pháp lý |
+| `rename_only` · `cosmetic_only` · `auto_reference_update` | Lần đổi mà câu hỏi dựa vào chỉ là đổi tên cơ quan do sắp xếp, đổi hình thức, hoặc cập nhật dẫn chiếu tự áp (định nghĩa R1). Máy đã lọc phần lớn; người dùng khi phát hiện còn sót |
+| `other` | Lỗi khác, mô tả ở `note` |
 
-Lớp thứ hai, **chỉ ở `data/review/labels.tsv`**, không vào κ: `meta_issues` ghi lỗi
-siêu dữ liệu của đồ thị mà không làm sai đáp án tại `as_of` (T1 hỏi ngày hôm sau
-ngày hiệu lực nên `valid_to` sai không đổi đáp án). Mã: `valid_to_wrong` ·
-`valid_from_wrong` · `group_wrong` · `citation_path_wrong` · `doc_number_wrong` ·
-`lead_in_wrong` · `other`. Một dòng có thể `dat` và vẫn mang `meta_issues`.
+Lớp phụ, chỉ ở `data/review/labels.tsv` và không vào đồng thuận: `meta_issues` ghi lỗi siêu dữ
+liệu không làm sai đáp án tại `as_of` (`valid_to_wrong` · `valid_from_wrong` · `group_wrong` ·
+`citation_path_wrong` · `doc_number_wrong` · `lead_in_wrong` · `other`).
 
 ## 3. Cách kiểm từng nhóm
 
-Đọc **câu hỏi → mốc → đáp án**, rồi mở link văn bản (cột `source_url`, là văn bản
-bị sửa) khi cần kiểm cột đáp án. Cột `note_for_annotator` ghi ngày ký và ngày hiệu
-lực của văn bản sửa đổi ở dòng T5.
+Đọc **câu hỏi → mốc → đáp án**. Đọc đoạn trích văn bản gốc và văn bản tác động ở phiếu; mở link
+(`source_url`) khi cần đọc thêm.
 
-- **T1** (một phiên bản): kiểm chủ yếu `question_ambiguous` — với mục trong danh
-  sách, câu hỏi phải ghim được đúng mục, không phải cả danh sách.
-- **T2** (hai phiên bản khác rõ): hai dòng cùng câu hỏi, khác mốc. Câu hỏi phải
-  chạm vào chỗ đã đổi; nếu đọc câu hỏi mà hai đáp án đều trả lời được như nhau →
-  `group_mismatch`. Kiểm **vế trước** (mốc sớm) với văn bản gốc: nếu văn bản gốc
-  trên cổng đã là lời văn sau sửa đổi → `gold_wrong`. Mỗi dòng (mỗi ngày hỏi) gán
-  riêng; một cặp có thể có một dòng `dat`, một dòng `khong_dat`. Ba ca (v2.0):
-  - **luật sư trả lời giống nhau ở cả hai ngày** → `group_mismatch`. Ví dụ không đạt:
-    "Điều 42 *Nghị định này*" đổi thành "Điều 42 *Nghị định số 27/2019/NĐ-CP*", cùng một
-    điều, chỉ khác cách viết. Ví dụ đạt: đổi tên cơ quan ("Tổng cục" thành "Ủy ban");
-  - **câu hỏi chứa sẵn vế trước của đáp án** → dòng ngày trước `question_leaks`
-    (120/2021/NĐ-CP: đề đã nêu "xã, phường, thị trấn"). Dòng ngày sau vẫn có thể `dat`,
-    vì chữ cũ trong đề là cái bẫy kéo về bản cũ;
-  - **đổi chủ thể giữa hai mốc** (25/2010/TT-BNNPTNT Điều 21: từ 18/07/2017 điều này nói
-    về Cục Thú y, không còn là Cục được hỏi) → dòng ngày sau `gold_wrong`, ghi `note`.
-- **T3** (chuỗi ≥ 3 phiên bản): câu hỏi phải tách được mọi mốc, không chỉ mốc đầu
-  và cuối.
-- **Cặp gần giống** (T4 cũ, từ 07/10 là lát `near_identical` của T2): chỗ đổi thường
-  chỉ là một cụm từ (tên cơ quan, số ngày). Câu hỏi phải hỏi đúng vào cụm đó; hỏi chung
-  chung là `group_mismatch`. Kiểm như T2.
-- **T5** (hồi tố): mốc sau nằm **trong khoảng hồi tố** — sau ngày có hiệu lực,
-  trước ngày ký. Đáp án chuẩn ở mốc đó là **nội dung mới**. Chỉ đánh `gold_wrong`
-  nếu văn bản sửa đổi không thật sự có hiệu lực từ ngày đó; việc văn bản có thuộc
-  Điều 152 Luật 80/2015/QH13 (Điều 55 Luật 64/2025/QH15 với văn bản ký từ 01/04/2025)
-  hay không là việc của luật sư (`data/review/t5_documents.tsv`), không phải của đợt
-  gán nhãn. Luật sư đã chốt cả 8 văn bản ngày 12/10/2026.
-- **T6** (hết hiệu lực một phần): mốc sau có đáp án rỗng và
-  `no_answer_reason = provision_repealed`. Câu hỏi không được giả định quy định đang
-  tồn tại. Câu **chỉ** hỏi có/không là `group_mismatch`. Câu ghép có thêm vế hỏi nội
-  dung ("… có áp dụng … hay không, **và quy định cụ thể thế nào**?") không tính là câu
-  có/không: chấm theo vế nội dung (làm rõ 14/10). Quy trình v2.0:
-  1. **Khoản có thật bị bãi bỏ không?** Chỉ đúng khi điều khoản bị bãi bỏ trong khi văn
-     bản vẫn còn hiệu lực.
-  2. **Nội dung còn ở đâu không?** Tìm theo thứ tự: (a) cùng văn bản sửa đổi, cụm "Bổ
-     sung … sau …" đi cùng "Bãi bỏ …"; (b) khoản cha hoặc khoản anh em của cùng điều;
-     (c) văn bản khác có hiệu lực cùng ngày hoặc được dẫn tới (thông tư thay thế).
-  3. **Chuyển chỗ khi đạt đủ cả bảy yếu tố** giữa quy định cũ và quy định ở chỗ mới:
+**T1 — đối chứng (một phiên bản).** Kiểm `question_ambiguous`: với mục trong danh sách, câu hỏi
+phải ghim được đúng mục.
 
-     | # | Yếu tố | Đạt khi |
-     |---|---|---|
-     | 1 | Hành vi | giữ nguyên về bản chất |
-     | 2 | Đối tượng, chủ thể | giữ nguyên |
-     | 3 | Điều kiện áp dụng | giữ nguyên |
-     | 4 | Cấu trúc quy định | chỉ đổi vị trí, thời hạn |
-     | 5 | Chế tài, hậu quả pháp lý | cùng loại chế tài; **mức** được đổi, không dùng ngưỡng. Đổi loại chế tài hay thêm hình thức phạt bổ sung: không đạt |
-     | 6 | Thẩm quyền, hiệu lực pháp lý kế thừa | cùng cơ quan ban hành, hiệu lực pháp lý không thấp hơn. Chuyển sang văn bản thấp hơn hoặc của cơ quan khác: không đạt |
-     | 7 | Dẫn chiếu, kỹ thuật chuyển tiếp | có dấu vết nối hai quy định: cùng đợt "Bãi bỏ … Bổ sung …", câu "thay thế", điều khoản chuyển tiếp |
+**T2 — cặp tương phản; T4 — cặp gần giống (lát của T2).** Hai dòng cùng câu hỏi, khác mốc, gán
+riêng từng dòng.
+- Câu hỏi phải chạm đúng phần đã đổi. Đọc câu hỏi mà hai đáp án trả lời được như nhau →
+  `group_mismatch`.
+- Lần đổi chỉ là đổi tên cơ quan do sắp xếp bộ máy (Bộ Giao thông vận tải → Bộ Xây dựng; Bộ Tài
+  nguyên và Môi trường → Bộ Nông nghiệp và Môi trường), đổi hình thức, hoặc cập nhật dẫn chiếu tự
+  áp → `rename_only` / `cosmetic_only` / `auto_reference_update`. Căn cứ: khoản 1 Điều 3 Nghị
+  quyết 190/2025/QH15, tên cơ quan trong văn bản đã được chuyển theo cơ quan tiếp nhận từ ngày
+  sắp xếp.
+- Đổi sang **cơ quan khác về chức năng** (không phải cơ quan kế thừa) là thay đổi thật.
+- Kiểm **vế trước** với văn bản gốc: văn bản gốc trên cổng đã là lời văn sau sửa → `gold_wrong`.
+- Câu hỏi chứa sẵn vế trước của đáp án → dòng ngày trước `question_leaks`.
+- T4: chỗ đổi thường chỉ là một con số hay một cụm từ; câu hỏi phải hỏi đúng vào chỗ đó.
 
-     **Sáp nhập cơ quan, đơn vị hành chính** (làm rõ 14/10): cơ quan ở chỗ mới là cơ quan
-     **kế thừa** cơ quan cũ theo văn bản sắp xếp bộ máy (ví dụ Bộ Giao thông vận tải hợp
-     nhất vào Bộ Xây dựng: thông tư BXD thay thông tư BGTVT) thì yếu tố 6 đạt. Đối tượng chỉ
-     đổi **tên** địa danh do sáp nhập tỉnh, xã mà phạm vi, ranh giới được hỏi giữ nguyên
-     (ví dụ "vùng nước cảng biển Bến Tre trên sông Tiền" thành vùng nước thuộc tỉnh Vĩnh
-     Long, cùng ranh giới, cùng tọa độ) thì yếu tố 2 đạt. Không xác định được cơ quan mới có
-     đúng là cơ quan kế thừa không, hoặc phạm vi, ranh giới có đổi → theo bước 4 là "không
-     chắc": `dat` kèm `unclear` ở `note`.
+**T3 — chuỗi nhiều bước.** Câu hỏi phải ra **≥ 3 đáp án khác nhau** qua các mốc. Chỉ tách được
+hai trạng thái → `group_mismatch`. Lần đổi giữa hai mốc chỉ là đổi tên hay hình thức thì không
+tính là một trạng thái mới.
 
-  4. **Gán nhãn:**
-     - đạt đủ bảy yếu tố → đáp án rỗng là sai: `khong_dat`, `gold_wrong`, ghi chỗ mới
-       (văn bản, vị trí, trích đoạn) ở `note`. Không đánh `group_mismatch`;
-     - không có quy định kế thừa, hoặc có yếu tố 1–6 không đạt rõ ràng → `dat`;
-     - không chắc ở yếu tố nào, hoặc yếu tố 7 không có dấu vết → `dat` nếu ngoài chuyện
-       chuyển chỗ dòng không có lỗi gì, ghi `unclear` cùng chỗ nghi ngờ ở `note`. Nghi ngờ
-       chưa phải lỗi đã thấy; nhóm lọc `unclear` để chuyển cố vấn, không tự quyết (CMT
-       chốt 12/10).
-  5. **Khoảng trống:** khoản cũ hết hiệu lực từ ngày A, quy định ở chỗ mới có hiệu lực
-     từ ngày B > A. Hỏi tại ngày giữa A và B thì **không có quy định**, đáp án rỗng là
-     đúng. Trước khi kết luận trống, kiểm bốn điểm: (1) điều khoản chuyển tiếp giữ khoản
-     cũ cho giai đoạn A–B; (2) văn bản cấp trên hoặc văn bản khác quy định cùng vấn đề
-     trong giai đoạn đó; (3) quy định mới có điều khoản hồi tố về A; (4) A và B có thật
-     khác nhau, vì cổng có thể ghi sai ngày hiệu lực. Gặp một trong bốn điểm thì không
-     còn trống.
+**T5a — hồi tố.** Mốc nằm giữa ngày hiệu lực và ngày ký của văn bản sửa đổi; đáp án là **nội
+dung mới**. Văn bản có thật sự hồi tố không là việc của luật sư (`data/review/t5_documents.tsv`,
+đã chốt 12/10/2026), không phải của người gán. Kiểm câu hỏi có hỏi vào phần thật sự đổi không
+(`group_mismatch`).
 
-  Dòng T6 mà B đã đánh `gold_wrong` theo v1.2 vì nội dung chuyển chỗ (ít nhất 25 dòng
-  trong hàng audit) không phải nhãn sai: v1.2 chưa phân biệt được trường hợp này.
-  `repeal_mode = ancestor` (24 dòng, từ 28/09): điều khoản không bị bãi bỏ đích
-  danh mà mất hiệu lực vì Điều/Khoản/Mục/Chương chứa nó bị bãi bỏ (`repealed_by`
-  ghi nút cha và event). Kiểm như T6 thường, kể cả quy trình chuyển chỗ; nếu câu bãi
-  bỏ của nút cha thật ra giữ lại điều khoản này (ví dụ "trừ điểm a") thì đánh
-  `gold_wrong`.
-- **`sau_het_hieu_luc`** (v1.2): cùng câu hỏi với lineage, nhưng hỏi **sau ngày văn
-  bản đích hết hiệu lực**. Đáp án chuẩn là không có đáp án
-  (`no_answer_reason = document_repealed`). `accepted_evidence` là câu của văn bản
-  chấm dứt ("... hết hiệu lực kể từ ...", "Thông tư này thay thế Thông tư số ...").
-  Kiểm câu đó có thật sự chấm dứt **cả** văn bản và đúng ngày không. Nếu chỉ chấm
-  dứt một phần, hoặc có điều khoản chuyển tiếp giữ nguyên quy định được hỏi, thì
-  đánh `gold_wrong`.
+**T5b — đã ký, chưa có hiệu lực.** Mốc sau ngày ký, trước ngày có hiệu lực của văn bản sửa đổi;
+đáp án là **nội dung cũ**. Kiểm ngày ký và ngày hiệu lực ở cột ghi chú của phiếu với văn bản.
 
-## 4. Ví dụ
+**T6a — bị bãi bỏ đích danh; T6b — mất hiệu lực vì điều khoản cấp trên bị bãi bỏ.** Mốc sau có
+đáp án rỗng. Câu **chỉ** hỏi có/không → `group_mismatch`; câu ghép có thêm vế hỏi nội dung thì
+chấm theo vế nội dung. Quy trình:
 
-| Câu hỏi | Nhãn | Vì sao |
-|---|---|---|
-| "Một doanh nghiệp tái xuất hàng hoá thì phải làm thủ tục hải quan tại đâu?" (đáp án: "tại cửa khẩu nhập hoặc cửa khẩu tái xuất") | `dat` | Một cách hiểu, đáp án trả lời trọn |
-| "Trong lĩnh vực xử phạt chứng khoán, hình thức xử phạt chính loại c) được quy định như thế nào?" | `khong_dat`: `question_leaks` | Ký hiệu mục "c)" là vị trí, không phải nội dung |
-| "Những hành vi nào bị phạt tiền từ 20.000.000 đồng đến 40.000.000 đồng?" (đáp án: một mục b) | `khong_dat`: `question_ambiguous` | Đáp án đúng là cả danh sách |
-| T2 — "Chế độ bảo hiểm xã hội đối với dân quân thường trực được xác định ra sao?" với hai đáp án khác nhau về căn cứ áp dụng | `dat` | Chạm đúng khía cạnh đã đổi |
-| T4 — câu hỏi về "cơ quan nào" khi chỗ đổi là "Bộ Tài nguyên và Môi trường" → "Bộ Nông nghiệp và Môi trường" | `dat` | Hỏi đúng cụm đã đổi |
-| Hỏi "được xác định ra sao" khi đáp án chỉ là tiêu đề Điều ("Điều 12. Các chỉ số…") | `khong_dat`: `gold_wrong` | Nội dung nằm ở nút con; lẽ ra đã bị cờ `answer_in_children` |
-| T6 — 100/2019/NĐ-CP điểm b khoản 1 Điều 17 (gắn biển số không đúng quy định) bị 123/2021/NĐ-CP bãi bỏ, cùng đợt bổ sung điểm d khoản 2 Điều 17 giống từng chữ, mức phạt tăng; đáp án sau mốc rỗng | `khong_dat`: `gold_wrong` | Chuyển chỗ, chỉ đổi mức phạt. `note`: 100/2019/NĐ-CP điểm d khoản 2 Điều 17 (kho chưa có nút này, ghi bằng chữ) |
-| T6 — 225/2016/TT-BTC khoản 2 Điều 5 (kê khai, nộp phí theo tháng, quyết toán năm) hết hiệu lực khi 74/2022/TT-BTC có hiệu lực; đáp án sau mốc rỗng | `khong_dat`: `gold_wrong` | Chuyển sang văn bản khác của cùng cơ quan. `note`: 74/2022/TT-BTC khoản 3 Điều 3 (không phải khoản 2) |
+1. **Có thật bị bãi bỏ không?** T6a: câu bãi bỏ nêu đích danh điều khoản. T6b: câu bãi bỏ nêu
+   điều khoản cấp trên (Khoản, Điều, Mục, Chương); kiểm câu đó không giữ lại điều khoản này (ví dụ
+   "trừ điểm a"), nếu giữ thì `gold_wrong`. Văn bản phải còn hiệu lực.
+2. **Nội dung còn ở đâu không?** Tìm theo thứ tự: (a) cùng văn bản bãi bỏ — cụm "Bổ sung…",
+   "Sửa đổi Điều… như sau" cùng đợt; (b) khoản cha, khoản anh em của cùng điều; (c) văn bản khác
+   có hiệu lực cùng ngày hoặc được dẫn tới; (d) văn bản cấp cao hơn còn hiệu lực quy định cùng vấn
+   đề (khi đó dùng `superseded_by_other_norm`).
+3. **Chuyển chỗ khi đạt đủ bảy yếu tố** giữa quy định cũ và quy định ở chỗ mới (luật sư xác nhận
+   12/10/2026):
 
-## 5. Quy trình
+   | # | Yếu tố | Đạt khi |
+   |---|---|---|
+   | 1 | Hành vi | giữ nguyên về bản chất |
+   | 2 | Đối tượng, chủ thể | giữ nguyên |
+   | 3 | Điều kiện áp dụng | giữ nguyên |
+   | 4 | Cấu trúc quy định | chỉ đổi vị trí, thời hạn |
+   | 5 | Chế tài, hậu quả pháp lý | cùng loại chế tài; **mức** được đổi, không dùng ngưỡng. Đổi loại chế tài hay thêm hình thức phạt bổ sung: không đạt |
+   | 6 | Thẩm quyền, hiệu lực pháp lý kế thừa | cùng cơ quan ban hành (hoặc cơ quan kế thừa sau sắp xếp), hiệu lực pháp lý không thấp hơn |
+   | 7 | Dẫn chiếu, kỹ thuật chuyển tiếp | có dấu vết nối hai quy định: cùng đợt "Bãi bỏ… Bổ sung…", câu "thay thế", điều khoản chuyển tiếp |
 
-1. Hai người gán nhãn **độc lập**, mỗi người một file (`data/review/crosscheck_A.tsv`,
-   `crosscheck_B.tsv`), không trao đổi trong lúc làm. Tên thật không ghi vào
-   file; dùng mã `A` / `B` (28/09: A = CMT, B = NMT; bảng ánh xạ chỉ nằm ở plan,
-   không phát hành). Chỉ gán dòng `ranh_gioi`. Dòng anh em `giua_khoang` cùng câu hỏi
-   và cùng phiên bản đáp án, nên **câu hỏi** dùng chung nhãn. **Gold thì không** (v1.2).
-   Dòng anh em hỏi ở ngày muộn hơn, nên mọi lần sửa đổi hay bãi bỏ mà chuỗi phiên bản
-   bỏ sót trong khoảng giữa hai ngày đều làm gold sai. Phản biện 29/09 tìm được 10/11
-   lỗi gold ở dòng anh em.
+   Địa danh chỉ đổi **tên** do sáp nhập mà phạm vi, ranh giới giữ nguyên thì yếu tố 2 đạt.
+4. **Gán nhãn:**
+   - đạt đủ bảy yếu tố → `khong_dat`, `relocated`, ghi chỗ mới (văn bản, vị trí, trích đoạn);
+   - không có quy định kế thừa, hoặc yếu tố 1–6 không đạt rõ ràng → `dat` (nếu không có lỗi khác);
+   - không chắc ở yếu tố nào, hoặc yếu tố 7 không có dấu vết → `khong_dat`, `relocation_unclear`.
+5. **Khoảng trống.** Khoản cũ hết hiệu lực từ ngày A, quy định ở chỗ mới có hiệu lực từ ngày B > A:
+   hỏi giữa A và B thì đáp án rỗng là đúng. Trước khi kết luận trống, kiểm: điều khoản chuyển tiếp
+   giữ khoản cũ; văn bản khác quy định cùng vấn đề trong giai đoạn đó; quy định mới hồi tố về A;
+   A và B có thật khác nhau.
 
-   Các lỗi này do `scripts/check/check_validity.py` dò. Hàng đợi ở
-   `data/review/validity_queue.tsv`: dòng thuộc bộ κ mang `sau_D4` và chỉ được
-   phân xử sau hoà giải (bước 4). Dòng ngoài bộ κ được phân xử ngay, với
-   `decision` là `loi` · `co_the_sai` · `bao_dong_gia` · `da_sua`.
-2. Không sửa câu hỏi hay đáp án trong file — chỉ điền `verdict`, `reasons`, `note`.
-3. Xong cả hai, chạy `python scripts/review/crosscheck.py kappa`. Ngưỡng đăng ký trước:
-   AC1 ≥ 0,80 và p_neg ≥ 0,60; κ chỉ báo kèm (v2.0). Kết quả được báo riêng theo từng
-   phiên bản hướng dẫn (cột `guideline_version`). Nếu không đạt: viết lại hướng dẫn ở
-   các điểm hay lệch, tăng phiên bản hướng dẫn, kiểm lại (plan, Gói D).
-4. Dòng hai người lệch nhau được người thứ ba (hoặc hai người cùng ngồi) hoà giải;
-   kết quả ghi ở cột `adjudicated` của file A. **Nhãn thô của từng người được
-   giữ nguyên** và phát hành cùng bộ dữ liệu (ADR 0003 §9).
-5. Dòng `khong_dat` sau hoà giải: câu hỏi viết lại hoặc dòng bị loại, không lặng lẽ
-   sửa đáp án chuẩn — sửa gold là thay đổi MAJOR (ADR 0003 §8).
+## 4. Ví dụ (đã đối chiếu văn bản gốc ngày 20/10/2026)
 
-## 6. Nhãn do model gán và audit cuốn chiếu (v1.1, bổ sung v1.2)
+| Nhóm | Dòng | Nhãn | Vì sao |
+|---|---|---|---|
+| T2 | TT 12/2017/TT-BGTVT điểm b khoản 2 Điều 28, hỏi "phải lưu trữ những bài sát hạch và biên bản nào", mốc 30/11/2019 và 01/12/2019 | `dat` cả hai | TT 38/2019 thêm "bài sát hạch lái xe trên phần mềm mô phỏng các tình huống giao thông": câu hỏi chạm đúng phần đổi |
+| T2 | TT 52/2022/TT-BGTVT khoản 2 Điều 4, "giấy chứng nhận loại tàu bay được cấp, công nhận theo bộ quy chế do bộ nào ban hành", mốc 30/06/2025 và 01/07/2025 | `khong_dat`: `rename_only` | Khoản 1 Điều 29 TT 09/2025/TT-BXD chỉ thay "Bộ Giao thông vận tải" bằng "Bộ Xây dựng". Từ 01/03/2025 tên cơ quan đã chuyển theo khoản 1 Điều 3 NQ 190/2025/QH15, nên hai mốc cùng một đáp án pháp lý |
+| T3 | TT 12/2017/TT-BGTVT khoản 13 Điều 33, "giấy phép lái xe hợp lệ khi đáp ứng điều kiện gì về cơ quan cấp và thông tin trên giấy phép" | `dat` | Ba đáp án khác nhau: trước 01/12/2019; đến 31/05/2024; từ 01/06/2024 thêm VNeID |
+| T4 | NĐ 355/2025/NĐ-CP điểm n khoản 1 Điều 30, "được cấp dầu gội đầu với định lượng bao nhiêu mỗi năm" | `dat` | 800 ml → 1.000 ml từ 01/07/2026 (khoản 5 Điều 43 NĐ 170/2026) |
+| T5a | NĐ 242/2025/NĐ-CP điểm c khoản 3 Điều 33, mốc 03/02/2026 | `dat` | NĐ 119/2026 ký 03/04/2026 nhưng có hiệu lực 01/01/2026: đáp án là bản mới |
+| T5b | Như T4, mốc 01/06/2026 | `dat` | NĐ 170/2026 đã ký 15/05/2026 nhưng chưa có hiệu lực: đáp án 800 ml |
+| T6a | NĐ 67/2013/NĐ-CP điểm c khoản 3 Điều 26 (diện tích 03 m² khi bán lẻ thuốc lá), mốc 10/08/2021 | `dat` | Khoản 4 Điều 2 NĐ 106/2017 bãi bỏ; không có quy định kế thừa |
+| T6b | NĐ 23/2016/NĐ-CP điểm a khoản 1 Điều 23 (trình độ cán bộ quản lý vận hành cơ sở hỏa táng), mốc 09/06/2026 | `dat` | Khoản 2 Điều 138 NĐ 14/2026 bãi bỏ khoản 1 (cấp trên); không có quy định kế thừa |
+| T6 | NĐ 37/2017/NĐ-CP Điều 8 khoản 2 (điều kiện phòng cháy khi khai thác cảng biển), mốc sau 24/10/2018, đáp án rỗng | `khong_dat`: `relocated` | Cùng NĐ 147/2018 viết lại Điều 7 và đưa vào khoản 2 "Đáp ứng các điều kiện về an toàn, vệ sinh lao động, phòng, chống cháy, nổ…". `note`: khoản 2 Điều 7 NĐ 37/2017 (sửa bởi khoản 3 Điều 5 NĐ 147/2018) |
+| T6 | TT 41/2011/TT-BCA khoản 1 Điều 4 (hồ sơ giấy thông hành sang Lào), mốc 14/11/2021 | `khong_dat`: `superseded_by_other_norm` | Từ 01/07/2020 NĐ 76/2020/NĐ-CP (cấp cao hơn) quy định tờ khai M01 thay mẫu TK7 |
+| — | "…hình thức xử phạt chính loại c) được quy định như thế nào?" | `khong_dat`: `question_leaks` | Ký hiệu mục là vị trí, không phải nội dung |
+| — | "Những hành vi nào bị phạt tiền từ 20.000.000 đồng đến 40.000.000 đồng?" (đáp án: một mục b) | `khong_dat`: `question_ambiguous` | Đáp án đúng là cả danh sách |
 
-Chốt 28/09 (CMT): để kịp tiến độ, model (`claude-opus-5-5`) gán nhãn trước, nhóm
-audit theo từng đợt. Bốn ràng buộc giữ cho số liệu còn bảo vệ được:
+## 5. Quy trình kiểm
 
-1. **Bộ kiểm chéo D4 chỉ gồm người, và gán mù.** Model không gán dòng nào của
-   `crosscheck_A/B.tsv` cho tới khi cả A và B đã gán dòng đó; `labels.py add`
-   từ chối. Cohen κ luôn là κ giữa hai người. Sau D4, nhãn của model trên 300
-   dòng này có thể dùng làm phân tích phụ (độ đồng thuận model–người), không
-   thay A hay B.
-2. **Nhãn nào cũng ghi người gán.** `labeler` là `claude-opus-5-5`, hoặc
-   `human:<mã>` cho người. Nhãn của model không bao giờ ghi đè nhãn của người;
-   mỗi (dòng, người gán) là một dòng riêng trong `labels.tsv`.
-3. **Audit bắt buộc** (cột `audit_required`) gồm:
-   - mọi `khong_dat` và mọi `meta_issues` của model;
-   - một mẫu cố định 20% các `dat` (`sha1(id) % 5 == 0`).
+1. **Phiếu kiểm** có đoạn trích văn bản gốc và văn bản tác động (`crosscheck_evidence.py`). Model
+   chỉ được trích dẫn chứng, không được điền kết luận.
+2. **Ô bắt buộc** cho mỗi dòng, ngoài `verdict`, `reasons`, `note`:
+   - `da_xem_van_ban_tac_dong`: liệt kê số hiệu các văn bản tác động đã xem (hoặc "không có");
+   - `cham_lan_sua` (T2, T3, T4): những ngày chuyển mà câu hỏi chạm tới;
+   - `noi_dung_con_o_dau` (T6): "không có", hoặc chỗ mới, hoặc "không chắc";
+   - `phut`: số phút đã dùng.
+   Thiếu ô bắt buộc thì phiếu không nạp được.
+3. **Tập test: mọi dòng có người kiểm.** 25% số dòng do hai người gán độc lập, không trao đổi
+   trong lúc làm; dùng mã `A`, `B` (bảng ánh xạ tên thật chỉ ở plan).
+4. **Đồng thuận:** `python scripts/review/crosscheck.py kappa`. Ngưỡng đăng ký trước: AC1 ≥ 0,80 và
+   p_neg ≥ 0,60; κ báo kèm; báo theo nhóm và theo phiên bản hướng dẫn.
+5. **Hòa giải:** dòng lệch do **người thứ ba** quyết, ghi ở cột `adjudicated`
+   (`scripts/review/adjudicate.py`, cột `adjudicator` ghi đúng người quyết). Không dùng AI để hòa
+   giải. Nhãn thô của từng người giữ nguyên và phát hành (ADR 0003 §9).
+6. **Dòng `khong_dat` sau hòa giải bị loại** bằng mã tương ứng, hoặc thay bằng câu dự trữ. Không
+   sửa đáp án chuẩn bằng tay.
+7. Làm theo lô 30–50 dòng; ghi `phut` để lập lại kế hoạch giờ công sau lô đầu.
 
-   Từ **v1.2**, bắt buộc thêm:
-   - dòng mà văn bản sửa đổi có điều khoản chuyển tiếp (`actor_has_transitional`);
-   - dòng hỏi sau 01/07/2025 mà câu hỏi hoặc đáp án còn nói "cấp huyện";
-   - mọi nhãn model gán theo v1.2, tức nhãn của các lineage thay thế.
+## 6. Nhãn do model gán
 
-   Áp luật mới cho nhãn đã có bằng `labels.py mark-audit`.
-
-   Người audit điền `audit` (`dong_y` · `khong_dong_y`), `auditor` và `audit_note`.
-   `auditor` phải là `human:<mã>`; `import-audit` từ chối model. Nếu tỷ lệ
-   `khong_dong_y` trong mẫu `dat` của một nhóm vượt 5%, audit toàn bộ `dat` của nhóm
-   đó. `python scripts/review/labels.py report` báo các tỷ lệ này.
-
-   **Audit không chỉ đọc cột gold** (v1.2). Phiếu audit có các cột:
-   - `also_asked_at`: các ngày cùng câu hỏi được hỏi lại (dòng anh em, dòng
-     `sau_het_hieu_luc`);
-   - `amended_by`: các văn bản tác động;
-   - `legal_markers`, `validity_flags`: dấu hiệu từ `validity_queue.tsv`.
-
-   Người audit mở lịch sử văn bản (lược đồ, văn bản hợp nhất trên cổng) để kiểm ba
-   điều ở **mọi** ngày đó:
-   - (a) không có văn bản nào sửa đổi hay bãi bỏ điều khoản trước ngày hỏi;
-   - (b) văn bản chưa hết hiệu lực toàn bộ;
-   - (c) điều khoản chuyển tiếp không giữ quy định cũ cho đúng quan hệ trong câu
-     hỏi. Nếu có, đánh `transitional_rule` và ghi Điều.
-
-   Lỗi ở dòng anh em ghi vào `audit_note` kèm ngày và văn bản.
-
-   Đáp án ngắn "đòi thừa" so với câu hỏi được đề xuất sửa trong `audit_note`. Nhóm
-   sửa trong `data/vilextime/short_answers.jsonl` với `by: human:<mã>`.
-4. **Model viết câu hỏi thì không tự chấm được lỗi của chính mình một cách khách
-   quan.** Câu hỏi do `claude-opus-5-5` viết, nên tỷ lệ `dat` của model là cận
-   trên. Khoá luận báo tỷ lệ đồng ý khi audit, không báo nhãn model như nhãn người.
-
-Phán đoán pháp lý (T5 hồi tố, điều khoản chuyển tiếp, chuyển chỗ ở T6) do model **đề xuất
-kèm trích dẫn câu chữ**, ở cột riêng; quyết định vẫn là của cố vấn luật ở các cột
-`LUẬT SƯ:` của `data/review/t5_documents.tsv`, `t5_items.tsv`.
-
+Từ bản 3.0, nhãn của model **không được tính là kiểm định**: trên 13 dòng D4 có nhãn model, chỉ 7
+dòng khớp kết luận cuối của người, và model gắn `khong_dat` ít hơn người nhiều lần (đo 19/10/2026).
+Nhãn model chỉ dùng để **xếp thứ tự** dòng cần người xem trước. Nhãn model cũ trong
+`data/review/labels.tsv` giữ nguyên làm phân tích phụ (đồng thuận model–người), có ghi `labeler`.
+Dòng chỉ có nhãn model là dòng chưa kiểm (`not_verified`), không vào tập test.

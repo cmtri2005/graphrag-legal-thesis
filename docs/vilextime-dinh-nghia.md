@@ -140,7 +140,7 @@ Người kiểm đánh dấu đủ các ô sau, kèm dẫn chứng:
 
 Thêm điều kiện máy: R6, R7 đạt.
 
-## 7. Mã loại dòng (danh sách đóng)
+## 7. Mã loại dòng (danh sách đóng, 19 mã)
 
 | Mã | Khi nào |
 |---|---|
@@ -155,12 +155,18 @@ Thêm điều kiện máy: R6, R7 đạt.
 | `reference_only` | Đáp án chỉ là dẫn chiếu (R5) |
 | `pending_event` | Có sự kiện chưa áp (R6) |
 | `after_snapshot` | Mốc sau ngày chụp kho (R7) |
+| `group_mismatch` | Câu hỏi không làm được việc của nhóm: không chạm phần thay đổi (T2, T4), không chạm ≥ 2 lần sửa (T3), chỉ hỏi có/không (T6), hỏi vào phần không đổi (T5) |
 | `question_ambiguous` | Câu hỏi khớp nhiều điều khoản hoặc nhiều đáp án |
 | `question_leaks` | Câu hỏi để lộ đáp án, số hiệu, Điều, Khoản hoặc phiên bản |
 | `unanswerable_as_asked` | Đáp án không trả lời được đúng điều câu hỏi hỏi |
 | `gold_wrong` | Đáp án không phải phiên bản có hiệu lực tại `t` |
-| `transitional_dependent` | Đáp án phụ thuộc điều khoản chuyển tiếp mà câu hỏi tự nêu |
+| `transitional_rule` | Đáp án phụ thuộc điều khoản chuyển tiếp mà câu hỏi tự nêu, hoặc chuyển tiếp buộc chính sự việc phát sinh tại `t` theo bản cũ |
+| `other` | Lỗi khác, mô tả ở ghi chú |
 | `not_verified` | Chưa được người kiểm; phát hành ở phần silver, không chấm |
+
+Mã `cosmetic_only`, `rename_only`, `auto_reference_update`, `single_change`, `pending_event`,
+`after_snapshot` do máy gán khi dựng; các mã còn lại do người gán khi kiểm (người cũng được dùng
+mã của máy khi phát hiện).
 
 ## 8. Câu hỏi, đáp án và kiểm định
 

@@ -1,5 +1,5 @@
 """The J2 validity detectors on hand-made rows and events."""
-from check_validity import locator_fits, missed_events, sentence_endings
+from check_validity import locator_fits, missed_events, reference_only, sentence_endings
 
 TARGET = {"document_id": "document:D", "article_id": "24", "clause_id": "1", "point_id": "b"}
 
@@ -56,3 +56,26 @@ def test_an_appendix_or_a_word_is_not_the_document():
     assert sentence_endings("điều trị bằng thuốc thay thế theo quy định tại Nghị định 116/2021/NĐ-CP.",
                             "116/2021/NĐ-CP") == []
     assert sentence_endings("Nghị định này thay thế Nghị định số 87/CP ngày 23 tháng 11 năm 1993.", "87-CP")
+
+
+def test_r4_names_a_reorganised_agency_or_province_only_after_its_date():
+    from check_validity import restructured
+
+    # TT 52/2022/TT-BGTVT k2 Đ4 before k1 Đ29 TT 09/2025/TT-BXD rewrote it (01/07/2025)
+    text = "do Bộ trưởng Bộ Giao thông vận tải ban hành."
+    assert restructured(text, "2025-02-28") is None
+    assert restructured(text, "2025-05-01") == "bộ giao thông vận tải"
+    assert restructured("Tổng cục Thuế hướng dẫn", "2025-04-01") == "tổng cục"
+    assert restructured("Tổng cục Chính trị Quân đội nhân dân", "2025-04-01") is None
+    # TT 03/2022/TT-BGTVT k2 Đ2: "vùng nước cảng biển ... tỉnh Bến Tre"
+    assert restructured("vùng nước cảng biển Bến Tre", "2025-06-30") is None
+    assert restructured("vùng nước cảng biển Bến Tre", "2025-07-01") == "bến tre"
+
+
+def test_r5_an_answer_that_only_points_elsewhere():
+    assert reference_only("a) Hồ sơ bao gồm: tài liệu quy định tại điểm a khoản 1 Điều này;")
+    assert reference_only("đ) Áp dụng các biện pháp khắc phục hậu quả quy định tại các điểm a, b, d và e "
+                          "khoản 3 Điều 4 của Nghị định này.")
+    assert not reference_only("a) Hồ sơ bao gồm: tài liệu quy định tại điểm a khoản 1 Điều này và 01 ảnh màu "
+                              "chân dung kích thước 3 cm x 4 cm. Ảnh chụp không quá 06 tháng kể từ ngày chụp;")
+    assert not reference_only("Phạt tiền từ 2.000.000 đồng đến 4.000.000 đồng đối với hành vi không mang giấy phép.")

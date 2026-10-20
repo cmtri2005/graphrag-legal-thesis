@@ -335,3 +335,58 @@ def test_a_date_for_part_of_what_a_provision_says_is_not_read_as_the_provisions_
     ranged = ["Các điều từ Điều 1 đến Điều 3, các điều 14 và 15 của Nghị định này có hiệu lực từ ngày "
               "01 tháng 7 năm 2025."]
     assert deferred_dates(ranged, set()) == {(str(n), None): date(2025, 7, 1) for n in (1, 2, 3, 14, 15)}
+
+
+def test_an_amending_act_is_recognised_by_its_title():
+    """NĐ 115/2016/NĐ-CP had no portal relation and was never read (D5 §5.6)."""
+    from extract_provision_events import _ACTS_ON_ANOTHER
+
+    assert _ACTS_ON_ANOTHER.search("Nghị định số 115/2016/NĐ-CP Sửa đổi, bổ sung một số điều của Nghị định số 163/2013/NĐ-CP")
+    assert _ACTS_ON_ANOTHER.search("Nghị quyết số 399/2003/NQ-UBTVQH11 Về việc sửa đổi, bổ sung biểu thuế")
+    assert not _ACTS_ON_ANOTHER.search("Quyết định số 616/PLDS Về kế hoạch triển khai thực hiện Luật sửa đổi, bổ sung")
+    assert not _ACTS_ON_ANOTHER.search("Nghị định số 168/2025/NĐ-CP Về đăng ký doanh nghiệp")
+
+
+def test_partial_repeal_is_not_a_whole_node_repeal():
+    from extract_provision_events import _PARTIAL_REPEAL
+
+    partial = [
+        "Bãi bỏ nội dung sau đây tại khoản 2 Điều 2",  # TT 01/2023/TT-BCT, D5 §5
+        "d) Bãi bỏ đoạn «Q» tại điểm d khoản 1",
+        "Bãi bỏ số thứ tự 19 tại Biểu phí, lệ phí quy định tại khoản 1 Điều 1 Thông tư số 43/2024/TT-BTC",
+        "Bãi bỏ tiết c điểm 3.2 Điều 4.",
+        "Bãi bỏ nội dung quy định tại gạch đầu dòng thứ 3 Khoản 1 Điều 27.",
+        "Bãi bỏ các nội dung liên quan đến thuế giá trị gia tăng hướng dẫn tại Điều 16",
+        "Bãi bỏ quy định giảm 50% mức thu lệ phí tại số thứ tự 30",
+    ]
+    whole = [
+        "Bãi bỏ nội dung quy định tại khoản 5 Điều 4 Nghị định số 91/2015/NĐ-CP",
+        "Bãi bỏ từ khoản 1 đến khoản 11 Điều 1",
+        "Bãi bỏ khoản 2 Điều 11 Nghị định số 12/2020/NĐ-CP",
+        "Bãi bỏ Mục 2 Chương II Nghị định số 84/2006/NĐ-CP",
+    ]
+    assert all(_PARTIAL_REPEAL.search(t) for t in partial)
+    assert not any(_PARTIAL_REPEAL.search(t) for t in whole)
+
+
+def test_an_omnibus_act_names_the_amended_document_in_each_chapter_title():
+    # NĐ 14/2026/NĐ-CP: Điều 59 NĐ 05/2021 was repealed from 15/01/2026 (D5 §5.5).
+    got = summary([
+        "Chương XXV",
+        "SỬA ĐỔI, BỔ SUNG MỘT SỐ ĐIỀU CỦA NGHỊ ĐỊNH SỐ 05/2021/NĐ-CP NGÀY 25 THÁNG 01 NĂM 2021 CỦA CHÍNH PHỦ",
+        "Điều 127. Sửa đổi, bổ sung khoản 3 Điều 10 như sau:",
+        "Điều 128. Bãi bỏ điều, điểm và biểu mẫu tại Phụ lục ban hành kèm theo Nghị định số 05/2021/NĐ-CP",
+        "1. Điểm c khoản 1 Điều 57, Điều 59.",
+        "Điều 126. Sửa đổi, bổ sung một số khoản của Điều 51",
+        "1. Sửa đổi, bổ sung khoản 6 như sau:",
+        "2. Mẫu số 07, Mẫu số 08 quy định tại Phụ lục ban hành kèm theo Nghị định này.",
+        "Chương XXVII",
+        "TỔ CHỨC THI HÀNH",
+        "Điều 131. Bãi bỏ khoản 2 Điều 3.",
+    ])
+    assert got == [
+        (Op.AMEND, "5/2021/nd/cp", [(("Article", "10"), ("Clause", "3"))], "part_context"),
+        (Op.REPEAL, "5/2021/nd/cp", [(("Article", "57"), ("Clause", "1"), ("Point", "c")), (("Article", "59"),)],
+         "part_context"),
+        (Op.AMEND, "5/2021/nd/cp", [(("Article", "51"), ("Clause", "6"))], "part_context"),
+    ]

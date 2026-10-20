@@ -80,10 +80,15 @@ PNEG_TARGET = 0.60
 KAPPA_PROPOSAL = 0.60          # the figure the submitted de cuong names, reported as-is
 BOOTSTRAP_DRAWS = 1000
 PILOT_ROWS, PILOT_GATE = 20, 17   # B8: >= 17/20 agree, else revise the guideline and try 10 more
-GUIDELINE = "2.0"   # docs/vilextime-annotation.md; labels.py and check_release.py read it from here
+GUIDELINE = "3.0"   # docs/vilextime-annotation.md; labels.py and check_release.py read it from here
 VERDICTS = {"dat", "khong_dat"}
+# Codes a person may write (docs/vilextime-dinh-nghia.md §7). transitional_rule: guideline 1.1;
+# the rest after `other`: 3.0. The machine-only codes (single_change, pending_event,
+# after_snapshot, not_verified) are not labels.
 REASONS = {"question_ambiguous", "question_leaks", "gold_wrong", "group_mismatch",
-           "unanswerable_as_asked", "transitional_rule", "other"}   # transitional_rule: guideline v1.1
+           "unanswerable_as_asked", "transitional_rule", "other",
+           "relocated", "relocation_unclear", "superseded_by_other_norm", "restructuring_2025",
+           "reference_only", "rename_only", "cosmetic_only", "auto_reference_update"}
 COLUMNS = ["id", "group", "lineage_id", "question", "as_of", "lead_in", "answer", "changed_span", "citation",
            "law_id", "valid_from", "valid_to", "source_url", "note_for_annotator", "verdict", "reasons", "note",
            "suggestion", "guideline_version"]   # guideline_version: the one the row was labelled under (B8)

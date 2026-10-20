@@ -63,9 +63,27 @@ Out of scope:
 
 - [x] Định nghĩa chốt, ADR 0003 Follow-Up, phiếu luật sư — 20/10
 - [ ] Bước 1: luật sư ký
-- [ ] Bước 2: hướng dẫn 3.0
-- [ ] Bước 3: bộ lọc máy
-- [ ] Bước 4: sửa lỗi đồ thị
+- [x] Bước 2: hướng dẫn 3.0 — `docs/vilextime-annotation.md`; `crosscheck.py`, `crosscheck_xlsx.py`,
+  `build_vilextime.py` mang GUIDELINE 3.0 và mã loại mới — 20/10
+- [x] Bước 3: bộ lọc máy — 20/10. R1 trong `build_question_pool.py` (`transition_kind`, `RENAMES`,
+  `_AUTO_UPDATE`; T3/T2 xếp theo số trạng thái pháp lý); R4 `restructuring_2025` và R5 `reference_only`
+  trong `check_validity.py` (chỉ để người kiểm, không tự loại); R6 `pending_events.py` xét cả cấp trên;
+  `subgroup` T5a/T5b, T6a/T6b; bỏ `sau_het_hieu_luc`. Dựng thử kho (thư mục tạm): R1 bỏ 2.760 ứng viên
+  (2.210 chỉ hình thức, 547 chỉ đổi tên, 3 tự cập nhật dẫn chiếu); T3 còn 362 chuỗi, cả 362 có ≥ 2 lần
+  sửa thực chất; R5 gắn 20 dòng của bản phát hành cũ.
+- [x] Bước 4: sửa lỗi đồ thị — 20/10. Đã sửa ở `extract_provision_events.py`/`provision_ops.py`:
+  §5.1 ngày hiệu lực riêng (`5877a5a`); 562 văn bản sửa đổi chỉ nhận ra qua tên (không có quan hệ trên
+  cổng, vd NĐ 115/2016) giờ được đọc; nghị định sửa nhiều nghị định ghi tên văn bản bị sửa ở tiêu đề
+  Chương (NĐ 14/2026: Điều 59 NĐ 05/2021 bị bãi bỏ từ 15/01/2026, §5.5; sự kiện của văn bản này 6 → 166);
+  tiêu đề Điều không có ":" vẫn dẫn danh sách và lời văn mới bên dưới (`wording.py`); câu mở đầu "sửa đổi
+  một số khoản của Điều X như sau:" không còn sinh sự kiện giả "sửa cả Điều X" (887 sự kiện chặn oan cả
+  Điều qua R6); bãi bỏ một phần ("nội dung sau", "đoạn", "số thứ tự", "tiết", "gạch đầu dòng")
+  thành `needs_review/partial_repeal` (§5.4, 41 sự kiện trước đó tự chấp nhận). §5.6 viết lại cả Điều
+  khác cấu trúc: không áp tự động, sự kiện `structure_mismatch` để R6 chặn khỏi test. §5.3 (R3) và §5.7:
+  người kiểm theo hướng dẫn 3.0, máy không dò. Trích thử vào thư mục tạm: 50.587 → 56.624 sự kiện (tự chấp
+  nhận 16.970 → 19.295, đã đối chiếu 3.049 → 3.262, chờ người xem 30.568 → 34.067). `build_versions.py
+  --target-document document:146845`: điểm a khoản 5 Điều 59 NĐ 05/2021 hết hiệu lực 15/01/2026 (trước là
+  01/07/2026). `pytest` 528 qua. Dữ liệu thật chưa đổi: dựng lại ở bước 5.
 - [ ] Bước 5: dựng lại, xuất phiếu
 - [ ] Bước 6: kiểm định người
 - [ ] Bước 7: gold độc lập
@@ -74,8 +92,8 @@ Out of scope:
 ## Decisions
 
 - 2026-10-20: một bản định nghĩa duy nhất, không chia phiên bản v1.0/v1.1 (CMT).
-- 2026-10-20: thêm R6 (dòng có sự kiện chưa áp chưa vào test); CMT chưa trả lời riêng điểm này, đưa vào
-  theo tinh thần "ưu tiên chất lượng", bỏ nếu CMT không đồng ý.
+- 2026-10-20: thêm R6 (dòng có sự kiện chưa áp chưa vào test); CMT trả lời "ok" cho câu hỏi giữ R6 cùng
+  lúc cho commit bước 2–4.
 
 ## Validation
 

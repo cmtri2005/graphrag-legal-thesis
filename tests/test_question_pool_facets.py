@@ -112,3 +112,52 @@ def test_near_identical_keeps_the_old_T4_cut_as_a_facet():
     differs = facets_of([version(1, "2020-01-01", text="a b c"), version(2, "2021-01-01", text="x y z")])
 
     assert same["near_identical"] is True and differs["near_identical"] is False
+
+
+def test_r1_tells_a_rename_or_a_reformat_from_a_change_of_content():
+    """docs/vilextime-dinh-nghia.md R1; the cases are the D4 rows checked on 19–20/10."""
+    from build_question_pool import transition_kind
+
+    # TT 52/2022/TT-BGTVT k2 Đ4, rewritten by k1 Đ29 TT 09/2025/TT-BXD
+    assert transition_kind("do Bộ trưởng Bộ Giao thông vận tải ban hành.",
+                           "do Bộ trưởng Bộ Xây dựng ban hành.") == "rename_only"
+    assert transition_kind("Ngân hàng Nhà nước chi nhánh", "Ngân hàng Nhà nước Khu vực") == "rename_only"
+    assert transition_kind("Trung ương hoá.", "trung ương hóa;") == "cosmetic_only"
+    # NĐ 355/2025 điểm n k1 Đ30, by k5 Đ43 NĐ 170/2026: a number is content
+    assert transition_kind("n) 800 ml dầu gội đầu/năm;", "n) 1000 ml dầu gội đầu/năm;") == "substantive"
+    # a rename plus a real change is a real change
+    assert transition_kind("Bộ Giao thông vận tải cấp trong 05 ngày",
+                           "Bộ Xây dựng cấp trong 03 ngày") == "substantive"
+    # TT 84/2018/TT-BTC k2 Đ3: only the cited act changed, and the circular applies successors itself
+    before = "thực hiện theo Thông tư 74/2018/TT-BTC ngày 16/8/2018 hướng dẫn chế độ kế toán"
+    after = "thực hiện theo Thông tư số 99/2021/TT-BTC ngày 15 tháng 11 năm 2021 hướng dẫn chế độ kế toán"
+    assert transition_kind(before, after, auto_update=True) == "auto_reference_update"
+    assert transition_kind(before, after, auto_update=False) == "substantive"
+
+
+def test_r1_groups_count_legal_states_not_versions():
+    from build_question_pool import classify, legal_states
+
+    chain = [version(1, "2020-01-01", text="Bộ Giao thông vận tải cấp trong 05 ngày"),
+             version(2, "2022-01-01", text="Bộ Giao thông vận tải cấp trong 03 ngày"),
+             version(3, "2025-07-01", text="Bộ Xây dựng cấp trong 03 ngày")]
+    assert legal_states(chain) == [0, 1]
+    assert classify(chain, None, "Clause", date(2026, 9, 20), states=legal_states(chain)) == "T2"
+    # asked around the real change, never around the rename
+    assert ask_dates("T2", chain, date(2026, 9, 20), "p", None, legal_states(chain)) == \
+        [date(2021, 12, 31), date(2022, 1, 1)]
+    only_renamed = chain[1:]
+    assert classify(only_renamed, None, "Clause", date(2026, 9, 20), states=legal_states(only_renamed)) is None
+
+
+def test_r1_finds_the_clause_that_applies_a_replaced_act():
+    from build_question_pool import _AUTO_UPDATE
+
+    # k3 Đ7 TT 84/2018/TT-BTC and k2 Đ27 TT 241/2017/TT-BQP, verbatim
+    assert _AUTO_UPDATE.search("3. Trường hợp các văn bản quy phạm pháp luật trích dẫn tại Thông tư này được sửa đổi, "
+                               "bổ sung hoặc thay thế bằng văn bản quy phạm pháp luật khác thì áp dụng quy định tại "
+                               "văn bản sửa đổi, bổ sung hoặc thay thế.")
+    assert _AUTO_UPDATE.search("2. Trường hợp văn bản được dẫn chiếu trong Thông tư này được sửa đổi, bổ sung, thay thế "
+                               "hoặc ban hành mới thì những nội dung liên quan đến Thông tư này cũng được thay đổi theo "
+                               "các văn bản sửa đổi, bổ sung, thay thế hoặc ban hành mới đó.")
+    assert not _AUTO_UPDATE.search("Thông tư này thay thế Thông tư số 74/2018/TT-BTC.")

@@ -1907,9 +1907,14 @@ Bám phân công trong đề cương UIT; nhóm đổi tùy ý.
 - W2-04: bốn phiếu `audit_T{1,2,3,6}.xlsx` thêm hai cột `trich_van_ban_goc`, `trich_van_ban_tac_dong` (468 dòng, trích
   từ `data/raw` bằng `crosscheck_evidence.py --ids`); `labels.py import-audit` vẫn đọc được.
 - **20/10: định nghĩa bộ dữ liệu chốt** ở `docs/vilextime-dinh-nghia.md` (thay bản nháp 06/10): T5a/T5b, T6a/T6b,
-  T3 chặt ở cấp câu hỏi, T4 là lát của T2, quy tắc R1–R7, 17 mã loại, test chỉ gồm dòng người đã kiểm, bỏ
+  T3 chặt ở cấp câu hỏi, T4 là lát của T2, quy tắc R1–R7, 19 mã loại, test chỉ gồm dòng người đã kiểm, bỏ
   `sau_het_hieu_luc` khỏi phần chấm. Phiếu luật sư ký 7 quy tắc: `data/review/gui_luat_su_dinh_nghia.xlsx`.
   Kế hoạch dựng lại: `docs/plans/active/vilextime-dinh-nghia-chot.md`.
+- 20/10, bước 2–4 của kế hoạch đó xong trên mã (chưa dựng lại dữ liệu thật): hướng dẫn gán nhãn 3.0; bộ lọc R1
+  (bỏ 2.760 ứng viên chỉ đổi hình thức, đổi tên, tự cập nhật dẫn chiếu), R4, R5, R6 xét cả cấp trên; T3 còn 362
+  chuỗi đều ≥ 2 lần sửa thực chất; sửa lỗi D5 §5.4–5.6: đọc thêm 562 văn bản sửa đổi chỉ nhận ra qua tên, nghị
+  định sửa nhiều nghị định (tên văn bản bị sửa ở tiêu đề Chương, NĐ 14/2026: 6 → 155 sự kiện, Điều 59 NĐ 05/2021
+  hết hiệu lực 15/01/2026), bãi bỏ một phần chuyển sang chờ người xem, bỏ 887 sự kiện giả "sửa cả Điều".
 
 **Tuần 2 (19–25/10): kiểm định xong, đóng băng**
 

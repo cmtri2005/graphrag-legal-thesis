@@ -102,17 +102,17 @@ def test_a_missed_amendment_caps_the_twin_window():
     assert date.fromisoformat(twin["as_of"]) < date(2022, 5, 2)              # before the cap, MARGIN kept
 
 
-def test_a_lineage_whose_document_ended_is_asked_after_the_end_with_no_answer():
-    from enrich_vilextime import AFTER_END, after_end
+def test_subgroup_names_the_reported_slice():
+    """docs/vilextime-dinh-nghia.md §4."""
+    from enrich_vilextime import subgroup
 
-    base = _row("2020-01-02", "version:p:1", answer="Bộ Tài nguyên và Môi trường cấp phép.", answerable=True,
-                target={"lead_in": "1."}, short_answer="Bộ Tài nguyên")
-    assert after_end(base, date(2024, 1, 1), []) is None                     # nothing in the corpus says it ended
-    assert after_end(base, date(2027, 1, 1), ["asis:provision:x"]) is None   # ends after the snapshot
-    late = after_end(base, date(2024, 1, 1), ["asis:provision:x"])
-    assert (late["as_of_strategy"], late["answerable"], late["no_answer_reason"]) == (AFTER_END, False, "document_repealed")
-    assert late["twin_of"] == base["id"] and late["as_of"] >= "2024-01-01" and late["id"].endswith(late["as_of"])
-    assert late["version_id"] is None and late["short_answer"] is None and late["_ending_units"] == ["asis:provision:x"]
+    assert subgroup({"group": "T2", "as_of_strategy": "ranh_gioi", "near_identical": False}) == "T2"
+    assert subgroup({"group": "T2", "as_of_strategy": "giua_khoang", "near_identical": True}) == "T4"
+    assert subgroup({"group": "T2", "as_of_strategy": "truoc_hieu_luc", "near_identical": True}) == "T5b"
+    assert subgroup({"group": "T5", "as_of_strategy": "ranh_gioi"}) == "T5a"
+    assert subgroup({"group": "T6", "repeal_mode": "direct"}) == "T6a"
+    assert subgroup({"group": "T6", "repeal_mode": "ancestor"}) == "T6b"
+    assert subgroup({"group": "T3"}) == "T3"
 
 
 def test_split_is_by_document_stable_and_keeps_T5_in_test():

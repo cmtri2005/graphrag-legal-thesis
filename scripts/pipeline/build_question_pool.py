@@ -106,12 +106,94 @@ def in_force_at(versions: list[dict], at: date) -> dict | None:
     return None
 
 
+# Old and new Vietnamese tone placement ("hoá"/"hóa", "uỷ"/"ủy") are the same word.
+_OLD_TONE = re.compile("o[àáảãạ]|o[èéẻẽẹ]|u[ỳýỷỹỵ]")
+_NEW_TONE = {"oà": "òa", "oá": "óa", "oả": "ỏa", "oã": "õa", "oạ": "ọa",
+             "oè": "òe", "oé": "óe", "oẻ": "ỏe", "oẽ": "õe", "oẹ": "ọe",
+             "uỳ": "ùy", "uý": "úy", "uỷ": "ủy", "uỹ": "ũy", "uỵ": "ụy"}
+
+
 def _words(text: str | None) -> str:
-    """Case, spacing and punctuation removed — what `cosmetic_only` compares on."""
-    return " ".join(re.findall(r"\w+", (text or "").casefold()))
+    """Case, spacing, punctuation and tone placement removed — what `cosmetic_only` compares on."""
+    folded = _OLD_TONE.sub(lambda m: _NEW_TONE[m[0]], (text or "").casefold())
+    return " ".join(re.findall(r"\w+", folded))
 
 
-def facets_of(versions: list[dict]) -> dict:
+# R1-ii (docs/vilextime-dinh-nghia.md): renames from the 2025 reorganisation, in `_words`
+# form. Khoản 1 Điều 3 NQ 190/2025/QH15 already carries an old name over to the agency
+# that took the function, from the reorganisation date (ministries: 01/03/2025, the date
+# NĐ 25/2025 ... 55/2025/NĐ-CP on the new ministries took effect), so a later amendment
+# that only rewrites the name does not change the legal answer. Where a function was
+# split, every receiving agency is listed: the rename is recognised only if the new
+# text names one of them in its place.
+RENAMES: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("bộ kế hoạch và đầu tư", ("bộ tài chính",)),
+    ("bộ giao thông vận tải", ("bộ xây dựng",)),
+    ("bộ tài nguyên và môi trường", ("bộ nông nghiệp và môi trường",)),
+    ("bộ nông nghiệp và phát triển nông thôn", ("bộ nông nghiệp và môi trường",)),
+    ("bộ thông tin và truyền thông", ("bộ khoa học và công nghệ", "bộ văn hóa thể thao và du lịch")),
+    ("bộ lao động thương binh và xã hội", ("bộ nội vụ", "bộ y tế", "bộ giáo dục và đào tạo")),
+    ("ủy ban dân tộc", ("bộ dân tộc và tôn giáo",)),
+    ("sở kế hoạch và đầu tư", ("sở tài chính",)),
+    ("sở giao thông vận tải", ("sở xây dựng",)),
+    ("sở tài nguyên và môi trường", ("sở nông nghiệp và môi trường",)),
+    ("sở nông nghiệp và phát triển nông thôn", ("sở nông nghiệp và môi trường",)),
+    ("sở thông tin và truyền thông", ("sở khoa học và công nghệ",)),
+    ("sở lao động thương binh và xã hội", ("sở nội vụ", "sở y tế")),
+    ("ngân hàng nhà nước chi nhánh", ("ngân hàng nhà nước khu vực",)),
+    ("tổng cục", ("cục",)),
+)
+# R1-iii: a citation changed and nothing else. Counts only in a document that says a
+# replaced act applies in its place (`auto_update_documents`).
+_CITATION = re.compile(r"(?i)(?:số\s*)?\d+[a-zđ]?/\d{4}/[\wĐđ&\-]+"
+                       r"|ngày\s+\d{1,2}\s*(?:tháng|/)\s*\d{1,2}\s*(?:năm|/)\s*\d{4}"
+                       r"|\b\d{1,2}/\d{1,2}/\d{4}\b")
+_AUTO_UPDATE = re.compile(r"(?i)(?:văn bản|quy định)[^.;]{0,160}(?:được|bị) sửa đổi, bổ sung(?:,| hoặc) (?:hoặc )?"
+                          r"thay thế[^.;]{0,100}thì[^.;]{0,60}(?:áp dụng|thực hiện|thay đổi) (?:theo|quy định tại)")
+
+
+def _renamed(a: str, b: str) -> bool:
+    """`b` is `a` with old agency names swapped for their successors, and nothing else."""
+    out = a
+    for old, successors in RENAMES:
+        if old in out and old not in b:
+            new = next((s for s in successors if s in b), None)
+            if new:
+                out = out.replace(old, new)
+    return out != a and out == b
+
+
+def transition_kind(before: str | None, after: str | None, auto_update: bool = False) -> str:
+    """R1: whether one version -> the next changes the legal content.
+
+    `substantive`, or why not: `cosmetic_only` (case, punctuation, spacing, tone
+    placement), `rename_only` (2025 reorganisation renames), `auto_reference_update`
+    (only a cited act changed, in a document that applies replaced acts itself).
+    """
+    a, b = _words(before), _words(after)
+    if a == b:
+        return "cosmetic_only"
+    if _renamed(a, b):
+        return "rename_only"
+    if auto_update and _words(_CITATION.sub(" ", before or "")) == _words(_CITATION.sub(" ", after or "")):
+        return "auto_reference_update"
+    return "substantive"
+
+
+def legal_states(versions: list[dict], auto_update: bool = False) -> list[int]:
+    """Indices of the versions that open a new legal state: 0, then every substantive transition."""
+    return [0] + [i for i in range(1, len(versions))
+                  if transition_kind(versions[i - 1]["text"], versions[i]["text"], auto_update) == "substantive"]
+
+
+def auto_update_documents(db: sqlite3.Connection) -> set[str]:
+    """Documents with a clause applying a replaced act's successor (TT 84/2018/TT-BTC k3 Đ7 kind)."""
+    return {doc for doc, text in db.execute(
+        "SELECT p.document_id, v.text FROM versions v JOIN provisions p ON p.id = v.provision_id "
+        "WHERE v.text LIKE '%thay thế%' AND v.text LIKE '%thì%'") if _AUTO_UPDATE.search(text or "")}
+
+
+def facets_of(versions: list[dict], auto_update: bool = False) -> dict:
     """Difficulty covariates, on every row rather than only where a group needs one.
 
     `similarity` used to be written for T4 alone, which is the same number that
@@ -130,7 +212,7 @@ def facets_of(versions: list[dict]) -> dict:
     texts = [v["text"] for v in versions]
     ratios = [round(difflib.SequenceMatcher(None, a, b).ratio(), 4)
               for a, b in zip(texts, texts[1:])]
-    normed = [_words(t) for t in texts]
+    kinds = [transition_kind(a, b, auto_update) for a, b in zip(texts, texts[1:])]
     return {
         "n_versions": len(versions),
         # This row's own chance level: the odds of being right by picking a version
@@ -146,7 +228,10 @@ def facets_of(versions: list[dict]) -> dict:
         # `build_vilextime.py` already reads it from
         "similarity": ratios[0] if len(ratios) == 1 else None,
         "similarities": ratios,
-        "substantive_transitions": sum(a != b for a, b in zip(normed, normed[1:])),
+        # R1 of docs/vilextime-dinh-nghia.md: cosmetic, rename-only and auto-reference
+        # transitions do not count; `transition_kinds` says which each one was
+        "substantive_transitions": kinds.count("substantive"),
+        "transition_kinds": kinds,
     }
 
 
@@ -242,7 +327,7 @@ def spread_as_of(provision_id: str, start: date, bound: date) -> date:
 
 
 def classify(versions: list[dict], document_ends: date | None, level: str, today: date,
-             moved: bool = False) -> str | None:
+             moved: bool = False, states: list[int] | None = None) -> str | None:
     """Which group this provision's chain can serve, or None.
 
     `moved` is `norm_continuity(...) == "unclear"`: a sibling unit in the same
@@ -250,13 +335,19 @@ def classify(versions: list[dict], document_ends: date | None, level: str, today
     is kept out of T6, whose gold asserts the content is simply gone, and falls
     through to the group its dated versions allow — where it is asked *inside* a
     version's window, so its gold is the version text and stays correct.
+
+    `states` (`legal_states`) are the versions that open a new legal state. T2 and T3
+    count states, not versions (R1): a chain whose only other change is a rename is a
+    pair, and a chain with no substantive change at all is no group (None). Without
+    `states` every transition counts, as before R1.
     """
     dated = [v for v in versions if v["effective_from"]]
     if len(dated) != len(versions) or not dated:
         return None  # an undated version can never be an answer
     # Scarcest group wins, so a chain that could serve two groups goes to the
     # one that cannot spare it: T3 has 2x its quota, T6 has 22x.
-    if len(dated) >= 3:
+    states = states if states is not None else list(range(len(dated)))
+    if len(states) >= 3:
         return "T3"
     last = dated[-1]
     if (
@@ -267,15 +358,25 @@ def classify(versions: list[dict], document_ends: date | None, level: str, today
         and not moved
     ):
         return "T6"  # ended while its document still stands, with nothing taking over
-    if len(dated) == 2:
+    if len(dated) == 1:
+        return "T1"
+    if len(states) == 2:
         return "T2"  # T4 merged in: `similarity` is a facet, not a group
-    return "T1"
+    return None      # several versions, one legal state: nothing to ask apart (R1)
 
 
 def ask_dates(group: str, versions: list[dict], today: date,
-              provision_id: str = "", document_ends: date | None = None) -> list[date]:
-    """The dates a question is asked at — chosen so the answers differ."""
+              provision_id: str = "", document_ends: date | None = None,
+              states: list[int] | None = None) -> list[date]:
+    """The dates a question is asked at — chosen so the answers differ.
+
+    T2 and T3 are asked around the transitions that open a legal state (`states`),
+    so a rename between them is never the switch a pair turns on.
+    """
     starts = [_d(v["effective_from"]) for v in versions]
+    need = {"T2": 2, "T3": 3}.get(group, 0)
+    if need and states is not None and len(states) >= need:
+        starts = [starts[i] for i in states]
     if group == "T1":
         # Anywhere in the one version's window, so the answer is the same wherever
         # it lands; the date is spread rather than fixed at start + 1 (see
@@ -344,8 +445,9 @@ def after_snapshot(row: dict) -> bool:
 
 def build_row(group: str, provision: dict, versions: list[dict], today: date,
               evidence: dict[str, dict], document_ends: date | None = None,
-              issued_on: dict[str, str] | None = None) -> dict:
-    dates = ask_dates(group, versions, today, provision["id"], document_ends)
+              issued_on: dict[str, str] | None = None, auto_update: bool = False) -> dict:
+    dates = ask_dates(group, versions, today, provision["id"], document_ends,
+                      legal_states(versions, auto_update))
     gold = []
     for at in dates:
         hit = in_force_at(versions, at)
@@ -382,7 +484,7 @@ def build_row(group: str, provision: dict, versions: list[dict], today: date,
     }
     if group == "T6":
         row["repeal_mode"] = "direct"
-    row.update(facets_of(versions))
+    row.update(facets_of(versions, auto_update))
     return row
 
 
@@ -408,7 +510,8 @@ def retro_kind(number: str, title: str, effective: str, effective_by_number: dic
 
 
 def build_t5_row(provision: dict, versions: list[dict], evidence: dict[str, dict],
-                 actors: dict[str, tuple], issued_on: dict[str, str] | None = None) -> dict | None:
+                 actors: dict[str, tuple], issued_on: dict[str, str] | None = None,
+                 auto_update: bool = False) -> dict | None:
     """Either side of the first change made by a retroactive document.
 
     `actors` maps a retroactive document to (number, title, issued_on,
@@ -421,6 +524,8 @@ def build_t5_row(provision: dict, versions: list[dict], evidence: dict[str, dict
         actor = f"document:{event.split(':')[1]}" if event else None
         if actor not in actors:
             continue
+        if transition_kind(versions[i - 1]["text"], v["text"], auto_update) != "substantive":
+            continue    # R1: a retroactive rename or reformatting changes no answer
         number, title, issued, effective, kind = actors[actor]
         start = _d(v["effective_from"])
         dates = [start - ONE_DAY, start]
@@ -456,7 +561,7 @@ def build_t5_row(provision: dict, versions: list[dict], evidence: dict[str, dict
                 "kind": kind, "event_id": event,
             },
         }
-        row.update(facets_of(versions))
+        row.update(facets_of(versions, auto_update))
         return row
     return None
 
@@ -520,6 +625,7 @@ def main() -> None:
             "SELECT id, number, title, issued_on, effective_from FROM documents "
             "WHERE issued_on IS NOT NULL AND effective_from IS NOT NULL AND effective_from < issued_on")
     }
+    auto_docs = auto_update_documents(db)    # R1-iii
     t5_rows: list[dict] = []
     ancestor_rows: list[dict] = []
     evidence = {}
@@ -558,12 +664,14 @@ def main() -> None:
         ends = document_ends.get(provision["document_id"])
         continuity = norm_continuity(provision["document_id"], rows[-1]["effective_to"], co_dated)
         moved = continuity == "unclear"
-        if (t5 := build_t5_row(provision, rows, evidence, retro_actors, issued_on)) is not None:
+        auto = provision["document_id"] in auto_docs
+        states = legal_states(rows, auto) if all(v["effective_from"] for v in rows) else None
+        if (t5 := build_t5_row(provision, rows, evidence, retro_actors, issued_on, auto)) is not None:
             t5_rows.append(add_repr_fields(t5, continuity, acted_on))
         is_ancestor = all(v["effective_from"] for v in rows) and repealed_by_ancestor(
             rows[-1], provision["level"], ends, args.today)
         if is_ancestor:
-            row = build_row("T6", provision, rows, args.today, evidence, ends, issued_on)
+            row = build_row("T6", provision, rows, args.today, evidence, ends, issued_on, auto)
             row.update(id=f"vilextime:T6:{provision['id']}", repeal_mode="ancestor")
             add_repr_fields(row, continuity, acted_on)
             if after_snapshot(row):
@@ -575,11 +683,15 @@ def main() -> None:
                 counts["bỏ T6/anc: nghi chuyển chỗ quy phạm, chờ người kiểm"] += 1
             else:
                 ancestor_rows.append(row)
-        group = classify(rows, ends, provision["level"], args.today, moved)
+        group = classify(rows, ends, provision["level"], args.today, moved, states)
         if moved and group != "T6":
             counts["T6 -> nhóm khác: nghi chuyển chỗ quy phạm, chờ người kiểm"] += 1
         if group is None:
-            counts["bỏ: phiên bản không có ngày"] += 1
+            if states is None:
+                counts["bỏ: phiên bản không có ngày"] += 1
+            else:
+                kinds = {transition_kind(a["text"], b["text"], auto) for a, b in zip(rows, rows[1:])}
+                counts[f"bỏ (R1): chỉ {'+'.join(sorted(kinds - {'substantive'}))}"] += 1
             return
         if is_ancestor:
             # Which group classify() would otherwise hand an H3 lineage to. The
@@ -593,7 +705,7 @@ def main() -> None:
         if (group == "T3" and last["effective_to"] and last["ended_by_event_id"]
                 and provision["level"] in ("Clause", "Point") and (ends is None or ends > args.today)):
             counts["CẢNH BÁO: T3 ăn mất một ứng viên T6-direct"] += 1
-        row = add_repr_fields(build_row(group, provision, rows, args.today, evidence, ends, issued_on),
+        row = add_repr_fields(build_row(group, provision, rows, args.today, evidence, ends, issued_on, auto),
                               continuity, acted_on)
         answers = [(g["in_force"], g["text"]) for g in row["gold"]]
         if len(answers) > 1 and len(set(answers)) != len(answers):

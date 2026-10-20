@@ -4,8 +4,8 @@
   * a boundary row carries every field of its selected row unchanged;
   * a twin has its boundary row's question, answer and gold version, and its
     date lies inside the gold version's window (T5: inside the retroactive one);
-  * a row asked after its document ended ("sau_het_hieu_luc") has its boundary
-    row's question, no answer (`document_repealed`) and a date after the end;
+  * no row is asked after its document ended ("sau_het_hieu_luc", removed 20/10:
+    docs/vilextime-dinh-nghia.md §5), and every row names its `subgroup`;
   * a row asked before the next version applies ("truoc_hieu_luc") carries the
     trap it exists for: `pending` names an act signed on or before as_of that
     takes effect after it;
@@ -43,7 +43,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "review"))
 from labels import GUIDELINE  # noqa: E402
 
-NEW = {"schema_version", "as_of_strategy", "twin_of", "changed_span", "evidence_set", "accepted_evidence",
+NEW = {"schema_version", "as_of_strategy", "twin_of", "changed_span", "evidence_set", "accepted_evidence", "subgroup",
        "domain", "domain_source", "legal_markers", "short_answer", "split", "retrieved_at"}
 SNAPSHOT = "2026-09-17"
 SPLITS = {"dev", "test", "test_contested", "excluded"}
@@ -69,11 +69,7 @@ def problems(release: list[dict], selected: dict[str, dict], layer_a: set[str], 
             if r["as_of"] > SNAPSHOT:
                 out.append(f"{r['id']}: hỏi sau ngày chụp corpus {SNAPSHOT}")
         elif r["as_of_strategy"] == "sau_het_hieu_luc":
-            base = selected.get(r["twin_of"])
-            if (base is None or r["question"] != base["question"] or r["lineage_id"] != base["lineage_id"]
-                    or r["answerable"] or r["no_answer_reason"] != "document_repealed"
-                    or not (r["valid_from"] <= r["as_of"] <= SNAPSHOT)):
-                out.append(f"{r['id']}: dòng sau hết hiệu lực không khớp dòng gốc hoặc ngày hết hiệu lực")
+            out.append(f"{r['id']}: chế độ sau_het_hieu_luc đã bỏ khỏi bộ chấm (định nghĩa §5)")
         else:
             base = selected.get(r["twin_of"])
             if base is None or any(r[k] != base[k] for k in ("question", "answer", "version_id", "lineage_id")):
@@ -101,12 +97,17 @@ def problems(release: list[dict], selected: dict[str, dict], layer_a: set[str], 
             out.append(f"{r['id']}: T5 nằm trong dev")
         if not r.get("retrieved_at") or r["review"]["guideline_version"] != GUIDELINE:
             out.append(f"{r['id']}: thiếu retrieved_at hoặc guideline_version khác {GUIDELINE}")
+        if r.get("subgroup") not in SUBGROUPS:
+            out.append(f"{r['id']}: subgroup {r.get('subgroup')!r} ngoài {sorted(SUBGROUPS)}")
     for key in ("lineage_id", "document_id"):
         seen = collections.defaultdict(set)
         for r in release:
             seen[r[key] if key == "lineage_id" else r["target"]["document_id"]].add(r.get("split"))
         out += [f"{k}: nằm ở nhiều split {sorted(map(str, v))}" for k, v in seen.items() if len(v) > 1]
     return out
+
+
+SUBGROUPS = {"T1", "T2", "T3", "T4", "T5a", "T5b", "T6a", "T6b"}   # docs/vilextime-dinh-nghia.md §4
 
 
 MANIFESTED = ("derived/vilextime/release.jsonl", "derived/corpus/manifest.json", "vilextime/questions.jsonl",

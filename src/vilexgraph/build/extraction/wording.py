@@ -26,6 +26,9 @@ from vilexgraph.build.temporal.models import Provision, ProvisionLevel
 
 _INTRO = re.compile(r"(?i:như sau)\s*:\s*(?P<tail>.*)$")
 _OPEN = ("“", '"')
+# An omnibus act's heading is the whole instruction, with no "như sau:" (NĐ 14/2026/NĐ-CP):
+# "Điều 123. Sửa đổi, bổ sung khoản 2 Điều 43" then "“2. Thủ tục đóng tạm thời …”".
+_HEAD_INSTRUCTION = re.compile(r"^Điều\s+\d+[a-zđ]?\s*\.\s*(?i:sửa đổi|thay thế|bổ sung)[^:“\"]*$")
 _STRAIGHT_CLOSE = re.compile(r"\"[\s.;,]*$")
 _ITEM = re.compile(
     r"^(?:(?P<Article>Điều\s+\d+[a-zđ]?)(?:\s*[.:\-–]|\s*$)"
@@ -55,7 +58,8 @@ def wording_blocks(paragraphs: list[str]) -> dict[int, Block]:
         tail = m.group("tail") if m else ""
         if m and tail.startswith(_OPEN):
             block = _close(paragraphs, i, tail, inline_at=m.start("tail"))
-        elif m and not tail and i + 1 < len(paragraphs) and paragraphs[i + 1].lstrip().startswith(_OPEN):
+        elif (m and not tail or not m and _HEAD_INSTRUCTION.match(paragraphs[i].strip())) \
+                and i + 1 < len(paragraphs) and paragraphs[i + 1].lstrip().startswith(_OPEN):
             block = _close(paragraphs, i + 1, paragraphs[i + 1].strip())
         else:
             block = None

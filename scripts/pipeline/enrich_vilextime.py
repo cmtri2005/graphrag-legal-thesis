@@ -18,9 +18,9 @@ and picks boundary rows as before; this step reads `selected.jsonl` and writes
       from the version chain and must equal its boundary row's, or no twin. A
       date the review found an amendment the chain missed on caps the window
       (`data/review/validity_queue.tsv`, `missed_event` judged `loi`; 29/09).
-      A lineage whose document ended before the snapshot gets a third row,
-      "sau_het_hieu_luc": asked after the end, no answer (`document_repealed`),
-      the ending sentence as accepted evidence (29/09, JUDGE N2).
+      The third row "sau_het_hieu_luc" (asked after the document ended, no
+      answer) is gone since 20/10: a replacing act usually carries the content on
+      (docs/vilextime-dinh-nghia.md §5), so "no answer" was wrong for most of them.
       The earlier row of a T2 pair gets one more, "truoc_hieu_luc": asked 30 days
       before the next version applies, once its amending act is signed — same
       question and gold, the trap of law signed but not yet in force (11/10).
@@ -57,6 +57,11 @@ and picks boundary rows as before; this step reads `selected.jsonl` and writes
   legal_markers
       Heuristics for the checker, not errors: the amending document has a
       transitional article; its effect clause names more than one date.
+  subgroup
+      The reported slice (docs/vilextime-dinh-nghia.md §4): T1, T2, T4 (a T2 pair
+      with near-identical versions), T3, T5a (retroactive), T5b (a T2 row asked
+      after its amending act was signed and before it applies), T6a (repealed by
+      name), T6b (fell with an ancestor).
   short_answer
       From `data/vilextime/short_answers.jsonl`, keyed by (lineage, version),
       its writer in `by` (a person or a model, audited with the row's label);
@@ -96,8 +101,6 @@ MARGIN = 30                    # days a mid-interval date keeps from either boun
 SEED = "vilextime-twin-v1"
 SPLIT_SEED = "vilextime-split-v1"
 DEV_SHARE = 0.2
-AFTER_END = "sau_het_hieu_luc"
-AFTER_END_GROUPS = ("T1", "T2", "T3", "T5")     # T6 is already unanswerable; T4 merged into T2
 BEFORE_EFFECT = "truoc_hieu_luc"
 BEFORE_EFFECT_DAYS = 30        # how long before the next version applies a before_effect row is asked
 # the proposal's four fields, by the words of the portal's own classification
@@ -108,7 +111,6 @@ _FIELD_WORDS = (
     ("giao_thong", ("giao thông", "đường bộ", "đường sắt", "đường thủy", "hàng hải", "hàng không", "vận tải",
                     "đăng kiểm")),
 )
-_ENDING_WORDS = re.compile(r"(?i)hết hiệu lực|thay thế|bãi bỏ|hủy bỏ|huỷ bỏ")
 _ORDER = (L.ARTICLE, L.CLAUSE, L.POINT)
 _WORD = re.compile(r"\w+", re.UNICODE)
 _DOC_TYPES = r"(?:Bộ luật|Luật|Pháp lệnh|Nghị định|Nghị quyết|Thông tư liên tịch|Thông tư|Quyết định|Quy chế|Quy định|Điều lệ)"
@@ -203,26 +205,17 @@ def twin_of(record: dict, versions: list[dict], document_end: date | None,
     return twin
 
 
-def after_end(record: dict, document_end: date | None, evidence: list[str]) -> dict | None:
-    """The lineage asked after its document ended: no answer, the ending sentence as evidence.
-
-    None when the document has not ended before the snapshot, or when no unit
-    of the corpus says so (a row nobody could retrieve the reason for).
-    """
-    if document_end is None or not evidence:
-        return None
-    at = mid_date(document_end, None, f"{record['lineage_id']}:{AFTER_END}")
-    if at is None:
-        return None
-    row = json.loads(json.dumps(record))
-    row.update(id=f"{record['id'].rsplit(':', 1)[0]}:{at.isoformat()}", as_of=at.isoformat(),
-               as_of_strategy=AFTER_END, twin_of=record["id"], answer=None, answerable=False, in_force=False,
-               no_answer_reason="document_repealed", version_id=None, valid_from=document_end.isoformat(),
-               valid_to=None, relevant_version_ids=[], utilized_version_ids=[], short_answer=None)
-    row["target"]["lead_in"] = None
-    row["derivation"] = {"transitions": [], "query": f"as_of({record['lineage_id']}, {at.isoformat()})"}
-    row["_ending_units"] = evidence
-    return row
+def subgroup(r: dict) -> str:
+    """The slice a row is reported under (docs/vilextime-dinh-nghia.md §4)."""
+    if r["group"] == "T5":
+        return "T5a"
+    if r["group"] == "T6":
+        return "T6b" if r.get("repeal_mode") == "ancestor" else "T6a"
+    if r["group"] == "T2":
+        if r.get("as_of_strategy") == BEFORE_EFFECT:
+            return "T5b"
+        return "T4" if r.get("near_identical") else "T2"
+    return r["group"]
 
 
 def before_effect(record: dict, versions: list[dict], document_end: date | None,
@@ -389,43 +382,6 @@ def domains(data: Path, documents: set[str]) -> dict[str, tuple[list[str], str]]
     return out
 
 
-def ending_units(db: sqlite3.Connection, data: Path, ended: dict[str, tuple[str, date]]) -> dict[str, list[str]]:
-    """Target document -> layer A units of the document(s) that ended it and name its number.
-
-    The ending document is the one a reviewed `effective_to` decision cites, or
-    one that repeals or replaces it (genealogy) taking effect on that day. A unit
-    counts when it names the number and it, or the clause above it, says the
-    document ends ("các văn bản sau đây hết hiệu lực: a) …").
-    """
-    actors: dict[str, set[str]] = collections.defaultdict(set)
-    raw_of = {doc.split(":", 1)[1]: doc for doc in ended}
-    path = data / "review/temporal_candidates.jsonl"
-    for line in path.read_text(encoding="utf-8").splitlines() if path.exists() else ():
-        rec = json.loads(line)
-        if rec.get("field") == "effective_to" and rec.get("decision") == "accept" and rec["document_id"] in raw_of:
-            actors[raw_of[rec["document_id"]]] |= {f"document:{a}" for a in rec.get("evidence_document_ids") or ()}
-    starts = {d: _d(f) for d, f in db.execute("SELECT id, effective_from FROM documents")}
-    for line in (data / "edges.jsonl").open(encoding="utf-8"):
-        edge = json.loads(line)
-        doc, actor = raw_of.get(edge["target_id"]), f"document:{edge['source_id']}"
-        if doc and edge["reference_type"] in (1, 12) and starts.get(actor) == ended[doc][1]:
-            actors[doc].add(actor)
-    corpus = {json.loads(line)["document_id"] for line in (data / "derived/corpus/documents.jsonl").open(encoding="utf-8")}
-    out: dict[str, list[str]] = {}
-    for doc, (number, _) in ended.items():
-        named = re.compile(rf"(?<![\w/-])(?:{re.escape(number)}|{re.escape(number.replace('/', '-', 1))})(?![\w/])")
-        units = []
-        for actor in sorted(actors.get(doc, set()) & corpus):
-            text = {pid: (parent, t) for pid, parent, t in db.execute(
-                "SELECT p.id, p.parent_id, v.text FROM provisions p JOIN versions v ON v.provision_id = p.id "
-                "WHERE p.document_id = ? AND v.ordinal = 1", (actor,))}
-            for pid, (parent, t) in text.items():
-                if named.search(t or "") and (_ENDING_WORDS.search(t) or _ENDING_WORDS.search(text.get(parent, (None, ""))[1] or "")):
-                    units.append(f"asis:{pid}")
-        out[doc] = sorted(units)
-    return out
-
-
 # ------------------------------------------------------------------ main
 
 def main() -> None:
@@ -446,7 +402,7 @@ def main() -> None:
     db = sqlite3.connect(data / "temporal.sqlite")
     document_end = {doc: _d(end) for doc, end in db.execute("SELECT id, effective_to FROM documents")}
     issued_on = {doc: issued for doc, issued in db.execute("SELECT id, issued_on FROM documents") if issued}
-    steps = {r["lineage_id"]: r["derivation"]["transitions"] for r in rows}   # after_end() empties the row's own
+    steps = {r["lineage_id"]: r["derivation"]["transitions"] for r in rows}
 
     # Same-document references, resolved once per (document, locator).
     resolver = TargetResolver(TemporalIndex(data / "temporal.sqlite"))
@@ -517,10 +473,7 @@ def main() -> None:
         r["retrieved_at"] = SNAPSHOT.isoformat()
         r["split"] = split_of(r["target"]["document_id"], always_test)
         r["domain"], r["domain_source"] = fields[r["target"]["document_id"]]
-        if r["as_of_strategy"] == AFTER_END:                         # built whole by after_end()
-            r["evidence_set"], r["accepted_evidence"], r["legal_markers"] = [], r.pop("_ending_units"), []
-            stats["dòng sau hết hiệu lực"] += 1
-            return r
+        r["subgroup"] = subgroup(r)
         evidence = []
         if r["version_id"]:
             evidence.append({"provision_id": lid, "version_id": r["version_id"], "role": "gold"})
@@ -559,21 +512,11 @@ def main() -> None:
         for q in csv.DictReader(queue.open(encoding="utf-8"), delimiter="\t"):
             if q["kind"] == "missed_event" and q["decision"] == "loi" and q["strategy"] == "giua_khoang":
                 caps[q["lineage"]].append(date.fromisoformat(q["date"]))
-    ended = {r["target"]["document_id"]: (r["target"]["law_id"], document_end[r["target"]["document_id"]])
-             for r in rows if r["group"] in AFTER_END_GROUPS and (e := document_end.get(r["target"]["document_id"]))
-             and e < SNAPSHOT}
-    ending = ending_units(db, data, ended)
-
-    out, asked_after = [], set()
+    out = []
     for r in rows:
         doc = r["target"]["document_id"]
         twin = twin_of(r, pool[r["lineage_id"]], document_end.get(doc), tuple(caps.get(r["lineage_id"], ())))
         stats["dòng anh em: có" if twin else "dòng anh em: không (cửa sổ rỗng hoặc chuỗi lệch)"] += 1
-        late = None
-        if doc in ended and r["lineage_id"] not in asked_after:
-            asked_after.add(r["lineage_id"])
-            late = after_end(r, ended[doc][1], ending.get(doc, []))
-            stats["sau hết hiệu lực: " + ("có dòng" if late else "không tìm được câu chấm dứt")] += 1
         early = None
         if r["group"] == "T2":
             early = before_effect(r, pool[r["lineage_id"]], document_end.get(doc),
@@ -583,7 +526,7 @@ def main() -> None:
             if r["version_id"] != pool[r["lineage_id"]][-1]["id"]:
                 stats["trước hiệu lực: " + ("có dòng" if early else "không (chưa ký, ra ngoài khoảng hoặc chuỗi lệch)")] += 1
         out.append(enrich(r))
-        for extra in (twin, early, late):
+        for extra in (twin, early):
             if extra:
                 out.append(enrich(extra))
     ids = [r["id"] for r in out]

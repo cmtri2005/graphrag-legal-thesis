@@ -103,6 +103,8 @@ _ARTICLE_HEAD = re.compile(r"^Điều\s+\d+[a-zđ]?\s*[.:\-–]\s*")
 _STRUCTURE_HEAD = re.compile(r"^(?:Chương|Mục|Phần)\s+(?:[IVXLC]+|\d+|[A-Z])(?:\s*[.:\-–](?:\s.*)?)?\s*$")
 _SENTENCE = re.compile(r"(?<=\.)\s+(?=[A-ZĐ])")
 _QUOTE_MARK = "«Q»"
+# "Sửa đổi, bổ sung một số khoản của Điều 51 như sau:" only heads its items; Điều 51 itself is not rewritten
+_SOME_OF = re.compile(r"(?i)\bmột số\s+(?:khoản|điểm|nội dung)")
 _WHOLE_DOC_OPS = (LegalOperation.REPEAL, LegalOperation.REPLACE, LegalOperation.SUSPEND)
 
 
@@ -142,7 +144,7 @@ class Mention:
     operation: LegalOperation
     locators: tuple[ProvisionLocator, ...]  # empty: the whole cited document
     document_number: str
-    method: str  # explicit | forward | list_forward | intro | article_context | title_context
+    method: str  # explicit | forward | list_forward | intro | article_context | part_context | title_context
     evidence: str
     paragraph: int = -1  # the instruction's paragraph, where `wording_blocks` keys its new wording
 
@@ -344,6 +346,10 @@ def extract_mentions(paragraphs: list[str], title_doc: str | None = None) -> lis
     mentions: list[Mention] = []
     seen: set[tuple] = set()
     article_doc: str | None = None
+    # An omnibus act names the amended document once per chapter: "Chương XXV" then
+    # "SỬA ĐỔI, BỔ SUNG MỘT SỐ ĐIỀU CỦA NGHỊ ĐỊNH SỐ 05/2021/NĐ-CP …" (NĐ 14/2026/NĐ-CP).
+    part_doc: str | None = None
+    after_structure = False
     level0: _Intro | None = None   # set by a plain line or article heading ending in ":"
     level1: _Intro | None = None   # set by a numbered/dash item ending in ":"
     pending: list[tuple[LegalOperation, list[dict], str, int]] = []  # letter items waiting for a later citation
@@ -374,8 +380,17 @@ def extract_mentions(paragraphs: list[str], title_doc: str | None = None) -> lis
                 line = line[marker.end():]
         if kind == "plain" and _STRUCTURE_HEAD.match(line) and not _CITE.search(line):
             level0 = level1 = article_doc = None
+            if not line.startswith("Mục"):
+                part_doc = None  # a Mục stays inside its chapter's amended document
             pending = []
+            after_structure = True
             continue
+        if after_structure:
+            after_structure = False
+            title = _statement(line)
+            if kind == "plain" and title.active and title.cite not in (None, "self") and not title.locators:
+                part_doc = title.cite
+                continue
         if kind == "head":
             level0 = level1 = None
             pending = []
@@ -395,6 +410,11 @@ def extract_mentions(paragraphs: list[str], title_doc: str | None = None) -> lis
                 later = next((s.passive for s in stmts[i:] if s.passive and not s.active), None)
                 earlier = next((s.active for s in reversed(stmts[:i]) if s.active), None)
                 op = st.active or later or earlier or (intro.op if intro else None)
+                if kind == "head" and i == 0 and st.active and not colon and st.cite != "self":
+                    # "Điều 128. Bãi bỏ điều, điểm … Nghị định số 05/2021/NĐ-CP" or "Điều 126. Sửa đổi,
+                    # bổ sung một số khoản của Điều 51" with no ":" still heads the list below it
+                    level0 = _Intro(st.active, _shared_outer(st.locators) if st.locators else None,
+                                    None if st.self_ref else st.cite)
                 if op is None or st.cite == "self" or st.self_ref:
                     continue
                 if not st.active and op in _TEXT_EDITS and (_PHRASE.search(st.text) or _SUBJECT_LIMITED.match(st.text)):
@@ -410,6 +430,8 @@ def extract_mentions(paragraphs: list[str], title_doc: str | None = None) -> lis
                         doc, method = intro.doc, "intro"
                     elif article_doc:
                         doc, method = article_doc, "article_context"
+                    elif part_doc:
+                        doc, method = part_doc, "part_context"
                     elif title_doc:
                         doc, method = title_doc, "title_context"
                 locs = [_merge_intro(p, intro.locator if intro else None) for p in st.locators]
@@ -421,6 +443,8 @@ def extract_mentions(paragraphs: list[str], title_doc: str | None = None) -> lis
                         level1 = new_intro
                 if kind == "head" and i == 0 and st.active and st.cite and not st.locators:
                     article_doc = st.cite
+                if i == 0 and (colon or kind == "head") and _SOME_OF.search(st.text):
+                    continue
                 if doc is None:
                     if locs and kind == "letter":
                         pending.append((op, locs, st.text, paragraph))

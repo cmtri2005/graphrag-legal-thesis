@@ -59,21 +59,30 @@ WIDTHS = {"id": 34, "group": 7, "lineage_id": 30, "question": 62, "as_of": 11, "
           "valid_to": 11, "source_url": 30, "note_for_annotator": 30,
           "verdict": 13, "reasons": 26, "note": 34, "suggestion": 46, "adjudicated": 12}
 
-REASON_HELP = [
+REASON_HELP = [   # docs/vilextime-annotation.md §2, hướng dẫn 3.0
     ("question_ambiguous", "Câu hỏi khớp nhiều điều khoản hoặc nhiều mục trong danh sách; đáp án chuẩn chỉ là một trong số đó."),
     ("question_leaks", "Câu hỏi đã nói ra đáp án, nêu số hiệu/Điều/Khoản, ký hiệu mục (\"c)\"), hoặc để lộ phiên bản nào."),
-    ("gold_wrong", "Cột đáp án không đúng là điều khoản có hiệu lực tại as_of: sai phiên bản, vế \"trước sửa đổi\" thực ra đã là bản sửa, text bị cắt mất phần được hỏi, hoặc (T6) đáp án rỗng trong khi nội dung đã chuyển chỗ."),
-    ("group_mismatch", "Câu hỏi không làm được việc của nhóm. T2 không chạm chỗ thay đổi (hai mốc trả lời như nhau); T3 chỉ chạm một lần sửa; T6 CHỈ hỏi có/không (câu ghép có thêm vế hỏi nội dung thì không tính); T5 hỏi vào phần không đổi."),
-    ("unanswerable_as_asked", "Đúng chủ đề nhưng không thể trả lời bằng đáp án: hỏi \"khi nào\" mà đáp án không nói thời hạn, hỏi \"ai\" mà đáp án không nêu chủ thể."),
-    ("transitional_rule", "Điều khoản chuyển tiếp giữ quy định cũ cho đúng quan hệ câu hỏi tự nêu (ví dụ hồ sơ nộp trước ngày hiệu lực), hoặc cho chính sự việc phát sinh tại as_of. Câu hỏi không nêu gì thì hiểu sự việc phát sinh tại as_of: điều khoản chỉ giữ bản cũ cho việc đang thực hiện KHÔNG phải lỗi. Ghi Điều chuyển tiếp vào note."),
+    ("unanswerable_as_asked", "Đúng chủ đề nhưng đáp án không trả lời được điều câu hỏi hỏi: hỏi \"khi nào\" mà đáp án không có thời hạn, hỏi \"ai\" mà đáp án không nêu chủ thể."),
+    ("group_mismatch", "Câu hỏi không làm được việc của nhóm: T2/T4 không chạm phần thay đổi; T3 không ra được 3 đáp án khác nhau; T6 CHỈ hỏi có/không; T5 hỏi vào phần không đổi."),
+    ("gold_wrong", "Cột đáp án không phải phiên bản có hiệu lực tại as_of: sai phiên bản, lời văn thiếu hay thừa so với văn bản gốc, vế \"trước sửa đổi\" thực ra đã là bản sửa. Ghi note."),
+    ("transitional_rule", "Điều khoản chuyển tiếp giữ bản cũ cho đúng quan hệ câu hỏi TỰ NÊU, hoặc buộc chính sự việc phát sinh tại as_of theo bản cũ. Chỉ giữ bản cũ cho việc đang thực hiện thì KHÔNG phải lỗi. Ghi Điều chuyển tiếp vào note."),
+    ("relocated", "(T6) Nội dung bị bãi bỏ đã chuyển chỗ, đạt đủ 7 yếu tố. Ghi chỗ mới (văn bản, vị trí, trích đoạn) vào note."),
+    ("relocation_unclear", "(T6) Không chắc có chuyển chỗ hay không. Ghi chỗ nghi vào note."),
+    ("superseded_by_other_norm", "Văn bản cấp cao hơn, hoặc văn bản cùng cơ quan ban hành sau, quy định khác về cùng vấn đề mà không sửa điều khoản này. Ghi văn bản vào note."),
+    ("restructuring_2025", "Ngày hỏi sau sắp xếp bộ máy (bộ: 01/03/2025; cấp huyện, tỉnh: 01/07/2025) mà đáp án vẫn nêu cơ quan, cấp, địa danh cũ chưa được sửa lời văn."),
+    ("reference_only", "Đáp án chỉ là dẫn chiếu (\"thực hiện theo Thông tư X\"), không có nội dung pháp lý."),
+    ("rename_only", "Lần đổi mà câu hỏi dựa vào chỉ là đổi tên cơ quan do sắp xếp bộ máy (Bộ GTVT → Bộ Xây dựng): hai mốc cùng một đáp án pháp lý."),
+    ("cosmetic_only", "Lần đổi chỉ là hình thức: hoa thường, dấu câu, khoảng trắng, đánh số."),
+    ("auto_reference_update", "Lần đổi chỉ cập nhật văn bản được dẫn chiếu, trong khi chính văn bản đã quy định tự áp văn bản thay thế."),
     ("other", "Lỗi khác. Bắt buộc mô tả ở cột note."),
 ]
 
-GROUP_HELP = [
-    ("T2", "Cặp tương phản (gồm cả cặp gần giống). Hai dòng cùng lineage, hai mốc. Luật sư trả lời giống nhau ở cả hai ngày thì group_mismatch, kể cả khi chỉ đổi cách viết cùng một điều. Câu hỏi chứa sẵn vế trước của đáp án: dòng ngày trước question_leaks. Đổi chủ thể giữa hai mốc: dòng ngày sau gold_wrong, ghi note."),
-    ("T3", "Chuỗi từ ba phiên bản. Câu hỏi phải chạm vào phần đổi qua NHIỀU lần sửa, không chỉ một lần."),
-    ("T5", "Hiệu lực hồi tố: văn bản có hiệu lực TRƯỚC ngày ký. Cột note_for_annotator ghi ngày ký và ngày hiệu lực. Kiểm xem câu hỏi có hỏi vào phần thực sự thay đổi."),
-    ("T6", "Hết hiệu lực một phần ở cấp Khoản/Điểm. Cột đáp án ghi \"(không có đáp án: ...)\". Câu CHỈ hỏi có/không là group_mismatch; câu ghép có thêm vế hỏi nội dung (\"... có áp dụng không, và quy định cụ thể thế nào?\") thì chấm theo vế nội dung. Nếu nội dung đã CHUYỂN CHỖ (đạt đủ 7 yếu tố, hướng dẫn §3) thì đáp án rỗng là sai: khong_dat, gold_wrong, ghi chỗ mới vào note. Sáp nhập: cơ quan kế thừa (Bộ GTVT vào Bộ Xây dựng) đạt yếu tố 6; địa danh chỉ đổi tên do sáp nhập tỉnh/xã, phạm vi và ranh giới giữ nguyên (Bến Tre thành Vĩnh Long) đạt yếu tố 2. Không chắc thì vẫn dat (nếu không có lỗi khác) và ghi \"unclear\" vào note."),
+GROUP_HELP = [   # docs/vilextime-annotation.md §3
+    ("T2/T4", "Cặp tương phản; T4 là cặp gần như y hệt. Hai dòng cùng câu hỏi, hai mốc, gán riêng từng dòng. Câu hỏi phải chạm đúng phần đổi. Đổi tên cơ quan do sắp xếp bộ máy thì rename_only. Câu hỏi chứa sẵn vế trước của đáp án: dòng ngày trước question_leaks."),
+    ("T3", "Chuỗi nhiều bước. Câu hỏi phải ra ít nhất 3 đáp án khác nhau qua các mốc; chỉ tách được 2 trạng thái là group_mismatch."),
+    ("T5a", "Hồi tố: văn bản sửa đổi có hiệu lực TRƯỚC ngày ký. Đáp án ở mốc trong khoảng hồi tố là nội dung MỚI. Kiểm câu hỏi có hỏi vào phần thực sự đổi."),
+    ("T5b", "Đã ký, chưa có hiệu lực: mốc sau ngày ký, trước ngày hiệu lực của văn bản sửa đổi. Đáp án là nội dung CŨ."),
+    ("T6a/T6b", "Bị bãi bỏ đích danh (T6a) hoặc mất hiệu lực vì điều khoản cấp trên bị bãi bỏ (T6b). Đáp án rỗng. Câu CHỈ hỏi có/không là group_mismatch. Tìm nội dung còn ở đâu: chuyển chỗ đủ 7 yếu tố thì relocated (ghi chỗ mới); không chắc thì relocation_unclear; văn bản cấp cao hơn quy định cùng vấn đề thì superseded_by_other_norm; không có kế thừa thì dat."),
 ]
 
 

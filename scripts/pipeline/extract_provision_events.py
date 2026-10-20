@@ -81,6 +81,7 @@ def main() -> None:
         if doc.number:
             by_number[normalize_number(doc.number)].append(doc.id)
 
+    stats_title_actors: set[str] = set()   # read because of their title, not of a portal relation
     targets_of: dict[str, set[str]] = collections.defaultdict(set)
     actors: dict[str, str] = {}  # domain id -> portal id, which names the file under data/raw
     for line in (data / "edges.jsonl").read_text(encoding="utf-8").splitlines():
@@ -93,10 +94,18 @@ def main() -> None:
     # Only a central normative act can amend one (ADR 0002 scope): a provincial
     # resolution or a consolidated text that cites "Điều 4 Nghị định số X" is
     # quoting it, not changing it.
-    central = {
-        make_document_id(row["doc_id"]) for row in map(json.loads, (data / "derived/eligibility.jsonl").read_text(encoding="utf-8").splitlines())
-        if row.get("doc_class") == "qppl"
-    }
+    central_rows = [row for row in map(json.loads, (data / "derived/eligibility.jsonl").read_text(encoding="utf-8").splitlines())
+                    if row.get("doc_class") == "qppl"]
+    central = {make_document_id(row["doc_id"]) for row in central_rows}
+    # The portal's Lược đồ misses some amending acts altogether: NĐ 115/2016/NĐ-CP, titled
+    # "Sửa đổi, bổ sung một số điều của Nghị định số 163/2013/NĐ-CP", lists only "Căn cứ ban
+    # hành", so none of its amendments were read (D5 §5.6). A title that opens on the act
+    # of amending is evidence enough to read the body: 562 such documents (20/10/2026).
+    for row in central_rows:
+        doc_id = make_document_id(row["doc_id"])
+        if doc_id not in actors and (doc := index.document(doc_id)) and _ACTS_ON_ANOTHER.search(doc.title or ""):
+            actors[doc_id] = row["doc_id"]
+            stats_title_actors.add(doc_id)
 
     gold: set[tuple[str, str]] = set()
     for line in (data / "expiry_targets.jsonl").read_text(encoding="utf-8").splitlines():
@@ -269,6 +278,7 @@ def main() -> None:
     print(f"  skipped: {stats['actor out of scope']:,} not central normative, {stats['actor without body']:,} without body, "
           f"{len(skipped_mismatch):,} whose body carries another document's number: {skipped_mismatch[:12]}")
     print(f"  {stats['duplicate mention']:,} repeated mentions written once")
+    print(f"  {len(stats_title_actors):,} acting documents read because of their title (no portal relation)")
     print(f"  {stats['deferred effective date']:,} mentions dated by a part of the act starting later")
     for key, count in sorted(rows.items()):
         print(f"  {count:>7,}  {key}")
@@ -294,11 +304,21 @@ def _status(row: dict, quoted: bool, gold: set[tuple[str, str]],
         return "needs_review", "structure_mismatch" if quoted else "missing_resulting_text"
     if op not in ENDING or op == "suspend":
         return "needs_review", f"{op}_not_materializable"
+    if op == "repeal" and _PARTIAL_REPEAL.search(row["evidence"] or ""):
+        # deleting a phrase, a row of a table or a dash is not ending the node (D5 §5)
+        return "needs_review", "partial_repeal"
     if any((row["target_document_id"], pid) in gold for pid in row["affected_provision_ids"]):
         return "verified", None
     return "auto_accepted", None
 
 
+# "Bãi bỏ nội dung sau tại khoản 3", "bãi bỏ đoạn “…” tại điểm d", "bãi bỏ số thứ tự 19 tại Biểu
+# phí", "bãi bỏ tiết c điểm 3.2": only part of the located node goes. "Bãi bỏ nội dung (quy định)
+# tại khoản 5" and "bãi bỏ từ khoản 1 đến khoản 11" still end whole nodes.
+_PARTIAL_REPEAL = re.compile(
+    r"(?i)bãi bỏ\s+(?:các\s+)?(?:nội dung\s+(?:sau|dưới đây|về|liên quan)|quy định\s+(?!tại)"
+    r"|(?:nội dung\s+(?:quy định\s+)?tại\s+)?(?:đoạn|câu|cụm từ|chữ|dòng|số thứ tự|tiết|gạch đầu dòng|ý)\b"
+    r"|từ\s+(?!khoản|điều|điểm|chương|mục))")
 _SELF = r"(?:Bộ luật|Luật|Pháp lệnh|Nghị định|Nghị quyết|Thông tư(?: liên tịch)?|Quyết định)\s+này"
 # "Các khoản 4, khoản 5 và khoản 12 Điều 1 Thông tư này có hiệu lực thi hành từ ngày 01 tháng 01
 # năm 2024": part of an act starting later than the act (TT 17/2023/TT-BGTVT, D5 §5.1)
@@ -360,6 +380,11 @@ def paragraph_positions(paragraphs: list[str], quoted: set[int]) -> list[tuple[s
                 clause = m[1]
         out.append((article, clause))
     return out
+
+
+_ACTS_ON_ANOTHER = re.compile(
+    r"(?i)^(?:Bộ luật|Luật|Pháp lệnh|Nghị định|Nghị quyết|Thông tư(?: liên tịch)?|Quyết định|Chỉ thị|Sắc lệnh)"
+    r"\s+(?:số\s*:?\s*)?\S+\s+(?:về việc\s+|về\s+)?(?:sửa đổi|bổ sung|bãi bỏ|thay thế|đính chính|ngưng hiệu lực|hủy bỏ|huỷ bỏ)")
 
 
 _BODY_NUMBER = re.compile(r"Số\s*:?\s*(\d[^\s,;]*(?:\s?[/\-]\s?[^\s,;]+)*)")

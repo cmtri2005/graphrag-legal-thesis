@@ -19,6 +19,11 @@ rows. This re-runs its detectors inside the repo, on every row:
   after_snapshot      a boundary row asked after the corpus snapshot
   cap_huyen           asked after district level was abolished (01/07/2025) but the row
                       still speaks of "cấp huyện"
+  restructuring_2025  rule R4 of docs/vilextime-dinh-nghia.md: asked after the 2025
+                      reorganisation (ministries 01/03/2025, provinces 01/07/2025) but the
+                      row still names a reorganised ministry, department or province
+  reference_only      rule R5: the answer is a pointer ("tài liệu quy định tại điểm a khoản 1
+                      Điều này") with almost no legal content of its own
 
 A detector, not a verdict: the 29/09 review found 31–37% of its flags true. The
 queue is `data/review/validity_queue.tsv`, one line per (row, kind, ref); a re-run
@@ -41,16 +46,46 @@ import csv
 import json
 import re
 import sqlite3
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "pipeline"))
+from build_question_pool import RENAMES, _words  # noqa: E402  one list of 2025 renames (rule R1, R4)
 
 SNAPSHOT = "2026-09-17"
 DISTRICTS_ABOLISHED = "2025-07-01"
+MINISTRIES_REORGANISED = "2025-03-01"   # NĐ 25/2025 ... 55/2025/NĐ-CP on the new ministries
+# The 29 provinces merged into others (NQ 202/2025/QH15, not in the corpus): a detector's
+# list for a person to confirm, so a bare name is enough.
+MERGED_PROVINCES = ("hà giang", "yên bái", "bắc kạn", "vĩnh phúc", "hòa bình", "bắc giang", "thái bình",
+                    "hải dương", "hà nam", "nam định", "quảng bình", "quảng nam", "kon tum", "bình định",
+                    "ninh thuận", "đắk nông", "bình thuận", "phú yên", "bình dương", "bà rịa vũng tàu",
+                    "bình phước", "long an", "sóc trăng", "hậu giang", "bến tre", "trà vinh", "tiền giang",
+                    "bạc liêu", "kiên giang")
+# Military "Tổng cục" survived the reorganisation; the civil ones became "Cục".
+_CIVIL_TONG_CUC = re.compile(r"\btổng cục (?!chính trị|hậu cần|kỹ thuật|công nghiệp quốc phòng|tình báo|ii\b)")
 # build_temporal_candidates.ENDING_CODES has 1 ("Văn bản bị bãi bỏ") too, but the portal also uses it
 # for the repeal of a single article; only a replacement ends the whole document
 ENDING_CODES = {12: "thay thế"}
 COLUMNS = ["id", "lineage", "group", "strategy", "kind", "in_kappa", "date", "ref", "evidence",
            "active", "decision", "reviewer", "note"]
 DECISIONS = {"", "loi", "co_the_sai", "bao_dong_gia", "da_sua", "sau_D4"}
+
+
+def restructured(text: str, as_of: str) -> str | None:
+    """The first reorganised name `text` still uses at `as_of` (rule R4), or None."""
+    words = f" {_words(text)} "
+    if as_of >= MINISTRIES_REORGANISED:
+        for old, _ in RENAMES:
+            if old != "tổng cục" and f" {old} " in words:
+                return old
+        if _CIVIL_TONG_CUC.search(words):
+            return "tổng cục"
+    if as_of >= DISTRICTS_ABOLISHED:
+        for name in MERGED_PROVINCES:
+            if f" {name} " in words:
+                return name
+    return None
 _EFFECTIVITY = re.compile(r"(?i)có hiệu lực(?: thi hành)?(?: kể)? từ ngày|có hiệu lực thi hành|có hiệu lực kể từ")
 _DOC_TYPE = r"(?:Bộ luật|Luật|Pháp lệnh|Nghị định|Nghị quyết|Thông tư liên tịch|Thông tư|Quyết định|Chỉ thị)"
 # "Thông tư này thay thế Thông tư số X": the verb, then nothing but the kind of document
@@ -60,6 +95,21 @@ _PARTIAL = re.compile(r"(?i)\b(?:điều|khoản|điểm|chương|mục)\s+[0-9a
                       r"|phụ lục|mẫu|biểu|nội dung|hướng dẫn|quy định tại")
 # the date the ending takes effect, not the ended document's own date earlier in the sentence
 _DATE = re.compile(r"từ ngày\s+(?:(\d{1,2})\s+tháng\s+(\d{1,2})\s+năm\s+(\d{4})|(\d{1,2})/(\d{1,2})/(\d{4}))")
+# rule R5: what is left of an answer once its pointers are gone
+_POINTER = re.compile(r"(?i)theo quy định|quy định tại|(?:thực hiện|áp dụng|tuân thủ) theo")
+_CITED = re.compile(rf"(?i){_DOC_TYPE}[^.;,]*?\d+/\d{{4}}/[\w\-]+|{_DOC_TYPE}\s+này"
+                    r"|\b(?:điểm|khoản|điều|mục|chương|phụ lục)\s+[\w.]+(?:(?:\s*,\s*|\s+và\s+)[\w.]+)*")
+_FILLER = set("theo quy định tại của và các thì được thực hiện áp dụng tuân thủ hướng dẫn như sau".split())
+
+
+def reference_only(answer: str, most: int = 7) -> bool:
+    """The answer only points elsewhere: at most `most` content words besides the pointer (rule R5)."""
+    if not _POINTER.search(answer):
+        return False
+    words = re.findall(r"\w+", _CITED.sub(" ", answer).lower())
+    return sum(w not in _FILLER and not w.isdigit() for w in words) <= most
+
+
 _LEVELS = {"Article": "article_id", "Clause": "clause_id", "Point": "point_id"}
 
 
@@ -197,6 +247,10 @@ def main() -> None:
         said = " ".join(filter(None, (r["question"], r["answer"], r.get("short_answer")))).lower()
         if r["as_of"] >= DISTRICTS_ABOLISHED and "cấp huyện" in said:
             flag(r, "cap_huyen", r["as_of"], "", r["question"])
+        if old := restructured(said, r["as_of"]):
+            flag(r, "restructuring_2025", r["as_of"], old, said)
+        if r["answerable"] and reference_only(r["answer"] or ""):
+            flag(r, "reference_only", r["as_of"], "", r["answer"])
 
     path = data / "review/validity_queue.tsv"
     old = {}
