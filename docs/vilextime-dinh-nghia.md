@@ -175,7 +175,7 @@ mã của máy khi phát hiện).
   án, để đo thiên lệch do model viết.
 - **Đáp án ngắn:** người duyệt cùng lúc với dòng.
 - **Tập test chỉ gồm dòng người đã kiểm** có dẫn chứng. 25% số dòng do hai người gán độc lập
-  để đo đồng thuận (AC1 ≥ 0,80 và p_neg ≥ 0,60; κ báo kèm). Dòng lệch do **người thứ ba** hòa
+  để đo đồng thuận (AC1 ≥ 0,80 và p_neg ≥ 0,60; κ báo kèm). Dòng lệch do **người thứ ba** (luật sư) hòa
   giải, không dùng AI. Model chỉ được trích dẫn chứng, không được ra kết luận.
 - **Silver:** dòng chưa kiểm phát hành riêng, mã `not_verified`.
 - **Gold độc lập:** 120 + 30 dòng gán mù, ngưỡng ≥ 114/120 (quyết định B6, 11/10/2026).

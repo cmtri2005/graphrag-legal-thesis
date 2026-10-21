@@ -1918,7 +1918,7 @@ Bám phân công trong đề cương UIT; nhóm đổi tùy ý.
 - 20/10, bước 5 xong: dựng lại toàn bộ (sự kiện 56.624, corpus và BM25 mới, embed PhoBERT bù 6.340 đoạn); bản
   phát hành 1.120 dòng ranh giới theo quota định nghĩa §9, 2.383 dòng tổng, `check_release.py` OK. Phiếu kiểm
   100% `data/review/kiem_{A,B}.xlsx` (A 700, B 698, 25% gán đôi, có trích văn bản gốc). B2/B3 trên dev chạy
-  lại trên corpus mới (`runs/W2-12_rerun/dev`): R@1 `b3` 0,253 so với `b2ctx` 0,409, hiệu −0,156 [−0,26; −0,05]. DeepSeek hết số dư: còn 375 câu hỏi dự trữ T1/T2 chưa sinh.
+  lại trên corpus mới (`runs/W2-12_rerun/dev`): R@1 `b3` 0,253 so với `b2ctx` 0,409, hiệu −0,156 [−0,26; −0,05]. Câu hỏi dự trữ còn thiếu do Claude viết (21/10, 389 lineage, giữ 316), bản phát hành không đổi.
 
 **Tuần 2 (19–25/10): kiểm định xong, đóng băng**
 

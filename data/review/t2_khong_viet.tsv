@@ -1,0 +1,47 @@
+lineage_id	ly_do
+provision:8087222c-eb6c-11f0-8186-9be8180ffe95#k4#b	cosmetic: chỉ thêm chủ ngữ «tổ chức, cá nhân» và đổi hoa/thường «Khoản»
+provision:a84ba1d0-2c84-11f1-8044-65705c49d91d	rename_only: «Tổng cục» → «Ủy ban» (Tổng cục TĐC → Ủy ban TĐC quốc gia, dạng viết tắt R1 chưa bắt)
+provision:274b9af4-e17a-11f0-9cf8-5569b88be781	cosmetic: «đường bưu điện» → «dịch vụ bưu chính», không đổi nội dung
+provision:751c6832-df48-11f0-8651-010b7cd28f9b#k5	cosmetic: «quy chế do Bộ trưởng Bộ TN&MT ban hành» → «Bộ TN&MT quy định», cùng một thẩm quyền
+provision:ca28b2c0-2c1b-11f1-9045-85d78d82eb7c	relocation_suspect: điểm d thay toàn bộ nội dung khác, nội dung cũ có thể đã chuyển sang điểm khác
+provision:aae8a0ca-eb78-11f0-aca1-0703955d4c36#k3#b	reference_only: chỉ đổi tên văn bản được dẫn chiếu (NĐ 134/2003 → NĐ 128) và chính tả
+provision:c4b07694-e165-11f0-b583-174b13473f30	rename_only: «Trung tâm Thông tin tín dụng» → «… Quốc gia Việt Nam»
+provision:0bd8196a-df3f-11f0-8933-5bedca54c5c8#k2#b	relocation_suspect: điểm b thay bằng nội dung hoàn toàn khác
+provision:a92bf070-2cc3-11f1-9f43-cd4b1467abff	relocation_suspect: khoản 3 thay bằng nội dung hoàn toàn khác
+provision:cee9b71c-df56-11f0-b331-5f815fe5ffb9#k2	reference_only: chỉ bỏ cụm dẫn chiếu «với các loại hình công nghệ, mức công suất quy định tại Điều 4»
+provision:79f139cc-df3f-11f0-8384-332072aa2888#k2	relocation_suspect: khoản 2 thay bằng nội dung hoàn toàn khác (gia hạn thuê đất)
+provision:687a9260-2d46-11f1-88b6-09ce5c351857	rename_only: «Bộ chỉ huy Bộ đội Biên phòng tỉnh» → «Ban chỉ huy Bộ đội Biên phòng» (sắp xếp 2025)
+provision:5a1602be-eb78-11f0-a1f0-17da45415d12	cosmetic: «Kết quả kiểm tra các môn học» → «Bảng kết quả … môn học, mô-đun»
+provision:0a0c5ca0-213d-11f1-a552-d58fd659f81f	boilerplate: điều khoản phản ánh vướng mắc + phần «Nơi nhận»
+provision:9fdde150-2d53-11f1-8f6f-f166d9302f0e	relocation_suspect: Điều 8 hai phiên bản nói hai việc khác hẳn (bảng kê tiền ↔ nghiệp vụ ngoại hối phái sinh)
+provision:b02190c4-df52-11f0-99c7-656bc1c49b5c	cosmetic: chỉ thêm «đối với hành vi vi phạm hành chính», mức phạt không đổi
+provision:a605b450-1e98-11f1-bcc0-05bd427be73f	rename_only: «Ngân hàng Nhà nước chi nhánh» → «… chi nhánh tại các Khu vực» (sắp xếp 2025)
+provision:4fbef990-2a1d-11f1-b070-5149faa09616	cosmetic: diễn đạt lại, nội dung cụm nhà chung cư không đổi
+provision:8fd11b6e-df57-11f0-a0a4-591321cd84f8	heading: phiên bản 1 chỉ là tiêu đề Điều (đổi «Ban Chỉ đạo» → «Ban Chỉ huy»)
+provision:f27e2f54-eb8c-11f0-814b-db91cbff9025	heading: phiên bản 1 chỉ là tiêu đề Điều
+provision:6d2c4a52-ec3b-11f0-a710-e714eec838d1	rename_only: «Tổng cục» → «Ủy ban» (TĐC, sắp xếp 2025)
+provision:21440414-df3d-11f0-90af-e9ee7d054570	heading: phiên bản 1 chỉ là tiêu đề Điều
+provision:2c7370ec-df3b-11f0-8870-5fdda29644dd#k1	rename_only: «Bộ Bưu chính Viễn thông» → «Bộ Thông tin và Truyền thông», diễn đạt lại
+provision:4c01df20-2dce-11f1-b76f-2dc048e35258	restructuring_2025: chỉ đổi cách ghi địa chỉ hành chính (bỏ cấp huyện)
+provision:16625fc0-2c8e-11f1-99de-cd2b2d767fa6	reference_only: thay văn bản được dẫn chiếu (Pháp lệnh Cảnh vệ 2005 → Luật Cảnh vệ 2017)
+provision:4c0fe8e0-2dce-11f1-a6ff-7373ff05d055	rename_only: «Cơ quan Thanh tra, giám sát ngân hàng» → «Cục Quản lý, giám sát tổ chức tín dụng» (sắp xếp 2025)
+provision:6927d670-2d53-11f1-976a-6390722995cb	relocation_suspect: điểm a hai phiên bản nói hai việc khác hẳn
+provision:3dbab8f0-1e20-11f1-90a4-29f36511ac8c	reference_only: Luật Giao thông đường bộ → Luật Trật tự, an toàn giao thông đường bộ
+provision:8cb967aa-eb74-11f0-aec5-ef7eb2822eec#k3	relocation_suspect: khoản 3 hai phiên bản nói hai việc khác hẳn
+provision:dd24c800-2c7f-11f1-a284-5f37968db441	reference_only: chỉ chèn chú thích «đã được sửa đổi bởi NĐ 43/2019»
+provision:1f05b30a-2d8a-11f1-ba74-6530da219255	reference_only: đổi tên loại quy hoạch theo luật mới («quy hoạch đô thị và nông thôn»)
+provision:3975c21e-df58-11f0-9b43-fd6f5c140d98	restructuring_2025: «xã, phường, thị trấn» → «đơn vị hành chính cấp xã»
+provision:6f603ca8-e177-11f0-9688-bbc32942fbb9	rename_only: «Cảnh sát môi trường» → «Cảnh sát phòng, chống tội phạm về môi trường»
+provision:c4380340-1db4-11f1-9c8a-370237416b4a	relocation_suspect: khoản 2 hai phiên bản nói hai việc khác hẳn
+provision:5a908270-282f-11f1-befe-8727d6b54772	relocation_suspect: phiên bản 1 là câu lệnh sửa đổi, phiên bản 2 nói việc khác
+provision:464dde78-df3e-11f0-9a9f-392f526735f7	cosmetic: chỉ ghi rõ «theo quy định của pháp luật lao động Việt Nam»
+provision:2c73756a-df3b-11f0-a5d7-b9362d9fe879#k6#c	rename_only: «Bộ Bưu chính, Viễn thông» → «Bộ Thông tin và Truyền thông», đảo câu
+provision:83fe925c-e174-11f0-8637-b58d7e2de8ea#k1#d	cosmetic: chỉ bỏ cụm yêu cầu dạng bản sao, danh mục giấy tờ không đổi
+provision:89bff0c6-df41-11f0-ae1d-df9ae8211d16#k3#d	rename_only: «cơ quan có chức năng điều tra ban đầu» → «cơ quan được giao nhiệm vụ tiến hành một số hoạt động điều tra»
+provision:8d341648-eb70-11f0-9fc0-458993a875c1#k1#d	relocation_suspect: điểm d hai phiên bản nói hai việc khác hẳn
+provision:52b1b0a0-36ea-11f1-bf68-cb55eaa8cc8b	cosmetic: «thuộc phạm vi, trên địa bàn do … quản lý» → «trên địa bàn, lĩnh vực quản lý của …»
+provision:a1f15210-ec3a-11f0-8e2e-0f8c7fb36446#k1#c	rename_only: đổi tên loại Giấy chứng nhận theo luật mới
+provision:ce064990-3196-11f1-9f7a-0716d264dbf5	cosmetic: chỉ thêm dẫn chiếu mẫu Phụ lục 19
+provision:ea847faa-e16a-11f0-8a63-d774163a9bd8	relocation_suspect: tiêu chuẩn điểm a thay hẳn nội dung (trình độ → nơi công tác)
+provision:5ad876ce-eb72-11f0-9243-2b133dc05179	heading: phiên bản 1 chỉ là tiêu đề khoản
+provision:c4beea10-eabd-11f0-8f62-69e071151189	restructuring_2025: Sở NN&PTNT → Sở NN&MT, Phòng NN huyện → UBND xã

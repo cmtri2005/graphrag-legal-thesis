@@ -46,7 +46,7 @@ Out of scope:
    đích bãi bỏ sai; `valid_to` sai; quy phạm cấp cao thay nội dung (chỉ dò để loại theo R3).
 5. **Dựng lại một lần**, giữ nhãn người cũ khi câu hỏi và đáp án không đổi; xuất phiếu kiểm kèm
    đoạn trích văn bản gốc (`crosscheck_evidence.py --ids`).
-6. **Người kiểm 100% tập test**; 25% gán đôi; người thứ ba hòa giải; ~100 câu người viết lại.
+6. **Người kiểm 100% tập test**; 25% gán đôi; người thứ ba (luật sư) hòa giải; ~100 câu người viết lại.
 7. **Gold độc lập** 120 + 30 (đang làm, B6).
 8. **Đóng băng:** manifest, tag, datasheet, phụ lục chỗ chuyển đến, silver.
 
@@ -97,6 +97,13 @@ Out of scope:
   1.120/1.120 dòng có trích văn bản gốc, 18 lô 40 dòng; gợi ý máy ở 74 dòng của A (cờ validity, R6, đáp án
   ngắn nằm trong bản khác). Sửa kèm: `transitions_of` đọc sự kiện của phiên bản; đáp án ngắn lệch lời văn
   sau dựng lại thành "hết hạn" thay vì dừng; khóa cache truy xuất theo corpus và bộ vector.
+- [x] Câu hỏi dự trữ còn thiếu (21/10, người dùng giao Claude viết thay DeepSeek): 389 lineage trong
+  `sample.jsonl` (T1 179, T2 209, T3 1) do claude-opus-5-5 viết qua `generate_questions.py --answers`, cùng
+  `validate()`. Giữ 316 (T1 152, T2 163, T3 1), từ chối 73: T1 27 (câu lệnh sửa đổi, mục trơn, điều khoản thủ
+  tục chung), T2 46 ghi lý do ở `data/review/t2_khong_viet.tsv` (đổi tên/sắp xếp 2025 mà R1 chưa bắt, chỉnh
+  câu chữ, chỉ đổi dẫn chiếu, nghi chuyển chỗ, phiên bản chỉ là tiêu đề). 5 cụm mở đầu chiếm 17,8% (T1),
+  12,9% (T2). Dựng lại T1–T3 và `--select`: `selected.jsonl` trùng từng byte, bản phát hành không đổi. Dự trữ
+  có câu hỏi: T1 255, T2 379, T3 119 lineage. Không còn lineage nào trong mẫu chưa có câu hỏi.
 - [ ] Bước 6: kiểm định người
 - [ ] Bước 7: gold độc lập
 - [ ] Bước 8: đóng băng
@@ -106,6 +113,8 @@ Out of scope:
 - 2026-10-20: một bản định nghĩa duy nhất, không chia phiên bản v1.0/v1.1 (CMT).
 - 2026-10-20: thêm R6 (dòng có sự kiện chưa áp chưa vào test); CMT trả lời "ok" cho câu hỏi giữ R6 cùng
   lúc cho commit bước 2–4.
+- 2026-10-21: người thứ ba hòa giải dòng lệch của phiếu kiểm (A/B) là **luật sư** (CMT); cột `adjudicator`
+  ghi tên luật sư. Câu hỏi dự trữ còn thiếu do Claude viết thay DeepSeek (CMT).
 
 ## Validation
 

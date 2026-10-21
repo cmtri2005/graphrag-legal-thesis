@@ -175,7 +175,7 @@ chấm theo vế nội dung. Quy trình:
    trong lúc làm; dùng mã `A`, `B` (bảng ánh xạ tên thật chỉ ở plan).
 4. **Đồng thuận:** `python scripts/review/crosscheck.py kappa`. Ngưỡng đăng ký trước: AC1 ≥ 0,80 và
    p_neg ≥ 0,60; κ báo kèm; báo theo nhóm và theo phiên bản hướng dẫn.
-5. **Hòa giải:** dòng lệch do **người thứ ba** quyết, ghi ở cột `adjudicated`
+5. **Hòa giải:** dòng lệch do **người thứ ba** (luật sư) quyết, ghi ở cột `adjudicated`
    (`scripts/review/adjudicate.py`, cột `adjudicator` ghi đúng người quyết). Không dùng AI để hòa
    giải. Nhãn thô của từng người giữ nguyên và phát hành (ADR 0003 §9).
 6. **Dòng `khong_dat` sau hòa giải bị loại** bằng mã tương ứng, hoặc thay bằng câu dự trữ. Không
