@@ -11,7 +11,9 @@ not write (ADR 0005 §7).
 The sample: 120 rows of `test` at `giua_khoang`, 20 per stratum (T1, T2 regular, T2
 near-identical, T3, T6 direct repeal, T6 ancestor repeal), one row per lineage, and
 none from a lineage a person has already seen with the KG's answer: D4, the Excel
-preview (`human:` labels) and the audit queues. 30 rows, 5 per stratum, go to both
+preview (`human:` labels), the audit queues, and the rows of the 100% check (`kiem`) already
+labelled or in its batch 0. The check shows the KG's answer for every lineage, so
+`label_ui.py` holds an annotator's gold lineages back until their gold sheet is filled. 30 rows, 5 per stratum, go to both
 annotators; the other 90 split evenly, so each labels 75.
 
 Labelling is blind, then revealed:
@@ -84,13 +86,16 @@ def seen_lineages(review: Path, lineage_of: dict[str, str]) -> set[str]:
     def lineage(row_id: str) -> str:   # an id from before 07/10 may be gone from the release
         return lineage_of.get(row_id) or row_id.split(":", 2)[-1].rsplit(":", 1)[0]
     for name in ("crosscheck_A.tsv", "crosscheck_B.tsv", "audit_queue.tsv", "audit_queue_relocation.tsv",
-                 "audit_truoc_hieu_luc.tsv", "labels.tsv"):
+                 "audit_truoc_hieu_luc.tsv", "labels.tsv", "kiem_A.tsv", "kiem_B.tsv"):
         path = review / name
         if not path.exists():
             continue
         for r in csv.DictReader(path.open(encoding="utf-8"), delimiter="\t"):
             if name == "labels.tsv" and not r.get("labeler", "").startswith("human"):
                 continue   # a model label was never shown to a person
+            if name.startswith("kiem_") and not r.get("verdict") and r.get("lo") != "0":
+                continue   # the 100% check shows every lineage, but only a labelled row (or batch 0, which
+                           # both label first) has been seen; label_ui.py holds back the gold lineages
             seen.add(r.get("lineage_id") or lineage(r["id"]))
     return seen
 

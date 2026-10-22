@@ -4,7 +4,7 @@ Date: 2026-10-20
 
 ## Status
 
-Active. Bước máy 2–5 xong (20/10). Chờ luật sư ký (bước 1) và người kiểm theo lô phiếu
+Active. Bước 1–5 xong (luật sư đồng ý 21/10). Chờ người kiểm theo lô phiếu
 `data/review/kiem_{A,B}.xlsx` (bước 6).
 
 ## Outcome
@@ -62,7 +62,7 @@ Out of scope:
 ## Progress
 
 - [x] Định nghĩa chốt, ADR 0003 Follow-Up, phiếu luật sư — 20/10
-- [ ] Bước 1: luật sư ký
+- [x] Bước 1: luật sư đồng ý cả 7 quy tắc pháp lý, không sửa định nghĩa — 21/10 (CMT báo)
 - [x] Bước 2: hướng dẫn 3.0 — `docs/vilextime-annotation.md`; `crosscheck.py`, `crosscheck_xlsx.py`,
   `build_vilextime.py` mang GUIDELINE 3.0 và mã loại mới — 20/10
 - [x] Bước 3: bộ lọc máy — 20/10. R1 trong `build_question_pool.py` (`transition_kind`, `RENAMES`,
@@ -104,8 +104,47 @@ Out of scope:
   câu chữ, chỉ đổi dẫn chiếu, nghi chuyển chỗ, phiên bản chỉ là tiêu đề). 5 cụm mở đầu chiếm 17,8% (T1),
   12,9% (T2). Dựng lại T1–T3 và `--select`: `selected.jsonl` trùng từng byte, bản phát hành không đổi. Dự trữ
   có câu hỏi: T1 255, T2 379, T3 119 lineage. Không còn lineage nào trong mẫu chưa có câu hỏi.
-- [ ] Bước 6: kiểm định người
-- [ ] Bước 7: gold độc lập
+- [x] Chuẩn bị phiếu cho bước 6 theo cách làm giảm lệch (21/10, CMT: "chuẩn bị tươm tất, best practice để
+  gán nhãn không bị mismatch"). Nhắm vào nguyên nhân lệch D5 §2: `scripts/review/kiem_hints.py` ghi
+  `data/review/kiem_goi_y.jsonl` — cột `cac_phien_ban` (mọi phiên bản, văn bản sửa, chỗ đổi) cho 970 dòng
+  nhiều phiên bản, cột `goi_y_cho_moi` cho 350 dòng T6 (văn bản bãi bỏ cũng sửa gì vào văn bản gốc; đoạn có
+  hiệu lực giống nội dung bị bãi bỏ, tách nhóm mới hiệu lực quanh ngày bãi bỏ). Phiếu: lô 0 hiệu chuẩn 21
+  dòng cả hai cùng làm rồi thảo luận với luật sư, không tính vào AC1 (`kappa` báo riêng); dòng gán đôi cùng
+  số lô ở hai phiếu, rải đều 18 lô, để đo đồng thuận sau lô 3, 6, 9…; chữ đổi tô đỏ trong `answer`; trang
+  "Cách quyết" (8 điều kiện §6 → mã). Hướng dẫn 3.0 thêm mục 5 bước 3 và mục 7 Hỏi đáp; quy tắc gán nhãn
+  không đổi. Máy không điền nhãn nào. Phiếu mới: A 715, B 704 dòng (lô 0: 21 dòng chung; 278 dòng gán đôi,
+  12–18 dòng mỗi lô). Sửa kèm: nạp phiếu không còn tự đổi `guideline_version` của nhãn D4 mang sang chỉ vì
+  dấu cách cuối ô `note` (Excel bỏ dấu cách đó); `pytest` 537 qua.
+- [ ] Bước 6: kiểm định người. Lệnh hòa giải đã có (21/10): `adjudicate.py export|import --set kiem`
+  → `hoa_giai_kiem.xlsx/.tsv` + cột `adjudicated` ở `kiem_A.tsv` (nhãn thô A/B không đổi); danh sách
+  gồm cả dòng lệch lô 0 (nhãn "lô 0 hiệu chuẩn"), còn `kappa` vẫn loại lô 0 khỏi AC1. `pytest` 538 qua.
+  Trang gán nhãn thay Excel (21/10): `scripts/review/label_ui.py` + `label_ui.html` (`--who A|B`; 4 họ lỗi, chip điền bằng chứng, tab Tổng quan) (localhost, phím tắt, tự đo phút,
+  lưu thẳng `kiem_X.tsv`, kiểm nhãn như `crosscheck_xlsx.py import`); `pytest` 539 qua.
+  Chưa làm: `drop` cho phiếu `kiem` (khi đóng băng). Còn chờ người gán nhãn lô 0.
+- [x] Xuất bản phát hành (21/10): `scripts/pipeline/export_release.py` theo `docs/vilextime-schema-phat-hanh.md`
+  (file chính 13 cột, silver, meta, `manifest.json`; `--final` từ chối khi còn dòng chưa có nhãn cuối);
+  `score_vilextime.py --release` chấm trên file công bố, trùng báo cáo nội bộ 2.383/2.383 dòng. Nhãn D4 mang sang
+  (139: A 70, B 69, hướng dẫn 1.2/2.0) chỉ tính khi xác nhận lại theo 3.0 (định nghĩa §8: có dẫn chứng); trang
+  gán nhãn hiện lại chúng. Bản ứng viên hôm nay: 0 dòng chính, 2.383 silver (A lô 0 xong, B chưa). `pytest` 540 qua.
+- [x] Một người kiểm, sửa câu chữ ngay khi kiểm (21/10, CMT: "thời gian gấp, label chéo để sau; cần ngay bộ
+  đầy đủ, tự đọc từng dòng và sửa"). `kiem_A.tsv` gộp thêm 405 dòng chỉ có ở B → đủ 1.120 dòng ranh giới (bản trước
+  ở `kiem_A.20261021.tsv`). `export_release.py`: một người gán theo 3.0 là đủ, hai người lệch thì chờ hòa giải;
+  `--draft` → `data/vilextime_dataset/vilextime.jsonl` đủ 2.383 dòng để đọc ngay. `label_ui.py`: sửa câu hỏi (cả lineage) và đáp
+  án ngắn (cả phiên bản; phải là đoạn trích của đáp án hoặc câu dẫn), ghi vào `questions.jsonl`,
+  `short_answers.jsonl` (giữ bản model, `edited_by`, `edited_at`) và phiếu TSV. Dựng lại (`build_vilextime.py` →
+  `sample_vilextime.py --select` → `enrich_vilextime.py`, ~1 phút) đã thử trọn vòng trên dữ liệu thật: câu sửa tới
+  cả 4 dòng của lineage, id không đổi, trả về thì trùng từng byte. `pytest` 542 qua. Còn: 1.099 dòng (139 nhãn D4
+  xác nhận lại); 149 dòng ẩn vì thuộc 75 lineage gold của A.
+- [x] Mẫu gán chéo thu nhỏ (21/10, CMT "ok"): `data/review/kiem_cheo.txt` 106 dòng, 60 lineage — các dòng gán đôi
+  đã thiết kế (có ở phiếu A trước khi gộp) thuộc lô 1–9, trừ lô 0 và lineage của gold; T2 48, T6 28, T1 18, T3 12.
+  B mở `label_ui.py --who B --ids data/review/kiem_cheo.txt`. `kappa --set kiem` và `adjudicate.py --set kiem` chỉ
+  tính dòng cả hai gán theo 3.0 (69 nhãn D4 của B đã chép sang phiếu A khi gộp, không phải hai lần phán).
+  `pytest` 542 qua.
+- [ ] Bước 7: gold độc lập. 21/10: mẫu cũ rút trước khi dựng lại (17/120 dòng không còn trong bản phát hành,
+  chưa ai gán) → rút lại 120 dòng trên bản dựng lại (`independent_gold.py build`, xuất lại `gold_{A,B}.xlsx`;
+  bản cũ lưu ở thư mục tạm của phiên). Lineage đã lộ đáp án máy qua phiếu `kiem` (dòng đã gán, lô 0) bị loại
+  khỏi mẫu; `label_ui.py` ẩn lineage trong phiếu gold của mỗi người tới khi phiếu gold điền xong (A: ẩn 83 dòng),
+  để gold vẫn mù khi hai việc làm song song. `pytest` 541 qua.
 - [ ] Bước 8: đóng băng
 
 ## Decisions
@@ -115,6 +154,19 @@ Out of scope:
   lúc cho commit bước 2–4.
 - 2026-10-21: người thứ ba hòa giải dòng lệch của phiếu kiểm (A/B) là **luật sư** (CMT); cột `adjudicator`
   ghi tên luật sư. Câu hỏi dự trữ còn thiếu do Claude viết thay DeepSeek (CMT).
+
+- 2026-10-21: gán chéo giữ lại nhưng thu nhỏ: B gán độc lập 106 dòng (thay 25% = 278 dòng của định nghĩa §8),
+  luật sư hòa giải dòng lệch, báo AC1/κ (CMT đồng ý). Đề cương chỉ ghi "kiểm định chéo dữ liệu và đánh giá độ đồng
+  thuận", không ghi tỷ lệ, nên vẫn khớp đề cương; chỗ lệch là với định nghĩa §8, ghi vào datasheet khi đóng băng.
+  Gold độc lập 75 dòng của A: làm nếu kịp.
+- 2026-10-21: một người kiểm toàn bộ trước, gán chéo 25% + AC1 làm sau (CMT). Chưa làm thì paper ghi "một người
+  kiểm, chưa đo đồng thuận" — lệch định nghĩa §8. Người kiểm sửa thẳng câu hỏi và đáp án ngắn (trước là chỉ đề
+  xuất ở `suggestion`); lời văn luật, ngày, phiên bản không sửa tay, sai thì khong_dat (CMT đồng ý hướng này khi giao
+  "đọc từng dòng rồi chỉnh sửa").
+- 2026-10-21: nhãn D4 mang sang phải xác nhận lại theo 3.0 mới vào bản phát hành (Claude, theo định nghĩa §8;
+  dòng T2 mốc 14/01/2026 đáp án "cấp huyện" mang nhãn D4 `dat`). CMT bác thì đổi một dòng ở `final_labels`.
+- 2026-10-21: chốt schema phát hành `docs/vilextime-schema-phat-hanh.md` (2 file, 12 cột chính, `2.0.0`, không công bố dòng bị loại); 5 quyết
+  định mở dùng mặc định Claude đề xuất (CMT: "chốt schema cuối cùng đi").
 
 ## Validation
 

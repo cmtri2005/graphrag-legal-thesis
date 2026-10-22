@@ -18,6 +18,8 @@ Usage:
     python scripts/review/adjudicate.py export
     python scripts/review/adjudicate.py import --by "human:A+B"
     python scripts/review/adjudicate.py drop
+    python scripts/review/adjudicate.py export --set kiem   # phiếu kiem: gồm cả dòng lệch của lô 0
+    python scripts/review/adjudicate.py import --set kiem --by "luật sư <tên>"
 
 `--by` ghi ai chốt vào cột `adjudicator` (người, hoặc model kèm người xác nhận):
 biên bản D5 phải nói đúng điều đó.
@@ -37,7 +39,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from crosscheck import REASONS, VERDICTS, d4_final, read  # noqa: E402
+from crosscheck import GUIDELINE, REASONS, VERDICTS, d4_final, read  # noqa: E402
 from crosscheck_xlsx import FONT, sheet_reasons  # noqa: E402
 
 SHEET = "Hoà giải"
@@ -53,6 +55,8 @@ WRAP = {"question", "lead_in", "answer", "A_note", "B_note", "chot_note", "A_rea
 
 
 def cause(a: dict, b: dict) -> str:
+    if a.get("lo") == "0":
+        return "lô 0 hiệu chuẩn"
     if a["guideline_version"] != b["guideline_version"]:
         return "khác phiên bản HD"
     if a["group"] == "T6" and "gold_wrong" in (a["reasons"] + b["reasons"]):
@@ -60,12 +64,16 @@ def cause(a: dict, b: dict) -> str:
     return "hiểu khác"
 
 
-def disagreements(data: Path) -> list[dict]:
-    a_rows = read(data / "review/crosscheck_A.tsv")
-    b = {r["id"]: r for r in read(data / "review/crosscheck_B.tsv")}
+def disagreements(data: Path, name: str = "crosscheck") -> list[dict]:
+    a_rows = read(data / f"review/{name}_A.tsv")
+    b = {r["id"]: r for r in read(data / f"review/{name}_B.tsv")}
     out = []
     for a in a_rows:
-        other = b[a["id"]]
+        other = b.get(a["id"])
+        if other is None:                    # kiem: A's sheet holds every row since 21/10, B's only some
+            continue
+        if name == "kiem" and not a.get("guideline_version") == other.get("guideline_version") == GUIDELINE:
+            continue                         # a D4 label copied into both sheets is not two judgements
         if a["verdict"] and other["verdict"] and a["verdict"] != other["verdict"]:
             row = {k: a[k] for k in ("id", "group", "question", "as_of", "lead_in", "answer",
                                      "citation", "source_url", "lineage_id")}
@@ -75,7 +83,7 @@ def disagreements(data: Path) -> list[dict]:
                     row[f"{who}_{k}"] = r[k]
                 row[f"{who}_version"] = r["guideline_version"]
             out.append(row)
-    order = ("T6 chuyển chỗ?", "hiểu khác", "khác phiên bản HD")
+    order = ("lô 0 hiệu chuẩn", "T6 chuyển chỗ?", "hiểu khác", "khác phiên bản HD")
     out.sort(key=lambda r: (order.index(r["nguyen_nhan"]), r["group"], r["lineage_id"], r["as_of"]))
     for i, r in enumerate(out, 1):
         r["stt"] = i
@@ -104,11 +112,15 @@ GUIDE = [
 ]
 
 
-def export(data: Path) -> None:
-    out = data / "review/hoa_giai_D4.xlsx"
+def stem(name: str) -> str:
+    return "hoa_giai_kiem" if name == "kiem" else "hoa_giai_D4"
+
+
+def export(data: Path, name: str = "crosscheck") -> None:
+    out = data / f"review/{stem(name)}.xlsx"
     if out.exists():
         raise SystemExit(f"{out} đã có; không ghi đè kết quả hoà giải")
-    rows = disagreements(data)
+    rows = disagreements(data, name)
     wb = Workbook()
     ws = wb.active
     ws.title = "Đọc trước"
@@ -148,7 +160,7 @@ def export(data: Path) -> None:
     ws.protection.sheet = True
     ws.protection.enable()
     wb.save(out)
-    counts = {k: sum(r["nguyen_nhan"] == k for r in rows) for k in ("T6 chuyển chỗ?", "hiểu khác", "khác phiên bản HD")}
+    counts = {k: sum(r["nguyen_nhan"] == k for r in rows) for k in ("lô 0 hiệu chuẩn", "T6 chuyển chỗ?", "hiểu khác", "khác phiên bản HD")}
     print(f"{out}: {len(rows)} dòng lệch {counts}")
 
 
@@ -171,26 +183,26 @@ def check(rows: dict[str, dict], expected: set[str]) -> list[str]:
     return errors
 
 
-def ingest(data: Path, by: str) -> None:
-    ws = load_workbook(data / "review/hoa_giai_D4.xlsx", data_only=True)[SHEET]
+def ingest(data: Path, by: str, name: str = "crosscheck") -> None:
+    ws = load_workbook(data / f"review/{stem(name)}.xlsx", data_only=True)[SHEET]
     head = [c.value for c in ws[1]]
     rows = {}
     for values in ws.iter_rows(min_row=2, values_only=True):
         cells = {k: str(v or "").strip() for k, v in zip(head, values)}
         if cells.get("id"):
             rows[cells["id"]] = cells
-    errors = check(rows, {r["id"] for r in disagreements(data)})
+    errors = check(rows, {r["id"] for r in disagreements(data, name)})
     if errors:
         print(f"{len(errors)} lỗi — KHÔNG ghi gì:", file=sys.stderr)
         for e in errors[:40]:
             print(f"  {e}", file=sys.stderr)
         raise SystemExit(1)
-    with (data / "review/hoa_giai_D4.tsv").open("w", encoding="utf-8", newline="") as f:
+    with (data / f"review/{stem(name)}.tsv").open("w", encoding="utf-8", newline="") as f:
         w = csv.writer(f, delimiter="\t", lineterminator="\n")
         w.writerow(["id", "verdict", "reasons", "note", "adjudicator"])
         for rid, c in rows.items():
             w.writerow([rid, c["chot_verdict"], c["chot_reasons"], c["chot_note"], by])
-    tsv = data / "review/crosscheck_A.tsv"
+    tsv = data / f"review/{name}_A.tsv"
     a_rows = read(tsv)
     for r in a_rows:
         r["adjudicated"] = rows[r["id"]]["chot_verdict"] if r["id"] in rows else r.get("adjudicated", "")
@@ -200,7 +212,7 @@ def ingest(data: Path, by: str) -> None:
         w.writerows(a_rows)
     final = [c["chot_verdict"] for c in rows.values()]
     print(f"chốt {len(rows)} dòng: dat {final.count('dat')}, khong_dat {final.count('khong_dat')} "
-          f"-> data/review/hoa_giai_D4.tsv, cột adjudicated của {tsv}")
+          f"-> data/review/{stem(name)}.tsv, cột adjudicated của {tsv}")
 
 
 def drop(data: Path, today: str | None = None) -> None:
@@ -225,16 +237,17 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("command", choices=("export", "import", "drop"))
     ap.add_argument("--data", type=Path, default=Path("data"))
+    ap.add_argument("--set", default="crosscheck", choices=("crosscheck", "kiem"), help="export/import: D4 hay phiếu kiem")
     ap.add_argument("--by", help="bắt buộc với import: ai chốt")
     args = ap.parse_args()
     if args.command == "export":
-        export(args.data)
+        export(args.data, args.set)
     elif args.command == "drop":
         drop(args.data)
     elif not args.by:
         ap.error("import cần --by")
     else:
-        ingest(args.data, args.by)
+        ingest(args.data, args.by, args.set)
 
 
 if __name__ == "__main__":

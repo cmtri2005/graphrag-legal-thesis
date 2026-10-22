@@ -36,12 +36,17 @@ version control and makes `kappa` read the empty originals.
     kiem    writes data/review/kiem_A.tsv and kiem_B.tsv: every boundary row of the
             release, the check of docs/vilextime-dinh-nghia.md §8 that decides the test
             split. KIEM_OVERLAP of each group's rows, whole lineages, go to both files
-            (labelled blind, `kappa --set kiem`); the rest alternate A/B. A D4 lineage
+            (labelled blind, `kappa --set kiem`); the rest alternate A/B. Before them, batch
+            `lo` 0 is the calibration both people label and then discuss (CALIB lineages per
+            stratum, never D4, never counted in the agreement); the overlap is spread
+            evenly over batches 1.. with the same batch number in both files, so agreement
+            can be read after any batch. A D4 lineage
             goes to one file with its final D4 label (adjudicated, or agreed) when the
             question and answer are unchanged — both have seen its adjudication, so it
             cannot measure agreement. Each row carries the cut of the raw text
-            (`kiem_evidence.jsonl` from crosscheck_evidence.py --ids), the machine's
-            flags, a batch number `lo`, and the guideline 3.0 fields KIEM_FIELDS. A
+            (`kiem_evidence.jsonl` from crosscheck_evidence.py --ids), the version chain and,
+            on T6, where the content may have gone (`kiem_goi_y.jsonl` from kiem_hints.py), the
+            machine's flags, a batch number `lo`, and the guideline 3.0 fields KIEM_FIELDS. A
             re-run keeps who has which lineage and every label still on an unchanged
             row; a file carrying labels is first copied to kiem_X.<YYYYMMDD>.tsv.
     pilot   writes data/review/pilot_T6_A.tsv and pilot_T6_B.tsv: PILOT_ROWS T6
@@ -110,12 +115,18 @@ COLUMNS = ["id", "group", "lineage_id", "question", "as_of", "lead_in", "answer"
 # The 100% check (definition §8): 25% of rows labelled by both, batches of 30-50 rows.
 KIEM_OVERLAP = 0.25
 KIEM_BATCH = 40
+# Batch 0: lineages both people label first and then discuss with the lawyer, so a reading the
+# guideline leaves open is settled before the independent batches, not in them. Weighted to where
+# D4 split (D5 §2): T6 and the T2 near-identical slice.
+CALIB = {("T6", "ancestor"): 2, ("T6", "direct"): 2, ("T2", "near"): 2, ("T2", "regular"): 2,
+         ("T3", None): 1, ("T1", None): 2}
 # guideline 3.0 §5: required besides verdict/reasons/note (`cham_lan_sua` on T2/T3, `noi_dung_con_o_dau` on T6)
 KIEM_FIELDS = ["da_xem_van_ban_tac_dong", "cham_lan_sua", "noi_dung_con_o_dau", "phut"]
 KIEM_COLUMNS = ["lo", "id", "group", "subgroup", "lineage_id", "question", "as_of", "lead_in", "answer",
                 "short_answer", "changed_span", "citation", "law_id", "valid_from", "valid_to", "source_url",
-                "trich_van_ban_goc", "trich_van_ban_tac_dong", "note_for_annotator",
+                "trich_van_ban_goc", "trich_van_ban_tac_dong", "cac_phien_ban", "goi_y_cho_moi", "note_for_annotator",
                 "verdict", "reasons", "note", "suggestion", *KIEM_FIELDS, "guideline_version"]
+KIEM_A_COLUMNS = [*KIEM_COLUMNS, "adjudicated"]    # nhãn chốt của bước hoà giải, chỉ ở phiếu A (như D4)
 CELL_MAX = 32000   # an Excel cell holds 32,767 characters
 
 
@@ -354,12 +365,43 @@ def d4_final(data: Path) -> dict[tuple[str, str], dict]:
             label["note"] = f"[D4 hoà giải, {adj[i].get('adjudicator')}] {label['note']}".strip()
         elif ra["verdict"] and ra["verdict"] == rb.get("verdict"):
             label = {"verdict": ra["verdict"], "reasons": ra["reasons"] or rb.get("reasons", ""),
-                     "note": "[D4: A và B cùng nhãn] " + " | ".join(filter(None, (ra["note"], rb.get("note"))))}
+                     "note": ("[D4: A và B cùng nhãn] " + " | ".join(filter(None, (ra["note"], rb.get("note"))))).strip()}
         else:
             continue
         label["guideline_version"] = ra.get("guideline_version") or rb.get("guideline_version") or "1.2"
         out[(ra["lineage_id"], ra["as_of"])] = {**ra, **label}
     return out
+
+
+def calibration(by_lineage: dict[str, list[dict]], assign: dict[str, set[str]], d4: set[str]) -> set[str]:
+    """CALIB lineages per stratum for batch 0: not D4 (both have seen its adjudication), not overlap."""
+    chosen: set[str] = set()
+    for (group, part), n in CALIB.items():
+        pool = sorted(lid for lid, rs in by_lineage.items() if stratum(rs) == (group, part)
+                      and lid not in d4 and assign.get(lid) != {"A", "B"})
+        random.Random(f"{SEED}:kiem:calib:{group}:{part}").shuffle(pool)
+        chosen.update(pool[:n])
+    return chosen
+
+
+def batches(overlap: list[str], singles: list[str], size: dict[str, int], batch: int) -> list[list[str]]:
+    """Lineages per batch: the overlap spread evenly in its given order, singles filling each to `batch` rows.
+
+    Both files receive the overlap in the same order, so a shared lineage lands in the same batch for A
+    and B and agreement can be read after any batch, not only at the end.
+    """
+    total = sum(size[lid] for lid in overlap + singles)
+    n = max(1, -(-total // batch))
+    even = -(-total // n)          # rows per batch, so the last one is not left with the overlap alone
+    lots: list[list[str]] = [[] for _ in range(n)]
+    for i, lid in enumerate(overlap):
+        lots[i * n // len(overlap)].append(lid)
+    rest = iter(singles)
+    for lot in lots:
+        while sum(size[lid] for lid in lot) < even and (lid := next(rest, None)):
+            lot.append(lid)
+    lots[-1] += list(rest)
+    return lots
 
 
 def kiem(data: Path, today: str | None = None) -> None:
@@ -374,13 +416,15 @@ def kiem(data: Path, today: str | None = None) -> None:
     by_lineage: dict[str, list[dict]] = collections.defaultdict(list)
     for r in rows:
         by_lineage[r["lineage_id"]].append(r)
-    earlier, who_had = {}, collections.defaultdict(set)
+    earlier, who_had, calibrated = {}, collections.defaultdict(set), set()
     for who in "AB":
         path = out / f"kiem_{who}.tsv"
         old = read(path) if path.exists() else []
         earlier[who] = {(r["lineage_id"], r["as_of"]): r for r in old}
         for r in old:
             who_had[r["lineage_id"]].add(who)
+            if r.get("lo") == "0":
+                calibrated.add(r["lineage_id"])
         if any(r.get("verdict") for r in old):
             keep = path.with_name(f"{path.stem}.{stamp}.tsv")
             if keep.exists():
@@ -392,6 +436,9 @@ def kiem(data: Path, today: str | None = None) -> None:
 
     # who labels which lineage: kept from the last run, else D4 to one person, else overlap/alternate
     assign: dict[str, set[str]] = {lid: who_had[lid] for lid in by_lineage if who_had.get(lid)}
+    calib = (calibrated & set(by_lineage)) or calibration(by_lineage, assign, d4_lineages)
+    for lid in calib:
+        assign[lid] = {"A", "B"}
     free_d4 = sorted(d4_lineages - set(assign))
     random.Random(f"{SEED}:kiem:d4").shuffle(free_d4)
     for k, lid in enumerate(free_d4):
@@ -399,7 +446,7 @@ def kiem(data: Path, today: str | None = None) -> None:
     for group in sorted({r["group"] for r in rows}):
         lineages = sorted(lid for lid, rs in by_lineage.items() if rs[0]["group"] == group)
         need = round(KIEM_OVERLAP * sum(len(by_lineage[lid]) for lid in lineages))
-        have = sum(len(by_lineage[lid]) for lid in lineages if assign.get(lid) == {"A", "B"})
+        have = sum(len(by_lineage[lid]) for lid in lineages if assign.get(lid) == {"A", "B"} and lid not in calib)
         free = [lid for lid in lineages if lid not in assign]
         random.Random(f"{SEED}:kiem:{group}").shuffle(free)
         for k, lid in enumerate(free):
@@ -408,9 +455,11 @@ def kiem(data: Path, today: str | None = None) -> None:
             else:
                 assign[lid] = {"AB"[k % 2]}
 
-    evidence_path = out / "kiem_evidence.jsonl"
+    evidence_path, hints_path = out / "kiem_evidence.jsonl", out / "kiem_goi_y.jsonl"
     evidence = ({e["id"]: e for e in map(json.loads, evidence_path.open(encoding="utf-8"))}
                 if evidence_path.exists() else {})
+    hints = ({h["id"]: h for h in map(json.loads, hints_path.open(encoding="utf-8"))}
+             if hints_path.exists() else {})
     flags = collections.defaultdict(set)
     if (out / "validity_queue.tsv").exists():
         for q in read(out / "validity_queue.tsv"):
@@ -425,42 +474,55 @@ def kiem(data: Path, today: str | None = None) -> None:
         for vid, text in wordings[r["lineage_id"]].items():
             if spans and vid != r["version_id"] and all(x in f" {norm(text)} " for x in spans):
                 flags[r["id"]].add(f"đáp án ngắn cũng nằm trong phiên bản {vid.rsplit(':', 1)[1]}: câu hỏi có tách được hai mốc?")
+
+    def row_for(r: dict, lo: int) -> dict:
+        cells = dict(zip(COLUMNS, row_cells(r)))
+        goc, tac = evidence_cells(evidence.get(r["id"]))
+        hint = "; ".join(filter(None, [cells["note_for_annotator"], *sorted(flags.get(r["id"], ()))]))
+        h = hints.get(r["id"], {})
+        cells.update(lo=str(lo), subgroup=r.get("subgroup") or "", short_answer=r.get("short_answer") or "",
+                     trich_van_ban_goc=goc, trich_van_ban_tac_dong=tac, note_for_annotator=hint,
+                     cac_phien_ban=h.get("cac_phien_ban", "")[:CELL_MAX], goi_y_cho_moi=h.get("goi_y_cho_moi", "")[:CELL_MAX])
+        return cells
+
     kept, carried, sizes = collections.Counter(), collections.Counter(), collections.Counter()
+    size = {lid: len(rs) for lid, rs in by_lineage.items()}
+    overlap = sorted(lid for lid, w in assign.items() if w == {"A", "B"} and lid not in calib)
+    random.Random(f"{SEED}:kiem:overlap").shuffle(overlap)          # one order: the same batch in both files
     for who in "AB":
-        mine = sorted(lid for lid, w in assign.items() if who in w)
-        random.Random(f"{SEED}:kiem:order:{who}").shuffle(mine)   # A and B read the overlap in different orders
+        singles = sorted(lid for lid, w in assign.items() if w == {who})
+        random.Random(f"{SEED}:kiem:order:{who}").shuffle(singles)
+        order = [(0, sorted(calib))] + list(enumerate(batches(overlap, singles, size, KIEM_BATCH), 1))
         lines = []
-        for lid in mine:
-            for r in sorted(by_lineage[lid], key=lambda r: r["as_of"]):
-                cells = dict(zip(COLUMNS, row_cells(r)))
-                goc, tac = evidence_cells(evidence.get(r["id"]))
-                hint = "; ".join(filter(None, [cells["note_for_annotator"], *sorted(flags.get(r["id"], ()))]))
-                cells.update(subgroup=r.get("subgroup") or "", short_answer=r.get("short_answer") or "",
-                             trich_van_ban_goc=goc, trich_van_ban_tac_dong=tac, note_for_annotator=hint)
-                key = (lid, r["as_of"])
-                old = earlier[who].get(key)
-                same = lambda x: x and all(x[c] == cells[c] for c in ("question", "answer"))
-                if old and old.get("verdict") and same(old):
-                    cells.update({c: old.get(c, "") for c in ("verdict", "reasons", "note", "suggestion",
-                                                              *KIEM_FIELDS, "guideline_version")})
-                    kept[who] += 1
-                elif key in d4 and len(assign[lid]) == 1 and same(d4[key]):
-                    cells.update({c: d4[key][c] for c in ("verdict", "reasons", "note", "guideline_version")})
-                    carried[who] += 1
-                lines.append(cells)
-        for k, cells in enumerate(lines):
-            cells["lo"] = str(1 + k // KIEM_BATCH)
+        for lo, lot in order:
+            random.Random(f"{SEED}:kiem:lo:{who}:{lo}").shuffle(lot)   # A and B read a batch in different orders
+            for lid in lot:
+                for r in sorted(by_lineage[lid], key=lambda r: r["as_of"]):
+                    lines.append(row_for(r, lo))
+        for cells in lines:
+            key = (cells["lineage_id"], cells["as_of"])
+            old = earlier[who].get(key)
+            same = lambda x: x and all(x[c] == cells[c] for c in ("question", "answer"))
+            if old and old.get("verdict") and same(old):
+                cells.update({c: old.get(c, "") for c in ("verdict", "reasons", "note", "suggestion",
+                                                          *KIEM_FIELDS, "guideline_version", "adjudicated")})
+                kept[who] += 1
+            elif key in d4 and len(assign[cells["lineage_id"]]) == 1 and same(d4[key]):
+                cells.update({c: d4[key][c] for c in ("verdict", "reasons", "note", "guideline_version")})
+                carried[who] += 1
         sizes[who] = len(lines)
         with (out / f"kiem_{who}.tsv").open("w", encoding="utf-8", newline="") as f:
-            w = csv.DictWriter(f, KIEM_COLUMNS, delimiter="\t", lineterminator="\n", extrasaction="ignore")
+            w = csv.DictWriter(f, KIEM_A_COLUMNS if who == "A" else KIEM_COLUMNS, delimiter="\t",
+                               lineterminator="\n", extrasaction="ignore")
             w.writeheader()
             w.writerows(lines)
-    both = sum(len(rs) for lid, rs in by_lineage.items() if assign[lid] == {"A", "B"})
-    print(f"{len(rows)} dòng ranh_gioi: A {sizes['A']}, B {sizes['B']}, gán đôi {both} ({both / len(rows):.0%}) "
-          f"-> {out}/kiem_A.tsv, kiem_B.tsv")
+    both = sum(size[lid] for lid in overlap)
+    print(f"{len(rows)} dòng ranh_gioi: A {sizes['A']}, B {sizes['B']}, gán đôi {both} ({both / len(rows):.0%}), "
+          f"lô 0 hiệu chuẩn {sum(size[lid] for lid in calib)} dòng -> {out}/kiem_A.tsv, kiem_B.tsv")
     print(f"  nhãn D4 mang sang (câu hỏi, đáp án không đổi): A {carried['A']}, B {carried['B']}; "
           f"giữ nhãn đợt kiểm trước: A {kept['A']}, B {kept['B']}")
-    print(f"  {sum(1 for r in rows if r['id'] in evidence)}/{len(rows)} dòng có trích văn bản gốc ({evidence_path.name})")
+    print(f"  {sum(1 for r in rows if r['id'] in evidence)}/{len(rows)} dòng có trích văn bản gốc ({evidence_path.name}), "
+          f"{sum(1 for r in rows if r['id'] in hints)} có gợi ý máy ({hints_path.name})")
 
 
 def pilot(data: Path) -> None:
@@ -508,8 +570,13 @@ def kappa(data: Path, name: str = "crosscheck") -> None:
             for code in filter(None, (c.strip() for c in r["reasons"].split(","))) if code not in REASONS]
     if bad:
         raise SystemExit(f"nhãn ngoài từ vựng (docs/vilextime-annotation.md §2): {bad[:10]}")
-    both = [i for i in a if i in b and a[i]["verdict"] and b[i]["verdict"]]
-    if not both:
+    labelled = [i for i in a if i in b and a[i]["verdict"] and b[i]["verdict"]]
+    if name == "kiem":   # a D4 label sits in both files since A's sheet took B's rows (21/10): not two judgements
+        labelled = [i for i in labelled if a[i].get("guideline_version") == b[i].get("guideline_version") == GUIDELINE]
+    # batch 0 of `kiem` is labelled by both and then discussed: calibration, not agreement
+    calib = [i for i in labelled if a[i].get("lo") == "0"]
+    both = [i for i in labelled if a[i].get("lo") != "0"]
+    if not both and not calib:
         # Writing a result file of nulls looks like a finished run and is worse than
         # stopping: the labelled copies have lived outside `--data` before, and a
         # silent zero is how that goes unnoticed.
@@ -542,6 +609,7 @@ def kappa(data: Path, name: str = "crosscheck") -> None:
         "preregistered": {"primary": "ac1", "ac1_target": AC1_TARGET, "p_neg_target": PNEG_TARGET,
                           "kappa_reported_target": KAPPA_PROPOSAL},
         "disagreements": [i for i in both if a[i]["verdict"] != b[i]["verdict"]],
+        "calibration": {"n": len(calib), "disagreements": [i for i in calib if a[i]["verdict"] != b[i]["verdict"]]},
         "labelled_before_d4": {i: sorted({x["labeler"] for x in outside if x["id"] == i})
                                for i in sorted({x["id"] for x in outside if x["id"] in a})},
     }
@@ -566,6 +634,9 @@ def kappa(data: Path, name: str = "crosscheck") -> None:
     print(f"  κ chỉ báo kèm: ở biên nhãn này κ >= {KAPPA_PROPOSAL:.2f} đòi p_o >= {fmt(need)}"
           f" (tối đa {round((1 - need) * result['n']) if need else '—'} dòng lệch / {result['n']})")
     print(f"  {len(result['disagreements'])} dòng lệch cần hoà giải")
+    if calib:
+        print(f"  lô 0 hiệu chuẩn: {len(calib)} dòng cả hai đã gán, {len(result['calibration']['disagreements'])} "
+              "dòng lệch — không tính vào AC1, đem ra thảo luận cùng luật sư (hướng dẫn §5)")
     if name == "pilot_T6":
         agree = result["n"] - len(result["disagreements"])
         print(f"  cổng pilot: trùng {agree}/{result['n']}, cần >= {PILOT_GATE}/{PILOT_ROWS} -> "

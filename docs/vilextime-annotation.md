@@ -17,6 +17,10 @@ Thay đổi so với 2.0:
 - mỗi dòng kiểm có **ô bắt buộc** (mục 5): người kiểm ghi đã xem gì, không chỉ ghi kết luận;
 - tập test chỉ gồm dòng người đã kiểm; nhãn model không còn được tính là kiểm định (mục 6).
 
+Bổ sung 21/10/2026, không đổi quy tắc gán nhãn nên vẫn là 3.0: lô 0 hiệu chuẩn, cột gợi ý của máy
+(`cac_phien_ban`, `goi_y_cho_moi`), chữ đổi tô đỏ trong `answer`, trang "Cách quyết" (mục 5) và mục 7
+Hỏi đáp.
+
 Bản 2.0 (12/10/2026) và 1.2 (29/09/2026) còn trong lịch sử git. Mỗi nhãn ghi phiên bản hướng dẫn
 đã dùng (cột `guideline_version`).
 
@@ -161,10 +165,20 @@ chấm theo vế nội dung. Quy trình:
 
 ## 5. Quy trình kiểm
 
-1. **Phiếu kiểm** `data/review/kiem_{A,B}.xlsx` (`crosscheck.py kiem`, rồi `crosscheck_xlsx.py export
-   --set kiem`) có mọi dòng `ranh_gioi` của bản phát hành, đoạn trích văn bản gốc và văn bản tác động
-   (`crosscheck_evidence.py`), cờ của máy và cột `lo`. Model chỉ được trích dẫn chứng, không được
-   điền kết luận. Nạp lại: `crosscheck_xlsx.py import --set kiem --who A`.
+1. **Phiếu kiểm** `data/review/kiem_{A,B}.xlsx` (`kiem_hints.py`, `crosscheck.py kiem`, rồi
+   `crosscheck_xlsx.py export --set kiem`) có mọi dòng `ranh_gioi` của bản phát hành và dẫn chứng do
+   máy chuẩn bị giống nhau cho cả hai người:
+   - `trich_van_ban_goc`, `trich_van_ban_tac_dong`: đoạn trích văn bản gốc và văn bản tác động
+     (`crosscheck_evidence.py`);
+   - `cac_phien_ban`: mọi phiên bản của điều khoản, khoảng hiệu lực, văn bản sửa, chỗ đổi; dòng đang
+     kiểm là bản đánh dấu ◀. Trong `answer`, chữ **đỏ đậm** là chữ phiên bản khác không có;
+   - `goi_y_cho_moi` (T6): những gì văn bản bãi bỏ cũng viết vào văn bản gốc, và các đoạn có hiệu
+     lực giống nội dung bị bãi bỏ nhất. Đây là chỗ bắt đầu tìm ở bước 2 của T6, không phải kết luận;
+   - `note_for_annotator`: cờ của máy (R6, kiểm hiệu lực, đáp án ngắn nằm trong bản khác).
+
+   Máy chỉ đưa dẫn chứng, không điền nhãn. Trang "Cách quyết" của phiếu xếp 8 điều kiện ở mục 6 của
+   định nghĩa theo thứ tự kiểm, kèm mã khi không đạt. Nạp lại: `crosscheck_xlsx.py import --set kiem
+   --who A`.
 2. **Ô bắt buộc** cho mỗi dòng, ngoài `verdict`, `reasons`, `note`:
    - `da_xem_van_ban_tac_dong`: liệt kê số hiệu các văn bản tác động đã xem (hoặc "không có");
    - `cham_lan_sua` (T2, T3, T4): những ngày chuyển mà câu hỏi chạm tới;
@@ -172,7 +186,17 @@ chấm theo vế nội dung. Quy trình:
    - `phut`: số phút đã dùng.
    Thiếu ô bắt buộc thì phiếu không nạp được.
 3. **Tập test: mọi dòng có người kiểm.** 25% số dòng do hai người gán độc lập, không trao đổi
-   trong lúc làm; dùng mã `A`, `B` (bảng ánh xạ tên thật chỉ ở plan).
+   trong lúc làm; dùng mã `A`, `B` (bảng ánh xạ tên thật chỉ ở plan). Dòng gán đôi nằm cùng số lô ở
+   hai phiếu, rải đều các lô, thứ tự trong lô khác nhau.
+   - **Lô 0 — hiệu chuẩn** (khoảng 20 dòng, nghiêng về T6 và T2 gần giống, nơi D4 lệch nhiều nhất):
+     cả hai làm độc lập và gửi trước. `crosscheck.py kappa --set kiem` liệt kê dòng lệch của lô 0
+     riêng, không tính vào AC1. Hai người cùng luật sư xem từng dòng lệch; kết luận dạng quy tắc
+     chung ghi vào mục 7, rồi mới làm lô 1.
+   - **Đo giữa chừng:** sau lô 3, 6, 9, 12, 15 chạy `kappa --set kiem` trên các dòng chung đã làm.
+     Dưới ngưỡng thì hiệu chuẩn lại (đọc lại mục 7, xem nhóm lỗi lệch), **không sửa nhãn đã gán**:
+     nhãn thô là số đo đồng thuận.
+   - **Phân vân:** vẫn chọn một nhãn theo câu hỏi ở mục 1, ghi `[phân vân] …` ở `note` để đưa vào
+     buổi hỏi luật sư.
 4. **Đồng thuận:** `python scripts/review/crosscheck.py kappa`. Ngưỡng đăng ký trước: AC1 ≥ 0,80 và
    p_neg ≥ 0,60; κ báo kèm; báo theo nhóm và theo phiên bản hướng dẫn.
 5. **Hòa giải:** dòng lệch do **người thứ ba** (luật sư) quyết, ghi ở cột `adjudicated`
@@ -189,3 +213,21 @@ dòng khớp kết luận cuối của người, và model gắn `khong_dat` ít
 Nhãn model chỉ dùng để **xếp thứ tự** dòng cần người xem trước. Nhãn model cũ trong
 `data/review/labels.tsv` giữ nguyên làm phân tích phụ (đồng thuận model–người), có ghi `labeler`.
 Dòng chỉ có nhãn model là dòng chưa kiểm (`not_verified`), không vào tập test.
+
+## 7. Hỏi đáp (quy tắc chốt trong lúc kiểm)
+
+Mỗi mục: ngày, câu hỏi chung (không nêu dòng gán đôi cụ thể), kết luận, người chốt (luật sư hoặc
+nhóm). Kết luận chỉ làm rõ cách áp quy tắc đã có; quy tắc mới thì sửa định nghĩa và tăng phiên bản
+hướng dẫn.
+
+Bài học từ D4 (biên bản D5 §2), nhắc lại để không lặp:
+
+- **T6: luôn làm bước 2 (nội dung còn ở đâu).** 26 dòng T6 lệch vì một người gán `dat` mà không
+  tìm chỗ chuyển đến. Ô `noi_dung_con_o_dau` bắt buộc; bắt đầu từ `goi_y_cho_moi`.
+- **Một phiên bản hướng dẫn cho mọi nhãn.** 31 dòng lệch vì hai người gán theo hai bản khác nhau.
+  Nhãn D4 mang sang phiếu phải được xác nhận lại theo 3.0.
+- **T2/T3: so câu hỏi với chỗ đổi, không với cả điều khoản.** Đọc `cac_phien_ban` và chữ đỏ; hai
+  mốc trả lời như nhau thì `group_mismatch`.
+
+(Các mục mới thêm bên dưới sau buổi hiệu chuẩn lô 0.)
+

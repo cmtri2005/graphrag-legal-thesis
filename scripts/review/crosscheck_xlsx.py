@@ -40,11 +40,15 @@ from __future__ import annotations
 import argparse
 import collections
 import csv
+import difflib
 import random
+import re
 import sys
 from pathlib import Path
 
 from openpyxl import Workbook, load_workbook
+from openpyxl.cell.rich_text import CellRichText, TextBlock
+from openpyxl.cell.text import InlineFont
 from openpyxl.styles import Alignment, Font, PatternFill, Protection
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
@@ -71,7 +75,11 @@ WIDTHS = {"id": 34, "group": 7, "lineage_id": 30, "question": 62, "as_of": 11, "
           "valid_to": 11, "source_url": 30, "note_for_annotator": 30,
           "verdict": 13, "reasons": 26, "note": 34, "suggestion": 46, "adjudicated": 12,
           "lo": 5, "subgroup": 8, "short_answer": 34, "trich_van_ban_goc": 70, "trich_van_ban_tac_dong": 70,
-          "da_xem_van_ban_tac_dong": 24, "cham_lan_sua": 18, "noi_dung_con_o_dau": 28, "phut": 7}
+          "da_xem_van_ban_tac_dong": 24, "cham_lan_sua": 18, "noi_dung_con_o_dau": 28, "phut": 7,
+          "cac_phien_ban": 60, "goi_y_cho_moi": 80}
+WRAP = {"question", "answer", "lead_in", "changed_span", "short_answer", "trich_van_ban_goc", "trich_van_ban_tac_dong",
+        "cac_phien_ban", "goi_y_cho_moi", "note_for_annotator", "note", "reasons", "suggestion"}
+CHANGED = InlineFont(rFont=FONT, sz=10, b=True, color="C00000")
 
 REASON_HELP = [   # docs/vilextime-annotation.md §2, hướng dẫn 3.0
     ("question_ambiguous", "Câu hỏi khớp nhiều điều khoản hoặc nhiều mục trong danh sách; đáp án chuẩn chỉ là một trong số đó."),
@@ -89,6 +97,25 @@ REASON_HELP = [   # docs/vilextime-annotation.md §2, hướng dẫn 3.0
     ("cosmetic_only", "Lần đổi chỉ là hình thức: hoa thường, dấu câu, khoảng trắng, đánh số."),
     ("auto_reference_update", "Lần đổi chỉ cập nhật văn bản được dẫn chiếu, trong khi chính văn bản đã quy định tự áp văn bản thay thế."),
     ("other", "Lỗi khác. Bắt buộc mô tả ở cột note."),
+]
+
+# docs/vilextime-dinh-nghia.md §6: the eight checks a test row passes, in the order to make them, and the
+# codes a failed check is written with (guideline 3.0 §2). The verdict is khong_dat as soon as one fails.
+DECISION = [
+    ("1", "Đáp án đúng là phiên bản có hiệu lực pháp lý tại as_of? Đối chiếu trich_van_ban_goc, trich_van_ban_tac_dong, "
+          "cac_phien_ban: cả lời văn, cả câu dẫn lead_in.", "gold_wrong · transitional_rule"),
+    ("2", "(T2, T4, T3) Câu hỏi chạm đúng chỗ đổi? Chữ đỏ trong answer và cac_phien_ban là chỗ đổi. Hai mốc phải ra hai "
+          "đáp án khác nhau (T3: ít nhất ba). Ghi ngày chuyển câu hỏi chạm vào cham_lan_sua.",
+     "group_mismatch · rename_only · cosmetic_only · auto_reference_update"),
+    ("3", "Câu hỏi chỉ khớp MỘT điều khoản, trả lời được bằng đáp án này và chỉ một cách?",
+     "question_ambiguous · unanswerable_as_asked"),
+    ("4", "Câu hỏi không nêu ngày, số hiệu văn bản, Điều, Khoản, ký hiệu mục, không chép sẵn đáp án?", "question_leaks"),
+    ("5", "Đáp án là nội dung pháp lý, không chỉ là \"thực hiện theo văn bản X\"?", "reference_only"),
+    ("6", "Không có văn bản khác đè lên cùng vấn đề; không vướng sắp xếp bộ máy 2025?",
+     "superseded_by_other_norm · restructuring_2025"),
+    ("7", "(T6) Đã tìm nội dung còn ở đâu (goi_y_cho_moi là chỗ bắt đầu, không phải kết luận) và xét bảy yếu tố? "
+          "Ghi kết quả vào noi_dung_con_o_dau.", "relocated · relocation_unclear"),
+    ("8", "Đáp án ngắn (short_answer) đúng và đủ? Sai thì ghi đáp án ngắn đúng vào note.", "other"),
 ]
 
 GROUP_HELP = [   # docs/vilextime-annotation.md §3
@@ -182,7 +209,12 @@ def kiem_guide(who: str, n: int, add, L: list) -> list[tuple[str, int, bool]]:
     add("1. Đọc câu hỏi, mốc as_of, đáp án (answer, cùng câu dẫn lead_in) và đáp án ngắn (short_answer).", 10)
     add("2. Đối chiếu với trich_van_ban_goc (văn bản bị sửa) và trich_van_ban_tac_dong (văn bản sửa, bãi bỏ:", 10)
     add("   đoạn tác động, điều khoản chuyển tiếp, điều hiệu lực). Thiếu thì mở source_url.", 10)
-    add("3. Điền verdict (dropdown). khong_dat thì điền reasons (trang \"Mã lý do\"), nhiều mã cách bằng dấu phẩy.", 10)
+    add("   cac_phien_ban: mọi phiên bản của điều khoản, ngày hiệu lực, văn bản sửa, chỗ đổi; dòng này là bản ◀.", 10)
+    add("   Chữ ĐỎ ĐẬM trong answer là chữ phiên bản khác của cùng điều khoản không có.", 10)
+    add("   goi_y_cho_moi (T6): chỗ máy tìm thấy có thể chứa nội dung bị bãi bỏ. Chỉ là chỗ bắt đầu tìm:", 10)
+    add("   bạn tự xét bảy yếu tố, máy có thể sai hoặc bỏ sót.", 10)
+    add("3. Kiểm 8 điều theo trang \"Cách quyết\". Điền verdict (dropdown); khong_dat thì điền reasons", 10)
+    add("   (trang \"Mã lý do\"), nhiều mã cách bằng dấu phẩy.", 10)
     add("4. Điền đủ ô bắt buộc (dưới đây). Thiếu thì file không nạp được.", 10)
     add("5. Đáp án ngắn sai hoặc thiếu: khong_dat, mã other, ghi đáp án ngắn đúng vào note.", 10)
     add()
@@ -200,12 +232,69 @@ def kiem_guide(who: str, n: int, add, L: list) -> list[tuple[str, int, bool]]:
     add("Quy tắc", 12, True)
     add("· Làm độc lập, không trao đổi với người kiểm còn lại. Một phần dòng do cả hai người cùng kiểm để đo", 10, True)
     add("  đồng thuận (AC1 ≥ 0,80 và p_neg ≥ 0,60); bạn không biết là dòng nào, cứ làm như nhau.", 10, True)
-    add("· Làm theo lô (cột lo, 40 dòng). Xong lô 1 thì gửi để đo phút mỗi dòng và lập lại kế hoạch.", 10)
+    add("· Lô 0 (khoảng 20 dòng) là lô HIỆU CHUẨN: cả hai cùng làm, độc lập, gửi lại trước. Sau đó hai người cùng", 10, True)
+    add("  luật sư xem các dòng lệch; kết luận ghi vào mục Hỏi đáp của hướng dẫn. Lô 0 không tính vào đồng thuận.", 10, True)
+    add("· Từ lô 1, mỗi lô 40 dòng. Gửi lô 1 để đo phút mỗi dòng. Sau lô 3, 6, 9, 12, 15 đồng thuận được đo trên", 10)
+    add("  các dòng chung đã làm; thấp thì hiệu chuẩn lại trên dòng mới, không sửa nhãn đã gán.", 10)
+    add("· Phân vân: vẫn chọn một nhãn, ghi \"[phân vân] …\" ở note để đưa vào buổi hỏi luật sư.", 10)
     add("· Dòng đã có nhãn từ D4 (cột guideline_version 1.2 hoặc 2.0): xác nhận lại theo 3.0 và điền ô", 10)
     add("  bắt buộc. Để nguyên thì dòng vẫn tính là chưa kiểm theo 3.0.", 10)
     add("· Không sửa câu hỏi, đáp án; câu hỏi nên viết lại thì ghi vào suggestion. Đừng sắp xếp hay xóa dòng.", 10)
-    add("· Model chỉ trích dẫn chứng (hai cột trich_...), không có kết luận nào của model trong phiếu.", 10)
+    add("· Máy chỉ đưa dẫn chứng (trich_..., cac_phien_ban, goi_y_cho_moi, note_for_annotator), không có nhãn nào", 10)
+    add("  do máy gán trong phiếu.", 10)
     return L
+
+
+def sheet_decision(wb: Workbook) -> None:
+    ws = wb.create_sheet("Cách quyết")
+    for col, (head, width) in enumerate((("#", 4), ("Kiểm theo thứ tự (định nghĩa §6)", 96), ("Không đạt → mã", 44)), 1):
+        c = ws.cell(1, col, head)
+        c.font = Font(name=FONT, bold=True, color="FFFFFF")
+        c.fill = PatternFill("solid", fgColor="44546A")
+        ws.column_dimensions[get_column_letter(col)].width = width
+    for i, row in enumerate(DECISION, 2):
+        for col, text in enumerate(row, 1):
+            c = ws.cell(i, col, text)
+            c.font = Font(name=FONT, size=10, bold=col == 1)
+            c.alignment = Alignment(vertical="top", wrap_text=True)
+        ws.row_dimensions[i].height = 44
+    tail = len(DECISION) + 3
+    for k, text in enumerate((
+            "Đạt cả 8 → dat. Một ô không đạt → khong_dat, ghi mọi mã tương ứng ở reasons.",
+            "Phân vân: vẫn chọn một nhãn theo câu hỏi nền (luật sư tra đúng văn bản có trả lời đúng bằng đáp án này, "
+            "và chỉ một cách?), rồi ghi \"[phân vân] …\" ở note để đưa vào buổi hỏi luật sư.",
+            "Gợi ý của máy (cac_phien_ban, goi_y_cho_moi, note_for_annotator) chỉ nói chỗ cần nhìn, không nói nhãn.")):
+        ws.cell(tail + k, 2, text).font = Font(name=FONT, size=10, italic=True)
+    ws.freeze_panes = "A2"
+
+
+def changed_spans(text: str, others: list[str]) -> list[tuple[int, int]]:
+    """Character spans of `text` whose words another version of the provision does not have."""
+    tokens = [(m.start(), m.end(), m.group()) for m in re.finditer(r"\S+", text)]
+    marked: set[int] = set()
+    for other in others:
+        ops = difflib.SequenceMatcher(a=[w for _, _, w in tokens], b=other.split(), autojunk=False).get_opcodes()
+        marked.update(i for op, i1, i2, _, _ in ops if op in ("replace", "delete") for i in range(i1, i2))
+    spans: list[tuple[int, int]] = []
+    for i in sorted(marked):
+        if spans and i - 1 in marked:
+            spans[-1] = (spans[-1][0], tokens[i][1])
+        else:
+            spans.append((tokens[i][0], tokens[i][1]))
+    return spans
+
+
+def highlighted(text: str, spans: list[tuple[int, int]]) -> CellRichText | str:
+    """`text` unchanged, its changed spans in bold red: the import still reads back the plain string."""
+    if not spans:
+        return text
+    parts, at = [], 0
+    for start, end in spans:
+        parts += [text[at:start]] if start > at else []
+        parts.append(TextBlock(CHANGED, text[start:end]))
+        at = end
+    parts += [text[at:]] if at < len(text) else []
+    return CellRichText(parts)
 
 
 def sheet_guide(wb: Workbook, who: str, n: int, non_blind: list[str], name: str = "crosscheck") -> None:
@@ -248,14 +337,18 @@ def sheet_labels(wb: Workbook, columns: list[str], rows: list[dict], set_name: s
         ws.column_dimensions[get_column_letter(col)].width = WIDTHS.get(name, 18)
     editable = PatternFill("solid", fgColor="EAF3EC")
     reopen = labels != LABEL_COLS          # kiem: a carried label is re-confirmed under 3.0
+    versions = collections.defaultdict(set)   # a lineage's rows sit in one file: its versions are all here
+    for row in rows:
+        if row.get("answer") and not row["answer"].startswith("(không có đáp án"):
+            versions[row.get("lineage_id")].add(row["answer"])
     for r, row in enumerate(rows, 2):
         for col, field in enumerate(columns, 1):
-            c = ws.cell(r, col, row.get(field) or "")
+            value = row.get(field) or ""
+            if field == "answer" and value:
+                value = highlighted(value, changed_spans(value, sorted(versions[row.get("lineage_id")] - {value})))
+            c = ws.cell(r, col, value)
             c.font = Font(name=FONT, size=10)
-            c.alignment = Alignment(vertical="top", wrap_text=field in
-                                    ("question", "answer", "lead_in", "changed_span", "short_answer",
-                                     "trich_van_ban_goc", "trich_van_ban_tac_dong",
-                                     "note_for_annotator", "note", "reasons", "suggestion"))
+            c.alignment = Alignment(vertical="top", wrap_text=field in WRAP)
             if field in labels and (reopen or not row.get("verdict")):   # a carried raw label stays as it was
                 c.protection, c.fill = Protection(locked=False), editable
             else:
@@ -316,6 +409,8 @@ def export(data: Path, name: str = "crosscheck") -> None:
         non_blind = [r["id"] for r in rows if r["id"] in known]
         wb = Workbook()
         sheet_guide(wb, who, len(rows), non_blind, name)
+        if name == "kiem":
+            sheet_decision(wb)
         sheet_reasons(wb)
         sheet_labels(wb, columns, ordered(rows, who, name), name)
         out = data / f"review/{name}_{who}.xlsx"
@@ -364,6 +459,9 @@ def ingest(data: Path, who: str, name: str = "crosscheck") -> None:
             if (str(src.get(col) or "").strip()) != (r.get(col) or "").strip():
                 errors.append(f"{r['id']}: cột `{col}` đã bị sửa trong xlsx")
         verdict = str(src.get("verdict") or "").strip()
+        if (r.get("verdict") or "").strip() and not verdict:
+            # the TSV is the record: a label saved by label_ui.py after this xlsx was exported must not be blanked
+            errors.append(f"{r['id']}: TSV có nhãn mà xlsx trống (xlsx cũ hơn TSV, vd nhãn lưu từ label_ui.py); xuất lại xlsx")
         if verdict and verdict not in VERDICTS:
             errors.append(f"{r['id']}: verdict `{verdict}` ngoài từ vựng")
         codes = [c.strip() for c in str(src.get("reasons") or "").split(",") if c.strip()]
@@ -388,7 +486,8 @@ def ingest(data: Path, who: str, name: str = "crosscheck") -> None:
         raise SystemExit(1)
     for r in rows:
         new = {col: str(got[r["id"]].get(col) or "").strip() for col in labels}
-        if any(new[c] != (r.get(c) or "") for c in labels):
+        # compared as the checks above compare: Excel drops a trailing space nobody typed
+        if any(new[c] != (r.get(c) or "").strip() for c in labels):
             r["guideline_version"] = GUIDELINE if new["verdict"] else ""   # labelled now, under today's guide
         else:                                    # unchanged: keeps its version; no version means 1.2 (crosscheck.py)
             r["guideline_version"] = (r.get("guideline_version") or "1.2") if new["verdict"] else ""

@@ -527,6 +527,8 @@ def main() -> None:
     ap.add_argument("--split", help="score only this split (default: test, or every row before the split)")
     ap.add_argument("--ids", type=Path, help="score only the row ids listed in this file, one per line")
     ap.add_argument("--out", type=Path, help="write the full report (per strategy and group) as JSON")
+    ap.add_argument("--release", type=Path, help="score against a published vilextime.jsonl (export_release.py) "
+                                                 "instead of <data>/derived/vilextime/release.jsonl")
     ap.add_argument("--ci", type=int, default=0, metavar="DRAWS",
                     help="95%% intervals from DRAWS lineage resamples; several prediction files are "
                          "also compared, each with the one before it")
@@ -535,7 +537,14 @@ def main() -> None:
         ap.error("give prediction files or --probes")
     if len({p.stem for p in args.predictions}) < len(args.predictions):
         ap.error("prediction files are named by their stem, so the stems must differ")
-    rows = [json.loads(line) for line in (args.data / "derived/vilextime/release.jsonl").open(encoding="utf-8")]
+    path = args.release or args.data / "derived/vilextime/release.jsonl"
+    rows = [json.loads(line) for line in path.open(encoding="utf-8")]
+    for r in rows:
+        if "context" in r:   # published names (docs/vilextime-schema-phat-hanh.md): answer is the short answer,
+            # context the wording with its lead-in already in front
+            r["short_answer"], r["answer"], r["target"] = r["answer"], r["context"], {"lead_in": None}
+    if args.probes and "target" not in rows[0]:
+        ap.error("--probes needs the internal release (it reads `target`)")
     extra = distractors(rows)
     for r in rows:
         r["_distractors"] = extra.get(r["id"], [])
