@@ -140,6 +140,11 @@ Out of scope:
   B mở `label_ui.py --who B --ids data/review/kiem_cheo.txt`. `kappa --set kiem` và `adjudicate.py --set kiem` chỉ
   tính dòng cả hai gán theo 3.0 (69 nhãn D4 của B đã chép sang phiếu A khi gộp, không phải hai lần phán).
   `pytest` 542 qua.
+- [x] Trang gán nhãn cho hai người cùng làm (23/10): `label_ui.py` thêm dòng thời gian phiên bản (một ô mỗi phiên
+  bản, ghim ở mốc hỏi) và so sánh hai phiên bản cạnh nhau (T2, T4, T3, T5a). Mã phiên bản đọc từ ◀ của
+  `cac_phien_ban`, khớp `release.jsonl` 1.120/1.120 dòng A và 704/704 dòng B, nên trang không còn cần
+  `release.jsonl` (gitignore): partner `git pull` là chạy được. Trên dữ liệu thật: 0 dòng phiên bản đọc sót, 0 ghim
+  lệch ô đáp án. `pytest` 544 qua.
 - [ ] Bước 7: gold độc lập. 21/10: mẫu cũ rút trước khi dựng lại (17/120 dòng không còn trong bản phát hành,
   chưa ai gán) → rút lại 120 dòng trên bản dựng lại (`independent_gold.py build`, xuất lại `gold_{A,B}.xlsx`;
   bản cũ lưu ở thư mục tạm của phiên). Lineage đã lộ đáp án máy qua phiếu `kiem` (dòng đã gán, lô 0) bị loại
@@ -167,6 +172,9 @@ Out of scope:
   dòng T2 mốc 14/01/2026 đáp án "cấp huyện" mang nhãn D4 `dat`). CMT bác thì đổi một dòng ở `final_labels`.
 - 2026-10-21: chốt schema phát hành `docs/vilextime-schema-phat-hanh.md` (2 file, 12 cột chính, `2.0.0`, không công bố dòng bị loại); 5 quyết
   định mở dùng mặc định Claude đề xuất (CMT: "chốt schema cuối cùng đi").
+- 2026-10-23: không host lên Vercel; mỗi người chạy `label_ui.py` trên máy mình, nhãn đồng bộ qua git (CMT chọn).
+  Lý do: Vercel cần thêm database, đăng nhập, chia nhỏ dữ liệu (trang tải 7,6 MB, giới hạn 4,5 MB mỗi phản hồi) và
+  đưa bộ test chưa công bố lên internet.
 
 ## Validation
 

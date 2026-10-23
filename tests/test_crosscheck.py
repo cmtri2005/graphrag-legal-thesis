@@ -493,3 +493,48 @@ def test_label_ui_edits_reach_the_whole_lineage_and_the_source_files(tmp_path):
     assert (q["question"], q["model_question"], q["edited_by"]) == ("Hỏi mới?", "Hỏi cũ?", "human:A")
     s = [json.loads(x) for x in (tmp_path / "vilextime/short_answers.jsonl").open(encoding="utf-8")]
     assert (s[0]["short_answer"], s[0]["model_short_answer"], s[1]["short_answer"]) == ("Phạt 7 triệu", "7 triệu", "9 triệu")
+
+
+def test_label_ui_timeline_reads_the_version_chain_and_ends_it_at_the_repeal():
+    import label_ui
+
+    chain = ("[1] 2017-11-01 → 2020-03-22 · bản gốc   ◀ đáp án của dòng này\n"
+             "[2] 2020-03-22 → nay · sửa bởi 17/2020/NĐ-CP (hiệu lực 2020-03-22)\n"
+             "    chỗ đổi: bỏ «Chi»")
+    t = label_ui.timeline({"cac_phien_ban": chain, "answer": "x"})
+    assert [(v["n"], v["from"], v["to"], v["by"], v["mine"]) for v in t["versions"]] == [
+        (1, "2017-11-01", "2020-03-22", "bản gốc", True),
+        (2, "2020-03-22", None, "sửa bởi 17/2020/NĐ-CP (hiệu lực 2020-03-22)", False)]
+    assert t["repeal"] is None
+    # T6b: the provision's own window is open; its ancestor's repeal ends it, and the row after it has no version
+    t = label_ui.timeline({"cac_phien_ban": "[1] 2012-06-01 → nay · bản gốc\nHết hiệu lực từ 2018-10-08 "
+                                            "(điều khoản cấp trên bị bãi bỏ) bởi 140/2018/NĐ-CP",
+                           "answer": "(không có đáp án: provision_repealed)"})
+    assert t["versions"] == [{"n": 1, "from": "2012-06-01", "to": "2018-10-08", "by": "bản gốc", "mine": False}]
+    assert t["repeal"] == {"on": "2018-10-08", "mode": "điều khoản cấp trên bị bãi bỏ", "by": "140/2018/NĐ-CP"}
+    # T1: the sheet has no chain, so the row's own window is the one version
+    t = label_ui.timeline({"cac_phien_ban": "", "answer": "x", "valid_from": "2013-07-01", "valid_to": ""})
+    assert t["versions"] == [{"n": 1, "from": "2013-07-01", "to": None, "by": "bản duy nhất", "mine": True}]
+    # the release's version id, read from the sheet alone
+    assert label_ui.version_id({"lineage_id": "provision:u#k2#a", "cac_phien_ban": chain, "answer": "x"}) == "version:u#k2#a:1"
+    assert label_ui.version_id({"lineage_id": "provision:u", "cac_phien_ban": "", "answer": "x"}) == "version:u:1"
+    assert label_ui.version_id({"lineage_id": "provision:u", "cac_phien_ban": "[1] 2012-06-01 → nay · bản gốc",
+                                "answer": "(không có đáp án: provision_repealed)"}) is None
+
+
+def test_label_ui_compare_pairs_consecutive_answers_and_marks_both_sides():
+    import label_ui
+
+    def chain(mine):
+        return "\n".join(f"[{n}] {a} → {b}{'   ◀ đáp án của dòng này' if n == mine else ''}"
+                         for n, a, b in ((1, "2019-01-01", "2020-01-01"), (2, "2020-01-01", "nay")))
+    rows = [{"lineage_id": "p", "answer": "Phạt 7 triệu đồng.", "cac_phien_ban": chain(1)},
+            {"lineage_id": "p", "answer": "Phạt 9 triệu đồng.", "cac_phien_ban": chain(2)},
+            {"lineage_id": "p", "answer": "Phạt 9 triệu đồng.", "cac_phien_ban": chain(2)},    # its mid-interval twin
+            {"lineage_id": "q", "answer": "Một bản.", "cac_phien_ban": "", "valid_from": "2019-01-01"}]
+    got = label_ui.compare(rows)
+    assert list(got) == ["p"]                                   # one answer only: nothing to compare
+    (pair,) = got["p"]["pairs"]
+    old, new = (v["text"] for v in got["p"]["versions"])
+    assert (pair["a"], pair["b"]) == (1, 2)
+    assert [old[s:e] for s, e in pair["sa"]] == ["7"] and [new[s:e] for s, e in pair["sb"]] == ["9"]

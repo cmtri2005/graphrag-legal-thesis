@@ -14,6 +14,10 @@ ghi vào data/vilextime/questions.jsonl, short_answers.jsonl (giữ bản model 
 phát hành mà nhãn vẫn khớp. Lời văn luật, ngày, phiên bản do đồ thị suy ra thì không sửa tay: sai là khong_dat.
 Đáp án ngắn phải là đoạn trích của đáp án hoặc câu dẫn (enrich_vilextime.check_short_answer).
 
+Dòng thời gian phiên bản (một ô mỗi phiên bản, ghim ở mốc hỏi) đọc lại cột `cac_phien_ban`; ô so sánh hai
+phiên bản cạnh nhau (cũ trái, mới phải, chữ khác nhau tô ở cả hai bên) lấy lời văn từ các dòng cùng lineage của
+chính phiếu, nên trùng chữ với cột `answer`.
+
 Dòng thuộc lineage trong phiếu gold độc lập của người đó (gold_X.tsv) bị ẩn tới khi phiếu gold điền xong:
 gold phải gán mù, còn trang này cho thấy đáp án của máy.
 
@@ -27,6 +31,7 @@ import collections
 import csv
 import json
 import os
+import re
 import sys
 import threading
 import webbrowser
@@ -68,6 +73,57 @@ def spans_for(rows: list[dict]) -> dict[str, list[list[int]]]:
             versions[r["lineage_id"]].add(r["answer"])
     return {r["id"]: [list(s) for s in changed_spans(r["answer"], sorted(versions[r["lineage_id"]] - {r["answer"]}))]
             for r in rows if r["answer"] and len(versions[r["lineage_id"]]) > 1}
+
+
+# kiem_hints.timeline writes one line per version and, for T6, one for the repeal
+TL_VERSION = re.compile(r"^\[(\d+)\] (\S+) → (\S+)(?: · (.*?))?(\s+◀ đáp án của dòng này)?$")
+TL_REPEAL = re.compile(r"^Hết hiệu lực từ (\S+) \((.+?)\) bởi (.+)$")
+
+
+def timeline(row: dict) -> dict:
+    """The row's version chain for the timeline bar: `cac_phien_ban` read back, or for a row without one (T1) its
+    single version. A provision repealed through its ancestor keeps an open window of its own; the repeal ends it."""
+    versions, repeal = [], None
+    for line in (row.get("cac_phien_ban") or "").splitlines():
+        if m := TL_VERSION.match(line):
+            n, start, end, by, mine = m.groups()
+            versions.append({"n": int(n), "from": None if start == "?" else start,
+                             "to": None if end == "nay" else end, "by": by or "", "mine": bool(mine)})
+        elif m := TL_REPEAL.match(line):
+            repeal = {"on": m[1], "mode": m[2], "by": m[3]}
+    if not versions:
+        versions = [{"n": 1, "from": row.get("valid_from") or None, "to": row.get("valid_to") or None,
+                     "by": "bản duy nhất", "mine": not row["answer"].startswith("(không có đáp án")}]
+    if repeal:
+        for v in versions:
+            if v["to"] is None or v["to"] > repeal["on"]:
+                v["to"] = repeal["on"]
+    return {"versions": versions, "repeal": repeal}
+
+
+def version_id(row: dict) -> str | None:
+    """The row's answer version as the release names it: kiem_hints writes ◀ from that id (T1: version 1)."""
+    mine = next((v for v in timeline(row)["versions"] if v["mine"]), None)
+    return f"version:{row['lineage_id'].split(':', 1)[1]}:{mine['n']}" if mine else None
+
+
+def compare(rows: list[dict]) -> dict[str, dict]:
+    """lineage -> the versions it answers with, in order, and each change between two of them with the words that
+    differ marked on both sides (T2, T4, T3, also T5a). A lineage with a single answer has nothing to compare."""
+    found: dict[str, dict[int, dict]] = collections.defaultdict(dict)
+    for r in rows:
+        mine = next((v for v in timeline(r)["versions"] if v["mine"]), None)
+        if mine and r["answer"] and not r["answer"].startswith("(không có đáp án"):
+            found[r["lineage_id"]].setdefault(mine["n"], {**mine, "text": r["answer"], "lead_in": r.get("lead_in") or ""})
+    out = {}
+    for lid, by_n in found.items():
+        vs = [by_n[n] for n in sorted(by_n)]
+        if len(vs) > 1:
+            out[lid] = {"versions": vs, "pairs": [{"a": x["n"], "b": y["n"],
+                                                  "sa": changed_spans(x["text"], [y["text"]]),
+                                                  "sb": changed_spans(y["text"], [x["text"]])}
+                                                 for x, y in zip(vs, vs[1:])]}
+    return out
 
 
 def held_back(review: Path, who: str) -> set[str]:
@@ -182,10 +238,15 @@ def handler(path: Path, who: str, data: Path, version_of: dict[str, str], only: 
                 with LOCK:
                     _, rows = load(path)
                 held = held_back(path.parent, who)
-                shown = [r for r in rows if r["lineage_id"] not in held and (only is None or r["id"] in only)]
+                shown = [{**r, "tl": timeline(r)} for r in rows
+                         if r["lineage_id"] not in held and (only is None or r["id"] in only)]
+                ids, lineages = {r["id"] for r in shown}, {r["lineage_id"] for r in shown}
                 state = {"who": who, "guideline": GUIDELINE, "rows": shown,
                          "held": sum(1 for r in rows if r["lineage_id"] in held and (only is None or r["id"] in only)),
-                         "spans": spans_for(shown), "labels": list(LABELS),
+                         # from the whole sheet: with --ids, a row's other version may sit outside the shown rows
+                         "spans": {k: v for k, v in spans_for(rows).items() if k in ids},
+                         "compare": {k: v for k, v in compare(rows).items() if k in lineages},
+                         "labels": list(LABELS),
                          "families": [{"name": n, "codes": [{"code": c, "help": dict(REASON_HELP)[c], "key": KEYS[KEY_ORDER.index(c)]}
                                                       for c in cs]} for n, cs in FAMILIES],
                          "decision": DECISION}
@@ -217,8 +278,7 @@ def main() -> None:
     args = ap.parse_args()
     path = args.data / f"review/kiem_{args.who}.tsv"
     port = args.port or (8765 if args.who == "A" else 8766)
-    version_of = {r["id"]: r["version_id"] for r in map(json.loads,
-                  (args.data / "derived/vilextime/release.jsonl").open(encoding="utf-8"))}
+    version_of = {r["id"]: version_id(r) for r in load(path)[1]}   # from the sheet: no gitignored release.jsonl
     only = set(args.ids.read_text(encoding="utf-8").split()) if args.ids else None
     server = ThreadingHTTPServer(("127.0.0.1", port), handler(path, args.who, args.data, version_of, only))
     url = f"http://127.0.0.1:{port}"

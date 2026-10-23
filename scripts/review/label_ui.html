@@ -51,6 +51,24 @@ th,td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right}
 th:first-child,td:first-child{text-align:left}
 tr.row{cursor:pointer}tr.row:hover{background:var(--chip)}
 #stats{max-width:900px;margin:16px auto;padding:0 16px}
+.tl{margin-top:14px;overflow-x:auto;padding:24px 0 6px}
+.tlbar{position:relative;display:flex;gap:3px;min-width:calc(var(--n) * 120px)}
+.seg{flex:1 1 0;min-width:0;background:var(--chip);border:1px solid transparent;border-radius:6px;padding:4px 8px;font-size:13px;line-height:1.35}
+.seg b,.seg span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg span{color:var(--mute)}
+.seg.mine{background:var(--acc);color:var(--card)}.seg.mine span{color:inherit;opacity:.85}
+.seg.gone{background:repeating-linear-gradient(135deg,var(--chip) 0 6px,transparent 6px 12px);border-color:var(--line)}
+.seg.gone.mine{border:2px solid var(--bad);color:var(--ink)}
+.pin{position:absolute;top:-24px;height:24px;border-left:2px solid var(--ink);pointer-events:none}
+.pin em{position:absolute;top:0;left:4px;font:600 12px/1.5 system-ui,sans-serif;background:var(--ink);color:var(--card);padding:0 6px;border-radius:4px;white-space:nowrap}
+.pin.r em{left:auto;right:4px}
+.tlnote{font-size:13px;color:var(--mute)}.tlnote .err{display:inline;font-size:13px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+@media(max-width:700px){.cmp{grid-template-columns:1fr}}
+.cmp>div{border:1px solid var(--line);border-radius:8px;padding:8px 12px;min-width:0}
+.cmp>div.own{border:2px solid var(--acc)}
+.cmp .old b{color:var(--bad);background:rgba(179,38,30,.14)}
+.cmp .new b{color:var(--acc);background:rgba(47,107,58,.16)}
 </style></head>
 <body>
 <header>
@@ -103,6 +121,34 @@ const cur = () => view[pos];
 function actors(r) { return [...(r.trich_van_ban_tac_dong || "").matchAll(/^\[\w+\] (.+?) · ký/gm)].map(m => m[1]); }
 function changeDates(r) { return [...(r.cac_phien_ban || "").matchAll(/^\[\d+\] (\d{4}-\d\d-\d\d) →/gm)].map(m => m[1]).slice(1); }
 
+// The timeline bar: one equal slot per version, one for the repeal. Boundary rows sit a day from the change,
+// so slots in proportion to time would put the pin on the line between two of them.
+const short = by => (by || "").replace(/ \(hiệu lực [^)]*\)$/, "");
+function timelineHtml(r) {
+  const t = r.tl; if (!t || !t.versions.length) return "";
+  const segs = t.versions.map(v => ({...v, label: `[${v.n}] ${short(v.by)}`}));
+  if (t.repeal) segs.push({from: t.repeal.on, to: null, gone: true, mine: !t.versions.some(v => v.mine), label: `bãi bỏ · ${t.repeal.by}`});
+  const at = segs.findIndex(s => (!s.from || s.from <= r.as_of) && (!s.to || r.as_of < s.to)), own = segs.findIndex(s => s.mine);
+  let pin = "";
+  if (at >= 0) {
+    const s = segs[at], a = Date.parse(s.from || r.as_of), b = Date.parse(s.to || new Date().toISOString().slice(0, 10)), x = Date.parse(r.as_of);
+    const left = 100 * (at + (b > a ? Math.min(.92, Math.max(.08, (x - a) / (b - a))) : .5)) / segs.length;
+    pin = `<span class="pin${left > 70 ? " r" : ""}" style="left:${left.toFixed(1)}%"><em>mốc hỏi ${r.as_of}</em></span>`;
+  }
+  const warn = own >= 0 && at !== own ? ` · <span class="err">mốc hỏi rơi vào ${at >= 0 ? esc(segs[at].label) : "ngoài mọi phiên bản"}, còn đáp án là ${esc(segs[own].label)}: kiểm lại</span>` : "";
+  return `<div class="tl"><div class="tlbar" style="--n:${segs.length}">${segs.map(s => `<div class="seg${s.mine ? " mine" : ""}${s.gone ? " gone" : ""}" title="${esc(s.label)}"><b>${esc(s.label)}</b><span>${s.from || "?"} → ${s.to || "nay"}</span></div>`).join("")}${pin}</div></div>
+    <div class="tlnote">ô nổi bật = đáp án của dòng này${warn}</div>`;
+}
+
+// Each change in the lineage as old | new, the words that differ marked on both sides; the row's own version framed.
+function compareHtml(r) {
+  const c = S.compare[r.lineage_id]; if (!c) return "";
+  const v = Object.fromEntries(c.versions.map(x => [x.n, x])), own = (r.tl.versions.find(x => x.mine) || {}).n;
+  const side = (x, sp, cls) => `<div class="${cls}${x.n === own ? " own" : ""}"><h4 style="text-transform:none">[${x.n}] ${x.from || "?"} → ${x.to || "nay"}${x.n === own ? " · dòng này" : ""}</h4>${x.lead_in ? `<div class="mute">${esc(x.lead_in)}</div>` : ""}<div class="ans">${hl(x.text, sp)}</div></div>`;
+  return `<div class="card"><h4>So sánh phiên bản <span class="mute" style="text-transform:none">(đỏ = bản cũ có mà bản mới bỏ hoặc đổi · xanh = bản mới thêm hoặc đổi)</span></h4>
+    ${c.pairs.map(p => `<details ${[p.a, p.b].includes(own) ? "open" : ""}><summary>[${p.a}] → [${p.b}]${short(v[p.b].by) ? " · " + esc(short(v[p.b].by)) : ""}</summary><div class="cmp">${side(v[p.a], p.sa, "old")}${side(v[p.b], p.sb, "new")}</div></details>`).join("")}</div>`;
+}
+
 function show() {
   const r = cur(); t0 = Date.now();
   if (!r) { $("left").innerHTML = '<div class="card"><h4>Xong</h4>Không còn dòng nào trong bộ lọc này.</div>'; $("right").innerHTML = ""; return; }
@@ -114,7 +160,9 @@ function show() {
     <div class="tags"><span>${r.group}${r.subgroup && r.subgroup !== r.group ? " · " + r.subgroup : ""}</span><span>lô ${r.lo}</span><span>mốc hỏi ${r.as_of}</span><span>${esc(r.citation)} · ${esc(r.law_id)}</span><span>hiệu lực ${r.valid_from || "?"} → ${r.valid_to || "nay"}</span>${r.verdict && !done(r) ? "<span>nhãn D4 cũ (v" + (r.guideline_version || "1.2") + "): xác nhận lại theo " + S.guideline + "</span>" : ""}</div>
     <h4>Câu hỏi <span class="mute" style="text-transform:none">(sửa thẳng ở đây nếu cần; sửa một lần cho cả lineage)</span></h4>
     <textarea class="q edit" id="e_question" rows="3">${esc(r.question)}</textarea>
+    ${timelineHtml(r)}
   </div>
+  ${compareHtml(r)}
   <div class="card">
     <h4>Đáp án chuẩn <span style="text-transform:none">(chữ đỏ = chỗ đổi giữa các phiên bản)</span></h4>
     <div class="mute">${esc(r.lead_in)}</div>
@@ -124,7 +172,7 @@ function show() {
     ${machine ? `<div class="hint"><h4>Máy gợi ý, có thể sai</h4>${esc(machine)}</div>` : ""}
   </div>
   <div class="card">
-    ${d("Các phiên bản", r.cac_phien_ban, true)}
+    ${d("Các phiên bản (dạng chữ)", r.cac_phien_ban, false)}
     ${d("Trích văn bản gốc", r.trich_van_ban_goc, false)}
     ${d("Trích văn bản tác động", r.trich_van_ban_tac_dong, r.group === "T6")}
     <details><summary>Nguồn</summary><a href="${esc(r.source_url)}" target="_blank" rel="noreferrer">${esc(r.source_url)}</a></details>
