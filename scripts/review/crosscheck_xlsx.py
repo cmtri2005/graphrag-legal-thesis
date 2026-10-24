@@ -92,8 +92,8 @@ REASON_HELP = [   # docs/vilextime-annotation.md §2, hướng dẫn 3.0
     ("relocation_unclear", "(T6) Không chắc có chuyển chỗ hay không. Ghi chỗ nghi vào note."),
     ("superseded_by_other_norm", "Văn bản cấp cao hơn, hoặc văn bản cùng cơ quan ban hành sau, quy định khác về cùng vấn đề mà không sửa điều khoản này. Ghi văn bản vào note."),
     ("restructuring_2025", "Ngày hỏi sau sắp xếp bộ máy (bộ: 01/03/2025; cấp huyện, tỉnh: 01/07/2025) mà đáp án vẫn nêu cơ quan, cấp, địa danh cũ chưa được sửa lời văn."),
-    ("reference_only", "Đáp án chỉ là dẫn chiếu (\"thực hiện theo Thông tư X\"), không có nội dung pháp lý."),
-    ("rename_only", "Lần đổi mà câu hỏi dựa vào chỉ là đổi tên cơ quan do sắp xếp bộ máy (Bộ GTVT → Bộ Xây dựng): hai mốc cùng một đáp án pháp lý."),
+    ("reference_only", "Đáp án chỉ là dẫn chiếu (\"thực hiện theo Thông tư X\"), không có nội dung pháp lý, kể cả khi khớp lời văn."),
+    ("rename_only", "Lần đổi mà câu hỏi dựa vào chỉ là đổi tên cơ quan do sắp xếp bộ máy (Bộ GTVT → Bộ Xây dựng): hai mốc cùng một đáp án pháp lý. Đổi danh sách đơn vị không 1-1 (\"thị trấn\" → \"đặc khu\") KHÔNG phải rename_only."),
     ("cosmetic_only", "Lần đổi chỉ là hình thức: hoa thường, dấu câu, khoảng trắng, đánh số."),
     ("auto_reference_update", "Lần đổi chỉ cập nhật văn bản được dẫn chiếu, trong khi chính văn bản đã quy định tự áp văn bản thay thế."),
     ("other", "Lỗi khác. Bắt buộc mô tả ở cột note."),
@@ -103,9 +103,11 @@ REASON_HELP = [   # docs/vilextime-annotation.md §2, hướng dẫn 3.0
 # codes a failed check is written with (guideline 3.0 §2). The verdict is khong_dat as soon as one fails.
 DECISION = [
     ("1", "Đáp án đúng là phiên bản có hiệu lực pháp lý tại as_of? Đối chiếu trich_van_ban_goc, trich_van_ban_tac_dong, "
-          "cac_phien_ban: cả lời văn, cả câu dẫn lead_in.", "gold_wrong · transitional_rule"),
+          "cac_phien_ban: cả lời văn, cả câu dẫn lead_in. Văn bản tác động có hiệu lực tách phần (data/review/hieu_luc_tach.tsv): "
+          "đọc điều hiệu lực của nó. Chữ hỏng dấu do trích xuất cũng là gold_wrong.", "gold_wrong · transitional_rule"),
     ("2", "(T2, T4, T3) Câu hỏi chạm đúng chỗ đổi? Chữ đỏ trong answer và cac_phien_ban là chỗ đổi. Hai mốc phải ra hai "
-          "đáp án khác nhau (T3: ít nhất ba). Ghi ngày chuyển câu hỏi chạm vào cham_lan_sua.",
+          "đáp án khác nhau (T3: ít nhất ba). Ghi ngày chuyển câu hỏi chạm vào cham_lan_sua. "
+          "Đổi danh sách đơn vị không 1-1 (\"thị trấn\" → \"đặc khu\") là thay đổi thật, không phải rename_only.",
      "group_mismatch · rename_only · cosmetic_only · auto_reference_update"),
     ("3", "Câu hỏi chỉ khớp MỘT điều khoản, trả lời được bằng đáp án này và chỉ một cách?",
      "question_ambiguous · unanswerable_as_asked"),
@@ -114,8 +116,9 @@ DECISION = [
     ("6", "Không có văn bản khác đè lên cùng vấn đề; không vướng sắp xếp bộ máy 2025?",
      "superseded_by_other_norm · restructuring_2025"),
     ("7", "(T6) Đã tìm nội dung còn ở đâu (goi_y_cho_moi là chỗ bắt đầu, không phải kết luận) và xét bảy yếu tố? "
-          "Ghi kết quả vào noi_dung_con_o_dau.", "relocated · relocation_unclear"),
-    ("8", "Đáp án ngắn (short_answer) đúng và đủ? Sai thì ghi đáp án ngắn đúng vào note.", "other"),
+          "Chỉ xét phần câu hỏi hỏi. Ghi kết quả vào noi_dung_con_o_dau.", "relocated · relocation_unclear"),
+    ("8", "Đáp án ngắn (short_answer) đúng và đủ? Sai hoặc thiếu ý thì ghi vào note ý thiếu và đoạn đúng trích nguyên "
+          "từ answer; không viết lời mới.", "other"),
 ]
 
 GROUP_HELP = [   # docs/vilextime-annotation.md §3
@@ -216,7 +219,7 @@ def kiem_guide(who: str, n: int, add, L: list) -> list[tuple[str, int, bool]]:
     add("3. Kiểm 8 điều theo trang \"Cách quyết\". Điền verdict (dropdown); khong_dat thì điền reasons", 10)
     add("   (trang \"Mã lý do\"), nhiều mã cách bằng dấu phẩy.", 10)
     add("4. Điền đủ ô bắt buộc (dưới đây). Thiếu thì file không nạp được.", 10)
-    add("5. Đáp án ngắn sai hoặc thiếu: khong_dat, mã other, ghi đáp án ngắn đúng vào note.", 10)
+    add("5. Đáp án ngắn sai hoặc thiếu ý: khong_dat, mã other; ghi ở note đoạn đúng trích nguyên từ answer.", 10)
     add()
     add("Ô bắt buộc", 12, True)
     add("da_xem_van_ban_tac_dong   Số hiệu các văn bản tác động bạn đã xem, hoặc \"không có\". Mọi dòng.", 10)

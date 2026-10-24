@@ -662,7 +662,7 @@ Cần chốt ở tuần 1. Ý kiến đề xuất chưa phải quyết định.
   dòng T1, và `id` có chứa ngày nên nhãn cũ mồ côi. Nối theo (lineage, phiên bản,
   câu hỏi) thì nối lại được 104 nhãn người và 143 nhãn model; chưa làm. (3) Bộ D4
   còn 158/300 dòng nằm trong bản phát hành (T2 50, T3 50, T5 38, T6 20).
-  **§8.1 của `reports/Phương án T2 và T5 ViLexTime.md`:** 153/225 lineage T2 đủ
+  **§8.1 của `reports/Phương án T2 và T5 ViLexTime.md` (đã xóa 24/10/2026, bản cuối ở git `e023e55`):** 153/225 lineage T2 đủ
   điều kiện hỏi ở `effective_from − 30` (đã ký, chưa hiệu lực). Cả 153/153 có câu
   lệnh sửa đổi tương lai trong lớp A, nên bẫy có thật với baseline phẳng. Bộ lọc cấp
   văn bản của B7 loại 153/153, nên chế độ này tách được "có xét ngày hay không",

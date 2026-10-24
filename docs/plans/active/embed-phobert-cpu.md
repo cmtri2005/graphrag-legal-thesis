@@ -5,7 +5,7 @@ Date: 2026-10-14
 ## Status
 
 Active. Chờ nhóm duyệt amendment ADR 0004 §4 (bước 0). Phương án thay thế dùng GPU vẫn giữ ở
-`embed-gpu.md`.
+`embed-gpu.md` (đã xóa 24/10/2026, bản cuối ở git `e023e55`).
 
 ## Outcome
 
@@ -151,7 +151,7 @@ không có NaN, đúng index, và 100 mẫu embed lại có cosine ≥ 0,99.
   kết quả `verify_embed.py`.
 - Cập nhật C1 trong `MASTER_RESEARCH_GUIDE.md` §7.7 (và bảng §0.6, §13.3 nếu có ghi C1), cùng
   tiến độ W1-08.
-- Chuyển plan này sang `docs/plans/completed/`; ghi `embed-gpu.md` là không dùng.
+- Chuyển plan này sang `docs/plans/completed/` (`embed-gpu.md` đã xóa 24/10/2026).
 
 ## Risks And Recovery
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check an embedding run brought back from another machine (docs/plans/active/embed-gpu.md).
+"""Check an embedding run brought back from another machine (docs/plans/active/embed-phobert-cpu.md).
 
     1. it was built from this index: every unit of the layer has a row, and the sha of a
        sample of units recomputed here matches the stored one;

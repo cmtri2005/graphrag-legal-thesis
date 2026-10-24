@@ -29,7 +29,7 @@ Nằm trong master plan: P2.7–P2.12.
 - Vấn đề gốc: `docs/audit_dataset.md` §4–§7.
 - Quyết định: [0001](../../decisions/0001-neo4j-milvus-la-kho-dan-xuat.md),
   [0002](../../decisions/0002-pham-vi-neo-thoi-gian-va-du-lieu-dan-xuat.md).
-- Bản nháp đã review: `docs/phuong-an-dien-khuyet-va-backfill-du-lieu.md`. Số đo trong
+- Bản nháp đã review: `docs/phuong-an-dien-khuyet-va-backfill-du-lieu.md` (đã xóa 24/10/2026, bản cuối ở git `e023e55`). Số đo trong
   bản nháp (60/60 diagram, 4.187 node, 395 candidate) **chưa được tái lập**;
   chúng được đo lại ở T0 và T1.
 
@@ -161,7 +161,7 @@ T4 và T5 chạy song song được sau T3.
   truy xuất và benchmark** (`in_scope=false`, lý do `no_text_not_needed`) nếu
   không cần cho graph hoặc benchmark. File trên đĩa vẫn giữ nguyên.
 - 2026-09-14: Danh sách điền tay được **sinh bằng script** từ tiêu chí T2, thay
-  cho `docs/danh-sach-van-ban-can-phuc-hoi-text-thu-cong.md`. Tiêu chí mới thêm nhóm
+  cho `docs/danh-sach-van-ban-can-phuc-hoi-text-thu-cong.md` (đã xóa 24/10/2026, bản cuối ở git `e023e55`). Tiêu chí mới thêm nhóm
   cây `[]` + body rỗng (850 văn bản VBQPPL trung ương trên v1).
 
 ## Validation

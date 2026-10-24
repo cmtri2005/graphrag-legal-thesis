@@ -227,7 +227,7 @@ def before_effect(record: dict, versions: list[dict], document_end: date | None,
     answers with law that is not in force yet (future-law leakage); the gold stays
     the boundary row's version. At the boundary the same trap is one day wide and
     mixed with an off-by-one, and mid-interval it almost never exists (4/1,225 rows
-    on 11/10), so it gets a date of its own (reports/Phương án T2 và T5, option b).
+    on 11/10), so it gets a date of its own (reports/Phương án T2 và T5, option b; git e023e55).
     None when the act is not signed by then, the date leaves the gold window, or
     the chain disagrees.
     """

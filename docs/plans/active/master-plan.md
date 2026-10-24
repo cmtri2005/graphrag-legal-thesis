@@ -157,7 +157,7 @@ Kế hoạch chi tiết đến M3, bắt đầu sớm từ 21/09 vì 3 tuần kh
 
 | ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
 |---|---|---|---|---|
-| P4.1 | Hướng dẫn gán nhãn; thống nhất định nghĩa T1–T6 | NMT | 🟡 | `docs/vilextime-annotation.md` v1.2 (29/09); v2.0 cho T6 theo phán quyết chuyển chỗ 05/10 còn là nháp (`docs/vilextime-annotation-v2-draft.md`) |
+| P4.1 | Hướng dẫn gán nhãn; thống nhất định nghĩa T1–T6 | NMT | 🟡 | `docs/vilextime-annotation.md` 3.0 (20/10), theo định nghĩa chốt `docs/vilextime-dinh-nghia.md` |
 | P4.2 | So khớp phiên bản: cặp `snapshot(u,t₁) ≠ snapshot(u,t₂)` | NMT | ✅ | `scripts/pipeline/build_question_pool.py` → `data/derived/vilextime_pool.jsonl`: mỗi ngày hỏi có đáp án khác nhau; 11,1% cặp giống hệt nhau bị loại |
 | P4.3 | Trích khác biệt thành bộ ba (trước, sau, mốc chuyển) | NMT | ✅ | Mỗi dòng có `derivation.transitions` (ngày, phiên bản, `event_id`, văn bản tác động) và `changed_span`; `check_release.py` OK |
 | P4.4 | Sinh câu hỏi bằng LLM (chỉ để diễn đạt) | NMT | ✅ | `generate_questions.py` + bộ kiểm C2; gold dẫn xuất từ chuỗi phiên bản. Người viết: `claude-opus-5-5` khoảng 2/3, `deepseek-flash` khoảng 1/3 (datasheet §3) |

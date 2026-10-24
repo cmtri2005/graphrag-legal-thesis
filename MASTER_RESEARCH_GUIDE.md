@@ -534,7 +534,7 @@ ViLexTime và đánh giá ~56 commit, KG L0–L3 ~37, dữ liệu và crawl ~12,
 | 23 | Giám khảo LLM | 🔶 | `scripts/eval/judge_vilextime.py` [Repo] | Chưa hiệu chuẩn với người | P1 |
 | 24 | LLM sinh chính | ⬜ | Ràng buộc ADR 0004 §3: không thuộc họ Claude, không thuộc họ DeepSeek | Chưa chọn | P0 |
 | 25 | Thực nghiệm RQ1–RQ3 | ⬜ | Không có file dự đoán nào ngoài probe [Đã kiểm] | — | §8 |
-| 26 | Khảo sát tài liệu | 🟡 | `docs/graph_justification.md` §5, `reports/`, `research_notes/` | 3/9 tài liệu đề cương chưa xác minh được; nhiều trích dẫn ghi "viết theo trí nhớ" | §6 |
+| 26 | Khảo sát tài liệu | 🟡 | `docs/graph_justification.md` §5, `reports/` | 3/9 tài liệu đề cương chưa xác minh được; nhiều trích dẫn ghi "viết theo trí nhớ" | §6 |
 | 27 | Viết khóa luận | ⬜ | Nháp: `paper/problem_statement.md`, `docs/graph_justification.md`, datasheet | — | §11 |
 | 28 | Giao diện minh họa | ⬜ | — | Đề cương UIT có cam kết | P1, bản tối thiểu |
 
@@ -959,7 +959,7 @@ dòng T6 còn lại của D4. Tốn khoảng 2 giờ, giảm mạnh rủi ro l�
 #### 5.3.6 Lỗi thường gặp khi gán nhãn
 
 - Người gán thấy nhãn của model hoặc của người kia trước khi tự gán. Trong bộ D4 hiện tại, 19 dòng đã
-  có nhãn từ ngoài D4 [Repo: `docs/vilextime_next_steps.md` §3]; biên bản D5 phải nêu.
+  có nhãn từ ngoài D4 [Repo: `docs/reports/D5_bien_ban.md` §3].
 - Đổi hướng dẫn giữa chừng mà không ghi phiên bản trên từng nhãn.
 - Người viết câu hỏi tự kiểm câu hỏi của mình.
 - Hòa giải xong ghi đè nhãn thô. Nhãn thô trước hòa giải là thứ không lấy lại được.
@@ -1049,11 +1049,11 @@ không chạm test.
 
 ### 5.7 Số lượng hay chất lượng
 
-- **Không mở rộng lên 1.500 câu.** Báo cáo `reports/Phương án ViLexTime 1500 câu.md` đã ước tính cần
+- **Không mở rộng lên 1.500 câu.** Báo cáo `reports/Phương án ViLexTime 1500 câu.md` (đã xóa 24/10/2026, bản cuối ở git `e023e55`) đã ước tính cần
   250–465 giờ sinh viên trong khi nhóm có khoảng 175–325 giờ [Repo]. Giờ công người là ràng buộc
   chặt nhất, và nó cần cho kiểm định, gold độc lập, phân tích lỗi.
 - Với T2, 225 cặp cho mức hiệu ứng nhỏ nhất phát hiện được (MDE) khoảng 5,9–10,2 điểm phần trăm
-  [Repo: `reports/Phương án T2 và T5 ViLexTime.md` §1.3]. Đủ cho câu hỏi chính.
+  [Repo: `reports/Phương án T2 và T5 ViLexTime.md` §1.3 (đã xóa 24/10/2026, bản cuối ở git `e023e55`)]. Đủ cho câu hỏi chính.
 - T5 (19 lineage từ 3 văn bản tác động) không đủ để kiểm định; chỉ mô tả bằng số đếm. Đó là bản chất
   của hiện tượng hiếm, nói rõ trong giới hạn.
 - Báo cáo cùng thư mục đã có câu đúng: khoảng 1.200 câu có đồng thuận người–người tốt hơn 1.500 câu
@@ -1702,8 +1702,7 @@ con số nào**.
 - Snapshot: Hugging Face `tricaominh/temporal_vietnames_law`, GCS `gs://graphrag-legal-thesis`
   [Đã kiểm script]. Kiểm chế độ công khai/riêng tư trước khi công bố.
 - Nhãn người: mã A, B; bảng ánh xạ tên không phát hành.
-- Kiểm chế độ công khai của repo GitHub trước khi đẩy `data/review/` (đã ghi trong
-  `docs/vilextime_next_steps.md` §1).
+- Kiểm chế độ công khai của repo GitHub trước khi đẩy `data/review/`.
 
 ### 10.8 Lệnh tái lập
 
@@ -2027,8 +2026,7 @@ tích lỗi; threats to validity; công bố chỗ lệch đề cương.
 - Mỗi tối: cập nhật trạng thái vào master plan **kèm bằng chứng**; mỗi lần chạy thí nghiệm ghi một dòng
   vào `runs/README.md`.
 - Mỗi Chủ nhật: đối chiếu cổng ở §12.5.
-- Quyết định lâu dài: ADR hoặc amendment. Không tạo thêm tài liệu kế hoạch song song; file Excel
-  `docs/ke-hoach-do-an-10-2026.xlsx` đã lỗi thời.
+- Quyết định lâu dài: ADR hoặc amendment. Không tạo thêm tài liệu kế hoạch song song.
 
 ---
 
@@ -2075,7 +2073,7 @@ bằng lời của mình.
 | DL-15 | Accuracy dạng tương phản; TV-Recall@k định nghĩa lại | Accuracy chứa đoạn | Probe rào đón đạt 0,951 theo định nghĩa cũ (29/09) | Phụ thuộc đáp án ngắn | — | Datasheet §4 |
 | DL-16 | Generator cột chính và giám khảo không thuộc họ Claude, DeepSeek | Dùng model mạnh nhất sẵn có | Hai họ này viết câu hỏi và đáp án ngắn | Hạn chế lựa chọn model | — | ADR 0004 §3 |
 | DL-17 | Verifier `reject` + sinh lại một lần; A3 là `off` | `warn` | — | Gần như không có tác dụng dưới tier `propagated` | — | ADR 0004 §5 |
-| DL-18 | Câu hỏi nội dung trả về quy phạm đang điều chỉnh, kể cả khi đã chuyển chỗ | Coi mọi khoản bị bãi bỏ là "không có đáp án" | Phán quyết của cố vấn luật 05/10 | Cần người đọc văn bản đích | — | `docs/vilextime-annotation-v2-draft.md` |
+| DL-18 | Câu hỏi nội dung trả về quy phạm đang điều chỉnh, kể cả khi đã chuyển chỗ | Coi mọi khoản bị bãi bỏ là "không có đáp án" | Phán quyết của cố vấn luật 05/10 | Cần người đọc văn bản đích | — | `docs/vilextime-dinh-nghia.md` R2 |
 | DL-19 | *(Chốt 11/10, xem 13.3)* Thang sạch, hai cột gold, kế hoạch phân tích đăng ký trước | — | §7.4, §8.4 | Thêm việc nhỏ | — | K-01, K-07, K-08 |
 
 ### 13.3 Quyết định chốt ngày 11/10/2026 cùng nhóm
@@ -2189,7 +2187,7 @@ bằng lời của mình.
   hiệu chỉnh nhiều so sánh (Holm).
 - *Tài liệu:* Dror và cộng sự (ACL 2018); Card và cộng sự (EMNLP 2020) [Web]; Efron và Tibshirani,
   *An Introduction to the Bootstrap* (1993) (chưa mở trong phiên này);
-  `reports/Phương án T2 và T5 ViLexTime.md` §2.
+  `reports/Phương án T2 và T5 ViLexTime.md` §2 (đã xóa 24/10/2026, bản cuối ở git `e023e55`).
 - *Tự kiểm:* vì sao bootstrap theo lineage mà không theo dòng? MDE nghĩa là gì với 225 cặp T2?
 
 **L7. Rò rỉ dữ liệu và chia tập.**
@@ -2339,13 +2337,11 @@ và tự trả lời bộ câu hỏi §15.3.
 | `paper/problem_statement.md` | Phát biểu bài toán dạng bài báo | Nháp tốt, có bảng truy vết số liệu |
 | `docs/decisions/0001`–`0004` | Quyết định lâu dài | Hiện hành; 0004 còn ghi Proposed dù phần 4, 5 đã chốt |
 | `docs/vilextime-datasheet.md` | Bộ dữ liệu: thành phần, cách dựng, giới hạn, số liệu | Hiện hành (11/10) |
-| `docs/vilextime_next_steps.md` | Việc người còn phải làm cho ViLexTime | Hiện hành (11/10) |
-| `docs/vilextime-annotation.md`, `docs/vilextime-annotation-v2-draft.md` | Hướng dẫn gán nhãn | v1.2 đang dùng; v2.0 nháp |
+| `docs/vilextime-annotation.md` | Hướng dẫn gán nhãn | 3.0 đang dùng (20/10; viết gọn 24/10) |
 | `docs/reports/JUDGE_DATASET.md` | Phản biện độc lập ngày 29/09 | Lịch sử; nhiều mục đã xử lý |
 | `docs/plans/active/phase-*.md`, `l2-event-store.md` | Chi tiết từng giai đoạn | Tham khảo |
 | `docs/crawling-plan.md`, `docs/audit_dataset.md` | Thu thập, khuyết tật dữ liệu | Nguồn cho Chương 3 |
-| `reports/*.md`, `research_notes/**` | Khảo sát và phương án do AI soạn | Tham khảo; chỉ dùng số đã tự kiểm |
-| `docs/ke-hoach-do-an-10-2026.xlsx` | Kế hoạch nén 21/09–31/10 | Lỗi thời; không còn dùng |
+| `reports/*.md` | Khảo sát do AI soạn | Tham khảo; chỉ dùng số đã tự kiểm |
 
 ## Phụ lục C. Lệnh kiểm tra nhanh
 
