@@ -69,7 +69,7 @@ def test_the_bootstrap_interval_is_seeded_and_brackets_the_point_estimate():
     assert bootstrap_ci(["dat"], ["dat"], gwet_ac1) is None         # one item: no interval
 
 
-def test_perfect_agreement_passes_the_preregistered_gate_and_a_skewed_split_does_not():
+def test_perfect_agreement_passes_the_gate_and_a_skewed_split_does_not():
     perfect = ["dat"] * 40 + ["khong_dat"] * 10
     scored = pair_scores(perfect, list(perfect))
     assert scored["ac1"] >= AC1_TARGET and scored["p_neg"] >= PNEG_TARGET
@@ -363,6 +363,10 @@ def test_kiem_import_refuses_a_new_label_without_the_required_fields(tmp_path):
     with pytest.raises(SystemExit):
         ingest(tmp_path, "A", "kiem")
     assert read(tmp_path / "review/kiem_A.tsv")[1]["verdict"] == "dat"
+    path = tmp_path / "review/kiem_B.xlsx"                         # B only measures agreement: verdict is enough
+    fill(verdict="khong_dat", reasons="relocated", note="Điều 13 TT 57/2018")
+    ingest(tmp_path, "B", "kiem")
+    assert read(tmp_path / "review/kiem_B.tsv")[1]["verdict"] == "khong_dat"
 
 
 def test_drop_adds_each_d4_lineage_with_a_final_khong_dat_once(tmp_path):

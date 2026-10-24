@@ -159,7 +159,7 @@ Bản UIT đã nộp không sửa được, nên khóa luận phải công bố 
 | "1.150 câu hỏi" | 1.225 **dòng** (câu hỏi, mốc) ở chế độ ranh giới, trong khung 1.100–1.300; số câu hỏi khác nhau bằng số lineage (653, mục 8). Còn chờ khoa xác nhận "câu" là dòng | ADR 0003 Follow-Up 24/09; plan GĐ4 07/10 |
 | "LLM chỉ hỗ trợ diễn đạt câu hỏi" | model viết câu hỏi, đáp án ngắn, nhãn đầu, đề xuất loại (mục 3) | plan GĐ4, 24/09 và 28/09 |
 | T5 "có lợi cho đối tượng áp dụng", 50 câu | T5 theo Điều 152, bỏ vế "có lợi"; số câu là số ca luật sư xác nhận, phần thiếu chuyển sang T6 | quyết định Q3, 20/09 |
-| κ ≥ 0,6 trên "toàn bộ T3, T4, T5, T6" | 300 dòng: T2 50 + lát gần giống 50, T3 50, toàn bộ T5, T6 phần còn lại tới 150 chia theo tỷ lệ H3/trực tiếp. Thước đo chính đăng ký trước là AC1 ≥ 0,80 và p_neg ≥ 0,60; κ báo kèm | quyết định Q2 20/09, dựng lại 11/10 |
+| κ ≥ 0,6 trên "toàn bộ T3, T4, T5, T6" | 300 dòng: T2 50 + lát gần giống 50, T3 50, toàn bộ T5, T6 phần còn lại tới 150 chia theo tỷ lệ H3/trực tiếp. Thước đo chính là AC1 ≥ 0,80 và p_neg ≥ 0,60 (AC1 chọn sau pilot 07/10/2026, không đăng ký trước); κ báo kèm | quyết định Q2 20/09, dựng lại 11/10 |
 | Công thức 9 (TV-Recall@k) | định nghĩa lại theo `version_id`/`accepted_evidence` (mục 4) | plan GĐ4, V7 |
 | Accuracy dạng "â = a*" | Accuracy tương phản trên đáp án ngắn | quyết định 29/09 |
 | Kiểm định thủ công | κ giữa hai người; nhãn model có audit của người | hướng dẫn §5–§6 |

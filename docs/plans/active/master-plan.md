@@ -42,7 +42,7 @@ Active. Giai đoạn 2 hoàn thành; Giai đoạn 3 đang đi trước kế ho�
 |---|---|---|---|
 | M1 | 05/10 | **Snapshot v2** đóng băng sau backfill, tải về kiểm tra được ([plan](../completed/2026-09-17-backfill-corpus-v2.md)) | ✅ (17/09, trước hạn) |
 | M2 | 26/10 | Chuỗi phiên bản thật trong Neo4j; `snapshot(u,t)` đúng trên 100 truy vấn đối chiếu tay | ⬜ |
-| M3 | 16/11 | ViLexTime đủ 1.150 câu; Cohen κ ≥ 0,6 trên 300 câu | 🟡 1.225 dòng ranh giới / 653 câu hỏi (chờ khoa chốt "câu"); bộ kiểm chéo dựng lại 11/10, chưa gán xong; thước đo chính đăng ký trước là AC1 |
+| M3 | 16/11 | ViLexTime đủ 1.150 câu; Cohen κ ≥ 0,6 trên 300 câu | 🟡 1.225 dòng ranh giới / 653 câu hỏi (chờ khoa chốt "câu"); bộ kiểm chéo dựng lại 11/10, chưa gán xong; thước đo chính là AC1, chọn sau pilot 07/10 |
 | M4 | 30/11 | **Điểm quyết định B7**: chọn hướng đóng góp phương pháp hay tài nguyên–phân tích | ⬜ |
 | M5 | 21/12 | Hệ thống end-to-end trả lời (x, t) kèm trích dẫn đã qua Verifier | ⬜ |
 | M6 | 04/01 | Đủ kết quả A1–A7, phân rã theo T1–T6 | ⬜ |

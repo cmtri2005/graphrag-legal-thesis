@@ -95,6 +95,7 @@ CORE = 150   # T5 + T6 rows (Q2: T6 absorbs T5's shortfall)
 # agreement that matters: `khong_dat` is the verdict that removes a row.
 AC1_TARGET = 0.80
 PNEG_TARGET = 0.60
+AC1_CHOSEN = "AC1 chọn sau pilot 07/10/2026 (nghịch lý prevalence của κ), không đăng ký trước"   # MASTER_RESEARCH_GUIDE A3, DL-12
 KAPPA_PROPOSAL = 0.60          # the figure the submitted de cuong names, reported as-is
 BOOTSTRAP_DRAWS = 1000
 PILOT_ROWS, PILOT_GATE = 20, 17   # B8: >= 17/20 agree, else revise the guideline and try 10 more
@@ -606,7 +607,7 @@ def kappa(data: Path, name: str = "crosscheck") -> None:
         "per_lineage": pair_scores(lva, lvb),
         # A row labelled under two versions by A and B is "mixed": neither version's agreement.
         "per_guideline": {v: scores([i for i in both if version(i) == v]) for v in sorted({version(i) for i in both})},
-        "preregistered": {"primary": "ac1", "ac1_target": AC1_TARGET, "p_neg_target": PNEG_TARGET,
+        "gate": {"primary": "ac1", "chosen": AC1_CHOSEN, "ac1_target": AC1_TARGET, "p_neg_target": PNEG_TARGET,
                           "kappa_reported_target": KAPPA_PROPOSAL},
         "disagreements": [i for i in both if a[i]["verdict"] != b[i]["verdict"]],
         "calibration": {"n": len(calib), "disagreements": [i for i in calib if a[i]["verdict"] != b[i]["verdict"]]},
@@ -619,7 +620,7 @@ def kappa(data: Path, name: str = "crosscheck") -> None:
     ci = lambda x: f"[{x[0]:.3f}; {x[1]:.3f}]" if x else "—"
     line = lambda label, v: (f"{label}  n={v['n']:>3}  AC1={fmt(v['ac1'])} {ci(v['ac1_ci95'])}  "
                              f"p_neg={fmt(v['p_neg'])}  đồng ý={fmt(v['agreement'])}  κ={fmt(v['kappa'])}")
-    print(f"{len(both)}/{len(a)} dòng cả hai đã gán · chỉ số chính AC1 (đăng ký trước)")
+    print(f"{len(both)}/{len(a)} dòng cả hai đã gán · chỉ số chính AC1 (chọn sau pilot 07/10/2026)")
     print(line("  toàn tập:   ", result))
     for g, v in result["per_group"].items():
         print(line(f"  {g}:         "[:14], v))
@@ -629,7 +630,7 @@ def kappa(data: Path, name: str = "crosscheck") -> None:
     ok = result["ac1"] is not None and result["ac1"] >= AC1_TARGET and (
         result["p_neg"] is not None and result["p_neg"] >= PNEG_TARGET)
     need = result["agreement_needed_for_kappa_target"]
-    print(f"  ngưỡng đăng ký trước: AC1 >= {AC1_TARGET:.2f} và p_neg >= {PNEG_TARGET:.2f} -> "
+    print(f"  ngưỡng: AC1 >= {AC1_TARGET:.2f} và p_neg >= {PNEG_TARGET:.2f} -> "
           f"{'ĐẠT' if ok else 'CHƯA ĐẠT'}")
     print(f"  κ chỉ báo kèm: ở biên nhãn này κ >= {KAPPA_PROPOSAL:.2f} đòi p_o >= {fmt(need)}"
           f" (tối đa {round((1 - need) * result['n']) if need else '—'} dòng lệch / {result['n']})")

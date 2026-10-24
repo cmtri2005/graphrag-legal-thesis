@@ -38,7 +38,8 @@ Ba quy tắc nền:
 | `noi_dung_con_o_dau` | "không có", chỗ mới (văn bản, Điều, Khoản), hoặc "không chắc" | T6 |
 | `phut` | số phút đã dùng (số nguyên) | mọi dòng |
 
-Thiếu ô bắt buộc thì phiếu không nạp được.
+Bốn ô cuối là dẫn chứng để dòng vào tập test, nên chỉ bắt buộc với người kiểm tập test (A); thiếu thì phiếu
+không nạp được. B gán mẫu gán đôi để đo đồng thuận, chỉ cần `verdict`, `reasons`, `note` (24/10/2026).
 
 **Mã lý do** (danh sách đóng, không thêm mã trong đợt kiểm; cách dùng ở §3). `note` bắt buộc
 với mã in đậm.
@@ -72,8 +73,9 @@ bản gốc, văn bản tác động, `cac_phien_ban` (dòng đang kiểm là b�
 - Văn bản tác động có hiệu lực tách phần ("trừ quy định tại khoản 2, 3 Điều này", "các quy định
   về … có hiệu lực kể từ ngày ký"): đọc điều hiệu lực của nó. Lần sửa của dòng thuộc phần ngoại lệ
   → `gold_wrong`, ghi ngày đúng. Danh sách văn bản cần đọc: `data/review/hieu_luc_tach.tsv`.
-- Chữ hỏng dấu do trích xuất ("sản xuât", "giây phép") → `gold_wrong`, ghi chữ đúng theo Công báo.
-  Không sửa tay lời văn.
+- Chữ hỏng dấu hoặc ký tự ẩn do trích xuất ("sản xuât", "giây phép") → `gold_wrong`, ghi chữ đúng theo
+  Công báo. Không sửa tay lời văn. Danh sách chỗ nghi: `data/review/chu_hong_dau.tsv` (khoảng một nửa là
+  chữ đúng nhưng hiếm, như "dược điển").
 - T5a (hồi tố: mốc nằm giữa ngày hiệu lực và ngày ký của văn bản sửa): đáp án là **bản mới**. Việc
   văn bản có hồi tố hay không đã được luật sư chốt (`data/review/t5_documents.tsv`, 12/10/2026),
   người gán không xét lại.
@@ -205,6 +207,7 @@ Lệnh cho người điều phối:
 | Đo đồng thuận | `crosscheck.py kappa --set kiem` |
 | Hòa giải | `adjudicate.py export --set kiem`, rồi `adjudicate.py import --set kiem --by "luật sư <tên>"` |
 | Văn bản có hiệu lực tách phần | `effect_split_scan.py` → `data/review/hieu_luc_tach.tsv` |
+| Chữ hỏng dấu, ký tự ẩn | `diacritic_scan.py` → `data/review/chu_hong_dau.tsv` |
 
 ## 6. Nhãn do model gán
 

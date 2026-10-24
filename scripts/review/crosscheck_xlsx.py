@@ -187,7 +187,7 @@ def guide_lines(who: str, n: int, non_blind: list[str], name: str = "crosscheck"
     if pilot:
         add("Cổng pilot: hai người trùng ít nhất 17/20 dòng. Thấp hơn thì sửa hướng dẫn và thử thêm 10 dòng,", 10)
     else:
-        add("Ngưỡng đăng ký trước là AC1 ≥ 0,80 và p_neg ≥ 0,60. Thấp hơn thì viết lại hướng dẫn và kiểm lại,", 10)
+        add("Ngưỡng: AC1 ≥ 0,80 và p_neg ≥ 0,60 (AC1 chọn sau pilot 07/10/2026). Thấp hơn thì viết lại hướng dẫn và kiểm lại,", 10)
     add("nên nhãn trung thực quan trọng hơn nhãn đẹp.", 10)
     if non_blind:
         add()
@@ -422,8 +422,13 @@ def export(data: Path, name: str = "crosscheck") -> None:
               f"thứ tự {'như TSV' if who == 'A' or name == 'kiem' else 'xáo theo lineage'}")
 
 
-def missing_fields(group: str, cells: dict) -> list[str]:
-    """Guideline 3.0 §5: what a row just labelled in a `kiem` sheet still lacks."""
+def missing_fields(group: str, cells: dict, who: str = "A") -> list[str]:
+    """Guideline 3.0 §2: what a row just labelled in a `kiem` sheet still lacks.
+
+    Only A's rows enter the test set, so only A owes the evidence fields; B labels the
+    cross-check sample to measure agreement, which reads `verdict` alone (CMT 24/10/2026)."""
+    if who != "A":
+        return []
     has = lambda c: str(cells.get(c) or "").strip()
     out = [] if has("da_xem_van_ban_tac_dong") else ["thiếu da_xem_van_ban_tac_dong"]
     if group in ("T2", "T3") and not has("cham_lan_sua"):
@@ -481,7 +486,7 @@ def ingest(data: Path, who: str, name: str = "crosscheck") -> None:
             errors.append(f"{r['id']}: {'/'.join(sorted(needs_note & set(codes)))} bắt buộc có note")
         if name == "kiem" and verdict and any(str(src.get(c) or "").strip() != (r.get(c) or "").strip()
                                               for c in labels):
-            errors += [f"{r['id']}: {m}" for m in missing_fields(r["group"], src)]
+            errors += [f"{r['id']}: {m}" for m in missing_fields(r["group"], src, who)]
     if errors:
         print(f"{len(errors)} lỗi — KHÔNG ghi gì vào {tsv}:", file=sys.stderr)
         for e in errors[:40]:

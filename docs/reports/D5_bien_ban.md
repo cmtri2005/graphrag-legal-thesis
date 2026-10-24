@@ -14,7 +14,10 @@ Ngày lập: 19/10/2026. Nguồn số liệu: `data/review/crosscheck_result.jso
   theo 2.0; A giữ nhãn 1.2 trên các dòng cũ. Một ô `reasons` của B chứa lời giải thích: đã chuyển sang
   `note`, đặt mã `gold_wrong`.
 
-## 2. Độ đồng thuận (đăng ký trước: AC1 ≥ 0,80 và p_neg ≥ 0,60; κ báo kèm)
+## 2. Độ đồng thuận (ngưỡng AC1 ≥ 0,80 và p_neg ≥ 0,60; κ báo kèm)
+
+AC1 được chọn làm chỉ số chính sau lượt pilot ngày 07/10/2026, vì nghịch lý prevalence của κ; đây không
+phải chỉ số đăng ký trước (sửa câu chữ 24/10/2026, theo DATASET_GAP G6).
 
 | Phạm vi | n | Đồng ý | AC1 [KTC 95%] | p_neg | κ |
 |---|---:|---:|---|---:|---:|
@@ -28,7 +31,7 @@ Ngày lập: 19/10/2026. Nguồn số liệu: `data/review/crosscheck_result.jso
 | Cùng HD 2.0 | 134 | 0,761 | 0,684 [0,570; 0,795] | 0,158 | 0,122 |
 | Khác phiên bản | 65 | 0,508 | 0,053 [−0,190; 0,309] | 0,590 | 0,140 |
 
-**Kết luận: chưa đạt ngưỡng đăng ký trước.** Số này được báo nguyên trạng; hoà giải không sửa nhãn thô.
+**Kết luận: chưa đạt ngưỡng.** Số này được báo nguyên trạng; hoà giải không sửa nhãn thô.
 
 Nguyên nhân lệch, đo trên 75 dòng:
 - 26 dòng T6 cùng hướng dẫn 2.0: A `dat`, B `khong_dat` (25 `gold_wrong`). B ghi chỗ nội dung chuyển

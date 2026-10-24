@@ -135,7 +135,7 @@ def held_back(review: Path, who: str) -> set[str]:
     return {r["lineage_id"] for r in load(sample)[1] if who in r["annotators"]}
 
 
-def validate(row: dict, new: dict) -> list[str]:
+def validate(row: dict, new: dict, who: str = "A") -> list[str]:
     verdict, note = new["verdict"], new["note"]
     codes = [c.strip() for c in new["reasons"].split(",") if c.strip()]
     errors = [] if verdict in VERDICTS else ["chưa chọn dat / khong_dat"]
@@ -147,7 +147,7 @@ def validate(row: dict, new: dict) -> list[str]:
     needs = {"gold_wrong", "other", "relocated", "superseded_by_other_norm"} & set(codes)
     if needs and not note:
         errors.append(f"{'/'.join(sorted(needs))} bắt buộc có note")
-    return errors + missing_fields(row["group"], new)   # saving here is labelling now, under GUIDELINE
+    return errors + missing_fields(row["group"], new, who)   # saving here is labelling now, under GUIDELINE
 
 
 def rewrite_jsonl(path: Path, match, change) -> int:
@@ -184,7 +184,7 @@ def save(path: Path, rid: str, new: dict, edits: dict | None = None, data: Path 
         new = {c: str(new.get(c) or "").strip() for c in LABELS}
         edits = {k: str(v).strip() for k, v in (edits or {}).items() if v is not None}
         edits = {k: v for k, v in edits.items() if v != (row.get(k) or "").strip()}
-        errors = validate(row, new) + check_edits(row, edits)
+        errors = validate(row, new, who) + check_edits(row, edits)
         if errors:
             return [], errors
         changed = [row]

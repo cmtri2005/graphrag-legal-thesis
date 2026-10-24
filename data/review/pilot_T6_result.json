@@ -72,16 +72,17 @@
    "agreement_needed_for_kappa_target": 0.84
   }
  },
- "preregistered": {
-  "primary": "ac1",
-  "ac1_target": 0.8,
-  "p_neg_target": 0.6,
-  "kappa_reported_target": 0.6
- },
  "disagreements": [
   "vilextime:T6:provision:78b5ad60-2cae-11f1-be1a-29baacadb302:2018-03-31",
   "vilextime:T6:provision:3ebc8100-2d54-11f1-9f9c-173afda016a4:2023-12-18",
   "vilextime:T6:provision:651e1cc0-2118-11f1-8084-97fc16eb22b8:2026-04-15"
  ],
- "labelled_before_d4": {}
+ "labelled_before_d4": {},
+ "gate": {
+  "primary": "ac1",
+  "chosen": "AC1 chọn sau pilot 07/10/2026 (nghịch lý prevalence của κ), không đăng ký trước",
+  "ac1_target": 0.8,
+  "p_neg_target": 0.6,
+  "kappa_reported_target": 0.6
+ }
 }

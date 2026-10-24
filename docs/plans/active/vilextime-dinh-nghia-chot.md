@@ -175,6 +175,18 @@ Out of scope:
 - 2026-10-23: không host lên Vercel; mỗi người chạy `label_ui.py` trên máy mình, nhãn đồng bộ qua git (CMT chọn).
   Lý do: Vercel cần thêm database, đăng nhập, chia nhỏ dữ liệu (trang tải 7,6 MB, giới hạn 4,5 MB mỗi phản hồi) và
   đưa bộ test chưa công bố lên internet.
+- 2026-10-24: lô 0 hiệu chuẩn xong. 12/21 dòng lệch; luật sư tự chốt (không dùng AI, CMT xác nhận) cả 12 là
+  `khong_dat`; sáu kết luận ghi ở hướng dẫn §7 (`docs/hoa_giai_lo0_chot.xlsx`). B gán lô 1–9 trước buổi hiệu chuẩn,
+  trái hướng dẫn §5 mục 3; nhãn thô vẫn giữ.
+- 2026-10-24: bốn ô dẫn chứng (`da_xem_van_ban_tac_dong`, `cham_lan_sua`, `noi_dung_con_o_dau`, `phut`) chỉ bắt
+  buộc với A; B chỉ đo đồng thuận nên chỉ cần `verdict` (CMT). `missing_fields(..., who)`. Phiếu B nạp 381 nhãn;
+  một mã gõ sai `question_ambiguou` → `question_ambiguous` sửa khi nạp (Claude). Hệ quả: không có `phut` của B.
+- 2026-10-24: hướng dẫn 3.0 viết gọn lại theo tám bước, không đổi quy tắc; AC1 ghi "chọn sau pilot 07/10" thay
+  "đăng ký trước" ở hướng dẫn, D5, datasheet, `*_result.json` (khóa `gate`), lệnh `kappa` (G6).
+- 2026-10-24: quét `effect_split_scan.py` (21 văn bản, 29 lineage hiệu lực tách phần) và `diacritic_scan.py`
+  (91 chỗ, 14 lineage); phiếu luật sư `data/review/gui_luat_su_2410.xlsx` gồm 21 lineage sắp xếp 2025 (G8)
+  và 29 lineage hiệu lực tách phần. Kết luận theo từng lineage không đưa cho A/B trước khi họ gán các dòng đó.
+- 2026-10-24: dọn 30 file lỗi thời (bản cuối ở git `e023e55`); đề cương KLTN không bao giờ xóa (CMT).
 
 ## Validation
 
