@@ -217,6 +217,11 @@ dùng để xếp thứ tự dòng cần người xem trước. Nhãn model cũ 
 phân tích phụ, có ghi `labeler`. Dòng chỉ có nhãn model là dòng chưa kiểm (`not_verified`) và không
 vào tập test.
 
+**Ngoại lệ từ 26/10/2026 (CMT):** nhãn của agent `vn-law-verifier` (có tra văn bản gốc, trích dẫn
+nguồn) được tính là kiểm định cho dòng test khi đã qua kiểm chứng ở mục 6 của định nghĩa: gán mù
+trên dòng có nhãn người, đạt AC1 ≥ 0,80 và p_neg ≥ 0,60, và luật sư kiểm mẫu 50 dòng. Nhãn agent ở
+`data/review/kiem_agent.tsv`, không trộn vào phiếu A hay B.
+
 ## 7. Hỏi đáp (sổ quyết định)
 
 Mỗi mục ghi: ngày, người chốt, câu hỏi chung (không nêu dòng gán đôi cụ thể), kết luận và chỗ đã đưa
@@ -234,5 +239,15 @@ tăng phiên bản hướng dẫn.
   4. Đáp án ngắn thiếu ý là `other`; không viết lời mới. Lỗi ở câu hỏi thì dùng mã của câu hỏi (bước 8).
   5. Văn bản tác động có hiệu lực tách phần có thể làm mốc sai; thuộc phần ngoại lệ là `gold_wrong` (bước 1).
   6. Chữ hỏng dấu do trích xuất là `gold_wrong`; không sửa tay (bước 1).
+- **26/10/2026, luật sư, lô 1–18** (`data/review/hoa_giai_kiem.xlsx`). 89 dòng lệch. Luật sư đọc phiếu
+  kiểm trước của Claude (`data/review/hoa_giai_kiem_claude.tsv`) và đồng ý, nên lần hòa giải này **có AI
+  hỗ trợ**, khác §5 mục 8; biên bản D5 phải ghi rõ. Hai kết luận:
+  1. T6, dòng mốc trước ngày bãi bỏ, đáp án đúng tại mốc: `dat`, kể cả khi nội dung sau đó chuyển sang
+     văn bản khác. `group_mismatch` ở T6 chỉ dùng cho câu hỏi có/không; chuyển chỗ xét ở dòng mốc sau (bước 7).
+  2. Luật và văn bản dưới luật cùng quy định vấn đề được hỏi tại `as_of`: đáp án theo Luật; văn bản
+     dưới luật khác Luật → `superseded_by_other_norm` (bước 7d).
+  3. Câu hiệu lực "áp dụng từ năm ngân sách X" là hiệu lực trở về trước, tính từ 01/01/X (Luật
+     17/2008/QH12 Điều 79, khoản 1 Điều 83; năm ngân sách theo Luật 01/2002/QH11 Điều 14). Mốc trong năm X
+     trước ngày hiệu lực lấy đáp án bản mới, như T5a (bước 1).
 - **D4, biên bản D5 §2.** Ba bài học: luôn làm bước 7 ở T6; dùng một phiên bản hướng dẫn cho mọi
   nhãn (§5 mục 5); so câu hỏi với chỗ đổi (bước 2).

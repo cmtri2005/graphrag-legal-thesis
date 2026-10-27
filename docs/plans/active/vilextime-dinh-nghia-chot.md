@@ -186,6 +186,25 @@ Out of scope:
 - 2026-10-24: quét `effect_split_scan.py` (21 văn bản, 29 lineage hiệu lực tách phần) và `diacritic_scan.py`
   (91 chỗ, 14 lineage); phiếu luật sư `data/review/gui_luat_su_2410.xlsx` gồm 21 lineage sắp xếp 2025 (G8)
   và 29 lineage hiệu lực tách phần. Kết luận theo từng lineage không đưa cho A/B trước khi họ gán các dòng đó.
+- 2026-10-25: gán trên một link cố định thay cho mỗi người tự chạy (CMT, đổi quyết định 23/10): Artifact riêng tư trên
+  claude.ai https://claude.ai/artifact/Q6ckAyZ3ULLPpXV64MdbrB, chỉ người được chia sẻ mở được. `label_ui.py --web`
+  dựng trang (phiếu A cả phiếu, B dòng gán chéo; dòng gold vẫn ẩn), nhãn lưu ở database của trang (`kiem_A`,
+  `kiem_B`); kéo về bằng ArtifactData `query` theo `lo` với `out_dir` rồi `label_ui.py --who X --pull <dir>`, đi qua
+  đúng `save()`. Phiếu kiểm chưa công bố vì vậy nằm trên claude.ai (CMT chấp nhận). Khi gold của A điền xong, hoặc khi
+  nhãn ở TSV đổi ngoài trang, phải dựng và đăng lại trang. Chế độ chạy máy cục bộ giữ nguyên, thêm mật khẩu tùy chọn
+  (`LABEL_UI_PASSWORD`).
+- 2026-10-26: kéo 950 nhãn A (lô 1–18, gán 25/10 trên trang) về `kiem_A.tsv`. CMT xác nhận A tự gán, Claude chỉ
+  viết nháp ghi chú (288 note có "[Claude nháp]"). Ghi lại cho biên bản D5: cả 950 nhãn lưu trong 4 giờ 45 phút,
+  trung vị khoảng 5 giây giữa hai lần lưu (491 lần dưới 5 giây), `phut` = 1 ở 946 dòng, 92,5% `dat`. 12 dòng đổi từ
+  `dat` sang `khong_dat` so với nhãn cũ trong phiếu. 149 dòng thuộc lineage gold vẫn ẩn vì `gold_A` còn 0/75.
+- 2026-10-26: đo `kiem` sau khi kéo nhãn: 246 dòng chung, AC1 0,377 (T1 0,88; T2 0,27; T3 0,38; T6 0,22), chưa đạt;
+  89 dòng lệch ngoài lô 0 xuất ra `hoa_giai_kiem.xlsx` (cùng 12 dòng lô 0). CMT yêu cầu agent `vn-law-verifier` kiểm
+  trước 89 dòng: kết quả ở `data/review/hoa_giai_kiem_claude.tsv` (nghiêng B 72, A 14, chưa rõ 2, cả hai sai mã 1;
+  21 dòng phân vân). Đây là phiếu tham khảo của model, không điền vào `chot_*`. §8 hướng dẫn nói hòa giải không dùng
+  AI; nếu đưa file này cho luật sư thì biên bản D5 và cột `adjudicator` phải ghi luật sư có Claude hỗ trợ.
+  Luật sư đọc phiếu và đồng ý, chốt thêm ba quy tắc (§7 hướng dẫn); nạp `hoa_giai_kiem.tsv` 101 dòng (12 lô 0 +
+  89; 83 `khong_dat`, 18 `dat`), `adjudicator` = "luật sư Nguyễn Văn A (bí danh), có phiếu Claude hỗ trợ" vì luật
+  sư không muốn nêu tên. AC1 đo trên nhãn thô nên không đổi (0,377, chưa đạt).
 - 2026-10-24: dọn 30 file lỗi thời (bản cuối ở git `e023e55`); đề cương KLTN không bao giờ xóa (CMT).
 
 ## Validation

@@ -140,6 +140,15 @@ Người kiểm đánh dấu đủ các ô sau, kèm dẫn chứng:
 
 Thêm điều kiện máy: R6, R7 đạt.
 
+**Sửa ngày 26/10/2026 (CMT), ai được kiểm.** Tám ô trên giữ nguyên. Dòng test chưa có người kiểm
+được giao cho agent `vn-law-verifier` kiểm, với ba điều kiện:
+1. Trước lượt gán hàng loạt, agent gán **mù** các dòng đã có nhãn người độc lập: A và B cùng nhãn
+   theo bản 3.0, và các dòng lô 0 luật sư tự chốt. Độ khớp phải đạt ngưỡng dùng cho người
+   (AC1 ≥ 0,80 và p_neg ≥ 0,60). Không đạt thì không gán hàng loạt.
+2. Luật sư kiểm một mẫu ngẫu nhiên 50 dòng do agent gán.
+3. Nhãn agent nằm ở file riêng, ghi `labeler`. Kết quả báo tách hai phần: dòng người kiểm và
+   dòng agent kiểm.
+
 ## 7. Mã loại dòng (danh sách đóng, 19 mã)
 
 | Mã | Khi nào |
@@ -235,3 +244,4 @@ Ví dụ bị loại, cũng đã đối chiếu:
 | T5 "hiệu lực trở về trước có lợi cho đối tượng áp dụng", 50 | T5a hồi tố (bỏ vế "có lợi") và T5b đã ký chưa hiệu lực | "Có lợi" là điều kiện cho phép hồi tố, không làm bài toán khó hơn |
 | T6 100 | T6a sàn 100, T6b sàn 200 | T6b là bậc lan truyền, phần đóng góp riêng của đề tài |
 | "LLM chỉ hỗ trợ diễn đạt câu hỏi" | Model viết nháp, người duyệt mọi câu trong test | Khớp lại tinh thần đề cương |
+| "LLM chỉ hỗ trợ diễn đạt câu hỏi" (sửa 26/10) | Phần lớn dòng test do agent kiểm, có kiểm chứng mù trên dòng người kiểm và luật sư kiểm mẫu (mục 6) | Người gán chỉ đủ cho khoảng 150 dòng trước hạn 31/10; AC1 giữa hai người 0,38 |
