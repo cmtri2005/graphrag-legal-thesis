@@ -542,3 +542,47 @@ def test_label_ui_compare_pairs_consecutive_answers_and_marks_both_sides():
     old, new = (v["text"] for v in got["p"]["versions"])
     assert (pair["a"], pair["b"]) == (1, 2)
     assert [old[s:e] for s, e in pair["sa"]] == ["7"] and [new[s:e] for s, e in pair["sb"]] == ["9"]
+
+
+def test_label_ui_password_gate():
+    import base64
+
+    import label_ui
+    basic = lambda pw: "Basic " + base64.b64encode(f"A:{pw}".encode()).decode()  # noqa: E731
+    assert label_ui.authorized(None, None)
+    assert label_ui.authorized(basic("s3cret"), "s3cret")
+    assert not label_ui.authorized(basic("wrong"), "s3cret")
+    assert not label_ui.authorized(None, "s3cret")
+    assert not label_ui.authorized("Basic !!!", "s3cret")
+
+
+def test_label_ui_pull_applies_page_documents_and_keeps_the_latest_edit(tmp_path):
+    import csv
+    import json
+
+    import label_ui
+    from crosscheck import KIEM_COLUMNS, read
+
+    (tmp_path / "vilextime").mkdir()
+    (tmp_path / "vilextime/questions.jsonl").write_text(json.dumps(
+        {"lineage_id": "provision:p", "question": "Hỏi cũ?"}, ensure_ascii=False) + "\n", encoding="utf-8")
+    path = tmp_path / "kiem_B.tsv"
+    with path.open("w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, KIEM_COLUMNS, delimiter="\t", lineterminator="\n", restval="")
+        w.writeheader()
+        for rid in ("r1", "r2", "r3"):
+            w.writerow({"lo": "1", "id": rid, "group": "T1", "lineage_id": "provision:p", "question": "Hỏi cũ?",
+                        "answer": "Phạt 7 triệu đồng."})
+    dump = tmp_path / "dump"
+    dump.mkdir()
+    ok, q1, q2 = {"verdict": "dat"}, {"text": "Hỏi 1?", "at": "T10:00"}, {"text": "Hỏi 2?", "at": "T10:05"}
+    for d in ({"id": "r2", "label": ok, "edits": {"question": q2}, "at": "T10:05"},
+              {"id": "r1", "label": ok, "edits": {"question": q1}, "at": "T10:10"},   # re-saved, carries its old edit
+              {"id": "r3", "label": {"verdict": "khong_dat"}, "edits": {}, "at": "T10:20"}):
+        (dump / f"{d['id']}.json").write_text(json.dumps({"data": d}), encoding="utf-8")
+    saved, errors = label_ui.pull(path, dump, tmp_path, "B")
+    got = {r["id"]: r for r in read(path)}
+    assert saved == 2 and len(errors) == 1 and errors[0].startswith("r3:")
+    assert got["r1"]["verdict"] == got["r2"]["verdict"] == "dat" and got["r3"]["verdict"] == ""
+    assert {r["question"] for r in got.values()} == {"Hỏi 2?"}
+    assert label_ui.doc_id("a#k1#%C4%91:2024") == "a~k1~+C4+91:2024"

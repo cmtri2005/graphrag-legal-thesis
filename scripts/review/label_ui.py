@@ -8,6 +8,20 @@ Luật kiểm nhãn giống `crosscheck_xlsx.py import` (từ vựng, note bắt
     python scripts/review/label_ui.py --who A          # mở http://127.0.0.1:8765
     python scripts/review/label_ui.py --who B --ids data/review/kiem_cheo.txt   # B: chỉ các dòng gán chéo
 
+Gán qua link chung (25/10, CMT): đặt mật khẩu rồi mở cổng ra ngoài bằng ngrok; người gán chỉ cần trình duyệt,
+nhãn vẫn lưu vào TSV trên máy chạy server (nhớ commit). Không có mật khẩu thì không được mở ra ngoài.
+
+    LABEL_UI_PASSWORD=... python scripts/review/label_ui.py --who A --no-browser
+    ngrok http 8765
+
+Link cố định trên claude.ai (25/10, CMT): `--web` dựng một trang tự chứa phiếu A (cả phiếu) và B (dòng gán chéo),
+nhãn lưu vào database của Artifact (collection `kiem_A`, `kiem_B`, mỗi dòng một document theo id). Kéo về bằng
+ArtifactData `list` với `out_dir`, rồi `--pull`: mỗi document đi qua đúng `save()` ở dưới, nên luật kiểm và chỗ
+ghi (TSV, questions.jsonl, short_answers.jsonl) giống hệt khi gán ở máy.
+
+    python scripts/review/label_ui.py --web /tmp/kiem.html
+    python scripts/review/label_ui.py --who A --pull <out_dir>/kiem_A
+
 Sửa câu chữ (CMT 21/10): câu hỏi (cả lineage) và đáp án ngắn (cả phiên bản) sửa được ngay trên trang. Lưu thì
 ghi vào data/vilextime/questions.jsonl, short_answers.jsonl (giữ bản model ở `model_question`,
 `model_short_answer`, ghi `edited_by`, `edited_at`) và vào phiếu TSV, để lần dựng lại sau mang chúng vào bản
@@ -27,6 +41,8 @@ Enter = lưu và sang dòng chưa gán kế tiếp · ←/→ = lùi/tới (khô
 from __future__ import annotations
 
 import argparse
+import base64
+import hmac
 import collections
 import csv
 import json
@@ -46,6 +62,10 @@ from crosscheck_xlsx import DECISION, REASON_HELP, changed_spans, missing_fields
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "pipeline"))
 from enrich_vilextime import check_short_answer  # noqa: E402
 
+NEEDS_NOTE = {"gold_wrong", "other", "relocated", "superseded_by_other_norm"}
+B_SAMPLE = Path("review/kiem_cheo.txt")   # B labels only the cross-check sample (decided 21/10)
+DOC_ID = re.compile(r"^[A-Za-z0-9_\-.~:@+]{1,200}$")   # an Artifact db document id
+doc_id = lambda rid: rid.replace("#", "~").replace("%", "+")   # as the page names its documents
 LABELS = ("verdict", "reasons", "note", "suggestion", *KIEM_FIELDS)
 KEYS = "1234567890qwert"
 LOCK = threading.Lock()
@@ -144,7 +164,7 @@ def validate(row: dict, new: dict, who: str = "A") -> list[str]:
         errors.append("khong_dat nhưng chưa chọn mã lý do")
     if verdict == "dat" and codes:
         errors.append("dat nhưng vẫn còn mã lý do")
-    needs = {"gold_wrong", "other", "relocated", "superseded_by_other_norm"} & set(codes)
+    needs = NEEDS_NOTE & set(codes)
     if needs and not note:
         errors.append(f"{'/'.join(sorted(needs))} bắt buộc có note")
     return errors + missing_fields(row["group"], new, who)   # saving here is labelling now, under GUIDELINE
@@ -224,8 +244,89 @@ def save(path: Path, rid: str, new: dict, edits: dict | None = None, data: Path 
         return list({r["id"]: r for r in changed}.values()), []
 
 
-def handler(path: Path, who: str, data: Path, version_of: dict[str, str], only: set[str] | None = None):
+def state(path: Path, who: str, only: set[str] | None = None) -> dict:
+    """Everything the page shows for one sheet."""
+    with LOCK:
+        _, rows = load(path)
+    held = held_back(path.parent, who)
+    shown = [{**r, "tl": timeline(r)} for r in rows
+             if r["lineage_id"] not in held and (only is None or r["id"] in only)]
+    ids, lineages = {r["id"] for r in shown}, {r["lineage_id"] for r in shown}
+    return {"who": who, "guideline": GUIDELINE, "rows": shown,
+            "held": sum(1 for r in rows if r["lineage_id"] in held and (only is None or r["id"] in only)),
+            # from the whole sheet: with --ids, a row's other version may sit outside the shown rows
+            "spans": {k: v for k, v in spans_for(rows).items() if k in ids},
+            "compare": {k: v for k, v in compare(rows).items() if k in lineages},
+            "labels": list(LABELS),
+            "families": [{"name": n, "codes": [{"code": c, "help": dict(REASON_HELP)[c], "key": KEYS[KEY_ORDER.index(c)]}
+                                         for c in cs]} for n, cs in FAMILIES],
+            "decision": DECISION,
+            "needs_note": sorted(NEEDS_NOTE)}
+
+
+def web_page(data: Path) -> str:
+    """The page with both sheets inside, for the Artifact: no doctype, html, head or body (the publish adds them)."""
+    states = {"A": state(data / "review/kiem_A.tsv", "A"),
+              "B": state(data / "review/kiem_B.tsv", "B", set((data / B_SAMPLE).read_text(encoding="utf-8").split()))}
+    bad = [r["id"] for st in states.values() for r in st["rows"] if not DOC_ID.match(doc_id(r["id"]))]
+    if bad:
+        raise SystemExit(f"{len(bad)} row ids are not db document ids, e.g. {bad[0]}")
+    head = PAGE[PAGE.index("<title>"):PAGE.index("</style>") + len("</style>")]
+    body = PAGE[PAGE.index("<body>") + len("<body>"):PAGE.index("</body>")]
+    blob = json.dumps(states, ensure_ascii=False).replace("</", "<\\/")
+    return f'{head}\n<script type="application/json" id="states">{blob}</script>\n{body}'
+
+
+def pull(path: Path, dump: Path, data: Path, who: str) -> tuple[int, list[str]]:
+    """Apply the page's db documents (one JSON file per row, as ArtifactData `out_dir` writes them) through `save`.
+    An edit travels with the label that carried it; for each lineage (question) and version (short answer) only the
+    latest edit is applied, so an older one re-sent with a later label cannot undo it."""
+    docs = [json.loads(f.read_text(encoding="utf-8")) for f in dump.glob("*.json")]
+    docs = sorted((d.get("data", d) for d in docs), key=lambda d: d.get("at", ""))   # tolerate a wrapper
+    version_of = {r["id"]: version_id(r) for r in load(path)[1]}
+    lineage = {r["id"]: r["lineage_id"] for r in load(path)[1]}
+    latest: dict[tuple, tuple[str, str]] = {}   # (kind, key) -> (at, doc id)
+    for d in docs:
+        for kind, e in (d.get("edits") or {}).items():
+            key = (kind, lineage.get(d["id"]) if kind == "question" else version_of.get(d["id"]))
+            if key not in latest or e["at"] >= latest[key][0]:
+                latest[key] = (e["at"], d["id"])
+    saved, errors = 0, []
+    for d in docs:
+        edits = {kind: e["text"] for kind, e in (d.get("edits") or {}).items()
+                 if latest.get((kind, lineage.get(d["id"]) if kind == "question" else version_of.get(d["id"])),
+                               ("", ""))[1] == d["id"]}
+        rows, errs = save(path, d["id"], d["label"], edits, data, version_of, who)
+        saved += bool(rows)
+        errors += [f"{d['id']}: {e}" for e in errs]
+    return saved, errors
+
+
+def authorized(header: str | None, password: str | None) -> bool:
+    """HTTP Basic, any user name: the link may leave this machine, the unpublished test set must not."""
+    if not password:
+        return True
+    if not header or not header.startswith("Basic "):
+        return False
+    try:
+        given = base64.b64decode(header[6:]).decode().partition(":")[2]
+    except ValueError:
+        return False
+    return hmac.compare_digest(given.encode(), password.encode())
+
+
+def handler(path: Path, who: str, data: Path, version_of: dict[str, str], only: set[str] | None = None,
+            password: str | None = None):
     class H(BaseHTTPRequestHandler):
+        def denied(self) -> bool:
+            if authorized(self.headers.get("Authorization"), password):
+                return False
+            self.send_response(401)
+            self.send_header("WWW-Authenticate", f'Basic realm="ViLexTime {who}", charset="UTF-8"')
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return True
+
         def send(self, body: bytes, ctype: str, code: int = 200):
             self.send_response(code)
             self.send_header("Content-Type", ctype)
@@ -234,27 +335,17 @@ def handler(path: Path, who: str, data: Path, version_of: dict[str, str], only: 
             self.wfile.write(body)
 
         def do_GET(self):
+            if self.denied():
+                return
             if self.path == "/api/state":
-                with LOCK:
-                    _, rows = load(path)
-                held = held_back(path.parent, who)
-                shown = [{**r, "tl": timeline(r)} for r in rows
-                         if r["lineage_id"] not in held and (only is None or r["id"] in only)]
-                ids, lineages = {r["id"] for r in shown}, {r["lineage_id"] for r in shown}
-                state = {"who": who, "guideline": GUIDELINE, "rows": shown,
-                         "held": sum(1 for r in rows if r["lineage_id"] in held and (only is None or r["id"] in only)),
-                         # from the whole sheet: with --ids, a row's other version may sit outside the shown rows
-                         "spans": {k: v for k, v in spans_for(rows).items() if k in ids},
-                         "compare": {k: v for k, v in compare(rows).items() if k in lineages},
-                         "labels": list(LABELS),
-                         "families": [{"name": n, "codes": [{"code": c, "help": dict(REASON_HELP)[c], "key": KEYS[KEY_ORDER.index(c)]}
-                                                      for c in cs]} for n, cs in FAMILIES],
-                         "decision": DECISION}
-                self.send(json.dumps(state, ensure_ascii=False).encode(), "application/json; charset=utf-8")
+                self.send(json.dumps(state(path, who, only), ensure_ascii=False).encode(),
+                          "application/json; charset=utf-8")
             else:
                 self.send(PAGE.encode(), "text/html; charset=utf-8")
 
         def do_POST(self):
+            if self.denied():
+                return
             body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
             rows, errors = save(path, body["id"], body["label"], body.get("edits"), data, version_of, who)
             self.send(json.dumps({"rows": rows, "errors": errors}, ensure_ascii=False).encode(),
@@ -271,19 +362,36 @@ PAGE = (Path(__file__).with_suffix(".html")).read_text(encoding="utf-8")
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--who", choices=("A", "B"), required=True)
+    ap.add_argument("--who", choices=("A", "B"))
+    ap.add_argument("--web", type=Path, metavar="OUT", help="write the claude.ai page with both sheets and stop")
+    ap.add_argument("--pull", type=Path, metavar="DIR", help="apply the page's saved labels (one JSON per row) to --who's sheet")
     ap.add_argument("--data", type=Path, default=Path("data"))
     ap.add_argument("--port", type=int)
     ap.add_argument("--ids", type=Path, help="show only the row ids in this file, one per line (B's cross-check sample)")
+    ap.add_argument("--no-browser", action="store_true", help="do not open a local browser (server for a shared link)")
     args = ap.parse_args()
+    password = os.environ.get("LABEL_UI_PASSWORD")
+    if args.web:
+        args.web.write_text(web_page(args.data), encoding="utf-8")
+        print(f"{args.web}: {args.web.stat().st_size / 1e6:.1f} MB")
+        return
+    if not args.who:
+        ap.error("--who is required")
+    if args.pull:
+        saved, errors = pull(args.data / f"review/kiem_{args.who}.tsv", args.pull, args.data, args.who)
+        print(f"{saved} dòng đã ghi vào kiem_{args.who}.tsv; {len(errors)} lỗi")
+        print("\n".join(errors))
+        sys.exit(1 if errors else 0)
     path = args.data / f"review/kiem_{args.who}.tsv"
     port = args.port or (8765 if args.who == "A" else 8766)
     version_of = {r["id"]: version_id(r) for r in load(path)[1]}   # from the sheet: no gitignored release.jsonl
     only = set(args.ids.read_text(encoding="utf-8").split()) if args.ids else None
-    server = ThreadingHTTPServer(("127.0.0.1", port), handler(path, args.who, args.data, version_of, only))
+    server = ThreadingHTTPServer(("127.0.0.1", port), handler(path, args.who, args.data, version_of, only, password))
     url = f"http://127.0.0.1:{port}"
-    print(f"{path}: mở {url} (Ctrl+C để dừng; nhãn lưu vào TSV sau mỗi dòng)")
-    webbrowser.open(url)
+    print(f"{path}: mở {url} (Ctrl+C để dừng; nhãn lưu vào TSV sau mỗi dòng)"
+          + ("; có mật khẩu" if password else "; KHÔNG có mật khẩu, đừng mở ra ngoài"))
+    if not args.no_browser:
+        webbrowser.open(url)
     server.serve_forever()
 
 

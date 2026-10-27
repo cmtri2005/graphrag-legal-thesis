@@ -3,10 +3,11 @@
 <title>Gán nhãn ViLexTime</title>
 <style>
 :root{--bg:#f6f5f1;--card:#fff;--ink:#1d1d1b;--mute:#6b6a64;--line:#dedcd3;--acc:#2f6b3a;--bad:#b3261e;--hl:#c00000;--chip:#eceae2;--warn:#d9a400}
-@media(prefers-color-scheme:dark){:root{--bg:#161715;--card:#202220;--ink:#ecebe5;--mute:#a09f97;--line:#363834;--acc:#6fbf80;--bad:#f2766e;--hl:#ff8a80;--chip:#2c2e2b}}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161715;--card:#202220;--ink:#ecebe5;--mute:#a09f97;--line:#363834;--acc:#6fbf80;--bad:#f2766e;--hl:#ff8a80;--chip:#2c2e2b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#161715;--card:#202220;--ink:#ecebe5;--mute:#a09f97;--line:#363834;--acc:#6fbf80;--bad:#f2766e;--hl:#ff8a80;--chip:#2c2e2b;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 system-ui,"Segoe UI",sans-serif}
-header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:8px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:15px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:8px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:15px}
 .bar{flex:1;min-width:120px;height:8px;background:var(--chip);border-radius:4px;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--acc)}
 select,button,input,textarea{font:inherit;color:inherit}
@@ -73,6 +74,8 @@ tr.row{cursor:pointer}tr.row:hover{background:var(--chip)}
 <body>
 <header>
   <b id="who"></b>
+  <label id="whoBox" hidden>Tôi là <select id="whoSel"><option value="A">A</option><option value="B">B</option></select></label>
+  <span id="sync" class="mute"></span>
   <button class="tab on" id="t_label" onclick="tab('label')">Gán nhãn</button>
   <button class="tab" id="t_stats" onclick="tab('stats')">Tổng quan</button>
   <span id="prog"></span><div class="bar"><i id="barfill" style="width:0"></i></div>
@@ -231,7 +234,8 @@ async function saveNext() {
   const r = cur(); if (!r) return;
   const secs = (spent[r.id] || 0) + (Date.now() - t0) / 1000; spent[r.id] = secs;
   const label = {...draft}; if (!label.phut) label.phut = String(Math.max(1, Math.round(secs / 60)));
-  const res = await (await fetch("/api/save", {method: "POST", body: JSON.stringify({id: r.id, label, edits: edited(r)})})).json();
+  const res = EMB ? await hostedSave(r, label, edited(r))
+    : await (await fetch("/api/save", {method: "POST", body: JSON.stringify({id: r.id, label, edits: edited(r)})})).json();
   if (res.errors.length) { $("msg").innerHTML = '<div class="err">' + res.errors.map(esc).join("<br>") + "</div>"; return; }
   const byId = Object.fromEntries(S.rows.map(x => [x.id, x]));
   for (const x of res.rows) if (byId[x.id]) Object.assign(byId[x.id], x);   // a question edit reaches its whole lineage
@@ -270,12 +274,102 @@ document.addEventListener("visibilitychange", () => {
 });
 function tick() { const r = cur(), s = r ? (spent[r.id] || 0) + (Date.now() - t0) / 1000 : 0; $("clock").textContent = r ? `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}` : ""; }
 
-fetch("/api/state").then(r => r.json()).then(s => {
+function start(s) {
   S = s; $("who").textContent = "Phiếu " + s.who + (s.held ? ` · ${s.held} dòng ẩn chờ gold` : "");
   const los = [...new Set(s.rows.map(r => r.lo))].sort((a, b) => a - b);
   $("lo").innerHTML = '<option value="*">tất cả</option>' + los.map(l => `<option>${l}</option>`).join("");
   const first = s.rows.find(r => !done(r)); $("lo").value = first ? first.lo : "*";
   $("lo").onchange = $("todo").onchange = () => refresh();
-  refresh(); setInterval(tick, 1000);
-});
+  refresh();
+}
+
+// On claude.ai (label_ui.py --web) both sheets ship inside the page and labels live in the page's database, one
+// document per row in `kiem_A` / `kiem_B`; label_ui.py --pull writes them back to the TSV through the same save().
+const EMB = document.getElementById("states");
+let DB = null, UID = null, READY = false, DOCS = {}, LATEST = {};
+const verOf = r => { const v = (r.tl.versions.find(x => x.mine) || {}).n; return v ? r.lineage_id + "#" + v : null; };
+const words = t => ((t || "").toLowerCase().match(/[\p{L}\p{N}_]+/gu) || []).join(" ");
+function shortOk(s, r) {   // enrich_vilextime.check_short_answer
+  const src = ` ${words(r.answer)} | ${words(r.lead_in)} `, sp = (s || "").split("…").map(words);
+  return sp.length > 0 && sp.every(x => x && src.includes(` ${x} `));
+}
+function check(r, l, e) {   // label_ui.validate + missing_fields + check_edits; --pull runs the Python ones again
+  const codes = list(l.reasons), err = [], has = c => (l[c] || "").trim();
+  if (!["dat", "khong_dat"].includes(l.verdict)) err.push("chưa chọn dat / khong_dat");
+  if (l.verdict === "khong_dat" && !codes.length) err.push("khong_dat nhưng chưa chọn mã lý do");
+  if (l.verdict === "dat" && codes.length) err.push("dat nhưng vẫn còn mã lý do");
+  const needs = codes.filter(c => S.needs_note.includes(c)).sort();
+  if (needs.length && !has("note")) err.push(needs.join("/") + " bắt buộc có note");
+  if (S.who === "A") {
+    if (!has("da_xem_van_ban_tac_dong")) err.push("thiếu da_xem_van_ban_tac_dong");
+    if (["T2", "T3"].includes(r.group) && !has("cham_lan_sua")) err.push("T2/T3 thiếu cham_lan_sua");
+    if (r.group === "T6" && !has("noi_dung_con_o_dau")) err.push("T6 thiếu noi_dung_con_o_dau");
+    if (!/^\d+$/.test(has("phut"))) err.push("phut phải là số phút (số nguyên)");
+  }
+  if ("question" in e && !e.question) err.push("câu hỏi không được để trống");
+  if ("short_answer" in e) {
+    if (!answerable(r)) err.push("dòng không có đáp án thì không có đáp án ngắn");
+    else if (!shortOk(e.short_answer, r)) err.push("đáp án ngắn phải là đoạn trích nguyên văn của đáp án hoặc câu dẫn (nhiều đoạn cách nhau …)");
+  }
+  return err;
+}
+function apply(d, s = S) {   // one saved document onto the rows it reaches; a later edit of the same text wins
+  const r = s.rows.find(x => x.id === d.id); if (!r) return [];
+  Object.assign(r, d.label, {guideline_version: d.guideline});
+  const out = [r], e = d.edits || {};
+  for (const [kind, key, same] of [["question", r.lineage_id, x => x.lineage_id === r.lineage_id],
+                                   ["short_answer", verOf(r), x => verOf(x) === verOf(r)]]) {
+    const k = kind + "|" + key;
+    if (!e[kind] || (LATEST[k] && LATEST[k] > e[kind].at)) continue;
+    LATEST[k] = e[kind].at;
+    for (const x of s.rows.filter(same)) { x[kind] = e[kind].text; out.push(x); }
+  }
+  return out;
+}
+async function hostedSave(r, raw, rawEdits) {
+  if (!READY) return {rows: [], errors: [DB ? "Đang tải nhãn đã lưu, đợi vài giây rồi lưu lại." :
+    "Chưa nối được chỗ lưu nhãn. Mở trang trên claude.ai khi đã đăng nhập, rồi tải lại trang."]};
+  const label = Object.fromEntries(S.labels.map(c => [c, String(raw[c] || "").trim()]));
+  const edits = Object.fromEntries(Object.entries(rawEdits).map(([k, v]) => [k, v.trim()]).filter(([k, v]) => v !== (r[k] || "").trim()));
+  const errors = check(r, label, edits); if (errors.length) return {rows: [], errors};
+  const at = new Date().toISOString(), kept = (DOCS[r.id] || {}).edits || {};
+  const doc = {id: r.id, lo: r.lo, label, guideline: S.guideline, at, by: UID || "",
+               edits: {...kept, ...Object.fromEntries(Object.entries(edits).map(([k, v]) => [k, {text: v, at}]))}};
+  try { await DB.collection("kiem_" + S.who).doc(r.id.replaceAll("#", "~").replaceAll("%", "+"))   /* label_ui.doc_id */.set(doc); }
+  catch (e) { return {rows: [], errors: [`Không lưu được (${e.code || e}). Bấm lưu lại; nếu vẫn lỗi, báo nhóm.`]}; }
+  DOCS[r.id] = doc; $("sync").textContent = "đã lưu " + at.slice(11, 16);
+  return {rows: apply(doc), errors: []};
+}
+async function openSheet(all, who) {
+  READY = false; DOCS = {}; LATEST = {};
+  start(all[who]);
+  const s = S;   // the sheet this load is for: a switch to the other sheet meanwhile must not receive its labels
+  if (!DB) return;
+  $("sync").textContent = "đang tải nhãn đã lưu…";
+  try {
+    const col = DB.collection("kiem_" + who), docs = [];
+    for (const lo of new Set(S.rows.map(r => r.lo))) (await col.where("lo", "==", lo).get()).docs.forEach(d => docs.push(d.data()));
+    if (S !== s) return;
+    docs.sort((a, b) => a.at < b.at ? -1 : 1).forEach(d => { DOCS[d.id] = d; apply(d, s); });
+    READY = true;
+    $("sync").textContent = `${docs.length} nhãn đã lưu trên web`;
+    refresh(cur() && cur().id);
+  } catch (e) { $("sync").textContent = `không tải được nhãn đã lưu (${e.code || e}); tải lại trang`; }
+}
+async function boot() {
+  setInterval(tick, 1000);
+  if (!EMB) return start(await (await fetch("/api/state")).json());
+  const all = JSON.parse(EMB.textContent);
+  let who = "A"; try { who = localStorage.getItem("vilextime-who") || "A"; } catch (e) {}
+  $("whoBox").hidden = false; $("whoSel").value = who;
+  $("whoSel").onchange = () => { try { localStorage.setItem("vilextime-who", $("whoSel").value); } catch (e) {} openSheet(all, $("whoSel").value); };
+  start(all[who]);
+  $("sync").textContent = "đang nối chỗ lưu…";
+  DB = window.claude ? await window.claude.use("db") : null;
+  const user = DB ? await window.claude.use("user") : null;
+  UID = user ? await user.id() : null;
+  if (!DB) { $("sync").textContent = "chưa nối được chỗ lưu: mở trên claude.ai khi đã đăng nhập"; return; }
+  openSheet(all, $("whoSel").value);
+}
+boot();
 </script></body></html>
