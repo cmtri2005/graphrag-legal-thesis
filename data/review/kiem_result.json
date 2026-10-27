@@ -1,30 +1,226 @@
 {
  "guideline_version": "3.0",
- "labelled_by_both": 0,
+ "labelled_by_both": 246,
  "total": 1120,
- "n": 0,
- "agreement": null,
- "ac1": null,
- "ac1_ci95": null,
- "p_pos": null,
- "p_neg": null,
- "kappa": null,
- "kappa_ci95": null,
- "agreement_needed_for_kappa_target": null,
- "per_group": {},
- "per_lineage": {
-  "n": 0,
-  "agreement": null,
-  "ac1": null,
-  "ac1_ci95": null,
-  "p_pos": null,
-  "p_neg": null,
-  "kappa": null,
-  "kappa_ci95": null,
-  "agreement_needed_for_kappa_target": null
+ "n": 246,
+ "agreement": 0.6382113821138211,
+ "ac1": 0.3772771875933273,
+ "ac1_ci95": [
+  0.25,
+  0.496
+ ],
+ "p_pos": 0.7420289855072464,
+ "p_neg": 0.3945578231292517,
+ "kappa": 0.23549130525874712,
+ "kappa_ci95": [
+  0.144,
+  0.32
+ ],
+ "agreement_needed_for_kappa_target": 0.8107079119571683,
+ "per_group": {
+  "T1": {
+   "n": 40,
+   "agreement": 0.9,
+   "ac1": 0.8780487804878048,
+   "ac1_ci95": [
+    0.719,
+    0.974
+   ],
+   "p_pos": 0.9444444444444444,
+   "p_neg": 0.5,
+   "kappa": 0.4444444444444447,
+   "kappa_ci95": [
+    -0.071,
+    0.875
+   ],
+   "agreement_needed_for_kappa_target": 0.9279999999999999
+  },
+  "T2": {
+   "n": 106,
+   "agreement": 0.5566037735849056,
+   "ac1": 0.26934076409767543,
+   "ac1_ci95": [
+    0.042,
+    0.476
+   ],
+   "p_pos": 0.6967741935483871,
+   "p_neg": 0.17543859649122806,
+   "kappa": 0.08250460405156533,
+   "kappa_ci95": [
+    -0.001,
+    0.186
+   ],
+   "agreement_needed_for_kappa_target": 0.8066927732289071
+  },
+  "T3": {
+   "n": 30,
+   "agreement": 0.6666666666666666,
+   "ac1": 0.37759336099585056,
+   "ac1_ci95": [
+    0.01,
+    0.706
+   ],
+   "p_pos": 0.7368421052631579,
+   "p_neg": 0.5454545454545454,
+   "kappa": 0.3589743589743589,
+   "kappa_ci95": [
+    0.129,
+    0.645
+   ],
+   "agreement_needed_for_kappa_target": 0.792
+  },
+  "T6": {
+   "n": 70,
+   "agreement": 0.6,
+   "ac1": 0.21599999999999997,
+   "ac1_ci95": [
+    -0.008,
+    0.457
+   ],
+   "p_pos": 0.65,
+   "p_neg": 0.5333333333333333,
+   "kappa": 0.28414901387874353,
+   "kappa_ci95": [
+    0.14,
+    0.449
+   ],
+   "agreement_needed_for_kappa_target": 0.7764897959183674
+  }
  },
- "per_guideline": {},
- "disagreements": [],
+ "per_lineage": {
+  "n": 138,
+  "agreement": 0.6594202898550725,
+  "ac1": 0.389639109772738,
+  "ac1_ci95": [
+   0.225,
+   0.537
+  ],
+  "p_pos": 0.745945945945946,
+  "p_neg": 0.4835164835164835,
+  "kappa": 0.29941672067401176,
+  "kappa_ci95": [
+   0.169,
+   0.435
+  ],
+  "agreement_needed_for_kappa_target": 0.8055450535601765
+ },
+ "per_guideline": {
+  "3.0": {
+   "n": 246,
+   "agreement": 0.6382113821138211,
+   "ac1": 0.3772771875933273,
+   "ac1_ci95": [
+    0.25,
+    0.496
+   ],
+   "p_pos": 0.7420289855072464,
+   "p_neg": 0.3945578231292517,
+   "kappa": 0.23549130525874712,
+   "kappa_ci95": [
+    0.144,
+    0.32
+   ],
+   "agreement_needed_for_kappa_target": 0.8107079119571683
+  }
+ },
+ "gate": {
+  "primary": "ac1",
+  "chosen": "AC1 chọn sau pilot 07/10/2026 (nghịch lý prevalence của κ), không đăng ký trước",
+  "ac1_target": 0.8,
+  "p_neg_target": 0.6,
+  "kappa_reported_target": 0.6
+ },
+ "disagreements": [
+  "vilextime:T6:provision:ae5db220-2d47-11f1-bf31-07a1b53c1cad:2022-10-06",
+  "vilextime:T2:provision:de1861d4-ec3f-11f0-b40a-2b89ca207647#k3:2013-08-31",
+  "vilextime:T2:provision:de1861d4-ec3f-11f0-b40a-2b89ca207647#k3:2013-09-01",
+  "vilextime:T6:provision:5644addc-e175-11f0-8eb4-5b18b27d2a83:2020-02-08",
+  "vilextime:T6:provision:5644addc-e175-11f0-8eb4-5b18b27d2a83:2020-02-09",
+  "vilextime:T2:provision:dea1606a-2d44-11f1-a4ba-79faf33b0cc5:2025-11-16",
+  "vilextime:T2:provision:dea1606a-2d44-11f1-a4ba-79faf33b0cc5:2025-11-17",
+  "vilextime:T3:provision:a3cc5070-1e27-11f1-a4cb-8511740d65b0:2021-09-30",
+  "vilextime:T2:provision:5d4ba0bc-df41-11f0-925a-bf6277faa5a2:2025-06-30",
+  "vilextime:T2:provision:5d4ba0bc-df41-11f0-925a-bf6277faa5a2:2025-07-01",
+  "vilextime:T2:provision:e6081fa0-eace-11f0-aa11-b58ad86b5107:2013-12-11",
+  "vilextime:T2:provision:e6081fa0-eace-11f0-aa11-b58ad86b5107:2013-12-12",
+  "vilextime:T2:provision:f0ea7630-31c2-11f1-8f5f-991d29966100:2026-05-28",
+  "vilextime:T2:provision:f0ea7630-31c2-11f1-8f5f-991d29966100:2026-05-29",
+  "vilextime:T6:provision:0019e6f0-1e3a-11f1-9995-c5d009a815ac:2026-02-16",
+  "vilextime:T1:provision:9269e841-b05e-401a-9264-b56afce4e642:2026-07-29",
+  "vilextime:T1:provision:2506a790-eb87-11f0-bc8c-7d7d6b7332ea#k2#c:2013-02-02",
+  "vilextime:T2:provision:1387f82e-eb7e-11f0-9909-4db0ca5268aa#k2#a:2025-02-06",
+  "vilextime:T2:provision:1387f82e-eb7e-11f0-9909-4db0ca5268aa#k2#a:2025-02-07",
+  "vilextime:T6:provision:40785820-1db9-11f1-a44c-2507ba422902:2026-06-30",
+  "vilextime:T2:provision:d9b34a10-2d52-11f1-8905-db5802a2aa55:2025-01-08",
+  "vilextime:T2:provision:d9b34a10-2d52-11f1-8905-db5802a2aa55:2025-01-09",
+  "vilextime:T3:provision:8cf09b36-eb73-11f0-bdcf-c99894bd1057#k1:2019-05-16",
+  "vilextime:T3:provision:8cf09b36-eb73-11f0-bdcf-c99894bd1057#k1:2025-01-04",
+  "vilextime:T3:provision:8cf09b36-eb73-11f0-bdcf-c99894bd1057#k1:2025-01-05",
+  "vilextime:T2:provision:f5c84a38-df38-11f0-9573-ffc15f872947:2024-12-11",
+  "vilextime:T2:provision:f5c84a38-df38-11f0-9573-ffc15f872947:2024-12-12",
+  "vilextime:T1:provision:c221763f-4fb4-434b-a804-a13aa0b96c55:2026-09-11",
+  "vilextime:T2:provision:1602de30-31be-11f1-8ada-5b5d1f57b5e3:2025-07-06",
+  "vilextime:T2:provision:1602de30-31be-11f1-8ada-5b5d1f57b5e3:2025-07-07",
+  "vilextime:T6:provision:55608380-2d53-11f1-98bd-91c70c43946f:2017-12-24",
+  "vilextime:T6:provision:55608380-2d53-11f1-98bd-91c70c43946f:2017-12-25",
+  "vilextime:T6:provision:d05a28a0-2c88-11f1-8fd2-9d6f5de9c3e6:2014-03-14",
+  "vilextime:T6:provision:508171dc-eb70-11f0-bbe4-43589f3ecb9b:2018-08-20",
+  "vilextime:T2:provision:b6442dca-eb7f-11f0-895d-618d16ddb87f:2022-01-09",
+  "vilextime:T2:provision:b6442dca-eb7f-11f0-895d-618d16ddb87f:2022-01-10",
+  "vilextime:T2:provision:27e75a50-294d-11f1-8192-f3a2ce5e7cb7:2019-12-31",
+  "vilextime:T2:provision:27e75a50-294d-11f1-8192-f3a2ce5e7cb7:2020-01-01",
+  "vilextime:T6:provision:a0082e30-34bd-11f1-ad8f-574f43395f87:2026-07-01",
+  "vilextime:T2:provision:8632bf0a-df47-11f0-a32e-d3482c4dd70e:2017-06-14",
+  "vilextime:T2:provision:8632bf0a-df47-11f0-a32e-d3482c4dd70e:2017-06-15",
+  "vilextime:T6:provision:ce5774c2-eb7e-11f0-9ba0-893032b2a15f:2025-07-01",
+  "vilextime:T6:provision:8542d920-eabb-11f0-8b3f-497244e0d6fa:2025-04-12",
+  "vilextime:T6:provision:8542d920-eabb-11f0-8b3f-497244e0d6fa:2025-04-13",
+  "vilextime:T6:provision:78b5ad60-2cae-11f1-be1a-29baacadb302:2018-03-31",
+  "vilextime:T2:provision:5400af84-df55-11f0-8692-89ff21eeafeb#k2#a:2009-12-09",
+  "vilextime:T2:provision:5400af84-df55-11f0-8692-89ff21eeafeb#k2#a:2009-12-10",
+  "vilextime:T6:provision:6e3d8840-eb76-11f0-bda4-4d130fab9c75#k2#c:2026-02-28",
+  "vilextime:T6:provision:9be90710-ead1-11f0-b8e8-47d0fbad7be7:2026-06-30",
+  "vilextime:T6:provision:de131310-eaa9-11f0-969c-61a526536f6c:2018-02-01",
+  "vilextime:T2:provision:10e8ac3c-df56-11f0-8111-bfe2d804ad0d:2019-06-30",
+  "vilextime:T2:provision:10e8ac3c-df56-11f0-8111-bfe2d804ad0d:2019-07-01",
+  "vilextime:T2:provision:a16f5706-2d53-11f1-9064-65cd9a5b2b00:2019-02-28",
+  "vilextime:T2:provision:a16f5706-2d53-11f1-9064-65cd9a5b2b00:2019-03-01",
+  "vilextime:T6:provision:a09c1e3a-3367-11f1-85cc-bfeb30da6ebd:2022-12-31",
+  "vilextime:T2:provision:78cd42e6-e17b-11f0-9505-3dc5f4c5d216:2020-02-05",
+  "vilextime:T2:provision:0645fb00-26bd-11f1-8b67-1f4c109fdf87:2022-01-09",
+  "vilextime:T2:provision:0645fb00-26bd-11f1-8b67-1f4c109fdf87:2022-01-10",
+  "vilextime:T2:provision:9a221410-2ebc-11f1-a9d6-2f32c76b8f5a:2025-11-02",
+  "vilextime:T2:provision:9a221410-2ebc-11f1-a9d6-2f32c76b8f5a:2025-11-03",
+  "vilextime:T6:provision:3d5bf290-2c83-11f1-a165-1fc03851a678:2026-03-01",
+  "vilextime:T1:provision:b512f282-e17b-11f0-afa7-b95381c9c145:2013-05-12",
+  "vilextime:T2:provision:c8c168e0-2c8f-11f1-b21a-ed28182da4bf:2004-05-19",
+  "vilextime:T2:provision:c8c168e0-2c8f-11f1-b21a-ed28182da4bf:2004-05-20",
+  "vilextime:T2:provision:1e8e0620-2c86-11f1-a5d2-c588daf1aa5e:2021-12-31",
+  "vilextime:T2:provision:1e8e0620-2c86-11f1-a5d2-c588daf1aa5e:2022-01-01",
+  "vilextime:T6:provision:169d2b60-2c79-11f1-9602-5bd7aa4eb8c5:2026-05-28",
+  "vilextime:T6:provision:169d2b60-2c79-11f1-9602-5bd7aa4eb8c5:2026-05-29",
+  "vilextime:T6:provision:ec459f70-2d52-11f1-a76d-ed4f9925ec2e:2017-04-30",
+  "vilextime:T2:provision:09093950-39fb-11f1-a9b3-55588ffc64c3:2024-11-19",
+  "vilextime:T2:provision:09093950-39fb-11f1-a9b3-55588ffc64c3:2024-11-20",
+  "vilextime:T2:provision:b07bd03a-df47-11f0-b955-11812632ee73:2020-01-01",
+  "vilextime:T6:provision:26e20aac-eba3-11f0-9146-c7b07c7c724d:2024-12-30",
+  "vilextime:T6:provision:26e20aac-eba3-11f0-9146-c7b07c7c724d:2024-12-31",
+  "vilextime:T6:provision:089bc820-268c-11f1-a9c5-a9a1eead86b6:2025-12-31",
+  "vilextime:T6:provision:134d1a4e-eb86-11f0-81ec-f7c43ab2f608:2020-03-05",
+  "vilextime:T2:provision:f63a817e-df4d-11f0-ac0c-eb2a14e1404d:2019-12-15",
+  "vilextime:T2:provision:62963236-eb70-11f0-9c91-5deba455f41a:2023-08-09",
+  "vilextime:T2:provision:62963236-eb70-11f0-9c91-5deba455f41a:2023-08-10",
+  "vilextime:T3:provision:a3e3a25a-ec3d-11f0-ab79-a33691076a8e:2022-04-30",
+  "vilextime:T3:provision:a3e3a25a-ec3d-11f0-ab79-a33691076a8e:2025-06-30",
+  "vilextime:T3:provision:a3e3a25a-ec3d-11f0-ab79-a33691076a8e:2025-07-01",
+  "vilextime:T3:provision:de1449b0-2c85-11f1-ab0c-978972b56b54:2021-12-31",
+  "vilextime:T3:provision:de1449b0-2c85-11f1-ab0c-978972b56b54:2024-06-30",
+  "vilextime:T3:provision:de1449b0-2c85-11f1-ab0c-978972b56b54:2024-07-01",
+  "vilextime:T2:provision:46a6bece-e157-11f0-bfad-2fe04ab37f53#k5#a:2020-12-31",
+  "vilextime:T2:provision:46a6bece-e157-11f0-bfad-2fe04ab37f53#k5#a:2021-01-01",
+  "vilextime:T6:provision:92d5d7b0-2d44-11f1-85b9-29152f4fe568:2026-01-17",
+  "vilextime:T6:provision:aa625280-25fd-11f1-b18f-6b9bf1c3faad:2025-07-01"
+ ],
  "calibration": {
   "n": 21,
   "disagreements": [
@@ -2621,12 +2817,5 @@
   "vilextime:T6:provision:fe9e707a-eb76-11f0-9089-810b3620234d#k2#c:2022-01-01": [
    "claude-opus-5-5"
   ]
- },
- "gate": {
-  "primary": "ac1",
-  "chosen": "AC1 chọn sau pilot 07/10/2026 (nghịch lý prevalence của κ), không đăng ký trước",
-  "ac1_target": 0.8,
-  "p_neg_target": 0.6,
-  "kappa_reported_target": 0.6
  }
 }
