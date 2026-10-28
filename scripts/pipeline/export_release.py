@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """ViLexTime — the published files (docs/vilextime-schema-phat-hanh.md), from the release and the labels.
 
-Reads data/derived/vilextime/release.jsonl and the 100% check (data/review/kiem_{A,B}.tsv, and
-hoa_giai_kiem.tsv once the lawyer has settled the rows A and B disagree on), and writes to
+Reads data/derived/vilextime/release.jsonl and the 100% check (data/review/kiem_{A,B}.tsv,
+optional kiem_agent.tsv, and hoa_giai_kiem.tsv once the lawyer has settled disagreements), and writes to
 data/vilextime_dataset/ (its own folder, apart from the build inputs in data/vilextime/):
 
     vilextime.jsonl          13 columns, the rows a person checked and passed: what a user needs
@@ -12,9 +12,9 @@ data/vilextime_dataset/ (its own folder, apart from the build inputs in data/vil
                              a BOM so Excel reads the diacritics; `accepted_evidence` joined by ";"
     manifest.json            schema version, row counts, rows dropped per reason code, agreement, sha256
 
-A row's final label: the lawyer's when settled; else the label of whoever labelled it under the current
-guideline, one person being enough (CMT 21/10: the double labelling comes later); two who disagree wait
-for the lawyer. A label made under an older guideline (carried from D4) counts only once confirmed under
+A row's final label: lawyer, matching A/B under 3.0, then agent (with `dat` winning an A/agent
+disagreement). Without an agent label, one current human label suffices; disagreeing A/B wait for
+the lawyer. A label made under an older guideline (carried from D4) counts only once confirmed under
 the current one. A lineage passes when every boundary row of it passes, fails
 when one fails (as `adjudicate.py drop` does for D4: a T2 pair without one of its rows is no pair).
 Its twins (`giua_khoang`, `truoc_hieu_luc`: same question, same gold version) go with it. A failed
@@ -46,17 +46,27 @@ MAIN = {"id": "id", "split": "split", "group": "group", "as_of_strategy": "as_of
         "question": "question", "as_of": "as_of", "context": None, "answer": "short_answer",
         "answerable": "answerable", "citation": None, "lineage_id": "lineage_id", "version_id": "version_id",
         "accepted_evidence": "accepted_evidence"}
+# 28/10 (CMT): the agent passed its blind calibration on T1 and T6 only (AC1 0,970 and 0,681; T2 0,704 with
+# p_neg 0,211, T3 0,473 with p_neg 0,200; docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md A3), so its
+# labels count only there. On the test split one person's label alone no longer counts as a check (A's pass
+# took about 5 s a row); dev keeps it, dev only picks a configuration.
+AGENT_GROUPS = ("T1", "T6")
+OUT_OF_SCOPE = "ngoài phạm vi agent, chưa đủ hai người kiểm"
 CODES = lambda s: sorted({c.strip() for c in (s or "").split(",") if c.strip()})
 
 
-def final_labels(review: Path) -> dict[str, dict]:
-    """Boundary row id -> review: status checked (verdict, reasons) or not_verified (why)."""
+def final_labels(review: Path, scope: dict[str, tuple[str, str]] | None = None) -> dict[str, dict]:
+    """Boundary row id -> review: status checked (verdict, reasons) or not_verified (why).
+
+    `scope` maps a boundary id to (group, split). Without it every group and split follows the old rules."""
     a = {r["id"]: r for r in read(review / "kiem_A.tsv")}
     b = {r["id"]: r for r in read(review / "kiem_B.tsv")}
     adj_path = review / "hoa_giai_kiem.tsv"
     adj = {r["id"]: r for r in read(adj_path)} if adj_path.exists() else {}
+    agent_path = review / "kiem_agent.tsv"
+    agent = {r["id"]: r for r in read(agent_path)} if agent_path.exists() else {}
     out = {}
-    for i in a.keys() | b.keys():
+    for i in a.keys() | b.keys() | adj.keys() | agent.keys():
         labelled = {w: r for w, r in (("A", a.get(i)), ("B", b.get(i))) if r and r["verdict"]}
         # a label carried from D4 (1.2/2.0) has none of 3.0's evidence fields nor its codes (definition §8)
         current = {w: r for w, r in labelled.items() if r.get("guideline_version") == GUIDELINE}
@@ -64,7 +74,25 @@ def final_labels(review: Path) -> dict[str, dict]:
         if len(current) == 2:
             rev["raw"] = {w: {"verdict": r["verdict"], "reasons": CODES(r["reasons"])} for w, r in current.items()}
         if i in adj and adj[i]["verdict"]:
-            rev.update(status="checked", verdict=adj[i]["verdict"], reasons=CODES(adj[i]["reasons"]), adjudicated=True)
+            rev.update(status="checked", verdict=adj[i]["verdict"], reasons=CODES(adj[i]["reasons"]),
+                       adjudicated=True, labeler=adj[i].get("adjudicator") or "luật sư", source="human")
+        elif len(current) == 2 and current["A"]["verdict"] == current["B"]["verdict"]:
+            rev.update(status="checked", verdict=current["A"]["verdict"],
+                       reasons=sorted({c for r in current.values() for c in CODES(r["reasons"])}),
+                       labeler="A+B", source="human")
+        elif (i in agent and agent[i]["verdict"] and agent[i].get("guideline_version") == GUIDELINE
+              and (scope is None or scope[i][0] in AGENT_GROUPS)):
+            ar = agent[i]
+            av = current.get("A")
+            conflict = bool(av and av["verdict"] != ar["verdict"])
+            winner = av if conflict and av["verdict"] == "dat" else ar
+            reasons = (CODES(av["reasons"] if av["verdict"] == "khong_dat" else ar["reasons"])
+                       if conflict else CODES(winner["reasons"]))
+            rev.update(status="checked", verdict=winner["verdict"], reasons=reasons,
+                       labeler=("A" if winner is av else ar.get("labeler") or "agent"), source="agent",
+                       a_agent_disagreement_dat=conflict)
+        elif scope is not None and scope[i][1] == "test" and len(current) < 2 and (current or not labelled):
+            rev.update(status="not_verified", why=OUT_OF_SCOPE if scope[i][0] not in AGENT_GROUPS else "chờ nhãn agent")
         elif not labelled:
             rev.update(status="not_verified", why="chưa gán")
         elif not current:
@@ -73,7 +101,8 @@ def final_labels(review: Path) -> dict[str, dict]:
             rev.update(status="not_verified", why="A và B lệch, chưa hòa giải")
         else:
             rev.update(status="checked", verdict=next(iter(current.values()))["verdict"],
-                       reasons=sorted({c for r in current.values() for c in CODES(r["reasons"])}))
+                       reasons=sorted({c for r in current.values() for c in CODES(r["reasons"])}),
+                       labeler="+".join(sorted(current)), source="human")
         if rev["status"] == "checked":
             rev["guideline_version"] = GUIDELINE
         out[i] = rev
@@ -114,7 +143,8 @@ def meta(r: dict, review: dict) -> dict:
 
 def export(data: Path, out: Path, final: bool = False, draft: bool = False) -> dict:
     rows = [json.loads(line) for line in (data / "derived/vilextime/release.jsonl").open(encoding="utf-8")]
-    labels = final_labels(data / "review")
+    scope = {r["id"]: (r["group"], r["split"]) for r in rows if r["as_of_strategy"] == "ranh_gioi"}
+    labels = final_labels(data / "review", scope)
     status = lineage_status(rows, labels)
     boundary = {r["lineage_id"]: [] for r in rows}
     for r in rows:
@@ -145,9 +175,10 @@ def export(data: Path, out: Path, final: bool = False, draft: bool = False) -> d
     assert len(ids) == len(set(ids)) == len(metas), "id trùng hoặc lệch số dòng meta"
     unsettled = sum(1 for x in labels.values() if x.get("why") == "A và B lệch, chưa hòa giải")
     unchecked = sum(1 for x in labels.values() if x["status"] == "not_verified")
-    if final and (unchecked or silver):
-        raise SystemExit(f"--final: còn {unchecked} dòng ranh giới chưa có nhãn cuối ({unsettled} dòng A/B lệch chưa "
-                         f"hòa giải), {len(silver)} dòng silver — KHÔNG ghi gì")
+    pending = sum(1 for x in labels.values() if x["status"] == "not_verified" and x.get("why") != OUT_OF_SCOPE)
+    if final and pending:
+        raise SystemExit(f"--final: còn {pending} dòng ranh giới chưa có nhãn cuối ({unsettled} dòng A/B lệch chưa "
+                         f"hòa giải) ngoài các dòng ngoài phạm vi agent — KHÔNG ghi gì")
     out.mkdir(parents=True, exist_ok=True)
     files = {"vilextime.jsonl": main, "vilextime_silver.jsonl": silver, "vilextime_meta.jsonl": metas}
     for name, items in files.items():
@@ -171,6 +202,11 @@ def export(data: Path, out: Path, final: bool = False, draft: bool = False) -> d
         "dropped_lineages_by_reason": dict(dropped.most_common()),
         "dropped_rows_by_group": dict(sorted(dropped_rows.items())),
         "boundary_rows": {"checked": len(labels) - unchecked, "not_verified": unchecked, "unsettled": unsettled},
+        "review_counts": {
+            "human_checked": sum(x.get("source") == "human" for x in labels.values()),
+            "agent_checked": sum(x.get("source") == "agent" for x in labels.values()),
+            "a_agent_disagreement_dat": sum(x.get("a_agent_disagreement_dat", False) for x in labels.values()),
+        },
         "agreement": json.loads(agreement.read_text(encoding="utf-8")) if agreement.exists() else None,
         "sha256": {n: hashlib.sha256((out / n).read_bytes()).hexdigest() for n in files},
     }

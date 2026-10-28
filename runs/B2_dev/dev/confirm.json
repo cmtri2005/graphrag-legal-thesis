@@ -1,0 +1,189 @@
+{
+ "split": "dev",
+ "draws": 2000,
+ "tests_run": 8,
+ "files": {
+  "retrieval/b7": {
+   "path": "runs/E1_2610/dev/b7.jsonl",
+   "sha256": "226c0282fe9d1654e94040b3a68705a2469a35e4e12fc1e5616ca968a6066f2d"
+  },
+  "retrieval/b7pp": {
+   "path": "runs/E1_2610/dev/b7pp.jsonl",
+   "sha256": "8a2323ac9ec76abe7405dddc74246b6e6f425d9d96d579c49ced19cd74fe71fa"
+  },
+  "generation/b7": {
+   "path": "runs/B2_dev/dev/b7.jsonl",
+   "sha256": "3d095c80ae5b3dffdec390cee272318d9963181b42f359abf13fa3bf007cb8c2"
+  },
+  "generation/b7pp": {
+   "path": "runs/B2_dev/dev/b7pp.jsonl",
+   "sha256": "865112d28a10a83f1af3a8ea82ac938e64d4d70c524e50ae00e1d4beee6775ec"
+  },
+  "retrieval/b2ctx": {
+   "path": "runs/E1_2610/dev/b2ctx.jsonl",
+   "sha256": "a1fffdcdf3d2f46ecd02b7096f048af4456912650e38378bba88eb9391bfd833"
+  },
+  "retrieval/b7plus": {
+   "path": "runs/E1_2610/dev/b7plus.jsonl",
+   "sha256": "377529eef62ea60004644a77a7e6bf3ec3b0f6d3a897123fe6e7a23bc9b3ce30"
+  },
+  "generation/b7plus": {
+   "path": "runs/B2_dev/dev/b7plus.jsonl",
+   "sha256": "7ea9a129d5ecfbf6cf5859db67225361cd9f89bb9f6dacff481d1c97f4625f49"
+  },
+  "generation/b2ctx": {
+   "path": "runs/B2_dev/dev/b2ctx.jsonl",
+   "sha256": "35abd199289c149d4fc3698d6d023920f8170d102f56ccba3f057a8d4dc6dd46"
+  },
+  "generation/proposed": {
+   "path": "runs/B2_dev/dev/proposed.jsonl",
+   "sha256": "4f8d815fbd224a10ec8ad2469bb0d18ddc7810bf560ffd9fa87c0a1907d79f70"
+  },
+  "generation/b1": {
+   "path": "runs/B2_dev/dev/b1.jsonl",
+   "sha256": "9484ae0fdc249182cf85648905515b7f4abd328dd736131d26c54a3bea87e854"
+  }
+ },
+ "results": {
+  "XN1": {
+   "estimate": 0.10000000000000003,
+   "ci95": [
+    0.03596479958890031,
+    0.16279069767441856
+   ],
+   "p": 0.008,
+   "rows": {
+    "all_answerable": 130
+   },
+   "lineages": {
+    "all_answerable": 81
+   },
+   "p_holm": 0.032,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "XN2": {
+   "estimate": -0.23333333333333334,
+   "ci95": [
+    -0.2857142857142857,
+    -0.17880794701986755
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 151
+   },
+   "lineages": {
+    "all": 81
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": -1
+  },
+  "XN3": {
+   "estimate": 0.14615384615384613,
+   "ci95": [
+    0.0901639344262295,
+    0.2061129286320126
+   ],
+   "p": 0.0,
+   "rows": {
+    "all_answerable": 130
+   },
+   "lineages": {
+    "all_answerable": 81
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "XN4": {
+   "estimate": 0.10000000000000003,
+   "ci95": [
+    0.03200000000000003,
+    0.16796839919173776
+   ],
+   "p": 0.006,
+   "rows": {
+    "all_answerable": 130
+   },
+   "lineages": {
+    "all_answerable": 81
+   },
+   "p_holm": 0.03,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "XN5": {
+   "estimate": -0.0625,
+   "ci95": [
+    -0.1875,
+    0.0
+   ],
+   "p": 0.732,
+   "rows": {
+    "t6_ancestor_repealed": 16
+   },
+   "lineages": {
+    "t6_ancestor_repealed": 16
+   },
+   "p_holm": 0.732,
+   "verdict": "không đủ bằng chứng",
+   "predicted": 1
+  },
+  "XN6": {
+   "estimate": 0.1875,
+   "ci95": [
+    0.0267857142857143,
+    0.3214285714285714
+   ],
+   "p": 0.024,
+   "rows": {
+    "t2_near": 16,
+    "t2_regular": 56
+   },
+   "lineages": {
+    "t2_near": 8,
+    "t2_regular": 28
+   },
+   "p_holm": 0.07200000000000001,
+   "verdict": "không đủ bằng chứng",
+   "predicted": 1
+  },
+  "XN7": {
+   "estimate": -0.08608058608058611,
+   "ci95": [
+    -0.1573033707865168,
+    0.0036717495987159316
+   ],
+   "p": 0.062,
+   "rows": {
+    "t6": 42,
+    "t2_t3": 91
+   },
+   "lineages": {
+    "t6": 21,
+    "t2_t3": 42
+   },
+   "p_holm": 0.124,
+   "verdict": "không đủ bằng chứng",
+   "predicted": 1
+  },
+  "XN9": {
+   "estimate": 0.3509933774834437,
+   "ci95": [
+    0.2967622461170848,
+    0.4097222222222222
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 151
+   },
+   "lineages": {
+    "all": 81
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  }
+ }
+}

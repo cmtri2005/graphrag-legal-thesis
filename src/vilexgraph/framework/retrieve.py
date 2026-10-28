@@ -43,6 +43,7 @@ MAX_DF_RATIO = 1.01
 FAST_KEEP, FAST_DF_RATIO = 20, 0.50
 CTX_WEIGHT = 1.0        # when the header is in play
 NO_CTX_WEIGHT = 0.0
+RRF_K = 60            # standard reciprocal-rank offset for the approved B4 descriptive baseline
 
 
 @dataclass(frozen=True, slots=True)
@@ -55,6 +56,16 @@ class Hit:
     @property
     def score(self) -> float:
         return sum(self.signals.values())
+
+
+def fuse_rrf(lexical_hits: list[Hit], dense_hits: list[Hit], k: int) -> list[Hit]:
+    """Merge two already-filtered rankings; keep the source contributions separate."""
+    scores: dict[str, dict[str, float]] = {}
+    for name, hits in (("lexical_rrf", lexical_hits), ("dense_rrf", dense_hits)):
+        for rank, hit in enumerate(hits, 1):
+            scores.setdefault(hit.unit_id, {})[name] = 1 / (RRF_K + rank)
+    merged = [Hit(unit_id, signals) for unit_id, signals in scores.items()]
+    return sorted(merged, key=lambda hit: (-hit.score, hit.unit_id))[:k]
 
 
 class RetrievalCache:
@@ -296,10 +307,10 @@ def searcher(corpus, spec: SystemSpec, cache: "RetrievalCache | None" = None, *,
         raise RuntimeError(
             "this index has no BM25 table; build it with "
             "`python scripts/eval/index_corpus.py --lexical`")
-    if spec.dense and (spec.lexical or spec.rerank):
+    if spec.rerank:
         raise NotImplementedError(
-            f"{spec.name} wants hybrid retrieval: the fusion of formula (5) and the reranker "
-            f"are not built yet. Run it on lexical retrieval alone with --no-dense.")
+            f"{spec.name} needs a reranker, which is not built. "
+            f"Run it on lexical retrieval alone with --no-dense.")
     if spec.dense and dense is None:
         raise RuntimeError(f"{spec.name} needs the embeddings: pass --embed <dir>")
     graph = None
@@ -313,7 +324,13 @@ def searcher(corpus, spec: SystemSpec, cache: "RetrievalCache | None" = None, *,
             hit = cache.get(key)
             if hit is not None:
                 return hit
-        if spec.dense:
+        if spec.lexical and spec.dense:
+            lexical_hits = lexical(corpus, question, as_of, layer=spec.layer, tier=spec.temporal,
+                                   context=spec.context, k=spec.k, fast=fast)
+            dense_hits = dense.search(corpus, question, as_of, layer=spec.layer,
+                                      tier=spec.temporal, k=spec.k)
+            found = fuse_rrf(lexical_hits, dense_hits, spec.k)
+        elif spec.dense:
             found = dense.search(corpus, question, as_of, layer=spec.layer,
                                  tier=spec.temporal, k=spec.k)
         else:

@@ -175,19 +175,18 @@ Bản UIT đã nộp không sửa được, nên khóa luận phải công bố 
   Mã băm của mọi thứ dùng để dựng nằm ở `data/vilextime/manifest.json`.
 - **Phiên bản:** theo ADR 0003 §8. Đổi gold hay chuyển dòng giữa các split là MAJOR; thêm
   trường hay thêm mã là MINOR.
-- **Chưa xong** (plan GĐ4, J6–J8; cập nhật 11/10):
-  - hướng dẫn v2.0 (T6 theo phán quyết chuyển chỗ 05/10), trước khi gán T6;
-  - gán bộ kiểm chéo (A 134 dòng, B 135 dòng còn trống), AC1/κ, hoà giải D5;
-  - nhãn cho 276 dòng T6 chưa có nhãn nào (chờ hướng dẫn v2.0);
-  - audit 375 nhãn bắt buộc trên dòng đang phát hành;
-  - T5: luật sư chốt cả 8 văn bản và 19 lineage trong bản phát hành ngày 12/10. Cả 19 đúng về
-    mốc hồi tố; 5 lineage có lỗi câu hỏi: loại 2 (`dropped.jsonl`), viết lại 3 câu hỏi
-    (`questions.jsonl`, `edited_at` 12/10) chờ luật sư xem lại. T5 còn 17 lineage, 34 dòng ranh
-    giới sau khi dựng lại; T6 nhận 4 dòng thiếu theo quy tắc chọn;
-  - phân xử các cờ hiệu lực của lineage κ sau D4, hàng đợi chuyển chỗ (20 dòng);
-  - kiểm 30 dòng ngày ký của `truoc_hieu_luc`;
-  - tập con gold độc lập;
-  - tag `vilextime-v1.0`.
+- **Trạng thái kiểm định (28/10/2026).** Bản phát hành `data/vilextime_dataset/` (schema 2.0.0, `final: true`):
+  1.013 dòng chính, 859 dòng silver. Tập test, chế độ ranh giới, trong file chính: T1 123, T2 46, T3 12, T6 152,
+  T5 0. Nguồn nhãn của 333 dòng này: luật sư chốt hoặc A và B cùng nhãn 98 dòng, nhãn agent 235 dòng (T1, T6; 78 trong số đó lấy `dat` của A vì A và agent lệch, theo Q2).
+  - Hiệu chuẩn mù của agent (Codex gpt-6-sol) trên 178 dòng có nhãn người độc lập: AC1 0,721, p_neg 0,610;
+    ngưỡng AC1 ≥ 0,80 **không đạt** ở mức toàn tập, đạt ở T1 (0,970) và chỉ T6 đạt p_neg (0,833, AC1 0,681).
+    Nên nhãn agent chỉ dùng cho T1, T6 (định nghĩa mục 6, sửa 28/10).
+  - Hai người gán độc lập: AC1 0,377 trên 246 dòng chung, chưa đạt ngưỡng. Nhãn của A: khoảng 5 giây mỗi dòng,
+    288 ghi chú nháp do Claude viết.
+  - Lệch A–agent lấy `dat` (Q2): xem `manifest.json`, `review_counts.a_agent_disagreement_dat`.
+  - Dòng test T2, T3, T5 chưa có đủ người kiểm nằm ở silver (389 dòng ranh giới). H1 và H2 chỉ thăm dò.
+  - **Chưa xong:** luật sư kiểm 50 dòng agent; tập gold độc lập (0/75); kiểm 30 dòng ngày ký của
+    `truoc_hieu_luc`; T5 chưa có dòng nào được kiểm; tag `vilextime-v1.0`.
 
 ## 8. Số liệu
 

@@ -78,19 +78,23 @@ def in_force(windows, as_of: str) -> bool:
 
 
 def windows_for(corpus, unit_id: str, tier: str) -> list[tuple[str | None, str | None]]:
-    """The windows `tier` would consult for one unit — for the Verifier and for tests."""
+    """The windows `tier` would consult for one unit — for the Verifier and for tests.
+
+    An instruction unit has no version window, so every temporal tier judges it
+    by its acting document — the same rule expansion admits it by (graphx).
+    """
     if tier not in TIERS:
         raise TierError(f"unknown tier {tier!r}; known: {', '.join(TIERS)}")
     if tier == "none":
         return [(None, None)]
     row = corpus.db.execute(
-        "SELECT u.local_from, u.local_to, d.effective_from, d.effective_to"
+        "SELECT u.local_from, u.local_to, d.effective_from, d.effective_to, u.kind"
         " FROM units u LEFT JOIN documents d ON d.document_id = u.document_id"
         " WHERE u.unit_id = ?", (unit_id,)).fetchone()
     if row is None:
         return []
-    local_from, local_to, doc_from, doc_to = tuple(row)
-    if tier == "document":
+    local_from, local_to, doc_from, doc_to, kind = tuple(row)
+    if tier == "document" or kind == "instruction":
         return [(doc_from, doc_to)]
     if tier == "version":
         return _intersect([(doc_from, doc_to)], [(local_from, local_to)])

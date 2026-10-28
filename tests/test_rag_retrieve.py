@@ -6,8 +6,8 @@ from pathlib import Path
 import pytest
 
 from vilexgraph.framework.corpus import Corpus, build, build_lexical
-from vilexgraph.framework.retrieve import (MAX_TERMS, Hit, lexical, match_expression, query_terms,
-                                        searcher)
+from vilexgraph.framework.retrieve import (MAX_TERMS, RRF_K, Hit, fuse_rrf, lexical,
+                                          match_expression, query_terms, searcher)
 from vilexgraph.framework.systems import REGISTRY, SystemSpec
 from test_rag_corpus import CLAUSE, data  # noqa: F401  (fixture)
 
@@ -96,9 +96,34 @@ def test_searcher_builds_a_callable_for_a_lexical_system(indexed: Corpus) -> Non
     assert all(isinstance(h, Hit) for h in search("nội dung khoản", "2021-01-01"))
 
 
-def test_searcher_refuses_hybrid_until_fusion_is_built(indexed: Corpus) -> None:
-    with pytest.raises(NotImplementedError, match="hybrid"):
-        searcher(indexed, REGISTRY["b4"])
+def test_rrf_merges_two_rankings_with_deterministic_ties() -> None:
+    found = fuse_rrf([Hit("shared"), Hit("lex")], [Hit("dense"), Hit("shared")], 3)
+    assert [h.unit_id for h in found] == ["shared", "dense", "lex"]
+    assert found[0].signals == {"lexical_rrf": 1 / (RRF_K + 1),
+                                 "dense_rrf": 1 / (RRF_K + 2)}
+    assert found[1].signals == {"dense_rrf": 1 / (RRF_K + 1)}
+    assert len(fuse_rrf([Hit("x")], [Hit("y")], 1)) == 1
+
+
+def test_b4_searches_both_sources_without_reranking(indexed: Corpus) -> None:
+    lexical_hits = lexical(indexed, "nội dung khoản", "2021-01-01", layer="asis",
+                           tier="none", context=True, k=20)
+    assert lexical_hits
+
+    class FakeDense:
+        def search(self, corpus, question, as_of, *, layer, tier, k):
+            assert (layer, tier, k) == ("asis", "none", 20)
+            return [Hit(lexical_hits[0].unit_id, {"dense": 0.9})]
+
+    found = searcher(indexed, REGISTRY["b4"], dense=FakeDense())("nội dung khoản", "2021-01-01")
+    assert found[0].unit_id == lexical_hits[0].unit_id
+    assert set(found[0].signals) == {"lexical_rrf", "dense_rrf"}
+    assert REGISTRY["b4"].rerank is False
+
+
+def test_searcher_refuses_unbuilt_reranker(indexed: Corpus) -> None:
+    with pytest.raises(NotImplementedError, match="reranker"):
+        searcher(indexed, REGISTRY["proposed"])
     with pytest.raises(RuntimeError, match="--embed"):
         searcher(indexed, REGISTRY["b3"])
     with pytest.raises(ValueError, match="does not retrieve"):

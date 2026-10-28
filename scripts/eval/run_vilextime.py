@@ -59,11 +59,13 @@ class Query:
     as_of: str
 
 
-def queries(release: Path, split: str | None, limit: int | None) -> list[Query]:
+def queries(release: Path, split: str | None, limit: int | None,
+            as_of_strategy: str | None = None) -> list[Query]:
     rows = [json.loads(line) for line in release.open(encoding="utf-8")]
     chosen = "test" if split is None and any(r.get("split") for r in rows) else split
     kept = [r for r in rows
-            if r.get("split") != "excluded" and (chosen is None or r.get("split") == chosen)]
+            if r.get("split") != "excluded" and (chosen is None or r.get("split") == chosen)
+            and (as_of_strategy is None or r.get("as_of_strategy") == as_of_strategy)]
     out = [Query(r["id"], r["question"], r["as_of"]) for r in kept]
     return out[:limit] if limit else out
 
@@ -90,6 +92,7 @@ def provenance(args, spec: systems.SystemSpec, corpus: Corpus | None) -> dict:
     manifest = args.index.parent / "manifest.json"
     return {
         "spec": asdict(spec),
+        "as_of_strategy": args.as_of_strategy,
         "embed": str(args.embed) if spec.dense else None,
         "argv": sys.argv[1:],
         "commit": git("rev-parse", "HEAD").strip(),
@@ -134,6 +137,8 @@ def main() -> None:
     ap.add_argument("--release", type=Path, default=RELEASE)
     ap.add_argument("--index", type=Path, default=INDEX)
     ap.add_argument("--split", help="default: test once the release is split")
+    ap.add_argument("--as-of-strategy", choices=("giua_khoang", "ranh_gioi", "truoc_hieu_luc"),
+                    help="run only rows with this as_of_strategy; default: all strategies")
     ap.add_argument("--limit", type=int)
     ap.add_argument("--k", type=int, help="override the system's retrieval depth")
     ap.add_argument("--provider")
@@ -162,7 +167,7 @@ def main() -> None:
     if args.k:
         spec = spec.variant(spec.name, k=args.k)
 
-    rows = queries(args.release, args.split, args.limit)
+    rows = queries(args.release, args.split, args.limit, args.as_of_strategy)
     skip = set() if args.restart else done_ids(args.out)
     todo = [q for q in rows if q.id not in skip]
     print(f"system {spec.name} · {len(rows)} rows · {len(skip)} already done · {len(todo)} to run",
@@ -212,6 +217,11 @@ def main() -> None:
                 line = {"id": q.id, "answer": got.text, "answerable": got.answerable,
                         "citations": list(got.citations),
                         "retrieved": [h.unit_id for h in hits]}
+                if not args.retrieval_only:
+                    line["format_ok"] = generate.format_ok(got.raw, got.citations,
+                                                           has_evidence=bool(hits))
+                    line["prompt_tokens"] = got.prompt_tokens
+                    line["completion_tokens"] = got.completion_tokens
                 if verdict is not None:
                     line["verification"] = verdict.as_dict()
                 if hits:

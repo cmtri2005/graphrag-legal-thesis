@@ -7,6 +7,7 @@ from vilexgraph.framework.corpus import Corpus, build
 from vilexgraph.framework.graphx import Graph, expand
 from vilexgraph.framework.retrieve import Hit
 from vilexgraph.framework.systems import SystemSpec
+from vilexgraph.framework.verify import invalid_units
 from test_rag_corpus import ARTICLE, CLAUSE, DOC, data, write  # noqa: F401  (fixtures)
 
 SEED = f"asis:{CLAUSE}"
@@ -76,3 +77,11 @@ def test_a_temporal_tier_drops_neighbours_whose_document_is_not_yet_in_force(gra
     # the non-temporal baseline admits them — that is what makes it the baseline
     assert ids(expand(g, spec(temporal="none"), hits, early)) == [SEED, PARENT]
     assert ids(expand(g, spec(expand_edges="rel"), hits, early)) == [SEED, COMMAND]
+
+
+@pytest.mark.parametrize("tier", ["document", "version", "propagated"])
+def test_the_verifier_judges_an_instruction_by_its_document_like_expansion(graph, tier) -> None:
+    """Expansion admits a command by its document; the Verifier must agree, or `proposed` regenerates."""
+    _, corpus = graph
+    assert invalid_units(corpus, tier, "2021-01-01", [COMMAND]) == ()
+    assert invalid_units(corpus, tier, "2019-06-01", [COMMAND]) == (COMMAND,)

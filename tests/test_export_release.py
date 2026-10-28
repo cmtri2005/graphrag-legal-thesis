@@ -7,8 +7,8 @@ import export_release
 from crosscheck import GUIDELINE, KIEM_A_COLUMNS, KIEM_COLUMNS
 
 
-def _row(lid, as_of, strategy="ranh_gioi", twin_of=None, group="T2"):
-    return {"id": f"{lid}:{as_of}", "lineage_id": lid, "group": group, "split": "test", "as_of_strategy": strategy,
+def _row(lid, as_of, strategy="ranh_gioi", twin_of=None, group="T2", split="dev"):
+    return {"id": f"{lid}:{as_of}", "lineage_id": lid, "group": group, "split": split, "as_of_strategy": strategy,
             "twin_of": twin_of, "question": "Hỏi?", "as_of": as_of, "answer": "s) Không kiểm tra.",
             "short_answer": "Phạt tiền 7 triệu", "answerable": True, "version_id": f"version:{lid}:1",
             "target": {"citation": "Điểm s Khoản 3 Điều 16", "lead_in": "3. Phạt tiền 7 triệu với:"},
@@ -74,3 +74,84 @@ def test_export_publishes_passed_lineages_with_twins_and_counts_the_dropped(tmp_
             ("solo:2024-01-01", "dat", "", g), ("mix:2024-01-01", "dat", "", g)])
     m = export_release.export(tmp_path, tmp_path / "final", final=True)
     assert m["rows"] == {"main": 7, "silver": 0}
+
+
+def test_agent_priority_q2_and_review_counts(tmp_path):
+    rel = tmp_path / "derived/vilextime"
+    rel.mkdir(parents=True)
+    ids = ("agent_only", "lawyer", "a_dat", "agent_dat", "agree")
+    rel.joinpath("release.jsonl").write_text(
+        "".join(json.dumps(_row(i, "2024-01-01", group="T1", split="test")) + "\n" for i in ids), encoding="utf-8")
+    review = tmp_path / "review"
+    review.mkdir()
+    g = GUIDELINE
+    _sheet(review / "kiem_A.tsv", KIEM_A_COLUMNS,
+           [("lawyer:2024-01-01", "khong_dat", "gold_wrong", g),
+            ("a_dat:2024-01-01", "dat", "", g),
+            ("agent_dat:2024-01-01", "khong_dat", "question_leaks", g),
+            ("agree:2024-01-01", "dat", "", g)])
+    _sheet(review / "kiem_B.tsv", KIEM_COLUMNS, [("agree:2024-01-01", "dat", "", g)])
+    (review / "hoa_giai_kiem.tsv").write_text(
+        "id\tverdict\treasons\tadjudicator\n"
+        "lawyer:2024-01-01\tdat\t\tluật sư\n", encoding="utf-8")
+    with (review / "kiem_agent.tsv").open("w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, ["id", "verdict", "reasons", "labeler", "guideline_version"], delimiter="\t")
+        w.writeheader()
+        for rid, verdict, reasons in [
+            ("agent_only", "dat", ""), ("lawyer", "khong_dat", "rename_only"),
+            ("a_dat", "khong_dat", "rename_only"), ("agent_dat", "dat", ""),
+            ("agree", "khong_dat", "gold_wrong"),
+        ]:
+            w.writerow({"id": f"{rid}:2024-01-01", "verdict": verdict, "reasons": reasons,
+                        "labeler": "Codex test", "guideline_version": g})
+
+    scope = {f"{i}:2024-01-01": ("T1", "test") for i in ids}
+    labels = export_release.final_labels(review, scope)
+    assert {i: labels[f"{i}:2024-01-01"]["verdict"] for i in ids} == dict.fromkeys(ids, "dat")
+    assert labels["lawyer:2024-01-01"]["labeler"] == "luật sư"
+    assert labels["agree:2024-01-01"]["labeler"] == "A+B"
+    assert labels["a_dat:2024-01-01"]["reasons"] == ["rename_only"]
+    assert labels["agent_dat:2024-01-01"]["reasons"] == ["question_leaks"]
+    assert labels["a_dat:2024-01-01"]["labeler"] == "A"
+    assert labels["agent_dat:2024-01-01"]["labeler"] == "Codex test"
+    out = tmp_path / "publish"
+    manifest = export_release.export(tmp_path, out)
+    assert manifest["rows"] == {"main": 5, "silver": 0}
+    assert manifest["review_counts"] == {"human_checked": 2, "agent_checked": 3,
+                                          "a_agent_disagreement_dat": 2}
+    meta = {r["id"]: r for r in map(json.loads, (out / "vilextime_meta.jsonl").open(encoding="utf-8"))}
+    assert meta["agent_only:2024-01-01"]["review"]["labeler"] == "Codex test"
+    assert meta["a_dat:2024-01-01"]["review"]["reasons"] == ["rename_only"]
+
+
+def test_agent_counts_only_for_t1_t6_and_one_human_is_not_enough_on_test(tmp_path):
+    rel = tmp_path / "derived/vilextime"
+    rel.mkdir(parents=True)
+    spec = [("t1_agent", "T1", "test"), ("t1_none", "T1", "test"), ("t2_agent", "T2", "test"),
+            ("t2_a", "T2", "test"), ("t2_dev_a", "T2", "dev")]
+    rel.joinpath("release.jsonl").write_text(
+        "".join(json.dumps(_row(i, "2024-01-01", group=g, split=sp)) + "\n" for i, g, sp in spec), encoding="utf-8")
+    review = tmp_path / "review"
+    review.mkdir()
+    g = GUIDELINE
+    _sheet(review / "kiem_A.tsv", KIEM_A_COLUMNS, [("t2_a:2024-01-01", "dat", "", g), ("t2_dev_a:2024-01-01", "dat", "", g),
+                                                    ("t1_none:2024-01-01", "dat", "", g)])
+    _sheet(review / "kiem_B.tsv", KIEM_COLUMNS, [])
+    with (review / "kiem_agent.tsv").open("w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, ["id", "verdict", "reasons", "labeler", "guideline_version"], delimiter="\t")
+        w.writeheader()
+        for rid in ("t1_agent", "t2_agent"):
+            w.writerow({"id": f"{rid}:2024-01-01", "verdict": "dat", "reasons": "", "labeler": "Codex", "guideline_version": g})
+    scope = {f"{i}:2024-01-01": (gr, sp) for i, gr, sp in spec}
+    labels = export_release.final_labels(review, scope)
+    status = {i: (labels[f"{i}:2024-01-01"]["status"], labels[f"{i}:2024-01-01"].get("why")) for i, _, _ in spec}
+    assert status["t1_agent"][0] == "checked" and labels["t1_agent:2024-01-01"]["source"] == "agent"
+    assert status["t1_none"] == ("not_verified", "chờ nhãn agent")            # A alone, T1 waits for the agent
+    assert status["t2_agent"] == ("not_verified", export_release.OUT_OF_SCOPE)  # agent label ignored outside T1, T6
+    assert status["t2_a"] == ("not_verified", export_release.OUT_OF_SCOPE)      # one person on test is not a check
+    assert status["t2_dev_a"][0] == "checked"                                   # dev keeps the one-person rule
+    with pytest.raises(SystemExit):                                              # t1_none is still pending
+        export_release.export(tmp_path, tmp_path / "final", final=True)
+    _sheet(review / "kiem_B.tsv", KIEM_COLUMNS, [("t1_none:2024-01-01", "dat", "", g)])
+    m = export_release.export(tmp_path, tmp_path / "final", final=True)         # out-of-scope rows may stay in silver
+    assert m["rows"]["silver"] == 2 and m["rows"]["main"] == 3

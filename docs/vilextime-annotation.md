@@ -217,10 +217,13 @@ dùng để xếp thứ tự dòng cần người xem trước. Nhãn model cũ 
 phân tích phụ, có ghi `labeler`. Dòng chỉ có nhãn model là dòng chưa kiểm (`not_verified`) và không
 vào tập test.
 
-**Ngoại lệ từ 26/10/2026 (CMT):** nhãn của agent `vn-law-verifier` (có tra văn bản gốc, trích dẫn
+**Ngoại lệ từ 26/10/2026 (CMT):** nhãn của agent kiểm (từ 27/10 là Codex, ghi ở `labeler`; có tra văn bản gốc, trích dẫn
 nguồn) được tính là kiểm định cho dòng test khi đã qua kiểm chứng ở mục 6 của định nghĩa: gán mù
 trên dòng có nhãn người, đạt AC1 ≥ 0,80 và p_neg ≥ 0,60, và luật sư kiểm mẫu 50 dòng. Nhãn agent ở
 `data/review/kiem_agent.tsv`, không trộn vào phiếu A hay B.
+
+**Giới hạn từ 28/10/2026 (CMT):** agent không đạt AC1 0,80 ở mức toàn tập (0,721), nên nhãn agent chỉ
+có giá trị ở nhóm T1 và T6; xem mục 6 của định nghĩa.
 
 ## 7. Hỏi đáp (sổ quyết định)
 

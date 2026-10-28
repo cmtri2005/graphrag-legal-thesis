@@ -4,7 +4,7 @@ Date: 2026-10-26
 
 ## Status
 
-Active. Bước 1 (hiệu chuẩn mù) đang chạy.
+Active. Bước 1 (hiệu chuẩn mù) đang chạy. Từ 27/10 việc còn lại theo dõi ở [`codex-chot-du-lieu-va-thuc-nghiem.md`](codex-chot-du-lieu-va-thuc-nghiem.md) (Phần A).
 
 ## Outcome
 

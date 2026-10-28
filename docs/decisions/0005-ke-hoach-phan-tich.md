@@ -29,22 +29,32 @@ Vì vậy đơn vị phân tích là lineage.
 
 ### 1. Dữ liệu được phân tích
 
-- Bản phát hành 11/10: `data/derived/vilextime/release.jsonl`, sha256 `118e0a26…de3dc44`
-  (`data/vilextime/manifest.json`, commit `cd4927e`), schema 1.4.0, 2.730 dòng. Corpus: manifest
-  sha256 `36d04090…b660975`.
-- Bảng chính là `test` ở chế độ `giua_khoang`: 994 dòng, 534 lineage. "all" gồm T1, T2, T3 và T6:
-  956 dòng, 515 lineage. T5 (38 dòng, 19 lineage, 3 văn bản tác động) chỉ được mô tả, không vào
-  "all", không kiểm định.
+- Bản final: `data/vilextime_dataset/vilextime.jsonl`, sha256
+  `19c515baca1b1628afe9916055a6b77ff432f6325808b39cfc502aeeccebe437`
+  (`data/vilextime_dataset/manifest.json`, schema 2.0.0, `final: true`): 1.013 dòng chính;
+  859 dòng silver ngoài bảng chính. Các trường `near_identical` và `repeal_mode` lấy theo ID từ
+  `data/vilextime_dataset/vilextime_meta.jsonl`. Số dưới đây đếm bằng `SLICES` của
+  `scripts/eval/confirm_vilextime.py` trên `giua_khoang`.
+- Bảng chính `test`: 333 dòng, 226 lineage; `dev`: 151 dòng, 81 lineage. "all" gồm T1, T2, T3
+  và T6, trùng toàn bộ bảng chính ở cả hai split. T5 không có trong file chính; các dòng T5 nằm
+  ở silver và chỉ được mô tả, không vào "all" hay kiểm định.
 - Các lát khai báo trước, lấy từ cột có sẵn trong release và đếm trên bảng chính:
 
-  | Lát | Điều kiện | Dòng | Lineage |
-  |---|---|---|---|
-  | T2 gần giống | `group = T2`, `near_identical = true` | 114 | 57 |
-  | T2 thường | `group = T2`, `near_identical = false` | 240 | 120 |
-  | T6 nút cha bị bãi bỏ | `group = T6`, `repeal_mode = ancestor`, `answerable = false` | 121 | 121 |
-  | T6 trực tiếp | `group = T6`, `repeal_mode = direct` | 70 | 35 |
-  | T2 ∪ T3 | `group ∈ {T2, T3}` | 514 | 229 |
-  | all, có đáp án | "all" và `answerable = true` | 800 | 515 |
+  | Lát (`SLICES`) | Điều kiện | Dev dòng / lineage | Test dòng / lineage |
+  |---|---|---:|---:|
+  | `all` | `group ∈ {T1, T2, T3, T6}` | 151 / 81 | 333 / 226 |
+  | `all_answerable` | `all`, `answerable = true` | 130 / 81 | 257 / 226 |
+  | `t2_near` | `group = T2`, `near_identical = true` | 16 / 8 | 8 / 4 |
+  | `t2_regular` | `group = T2`, `near_identical = false` | 56 / 28 | 38 / 19 |
+  | `t6_ancestor_repealed` | `group = T6`, `repeal_mode = ancestor`, `answerable = false` | 16 / 16 | 56 / 56 |
+  | `t6` | `group = T6` | 42 / 21 | 152 / 76 |
+  | `t2_t3` | `group ∈ {T2, T3}` | 91 / 42 | 58 / 27 |
+
+  Trên test, T2 chỉ có 46 dòng / 23 lineage; T3 chỉ có 12 dòng / 4 lineage.
+  `t2_near` còn 8 dòng / 4 lineage. **Đề xuất để nhóm duyệt trước khi Accepted:** chuyển H1
+  (XN6) và H2 (XN7) sang phân tích thăm dò vì các lát so sánh quá nhỏ; cập nhật họ Holm và
+  §4–§8 nếu nhóm chấp thuận. Bản Proposed này vẫn giữ định nghĩa XN6/XN7 hiện tại để nhóm
+  quyết định rõ ràng, không dùng số dev để chọn giả thuyết.
 
 - Ba chế độ `as_of` còn lại chỉ chạy truy xuất (quyết định C2) và chỉ được mô tả.
 

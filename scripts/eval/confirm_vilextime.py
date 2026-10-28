@@ -15,7 +15,7 @@ The run that the thesis reports must have all nine.
 
 Usage:
     python scripts/eval/confirm_vilextime.py --retrieval runs/E1_ladder/test --generation runs/E3/test \\
-        --split test --draws 10000 --out runs/confirm_test.json
+        --split test --release data/vilextime_dataset/vilextime.jsonl --draws 10000 --out runs/confirm_test.json
 """
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ import json
 import zlib
 from pathlib import Path
 
-from score_vilextime import distractors, interval, score, units_of
+from score_vilextime import distractors, interval, load_rows, score, units_of
 
 ALPHA = 0.05
 MAIN = ("T1", "T2", "T3", "T6")      # "all": T5 is diagnostic only (ADR 0005 §1)
@@ -110,6 +110,8 @@ def main() -> None:
     ap.add_argument("--split", required=True, choices=("dev", "test"))
     ap.add_argument("--draws", type=int, default=10_000)
     ap.add_argument("--data", type=Path, default=Path("data"))
+    ap.add_argument("--release", type=Path, help="a published vilextime.jsonl (export_release.py) "
+                                                 "instead of <data>/derived/vilextime/release.jsonl")
     ap.add_argument("--out", type=Path)
     args = ap.parse_args()
 
@@ -123,7 +125,7 @@ def main() -> None:
     for key, path in files.items():
         preds[key] = {p["id"]: p for p in map(json.loads, path.open(encoding="utf-8"))}
 
-    release = [json.loads(line) for line in (args.data / "derived/vilextime/release.jsonl").open(encoding="utf-8")]
+    release = load_rows(args.release or args.data / "derived/vilextime/release.jsonl")
     extra = distractors(release)
     rows = [{**r, "_distractors": extra.get(r["id"], [])} for r in release
             if r.get("split") == args.split and r["as_of_strategy"] == "giua_khoang"]

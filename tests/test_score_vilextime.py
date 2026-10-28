@@ -1,7 +1,7 @@
 """ViLexTime scorer on hand-made rows: formulas 6–9 of the proposal and the 28/09 choices."""
 import json
 
-from score_vilextime import nearest, probe, resolve, score
+from score_vilextime import load_rows, nearest, probe, resolve, score
 
 # provision P: v1 in force 2019-01-01..2021-01-01, v2 from then (written by event E2);
 # provision Q: v1 until 2021-06-01, when instruction R repealed it.
@@ -41,6 +41,25 @@ def test_the_gold_scores_perfectly():
     assert (s["recall@1"], s["tv_recall@1"], s["mrr"], s["accuracy"], s["tcs"]) == (1, 1, 1, 1, 1)
     assert (s["tver"], s["vcr"], s["cited_rows"]) == (0, 0, 3)
     assert s["em"] == 0.5          # r2 exact after normalisation; r1 has words between the spans
+
+
+def test_published_release_restores_lead_in_and_written_citation(tmp_path):
+    release = tmp_path / "vilextime.jsonl"
+    release.write_text(json.dumps({**ROWS[0], "answer": "Phạt tiền từ 1 đến 2 triệu đồng",
+                                   "context": "1. Phạt tiền từ 1 đến 2 triệu đồng.",
+                                   "citation": "Khoản 1 Điều 5"}) + "\n")
+    (tmp_path / "vilextime_meta.jsonl").write_text(json.dumps({
+        "id": "r1", "target": {"lead_in": "1. Phạt tiền từ 1 đến 2 triệu đồng.",
+                               "citation": "Khoản 1 Điều 5", "doc_type": "Luật",
+                               "law_id": "1/2019/QH14"}, "near_identical": True,
+        "repeal_mode": None}) + "\n")
+    row = load_rows(release)[0]
+    assert row["near_identical"] is True
+    chain = {"provision:P": [{"id": "version:P:1", "ordinal": 1,
+                               "text": "1. Phạt tiền từ 1 đến 2 triệu đồng.",
+                               "effective_intervals": [{"start": "2019-01-01", "end": "2021-01-01"}]}]}
+    assert score([row], probe("oracle", [row], chain), UNITS)["accuracy"] == 1
+    assert probe("text_cite", [row], chain)["r1"]["citations"] == ["Khoản 1 Điều 5 Luật 1/2019/QH14"]
 
 
 def test_the_right_provision_at_the_wrong_version():

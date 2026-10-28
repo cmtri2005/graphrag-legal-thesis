@@ -106,6 +106,8 @@ class Completion:
     provider: str
     model: str
     temperature: float
+    prompt_tokens: int | None = None
+    completion_tokens: int | None = None
 
 
 def configured() -> list[str]:
@@ -188,7 +190,8 @@ def complete(system: str, user: str, *, provider: str | None = None, model: str 
             continue
         if not response.ok:
             raise LLMError(f"{provider} {response.status_code}: {response.text[:400]}")
-        choices = response.json().get("choices") or []
+        payload_out = response.json()
+        choices = payload_out.get("choices") or []
         if not choices:
             raise LLMError(f"{provider} returned no choice: {response.text[:400]}")
         # Reasoning models (gpt-oss, qwen3) spend max_tokens on hidden thinking
@@ -197,5 +200,7 @@ def complete(system: str, user: str, *, provider: str | None = None, model: str 
             raise Truncated(f"{provider} {model}: hit max_tokens={max_tokens}; the answer is truncated"
                             + ("" if effort else " (a reasoning model? try effort='low')"),
                             (choices[0]["message"].get("content") or "").strip())
-        return Completion((choices[0]["message"]["content"] or "").strip(), provider, model, temperature)
+        usage = payload_out.get("usage") or {}
+        return Completion((choices[0]["message"]["content"] or "").strip(), provider, model, temperature,
+                          usage.get("prompt_tokens"), usage.get("completion_tokens"))
     raise LLMError(f"{provider} still failing after {retries} attempts")

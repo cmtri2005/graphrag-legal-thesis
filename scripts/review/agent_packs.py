@@ -20,7 +20,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 csv.field_size_limit(sys.maxsize)
 from crosscheck import gwet_ac1, specific_agreement  # noqa: E402
-from label_ui import held_back  # noqa: E402
 
 KEEP = ("id", "group", "subgroup", "question", "as_of", "lead_in", "answer", "short_answer", "changed_span",
         "citation", "law_id", "valid_from", "valid_to", "source_url", "trich_van_ban_goc",
@@ -35,6 +34,17 @@ def read(p: Path) -> dict[str, dict]:
         return {r["id"]: r for r in csv.DictReader(f, delimiter="\t")}
 
 
+def calibration_verdict(a: dict, b: dict | None, adjudicated: dict | None) -> str | None:
+    """Use independent agreement, or the lawyer's unaided lot-0 decision."""
+    if not b or not a["verdict"] or not b["verdict"]:
+        return None
+    if a["guideline_version"] != "3.0" or b["guideline_version"] != "3.0":
+        return None
+    if a["verdict"] == b["verdict"]:
+        return a["verdict"]
+    return adjudicated["verdict"] if a["lo"] == "0" and adjudicated else None
+
+
 def build(out: Path, data: Path) -> None:
     a, b = read(data / "review/kiem_A.tsv"), read(data / "review/kiem_B.tsv")
     adj = read(data / "review/hoa_giai_kiem.tsv")
@@ -42,14 +52,13 @@ def build(out: Path, data: Path) -> None:
     for line in (data / "vilextime_dataset/vilextime.jsonl").open(encoding="utf-8"):
         d = json.loads(line)
         rel[d["id"]] = d
-    held = held_back(data / "review", "A")
     calib: dict[str, str] = {}
     for i, r in a.items():
-        o = b.get(i)
-        if o and r["verdict"] and o["verdict"] and r["guideline_version"] == o["guideline_version"] == "3.0":
-            calib[i] = r["verdict"] if r["verdict"] == o["verdict"] else adj[i]["verdict"]
+        verdict = calibration_verdict(r, b.get(i), adj.get(i))
+        if verdict:
+            calib[i] = verdict
     target = [i for i, r in a.items() if i not in calib and rel.get(i, {}).get("split") == "test"
-              and rel[i]["as_of_strategy"] == "ranh_gioi" and r["lineage_id"] not in held]
+              and rel[i]["as_of_strategy"] == "ranh_gioi" and i not in adj]
     ids = sorted(calib) + sorted(target)
     random.Random("agent-packs-2610").shuffle(ids)
     out.mkdir(parents=True, exist_ok=True)
@@ -66,8 +75,8 @@ def build(out: Path, data: Path) -> None:
     print(f"{len(ids)} dòng ({len(calib)} hiệu chuẩn, {len(target)} cần gán) -> {-(-len(ids) // PACK)} gói ở {out}; khóa: {key}")
 
 
-def score(out: Path, result: Path) -> None:
-    key = {r["id"]: r for r in read(out.parent.parent / "key_calib.tsv").values()}
+def score(out: Path, result: Path, key_path: Path | None = None) -> None:
+    key = {r["id"]: r for r in read(key_path or out.parent.parent / "key_calib.tsv").values()}
     got = read(result)
     bad = sorted(set(got) - set(key) - set(read_ids(out)))
     ids = sorted(set(key) & set(got))
@@ -95,5 +104,6 @@ if __name__ == "__main__":
     ap.add_argument("result", nargs="?", type=Path)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--data", type=Path, default=Path("data"))
-    args = ap.parse_args()
-    build(args.out, args.data) if args.cmd == "build" else score(args.out, args.result)
+    ap.add_argument("--key", type=Path, help="calibration key for score; default: OUT/../../key_calib.tsv")
+    args = ap.parse_intermixed_args()
+    build(args.out, args.data) if args.cmd == "build" else score(args.out, args.result, args.key)

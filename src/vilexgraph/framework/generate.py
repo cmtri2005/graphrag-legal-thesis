@@ -85,6 +85,8 @@ class Answer:
     provider: str
     model: str
     cached: bool = False
+    prompt_tokens: int | None = None
+    completion_tokens: int | None = None
 
 
 def build_prompt(question: str, as_of: str, units, *, with_context: bool) -> tuple[str, str, list[str]]:
@@ -133,6 +135,12 @@ def parse(raw: str, ids: list[str]) -> tuple[str, bool, tuple[str, ...]]:
     if verdict == "expired":
         text = ""
     return text, verdict != "expired", tuple(cites)
+
+
+def format_ok(raw: str, citations: tuple[str, ...], *, has_evidence: bool) -> bool:
+    """B1 gate: required fields, plus a usable citation when evidence was supplied."""
+    return bool(_ANSWER.search(raw) and _FORCE.search(raw) and _CITES.search(raw)
+                and (not has_evidence or citations))
 
 
 def _normalise_force(value: str) -> str:
@@ -200,11 +208,14 @@ def answer(question: str, as_of: str, units, *, with_context: bool = True,
     if hit is not None:
         used_provider, used_model, raw = hit
         cached = True
+        prompt_tokens = completion_tokens = None
     else:
         completion = llm.complete(system, user, provider=provider, model=model, **kwargs)
         used_provider, used_model, raw = completion.provider, completion.model, completion.text
         cached = False
+        prompt_tokens, completion_tokens = completion.prompt_tokens, completion.completion_tokens
         if cache:
             cache.put(key, used_provider, used_model, raw)
     text, answerable, citations = parse(raw, ids)
-    return Answer(text, answerable, citations, raw, used_provider, used_model, cached)
+    return Answer(text, answerable, citations, raw, used_provider, used_model, cached,
+                  prompt_tokens, completion_tokens)

@@ -4,6 +4,8 @@ Date: 2026-10-21
 
 ## Status
 
+Từ 27/10 việc còn lại theo dõi ở [`codex-chot-du-lieu-va-thuc-nghiem.md`](codex-chot-du-lieu-va-thuc-nghiem.md) (Phần B, C).
+
 Active. Bản nháp do Claude soạn ngày 21/10 theo yêu cầu của CMT; CMT bổ sung. Chưa có quyết định mới nào
 trong file này được duyệt: những chỗ ghi **[đề xuất]** chờ nhóm chốt.
 

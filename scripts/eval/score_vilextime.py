@@ -133,6 +133,24 @@ def distractors(rows: list[dict]) -> dict[str, list[str]]:
     return out
 
 
+def load_rows(path: Path) -> list[dict]:
+    """Load an internal release or join a published release to its companion metadata."""
+    rows = [json.loads(line) for line in path.open(encoding="utf-8")]
+    if not rows or "context" not in rows[0]:
+        return rows
+    meta_path = path.with_name("vilextime_meta.jsonl")
+    metadata = {m["id"]: m for m in map(json.loads, meta_path.open(encoding="utf-8"))}
+    if not {r["id"] for r in rows} <= set(metadata):
+        raise ValueError("published release has IDs missing from vilextime_meta.jsonl")
+    for r in rows:
+        m = metadata[r["id"]]
+        r["short_answer"], r["answer"] = r["answer"], r["context"]
+        r["target"] = m["target"]
+        r["near_identical"] = m.get("near_identical")
+        r["repeal_mode"] = m.get("repeal_mode")
+    return rows
+
+
 def f1(answer: str, gold: str) -> float:
     pred, ref = norm(answer).split(), gold.split()
     common = sum((collections.Counter(pred) & collections.Counter(ref)).values())
@@ -538,11 +556,7 @@ def main() -> None:
     if len({p.stem for p in args.predictions}) < len(args.predictions):
         ap.error("prediction files are named by their stem, so the stems must differ")
     path = args.release or args.data / "derived/vilextime/release.jsonl"
-    rows = [json.loads(line) for line in path.open(encoding="utf-8")]
-    for r in rows:
-        if "context" in r:   # published names (docs/vilextime-schema-phat-hanh.md): answer is the short answer,
-            # context the wording with its lead-in already in front
-            r["short_answer"], r["answer"], r["target"] = r["answer"], r["context"], {"lead_in": None}
+    rows = load_rows(path)
     if args.probes and "target" not in rows[0]:
         ap.error("--probes needs the internal release (it reads `target`)")
     extra = distractors(rows)

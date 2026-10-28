@@ -1,0 +1,26 @@
+{
+  "system": "b4",
+  "spec": {
+    "name": "b4",
+    "layer": "asis",
+    "lexical": true,
+    "dense": true,
+    "rerank": false,
+    "temporal": "none",
+    "context": true,
+    "expand": 0,
+    "expand_edges": "none",
+    "verify": "off",
+    "k": 20,
+    "note": "B4 — BM25 + dense by reciprocal rank fusion (k=60), no reranker"
+  },
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "no_dense": false,
+  "embed": "data/derived/embed/asis-vietnamese-embedding",
+  "embed_sha256": "3a8b143bd5e6307642b2f011020d3a7ed9b32599de7861ef992555343ee4915e",
+  "rows": 151,
+  "release_sha256": "19c515baca1b1628afe9916055a6b77ff432f6325808b39cfc502aeeccebe437",
+  "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+  "prompt_file_sha256": "508902040c131a719888c8dda2b452736e4261c587dda5295a1ad259c38fc377"
+}

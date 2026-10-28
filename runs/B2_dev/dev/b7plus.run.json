@@ -1,0 +1,42 @@
+{
+  "system": "b7plus",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "0d8216c4f63f5ad03e8d372a7700e5b346e25169fdd152338654bf5588d2b70b",
+  "raw_file_sha256": "64795d65f83b869c48fd9b00b3707fd577ee9b733f3be3fb6d84986eccb0fd86",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+  "gpu": [
+    "Tesla T4 + Tesla T4"
+  ],
+  "rows": 151,
+  "format_ok": 151,
+  "truncated": 0,
+  "prompt_tokens_mean": 4553.403973509934,
+  "completion_tokens_mean": 105.99337748344371,
+  "generation_seconds": 1816.235984759007,
+  "export": {
+    "system": "b7plus",
+    "spec": {
+      "name": "b7plus-lex",
+      "layer": "version",
+      "lexical": true,
+      "dense": false,
+      "rerank": false,
+      "temporal": "version",
+      "context": true,
+      "expand": 0,
+      "expand_edges": "none",
+      "verify": "off",
+      "k": 20,
+      "note": "B7+ — version-level filter; the proposed system minus the online graph"
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": true,
+    "rows": 151,
+    "release_sha256": "19c515baca1b1628afe9916055a6b77ff432f6325808b39cfc502aeeccebe437",
+    "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+    "prompt_file_sha256": "0d8216c4f63f5ad03e8d372a7700e5b346e25169fdd152338654bf5588d2b70b"
+  }
+}

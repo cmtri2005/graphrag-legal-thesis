@@ -1,0 +1,24 @@
+{
+  "system": "b7",
+  "spec": {
+    "name": "b7-lex",
+    "layer": "asis",
+    "lexical": true,
+    "dense": false,
+    "rerank": false,
+    "temporal": "document",
+    "context": true,
+    "expand": 0,
+    "expand_edges": "none",
+    "verify": "off",
+    "k": 20,
+    "note": "B7 — document-level date filter, no graph (the main control)"
+  },
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "no_dense": true,
+  "rows": 151,
+  "release_sha256": "19c515baca1b1628afe9916055a6b77ff432f6325808b39cfc502aeeccebe437",
+  "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+  "prompt_file_sha256": "85fd363c7f3e6e86e9cd1184b933e5c26c2a77e57343317b827dcf5a8e9fc1e4"
+}

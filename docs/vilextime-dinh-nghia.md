@@ -141,13 +141,29 @@ Người kiểm đánh dấu đủ các ô sau, kèm dẫn chứng:
 Thêm điều kiện máy: R6, R7 đạt.
 
 **Sửa ngày 26/10/2026 (CMT), ai được kiểm.** Tám ô trên giữ nguyên. Dòng test chưa có người kiểm
-được giao cho agent `vn-law-verifier` kiểm, với ba điều kiện:
+được giao cho agent kiểm (sửa 27/10, CMT: agent Codex; tên agent và model ghi ở cột `labeler`), với ba điều kiện:
 1. Trước lượt gán hàng loạt, agent gán **mù** các dòng đã có nhãn người độc lập: A và B cùng nhãn
    theo bản 3.0, và các dòng lô 0 luật sư tự chốt. Độ khớp phải đạt ngưỡng dùng cho người
    (AC1 ≥ 0,80 và p_neg ≥ 0,60). Không đạt thì không gán hàng loạt.
 2. Luật sư kiểm một mẫu ngẫu nhiên 50 dòng do agent gán.
 3. Nhãn agent nằm ở file riêng, ghi `labeler`. Kết quả báo tách hai phần: dòng người kiểm và
    dòng agent kiểm.
+
+**Sửa ngày 28/10/2026 (CMT), phạm vi agent.** Hiệu chuẩn mù trên 178 dòng có nhãn người độc lập:
+AC1 0,721 (ngưỡng 0,80), p_neg 0,610 (ngưỡng 0,60), nên điều kiện 1 **không đạt ở mức toàn tập**.
+Theo từng nhóm: T1 AC1 0,970 (n=38), T6 0,681 (n=50, p_neg 0,833); T2 0,704 với p_neg 0,211 (n=67);
+T3 0,473 với p_neg 0,200 (n=23); T5 không có dòng hiệu chuẩn. CMT chốt:
+1. Nhãn agent chỉ có giá trị ở nhóm **T1 và T6**. Dòng T2, T3, T5 của tập test không dùng nhãn agent
+   (389 nhãn agent ở nhóm này nằm ở `data/review/kiem_agent_ngoai_pham_vi.tsv`, không đưa vào phát hành).
+2. Ở tập test, nhãn của **một người** không đủ để vào file chính (nhãn nhanh của A, khoảng 5 giây mỗi dòng).
+   Dòng đủ điều kiện: luật sư chốt, hoặc A và B cùng nhãn, hoặc nhãn agent ở T1, T6. Tập dev vẫn nhận
+   nhãn một người (dev chỉ để chọn cấu hình).
+3. Dòng test T2, T3, T5 chưa đủ điều kiện nằm ở `vilextime_silver` (chưa kiểm). Kết quả trên T2, T3 vì thế
+   chỉ mô tả; H1 và H2 báo ở mức thăm dò cho tới khi có người kiểm đủ.
+4. A và agent lệch nhau thì lấy `dat` (quyết định Q2, CMT 27/10). Số dòng lệch ghi ở
+   `manifest.json` (`review_counts.a_agent_disagreement_dat`).
+5. Luật sư kiểm mẫu 50 dòng agent: `data/review/luat_su_kiem_agent.xlsx`. Chưa có kết quả; đến khi có thì
+   bản phát hành là **bản final chờ luật sư xác nhận mẫu**, chưa gắn tag.
 
 ## 7. Mã loại dòng (danh sách đóng, 19 mã)
 
