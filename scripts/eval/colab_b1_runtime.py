@@ -49,7 +49,8 @@ for filename, prompt_bytes in sorted(uploaded.items()):
     assert len(system_names) == 1, filename
     system_name = next(iter(system_names))
     if is_b2:
-        assert system_name in B2_SYSTEMS and all(r["split"] == "dev" for r in prompts), filename
+        splits = {r["split"] for r in prompts}
+        assert system_name in B2_SYSTEMS and len(splits) == 1 and splits <= {"dev", "test"}, filename
     batches.append((filename, prompt_sha256, prompts, is_b2, system_name))
 if len(batches) > 1:
     assert all(batch[3] for batch in batches), "Multiple-file upload requires B2 prompts"

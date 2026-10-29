@@ -28,3 +28,9 @@ def test_each_kind_of_test_runs_on_its_slices():
     assert xn1["estimate"] == 1 and xn1["ci95"] == [1, 1] and xn1["p"] == 0
     xn7 = run(by["XN7"], rows, {"b7": wrong, "proposed": right}, {}, draws=200)
     assert xn7["estimate"] == 0 and xn7["rows"] == {"t6": 5, "t2_t3": 15}   # the same gain on both slices
+
+
+def test_xn5_to_xn7_are_outside_the_holm_family():
+    from confirm_vilextime import EXPLORATORY, FAMILY
+    assert [t[0] for t in FAMILY] == ["XN1", "XN2", "XN3", "XN4", "XN8", "XN9"]
+    assert EXPLORATORY == {"XN5", "XN6", "XN7"} and len(TESTS) == 9

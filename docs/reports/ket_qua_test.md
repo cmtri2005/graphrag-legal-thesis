@@ -71,16 +71,16 @@ Hiệu ghép cặp với hệ đứng trước trong file (KTC 95%):
 
 ## XN1–XN9 (`runs/B2_dev/dev/confirm.json`)
 
-2.000 lần lấy mẫu lại, Holm trên 9/9 kiểm định.
+2.000 lần lấy mẫu lại, Holm trên 6/6 kiểm định; XN5–XN7 là thăm dò, ngoài Holm (ADR 0005 §1).
 
 | XN | Giả thuyết | So sánh · thước đo · lát | Ước lượng [KTC 95%] | p | p Holm | Kết luận | Dòng/lineage |
 |---|---|---|---|---|---|---|---|
-| XN1 | H0, truy xuất | `b7pp` − `b7` · tv_recall@1 · all_answerable | +0,100 [+0,036; +0,163] | 0,008 | 0,032 | ủng hộ | 130/81 |
+| XN1 | H0, truy xuất | `b7pp` − `b7` · tv_recall@1 · all_answerable | +0,100 [+0,036; +0,163] | 0,008 | 0,012 | ủng hộ | 130/81 |
 | XN2 | H0, câu trả lời | `b7pp` − `b7` · tver · all | -0,233 [-0,286; -0,179] | 0,000 | 0,000 | ủng hộ | 151/81 |
 | XN3 | RQ3: siêu dữ liệu cấp văn bản | `b7` − `b2ctx` · tv_recall@1 · all_answerable | +0,146 [+0,090; +0,206] | 0,000 | 0,000 | ủng hộ | 130/81 |
-| XN4 | RQ3: chuỗi phiên bản | `b7plus` − `b7` · tv_recall@1 · all_answerable | +0,100 [+0,032; +0,168] | 0,006 | 0,030 | ủng hộ | 130/81 |
-| XN5 | H3: lan truyền | `b7pp` − `b7plus` · accuracy · t6_ancestor_repealed | -0,062 [-0,188; +0,000] | 0,732 | 0,732 | không đủ bằng chứng | 16/16 |
-| XN6 | H1 | `b2ctx` · vcr · t2_near/t2_regular | +0,188 [+0,027; +0,321] | 0,024 | 0,072 | không đủ bằng chứng | 16/8, 56/28 |
-| XN7 | H2 | `proposed` − `b7` · accuracy · t6/t2_t3 | -0,086 [-0,157; +0,004] | 0,062 | 0,124 | không đủ bằng chứng | 42/21, 91/42 |
+| XN4 | RQ3: chuỗi phiên bản | `b7plus` − `b7` · tv_recall@1 · all_answerable | +0,100 [+0,032; +0,168] | 0,006 | 0,012 | ủng hộ | 130/81 |
+| XN5 | H3: lan truyền | `b7pp` − `b7plus` · accuracy · t6_ancestor_repealed | -0,062 [-0,188; +0,000] | 0,732 | — | thăm dò | 16/16 |
+| XN6 | H1 | `b2ctx` · vcr · t2_near/t2_regular | +0,188 [+0,027; +0,321] | 0,024 | — | thăm dò | 16/8, 56/28 |
+| XN7 | H2 | `proposed` − `b7` · accuracy · t6/t2_t3 | -0,086 [-0,157; +0,004] | 0,062 | — | thăm dò | 42/21, 91/42 |
 | XN8 | RQ2: đồ thị phi thời gian | `proposed` − `b5` · accuracy · all | +0,305 [+0,218; +0,391] | 0,000 | 0,000 | ủng hộ | 151/81 |
 | XN9 | RQ1: giá trị của truy xuất | `b2ctx` − `b1` · accuracy · all | +0,351 [+0,297; +0,410] | 0,000 | 0,000 | ủng hộ | 151/81 |

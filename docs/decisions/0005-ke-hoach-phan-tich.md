@@ -4,7 +4,8 @@ Date: 2026-10-11
 
 ## Status
 
-Proposed (bản nháp, chờ nhóm duyệt).
+Accepted, 29/10/2026. Người duyệt: CMT, NMT. Lúc duyệt chưa hệ nào chạy trên `test`
+(`runs/**/test/` chỉ có probe kiểm scorer E0, không có dự đoán của hệ nào).
 
 ADR này phải được commit và chuyển sang Accepted **trước** khi bất kỳ hệ nào chạy trên `test`.
 Ngày commit sớm hơn ngày của file kết quả test đầu tiên trong `runs/` là bằng chứng giả thuyết có
@@ -53,10 +54,11 @@ Vì vậy đơn vị phân tích là lineage.
 
   Trên test, T2 chỉ có 46 dòng / 23 lineage; T3 chỉ có 12 dòng / 4 lineage; T6 chỉ có 30 dòng /
   15 lineage. `t2_near` còn 8 dòng / 4 lineage, `t6_ancestor_repealed` 12 / 12. T6 giảm từ 76 lineage
-  vì phần lớn dòng bãi bỏ có nội dung chuyển sang văn bản thay thế (R2, luật sư chốt 29/10). **Đề xuất để nhóm duyệt trước khi Accepted:** chuyển H1
-  (XN6) và H2 (XN7) sang phân tích thăm dò vì các lát so sánh quá nhỏ; cập nhật họ Holm và
-  §4–§8 nếu nhóm chấp thuận. Bản Proposed này vẫn giữ định nghĩa XN6/XN7 hiện tại để nhóm
-  quyết định rõ ràng, không dùng số dev để chọn giả thuyết.
+  vì phần lớn dòng bãi bỏ có nội dung chuyển sang văn bản thay thế (R2, luật sư chốt 29/10).
+  **Quyết định của nhóm (29/10, trước mọi lần chạy test):** H1 (XN6), H2 (XN7) và H3 (XN5) chuyển
+  sang phân tích thăm dò (§8), vì lát so sánh của chúng trên `test` chỉ có 4–15 lineage. Lý do là cỡ
+  mẫu, không dựa vào số dev: trên dev XN7 nghiêng ngược chiều, XN6 nghiêng đúng chiều, và cả hai
+  đều bị chuyển như nhau. Họ Holm còn sáu kiểm định (§4).
 
 - Ba chế độ `as_of` còn lại chỉ chạy truy xuất (quyết định C2) và chỉ được mô tả.
 - Kiểm scorer trên bản final (E0, `score_vilextime.py --probes`, 29/10): probe oracle đạt Accuracy
@@ -76,8 +78,8 @@ Vì vậy đơn vị phân tích là lineage.
 - Generator: `Qwen/Qwen3-4B-Instruct-2507` rev `cdbee75`, NF4, greedy, `max_new_tokens=512`, chạy
   qua batch Colab (ADR 0004, amendment 29/10). Nó qua cổng chất lượng trên 100 dòng `dev`
   (MASTER_RESEARCH_GUIDE §7.5) và không thuộc họ Claude hay DeepSeek (ADR 0004 §3). Prompt được khóa
-  theo `prompt_sha256` từng dòng và `prompt_file_sha256` trong `run.json`. Model kiểm độ bền là model
-  qua cổng thuộc họ khác: [chưa có, xem amendment ADR 0004].
+  theo `prompt_sha256` từng dòng và `prompt_file_sha256` trong `run.json`. Không có model kiểm độ bền ở
+  lần chạy này (§7).
 - Mọi tinh chỉnh chỉ làm trên `dev`. Mỗi cấu hình chạy trên `test` một lần. Mỗi lần chạy nằm trong
   `runs/`, kèm `run.json` ghi commit, hash của release, manifest, prompt và model.
 
@@ -104,21 +106,28 @@ Tên XN để khỏi trùng với mã quyết định C1–C5 và khuyến ngh�
 | XN2 | H0, câu trả lời | `b7pp` − `b7` (E3) | TVER | all | < 0 | ghép cặp |
 | XN3 | RQ3: siêu dữ liệu cấp văn bản | `b7` − `b2ctx` (E1) | TV-Recall@1 | all, có đáp án | > 0 | ghép cặp |
 | XN4 | RQ3: chuỗi phiên bản | `b7plus` − `b7` (E1) | TV-Recall@1 | all, có đáp án | > 0 | ghép cặp |
-| XN5 | H3: lan truyền | `b7pp` − `b7plus` (E3) | Accuracy | T6 nút cha bị bãi bỏ | > 0 | ghép cặp |
-| XN6 | H1 | VCR(T2 gần giống) − VCR(T2 thường), hệ `b2ctx` (E2) | VCR | hai lát T2 | > 0 | hai mẫu |
-| XN7 | H2 | [`proposed` − `b7`] trên T6 − [`proposed` − `b7`] trên T2 ∪ T3 (E3) | Accuracy | T6; T2 ∪ T3 | > 0 | hai mẫu của hai hiệu ghép cặp |
 | XN8 | RQ2: đồ thị phi thời gian | `proposed` − `b5` (E3) | Accuracy | all | > 0 | ghép cặp |
 | XN9 | RQ1: giá trị của truy xuất | `b2ctx` − `b1` (E2) | Accuracy | all | > 0 | ghép cặp |
 
 Ba kiểm định ở tầng truy xuất (XN1, XN3, XN4) chỉ dùng dòng có đáp án. Trên dòng không có đáp án,
 TV-Recall chỉ chấm trúng khi lấy được lệnh bãi bỏ (`accepted_evidence` là một đơn vị `asis:event:`).
 Lớp B không có đơn vị lệnh, nên `b7v`, `b7plus`, `b7pp` luôn bằng 0 ở đó do cấu trúc, không do chất
-lượng truy xuất. Tác dụng của việc phát hiện bãi bỏ được kiểm ở tầng câu trả lời (XN2, XN5, XN7);
-ở tầng truy xuất chỉ mô tả tỷ lệ dòng có điều khoản đã hết hiệu lực lọt vào top-k.
+lượng truy xuất. Tác dụng của việc phát hiện bãi bỏ được kiểm ở tầng câu trả lời (XN2), và mô tả
+thêm ở XN5, XN7 (§8); ở tầng truy xuất chỉ mô tả tỷ lệ dòng có điều khoản đã hết hiệu lực lọt vào
+top-k.
 
 Không đưa vào họ này, chỉ báo ước lượng kèm khoảng tin cậy: `proposed` − `b7pp` (thành phần trực
 tuyến, vì H4 là thăm dò), hai bước tách bằng `b7v` (`b7v` − `b7`, `b7plus` − `b7v`), `b6`, `a1`–`a3`,
 và `a4` − `proposed` (lặp lại XN5 khi có đồ thị trực tuyến).
+
+Ba kiểm định giữ nguyên định nghĩa nhưng chuyển ra ngoài họ (quyết định 29/10, §1). Chúng được tính
+bằng cùng công cụ, báo ước lượng, khoảng tin cậy và p chưa hiệu chỉnh, kết luận ghi "thăm dò":
+
+| Mã | Giả thuyết | So sánh | Đại lượng | Lát | Dự đoán | Kiểu | Test dòng / lineage |
+|---|---|---|---|---|---|---|---|
+| XN5 | H3: lan truyền | `b7pp` − `b7plus` (E3) | Accuracy | T6 nút cha bị bãi bỏ | > 0 | ghép cặp | 12 / 12 |
+| XN6 | H1 | VCR(T2 gần giống) − VCR(T2 thường), hệ `b2ctx` (E2) | VCR | hai lát T2 | > 0 | hai mẫu | 8 / 4 và 38 / 19 |
+| XN7 | H2 | [`proposed` − `b7`] trên T6 − [`proposed` − `b7`] trên T2 ∪ T3 (E3) | Accuracy | T6; T2 ∪ T3 | > 0 | hai mẫu của hai hiệu ghép cặp | 30 / 15 và 58 / 27 |
 
 ### 5. Thống kê
 
@@ -128,12 +137,12 @@ và `a4` − `proposed` (lặp lại XN5 khi có đồ thị trực tuyến).
   cố định cho mỗi ô (chế độ `as_of`, nhóm).
 - Hai mẫu: hai lát khác nhau lấy mẫu lại độc lập, mỗi lát một seed.
 - p hai phía của bootstrap: 2 × min(tỷ lệ lần lấy mẫu có hiệu ≤ 0, tỷ lệ có hiệu ≥ 0).
-- Hiệu chỉnh Holm trên XN1–XN9, α = 0,05.
+- Hiệu chỉnh Holm trên sáu kiểm định của §4 (XN1–XN4, XN8, XN9), α = 0,05.
 - Báo độ lớn hiệu ứng bằng điểm phần trăm kèm khoảng tin cậy, cùng số dòng và số lineage của mẫu
   số, kể cả khi không có ý nghĩa.
 - Công cụ: `scripts/eval/confirm_vilextime.py` mã hóa đúng bảng §4 (so sánh, đại lượng, lát, chiều
-  dự đoán, kiểu lấy mẫu lại) và tính XN1–XN9 cùng Holm; `score_vilextime.py --ci` cho khoảng tin cậy
-  của từng hệ. Script phải được commit trước khi chạy test, và chạy thử trên `dev` trước đó.
+  dự đoán, kiểu lấy mẫu lại) và tính XN1–XN9, Holm trên sáu kiểm định của §4 (`FAMILY`);
+  `score_vilextime.py --ci` cho khoảng tin cậy của từng hệ. Script phải được commit trước khi chạy test, và chạy thử trên `dev` trước đó.
 
 ### 6. Quy tắc kết luận
 
@@ -150,8 +159,10 @@ và `a4` − `proposed` (lặp lại XN5 khi có đồ thị trực tuyến).
 ### 7. Kiểm tra độ bền (mô tả, không thêm kiểm định)
 
 - Gold độc lập (E6, khoảng 120 dòng): báo XN1, XN2, XN4, XN5 trên gold người gán bên cạnh gold của
-  KG, kèm thứ hạng các nấc thang.
-- Model kiểm độ bền trên `b2ctx`, `b7`, `proposed`: cùng chiều với XN2, XN8, XN9 hay không.
+  KG, kèm thứ hạng các nấc thang. Chưa có gold độc lập (0/75), nên chưa chạy ở lần này.
+- Model kiểm độ bền trên `b2ctx`, `b7`, `proposed`: **không chạy ở lần này** (nhóm quyết 29/10, vì
+  thời gian; không có model thứ hai qua cổng B1). Bảng nhiều LLM cũng hoãn. Kết luận về XN2, XN8, XN9
+  vì vậy chỉ gắn với một generator, phải ghi ở phần giới hạn.
 - Dao động của LLM: đo trên `dev` thay cho việc chạy hệ chính hai lần (CMT đồng ý ngày 29/10). Qua
   hai lượt Colab với hai biến thể attention, prompt giống nhau cho output giống nhau ở 553/553 dòng
   (`a3` so với `proposed`, `a2` so với `b7pp`, 121 dòng `b5` so với `b2ctx`, 130 dòng `a4` so với
@@ -162,7 +173,7 @@ và `a4` − `proposed` (lặp lại XN5 khi có đồ thị trực tuyến).
 
 ### 8. Phân tích thăm dò
 
-H4, T5, phân rã theo miền, độ nhạy theo `k`, LightRAG trên tập con (E4) và giám khảo LLM được báo
+H1, H2, H3 (XN5–XN7, §4), H4, T5, phân rã theo miền, độ nhạy theo `k`, LightRAG trên tập con (E4) và giám khảo LLM được báo
 là thăm dò: có số, có khoảng tin cậy khi cỡ mẫu cho phép, không kiểm định, không dùng để ủng hộ hay
 bác giả thuyết nào.
 
@@ -170,8 +181,8 @@ bác giả thuyết nào.
 
 1. **Kiểm định McNemar trên từng dòng.** Bị loại: các dòng của một lineage không độc lập, nên giả
    định của McNemar không thỏa.
-2. **Không hiệu chỉnh đa so sánh.** Bị loại: chín kiểm định ở α = 0,05 có xác suất ít nhất một
-   dương tính giả khoảng 37% nếu mọi H0 thống kê đều đúng.
+2. **Không hiệu chỉnh đa so sánh.** Bị loại: sáu kiểm định ở α = 0,05 có xác suất ít nhất một
+   dương tính giả khoảng 26% nếu mọi H0 thống kê đều đúng.
 3. **Bonferroni.** Kiểm soát cùng mức sai số theo họ như Holm nhưng có lực thấp hơn, nên không chọn.
 4. **Một đại lượng chính cho mọi giả thuyết.** Không khả thi: B1 không có VCR, thang chỉ truy xuất
    không có Accuracy, và H3 nằm trên dòng không có đáp án.
@@ -186,14 +197,13 @@ Positive:
 
 Tradeoffs:
 
-- Holm trên chín kiểm định làm H1 (57 so với 120 lineage) khó đạt ý nghĩa. Đó là cái giá của việc
-  khai báo trung thực.
-- XN2, XN5, XN6, XN7, XN8, XN9 phụ thuộc generator. Model kiểm độ bền chỉ là kiểm tra mô tả.
+- H1, H2, H3 không có kiểm định xác nhận ở lần này: lát của chúng trên `test` quá nhỏ sau khi luật sư
+  loại phần lớn dòng bãi bỏ có nội dung chuyển chỗ. Đó là cái giá của việc khai báo trung thực.
+- XN2, XN8, XN9 phụ thuộc generator, và chỉ có một generator.
 
 ## Follow-Up
 
-- Nhóm duyệt; ghi người duyệt và ngày; chuyển Status sang Accepted rồi commit trước lần chạy test
-  đầu tiên.
+- Đã duyệt 29/10 (CMT, NMT); commit trước lần chạy test đầu tiên.
 - Commit `confirm_vilextime.py` cùng ADR này; chạy thử trên `dev` (XN1, XN3, XN4 có ngay từ E1 dev,
   các kiểm định còn lại khi có lượt chạy thử sinh câu trả lời W1-15).
 - Ghi model đã chọn (MASTER_RESEARCH_GUIDE §7.5) vào amendment của ADR 0004 trước khi chạy E2, E3.

@@ -57,8 +57,23 @@ def test_b2_import_is_dev_only_and_keeps_system_metadata(tmp_path):
     assert json.loads(out.read_text())["signals"] == {}
     assert json.loads(out.with_suffix(".run.json").read_text())["system"] == "b1"
     assert json.loads(out.with_suffix(".run.json").read_text())["export"] == export
-    prompt["split"] = "test"
+    prompt["split"] = "train"
     prompt["prompt_sha256"] = digest(prompt)
     prompts.write_text(json.dumps(prompt) + "\n")
-    with pytest.raises(SystemExit, match="dev prompts"):
+    with pytest.raises(SystemExit, match="dev or test"):
         import_completions(SimpleNamespace(prompts=prompts, raw=raw, out=out))
+
+
+def test_test_split_export_waits_for_a_committed_accepted_adr(tmp_path):
+    import subprocess
+    from colab_b1 import adr_accepted
+    adr = tmp_path / "docs/decisions/0005.md"
+    adr.parent.mkdir(parents=True)
+    git = lambda *a: subprocess.run(["git", *a], cwd=tmp_path, check=True, capture_output=True)
+    git("init", "-q")
+    adr.write_text("# 0005\n\n## Status\n\nProposed.\n\n## Context\n\nAccepted later.\n")
+    git("add", "."), git("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "p")
+    adr.write_text("# 0005\n\n## Status\n\nAccepted (CMT).\n")
+    assert not adr_accepted(adr)          # the working tree alone does not count
+    git("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qam", "a")
+    assert adr_accepted(adr)

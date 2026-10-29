@@ -1,7 +1,7 @@
 {
  "split": "dev",
  "draws": 2000,
- "tests_run": 9,
+ "tests_run": 6,
  "files": {
   "retrieval/b7": {
    "path": "runs/E1_2610/dev/b7.jsonl",
@@ -62,7 +62,7 @@
    "lineages": {
     "all_answerable": 81
    },
-   "p_holm": 0.032,
+   "p_holm": 0.012,
    "verdict": "ủng hộ",
    "predicted": 1
   },
@@ -113,7 +113,7 @@
    "lineages": {
     "all_answerable": 81
    },
-   "p_holm": 0.03,
+   "p_holm": 0.012,
    "verdict": "ủng hộ",
    "predicted": 1
   },
@@ -130,8 +130,8 @@
    "lineages": {
     "t6_ancestor_repealed": 16
    },
-   "p_holm": 0.732,
-   "verdict": "không đủ bằng chứng",
+   "p_holm": null,
+   "verdict": "thăm dò",
    "predicted": 1
   },
   "XN6": {
@@ -149,8 +149,8 @@
     "t2_near": 8,
     "t2_regular": 28
    },
-   "p_holm": 0.07200000000000001,
-   "verdict": "không đủ bằng chứng",
+   "p_holm": null,
+   "verdict": "thăm dò",
    "predicted": 1
   },
   "XN7": {
@@ -168,8 +168,8 @@
     "t6": 21,
     "t2_t3": 42
    },
-   "p_holm": 0.124,
-   "verdict": "không đủ bằng chứng",
+   "p_holm": null,
+   "verdict": "thăm dò",
    "predicted": 1
   },
   "XN8": {

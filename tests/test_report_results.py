@@ -24,6 +24,6 @@ def test_render_reads_score_and_confirm_without_recomputing(tmp_path):
     assert "**Số dev**" in md
     assert "| `b2ctx` | 0,500 [0,000; 1,000] |" in md
     assert "| b2ctx − b1 | +0,250 [+0,100; +0,400] | +0,000 | — |" in md
-    assert "2.000 lần lấy mẫu lại, Holm trên 1/9 kiểm định (**chưa đủ họ**)" in md
+    assert "2.000 lần lấy mẫu lại, Holm trên 1/6 kiểm định (**chưa đủ họ**)" in md
     assert "| XN9 |" in md and "| ủng hộ | 2/1 |" in md
     assert "| XN1 |" in md and "chưa chạy" in md

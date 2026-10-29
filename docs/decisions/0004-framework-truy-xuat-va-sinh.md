@@ -212,5 +212,6 @@ prompt sha256 `991eada9…`.
 **Chi phí:** [CMT điền: gói Colab, số giờ GPU đã dùng]. Ước cho test: 333 dòng × khoảng 13 giây,
 tức khoảng 70 phút mỗi hệ.
 
-**Model độ bền:** chưa có. `microsoft/Phi-3.5-mini-instruct` chưa chạy cổng B1. Cổng G mục 3 cần
-model này trước C6; nếu không kịp, ADR 0005 §7 phải ghi bỏ kiểm tra độ bền.
+**Model độ bền:** không có ở lần chạy test này. Nhóm quyết ngày 29/10 bỏ C6 (độ bền) và C11 (bảng
+nhiều LLM) vì thời gian; `microsoft/Phi-3.5-mini-instruct` chưa chạy cổng B1, để cho phase 2. ADR 0005
+§7 ghi giới hạn này.

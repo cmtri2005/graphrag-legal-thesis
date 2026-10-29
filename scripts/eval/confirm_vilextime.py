@@ -54,6 +54,10 @@ TESTS = (
     ("XN8", "RQ2: đồ thị phi thời gian", "paired", "accuracy", ("all",), "generation", ("b5", "proposed"), +1),
     ("XN9", "RQ1: giá trị của truy xuất", "paired", "accuracy", ("all",), "generation", ("b1", "b2ctx"), +1),
 )
+# Moved to exploratory before any test run (ADR 0005 §1, 29/10): on test their slices hold 4–15 lineages.
+# Still computed with the same definition, but outside Holm and without a verdict.
+EXPLORATORY = frozenset({"XN5", "XN6", "XN7"})
+FAMILY = tuple(t for t in TESTS if t[0] not in EXPLORATORY)
 
 
 def holm(p: dict[str, float]) -> dict[str, float]:
@@ -136,19 +140,23 @@ def main() -> None:
         name, _, _, _, _, source, systems, _ = test
         if all((source, s) in preds for s in systems):
             results[name] = run(test, rows, {s: preds[(source, s)] for s in systems}, units, args.draws)
-    ran = {k: v["p"] for k, v in results.items() if v["p"] is not None}
+    ran = {k: v["p"] for k, v in results.items() if v["p"] is not None and k not in EXPLORATORY}
     adjusted = holm(ran)
     lines = [f"ADR 0005 · split {args.split} · {args.draws:,} lần lấy mẫu lại · "
-             f"Holm trên {len(ran)}/{len(TESTS)} kiểm định" + ("" if len(ran) == len(TESTS) else " (CHƯA ĐỦ HỌ)")]
+             f"Holm trên {len(ran)}/{len(FAMILY)} kiểm định" + ("" if len(ran) == len(FAMILY) else " (CHƯA ĐỦ HỌ)")]
     for name, hypothesis, kind, metric, slices, source, systems, sign in TESTS:
         r = results.get(name)
         what = f"{name} {hypothesis}: {' − '.join(reversed(systems))} · {metric} · {'/'.join(slices)}"
         if r is None or r["p"] is None:
             lines.append(f"{what}: chưa chạy" + ("" if r is None else " (đại lượng không xác định)"))
             continue
-        r.update(p_holm=adjusted[name], verdict=verdict(r["estimate"], adjusted[name], sign), predicted=sign)
+        if name in EXPLORATORY:
+            r.update(p_holm=None, verdict="thăm dò", predicted=sign)
+        else:
+            r.update(p_holm=adjusted[name], verdict=verdict(r["estimate"], adjusted[name], sign), predicted=sign)
+        holm_p = "—" if r["p_holm"] is None else f"{r['p_holm']:.4f}"
         lines.append(f"{what}: {r['estimate']:+.3f} [{r['ci95'][0]:+.3f}; {r['ci95'][1]:+.3f}] "
-                     f"p={r['p']:.4f} p_Holm={r['p_holm']:.4f} → {r['verdict']} "
+                     f"p={r['p']:.4f} p_Holm={holm_p} → {r['verdict']} "
                      f"({', '.join(f'{s} {r['rows'][s]} dòng/{r['lineages'][s]} lineage' for s in slices)})")
     h0 = [results.get(k, {}).get("verdict") for k in ("XN1", "XN2")]
     if all(h0):

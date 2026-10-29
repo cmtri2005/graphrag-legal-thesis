@@ -248,12 +248,12 @@ chừng thì chạy tiếp (runner giữ dòng đã có), không `--restart`.
 | C3 | E3 thang có sinh | `b7 b7v b7plus b7pp proposed` | `--no-dense --as-of-strategy giua_khoang` | `runs/E3/test` |
 | C4 | E5 ablation | `a4` trước, rồi `a1 a2 a3` | như C3 | `runs/E5/test` |
 | C5 | E4 đồ thị phi thời gian | `b5`, `b6` | như C3 | `runs/E4/test` |
-| C6 | Độ bền | `b2ctx b7 proposed` với model độ bền | như C3, `--model <độ bền>` | `runs/robust/test` |
+| ~~C6~~ | Độ bền (bỏ 29/10, phase 2) | `b2ctx b7 proposed` với model độ bền | như C3, `--model <độ bền>` | `runs/robust/test` |
 | C7 | XN1–XN9 + Holm | — | `confirm_vilextime.py --retrieval runs/E1/test --generation runs/E3/test --split test --draws 10000` (hệ `b1`, `b2ctx`, `b5` phải có mặt trong thư mục `--generation`: chép hoặc chỉnh đường dẫn, không chạy lại) | `runs/confirm_test.json` |
 | C8 | E6 gold độc lập | thang + baseline chính | chỉ khi có gold (Q3) | `runs/E6/test` |
 | C9 | Bảng kết quả | — | B4 trên số test | `docs/reports/ket_qua_test.md` |
 | C10 | Ngữ cảnh đúng (mô tả) | script B5 | `giua_khoang` | `runs/oracle_ctx/test` |
-| C11 | Bảng nhiều LLM (mô tả) | `b1 b2ctx proposed` × model Hugging Face qua cổng | batch Colab theo B2 | `runs/multi_llm/test` |
+| ~~C11~~ | Bảng nhiều LLM (bỏ 29/10, phase 2) | `b1 b2ctx proposed` × model Hugging Face qua cổng | batch Colab theo B2 | `runs/multi_llm/test` |
 
 Chấm mỗi bước: `score_vilextime.py <các file> --split test --release ... --ci 10000 --out <thư mục>/<tên>.score.json`
 (nhiều hệ một lệnh để scorer đọc `versions.jsonl` một lần).
@@ -296,6 +296,13 @@ Trễ ở A2/A3 thì C dời theo, **không** chạy test trên bản chưa fina
 
 ## Progress
 
+- 29/10, Claude, ADR 0005 Accepted: CMT chọn chuyển XN5–XN7 sang thăm dò (Holm trên 6: XN1–XN4, XN8,
+  XN9), bỏ C6/C11 cho phase 2, người duyệt CMT và NMT. `confirm_vilextime.py`: `EXPLORATORY`, `FAMILY`;
+  XN5–7 vẫn tính, `p_Holm=—`, kết luận "thăm dò". Confirm dev chạy lại: Holm 6/6, XN1–4, XN8, XN9 ủng hộ.
+  `colab_b1.py` nhận `--split test` chỉ khi Status của ADR 0005 ở HEAD là Accepted (`adr_accepted`, đọc
+  bằng `git show`); import nhận dev hoặc test. Runtime và notebook nhận split test. Lệnh xuất test bị từ
+  chối đúng khi ADR còn Proposed. Test: `test_colab_b1 test_confirm_vilextime test_report_results
+  test_export_release test_agent_sample` qua. Còn tag `vilextime-v1.0` (CMT) trước C1.
 - 29/10, Claude, nạp luật sư lượt 2 (`data/review/luat_su_kiem_q2_da_chot.xlsx`): 67/67 dòng, cột gốc
   không bị sửa; chốt `dat` 13 (T6 8, T1 5), `khong_dat` 54; đồng ý agent 54/67. `luat_su_kiem_agent.tsv` gộp
   117 dòng. `export_release.py --final` → sha256 `7cf51ee6…`, 769 dòng chính, 859 silver; dev 328/328 không
@@ -438,9 +445,9 @@ Trễ ở A2/A3 thì C dời theo, **không** chạy test trên bản chưa fina
 - [ ] A6 `drop` cho `kiem`, báo cơ cấu so với sàn §9
 - [ ] A7 đóng băng, datasheet, E0 lại
 - [x] B0 `--as-of-strategy`
-- [ ] B1 chọn generator, amendment ADR 0004
+- [x] B1 chọn generator, amendment ADR 0004 (không có model độ bền)
 - [x] B2 chạy thử mọi hệ trên dev, đo dao động
-- [ ] B3 ADR 0005 cập nhật số, Accepted, commit
+- [x] B3 ADR 0005 cập nhật số, Accepted, commit
 - [x] B4 script bảng kết quả
 - [ ] B5: B4 RRF và ngữ cảnh đúng xong trên dev; bảng nhiều LLM chờ model thứ hai (cổng Phi-3.5)
 - [ ] Cổng G

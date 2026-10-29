@@ -15,7 +15,7 @@ import argparse
 import json
 from pathlib import Path
 
-from confirm_vilextime import TESTS
+from confirm_vilextime import FAMILY, TESTS
 
 MODE = "giua_khoang"
 GROUPS = ("T1", "T2", "T3", "T6")
@@ -61,8 +61,9 @@ def score_section(path: Path) -> list[str]:
 def confirm_section(path: Path) -> list[str]:
     data = json.loads(path.read_text(encoding="utf-8"))
     out = [f"## XN1–XN9 (`{path}`)", "",
-           f"{data['draws']:,} lần lấy mẫu lại".replace(",", ".") + f", Holm trên {data['tests_run']}/{len(TESTS)} kiểm định"
-           + ("" if data["tests_run"] == len(TESTS) else " (**chưa đủ họ**)") + ".", "",
+           f"{data['draws']:,} lần lấy mẫu lại".replace(",", ".") + f", Holm trên {data['tests_run']}/{len(FAMILY)} kiểm định"
+           + ("" if data["tests_run"] == len(FAMILY) else " (**chưa đủ họ**)")
+           + "; XN5–XN7 là thăm dò, ngoài Holm (ADR 0005 §1).", "",
            "| XN | Giả thuyết | So sánh · thước đo · lát | Ước lượng [KTC 95%] | p | p Holm | Kết luận | Dòng/lineage |",
            "|---|---|---|---|---|---|---|---|"]
     for name, hypothesis, _, metric, slices, _, systems, _ in TESTS:

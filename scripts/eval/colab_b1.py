@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import random
+import subprocess
 import sys
 from dataclasses import asdict
 from pathlib import Path
@@ -19,6 +20,16 @@ from run_vilextime import EMBED, INDEX, RELEASE, queries, retriever  # noqa: E40
 
 
 ORACLE = "oracle"
+SPLITS = ("dev", "test")
+ADR = Path(__file__).resolve().parents[2] / "docs/decisions/0005-ke-hoach-phan-tich.md"
+
+
+def adr_accepted(path: Path = ADR) -> bool:
+    """ADR 0005 §Status reads Accepted in the committed file, not only in the working tree."""
+    text = subprocess.run(["git", "show", f"HEAD:{path.relative_to(path.parents[2])}"],
+                          cwd=path.parents[2], capture_output=True, text=True).stdout
+    status = text.split("## Status", 1)[-1].split("##", 1)[0]
+    return status.strip().startswith("Accepted")
 
 
 def digest(row: dict) -> str:
@@ -35,8 +46,10 @@ def read_jsonl(path: Path) -> list[dict]:
 
 
 def export_prompts(args) -> None:
-    if args.split != "dev" or args.as_of_strategy != "giua_khoang":
-        raise SystemExit("Colab export requires --split dev --as-of-strategy giua_khoang")
+    if args.split not in SPLITS or args.as_of_strategy != "giua_khoang":
+        raise SystemExit("Colab export requires --split dev|test --as-of-strategy giua_khoang")
+    if args.split == "test" and not adr_accepted():
+        raise SystemExit(f"test prompts need {ADR} Accepted and committed first (plan, gate G)")
     name = getattr(args, "system", "b2ctx")
     # B5 oracle context: the gold unit alone (the version in force, or for a repealed row the
     # repeal), an upper bound kept out of the runner, which never sees gold. Adding the repealed
@@ -63,7 +76,7 @@ def export_prompts(args) -> None:
         row = {"id": q.id, "system": system, "user": user, "ids": ids,
                "retrieved": retrieved}
         if name != "b2ctx" or getattr(args, "b2", False):
-            row.update({"system_name": name, "split": "dev", "as_of": q.as_of,
+            row.update({"system_name": name, "split": args.split, "as_of": q.as_of,
                         "signals": {u: {} for u in retrieved} if oracle else
                                    {h.unit_id: h.signals for h in hits}})
         row["prompt_sha256"] = digest(row)
@@ -74,7 +87,7 @@ def export_prompts(args) -> None:
     args.out.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
     if getattr(args, "b2", False):
         manifest = args.index.parent / "manifest.json"
-        export_record = {"system": name, "spec": None if oracle else asdict(spec), "split": "dev",
+        export_record = {"system": name, "spec": None if oracle else asdict(spec), "split": args.split,
                          "as_of_strategy": "giua_khoang", "no_dense": bool(getattr(args, "no_dense", False)),
                          "embed": str(embed) if embed else None,
                          "embed_sha256": hashlib.sha256(embed.with_suffix(".sha256").read_bytes()).hexdigest()
@@ -98,8 +111,9 @@ def import_completions(args) -> None:
     if len(names) != 1:
         raise SystemExit(f"mixed systems in prompts: {names}")
     system_name = next(iter(names))
-    if any(r.get("split") != "dev" for r in prompts if "system_name" in r):
-        raise SystemExit("B2 import requires dev prompts")
+    splits = {r.get("split", "dev") for r in prompts}
+    if len(splits) != 1 or not splits <= set(SPLITS):
+        raise SystemExit(f"B2 import requires one split, dev or test; found {splits}")
     export_record = None
     if "system_name" in prompts[0]:
         record_path = args.prompts.with_suffix(".export.json")
@@ -159,7 +173,7 @@ def import_completions(args) -> None:
     good = sum(r["format_ok"] for r in predictions)
     cut = sum(r["truncated"] for r in predictions)
     n = len(predictions)
-    record = {"system": system_name, "split": "dev", "as_of_strategy": "giua_khoang",
+    record = {"system": system_name, "split": next(iter(splits)), "as_of_strategy": "giua_khoang",
               "prompt_file_sha256": hashlib.sha256(args.prompts.read_bytes()).hexdigest(),
               "raw_file_sha256": hashlib.sha256(args.raw.read_bytes()).hexdigest(),
               "model": next(iter(models))[0], "revision": next(iter(models))[1],
