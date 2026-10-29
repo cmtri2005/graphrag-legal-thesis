@@ -296,6 +296,15 @@ Trễ ở A2/A3 thì C dời theo, **không** chạy test trên bản chưa fina
 
 ## Progress
 
+- 29/10, Claude, C1 xong: E1 trên test, 5 hệ × 441 dòng, chấm `--ci 10000` → `runs/E1/test/ladder.score.json`
+  (số ở `runs/README.md`). Sự cố `b7pp` (hai tiến trình cùng ghi sau khi phiên bị ngắt) đã xử lý như ghi ở sổ chạy:
+  giữ file gốc, bản sạch đủ 441/441 ID. Bài học: trước khi chạy tiếp một runner, kiểm `ps` xem tiến trình cũ đã
+  chết chưa. Đang xuất prompt test Colab vào `runs/test_prompts/` (xong `b1 b2ctx b7 b7pp`).
+- 29/10, Claude, **Cổng G qua**: (1) release final commit `3e487c4`, tag `vilextime-v1.0` (CMT bảo tag),
+  sha256 `7cf51ee6…`, export và `data/review` không đổi tới HEAD; (2) ADR 0005 Accepted, commit `a64a5bc`,
+  trước mọi file dự đoán trên test (`runs/**/test/` lúc đó chỉ có probe E0); (3) amendment ADR 0004 đã
+  commit, không có model độ bền (C6, C11 hoãn), còn thiếu chi phí Colab; (4) `.venv/bin/python -m pytest -q`
+  → **564 passed**. Bắt đầu C1.
 - 29/10, Claude, ADR 0005 Accepted: CMT chọn chuyển XN5–XN7 sang thăm dò (Holm trên 6: XN1–XN4, XN8,
   XN9), bỏ C6/C11 cho phase 2, người duyệt CMT và NMT. `confirm_vilextime.py`: `EXPLORATORY`, `FAMILY`;
   XN5–7 vẫn tính, `p_Holm=—`, kết luận "thăm dò". Confirm dev chạy lại: Holm 6/6, XN1–4, XN8, XN9 ủng hộ.
@@ -450,7 +459,7 @@ Trễ ở A2/A3 thì C dời theo, **không** chạy test trên bản chưa fina
 - [x] B3 ADR 0005 cập nhật số, Accepted, commit
 - [x] B4 script bảng kết quả
 - [ ] B5: B4 RRF và ngữ cảnh đúng xong trên dev; bảng nhiều LLM chờ model thứ hai (cổng Phi-3.5)
-- [ ] Cổng G
+- [x] Cổng G
 - [ ] C1–C11
 
 ### Nhật ký 27/10 — Codex

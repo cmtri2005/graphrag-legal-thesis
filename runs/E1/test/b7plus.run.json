@@ -1,0 +1,56 @@
+[
+ {
+  "spec": {
+   "name": "b7plus-lex",
+   "layer": "version",
+   "lexical": true,
+   "dense": false,
+   "rerank": false,
+   "temporal": "version",
+   "context": true,
+   "expand": 0,
+   "expand_edges": "none",
+   "verify": "off",
+   "k": 20,
+   "note": "B7+ — version-level filter; the proposed system minus the online graph"
+  },
+  "as_of_strategy": null,
+  "embed": null,
+  "argv": [
+   "--system",
+   "b7plus",
+   "--no-dense",
+   "--retrieval-only",
+   "--split",
+   "test",
+   "--release",
+   "data/vilextime_dataset/vilextime.jsonl",
+   "--out",
+   "runs/E1/test/b7plus.jsonl"
+  ],
+  "commit": "a64a5bcc1f22a4e6aa104eb4c158c88b85ee3622",
+  "uncommitted": "2bbc14f59b70a86e72ccf6260ba67cc1b1ac79b0fa4bb39c326d8ab262af5dcf",
+  "release_sha256": "7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366",
+  "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+  "index_counts": {
+   "documents": 17333,
+   "units_asis": 1509363,
+   "units_version": 1477089,
+   "instructions": 53991,
+   "propagated_windows": 1476957,
+   "versions_with_local_window": 1477089,
+   "provisions_with_context": 1700484
+  },
+  "prompt_sha256": "88e5bb0e72eefae70be63d72ea8b1e6be04abb1c8fd9d12c4d23dfe609af4006",
+  "python": "3.12.3",
+  "started": "2026-10-29T08:44:37+00:00",
+  "finished": true,
+  "ended": "2026-10-29T09:22:36+00:00",
+  "written": 441,
+  "cached": 0,
+  "failed": 0,
+  "models": {
+   "none/none": 441
+  }
+ }
+]
