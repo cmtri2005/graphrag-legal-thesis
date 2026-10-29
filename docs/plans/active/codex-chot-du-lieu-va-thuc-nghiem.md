@@ -296,6 +296,36 @@ Trễ ở A2/A3 thì C dời theo, **không** chạy test trên bản chưa fina
 
 ## Progress
 
+- 29/10, Claude, nạp luật sư lượt 2 (`data/review/luat_su_kiem_q2_da_chot.xlsx`): 67/67 dòng, cột gốc
+  không bị sửa; chốt `dat` 13 (T6 8, T1 5), `khong_dat` 54; đồng ý agent 54/67. `luat_su_kiem_agent.tsv` gộp
+  117 dòng. `export_release.py --final` → sha256 `7cf51ee6…`, 769 dòng chính, 859 silver; dev 328/328 không
+  đổi. Test `giua_khoang` **211/165**: T1 123, T2 46, T3 12, **T6 30/15**; `t6_ancestor_repealed` **12/12**.
+  7/8 dòng T6 luật sư chốt `dat` là dòng trước ngày bãi bỏ; dòng ngày bãi bỏ cùng lineage bị chốt
+  `khong_dat` (nội dung chuyển chỗ), nên lineage vẫn bị loại. Nguồn nhãn 211 dòng ranh giới test: luật sư 33,
+  A+B 88, agent 90. E0 chạy lại (`runs/E0_final/{dev,test}/probes.score.json`, `--ci 1000`): oracle 1,000
+  cả ba chế độ; 12/246 trích dẫn chữ không phân giải. Cập nhật ADR 0005 §1 (vẫn Proposed), định nghĩa §6
+  điều 4–5, datasheet. Chờ nhóm: họ XN với các lát T6 nhỏ; xác nhận phiếu luật sư có dùng AI hỗ trợ không;
+  tag.
+- 29/10, Claude, Q2 đảo, chờ luật sư lượt 2: CMT đồng ý hướng 1 (A–agent lệch thì lấy nhãn agent).
+  `export_release.py` đọc thêm `data/review/luat_su_kiem_agent.tsv` (nhãn luật sư, cùng mức ưu tiên với
+  `hoa_giai_kiem.tsv`). Field manifest đổi thành `a_agent_disagreement`. `agent_sample.py --load` nạp phiếu
+  luật sư và gộp theo id; `--q2` xuất phiếu cho các dòng còn lại. `export_release.py --final` (chưa commit,
+  sha256 `8f16f3a7…`): dev không đổi 328/328. Test `giua_khoang` còn **204/159**, T6 **28/14**,
+  `t6_ancestor_repealed` **11/11** (trước đó 333/226, 152/76, 56/56). Mình đã ước mất khoảng 40–50 lineage,
+  thực tế mất 67, vì đảo Q2 loại cả 80 dòng xung đột chứ không chỉ phần hỏng. Gốc rễ: 59/82 dòng Q2 bị agent
+  gắn `relocation_unclear` (R2: bãi bỏ có nội dung chuyển sang văn bản thay thế). CMT chọn hướng 3: luật sư
+  xem 67 dòng còn lại, `data/review/luat_su_kiem_q2.xlsx` (T6 62, T1 5). Nạp bằng `agent_sample.py --load`,
+  rồi chạy lại `--final`. Test `test_agent_sample.py`, `test_export_release.py` → 4 passed. Chưa sửa
+  định nghĩa §6 điều 4, datasheet, ADR 0005 §1, E0; chờ số cuối.
+- 29/10, Claude, A5 nạp phiếu luật sư (`data/review/luat_su_kiem_agent_da_chot.xlsx`): 50/50 dòng, cùng
+  ID và thứ tự với phiếu gốc, cột gốc không bị sửa, đủ `dong_y`/`ly_do`; thêm `ket_luan_chot`, `do_tin_cay`.
+  Đồng ý với agent **43/50 = 0,86, Wilson 95% [0,738; 0,930]**: **dưới ngưỡng 45/50, theo A5 dừng và báo
+  CMT**, không sửa nhãn. Agent `dat` 27/27; agent `khong_dat` 16/23. Cả 7 dòng lệch đều là agent
+  `khong_dat`, luật sư `dat`. Hệ quả cho release: 36/50 dòng nằm trong test chính, nhãn cuối khớp luật sư ở
+  28/36 [0,619; 0,883]. Cả 8 dòng sai đều do Q2 ghi đè (A `dat` / agent `khong_dat` → `dat`) trong khi luật
+  sư chốt `khong_dat`. Trong 12 dòng Q2 được luật sư xem, luật sư đứng về phía agent ở 8/12 [0,391; 0,862].
+  Q2 chạm 82 dòng ranh giới test (T6 75, T1 7), 72/226 lineage, 137/333 dòng `giua_khoang`. 14/50 dòng
+  mẫu không có trong release công bố. Chờ CMT chọn hướng xử lý Q2 trước A7/tag.
 - 29/10, Claude, đóng phần dev: CMT chọn `oracle` bản 1. `colab_b1.py` trả về bản 1 (bỏ `last_version`).
   Xuất lại ra đúng sha256 `e092986c…`, nạp raw cũ, 151/151. Bản 2 giữ làm số chẩn đoán ở
   `runs/B2_dev/{prompts,dev}/oracle_v2.*`. Chấm lại 17 hệ (`all.score.json`, `--ci 2000`): `oracle` Acc 0,854

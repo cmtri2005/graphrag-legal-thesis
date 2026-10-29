@@ -160,10 +160,13 @@ T3 0,473 với p_neg 0,200 (n=23); T5 không có dòng hiệu chuẩn. CMT chố
    nhãn một người (dev chỉ để chọn cấu hình).
 3. Dòng test T2, T3, T5 chưa đủ điều kiện nằm ở `vilextime_silver` (chưa kiểm). Kết quả trên T2, T3 vì thế
    chỉ mô tả; H1 và H2 báo ở mức thăm dò cho tới khi có người kiểm đủ.
-4. A và agent lệch nhau thì lấy `dat` (quyết định Q2, CMT 27/10). Số dòng lệch ghi ở
-   `manifest.json` (`review_counts.a_agent_disagreement_dat`).
-5. Luật sư kiểm mẫu 50 dòng agent: `data/review/luat_su_kiem_agent.xlsx`. Chưa có kết quả; đến khi có thì
-   bản phát hành là **bản final chờ luật sư xác nhận mẫu**, chưa gắn tag.
+4. A và agent lệch nhau thì lấy **nhãn agent** (CMT 29/10, thay quyết định Q2 ngày 27/10 "lấy `dat`").
+   Lý do: trong mẫu luật sư, ở 12 dòng A `dat` / agent `khong_dat`, luật sư đứng về phía agent 8/12. Số dòng
+   lệch ghi ở `manifest.json` (`review_counts.a_agent_disagreement`).
+5. Luật sư kiểm nhãn agent (29/10): mẫu ngẫu nhiên 50 dòng (`luat_su_kiem_agent_da_chot.xlsx`), đồng ý 43/50,
+   Wilson 95% [0,738; 0,930], dưới ngưỡng 45/50; rồi toàn bộ 67 dòng A–agent lệch còn lại
+   (`luat_su_kiem_q2_da_chot.xlsx`), đồng ý 54/67. Nhãn luật sư của 117 dòng này
+   (`data/review/luat_su_kiem_agent.tsv`) đứng trên nhãn agent và nhãn A.
 
 ## 7. Mã loại dòng (danh sách đóng, 19 mã)
 

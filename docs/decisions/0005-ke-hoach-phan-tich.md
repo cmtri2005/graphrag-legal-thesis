@@ -30,35 +30,37 @@ Vì vậy đơn vị phân tích là lineage.
 ### 1. Dữ liệu được phân tích
 
 - Bản final: `data/vilextime_dataset/vilextime.jsonl`, sha256
-  `19c515baca1b1628afe9916055a6b77ff432f6325808b39cfc502aeeccebe437`
-  (`data/vilextime_dataset/manifest.json`, schema 2.0.0, `final: true`): 1.013 dòng chính;
+  `7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366`
+  (`data/vilextime_dataset/manifest.json`, schema 2.0.0, `final: true`, xuất lại 29/10 sau khi luật sư
+  kiểm 117 dòng nhãn agent và đảo Q2, định nghĩa §6): 769 dòng chính;
   859 dòng silver ngoài bảng chính. Các trường `near_identical` và `repeal_mode` lấy theo ID từ
   `data/vilextime_dataset/vilextime_meta.jsonl`. Số dưới đây đếm bằng `SLICES` của
   `scripts/eval/confirm_vilextime.py` trên `giua_khoang`.
-- Bảng chính `test`: 333 dòng, 226 lineage; `dev`: 151 dòng, 81 lineage. "all" gồm T1, T2, T3
+- Bảng chính `test`: 211 dòng, 165 lineage; `dev`: 151 dòng, 81 lineage (dev không đổi so với bản 28/10). "all" gồm T1, T2, T3
   và T6, trùng toàn bộ bảng chính ở cả hai split. T5 không có trong file chính; các dòng T5 nằm
   ở silver và chỉ được mô tả, không vào "all" hay kiểm định.
 - Các lát khai báo trước, lấy từ cột có sẵn trong release và đếm trên bảng chính:
 
   | Lát (`SLICES`) | Điều kiện | Dev dòng / lineage | Test dòng / lineage |
   |---|---|---:|---:|
-  | `all` | `group ∈ {T1, T2, T3, T6}` | 151 / 81 | 333 / 226 |
-  | `all_answerable` | `all`, `answerable = true` | 130 / 81 | 257 / 226 |
+  | `all` | `group ∈ {T1, T2, T3, T6}` | 151 / 81 | 211 / 165 |
+  | `all_answerable` | `all`, `answerable = true` | 130 / 81 | 196 / 165 |
   | `t2_near` | `group = T2`, `near_identical = true` | 16 / 8 | 8 / 4 |
   | `t2_regular` | `group = T2`, `near_identical = false` | 56 / 28 | 38 / 19 |
-  | `t6_ancestor_repealed` | `group = T6`, `repeal_mode = ancestor`, `answerable = false` | 16 / 16 | 56 / 56 |
-  | `t6` | `group = T6` | 42 / 21 | 152 / 76 |
+  | `t6_ancestor_repealed` | `group = T6`, `repeal_mode = ancestor`, `answerable = false` | 16 / 16 | 12 / 12 |
+  | `t6` | `group = T6` | 42 / 21 | 30 / 15 |
   | `t2_t3` | `group ∈ {T2, T3}` | 91 / 42 | 58 / 27 |
 
-  Trên test, T2 chỉ có 46 dòng / 23 lineage; T3 chỉ có 12 dòng / 4 lineage.
-  `t2_near` còn 8 dòng / 4 lineage. **Đề xuất để nhóm duyệt trước khi Accepted:** chuyển H1
+  Trên test, T2 chỉ có 46 dòng / 23 lineage; T3 chỉ có 12 dòng / 4 lineage; T6 chỉ có 30 dòng /
+  15 lineage. `t2_near` còn 8 dòng / 4 lineage, `t6_ancestor_repealed` 12 / 12. T6 giảm từ 76 lineage
+  vì phần lớn dòng bãi bỏ có nội dung chuyển sang văn bản thay thế (R2, luật sư chốt 29/10). **Đề xuất để nhóm duyệt trước khi Accepted:** chuyển H1
   (XN6) và H2 (XN7) sang phân tích thăm dò vì các lát so sánh quá nhỏ; cập nhật họ Holm và
   §4–§8 nếu nhóm chấp thuận. Bản Proposed này vẫn giữ định nghĩa XN6/XN7 hiện tại để nhóm
   quyết định rõ ràng, không dùng số dev để chọn giả thuyết.
 
 - Ba chế độ `as_of` còn lại chỉ chạy truy xuất (quyết định C2) và chỉ được mô tả.
 - Kiểm scorer trên bản final (E0, `score_vilextime.py --probes`, 29/10): probe oracle đạt Accuracy
-  1,000 ở cả ba chế độ, trên `dev` (151 dòng) và `test` (333 dòng). Có 12/307 trích dẫn chữ không
+  1,000 ở cả ba chế độ, trên `dev` (151 dòng) và `test` (211 dòng). Có 12/246 trích dẫn chữ không
   phân giải được, toàn bộ ở T1 của `test`. Phần lớn thiếu Điều, số còn lại dùng nhãn lạ (`Khoản a`,
   `Điểm 4`, `(V19)`). Lỗi này chỉ ảnh hưởng đến trích dẫn viết bằng chữ; trích dẫn theo mã đơn vị
   không bị. Ghi là giới hạn, không nới parser.

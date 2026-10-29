@@ -79,7 +79,7 @@ def test_export_publishes_passed_lineages_with_twins_and_counts_the_dropped(tmp_
 def test_agent_priority_q2_and_review_counts(tmp_path):
     rel = tmp_path / "derived/vilextime"
     rel.mkdir(parents=True)
-    ids = ("agent_only", "lawyer", "a_dat", "agent_dat", "agree")
+    ids = ("agent_only", "lawyer", "a_dat", "agent_dat", "agree", "sample")
     rel.joinpath("release.jsonl").write_text(
         "".join(json.dumps(_row(i, "2024-01-01", group="T1", split="test")) + "\n" for i in ids), encoding="utf-8")
     review = tmp_path / "review"
@@ -89,39 +89,46 @@ def test_agent_priority_q2_and_review_counts(tmp_path):
            [("lawyer:2024-01-01", "khong_dat", "gold_wrong", g),
             ("a_dat:2024-01-01", "dat", "", g),
             ("agent_dat:2024-01-01", "khong_dat", "question_leaks", g),
-            ("agree:2024-01-01", "dat", "", g)])
+            ("agree:2024-01-01", "dat", "", g),
+            ("sample:2024-01-01", "dat", "", g)])
     _sheet(review / "kiem_B.tsv", KIEM_COLUMNS, [("agree:2024-01-01", "dat", "", g)])
     (review / "hoa_giai_kiem.tsv").write_text(
         "id\tverdict\treasons\tadjudicator\n"
         "lawyer:2024-01-01\tdat\t\tluật sư\n", encoding="utf-8")
+    (review / "luat_su_kiem_agent.tsv").write_text(
+        "id\tverdict\treasons\tnote\tadjudicator\n"
+        "sample:2024-01-01\tdat\t\t\tluật sư (mẫu agent)\n", encoding="utf-8")
     with (review / "kiem_agent.tsv").open("w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, ["id", "verdict", "reasons", "labeler", "guideline_version"], delimiter="\t")
         w.writeheader()
         for rid, verdict, reasons in [
             ("agent_only", "dat", ""), ("lawyer", "khong_dat", "rename_only"),
             ("a_dat", "khong_dat", "rename_only"), ("agent_dat", "dat", ""),
-            ("agree", "khong_dat", "gold_wrong"),
+            ("agree", "khong_dat", "gold_wrong"), ("sample", "khong_dat", "rename_only"),
         ]:
             w.writerow({"id": f"{rid}:2024-01-01", "verdict": verdict, "reasons": reasons,
                         "labeler": "Codex test", "guideline_version": g})
 
     scope = {f"{i}:2024-01-01": ("T1", "test") for i in ids}
     labels = export_release.final_labels(review, scope)
-    assert {i: labels[f"{i}:2024-01-01"]["verdict"] for i in ids} == dict.fromkeys(ids, "dat")
+    # an A/agent disagreement takes the agent's label (29/10, the lawyer's sample); the lawyer still wins
+    assert {i: labels[f"{i}:2024-01-01"]["verdict"] for i in ids} == {**dict.fromkeys(ids, "dat"),
+                                                                       "a_dat": "khong_dat"}
     assert labels["lawyer:2024-01-01"]["labeler"] == "luật sư"
+    assert labels["sample:2024-01-01"]["labeler"] == "luật sư (mẫu agent)"
     assert labels["agree:2024-01-01"]["labeler"] == "A+B"
     assert labels["a_dat:2024-01-01"]["reasons"] == ["rename_only"]
     assert labels["agent_dat:2024-01-01"]["reasons"] == ["question_leaks"]
-    assert labels["a_dat:2024-01-01"]["labeler"] == "A"
+    assert labels["a_dat:2024-01-01"]["labeler"] == "Codex test"
     assert labels["agent_dat:2024-01-01"]["labeler"] == "Codex test"
     out = tmp_path / "publish"
     manifest = export_release.export(tmp_path, out)
     assert manifest["rows"] == {"main": 5, "silver": 0}
-    assert manifest["review_counts"] == {"human_checked": 2, "agent_checked": 3,
-                                          "a_agent_disagreement_dat": 2}
+    assert manifest["review_counts"] == {"human_checked": 3, "agent_checked": 3,
+                                          "a_agent_disagreement": 2}
     meta = {r["id"]: r for r in map(json.loads, (out / "vilextime_meta.jsonl").open(encoding="utf-8"))}
     assert meta["agent_only:2024-01-01"]["review"]["labeler"] == "Codex test"
-    assert meta["a_dat:2024-01-01"]["review"]["reasons"] == ["rename_only"]
+    assert "a_dat:2024-01-01" not in meta
 
 
 def test_agent_counts_only_for_t1_t6_and_one_human_is_not_enough_on_test(tmp_path):

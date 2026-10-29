@@ -175,17 +175,21 @@ Bản UIT đã nộp không sửa được, nên khóa luận phải công bố 
   Mã băm của mọi thứ dùng để dựng nằm ở `data/vilextime/manifest.json`.
 - **Phiên bản:** theo ADR 0003 §8. Đổi gold hay chuyển dòng giữa các split là MAJOR; thêm
   trường hay thêm mã là MINOR.
-- **Trạng thái kiểm định (28/10/2026).** Bản phát hành `data/vilextime_dataset/` (schema 2.0.0, `final: true`):
-  1.013 dòng chính, 859 dòng silver. Tập test, chế độ ranh giới, trong file chính: T1 123, T2 46, T3 12, T6 152,
-  T5 0. Nguồn nhãn của 333 dòng này: luật sư chốt hoặc A và B cùng nhãn 98 dòng, nhãn agent 235 dòng (T1, T6; 78 trong số đó lấy `dat` của A vì A và agent lệch, theo Q2).
+- **Trạng thái kiểm định (29/10/2026).** Bản phát hành `data/vilextime_dataset/` (schema 2.0.0, `final: true`):
+  769 dòng chính, 859 dòng silver. Tập test, chế độ ranh giới, trong file chính: T1 123, T2 46, T3 12, T6 30,
+  T5 0. Nguồn nhãn của 211 dòng này: luật sư 33 dòng (10 dòng hòa giải, có phiếu Claude hỗ trợ; 23 dòng từ lượt
+  kiểm nhãn agent), A và B cùng nhãn 88 dòng, nhãn agent 90 dòng (T1, T6).
   - Hiệu chuẩn mù của agent (Codex gpt-6-sol) trên 178 dòng có nhãn người độc lập: AC1 0,721, p_neg 0,610;
     ngưỡng AC1 ≥ 0,80 **không đạt** ở mức toàn tập, đạt ở T1 (0,970) và chỉ T6 đạt p_neg (0,833, AC1 0,681).
     Nên nhãn agent chỉ dùng cho T1, T6 (định nghĩa mục 6, sửa 28/10).
   - Hai người gán độc lập: AC1 0,377 trên 246 dòng chung, chưa đạt ngưỡng. Nhãn của A: khoảng 5 giây mỗi dòng,
     288 ghi chú nháp do Claude viết.
-  - Lệch A–agent lấy `dat` (Q2): xem `manifest.json`, `review_counts.a_agent_disagreement_dat`.
+  - Luật sư kiểm nhãn agent: mẫu 50 dòng đồng ý 43/50 (Wilson 95% [0,738; 0,930]); 67 dòng A–agent lệch còn lại
+    đồng ý 54/67. A và agent lệch thì lấy nhãn agent (định nghĩa mục 6, sửa 29/10; trước đó lấy `dat`). T6 test
+    giảm từ 152 xuống 30 dòng: luật sư xác nhận phần lớn dòng bãi bỏ có nội dung chuyển sang văn bản thay thế
+    (R2), hoặc không chắc có chuyển hay không.
   - Dòng test T2, T3, T5 chưa có đủ người kiểm nằm ở silver (389 dòng ranh giới). H1 và H2 chỉ thăm dò.
-  - **Chưa xong:** luật sư kiểm 50 dòng agent; tập gold độc lập (0/75); kiểm 30 dòng ngày ký của
+  - **Chưa xong:** tập gold độc lập (0/75); kiểm 30 dòng ngày ký của
     `truoc_hieu_luc`; T5 chưa có dòng nào được kiểm; tag `vilextime-v1.0`.
 
 ## 8. Số liệu

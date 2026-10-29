@@ -12,8 +12,9 @@ data/vilextime_dataset/ (its own folder, apart from the build inputs in data/vil
                              a BOM so Excel reads the diacritics; `accepted_evidence` joined by ";"
     manifest.json            schema version, row counts, rows dropped per reason code, agreement, sha256
 
-A row's final label: lawyer, matching A/B under 3.0, then agent (with `dat` winning an A/agent
-disagreement). Without an agent label, one current human label suffices; disagreeing A/B wait for
+A row's final label: lawyer (hoa_giai_kiem.tsv, then the lawyer's check of the agent sample,
+luat_su_kiem_agent.tsv), matching A/B under 3.0, then agent (the agent's label winning an A/agent
+disagreement: the lawyer sided with the agent on 8 of the 12 such rows of the sample, 29/10). Without an agent label, one current human label suffices; disagreeing A/B wait for
 the lawyer. A label made under an older guideline (carried from D4) counts only once confirmed under
 the current one. A lineage passes when every boundary row of it passes, fails
 when one fails (as `adjudicate.py drop` does for D4: a T2 pair without one of its rows is no pair).
@@ -62,7 +63,7 @@ def final_labels(review: Path, scope: dict[str, tuple[str, str]] | None = None) 
     a = {r["id"]: r for r in read(review / "kiem_A.tsv")}
     b = {r["id"]: r for r in read(review / "kiem_B.tsv")}
     adj_path = review / "hoa_giai_kiem.tsv"
-    adj = {r["id"]: r for r in read(adj_path)} if adj_path.exists() else {}
+    adj = {r["id"]: r for p in (review / "luat_su_kiem_agent.tsv", adj_path) if p.exists() for r in read(p)}
     agent_path = review / "kiem_agent.tsv"
     agent = {r["id"]: r for r in read(agent_path)} if agent_path.exists() else {}
     out = {}
@@ -85,12 +86,10 @@ def final_labels(review: Path, scope: dict[str, tuple[str, str]] | None = None) 
             ar = agent[i]
             av = current.get("A")
             conflict = bool(av and av["verdict"] != ar["verdict"])
-            winner = av if conflict and av["verdict"] == "dat" else ar
             reasons = (CODES(av["reasons"] if av["verdict"] == "khong_dat" else ar["reasons"])
-                       if conflict else CODES(winner["reasons"]))
-            rev.update(status="checked", verdict=winner["verdict"], reasons=reasons,
-                       labeler=("A" if winner is av else ar.get("labeler") or "agent"), source="agent",
-                       a_agent_disagreement_dat=conflict)
+                       if conflict else CODES(ar["reasons"]))
+            rev.update(status="checked", verdict=ar["verdict"], reasons=reasons,
+                       labeler=ar.get("labeler") or "agent", source="agent", a_agent_disagreement=conflict)
         elif scope is not None and scope[i][1] == "test" and len(current) < 2 and (current or not labelled):
             rev.update(status="not_verified", why=OUT_OF_SCOPE if scope[i][0] not in AGENT_GROUPS else "chờ nhãn agent")
         elif not labelled:
@@ -205,7 +204,7 @@ def export(data: Path, out: Path, final: bool = False, draft: bool = False) -> d
         "review_counts": {
             "human_checked": sum(x.get("source") == "human" for x in labels.values()),
             "agent_checked": sum(x.get("source") == "agent" for x in labels.values()),
-            "a_agent_disagreement_dat": sum(x.get("a_agent_disagreement_dat", False) for x in labels.values()),
+            "a_agent_disagreement": sum(x.get("a_agent_disagreement", False) for x in labels.values()),
         },
         "agreement": json.loads(agreement.read_text(encoding="utf-8")) if agreement.exists() else None,
         "sha256": {n: hashlib.sha256((out / n).read_bytes()).hexdigest() for n in files},
