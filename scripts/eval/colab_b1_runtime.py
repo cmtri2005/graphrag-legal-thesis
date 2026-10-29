@@ -14,14 +14,18 @@ from pathlib import Path
 
 import torch
 from google.colab import drive, files
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+import torch.nn.functional as F
+from torch.nn.attention import SDPBackend, sdpa_kernel
+from transformers import (AttentionInterface, AutoModelForCausalLM, AutoTokenizer,
+                          BitsAndBytesConfig)
+from transformers.masking_utils import AttentionMaskInterface, sdpa_mask
 
 MODEL_ID = "Qwen/Qwen3-4B-Instruct-2507"
 # For the second B1 candidate, use "microsoft/Phi-3.5-mini-instruct".
 MAX_NEW_TOKENS = 512
 MODELS = {"Qwen/Qwen3-4B-Instruct-2507", "microsoft/Phi-3.5-mini-instruct"}
 B2_SYSTEMS = {"b1", "b2ctx", "b3", "b4", "b7", "b7v", "b7plus", "b7pp", "proposed",
-              "b5", "b6", "a1", "a2", "a3", "a4"}
+              "b5", "b6", "a1", "a2", "a3", "a4", "oracle", "b2"}
 BASE_FIELDS = {"id", "system", "user", "ids", "retrieved", "prompt_sha256"}
 B2_FIELDS = BASE_FIELDS | {"system_name", "split", "as_of", "signals"}
 assert MODEL_ID in MODELS
@@ -51,12 +55,35 @@ if len(batches) > 1:
     assert all(batch[3] for batch in batches), "Multiple-file upload requires B2 prompts"
     assert len({batch[4] for batch in batches}) == len(batches), "Duplicate B2 system"
 
+ATTENTION = "t4_sdpa_repeat_kv"
+
+
+def t4_sdpa_repeat_kv(module, query, key, value, attention_mask, dropout=0.0, scaling=None,
+                      **kwargs):
+    """SDPA on the memory-efficient kernel. T4 has no flash kernel and the efficient one
+    rejects grouped KV heads, so plain sdpa falls back to the math kernel, which builds
+    the whole heads x L x L matrix: 29 GiB for a 22k-token prompt. Repeating the KV heads
+    keeps memory linear in L. The KV cache itself stays unrepeated."""
+    groups = query.shape[1] // key.shape[1]
+    key = key.repeat_interleave(groups, dim=1)
+    value = value.repeat_interleave(groups, dim=1)
+    mask = None if attention_mask is None else attention_mask[:, :, :, :key.shape[-2]]
+    with sdpa_kernel([SDPBackend.EFFICIENT_ATTENTION]):
+        out = F.scaled_dot_product_attention(
+            query, key, value, attn_mask=mask, scale=scaling,
+            is_causal=mask is None and query.shape[2] > 1)
+    return out.transpose(1, 2).contiguous(), None
+
+
+AttentionInterface.register(ATTENTION, t4_sdpa_repeat_kv)
+AttentionMaskInterface.register(ATTENTION, sdpa_mask)
+
 quantization = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
                                   bnb_4bit_compute_dtype=torch.float16)
 tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
 model = AutoModelForCausalLM.from_pretrained(
     MODEL_ID, device_map="auto", quantization_config=quantization,
-    torch_dtype=torch.float16).eval()
+    torch_dtype=torch.float16, attn_implementation=ATTENTION).eval()
 revision = model.config._commit_hash
 assert revision, "Missing Hugging Face model revision"
 print("Model revision:", revision)
@@ -73,7 +100,8 @@ for filename, prompt_sha256, prompts, is_b2, system_name in batches:
     meta_path = output_path.with_suffix(".meta.json")
     metadata = {"prompt_sha256": prompt_sha256, "model": MODEL_ID,
                 "max_new_tokens": MAX_NEW_TOKENS, "decoding": "greedy",
-                "quantization": "nf4", "gpu": gpu_name}
+                "quantization": "nf4", "gpu": gpu_name,
+                "attention_backend": ATTENTION}
     if is_b2:
         metadata["system_name"] = system_name
     if meta_path.exists():
@@ -100,14 +128,14 @@ for filename, prompt_sha256, prompts, is_b2, system_name in batches:
             continue
         messages = [{"role": "system", "content": row["system"]},
                     {"role": "user", "content": row["user"]}]
-        tokens = tokenizer.apply_chat_template(messages, add_generation_prompt=True,
-                                               return_tensors="pt")
-        prompt_tokens = tokens.shape[-1]
+        inputs = tokenizer.apply_chat_template(messages, add_generation_prompt=True,
+                                               return_tensors="pt", return_dict=True)
+        prompt_tokens = inputs["input_ids"].shape[-1]
         assert prompt_tokens + MAX_NEW_TOKENS <= model.config.max_position_embeddings, (
             f"Context too long: {row['id']} ({prompt_tokens})")
         started = time.perf_counter()
         with torch.inference_mode():
-            output = model.generate(tokens.to(model.device), max_new_tokens=MAX_NEW_TOKENS,
+            output = model.generate(**inputs.to(model.device), max_new_tokens=MAX_NEW_TOKENS,
                                     do_sample=False, pad_token_id=tokenizer.eos_token_id)
         elapsed_s = time.perf_counter() - started
         new = output[0, prompt_tokens:]
@@ -116,7 +144,8 @@ for filename, prompt_sha256, prompts, is_b2, system_name in batches:
                 "model": MODEL_ID, "revision": revision,
                 "raw": tokenizer.decode(new, skip_special_tokens=True),
                 "finish_reason": finish, "prompt_tokens": int(prompt_tokens),
-                "completion_tokens": int(len(new)), "elapsed_s": elapsed_s, "gpu": gpu_name}
+                "completion_tokens": int(len(new)), "elapsed_s": elapsed_s, "gpu": gpu_name,
+                "attention_backend": ATTENTION}
         with output_path.open("a", encoding="utf-8") as sink:
             sink.write(json.dumps(item, ensure_ascii=False) + "\n")
             sink.flush()

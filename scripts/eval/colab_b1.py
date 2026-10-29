@@ -18,6 +18,9 @@ from vilexgraph.framework.corpus import Corpus  # noqa: E402
 from run_vilextime import EMBED, INDEX, RELEASE, queries, retriever  # noqa: E402
 
 
+ORACLE = "oracle"
+
+
 def digest(row: dict) -> str:
     fields = [row["id"], row["system"], row["user"], row["ids"], row["retrieved"]]
     if "system_name" in row:
@@ -35,24 +38,34 @@ def export_prompts(args) -> None:
     if args.split != "dev" or args.as_of_strategy != "giua_khoang":
         raise SystemExit("Colab export requires --split dev --as-of-strategy giua_khoang")
     name = getattr(args, "system", "b2ctx")
-    spec = systems.get(name)
+    # B5 oracle context: the gold unit alone (the version in force, or for a repealed row the
+    # repeal), an upper bound kept out of the runner, which never sees gold. Adding the repealed
+    # row's last version was tried on dev and scored lower (runs/README.md, 29/10).
+    oracle = name == ORACLE
+    spec = systems.get("b2ctx" if oracle else name)
     if getattr(args, "no_dense", False) and spec.dense:
         spec = spec.variant(f"{spec.name}-lex", dense=False, rerank=False)
-    embed = getattr(args, "embed", EMBED) if spec.dense else None
+    embed = getattr(args, "embed", EMBED) if spec.dense and not oracle else None
     corpus = Corpus(args.index) if spec.retrieves else None
-    search = retriever(spec, corpus, args.hits_cache, embed=embed)
+    search = None if oracle else retriever(spec, corpus, args.hits_cache, embed=embed)
+    gold = {r["id"]: [r["version_id"]] if r["version_id"] else r["accepted_evidence"]
+            for r in read_jsonl(args.release)} if oracle else {}
     rows = []
     limit = args.limit if args.limit > 0 else None
     for q in queries(args.release, args.split, limit, args.as_of_strategy):
         hits = search(q.question, q.as_of) if search else []
-        units = corpus.units([h.unit_id for h in hits]) if corpus and hits else []
+        retrieved = gold[q.id] if oracle else [h.unit_id for h in hits]
+        units = corpus.units(retrieved) if corpus and retrieved else []
+        if oracle and len(units) != len(retrieved):
+            raise SystemExit(f"{q.id}: gold unit not in the corpus: {retrieved}")
         system, user, ids = generate.build_prompt(q.question, q.as_of, units,
                                                    with_context=spec.context)
         row = {"id": q.id, "system": system, "user": user, "ids": ids,
-               "retrieved": [h.unit_id for h in hits]}
+               "retrieved": retrieved}
         if name != "b2ctx" or getattr(args, "b2", False):
             row.update({"system_name": name, "split": "dev", "as_of": q.as_of,
-                        "signals": {h.unit_id: h.signals for h in hits}})
+                        "signals": {u: {} for u in retrieved} if oracle else
+                                   {h.unit_id: h.signals for h in hits}})
         row["prompt_sha256"] = digest(row)
         rows.append(row)
     if (not rows or (limit and len(rows) != limit) or len({r["id"] for r in rows}) != len(rows)):
@@ -61,7 +74,7 @@ def export_prompts(args) -> None:
     args.out.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
     if getattr(args, "b2", False):
         manifest = args.index.parent / "manifest.json"
-        export_record = {"system": name, "spec": asdict(spec), "split": "dev",
+        export_record = {"system": name, "spec": None if oracle else asdict(spec), "split": "dev",
                          "as_of_strategy": "giua_khoang", "no_dense": bool(getattr(args, "no_dense", False)),
                          "embed": str(embed) if embed else None,
                          "embed_sha256": hashlib.sha256(embed.with_suffix(".sha256").read_bytes()).hexdigest()
@@ -96,8 +109,8 @@ def import_completions(args) -> None:
         if (export_record["system"] != system_name or export_record["rows"] != len(prompts)
                 or export_record["prompt_file_sha256"] != hashlib.sha256(args.prompts.read_bytes()).hexdigest()):
             raise SystemExit("B2 prompt export record mismatch")
-    spec = systems.get(system_name)
-    corpus = Corpus(getattr(args, "index", INDEX)) if spec.verify != "off" else None
+    spec = None if system_name == ORACLE else systems.get(system_name)
+    corpus = Corpus(getattr(args, "index", INDEX)) if spec and spec.verify != "off" else None
     completions = read_jsonl(args.raw)
     seen, models, predictions = set(), set(), []
     for item in completions:
@@ -150,7 +163,9 @@ def import_completions(args) -> None:
               "prompt_file_sha256": hashlib.sha256(args.prompts.read_bytes()).hexdigest(),
               "raw_file_sha256": hashlib.sha256(args.raw.read_bytes()).hexdigest(),
               "model": next(iter(models))[0], "revision": next(iter(models))[1],
-              "gpu": sorted({r.get("gpu", "unknown") for r in completions}),
+              # Later runtimes write the GPU list per row instead of a joined string.
+              "gpu": sorted({" + ".join(g) if isinstance(g, list) else g
+                             for g in (r.get("gpu", "unknown") for r in completions)}),
               "rows": n, "format_ok": good, "truncated": cut,
               "prompt_tokens_mean": sum(r["prompt_tokens"] for r in predictions) / n,
               "completion_tokens_mean": sum(r["completion_tokens"] for r in predictions) / n,
@@ -176,7 +191,7 @@ def main() -> None:
     ex.add_argument("--split", required=True)
     ex.add_argument("--as-of-strategy", required=True)
     ex.add_argument("--limit", type=int, default=100, help="0 exports every dev giua_khoang row")
-    ex.add_argument("--system", choices=sorted(systems.REGISTRY), default="b2ctx")
+    ex.add_argument("--system", choices=sorted(systems.REGISTRY) + [ORACLE], default="b2ctx")
     ex.add_argument("--no-dense", action="store_true")
     ex.add_argument("--embed", type=Path, default=EMBED, help="embeddings for dense systems (b3, b4)")
     ex.add_argument("--b2", action="store_true", help="include B2 metadata for b2ctx prompts")
