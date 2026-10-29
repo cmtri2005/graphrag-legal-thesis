@@ -1,7 +1,7 @@
 {
  "split": "dev",
  "draws": 2000,
- "tests_run": 8,
+ "tests_run": 9,
  "files": {
   "retrieval/b7": {
    "path": "runs/E1_2610/dev/b7.jsonl",
@@ -38,6 +38,10 @@
   "generation/proposed": {
    "path": "runs/B2_dev/dev/proposed.jsonl",
    "sha256": "4f8d815fbd224a10ec8ad2469bb0d18ddc7810bf560ffd9fa87c0a1907d79f70"
+  },
+  "generation/b5": {
+   "path": "runs/B2_dev/dev/b5.jsonl",
+   "sha256": "279c17b95dd9f31a3cf39aa40c2d391c805e7abc420e43e6e947667b68a7b4cb"
   },
   "generation/b1": {
    "path": "runs/B2_dev/dev/b1.jsonl",
@@ -166,6 +170,23 @@
    },
    "p_holm": 0.124,
    "verdict": "không đủ bằng chứng",
+   "predicted": 1
+  },
+  "XN8": {
+   "estimate": 0.304635761589404,
+   "ci95": [
+    0.21830083062477432,
+    0.3910659509202454
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 151
+   },
+   "lineages": {
+    "all": 81
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
    "predicted": 1
   },
   "XN9": {

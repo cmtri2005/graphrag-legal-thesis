@@ -1,0 +1,44 @@
+{
+  "system": "b3",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "2bcc97c87b2cf9a0eaa8a49a77bae083af7aa41e75a662f1b18bb7a2363264f8",
+  "raw_file_sha256": "23c50a72975b48780af3fd365fb917618b679614a925ecfe05a9540ffe98699f",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+  "gpu": [
+    "Tesla T4"
+  ],
+  "rows": 151,
+  "format_ok": 151,
+  "truncated": 0,
+  "prompt_tokens_mean": 4837.940397350993,
+  "completion_tokens_mean": 113.64900662251655,
+  "generation_seconds": 1909.6194587940017,
+  "export": {
+    "system": "b3",
+    "spec": {
+      "name": "b3",
+      "layer": "asis",
+      "lexical": false,
+      "dense": true,
+      "rerank": false,
+      "temporal": "none",
+      "context": true,
+      "expand": 0,
+      "expand_edges": "none",
+      "verify": "off",
+      "k": 20,
+      "note": "B3 — dense"
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "embed": "data/derived/embed/asis-vietnamese-embedding",
+    "embed_sha256": "3a8b143bd5e6307642b2f011020d3a7ed9b32599de7861ef992555343ee4915e",
+    "rows": 151,
+    "release_sha256": "19c515baca1b1628afe9916055a6b77ff432f6325808b39cfc502aeeccebe437",
+    "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+    "prompt_file_sha256": "2bcc97c87b2cf9a0eaa8a49a77bae083af7aa41e75a662f1b18bb7a2363264f8"
+  }
+}

@@ -179,3 +179,38 @@ như công thức (4).
 Hệ quả: B3, B4 là baseline dense yếu hơn mức có thể đạt (1,5% lời văn bị cắt ở 256 token). Bảng
 chính không đổi vì chỉ dùng truy xuất từ vựng. Trên dev, B3 có R@1 0,260 so với `b2ctx` 0,420
 (`runs/README.md`, 19/10).
+
+## Amendment 2026-10-29 (§3, generator) — Proposed, chờ CMT duyệt
+
+Soạn theo bước B1.5 của `docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md`. Thay quyết định
+Groq ngày 27/10 (Q4): Groq giới hạn 8.000 TPM, trong khi một prompt `b2ctx` dài khoảng 18.000 token.
+
+**Generator chính:** `Qwen/Qwen3-4B-Instruct-2507`, revision `cdbee75f17c01a7cc42f958dc650907174af0554`,
+chỉ chế độ non-thinking. Không thuộc họ Claude hay DeepSeek (§3).
+
+- Chạy: trọng số Hugging Face trên Google Colab, 4-bit NF4 (`bitsandbytes`, compute float16), greedy
+  (`do_sample=False`), `max_new_tokens=512`. Phần cứng: 2×Tesla T4. Riêng `b3`, `b4` lượt 3 chạy
+  trên 1×T4.
+- Attention: SDPA ép kernel memory-efficient, nhân head KV (`t4_sdpa_repeat_kv`, trong
+  `scripts/eval/colab_b1_runtime.py`). Lượt B1 và lượt B2 thứ 2 dùng biến thể
+  `t4_sdpa_force_repeat_kv`, **chưa có trong repo**. Prompt giống nhau cho output giống nhau ở
+  553/553 dòng giữa hai biến thể, nên hai biến thể không đổi kết quả trên dev.
+- Đường chạy: `scripts/eval/colab_b1.py export` xuất prompt (không có nhãn), sau đó
+  `colab_b1_runtime.py` trên Colab, rồi `colab_b1.py import` nạp kết quả cho scorer. Mỗi dòng có
+  `prompt_sha256`; `run.json` ghi `prompt_file_sha256`, `raw_file_sha256`, model, revision, GPU.
+  Cột chính không dùng `vilexgraph.llm`.
+
+**Số đo cổng B1** (`runs/W1-09_generator/dev/qwen/`): 100 prompt `b2ctx`, `dev`, `giua_khoang`, file
+prompt sha256 `991eada9…`.
+
+- Đúng định dạng: 100/100. Bị cắt cụt (`length`): 0.
+- Token trung bình: vào 5.061, ra 104. Thời gian trung bình: 12,7 giây/câu.
+- CMT đã đọc 20 câu (`doc_20_cau.md`).
+- Trên 151 dòng dev × 15 hệ (B2, `runs/README.md` 28–29/10): đúng định dạng 97,4–100%, cắt cụt
+  tối đa 3 câu/hệ, 12,6–15,3 giây/câu.
+
+**Chi phí:** [CMT điền: gói Colab, số giờ GPU đã dùng]. Ước cho test: 333 dòng × khoảng 13 giây,
+tức khoảng 70 phút mỗi hệ.
+
+**Model độ bền:** chưa có. `microsoft/Phi-3.5-mini-instruct` chưa chạy cổng B1. Cổng G mục 3 cần
+model này trước C6; nếu không kịp, ADR 0005 §7 phải ghi bỏ kiểm tra độ bền.

@@ -1,0 +1,42 @@
+{
+  "system": "a2",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "2ac21bede15d43dc48c1f92cb3cb6d412f2e30b2d2a23c9761aaaf930df68936",
+  "raw_file_sha256": "7e0b1eee5994a0cc9661304bc65aaff209792bac68fd93571507d6439def2323",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+  "gpu": [
+    "Tesla T4 + Tesla T4"
+  ],
+  "rows": 151,
+  "format_ok": 149,
+  "truncated": 0,
+  "prompt_tokens_mean": 4610.635761589404,
+  "completion_tokens_mean": 106.25827814569537,
+  "generation_seconds": 1918.4640719060012,
+  "export": {
+    "system": "a2",
+    "spec": {
+      "name": "a2-lex",
+      "layer": "version",
+      "lexical": true,
+      "dense": false,
+      "rerank": false,
+      "temporal": "propagated",
+      "context": true,
+      "expand": 0,
+      "expand_edges": "none",
+      "verify": "reject",
+      "k": 20,
+      "note": "A2 — drop graph expansion"
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": true,
+    "rows": 151,
+    "release_sha256": "19c515baca1b1628afe9916055a6b77ff432f6325808b39cfc502aeeccebe437",
+    "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+    "prompt_file_sha256": "2ac21bede15d43dc48c1f92cb3cb6d412f2e30b2d2a23c9761aaaf930df68936"
+  }
+}

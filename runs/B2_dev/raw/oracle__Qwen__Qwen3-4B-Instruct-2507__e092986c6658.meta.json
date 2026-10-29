@@ -1,0 +1,10 @@
+{
+  "prompt_sha256": "e092986c6658a51fc20ada532c1ad4a7783bc26ba7776510e7beadac154d01df",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "max_new_tokens": 512,
+  "decoding": "greedy",
+  "quantization": "nf4",
+  "gpu": "Tesla T4",
+  "attention_backend": "t4_sdpa_repeat_kv",
+  "system_name": "oracle"
+}

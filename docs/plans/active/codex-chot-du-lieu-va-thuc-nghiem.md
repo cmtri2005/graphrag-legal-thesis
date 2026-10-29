@@ -244,7 +244,7 @@ chừng thì chạy tiếp (runner giữ dòng đã có), không `--restart`.
 | Bước | Thí nghiệm | Hệ | Cờ | Thư mục |
 |---|---|---|---|---|
 | C1 | E1 thang chỉ truy xuất | `b2ctx b7 b7v b7plus b7pp` | `--no-dense --retrieval-only`, mọi chế độ | `runs/E1/test` |
-| C2 | E2 | `b1`, `b2ctx`, `b3`, `b4` (RRF) | `--as-of-strategy giua_khoang`; `b3`, `b4` với `--embed` | `runs/E2/test` |
+| C2 | E2 | `b1`, `b2`, `b2ctx`, `b3`, `b4` (RRF) | `--as-of-strategy giua_khoang`; `b3`, `b4` với `--embed` | `runs/E2/test` |
 | C3 | E3 thang có sinh | `b7 b7v b7plus b7pp proposed` | `--no-dense --as-of-strategy giua_khoang` | `runs/E3/test` |
 | C4 | E5 ablation | `a4` trước, rồi `a1 a2 a3` | như C3 | `runs/E5/test` |
 | C5 | E4 đồ thị phi thời gian | `b5`, `b6` | như C3 | `runs/E4/test` |
@@ -296,6 +296,64 @@ Trễ ở A2/A3 thì C dời theo, **không** chạy test trên bản chưa fina
 
 ## Progress
 
+- 29/10, Claude, đóng phần dev: CMT chọn `oracle` bản 1. `colab_b1.py` trả về bản 1 (bỏ `last_version`).
+  Xuất lại ra đúng sha256 `e092986c…`, nạp raw cũ, 151/151. Bản 2 giữ làm số chẩn đoán ở
+  `runs/B2_dev/{prompts,dev}/oracle_v2.*`. Chấm lại 17 hệ (`all.score.json`, `--ci 2000`): `oracle` Acc 0,854
+  [0,796; 0,904], TVER 0. Sinh lại `docs/reports/ket_qua_test.md`. Test
+  `test_colab_b1 test_report_results test_rag_systems test_export_release` → 18 passed. Dev còn lại một
+  việc: cổng B1 cho Phi-3.5 (model độ bền, bảng nhiều LLM) nếu nhóm giữ C6/C11.
+- 29/10, Claude, `oracle` bản 2 trên dev: Acc 0,834, TVER 0,126, T6 bãi bỏ 3/21 (bản 1: 0,854, TVER 0,
+  6/21). Có lời văn điều khoản thì model trả "còn" ở 18/21 dòng. Bản 2 kém hơn và đưa vào một đoạn đã hết
+  hiệu lực, trái định nghĩa B5. Đề xuất (chờ CMT): quay lại bản 1 (prompt `e092986c…`, raw đã có, không cần
+  chạy lại), giữ bản 2 làm số chẩn đoán. Hệ quả cho H3: ở dòng bãi bỏ, generator là nút thắt ngay cả khi
+  ngữ cảnh đúng; nên ghi vào phần giới hạn khi viết XN5, XN7.
+- 29/10, Claude: CMT đồng ý sửa `oracle`. Dòng bãi bỏ nay có hai đoạn: phiên bản cuối của điều khoản
+  được hỏi (`last_version` trong `colab_b1.py`), rồi đến lệnh bãi bỏ. Dòng có đáp án không đổi: 130/130
+  hash prompt trùng bản cũ, 21 dòng bãi bỏ có 2 đoạn. Prompt mới `runs/B2_dev/prompts/oracle.jsonl` sha256
+  `35b510ec…`; cả 152 dòng bãi bỏ của test đều có phiên bản. Raw cũ (`e092986c…`) giữ ở `raw/` làm bằng
+  chứng; chờ CMT chạy lại trên Colab.
+- 29/10, Claude, nạp `b2` và `oracle` dev: hash prompt khớp, mỗi hệ 151/151; chấm lại 17 hệ →
+  `runs/B2_dev/dev/all.score.json`, `docs/reports/ket_qua_test.md` sinh lại. `oracle` Acc 0,854, nhưng T6
+  bãi bỏ chỉ đạt 6/21: với `repeal_mode = ancestor`, ngữ cảnh chỉ có lệnh bãi bỏ Điều cha, không có điều
+  khoản được hỏi. Đề xuất (chờ CMT): dòng bãi bỏ đưa phiên bản cuối của điều khoản rồi mới tới lệnh bãi bỏ,
+  sau đó chạy lại `oracle` dev. XN không đổi (`b2`, `oracle` không thuộc họ).
+- 29/10, Claude: CMT chọn chạy `b2` trên test (C2 thêm `b2`, khớp ADR 0005 §2). Đã xuất
+  `runs/B2_dev/prompts/b2.jsonl`: 151 dòng dev, sha256 `5adbe3bd…`, không có header phân cấp. Runtime và
+  notebook nhận `b2` (code nhúng khớp byte). Chờ chạy trên Colab dev trước cổng G.
+- 29/10, Claude, E0 và hai ADR (bản nháp): chạy lại `score_vilextime.py --probes --split dev|test
+  --release data/vilextime_dataset/vilextime.jsonl` trên code hiện tại: oracle Accuracy **1,000** ở cả ba
+  chế độ (dev 151, test 333). Con số 0,993/0,982 trong nhật ký 28/10 là từ trước khi sửa `lead_in`; việc
+  "tìm dòng oracle chưa đủ trần" coi như xong. Còn 12/307 trích dẫn chữ không phân giải, đều ở T1 test
+  (thiếu Điều hoặc nhãn lạ), đã ghi là giới hạn ở ADR 0005 §1. ADR 0004: thêm amendment 29/10 (generator
+  Qwen3-4B, số đo cổng B1, chưa có model độ bền, chi phí chờ CMT điền). ADR 0005 (vẫn Proposed): §1 thêm
+  E0, §2 thêm generator và `b3`/`b4`, §7 thay việc chạy hai lần bằng 553/553. Chờ nhóm quyết: XN6/XN7 có
+  chuyển sang thăm dò không; `b2` có trong §2 nhưng không có ở bảng C; model độ bền. Phát hiện chặn C:
+  `colab_b1.py` export/import chỉ nhận `--split dev`, nên chưa xuất được prompt test qua Colab.
+- 29/10, Claude, B2 đóng, B4, B5 ngữ cảnh đúng: CMT đồng ý dùng 553/553 dòng output trùng làm số dao
+  động thay lần `--restart` 100 dòng (B2 xong). B4: `scripts/eval/report_results.py <score.json…>
+  --confirm <confirm.json> --out docs/reports/ket_qua_test.md` chỉ đọc số scorer/confirm đã ghi (bảng
+  chính, Acc theo nhóm, hiệu ghép cặp, XN1–XN9 với Holm, dòng/lineage); tự ghi "Số dev" ở đầu khi có file
+  dev. Đã chạy trên `runs/B2_dev/dev/`. B5 ngữ cảnh đúng: `colab_b1.py export --system oracle` đưa đúng
+  một đơn vị gold làm căn cứ: `version_id` (phiên bản có hiệu lực tại mốc), dòng bãi bỏ thì lệnh bãi bỏ
+  trong `accepted_evidence`; khung prompt như `b2ctx`, không qua runner. Dev: 151 prompt (130 phiên bản,
+  21 lệnh bãi bỏ), `runs/B2_dev/prompts/oracle.jsonl` sha256 `e092986c…`; runtime và notebook nhận
+  `oracle` (code nhúng khớp byte). Nhập thử raw giả 151/151 qua. Chưa chạy Qwen. Test:
+  `tests/test_colab_b1.py tests/test_report_results.py` → 3 passed.
+- 29/10, Claude, nạp B2 lượt 2–3: CMT upload raw `b3 b4` (1×T4) và `b5 b6 a1 a2 a3 a4` (2×T4,
+  backend `t4_sdpa_force_repeat_kv`, bản này **không có trong repo**). Hash prompt khớp cả 8 file; raw
+  chuyển vào `runs/B2_dev/raw/`. `colab_b1.py import` vỡ vì runtime mới ghi `gpu` dạng list; sửa để
+  nối thành chuỗi như cũ. 151/151 dòng mỗi hệ. Chấm 15 hệ một lệnh → `runs/B2_dev/dev/all.score.json`
+  (lượt 1 trùng số cũ); confirm dev **9/9 XN** (XN8 `proposed − b5` +0,305 [+0,218; +0,391]); số ở
+  `runs/README.md`. Dao động: prompt trùng byte cho output trùng byte ở 553/553 dòng giữa hai lượt Colab
+  (`a3`≡`proposed`, `a2`≡`b7pp`, một phần `b5`, `a4`), nên greedy ổn định qua lần chạy và backend.
+  Đây chưa phải lần chạy `--restart` 100 dòng mà B2 ghi; CMT quyết có thay được không. Verifier không
+  bác dòng nào trên dev, nên A3 hiện không đo được gì. `pytest tests/test_colab_b1.py` → 2 passed.
+- 28/10, Claude, Colab lượt 2: notebook repo hết bộ nhớ ở `b3` (SDPA trên T4 rơi về kernel math vì
+  KV nhóm, đòi 29 GiB). Bản lượt 1 (`t4_sdpa_repeat_kv`) không có trong repo, nên viết lại trong
+  `colab_b1_runtime.py` (nhân head KV, ép kernel memory-efficient, truyền `attention_mask`) và chép
+  vào notebook; meta ghi `attention_backend`. Kiểm trên CPU (Qwen3 nhỏ, kernel math thay efficient):
+  logits và 20 token greedy trùng eager, hàm được gọi 42 lần. Chưa chạy trên GPU thật. Truy xuất dev
+  `giua_khoang` 151 dòng: R@1 `b3` 0,272, `b4` 0,411 (`b2ctx` 0,391), ở `runs/B2_dev/retrieval/`.
 - 28/10, Claude B2 (lượt 1, 7 hệ): CMT chạy Qwen3-4B-Instruct-2507 (rev `cdbee75`, NF4, greedy,
   2×T4) trên Colab, raw ở `runs/B2_dev/raw/`. Nạp bằng `colab_b1.py import` → `runs/B2_dev/dev/`,
   151/151 dòng mỗi hệ, đúng định dạng 97,4–100%, cắt cụt ≤ 3. `proposed` lúc đầu không nhập được:
@@ -351,10 +409,10 @@ Trễ ở A2/A3 thì C dời theo, **không** chạy test trên bản chưa fina
 - [ ] A7 đóng băng, datasheet, E0 lại
 - [x] B0 `--as-of-strategy`
 - [ ] B1 chọn generator, amendment ADR 0004
-- [ ] B2 chạy thử mọi hệ trên dev, đo dao động
+- [x] B2 chạy thử mọi hệ trên dev, đo dao động
 - [ ] B3 ADR 0005 cập nhật số, Accepted, commit
-- [ ] B4 script bảng kết quả
-- [ ] B5: B4 RRF đã chạy thử 1 dòng dev; ngữ cảnh đúng và bảng nhiều LLM còn chờ generator
+- [x] B4 script bảng kết quả
+- [ ] B5: B4 RRF và ngữ cảnh đúng xong trên dev; bảng nhiều LLM chờ model thứ hai (cổng Phi-3.5)
 - [ ] Cổng G
 - [ ] C1–C11
 

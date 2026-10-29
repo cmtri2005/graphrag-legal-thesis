@@ -57,17 +57,25 @@ Vì vậy đơn vị phân tích là lineage.
   quyết định rõ ràng, không dùng số dev để chọn giả thuyết.
 
 - Ba chế độ `as_of` còn lại chỉ chạy truy xuất (quyết định C2) và chỉ được mô tả.
+- Kiểm scorer trên bản final (E0, `score_vilextime.py --probes`, 29/10): probe oracle đạt Accuracy
+  1,000 ở cả ba chế độ, trên `dev` (151 dòng) và `test` (333 dòng). Có 12/307 trích dẫn chữ không
+  phân giải được, toàn bộ ở T1 của `test`. Phần lớn thiếu Điều, số còn lại dùng nhãn lạ (`Khoản a`,
+  `Điểm 4`, `(V19)`). Lỗi này chỉ ảnh hưởng đến trích dẫn viết bằng chữ; trích dẫn theo mã đơn vị
+  không bị. Ghi là giới hạn, không nới parser.
 
 ### 2. Hệ và cấu hình bị khóa
 
 - Thang biểu diễn: `b2ctx → b7 → b7v → b7plus → b7pp`, truy xuất từ vựng (`--no-dense`), `k = 20`.
   Hai nấc liền nhau khác nhau đúng một trường (`tests/test_rag_systems.py`). `proposed` là `b7pp`
   cộng mở rộng 1 bước và Verifier `reject` (ADR 0004 §5).
-- Baseline: `b1`, `b2`, `b2ctx`, `b5`, `b6`. `b3`/`b4` chỉ chạy khi đã có dense (ADR 0004 §4).
+- Baseline: `b1`, `b2`, `b2ctx`, `b5`, `b6`. `b3` (dense) và `b4` (BM25 + dense trộn thứ hạng RRF,
+  không reranker) dùng `data/derived/embed/asis-vietnamese-embedding` (ADR 0004, amendment 19/10).
   Ablation: `a1`–`a4`.
-- Generator: model rẻ nhất qua cổng chất lượng trên 100 dòng `dev` (MASTER_RESEARCH_GUIDE §7.5),
-  không thuộc họ Claude hay DeepSeek (ADR 0004 §3), nhiệt độ 0. Prompt được khóa theo
-  `prompt_sha256` trong `run.json`. Model kiểm độ bền là model rẻ nhất qua cổng thuộc họ khác.
+- Generator: `Qwen/Qwen3-4B-Instruct-2507` rev `cdbee75`, NF4, greedy, `max_new_tokens=512`, chạy
+  qua batch Colab (ADR 0004, amendment 29/10). Nó qua cổng chất lượng trên 100 dòng `dev`
+  (MASTER_RESEARCH_GUIDE §7.5) và không thuộc họ Claude hay DeepSeek (ADR 0004 §3). Prompt được khóa
+  theo `prompt_sha256` từng dòng và `prompt_file_sha256` trong `run.json`. Model kiểm độ bền là model
+  qua cổng thuộc họ khác: [chưa có, xem amendment ADR 0004].
 - Mọi tinh chỉnh chỉ làm trên `dev`. Mỗi cấu hình chạy trên `test` một lần. Mỗi lần chạy nằm trong
   `runs/`, kèm `run.json` ghi commit, hash của release, manifest, prompt và model.
 
@@ -142,8 +150,12 @@ và `a4` − `proposed` (lặp lại XN5 khi có đồ thị trực tuyến).
 - Gold độc lập (E6, khoảng 120 dòng): báo XN1, XN2, XN4, XN5 trên gold người gán bên cạnh gold của
   KG, kèm thứ hạng các nấc thang.
 - Model kiểm độ bền trên `b2ctx`, `b7`, `proposed`: cùng chiều với XN2, XN8, XN9 hay không.
-- Dao động của LLM: hệ chính chạy hai lần trên 100 dòng `dev`. Nếu chênh lệch giữa hai lần cỡ bằng
-  một hiệu ứng ở §4, kết luận về hiệu ứng đó phải được giảm nhẹ.
+- Dao động của LLM: đo trên `dev` thay cho việc chạy hệ chính hai lần (CMT đồng ý ngày 29/10). Qua
+  hai lượt Colab với hai biến thể attention, prompt giống nhau cho output giống nhau ở 553/553 dòng
+  (`a3` so với `proposed`, `a2` so với `b7pp`, 121 dòng `b5` so với `b2ctx`, 130 dòng `a4` so với
+  `proposed`; `runs/README.md`, 29/10). Với greedy, dao động giữa các lần chạy vì thế bằng 0. Phép
+  đo này không loại trừ dao động do đổi GPU hoặc thư viện. Nếu `test` chạy trên phần cứng khác, ghi
+  lại phần cứng đó trong `run.json`.
 - Bỏ từng nhóm khỏi "all", và các chế độ `as_of` khác: báo cùng chiều hay không.
 
 ### 8. Phân tích thăm dò

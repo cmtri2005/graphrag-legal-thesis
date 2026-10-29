@@ -1,0 +1,42 @@
+{
+  "system": "a4",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "39e15e153bac8f11d765729a6fe70276e3e1b68aa2cb699735ff0a3466b056c6",
+  "raw_file_sha256": "9e0b093aa7f727747cd931494357cd49426e2e4212bcf6a9f0768e605fd8afb2",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+  "gpu": [
+    "Tesla T4 + Tesla T4"
+  ],
+  "rows": 151,
+  "format_ok": 149,
+  "truncated": 2,
+  "prompt_tokens_mean": 4680.761589403974,
+  "completion_tokens_mean": 108.45695364238411,
+  "generation_seconds": 2001.3786347649966,
+  "export": {
+    "system": "a4",
+    "spec": {
+      "name": "a4-lex",
+      "layer": "version",
+      "lexical": true,
+      "dense": false,
+      "rerank": false,
+      "temporal": "version",
+      "context": true,
+      "expand": 1,
+      "expand_edges": "rel",
+      "verify": "reject",
+      "k": 20,
+      "note": "A4 — drop propagation: the recursive clause of (3). This is the variant H3 actually needs; the proposal's A4 is only a proxy"
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": true,
+    "rows": 151,
+    "release_sha256": "19c515baca1b1628afe9916055a6b77ff432f6325808b39cfc502aeeccebe437",
+    "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+    "prompt_file_sha256": "39e15e153bac8f11d765729a6fe70276e3e1b68aa2cb699735ff0a3466b056c6"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "prompt_sha256": "2bcc97c87b2cf9a0eaa8a49a77bae083af7aa41e75a662f1b18bb7a2363264f8",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "max_new_tokens": 512,
+  "decoding": "greedy",
+  "quantization": "nf4",
+  "gpu": "Tesla T4",
+  "attention_backend": "t4_sdpa_repeat_kv",
+  "system_name": "b3"
+}

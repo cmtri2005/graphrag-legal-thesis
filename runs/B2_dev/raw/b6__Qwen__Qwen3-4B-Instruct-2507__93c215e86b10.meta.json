@@ -1,0 +1,20 @@
+{
+  "prompt_sha256": "93c215e86b104867e8ecb2c6973ccfaf08ca32e96e01e13865a5709d42c43003",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+  "system_name": "b6",
+  "max_new_tokens": 512,
+  "decoding": "greedy",
+  "quantization": "nf4",
+  "bnb_4bit_compute_dtype": "float16",
+  "attention_backend": "t4_sdpa_force_repeat_kv",
+  "gpu_count": 2,
+  "gpus": [
+    "Tesla T4",
+    "Tesla T4"
+  ],
+  "torch_version": "2.11.0+cu128",
+  "transformers_version": "5.20.2",
+  "huggingface_hub_version": "1.33.0",
+  "bitsandbytes_version": "0.50.2"
+}

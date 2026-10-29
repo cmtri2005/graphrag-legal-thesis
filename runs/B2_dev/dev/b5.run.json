@@ -1,0 +1,42 @@
+{
+  "system": "b5",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "fe2be69e2df287bbaa1ed4e36933004d05b6f465e9ae23fecf1753b07cf41287",
+  "raw_file_sha256": "d3a52203634663d59098bde57e1464983e10ef332a0affdb35a516960efca871",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+  "gpu": [
+    "Tesla T4 + Tesla T4"
+  ],
+  "rows": 151,
+  "format_ok": 151,
+  "truncated": 0,
+  "prompt_tokens_mean": 5063.748344370861,
+  "completion_tokens_mean": 110.49668874172185,
+  "generation_seconds": 2074.285670276986,
+  "export": {
+    "system": "b5",
+    "spec": {
+      "name": "b5-lex",
+      "layer": "asis",
+      "lexical": true,
+      "dense": false,
+      "rerank": false,
+      "temporal": "none",
+      "context": true,
+      "expand": 1,
+      "expand_edges": "rel",
+      "verify": "off",
+      "k": 20,
+      "note": "B5 — non-temporal GraphRAG; reduced corpus, see the plan"
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": true,
+    "rows": 151,
+    "release_sha256": "19c515baca1b1628afe9916055a6b77ff432f6325808b39cfc502aeeccebe437",
+    "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+    "prompt_file_sha256": "fe2be69e2df287bbaa1ed4e36933004d05b6f465e9ae23fecf1753b07cf41287"
+  }
+}

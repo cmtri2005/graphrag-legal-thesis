@@ -1,0 +1,42 @@
+{
+  "system": "a3",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "bafb53aa0353fb2641dafce37fe4d615fa4304776c84b5d31d56d7f3efaae65b",
+  "raw_file_sha256": "3e443273abe5772ae64c43a8fb42a739df791291987c90250a9a7a778902a39e",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+  "gpu": [
+    "Tesla T4 + Tesla T4"
+  ],
+  "rows": 151,
+  "format_ok": 147,
+  "truncated": 2,
+  "prompt_tokens_mean": 4737.9933774834435,
+  "completion_tokens_mean": 109.86092715231788,
+  "generation_seconds": 2033.2444394979975,
+  "export": {
+    "system": "a3",
+    "spec": {
+      "name": "a3-lex",
+      "layer": "version",
+      "lexical": true,
+      "dense": false,
+      "rerank": false,
+      "temporal": "propagated",
+      "context": true,
+      "expand": 1,
+      "expand_edges": "rel",
+      "verify": "off",
+      "k": 20,
+      "note": "A3 — drop the Temporal Verifier"
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": true,
+    "rows": 151,
+    "release_sha256": "19c515baca1b1628afe9916055a6b77ff432f6325808b39cfc502aeeccebe437",
+    "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+    "prompt_file_sha256": "bafb53aa0353fb2641dafce37fe4d615fa4304776c84b5d31d56d7f3efaae65b"
+  }
+}
