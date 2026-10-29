@@ -180,7 +180,7 @@ Hệ quả: B3, B4 là baseline dense yếu hơn mức có thể đạt (1,5% l�
 chính không đổi vì chỉ dùng truy xuất từ vựng. Trên dev, B3 có R@1 0,260 so với `b2ctx` 0,420
 (`runs/README.md`, 19/10).
 
-## Amendment 2026-10-29 (§3, generator) — Proposed, chờ CMT duyệt
+## Amendment 2026-10-29 (§3, generator) — Accepted 29/10/2026 (CMT duyệt, trước khi sinh trên test)
 
 Soạn theo bước B1.5 của `docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md`. Thay quyết định
 Groq ngày 27/10 (Q4): Groq giới hạn 8.000 TPM, trong khi một prompt `b2ctx` dài khoảng 18.000 token.
@@ -209,8 +209,9 @@ prompt sha256 `991eada9…`.
 - Trên 151 dòng dev × 15 hệ (B2, `runs/README.md` 28–29/10): đúng định dạng 97,4–100%, cắt cụt
   tối đa 3 câu/hệ, 12,6–15,3 giây/câu.
 
-**Chi phí:** [CMT điền: gói Colab, số giờ GPU đã dùng]. Ước cho test: 333 dòng × khoảng 13 giây,
-tức khoảng 70 phút mỗi hệ.
+**Chi phí:** lúc duyệt chưa ghi gói Colab và số giờ GPU; CMT bổ sung sau đợt test. Dev đã dùng khoảng
+3,3 giờ GPU ở lượt 1 (`runs/README.md`, 28/10). Ước cho test: 211 dòng `giua_khoang` × khoảng 13 giây,
+tức khoảng 45 phút mỗi hệ (`b2` khoảng 90 phút); 17 hệ khoảng 13 giờ T4.
 
 **Model độ bền:** không có ở lần chạy test này. Nhóm quyết ngày 29/10 bỏ C6 (độ bền) và C11 (bảng
 nhiều LLM) vì thời gian; `microsoft/Phi-3.5-mini-instruct` chưa chạy cổng B1, để cho phase 2. ADR 0005
