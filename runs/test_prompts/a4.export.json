@@ -1,0 +1,26 @@
+{
+  "system": "a4",
+  "spec": {
+    "name": "a4-lex",
+    "layer": "version",
+    "lexical": true,
+    "dense": false,
+    "rerank": false,
+    "temporal": "version",
+    "context": true,
+    "expand": 1,
+    "expand_edges": "rel",
+    "verify": "reject",
+    "k": 20,
+    "note": "A4 — drop propagation: the recursive clause of (3). This is the variant H3 actually needs; the proposal's A4 is only a proxy"
+  },
+  "split": "test",
+  "as_of_strategy": "giua_khoang",
+  "no_dense": true,
+  "embed": null,
+  "embed_sha256": null,
+  "rows": 211,
+  "release_sha256": "7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366",
+  "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+  "prompt_file_sha256": "04386850d9c11b162abd749f6dfbcfbabb5ed59decb6f60425b124700ab81ff2"
+}

@@ -104,6 +104,7 @@ def main() -> None:
     ap.add_argument("--data", type=Path, default=Path("data"))
     ap.add_argument("--ids", type=Path, help="one row id per line, instead of the rows of crosscheck_A.tsv")
     ap.add_argument("--out", type=Path, help="default: <data>/review/crosscheck_evidence.jsonl")
+    ap.add_argument("--release", type=Path, help="rows to read; default: <data>/derived/vilextime/release.jsonl")
     args = ap.parse_args()
     d = args.data
 
@@ -125,9 +126,9 @@ def main() -> None:
         with (d / "review/crosscheck_A.tsv").open(encoding="utf-8", newline="") as f:
             order = [r["id"] for r in csv.DictReader(f, delimiter="\t")]
     wanted = set(order)
-    rows = {r["id"]: r for r in map(json.loads, (d / "derived/vilextime/release.jsonl").open(encoding="utf-8"))
-            if r["id"] in wanted}
-    assert len(rows) == len(order), f"{len(order) - len(rows)} dòng không còn trong release.jsonl"
+    release = args.release or d / "derived/vilextime/release.jsonl"
+    rows = {r["id"]: r for r in map(json.loads, release.open(encoding="utf-8")) if r["id"] in wanted}
+    assert len(rows) == len(order), f"{len(order) - len(rows)} dòng không còn trong {release.name}"
 
     closers = collections.defaultdict(list)     # provision -> applied events that closed one of its versions
     for line in (d / "derived/event_log.jsonl").open(encoding="utf-8"):

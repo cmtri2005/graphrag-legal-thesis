@@ -1,0 +1,26 @@
+{
+  "system": "b6",
+  "spec": {
+    "name": "b6-lex",
+    "layer": "asis",
+    "lexical": true,
+    "dense": false,
+    "rerank": false,
+    "temporal": "none",
+    "context": true,
+    "expand": 1,
+    "expand_edges": "part",
+    "verify": "off",
+    "k": 20,
+    "note": "B6 — hierarchical legal KG, structure only"
+  },
+  "split": "test",
+  "as_of_strategy": "giua_khoang",
+  "no_dense": true,
+  "embed": null,
+  "embed_sha256": null,
+  "rows": 211,
+  "release_sha256": "7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366",
+  "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+  "prompt_file_sha256": "bb0512a9578392f58c00d96f092e244ce70516f4ed81abccac92737a35d97ae1"
+}

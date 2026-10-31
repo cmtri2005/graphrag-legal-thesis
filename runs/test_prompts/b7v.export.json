@@ -1,0 +1,26 @@
+{
+  "system": "b7v",
+  "spec": {
+    "name": "b7v-lex",
+    "layer": "version",
+    "lexical": true,
+    "dense": false,
+    "rerank": false,
+    "temporal": "document",
+    "context": true,
+    "expand": 0,
+    "expand_edges": "none",
+    "verify": "off",
+    "k": 20,
+    "note": "B7 over layer B: consolidated version texts, still the document filter. Separates the wording L3 consolidated from the version window (K-07)"
+  },
+  "split": "test",
+  "as_of_strategy": "giua_khoang",
+  "no_dense": true,
+  "embed": null,
+  "embed_sha256": null,
+  "rows": 211,
+  "release_sha256": "7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366",
+  "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+  "prompt_file_sha256": "cbf24e3914e98fe13c4bf11e4b923e22841ff43f624e16f5b993c03f751d2ace"
+}

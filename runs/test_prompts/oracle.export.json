@@ -1,0 +1,13 @@
+{
+  "system": "oracle",
+  "spec": null,
+  "split": "test",
+  "as_of_strategy": "giua_khoang",
+  "no_dense": false,
+  "embed": null,
+  "embed_sha256": null,
+  "rows": 211,
+  "release_sha256": "7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366",
+  "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+  "prompt_file_sha256": "eedd8a3dc24e76e9c7bfe9613a9b5de95da0453178dc7e5f1e2726fb6fbbc64e"
+}
