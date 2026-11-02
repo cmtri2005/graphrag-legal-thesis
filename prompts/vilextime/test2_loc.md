@@ -34,7 +34,12 @@ Mọi nhóm:
    mà không sửa điều khoản này → `superseded_by_other_norm`. Luật và văn bản dưới luật khác nhau: theo Luật.
 4. **Không vướng sắp xếp bộ máy 2025.** Mốc sau 01/03/2025 (bộ) hoặc 01/07/2025 (cấp huyện, tỉnh) mà lời văn còn nêu
    cơ quan, cấp, địa danh cũ chưa được sửa → `restructuring_2025`.
-5. **Không có điều khoản chuyển tiếp** buộc sự việc phát sinh tại mốc theo bản cũ → `transitional_rule`.
+5. **Không có điều khoản chuyển tiếp buộc sự việc phát sinh tại mốc theo bản cũ** → `transitional_rule`. Câu hỏi
+   hỏi "pháp luật quy định gì tại mốc", sự việc hiểu là phát sinh tại mốc. Chuyển tiếp chỉ giữ việc phát sinh
+   **trước** ngày bản mới có hiệu lực (hồ sơ đã tiếp nhận, giấy phép đã cấp, hợp đồng đã ký, hành vi đã xảy ra, dự
+   án đã phê duyệt, định mức đã ban hành, nhiệm kỳ đang dở) thì **không** vướng điều này. Chỉ loại khi chuyển tiếp
+   kéo dài bản cũ cho cả việc mới phát sinh sau ngày hiệu lực và mốc rơi vào khoảng đó (ví dụ "được tiếp tục cấp
+   theo mẫu cũ đến hết 31/10/2022" với mốc 16/07/2022). Văn bản quy định hiệu lực trở về trước thì kiểm ở điều 2.
 
 T2, T3 thêm:
 

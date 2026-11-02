@@ -1,0 +1,68 @@
+{
+  "display_source": "LLM",
+  "provider": "codex",
+  "model": null,
+  "model_identity_status": "unavailable",
+  "prompt_sha256": "a6b648d6223047c6a4529a2aa906128bc24d435336f7ed08bd9aabd9dcf3227a",
+  "gate": {
+    "catch_min": 0.8,
+    "false_reject_max": 0.3,
+    "caught": 1.0,
+    "false_reject": 0.3,
+    "passed": true
+  },
+  "metrics": {
+    "all": {
+      "good": 40,
+      "bad": 28,
+      "bad_rejected": 28,
+      "good_rejected": 12
+    },
+    "T2": {
+      "good": 25,
+      "bad": 0,
+      "bad_rejected": 0,
+      "good_rejected": 3
+    },
+    "T2 gần giống": {
+      "good": 3,
+      "bad": 2,
+      "bad_rejected": 2,
+      "good_rejected": 2
+    },
+    "T3": {
+      "good": 4,
+      "bad": 1,
+      "bad_rejected": 1,
+      "good_rejected": 2
+    },
+    "T6 cấp trên": {
+      "good": 8,
+      "bad": 17,
+      "bad_rejected": 17,
+      "good_rejected": 5
+    },
+    "T6 đích danh": {
+      "good": 0,
+      "bad": 8,
+      "bad_rejected": 8,
+      "good_rejected": 0
+    }
+  },
+  "calibration_items": 68,
+  "mixed_candidates": 12,
+  "fresh_conversations": 3,
+  "isolation": "No inherited conversation; only per-worker inputs supplied; instruction-level filesystem scope, not an OS isolation claim.",
+  "limitations": [
+    "Same 68 calibration lineages were used earlier for Claude prompt development; not a project-held-out evaluation.",
+    "T6 good cases only8 and near-identical good only3; subgroup error rates imprecise.",
+    "Exact active model identity unavailable; no identity invented.",
+    "Official web requests sometimes failed; unresolved relocation rejected."
+  ],
+  "input_tasks_sha256": {
+    "worker_1": "626724e19b10737b045e96567f930fe8e022d4d54ad72dfc50d8e0656c6a0da6",
+    "worker_2": "a205bffabeb20d2a228b2f95ea63aa10855892960dc7228ae0ec18e36f73a0da",
+    "worker_3": "c3a6eee3e58ae2f4f8ecc539cdcfcbe708e771439712076b55e77632e2125263"
+  },
+  "result_sha256": "1076caca1fec2ecb12532cf9ce800c31709835c96b520db276ddf7a52294bf12"
+}

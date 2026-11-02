@@ -1,0 +1,151 @@
+{
+  "snapshot_rows": 825,
+  "source": "LLM",
+  "provider": "claude-code",
+  "reported_model": "claude-sonnet-5-5",
+  "snapshot_sha256": "56e3becbb1eccbb67487cf03bff1472ac45e8d2c2b8c712b4339a35e6b8c5059",
+  "session": "7c728d65-5cc5-47bf-96f3-da4b607d72d5",
+  "session_time": "2026-11-02T07:01:20Z/2026-11-02T07:42:18Z",
+  "prompt_sha256": "a6b648d6223047c6a4529a2aa906128bc24d435336f7ed08bd9aabd9dcf3227a",
+  "sensitive_path_scan_hits": 0,
+  "overlap_with_codex": 168,
+  "decision_conflicts": 27,
+  "conflicts": [
+    {
+      "item": "provision:0bd55100-eb77-11f0-a27c-1b78663305ca",
+      "claude": "giu",
+      "codex": "loai"
+    },
+    {
+      "item": "provision:0e32b70e-e176-11f0-ab55-25401b1e8e67",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:1b7c4402-e16c-11f0-81b2-5537769b0fb2#k3#c",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:21964bd0-22bc-11f1-8db3-5bfa1c062fa6",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:3ebda61c-df4c-11f0-bd73-e5052dc2cdbf#k1",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:3ebecaf0-2d54-11f1-a71d-f3078dcb65b2",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:3ec35eda-2d54-11f1-8f2a-e79e446db919",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:4623c2f4-df49-11f0-a5bc-49ae4b3b7b6f",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:47214c7e-eb8f-11f0-bb8c-65ff00fbac2b#k4",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:53c9fe24-e17d-11f0-91df-b1e252a7932e#k2#d",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:5400b11e-df55-11f0-b2db-db8213713dab#k2#%C4%91",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:55f19040-eab5-11f0-8ee1-a790b5185e01",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:59915bf0-2d53-11f1-bf60-a9df1703fcab",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:604217a0-2c86-11f1-a07e-89d29afc1e91",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:6927d670-2d53-11f1-976a-6390722995cb",
+      "claude": "giu",
+      "codex": "loai"
+    },
+    {
+      "item": "provision:6b2a03a0-2964-11f1-80bf-31b474ab4aaa",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:7debb0a6-df45-11f0-a43e-33b52192b20e",
+      "claude": "giu",
+      "codex": "loai"
+    },
+    {
+      "item": "provision:94fab000-2750-11f1-9b3a-8b8340aae130",
+      "claude": "giu",
+      "codex": "loai"
+    },
+    {
+      "item": "provision:ae5935a0-eaa9-11f0-9936-3fb5cb05e572",
+      "claude": "giu",
+      "codex": "loai"
+    },
+    {
+      "item": "provision:af1cc800-2c79-11f1-b5a1-75629aabff65",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:d386df08-2c85-11f1-8bd7-bb1ab52f0e8e",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:d427a720-2d53-11f1-a1cc-67f2013d5aa0",
+      "claude": "giu",
+      "codex": "loai"
+    },
+    {
+      "item": "provision:db5da940-2d53-11f1-b8ea-772cb5c62cab",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:f5c847c2-df38-11f0-8646-c7d7c78af469",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:f5c84a24-df38-11f0-94cb-634e6f8d12a0",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:fbe7d3cc-eb84-11f0-8180-9dc19a1d382d",
+      "claude": "loai",
+      "codex": "giu"
+    },
+    {
+      "item": "provision:fee71030-2fe8-11f1-b5aa-3937e0c9b610",
+      "claude": "loai",
+      "codex": "giu"
+    }
+  ],
+  "note": "Both raw decisions retained; this is model-filter overlap, not human annotation agreement."
+}

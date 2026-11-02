@@ -93,13 +93,186 @@ Out of scope:
   chuẩn: tốt 40 (T2 28, T3 4, T6 8), xấu 28 (T2 gần giống 2, T3 1, T6 25). **Giới hạn:** T2 chỉ có 2 mục
   xấu, nên tỷ lệ loại đúng thực chất là số đo của T6; ở T2 chỉ đo được loại nhầm. Người vẫn gán mọi câu
   được giữ, nên lọc lỏng ở T2 chỉ tốn công người. Lời dặn sha256 `e524774ebc8e2d33…`; `pytest` 567 qua.
-- [ ] Bước 2: CMT mở phiên Claude Code mới trong `~/vilextime_loc/gan` (thư mục chỉ có gói, lời dặn,
-  `CLAUDE.md`), lọc 27 gói ra `result.tsv`; kiểm log phiên không có đường dẫn tới repo; chấm `score`.
-- [ ] Bước 3–4: lọc 850, viết câu hỏi, kiểm trùng chữ.
+- [x] 29/10 bước 2, lần 1 (lời dặn v1 `e524774ebc8e2d33…`): `result.tsv` đủ 653 mục. Chấm 31/10:
+  loại đúng 0,96 (27/28), loại nhầm **0,42** (17/40) → **chưa đạt** (ngưỡng ≤ 0,30). Theo nhóm, loại nhầm: T2
+  0,28; T2 gần giống 3/3; T3 3/4; T6 cấp trên 4/8. Ứng viên giữ 178/585 (T2 72, T2 gần giống 17, T3 71, T6 cấp
+  trên 7, T6 đích danh 11).
+  Nguyên nhân: 10/17 câu tốt bị loại nhầm mang `transitional_rule`, đều là chuyển tiếp giữ việc phát sinh
+  **trước** ngày hiệu lực (hồ sơ đã tiếp nhận, hành vi đã xảy ra). Định nghĩa §1 không loại các ca này; lời
+  dặn v1 điều 5 viết quá gọn nên bị đọc rộng. Ở ứng viên: 169 mục loại vì `transitional_rule`, ≥ 133 thuộc kiểu
+  này. Chẩn đoán (cùng tập, không phải lần 2): coi mọi `transitional_rule` là giữ thì 0,86 / 0,17. 3 câu T6 tốt
+  bị loại vì `relocation_unclear` là đúng chủ ý "không chắc thì loại".
+- [x] 31/10: lời dặn v2 `a6b648d6223047c6…` (Claude): chỉ viết lại điều 5 theo định nghĩa §1, có ví dụ. Bản
+  v1 giữ trong git (`8cfcd9a`).
+- [x] 31/10: CMT chọn chấm lần 2 trên **cùng 68 lineage hiệu chuẩn** (mọi lineage có nhãn người độc lập đã
+  dùng ở lần 1; phần còn lại là nhãn một người, nhãn Codex hoặc có phiếu Claude). Khóa luận phải ghi: lần 2
+  không có tập giữ riêng; lời dặn chỉ sửa một điều cho khớp định nghĩa, không chỉnh theo điểm.
+- [x] 31/10: `test2_packs.py redo --out ~/vilextime_loc/gan2/packs --from ~/vilextime_loc/gan/packs
+  ~/vilextime_loc/gan/result.tsv` → 237 mục (68 hiệu chuẩn + 169 ứng viên loại vì `transitional_rule`), 10 gói,
+  trộn lại, kèm `HUONG_DAN.md` v2. Ứng viên khác giữ quyết định lần 1 (v2 chỉ nới điều 5). `pytest` 568 qua.
+- [x] 02/11 bước 2, lần 2 (lời dặn v2): phiên `claude -p` mới trong `~/vilextime_loc/gan2`, Sonnet 5.5 như lần 1,
+  cùng câu lệnh, 22 phút, đủ 237 mục. Log phiên không có đường dẫn tới khóa hay repo. Không tra web (lần 1 cũng
+  không), nên T6 không chắc đều rơi vào `relocation_unclear`. Chấm: loại đúng **1,00** (28/28, Wilson 95% [0,88; 1,00]),
+  loại nhầm **0,28** (11/40, [0,16; 0,43]) → **đạt**, sát ngưỡng: thêm một câu tốt bị loại là không đạt. Loại nhầm theo
+  nhóm: T2 0,12 (3/25); T2 gần giống 3/3; T3 1/4; T6 cấp trên 4/8. Ứng viên giữ 244/585 (T2 93, T2 gần giống 24, T3
+  107, T6 cấp trên 7, T6 đích danh 13). Phiên lọc không dùng `transitional_rule` lần nào: 66 mục từng bị loại vì mã này
+  được giữ (12 mục có dấu vết thời hạn, đọc tay đều là chuyển tiếp giữ việc cũ), 103 mục chuyển sang mã khác; 7 câu
+  hiệu chuẩn đổi quyết định, 6 ở mã này, 1 câu xấu lần 1 bỏ sót.
+- [ ] Bước 3, đợt 2: T6 giữ 13% nên chưa đủ. `test2_packs.py build --second --out ~/vilextime_loc/gan3/packs` → 1.012
+  mục, 41 gói: 68 hiệu chuẩn + 944 ứng viên (T2 120, T2 gần giống 40, T3 184 là hết kho, T6 mỗi kiểu 300), kiểm tái lập
+  đợt 1 qua; rồi lọc bằng phiên mới như lần 2. 68 câu hiệu chuẩn lặp lại để phiên lọc vẫn
+  không biết mục nào bị chấm, và cho số đo độ ổn định cùng lời dặn. Cổng của bước 2 chốt ở số lần 2; số này chỉ báo.
+  Dở 02/11: phiên lọc `gan3` dừng vì hết hạn mức 5 giờ (mở lại 7:00 UTC), `result.tsv` có 125/1.012 mục, log không chạm khóa
+  hay repo. Chạy tiếp: phiên mới trong `gan3`, chỉ làm mục chưa có trong `result.tsv`, Sonnet 5.5. Chấm: `score --out
+  ~/vilextime_loc/gan3/packs ~/vilextime_loc/gan/result.tsv ~/vilextime_loc/gan2/result.tsv ~/vilextime_loc/gan3/result.tsv`.
+- [x] 02/11 bước 4, chuẩn bị: `test2_packs.py qpack|qcheck`, lời dặn `prompts/vilextime/test2_cau_hoi.md` (ghép với
+  `base.md`, `T2/T3/T4/T6.md`). `qcheck` dùng lại `validate()` của `generate_questions.py` và thêm `copy_share` (cùng cách
+  đo G7 của DATASET_GAP; bộ câu cũ trung vị 0,71, chỉ 11% đạt ≤ 40%). Thử 25 mục, phiên riêng Opus 5.5. Bản 1 xúi "lời
+  thường": trùng chữ quá thấp, ra từ tự chế ("biên lai nhà băng"), hại Q3 và làm BM25 thua giả tạo. Bản 2 giữ thuật ngữ
+  chuẩn, coi 40% là trần: trung vị 0,32, 22/25 qua, 2 từ chối, 1 phải viết lại; đọc tay ổn.
+- [ ] Bước 4: viết câu hỏi cho mọi ứng viên giữ, ra `data/vilextime/questions_test2.jsonl`.
 - [ ] Bước 5: trang gán theo câu hỏi; lô 0; gán đôi; đo AC1 từng Q.
 - [ ] Bước 6–7: hòa giải, đóng băng, amendment ADR 0005, chạy.
 
+### Tiếp quản Codex — 02/11/2026
+
+- CMT xác nhận tiếp tục **test2 theo kế hoạch đã duyệt**, Claude Code đang hết usage. Giữ nguyên kết quả Claude
+  ở `~/vilextime_loc/gan{,2,3}`. CMT sau đó quyết định: **"Codex làm nốt đi, rồi cứ ghi llm chung là được"**.
+  Codex tiếp quản lọc/viết; phần trình bày chung gọi `LLM`, hồ sơ kỹ thuật giữ nguồn thực tế khi biết, nếu chưa
+  xác minh được thì ghi rõ chưa biết. Hiệu chuẩn mù Codex riêng, không kế thừa số đo Sonnet 5.5.
+- Đã giao ba worker Codex **phiên mới không kế thừa hội thoại**, chỉ đọc thư mục riêng
+  `/tmp/vilextime-test2-codex/filter_calibration/worker_{1,2,3}`: 80 mục trộn ngẫu nhiên (68 hiệu chuẩn
+  cũ + 12 ứng viên mới; không đưa khóa, vai trò hay kết quả Claude cho worker). Prompt giữ nguyên v2,
+  SHA256 `a6b648d6223047c6a4529a2aa906128bc24d435336f7ed08bd9aabd9dcf3227a`.
+  Đây là kiểm khả năng của model mới trên tập đã có; không phải tập kiểm định giữ riêng của cả dự án.
+- Hiệu chuẩn Codex lần đầu theo prompt v2 **ĐẠT**: bắt đúng 28/28 mục xấu, loại nhầm 12/40 mục tốt
+  (0,30, **sát đúng trần**). Theo tầng: T2 thường loại nhầm 3/25, gần giống 2/3, T3 2/4, T6 cấp trên 5/8;
+  mẫu xấu T2 thường bằng 0. Không sửa prompt hoặc chạy lại để chọn số tốt hơn. 12 ứng viên trộn kèm giữ 3
+  (gần giống 1, T3 2), chỉ là quyết định lọc. Lưu toàn bộ 80 kết quả và receipt ở
+  `data/review/test2_filter_codex/calibration.tsv`, `calibration.json` (không phải nhãn A/B).
+- Đợt 2 sau khi nối 125 kết quả Claude và 80 kết quả hiệu chuẩn Codex: còn 814 ứng viên chưa lọc; chặn 1
+  văn bản dev → **813 mục**, chia 7 gói (6×120 + 93), tại
+  `/tmp/vilextime-test2-codex/filter_remaining/batch_{01..07}`. Chỉ chuyển tiếp kết quả đã kiểm cấu trúc;
+  lưu riêng nguồn Codex, không ghi đè `~/vilextime_loc/gan3/result.tsv`.
+- Viết câu hỏi song song từ 242 ứng viên đợt 1 hợp lệ: 24 đã có kết quả thử (22 đạt, 2 từ chối), còn
+  **218 mục** tại `/tmp/vilextime-test2-codex/question_writers/worker_{1,2,3}` (73/73/72). Không dùng lại
+  câu bị từ chối để chạy đến khi đạt. `qcheck --provider codex --model 'Codex (model identity unavailable)'`
+  ghi đúng nguồn nội bộ, không mặc định nhầm thành Claude. Hai lượt viết lại chỉ dành cho câu bị kiểm tự
+  động loại mà không phải `KHONG_DU_NGU_CANH`, giữ đầy đủ lịch sử lượt viết.
+- **Ngắt usage Codex, 02/11 lúc trước 08:21 UTC:** ba worker bị chặn, thông báo hẹn mở lại **09:01 UTC**.
+  Không đổi model/nhà cung cấp để né hạn mức. Đã phục hồi 89/120 quyết định batch01 và 48/120 batch02,
+  kiểm cấu trúc và sao lưu nguyên byte vào `data/review/test2_filter_codex/batch_01_partial.tsv`,
+  `batch_02_partial.tsv`. Còn **676/813** ứng viên chưa lọc; mỗi batch đã có `remaining.jsonl` trong thư mục
+  tạm để chỉ giao mục thiếu sau khi hạn mức phục hồi. Không tự gán trong phiên điều phối đã biết khóa.
+- Đã hoàn tất biên soạn và kiểm tự động **242/242** ứng viên đợt 1: giữ 77 câu (T2 43, T3 28, T6 6),
+  165 từ chối hoặc hết lượt kiểm. `data/vilextime/questions_test2.jsonl` lưu cả câu đạt và thất bại;
+  đây **chỉ** là kết quả biên soạn của đợt 1, chưa phải tập test2 final. 218 câu Codex có đủ lượt gốc và
+  tối đa hai lượt viết lại ở `data/vilextime/test2_generation/first_{1,2,3}/answers_{1,2,3}.jsonl`;
+  ngưỡng 40% và thuật ngữ chuẩn giữ nguyên, không thêm chữ để vượt kiểm.
+- Bổ sung kiểm tương phản trước phiếu A/B theo **định nghĩa §4**: T2 không cho đáp án ngắn nằm trong bản
+  kia; T3 cần ít nhất ba đáp án khác nhau. `test2_prepare.py contrast` chỉ là chẩn đoán máy, không phải
+  nhãn người. Phiếu thử 22 câu/47 đáp án đã có **22/22** qua kiểm này. Test dương/âm mới chứng minh một
+  đoạn trích có thật nhưng cũng nằm trong bản kia bị chặn, không đổi lời luật để tạo khác biệt.
+- Phần không cần worker mù đã làm tiếp trong khi chờ usage: trích **129 phiên bản mới** cho 55 câu
+  Codex, nối 47 phiên bản thử trước thành `data/vilextime/short_answers_test2.jsonl` (**176 bản ghi**).
+  12 bản ghi để `null` ở 6 lineage T2 vì không có đoạn trích riêng giữa hai bản (bản này bao hàm bản kia);
+  không viết thêm câu phủ định ngoài lời luật. Mọi lựa chọn là biên soạn LLM, chưa phải nhãn người.
+- Sửa hai câu hỏi trước khi giao người: mốc bắt đầu phải là **ngày cơ quan nhận đủ hồ sơ**, không phải
+  lúc nộp; trường hợp giới hạn tịch thu phụ thuộc mức phạt thì hỏi **cách xác định giới hạn**, không ép
+  nguồn gián tiếp thành một con số chưa có. Cả hai còn lượt viết lại, đã qua `judge_question()`; giữ đầy
+  đủ câu cũ/lý do trong `data/vilextime/test2_generation/semantic_revisions_20261102.jsonl`, nguồn sửa
+  đi cùng `question_source`. Không sửa lời văn pháp luật hoặc nhãn người.
+- Chốt được **71 ứng viên có câu hỏi và đáp án ngắn qua kiểm máy** (T2 37, T3 28, T6 6), **170 mốc**,
+  164 đáp án trích không-null. Phiếu: `data/review/test2_candidate_worksheet.jsonl`; receipt ở
+  `test2_candidate_worksheet.manifest.json`, SHA256
+  `2233b7d3c9b168cbdfbe1ab03784734da69e020a550dcf8e82f5cc4ed71e5783`.
+  Có link gốc cho 99 trích văn bản tác động. Phiếu này **chưa phải lô 0**, không có nhãn A/B và không
+  phải bản phát hành. Sáu lineage bị chặn ở chẩn đoán `data/review/test2_short_contrast_v2.json`
+  (kèm hash câu hỏi/đáp án đầu vào); vẫn giữ trong phễu, chưa ghi vào nhãn `khong_dat` của người.
+- Kiểm sau tiếp quản: toàn repo **591 passed**; sau chỉnh kiểm “T2 đúng hai đáp án”, 27 test tập trung
+  qua; `git diff --check` qua. v1.0 vẫn đúng hash `7cf51ee6…`. Công việc còn phụ thuộc worker mù: **676**
+  ứng viên chưa lọc, rồi viết/trích câu mới từ phần được giữ. Các cổng người, Q4 và amendment chưa đóng.
+- **Đối chiếu checkpoint sống lúc 08:57 UTC:** `~/vilextime_loc/gan3/result.tsv` đã có **825** mục,
+  không còn 125 của checkpoint trước. File được bổ sung lúc 07:01–07:42 trong phiên Claude
+  `7c728d65-5cc5-47bf-96f3-da4b607d72d5`; log báo `claude-sonnet-5-5`, prompt đúng hash v2. Quét tham số
+  tool không thấy các đường dẫn khóa/nhãn/repo đã liệt kê; đây là quan sát log, không chứng nhận sandbox.
+  Snapshot cố định `data/review/test2_filter_claude_round2_825.tsv`; đối chiếu mô tả ở
+  `data/review/test2_filter_overlap.json`: 168 mục trùng Codex, 27 quyết định khác nhau, giữ cả hai bản gốc.
+  Thứ tự đọc khi tiếp tục là kết quả Claude rồi các kết quả Codex đã giao tiếp quản; không sửa file gốc và
+  không gọi hai model là hai người gán hay coi đây là đồng thuận người.
+- Số **676** trên là phần thiếu nếu chỉ đọc checkpoint Claude cũ. Lệnh `pending` đối chiếu snapshot825,
+  calibration Codex và 137 mục Codex đã lưu cho ra **138 mục** còn thiếu; prompt sao chép nguyên byte,
+  không rút lại mẫu, không sửa kết quả. Gói `/tmp/vilextime-test2-codex/resume_138/worker_{1,2}`,
+  mỗi gói 69 mục, chỉ giao sau khi tới mốc phục hồi 09:01 UTC; hai worker đã chạy lại được.
+- Phần đã có kết quả lọc hiện giữ **378 ứng viên hợp lệ** sau chặn văn bản dev. Đợt1 đã xử lý242;
+  136 mới nằm ở `/tmp/vilextime-test2-codex/questions_second_known`. Lượt đầu đã đủ136:33 qua,
+  9 từ chối,94 cần viết lại theo cùng cổng40%, lịch sử ở
+  `data/vilextime/test2_generation/second_known/`. Chưa cộng các câu này vào phiếu71 cho đến khi đủ đáp án.
+- Bổ sung `test2_packs.py pending` để phục hồi sau usage bằng đối chiếu ID thực tế. Test cho phép giữ
+  ứng viên mới, bỏ mục đã làm/hiệu chuẩn/dev, giữ nguyên thứ tự và byte prompt, từ chối ghi đè thư mục;
+  **28 test tập trung qua**. Lệnh hồi phục từ snapshot825, calibration.tsv và hai partial.tsv đã được chạy
+  thực tế, ra138mục. Không dùng số trong plan thay cho kiểm file sống khi nối phiên.
+- Phát hiện rò văn bản dev: `build()` lấy danh sách dev từ riêng các lineage T2/T3/T6, bỏ sót văn bản chỉ
+  có T1 ở dev. Đối chiếu **toàn bộ** v1.0 + metadata: dev có 73 văn bản; ứng viên đợt 1 vi phạm 2,
+  đợt 2 vi phạm 1. `published_scope()` nay lấy văn bản từ metadata v1.0 của mọi nhóm. Không dựng lại hay sửa
+  khóa/kết quả các đợt lịch sử (thứ tự rút sẽ đổi); chặn các mục này tại `qpack` và `test2_prepare.py`.
+  Căn cứ: Decisions 29/10 và Context của chính plan này, bỏ văn bản dev và lineage v1.0.
+- `qpack` trên kết quả hoàn chỉnh đợt 1 + lượt sửa v2: 244 giữ → **242 mục / 10 gói** ở
+  `/tmp/vilextime-test2-codex/cau_hoi/packs`; 2 mục bị chặn ghi trong `../excluded_scope.jsonl`.
+  Đây là gói tạm, có thể dựng lại; **không** phải toàn bộ ứng viên cuối cùng (gan3 còn thiếu 887 mục).
+- Bổ sung bước nối còn thiếu giữa viết câu hỏi và Q1: `test2_prepare.py shortpack` dùng **câu hỏi mới**
+  để giao trích đáp án ngắn cho mọi phiên bản; `worksheet` chỉ nhận đoạn nằm trong lời văn/câu dẫn, có
+  `by`/`at`, đủ trích nguồn, không mang nhãn/model nguồn cũ sang. Không tự dùng đáp án của câu hỏi v1.0.
+  Gói thử từ 22 câu Claude đã qua `qcheck`: **47 phiên bản**, tại
+  `/tmp/vilextime-test2-codex/dap_an_ngan_thu/tasks.jsonl`. Đáp án ngắn của Codex, nếu có, chỉ là đầu vào
+  biên soạn, ghi nguồn riêng, **không** thay nhãn của A/B hay luật sư.
+- Công cụ bước 5: `scripts/review/test2_labels.py`, `test2_label_ui.html`: mọi mốc của cùng câu hỏi;
+  tô thay đổi và đáp án ngắn; Q1–Q4, mã loại theo thẻ 4.0, câu trích bắt buộc; T6 Q4 Không cần nhật ký tìm
+  chuyển chỗ. Từng tiến trình A/B chỉ đọc và ghi phiếu của chính mình. Nhãn gắn hash câu hỏi/đáp án/nguồn;
+  thay phiếu thì nhãn cũ bị từ chối, không bị tái dùng. Chưa tạo hoặc sửa nhãn người.
+- **Chưa chọn thay CMT:** Q4 có ba mức (`Không`, `Có`, `Không chắc`) nhưng kế hoạch chưa định nghĩa cách
+  tính `p_neg` cho ba mức. `report` báo AC1 ba mức, thỏa thuận từng mức và chẩn đoán nhị phân gộp hai đáp án
+  bất lợi; cổng Q4 để `unresolved_q4_categories`, không tự cho qua. Cần chốt trước cổng 50 câu.
+- Gói thử đã dựng xuyên suốt: giữ nguyên 24 kết quả `qcheck` thử của Claude (22 câu đạt, 2 từ chối) ở
+  `data/vilextime/questions_test2_trial.jsonl`; 47 đáp án ngắn do Codex trích ở
+  `data/vilextime/short_answers_test2_trial.jsonl` (`by: Codex (model identity unavailable)` vì worker không
+  có tên model được xác minh). Cả 47 đều qua phép kiểm trích đoạn, **chưa được người kiểm nghĩa**.
+  Phiếu thử `/tmp/vilextime-test2-codex/worksheet_thu_v2.jsonl`: 22 câu / 50 mốc (T2 13, T3 6, T6 3),
+  có đủ link gốc cho 28 trích văn bản tác động, lấy từ `temporal.sqlite` mở read-only.
+  SHA256 `752b48b50466204cf26088650986b28af374c4475dd0e19acd0627eb113c32b1`.
+  Đây chưa là lô 0 và không phải bản release; chưa có nhãn A/B. Có thể dựng lại bằng `worksheet` từ hai
+  file `*_trial.jsonl` đã lưu và hai file evidence gốc, không cần gọi model lại.
+- Kiểm đã chạy: 24 test tập trung (gói lọc/chuẩn bị/nhãn) qua; toàn repo **588 passed**. `git diff --check`
+  qua. Test dương/âm chứng minh văn bản dev chỉ có T1 bị loại, ứng viên hợp lệ vẫn được giữ; v1.0 và kết quả
+  lọc gốc không bị đổi. `node --check` JavaScript qua; smoke-test HTTP thật trên loopback qua mở trang,
+  đọc trạng thái, lưu và đọc lại nhãn A, không tạo nhãn B; chỉ dùng dữ liệu giả trong thư mục tạm và đã dừng
+  server/xóa dữ liệu giả. Chưa kiểm giao diện bằng trình duyệt. Hash v1.0 vẫn `7cf51ee6…`.
+  Chưa thấy cấu hình CI/pre-commit gọi kiểm này trong repo; hook cục bộ và branch protection chưa xác minh.
+
+#### Lệnh tiếp tục phần chuẩn bị và gán nhãn
+
+Chạy từ repo bằng `.venv/bin/python`. Dùng thư mục đầu ra mới để không ghi đè phiếu đã có nhãn.
+Gói `/tmp` là tạm; đầu vào gốc vẫn ở `~/vilextime_loc` và dữ liệu repo.
+
+```bash
+# Chốt câu hỏi bằng qcheck trước; câu hỏi mới cần đáp án ngắn riêng.
+.venv/bin/python scripts/review/test2_prepare.py shortpack --questions QUESTIONS.jsonl --out NEW_SHORT_TASK_DIR
+.venv/bin/python scripts/review/test2_prepare.py worksheet --questions QUESTIONS.jsonl --shorts SHORT_ANSWERS.jsonl --evidence ~/vilextime_loc/evidence.jsonl ~/vilextime_loc/evidence_2.jsonl --out NEW_WORKSHEET.jsonl
+# Sau khi chọn lô 0 và luật sư xem thẻ: hai phiên riêng, cùng phiếu, hai tệp nhãn riêng.
+.venv/bin/python scripts/review/test2_labels.py serve --worksheet PILOT_WORKSHEET.jsonl --labels-dir data/review/test2 --who A
+.venv/bin/python scripts/review/test2_labels.py serve --worksheet PILOT_WORKSHEET.jsonl --labels-dir data/review/test2 --who B
+.venv/bin/python scripts/review/test2_labels.py report --worksheet PILOT_WORKSHEET.jsonl --a data/review/test2/test2_A.tsv --b data/review/test2/test2_B.tsv
+```
+
+Server chỉ lắng nghe loopback, cổng mặc định A 8775/B 8776; mở đúng link của người gán, Ctrl-C dừng đúng
+tiến trình đã khởi chạy. Không chạy trực tiếp trên phiếu thật khi đang smoke-test: dùng phiếu và thư mục
+nhãn giả trong `/tmp`, cổng tạm riêng. Chưa mở ra mạng ngoài. Lô 0 cần `batch: 0`; lô sản xuất `batch >= 1`.
+Chuẩn bị phiếu **chưa** tự chọn 20 câu lô 0, chưa cho phép vượt cổng luật sư hoặc cổng đồng thuận.
+
 ## Decisions
+
+- 2026-11-02 (CMT): Codex làm tiếp phần còn lại của test2; gọi chung `LLM` trong phần trình bày. Gán đôi
+  A/B, luật sư hòa giải và các ngưỡng đã duyệt giữ nguyên. Kết quả model không thay nhãn người.
 
 - 2026-10-29 (CMT): lọc ứng viên bằng Claude thay cho luật cứng; phiếu Q1–Q4, nhãn do máy suy ra,
   gán theo câu hỏi; luật làm việc (dẫn chứng bắt buộc, lô 0 với luật sư, dừng khi AC1 thấp).
@@ -111,6 +284,8 @@ Out of scope:
 - 2026-10-29 (Claude): rút đợt 1 khoảng nửa số cần (T2 150, T2 gần giống 65, T3 220, T6 mỗi kiểu 75), seed
   `vilextime-test2-2910`; thiếu thì rút đợt 2 tiếp theo cùng thứ tự. Hiệu chuẩn bỏ nhãn một người và 101 dòng
   luật sư hòa giải có phiếu Claude hỗ trợ (không mù với Claude).
+- 2026-11-02 (Claude, mặc định, CMT có thể đổi): cỡ đợt 2 theo tỉ lệ giữ đo được, tổng rút 1.529 ứng viên thay vì 850 của
+  bước 1; dự kiến giữ khoảng 520 câu, nhiều hơn sức người (430), phần dư cắt theo nhóm ở bước 5.
 
 Câu hỏi còn mở: mốc cuối tháng 11 đã chắc chưa.
 
