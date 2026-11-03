@@ -6,16 +6,14 @@
   "sample_completeness": {
     "requested": null,
     "selected": 138,
-    "paired": 137,
-    "all_selected_paired": false,
+    "paired": 138,
+    "all_selected_paired": true,
     "requested_sample_available": true,
-    "status": "missing_pairs"
+    "status": "complete"
   },
-  "paired": 137,
+  "paired": 138,
   "missing_A": [],
-  "missing_B": [
-    "provision:570f6eee-df4c-11f0-8330-797cc44e0ad6"
-  ],
+  "missing_B": [],
   "disagreements": [
     "provision:25c2d034-e158-11f0-9af6-3dcb1b650870",
     "provision:29a82d50-1efe-11f1-8f6b-05baeacf3fb1",
@@ -27,6 +25,7 @@
     "provision:5235a830-2857-11f1-837c-6bcad5a2608b",
     "provision:53c9f49c-e17d-11f0-b95f-77080cf1bb2c#k5",
     "provision:555eaec0-2d53-11f1-9a36-9978a5f04316",
+    "provision:570f6eee-df4c-11f0-8330-797cc44e0ad6",
     "provision:5a16020a-eb78-11f0-9dd0-c97711150498",
     "provision:66a9ecf0-27a7-11f1-80c4-67e884f56f46",
     "provision:7627d0d0-276f-11f1-b554-758ec856a7d8",
@@ -76,10 +75,10 @@
   },
   "metrics": {
     "q1": {
-      "n": 137,
-      "ac1": 0.9064701318851823,
+      "n": 138,
+      "ac1": 0.9072495646595179,
       "category_agreement": {
-        "dung": 0.9565217391304348,
+        "dung": 0.9568627450980393,
         "sai": 0.47619047619047616
       },
       "p_neg": 0.47619047619047616,
@@ -87,10 +86,10 @@
       "gate": "not_met"
     },
     "q2": {
-      "n": 137,
-      "ac1": 0.8835104767689037,
+      "n": 138,
+      "ac1": 0.8844635809113742,
       "category_agreement": {
-        "co": 0.9453125,
+        "co": 0.9457364341085271,
         "khong": 0.2222222222222222
       },
       "p_neg": 0.2222222222222222,
@@ -98,40 +97,40 @@
       "gate": "not_met"
     },
     "q3": {
-      "n": 137,
-      "ac1": 0.7749153879012913,
+      "n": 138,
+      "ac1": 0.7663149667839,
       "category_agreement": {
-        "co": 0.8979591836734694,
-        "khong": 0.13793103448275862
+        "co": 0.8943089430894309,
+        "khong": 0.13333333333333333
       },
-      "p_neg": 0.13793103448275862,
+      "p_neg": 0.13333333333333333,
       "negative_category": "khong",
       "gate": "not_met"
     },
     "q4": {
-      "n": 137,
-      "ac1": 0.8681480433090369,
+      "n": 138,
+      "ac1": 0.8691596603505249,
       "category_agreement": {
         "co": 0.0,
-        "khong": 0.933852140077821,
+        "khong": 0.9343629343629344,
         "khong_chac": 0.0
       },
       "p_neg": null,
       "negative_category": null,
       "gate": "unresolved_q4_categories",
       "binary_adverse_diagnostic": {
-        "ac1": 0.8595676686062288,
+        "ac1": 0.8607095146207511,
         "p_neg": 0.0
       }
     },
     "verdict": {
-      "n": 137,
-      "ac1": 0.5109222269443264,
+      "n": 138,
+      "ac1": 0.5014492753623188,
       "category_agreement": {
-        "dat": 0.7961165048543689,
-        "khong_dat": 0.38235294117647056
+        "dat": 0.7922705314009661,
+        "khong_dat": 0.37681159420289856
       },
-      "p_neg": 0.38235294117647056,
+      "p_neg": 0.37681159420289856,
       "negative_category": "khong_dat",
       "gate": "not_met"
     }
