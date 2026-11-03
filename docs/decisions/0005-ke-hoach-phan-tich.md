@@ -230,6 +230,4 @@ Lý do: v1.0 có test nhỏ ở T3 (12 dòng / 4 lineage) và T6 (30 / 15), và 
 4. **Kiểm định.** Giữ nguyên §4: XN1–XN4, XN8, XN9, Holm trên sáu, bootstrap theo lineage, cùng generator và cấu hình bị
    khóa ở §2, mỗi cấu hình chạy trên test 2 một lần. XN5–XN7 vẫn thăm dò (T6 chỉ 18 lineage, "cấp trên" chỉ 3).
    Test 2 báo riêng, không gộp với `test` của v1.0; kết luận chỉ "lặp lại" khi hai bảng cùng chiều.
-5. **Giới hạn đã biết.** (a) nhãn LLM, T6 và T3 ít mẫu; (b) kho đồ thị thiếu phiên bản của hai điều khoản trong bảng
-   (115/2018 Đ22 k6 thiếu bản 124/2021; 40/2019 Đ18 k2 đ.đ chỉ có một phiên bản), cần xử lý trước khi chạy hệ dùng
-   đồ thị; (c) mới đo trên một generator.
+5. **Giới hạn đã biết.** (a) nhãn LLM, T6 và T3 ít mẫu; (b) cảnh báo của agent kiểm luật rằng `data/temporal.sqlite` (kho 02/10) thiếu phiên bản của hai điều khoản chưa được kiểm trên đồ thị dùng để chạy; phiếu test 2 có đủ mốc và `provision_events.jsonl` có đủ lệnh sửa đổi tương ứng; (c) mới đo trên một generator.
