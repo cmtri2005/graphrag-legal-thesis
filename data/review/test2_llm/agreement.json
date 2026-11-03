@@ -1,0 +1,141 @@
+{
+  "guideline_version": "4.0",
+  "selected": 138,
+  "batch": null,
+  "limit": null,
+  "sample_completeness": {
+    "requested": null,
+    "selected": 138,
+    "paired": 137,
+    "all_selected_paired": false,
+    "requested_sample_available": true,
+    "status": "missing_pairs"
+  },
+  "paired": 137,
+  "missing_A": [],
+  "missing_B": [
+    "provision:570f6eee-df4c-11f0-8330-797cc44e0ad6"
+  ],
+  "disagreements": [
+    "provision:25c2d034-e158-11f0-9af6-3dcb1b650870",
+    "provision:29a82d50-1efe-11f1-8f6b-05baeacf3fb1",
+    "provision:2c72c7b0-29c2-11f1-96e3-05ee1f0b16ea",
+    "provision:387d1c50-2c82-11f1-818f-412493f5db5f",
+    "provision:38a6b32c-e14f-11f0-8c45-8d14d093dce9#k3#b",
+    "provision:4623c2e0-df49-11f0-b317-bb26a2d19d58",
+    "provision:46a6c8d8-e157-11f0-80a4-dd6b2cc87f79#k2#a",
+    "provision:5235a830-2857-11f1-837c-6bcad5a2608b",
+    "provision:53c9f49c-e17d-11f0-b95f-77080cf1bb2c#k5",
+    "provision:555eaec0-2d53-11f1-9a36-9978a5f04316",
+    "provision:5a16020a-eb78-11f0-9dd0-c97711150498",
+    "provision:66a9ecf0-27a7-11f1-80c4-67e884f56f46",
+    "provision:7627d0d0-276f-11f1-b554-758ec856a7d8",
+    "provision:7a034a80-2d47-11f1-b3f1-c38626282025",
+    "provision:8817f1f0-2c81-11f1-9ea5-cd13799c9b6d",
+    "provision:8fdea2ba-2c7e-11f1-ab32-c9bcac3e3e7e",
+    "provision:8fdea30a-2c7e-11f1-9ef6-d9f3304caa84",
+    "provision:9b0f7e90-295c-11f1-8212-47b00160372d",
+    "provision:a8ca5020-eb7f-11f0-a0c7-e91415d76b3b",
+    "provision:af12dd36-2c79-11f1-8e79-6360e645c37b",
+    "provision:b07bd08a-df47-11f0-afb1-1975890b86da",
+    "provision:c86c3310-2c86-11f1-8c3a-83b67d77c889",
+    "provision:c8998e70-2874-11f1-8718-5f51fff8cd8c",
+    "provision:e5f18c5e-df52-11f0-b62f-cdc2080aa0e9",
+    "provision:e902c6c4-df52-11f0-93ba-1335ae0e56a4",
+    "provision:f3c94770-eada-11f0-83eb-addc4223adbd",
+    "provision:03421b32-e167-11f0-a935-53f704f2844b",
+    "provision:250ecd06-df4a-11f0-b93e-fdaa2f506729#k4#c",
+    "provision:625d06b0-2b39-11f1-b889-09e94493d9ec",
+    "provision:9134b140-2c88-11f1-b8ed-21827e5e62dc",
+    "provision:a0ac35d8-df55-11f0-9ac3-5774151cfd0a#k3",
+    "provision:ab3c9c00-2d47-11f1-a983-8def23354fda",
+    "provision:fbe7d3cc-eb84-11f0-8180-9dc19a1d382d",
+    "provision:004de320-2c7b-11f1-86d2-115c12183727",
+    "provision:03bdb810-eae9-11f0-b4f1-2b87d85645ca",
+    "provision:3ec385e0-2d54-11f1-bf8d-53fc621534b7",
+    "provision:438504b0-1fa2-11f1-85ac-4970dd8db725",
+    "provision:5232e924-2857-11f1-b446-19fcb1403ab2",
+    "provision:5233ac60-2857-11f1-8342-e11c78c551a3",
+    "provision:5989a884-df4b-11f0-a556-5d477024807a#k2#b",
+    "provision:741776a0-23ba-11f1-8a9d-2550e42ea60a",
+    "provision:782d9cf0-2d43-11f1-beba-c90d0710d870",
+    "provision:7aa9100e-eb7b-11f0-9c3e-c122759fa4a7#k4",
+    "provision:8b05f650-2740-11f1-b692-0b1e9cea0c6e",
+    "provision:8cb8f338-eb74-11f0-8c8b-d1fbfebdcd47#k2#e",
+    "provision:8f1aab6a-eb6c-11f0-84c0-97d1911af377#k6#b",
+    "provision:9a7e694a-33bc-11f1-b5a5-756c38795148",
+    "provision:9a7f53a0-33bc-11f1-bec9-27d3884503df",
+    "provision:a0115082-df40-11f0-8599-7177aa5fd3bb#k1#a",
+    "provision:d764a1c6-eb8c-11f0-a056-c9971fa8f2d2",
+    "provision:dcc9292a-3b96-11f1-a5f5-fd800e1da1f9",
+    "provision:eaad2dd2-df45-11f0-90b5-5fa2ea4e0cd8"
+  ],
+  "thresholds": {
+    "ac1": 0.8,
+    "p_neg": 0.6
+  },
+  "metrics": {
+    "q1": {
+      "n": 137,
+      "ac1": 0.9064701318851823,
+      "category_agreement": {
+        "dung": 0.9565217391304348,
+        "sai": 0.47619047619047616
+      },
+      "p_neg": 0.47619047619047616,
+      "negative_category": "sai",
+      "gate": "not_met"
+    },
+    "q2": {
+      "n": 137,
+      "ac1": 0.8835104767689037,
+      "category_agreement": {
+        "co": 0.9453125,
+        "khong": 0.2222222222222222
+      },
+      "p_neg": 0.2222222222222222,
+      "negative_category": "khong",
+      "gate": "not_met"
+    },
+    "q3": {
+      "n": 137,
+      "ac1": 0.7749153879012913,
+      "category_agreement": {
+        "co": 0.8979591836734694,
+        "khong": 0.13793103448275862
+      },
+      "p_neg": 0.13793103448275862,
+      "negative_category": "khong",
+      "gate": "not_met"
+    },
+    "q4": {
+      "n": 137,
+      "ac1": 0.8681480433090369,
+      "category_agreement": {
+        "co": 0.0,
+        "khong": 0.933852140077821,
+        "khong_chac": 0.0
+      },
+      "p_neg": null,
+      "negative_category": null,
+      "gate": "unresolved_q4_categories",
+      "binary_adverse_diagnostic": {
+        "ac1": 0.8595676686062288,
+        "p_neg": 0.0
+      }
+    },
+    "verdict": {
+      "n": 137,
+      "ac1": 0.5109222269443264,
+      "category_agreement": {
+        "dat": 0.7961165048543689,
+        "khong_dat": 0.38235294117647056
+      },
+      "p_neg": 0.38235294117647056,
+      "negative_category": "khong_dat",
+      "gate": "not_met"
+    }
+  },
+  "gate": "unresolved_q4_categories",
+  "note": "Q4 có ba mức; AC1 thô và thỏa thuận từng mức được báo. Gộp Có/Không chắc chỉ là chẩn đoán, chưa chọn cổng. Lô 0 bị loại khỏi báo cáo mặc định."
+}
