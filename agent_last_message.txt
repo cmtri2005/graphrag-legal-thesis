@@ -1,0 +1,7 @@
+Đã hoàn tất [result.tsv](/home/trica/vilextime_loc/gan4/result.tsv).
+
+Đã kiểm tra:
+- 468/468 mã, không trùng hoặc dư.
+- Header và 5 trường TSV hợp lệ.
+- 348 dòng `.work` hợp lệ được giữ nguyên văn.
+- Loại 5 dòng `.work` không thuộc các gói.

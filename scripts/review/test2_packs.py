@@ -3,6 +3,7 @@
 
     python scripts/review/test2_packs.py build --out DIR              # DIR ngoài repo; khóa ở DIR/../../key_loc.tsv
     python scripts/review/test2_packs.py build --second --out DIR3    # đợt 2: hiệu chuẩn cũ + ứng viên kế tiếp; nối vào khóa
+    python scripts/review/test2_packs.py build --third --out DIR4/packs     # đợt 3 (T2): seed mới, bỏ lineage đã trong khóa
     python scripts/review/test2_packs.py score --out DIR RESULT.tsv [RESULT2.tsv]   # file sau đè file trước
     python scripts/review/test2_packs.py redo --out DIR2 --from DIR RESULT.tsv     # lọc lại sau khi sửa lời dặn
     python scripts/review/test2_packs.py pending --out NEW/packs --from OLD/packs --key KEY RESULT.tsv...  # chỉ mục còn thiếu
@@ -40,6 +41,8 @@ GROUPS = ("T2", "T3", "T6")
 QUOTA = {"T2": 150, "T2 gần giống": 65, "T3": 220, "T6 cấp trên": 75, "T6 đích danh": 75}
 # Đợt 2 (02/11): T3 lấy hết kho; T6 giữ được 13% ở đợt 1 nên cần rút nhiều để đủ ~100 câu
 QUOTA2 = {"T2": 120, "T2 gần giống": 40, "T3": 221, "T6 cấp trên": 300, "T6 đích danh": 300}
+# Đợt 3 (02/11, chỉ T2, bù cho cổng trùng chữ): seed mới, bỏ mọi lineage đã nằm trong khóa; T3 hết kho, T6 để CMT quyết
+QUOTA3 = {"T2": 280, "T2 gần giống": 120}
 # Lý do ở cấp lineage: bên lọc nhìn được khi chưa có câu hỏi. Lý do ở cấp câu hỏi không dùng để hiệu chuẩn.
 LINEAGE_CODES = {"cosmetic_only", "rename_only", "auto_reference_update", "single_change", "relocated",
                  "relocation_unclear", "reference_only", "superseded_by_other_norm", "gold_wrong",
@@ -114,7 +117,7 @@ def published_scope(data: Path) -> tuple[set[str], set[str]]:
     return {r["lineage_id"] for r in main}, set(docs.values())
 
 
-def build(out: Path, data: Path, second_round: bool = False) -> None:
+def build(out: Path, data: Path, second_round: bool = False, third: bool = False) -> None:
     from export_release import final_labels
     from kiem_hints import hints, versions_of
     from vilexgraph.framework.corpus import Corpus
@@ -142,8 +145,15 @@ def build(out: Path, data: Path, second_round: bool = False) -> None:
             pool[stratum(by_lineage[lid][0])].append(lid)
     picked, later = draw(pool, rng)
     work = out.parent.parent
-    tag = "_2" if second_round else ""
-    if second_round:
+    tag = "_3" if third else "_2" if second_round else ""
+    if third:
+        taken, r3 = set(read_tsv(work / "key_loc.tsv")), random.Random(SEED + "-r3")
+        picked = []
+        for st, n in QUOTA3.items():
+            fresh = [l for l in pool[st] if l not in taken]
+            r3.shuffle(fresh)
+            picked += fresh[:n]
+    elif second_round:
         if set(read_tsv(work / "key_loc.tsv")) != set(truth) | set(picked):
             raise SystemExit("Không tái lập được đợt 1 (nhãn đã đổi?): đợt 2 sẽ rút trùng hoặc lệch thứ tự.")
         picked = later
@@ -187,11 +197,11 @@ def build(out: Path, data: Path, second_round: bool = False) -> None:
 
     write_packs(out, [record(lid) for lid in items])
     key = work / "key_loc.tsv"
-    if second_round:
+    if second_round or third:
         with key.open("a", encoding="utf-8") as f:
             f.writelines(f"{lid}\t{stratum(by_lineage[lid][0])}\tung_vien\t\t\n" for lid in picked)
         install_instructions(out, work / "gan")
-        print(f"đợt 2: {len(items)} mục ({len(truth)} hiệu chuẩn, {len(picked)} ứng viên) -> {-(-len(items) // PACK)} gói ở {out}")
+        print(f"đợt {3 if third else 2}: {len(items)} mục ({len(truth)} hiệu chuẩn, {len(picked)} ứng viên) -> {-(-len(items) // PACK)} gói ở {out}")
         return
     with key.open("w", encoding="utf-8") as f:
         f.write("item\tnhom\tvai_tro\tsu_that\tma\n")
@@ -402,6 +412,7 @@ if __name__ == "__main__":
     ap.add_argument("--data", type=Path, default=Path("data"))
     ap.add_argument("--key", type=Path, help="khóa cho score; mặc định OUT/../../key_loc.tsv")
     ap.add_argument("--second", action="store_true", help="build: đợt 2 cùng thứ tự rút")
+    ap.add_argument("--third", action="store_true", help="build: đợt 3, chỉ T2, seed mới, bỏ lineage đã trong khóa")
     ap.add_argument("--limit", type=int, help="qpack: chỉ rút chừng này mục để thử")
     ap.add_argument("--model", help="qcheck: ai viết câu hỏi")
     ap.add_argument("--provider", default="claude-code", help="qcheck: nguồn thực tế, ví dụ codex hoặc claude-code")
@@ -410,7 +421,7 @@ if __name__ == "__main__":
     ap.add_argument("--codes", default="transitional_rule", help="redo: mã đã sửa trong lời dặn, phẩy ngăn cách")
     args = ap.parse_intermixed_args()
     if args.cmd == "build":
-        build(args.out, args.data, args.second)
+        build(args.out, args.data, args.second, args.third)
     elif args.cmd == "redo":
         redo(args.out, args.old, args.result[0], set(args.codes.split(",")))
     elif args.cmd == "pending":

@@ -269,6 +269,151 @@ tiến trình đã khởi chạy. Không chạy trực tiếp trên phiếu th�
 nhãn giả trong `/tmp`, cổng tạm riêng. Chưa mở ra mạng ngoài. Lô 0 cần `batch: 0`; lô sản xuất `batch >= 1`.
 Chuẩn bị phiếu **chưa** tự chọn 20 câu lô 0, chưa cho phép vượt cổng luật sư hoặc cổng đồng thuận.
 
+### Bàn giao lại cho Codex — 02/11/2026 (Claude, sau khi hết usage lần 1)
+
+Đã làm (Claude, Sonnet 5.5):
+- **Lọc xong 100% ứng viên.** 138 mục còn thiếu lọc bằng phiên mù mới (thư mục không có khóa/repo), lưu
+  `data/review/test2_filter_codex_resume138_by_claude.tsv` (38 giữ, 100 loại). Tên file nói "codex" chỉ vì đó là
+  phần Codex đang dở; **nguồn là Claude Sonnet 5.5**. Kiểm `pending` ra 0 mục thiếu. `/tmp/vilextime-test2-codex/`
+  đã mất (khởi động lại WSL): đừng tìm lại, dựng lại bằng lệnh dưới.
+- `qpack` trên toàn bộ kết quả lọc → **174 mục giữ chưa nằm trong 242 mục đợt 1**: 136 đã có lượt viết đầu
+  (`test2_generation/second_known/`, 33 qua, 9 từ chối, 94 cần viết lại) + **38 mục mới chưa có câu hỏi**.
+  Một phiên Claude đang viết 38 câu này ở thư mục tạm; nếu `/tmp` còn, kết quả ở `.../scratchpad/q/w/answers.jsonl`.
+
+Việc Codex làm tiếp, theo thứ tự (mỗi việc dùng thư mục đầu ra mới, không ghi đè):
+1. Dựng lại gói: `test2_packs.py qpack --out DIR/packs --key ~/vilextime_loc/key_loc.tsv` + các file kết quả lọc theo thứ
+   tự: `test2_filter_claude_round2_825.tsv`, `test2_filter_codex/{calibration,batch_01_partial,batch_02_partial}.tsv`,
+   `test2_filter_codex_resume138_by_claude.tsv`. Bỏ mục đã có trong `questions_test2.jsonl` hoặc `second_known/answers_1.jsonl`.
+2. Viết câu hỏi cho 38 mục mới (nếu chưa có `answers.jsonl` của Claude); viết lại 94 mục của `second_known` (tối đa hai
+   lượt, cùng cổng 40%). Chạy `qcheck` rồi ghi vào `questions_test2.jsonl`. Không chạy lại để chọn câu đẹp hơn.
+3. `test2_prepare.py shortpack` → trích đáp án ngắn → `worksheet`. Thêm vào phiếu71 để thành phiếu đầy đủ.
+4. `pytest -q`, `git diff --check`, kiểm hash v1.0 `7cf51ee6…`. Dừng ở diff, CMT commit.
+
+Không thuộc Codex, chờ người: luật sư xem thẻ 4.0; chọn 20 câu lô 0; A/B gán đôi; CMT chốt cách tính `p_neg`
+Q4 ba mức; amendment ADR 0005. Cỡ đợt: giữ ~520 câu, sức người 430, cắt ở bước 5.
+
+#### Checkpoint Codex — 02/11/2026 (chưa hoàn tất bước 4)
+
+- Dựng lại `qpack` từ đúng năm file lọc theo thứ tự bàn giao tại
+  `data/vilextime/test2_generation/second_new/qpack_rebuilt_20261102/`: 174 ứng viên giữ sau chặn scope.
+  Đối chiếu ID xác nhận 136 mục đúng bằng `second_known/answers_1.jsonl`, 38 mục đúng bằng
+  `second_new/answers_1.jsonl`, không trùng 242 câu đã có. Bản gói chỉ 38 mục mới để kiểm nằm ở
+  `data/vilextime/test2_generation/second_new/qcheck_20261102_r2/packs/`.
+- `qcheck` một lượt trên 38 câu Claude có sẵn, provenance `claude-code` / `Claude Sonnet 5.5`, cho
+  8 đạt, 2 `insufficient_context`, 27 `copy_share`, 1 `copies_the_answer`; 10 kết quả chốt (gồm từ chối)
+  ở `.../checked_1.jsonl`, 28 mục cần viết lại ở `.../viet_lai.jsonl`. Theo bàn giao, **không viết lại
+  38 câu này**; chưa nối chúng vào `questions_test2.jsonl` khi chưa có cách ghi các mục không đạt mà vẫn
+  giữ đúng nghĩa một lượt qcheck.
+- `qcheck` lượt đầu của 136 mục `second_known` tái lập: 33 đạt, 9 `insufficient_context`, 94
+  `copy_share`; gói và receipt tại `data/vilextime/test2_generation/second_known/qcheck_20261102/`.
+  Codex (CLI báo model thực tế `gpt-5.6-terra`, còn hồ sơ qcheck phải ghi theo nhãn được duyệt
+  `codex` / `Codex (model identity unavailable)`) đã viết lại được 16/94 ở
+  `rewrite_chunk_01/answers_2.jsonl`. Các phiên sau đọc gói nhưng kết thúc trước khi ghi file;
+  không có kết quả một phần và không được tính là lượt viết lại.
+- **Dừng do phiên viết Codex không còn trả file đầu ra sau gói đầu**, chưa chạy qcheck lượt 2, chưa
+  ghi `questions_test2.jsonl`, shortpack/đáp án ngắn/worksheet mới, hoặc pytest/hash cuối. Không commit,
+  tag hay push.
+- Lệnh tiếp tục sau khi khôi phục khả năng viết của Codex: dùng từng thư mục
+  `data/vilextime/test2_generation/second_known/qcheck_20261102/rewrite_small_{01..10}/` (8 mục/gói,
+  riêng gói 10 là 6), chỉ đọc `HUONG_DAN.md` và `tasks.json`, ghi `answers_2.jsonl`; gói 01 chưa có
+  đầu ra nên vẫn làm đủ 78 mục. Sau khi đủ 94, gom các `answers_2.jsonl` (và 16 dòng
+  `rewrite_chunk_01/answers_2.jsonl`, không dùng các thư mục `rewrite_chunk_02..06` không có output)
+  rồi chạy:
+
+  ```bash
+  .venv/bin/python scripts/review/test2_packs.py qcheck \
+    --out data/vilextime/test2_generation/second_known/qcheck_20261102/packs \
+    --provider codex --model 'Codex (model identity unavailable)' \
+    --dest NEW_QUESTIONS.jsonl \
+    data/vilextime/test2_generation/second_known/answers_1.jsonl ANSWERS_2.jsonl
+  ```
+
+  Chỉ sau đó mới hợp nhất duy nhất các kết quả qcheck hợp lệ vào `questions_test2.jsonl`, rồi tiếp tục
+  shortpack → trích đáp án ngắn → worksheet trong các đường dẫn mới như lệnh bàn giao quy định.
+
+#### Checkpoint tiếp tục — 02/11/2026 (Codex, dừng do lượt viết lại cuối không có đầu ra)
+
+- Dựng lại `qpack` bằng đúng năm file lọc theo thứ tự bàn giao tại
+  `data/vilextime/test2_generation/second_new/qpack_rebuilt_20261102_r3/`: 174 mục giữ; sau khi bỏ 136
+  mục đã có `second_known/answers_1.jsonl` (và 0 mục đã có trong `questions_test2.jsonl`) còn đúng **38**
+  mục mới, giữ nguyên thứ tự, ở `new_only/packs/`.
+- Đã chạy lại `qcheck` trên 38 câu có sẵn của Claude Sonnet 5.5, ghi nguồn `claude-code` / `Claude Sonnet
+  5.5`, tại `second_new/qcheck_20261102_r3/`: 8 đạt, 2 `insufficient_context`, 27 `copy_share`, 1
+  `copies_the_answer`; 28 còn lượt nhưng **không viết lại** theo bàn giao. Kết quả chốt 10 dòng là
+  `checked_1.jsonl`, danh sách không chốt là `viet_lai.jsonl`.
+- Đã kiểm 94 dòng `answers_2.jsonl` khớp chính xác 94 mục cần viết lại ở lượt một, rồi qcheck bằng nguồn
+  `codex` / `Codex (model identity unavailable)` trong thư mục đầu ra mới
+  `second_known/qcheck_20261102_r3/`: tổng 136 mục cho 35 đạt, 9 `insufficient_context`, 92 `copy_share`;
+  44 mục đã chốt, 92 mục còn **một lượt viết lại cuối** (giới hạn `MAX_WRITES=3`, tức câu gốc + tối đa hai
+  lượt viết lại).
+- Đã tạo gói mới chỉ gồm 92 mục cuối tại `.../qcheck_20261102_r3/rewrite_2/`, rồi thử Codex CLI với gói
+  92 mục và tiếp tục với `chunks/chunk_01` (8 mục). Cả hai phiên chỉ đọc đầu vào rồi kết thúc mà không tạo
+  `answers_3.jsonl`; không có dòng đầu ra hợp lệ để tính là lượt viết lại, và không đổi model/nhà cung cấp
+  để né lỗi/usage. Vì vậy **chưa** hợp nhất vào `questions_test2.jsonl`, chưa chạy `shortpack`, chưa trích
+  đáp án ngắn hay dựng worksheet mới; cũng chưa chạy pytest/hash cuối.
+
+  Lệnh tiếp tục sau khi Codex có thể ghi đầu ra trở lại (chạy từng `chunk_01` … `chunk_12`, 8 mục/chunk,
+  chunk_12 4 mục; chỉ đọc `HUONG_DAN.md`, `tasks.jsonl`, ghi `answers_3.jsonl`):
+
+  ```bash
+  codex exec --ephemeral --sandbox workspace-write \
+    -C data/vilextime/test2_generation/second_known/qcheck_20261102_r3/rewrite_2/chunks/chunk_01 \
+    -o agent_last_message.txt \
+    'Read only HUONG_DAN.md and tasks.jsonl. For every JSONL record, write one replacement Vietnamese legal question that obeys HUONG_DAN.md and repairs ly_do. Write exactly one JSON object per line to answers_3.jsonl with schema {"item": ..., "question": ...}; no prose.'
+  ```
+
+  Khi đủ 92 dòng, ghép duy nhất các `answers_3.jsonl` theo ID (không chọn câu), chạy:
+
+  ```bash
+  .venv/bin/python scripts/review/test2_packs.py qcheck \
+    --out data/vilextime/test2_generation/second_known/qcheck_20261102_r3/packs \
+    --provider codex --model 'Codex (model identity unavailable)' \
+    --dest NEW_SECOND_KNOWN_FINAL.jsonl \
+    data/vilextime/test2_generation/second_known/answers_1.jsonl \
+    data/vilextime/test2_generation/second_known/qcheck_20261102/answers_2.jsonl \
+    ANSWERS_3.jsonl
+  ```
+
+  Chỉ sau đó nối kết quả 136 mục đầy đủ vào `data/vilextime/questions_test2.jsonl`, tiếp tục `shortpack`
+  → đáp án ngắn → `worksheet` bằng đường dẫn mới, rồi chạy `.venv/bin/python -m pytest -q`, `git diff
+  --check` và kiểm hash v1.0 `7cf51ee6…`.
+
+#### Chốt biên soạn câu hỏi — 02/11/2026 (Claude)
+
+- Lượt viết lại cuối 92 mục `second_known`: Claude Sonnet 5.5, phiên chỉ đọc `HUONG_DAN.md` + `tasks.jsonl`
+  (Codex CLI không ghi được `answers_3.jsonl`); `qcheck` → `second_known/qcheck_20261102_r4/final.jsonl`: 39 đạt
+  (33 lượt 1 + 2 lượt 2 do Codex, 4 lượt 3 do Claude), 9 thiếu ngữ cảnh, 87 trùng chữ, 1 chép đáp án. Độ trùng điển hình
+  0,6–0,9 so với trần 0,40: viết lại thêm không cứu được; **không** thêm lượt cho câu sát ngưỡng, **không** nới cổng.
+- Nhập vào `questions_test2.jsonl`: 136 mục `second_known` (sửa `provider/model` thành Codex cho lượt 1–2, Claude cho lượt 3
+  vì `qcheck` gắn một nguồn cho cả cụm) + 10 mục chốt của 38 câu mới. 28 câu mới còn lượt nhưng không viết lại, nằm ở
+  `second_new/qcheck_20261102_r3/viet_lai.jsonl`. Tổng 388 mục, **124 câu hợp lệ: T2 72, T3 33, T6 19**.
+- Kho đã giữ (378) cạn; thêm câu phải rút/lọc đợt 3. Test2 hiện nhỏ hơn mục tiêu 300: CMT chọn giữa test2 nhỏ (T6
+  ghi rõ không đủ mẫu) và đợt 3. Còn lại cho Codex: `shortpack` → đáp án ngắn → `worksheet`, `pytest`.
+
+#### Checkpoint đợt 3 — 02/11/2026 (phiên Claude Code Sonnet tại `~/vilextime_loc/gan4`)
+
+- Gói đợt 3 có 468 lineage T2. Phiên lọc dừng lúc 14:39 UTC vì hết hạn mức 5 giờ; CLI báo mở lại lúc 17:30 UTC.
+  Không có `result.tsv` hoàn chỉnh; kết quả từng phần nằm ở `gan4/.work/r01a.tsv` … `r14a.tsv`.
+- Kiểm cấu trúc độc lập: 338 dòng có đủ năm cột và không lặp, nhưng **5 `item` không có trong các gói hiện hành**;
+  vì vậy chỉ 333 quyết định khớp gói, còn 135 lineage phải được lọc. Năm ID sai phải bị thay bằng quyết định cho
+  các mục còn thiếu, không được đưa vào kết quả chấm. Chưa chạy `score`, `qpack`, hay hợp nhất vào dữ liệu repo.
+- Khi hạn mức mở lại, tiếp tục chỉ trong `gan4`: kiểm chính xác tập ID của `packs/*.jsonl`, giữ nguyên 333 quyết định
+  khớp gói, lọc 135 mục thiếu, và xuất đúng một `result.tsv` 468 dòng (header một lần) theo `HUONG_DAN.md`.
+  Sau đó mới chạy `test2_packs.py score` với khóa và dựng gói câu hỏi theo kết quả đã chấm.
+
+#### Checkpoint thay thế phần còn thiếu bằng Codex — 02/11/2026
+
+- CMT yêu cầu dùng Codex thay cho phiên Sonnet đang chờ quota. Các phiên Codex mới, không kế thừa hội thoại,
+  chỉ được giao `HUONG_DAN.md`, `packs/*.jsonl`, và các TSV phần việc trong `gan4/.work`; không được đọc repo,
+  khóa, nhãn, hay thư mục cha. Chỉ dùng chứng cứ đã đóng trong pack (không gọi web) do CLI web dừng trước khi ghi file.
+- Các lô hợp lệ: `codex_b01.tsv` 15 mục, `codex_b02.tsv` 5 mục, `codex_b03.tsv` 5 mục, `codex_b04.tsv` 15 mục.
+  Các lô ban đầu có xuống dòng trong ô đã được chuẩn hóa lại cùng nội dung quyết định trước khi nhận. Đối chiếu mới
+  nhất: **373/468** ID gói có đúng một hàng năm cột; 5 ID lạc từ phần Sonnet cũ vẫn tách riêng; **95** mục còn thiếu.
+  Chưa có `result.tsv`, chưa chấm hiệu chuẩn, chưa dựng qpack.
+- CLI chỉ hoàn tất được một phiên lọc trước khi runner kết thúc vòng lặp tuần tự; tiếp tục bằng các phiên Codex nhỏ,
+  mỗi phiên lấy các ID còn thiếu đầu tiên, ghi `.work/codex_bNN.tsv`, rồi kiểm đủ năm cột, không trùng, và ID thuộc pack
+  trước khi nhận. Khi đủ 468, chỉ ghép các hàng hợp lệ thành `result.tsv` rồi mới chạy score.
+
 ## Decisions
 
 - 2026-11-02 (CMT): Codex làm tiếp phần còn lại của test2; gọi chung `LLM` trong phần trình bày. Gán đôi
