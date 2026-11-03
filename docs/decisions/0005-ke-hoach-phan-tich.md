@@ -231,3 +231,11 @@ Lý do: v1.0 có test nhỏ ở T3 (12 dòng / 4 lineage) và T6 (30 / 15), và 
    khóa ở §2, mỗi cấu hình chạy trên test 2 một lần. XN5–XN7 vẫn thăm dò (T6 chỉ 18 lineage, "cấp trên" chỉ 3).
    Test 2 báo riêng, không gộp với `test` của v1.0; kết luận chỉ "lặp lại" khi hai bảng cùng chiều.
 5. **Giới hạn đã biết.** (a) nhãn LLM, T6 và T3 ít mẫu; (b) cảnh báo của agent kiểm luật rằng `data/temporal.sqlite` (kho 02/10) thiếu phiên bản của hai điều khoản chưa được kiểm trên đồ thị dùng để chạy; phiếu test 2 có đủ mốc và `provision_events.jsonl` có đủ lệnh sửa đổi tương ứng; (c) mới đo trên một generator.
+
+### Điều chỉnh cùng ngày 03/11/2026 (trước mọi lần chạy trên test 2)
+
+Dựng release test 2 bằng `scripts/pipeline/enrich_vilextime.py` (thêm `accepted_evidence`, dòng `giua_khoang`, `truoc_hieu_luc`) cho kết quả:
+6 lineage thuộc văn bản của split `dev` nên bị loại để không rò dev. Bảng chính test 2 còn **101 lineage**, **492 dòng**
+(T2 ranh giới 120, giữa khoảng 120, trước hiệu lực 38; T3 75 và 75; T6 32 và 32) trong
+`data/vilextime/test2_release.jsonl`, sha256 `8c140f5c14b1dbc00a7d34954abf161d1a94fd6e69d3a56ee16d3e80c0bd4c28`.
+Con số 107 / 240 ở mục 1 phía trên là trước bước này. Thang truy xuất chạy với `--release` file này và `--split test`.
