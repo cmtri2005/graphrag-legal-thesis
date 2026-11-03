@@ -416,6 +416,13 @@ Q4 ba mức; amendment ADR 0005. Cỡ đợt: giữ ~520 câu, sức người 43
 
 ## Decisions
 
+- 2026-11-03 (CMT, qua /goal): dùng agent LLM thay A/B và hòa giải để có nhãn "silver" cho test2. Làm: LLM-A (Sonnet 5.5) và
+  LLM-B (Codex) gán độc lập 138 câu, đồng thuận chưa đạt cổng thẻ 4.0 (AC1 Q1–Q3 0,77–0,91; p_neg Q1 0,48, Q2 0,22, Q3 0,13,
+  nhãn suy ra 0,38); 53 câu lệch do Opus hòa giải; kết quả `data/review/test2_llm/test2_LLM_silver.tsv`: 103 `dat`
+  (T2 62, T3 25, T6 16), 35 `khong_dat`. Đây là nhãn LLM, **không phải người hay luật sư**, trái chữ thẻ 4.0 "không dùng AI";
+  khóa luận phải ghi đúng nguồn và cổng đồng thuận không đạt. Q4 `khong_chac` tính là bất lợi (mặc định của Claude, CMT có thể đổi).
+  Dòng 7 của lượt hòa giải đổi Q4 dựa vào kiến thức ngoài nguồn (Luật Căn cước, CMND): cần luật sư kiểm. Việc còn lại: mẫu nhỏ
+  do người kiểm, amendment ADR 0005, giai đoạn 5–9.
 - 2026-11-03 (CMT): giữ test2 nhỏ, không mở đợt 3. Phiếu gán nhãn
   `data/review/test2_candidate_worksheet_v3.jsonl` (sha256 `c0925d5b…`): 138 câu / 321 mốc (T2 86, T3 33,
   T6 19). T6 không đủ mẫu, khóa luận phải ghi rõ. 6 câu loại sau rà Codex + rà tay ở
