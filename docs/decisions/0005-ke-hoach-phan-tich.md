@@ -207,3 +207,29 @@ Tradeoffs:
 - Commit `confirm_vilextime.py` cùng ADR này; chạy thử trên `dev` (XN1, XN3, XN4 có ngay từ E1 dev,
   các kiểm định còn lại khi có lượt chạy thử sinh câu trả lời W1-15).
 - Ghi model đã chọn (MASTER_RESEARCH_GUIDE §7.5) vào amendment của ADR 0004 trước khi chạy E2, E3.
+
+## Amendment 2026-11-03: bộ test 2 (T2, T3, T6) làm bản lặp lại của v1.0
+
+Ngày: 03/11/2026. Người duyệt: CMT (giao cho agent soạn và commit, 03/11). **Lúc viết amendment này đã thấy kết quả
+test nào:** đã có `runs/E1/test` của v1.0 (E1, 29/10, một lần), và chưa có dự đoán nào của hệ nào trên test 2. Nếu file
+dự đoán đầu tiên trên test 2 trong `runs/` có ngày sớm hơn commit này thì amendment mất hiệu lực.
+
+Lý do: v1.0 có test nhỏ ở T3 (12 dòng / 4 lineage) và T6 (30 / 15), và đo 29/10 cho thấy phần lớn lệch A–B nằm ở dòng
+đưa cho người. Test 2 (kế hoạch `docs/plans/active/vilextime-test2.md`) kiểm lại kết luận của v1.0 trên dữ liệu khác.
+
+1. **Dữ liệu.** `data/review/test2_candidate_worksheet_v3.jsonl` sha256 `c0925d5bee759d4b6c188cb4b419d367158a591cb53111b066b3609ccda9d2d1`
+   (138 câu hỏi); nhãn `data/review/test2_llm/test2_LLM_silver.tsv` sha256
+   `5107c4ce4f29ff7dd8dfaf45ae1b1ca17ec90574ddf82abefc623e908d847291`. Bảng chính test 2 là các câu `verdict = dat`:
+   **107 lineage / 240 dòng mốc** (T2 63 gồm 16 "gần giống"; T3 26; T6 18 gồm 15 đích danh và 3 cấp trên).
+2. **Nhãn không phải của người.** Nhãn do hai LLM gán độc lập (Claude Sonnet 5.5, Codex), 53 câu lệch do Opus hòa giải,
+   sáu câu phân vân kiểm lại bằng agent tra luật (Lawgical); đồng thuận hai LLM **không đạt** cổng thẻ 4.0
+   (AC1 Q1–Q3 0,77–0,91; p_neg Q1 0,48, Q2 0,22, Q3 0,13; `data/review/test2_llm/agreement.json`). Không có luật sư hay
+   người nào kiểm. Mọi kết quả trên test 2 phải gọi là "nhãn LLM", không dùng chung bảng với v1.0.
+3. **Q4 ba mức.** Khi tính p_neg, `Có` và `Không chắc` gộp thành một mức bất lợi (Không so với {Có, Không chắc}); một câu
+   `Không chắc` không bao giờ vào bảng chính (đã áp dụng khi suy ra `dat`).
+4. **Kiểm định.** Giữ nguyên §4: XN1–XN4, XN8, XN9, Holm trên sáu, bootstrap theo lineage, cùng generator và cấu hình bị
+   khóa ở §2, mỗi cấu hình chạy trên test 2 một lần. XN5–XN7 vẫn thăm dò (T6 chỉ 18 lineage, "cấp trên" chỉ 3).
+   Test 2 báo riêng, không gộp với `test` của v1.0; kết luận chỉ "lặp lại" khi hai bảng cùng chiều.
+5. **Giới hạn đã biết.** (a) nhãn LLM, T6 và T3 ít mẫu; (b) kho đồ thị thiếu phiên bản của hai điều khoản trong bảng
+   (115/2018 Đ22 k6 thiếu bản 124/2021; 40/2019 Đ18 k2 đ.đ chỉ có một phiên bản), cần xử lý trước khi chạy hệ dùng
+   đồ thị; (c) mới đo trên một generator.

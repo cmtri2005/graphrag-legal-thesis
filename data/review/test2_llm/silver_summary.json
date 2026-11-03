@@ -1,11 +1,11 @@
 {
- "note": "nhan LLM, khong phai nguoi/luat su; Q4 khong_chac tinh la bat loi",
+ "note": "nhan LLM + kiem luat bang agent, khong phai nguoi/luat su; Q4 khong_chac tinh la bat loi",
  "counts": {
-  "T2/khong_dat": 24,
-  "T2/dat": 62,
-  "T3/dat": 25,
-  "T3/khong_dat": 8,
-  "T6/khong_dat": 3,
-  "T6/dat": 16
+  "T2/dat": 63,
+  "T3/dat": 26,
+  "T3/khong_dat": 7,
+  "T2/khong_dat": 23,
+  "T6/dat": 18,
+  "T6/khong_dat": 1
  }
 }
