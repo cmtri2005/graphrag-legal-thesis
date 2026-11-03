@@ -416,6 +416,11 @@ Q4 ba mức; amendment ADR 0005. Cỡ đợt: giữ ~520 câu, sức người 43
 
 ## Decisions
 
+- 2026-11-03 (CMT): giữ test2 nhỏ, không mở đợt 3. Phiếu gán nhãn
+  `data/review/test2_candidate_worksheet_v3.jsonl` (sha256 `c0925d5b…`): 138 câu / 321 mốc (T2 86, T3 33,
+  T6 19). T6 không đủ mẫu, khóa luận phải ghi rõ. 6 câu loại sau rà Codex + rà tay ở
+  `data/review/test2_worksheet_v2_loai.json` (lọc, không phải nhãn người). Rà mới chạm 13 + 73 câu, Codex dễ dãi.
+
 - 2026-11-02 (CMT): Codex làm tiếp phần còn lại của test2; gọi chung `LLM` trong phần trình bày. Gán đôi
   A/B, luật sư hòa giải và các ngưỡng đã duyệt giữ nguyên. Kết quả model không thay nhãn người.
 
