@@ -1,0 +1,19 @@
+{
+  "status": "unlabelled_candidates",
+  "guideline_version": "4.0",
+  "questions": 144,
+  "boundary_rows": 321,
+  "groups": {
+    "T2": 92,
+    "T3": 33,
+    "T6": 19
+  },
+  "sha256": "7c578b72ab55dfe13d2bfc0a8c2af4112ad873956c1b3d036252a53283570cf5",
+  "pending": [
+    "pilot selection and lawyer approval",
+    "independent A/B labels",
+    "agreement gate",
+    "lawyer adjudication",
+    "release and preregistration amendment"
+  ]
+}

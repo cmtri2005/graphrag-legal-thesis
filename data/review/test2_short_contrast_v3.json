@@ -1,0 +1,178 @@
+{
+  "status": "machine_check_only_not_human_validation",
+  "questions": 165,
+  "without_detected_problem": 144,
+  "needs_review": 21,
+  "findings": [
+    {
+      "lineage_id": "provision:278ff980-9de3-11f1-80d6-f5b6c1c9ecf8",
+      "group": "T2",
+      "problems": [
+        "version:278ff980-9de3-11f1-80d6-f5b6c1c9ecf8:1: thiếu đáp án ngắn trích đúng lời văn",
+        "version:278ff980-9de3-11f1-80d6-f5b6c1c9ecf8:2: thiếu đáp án ngắn trích đúng lời văn",
+        "T2: cần đúng 2 đáp án ngắn khác nhau (định nghĩa §4)"
+      ]
+    },
+    {
+      "lineage_id": "provision:35f91aa0-eac5-11f0-b8b8-57ed89d20ab7",
+      "group": "T2",
+      "problems": [
+        "version:35f91aa0-eac5-11f0-b8b8-57ed89d20ab7:1: thiếu đáp án ngắn trích đúng lời văn",
+        "version:35f91aa0-eac5-11f0-b8b8-57ed89d20ab7:2: thiếu đáp án ngắn trích đúng lời văn",
+        "T2: cần đúng 2 đáp án ngắn khác nhau (định nghĩa §4)"
+      ]
+    },
+    {
+      "lineage_id": "provision:770f05d4-df3c-11f0-b9da-7d6bc576434e",
+      "group": "T2",
+      "problems": [
+        "version:770f05d4-df3c-11f0-b9da-7d6bc576434e:1: thiếu đáp án ngắn trích đúng lời văn",
+        "version:770f05d4-df3c-11f0-b9da-7d6bc576434e:2: thiếu đáp án ngắn trích đúng lời văn",
+        "T2: cần đúng 2 đáp án ngắn khác nhau (định nghĩa §4)"
+      ]
+    },
+    {
+      "lineage_id": "provision:7b6c4142-e166-11f0-a0d8-e724106e0ec9",
+      "group": "T2",
+      "problems": [
+        "version:7b6c4142-e166-11f0-a0d8-e724106e0ec9:1: thiếu đáp án ngắn trích đúng lời văn",
+        "version:7b6c4142-e166-11f0-a0d8-e724106e0ec9:2: thiếu đáp án ngắn trích đúng lời văn",
+        "T2: cần đúng 2 đáp án ngắn khác nhau (định nghĩa §4)"
+      ]
+    },
+    {
+      "lineage_id": "provision:bfd24e78-df4d-11f0-92e1-7dff3127bd8e#k2",
+      "group": "T2",
+      "problems": [
+        "version:bfd24e78-df4d-11f0-92e1-7dff3127bd8e#k2:1: thiếu đáp án ngắn trích đúng lời văn",
+        "version:bfd24e78-df4d-11f0-92e1-7dff3127bd8e#k2:2: thiếu đáp án ngắn trích đúng lời văn",
+        "T2: cần đúng 2 đáp án ngắn khác nhau (định nghĩa §4)"
+      ]
+    },
+    {
+      "lineage_id": "provision:eb31f870-2d45-11f1-b4d9-3fd2c0524145",
+      "group": "T2",
+      "problems": [
+        "version:eb31f870-2d45-11f1-b4d9-3fd2c0524145:1: thiếu đáp án ngắn trích đúng lời văn",
+        "version:eb31f870-2d45-11f1-b4d9-3fd2c0524145:2: thiếu đáp án ngắn trích đúng lời văn",
+        "T2: cần đúng 2 đáp án ngắn khác nhau (định nghĩa §4)"
+      ]
+    },
+    {
+      "lineage_id": "provision:0aefcb44-df4c-11f0-95be-8f329e05cc50#k4",
+      "group": "T2",
+      "problems": [
+        "version:0aefcb44-df4c-11f0-95be-8f329e05cc50#k4:1: đáp án ngắn cũng nằm trong version:0aefcb44-df4c-11f0-95be-8f329e05cc50#k4:2 (định nghĩa §4 T2)"
+      ]
+    },
+    {
+      "lineage_id": "provision:15800860-2954-11f1-8692-c107334ba646",
+      "group": "T2",
+      "problems": [
+        "version:15800860-2954-11f1-8692-c107334ba646:1: đáp án ngắn cũng nằm trong version:15800860-2954-11f1-8692-c107334ba646:2 (định nghĩa §4 T2)"
+      ]
+    },
+    {
+      "lineage_id": "provision:6644a330-2f41-11f1-9ed0-2f4e04a0bace",
+      "group": "T2",
+      "problems": [
+        "version:6644a330-2f41-11f1-9ed0-2f4e04a0bace:2: đáp án ngắn cũng nằm trong version:6644a330-2f41-11f1-9ed0-2f4e04a0bace:1 (định nghĩa §4 T2)"
+      ]
+    },
+    {
+      "lineage_id": "provision:7060dc40-2d47-11f1-882a-8dfb656811df",
+      "group": "T2",
+      "problems": [
+        "version:7060dc40-2d47-11f1-882a-8dfb656811df:1: đáp án ngắn cũng nằm trong version:7060dc40-2d47-11f1-882a-8dfb656811df:2 (định nghĩa §4 T2)"
+      ]
+    },
+    {
+      "lineage_id": "provision:db28c100-314d-11f1-bda2-a37c0061ca1d",
+      "group": "T2",
+      "problems": [
+        "version:db28c100-314d-11f1-bda2-a37c0061ca1d:2: đáp án ngắn cũng nằm trong version:db28c100-314d-11f1-bda2-a37c0061ca1d:1 (định nghĩa §4 T2)"
+      ]
+    },
+    {
+      "lineage_id": "provision:f2944a80-df4f-11f0-9e84-1dba98e7a86c",
+      "group": "T2",
+      "problems": [
+        "version:f2944a80-df4f-11f0-9e84-1dba98e7a86c:1: thiếu đáp án ngắn trích đúng lời văn",
+        "T2: cần đúng 2 đáp án ngắn khác nhau (định nghĩa §4)"
+      ]
+    },
+    {
+      "lineage_id": "provision:406e1160-2c7f-11f1-b69b-4fe0d8fc0945",
+      "group": "T2",
+      "problems": [
+        "version:406e1160-2c7f-11f1-b69b-4fe0d8fc0945:2: đáp án ngắn cũng nằm trong version:406e1160-2c7f-11f1-b69b-4fe0d8fc0945:1 (định nghĩa §4 T2)"
+      ]
+    },
+    {
+      "lineage_id": "provision:02c3c56c-df40-11f0-b9ac-73515a50c71a",
+      "group": "T2",
+      "problems": [
+        "version:02c3c56c-df40-11f0-b9ac-73515a50c71a:1: thiếu đáp án ngắn trích đúng lời văn",
+        "T2: cần đúng 2 đáp án ngắn khác nhau (định nghĩa §4)"
+      ]
+    },
+    {
+      "lineage_id": "provision:33b30956-e168-11f0-bbe8-379027769a7d#k3#c",
+      "group": "T2",
+      "problems": [
+        "version:33b30956-e168-11f0-bbe8-379027769a7d#k3#c:1: thiếu đáp án ngắn trích đúng lời văn",
+        "version:33b30956-e168-11f0-bbe8-379027769a7d#k3#c:2: thiếu đáp án ngắn trích đúng lời văn",
+        "T2: cần đúng 2 đáp án ngắn khác nhau (định nghĩa §4)"
+      ]
+    },
+    {
+      "lineage_id": "provision:55e2ea40-eab5-11f0-9650-77d539a295a3",
+      "group": "T2",
+      "problems": [
+        "version:55e2ea40-eab5-11f0-9650-77d539a295a3:1: đáp án ngắn cũng nằm trong version:55e2ea40-eab5-11f0-9650-77d539a295a3:2 (định nghĩa §4 T2)"
+      ]
+    },
+    {
+      "lineage_id": "provision:66d2a010-2c88-11f1-a944-955bf2e07dc1",
+      "group": "T2",
+      "problems": [
+        "version:66d2a010-2c88-11f1-a944-955bf2e07dc1:1: đáp án ngắn cũng nằm trong version:66d2a010-2c88-11f1-a944-955bf2e07dc1:2 (định nghĩa §4 T2)"
+      ]
+    },
+    {
+      "lineage_id": "provision:7d7049a2-eb70-11f0-b4c9-3713ec2dcb1e",
+      "group": "T2",
+      "problems": [
+        "version:7d7049a2-eb70-11f0-b4c9-3713ec2dcb1e:1: thiếu đáp án ngắn trích đúng lời văn",
+        "version:7d7049a2-eb70-11f0-b4c9-3713ec2dcb1e:2: thiếu đáp án ngắn trích đúng lời văn",
+        "T2: cần đúng 2 đáp án ngắn khác nhau (định nghĩa §4)"
+      ]
+    },
+    {
+      "lineage_id": "provision:83fe925c-e174-11f0-8637-b58d7e2de8ea#k1#d",
+      "group": "T2",
+      "problems": [
+        "version:83fe925c-e174-11f0-8637-b58d7e2de8ea#k1#d:2: đáp án ngắn cũng nằm trong version:83fe925c-e174-11f0-8637-b58d7e2de8ea#k1#d:1 (định nghĩa §4 T2)"
+      ]
+    },
+    {
+      "lineage_id": "provision:ef2295d0-1dea-11f1-a745-d3f280e97e0f",
+      "group": "T2",
+      "problems": [
+        "version:ef2295d0-1dea-11f1-a745-d3f280e97e0f:1: đáp án ngắn cũng nằm trong version:ef2295d0-1dea-11f1-a745-d3f280e97e0f:2 (định nghĩa §4 T2)"
+      ]
+    },
+    {
+      "lineage_id": "provision:f3c54c10-201d-11f1-99db-838cf48cbbf2",
+      "group": "T2",
+      "problems": [
+        "version:f3c54c10-201d-11f1-99db-838cf48cbbf2:2: đáp án ngắn cũng nằm trong version:f3c54c10-201d-11f1-99db-838cf48cbbf2:1 (định nghĩa §4 T2)"
+      ]
+    }
+  ],
+  "authority": "docs/vilextime-dinh-nghia.md §4",
+  "inputs_sha256": {
+    "data/vilextime/questions_test2.jsonl": "40eb22506a5ddfd1c96cebab90955d3941859ac45d77e5fd9821315d99088c23",
+    "data/vilextime/short_answers_test2.jsonl": "9c827eb029f8fa605e9f849c696e1a388981ac4a71c4f7de20e239730ba72ae0"
+  }
+}
