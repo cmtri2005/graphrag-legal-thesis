@@ -1,0 +1,76 @@
+{
+ "split": "test",
+ "draws": 10000,
+ "tests_run": 3,
+ "files": {
+  "retrieval/b7": {
+   "path": "runs/E1_test2/test/b7.jsonl",
+   "sha256": "33c3628aef9210e49a9bd1e10c6b909a66871bdca3728ec6e9cae183cce7ba7b"
+  },
+  "retrieval/b7pp": {
+   "path": "runs/E1_test2/test/b7pp.jsonl",
+   "sha256": "e052f8b677cbbae13d41be67505e2eaf7dae772108187d927decd85073efa238"
+  },
+  "retrieval/b2ctx": {
+   "path": "runs/E1_test2/test/b2ctx.jsonl",
+   "sha256": "71f79bcaab62422e9dd315083d79fc8011c114a7f0327fae65abe86fa054a1d8"
+  },
+  "retrieval/b7plus": {
+   "path": "runs/E1_test2/test/b7plus.jsonl",
+   "sha256": "bd5f8ce3ac2dd11b7732d89c4d227f5e96c2db526a0a866b27d101df4430da26"
+  }
+ },
+ "results": {
+  "XN1": {
+   "estimate": 0.028436018957345988,
+   "ci95": [
+    -0.014152620048287578,
+    0.07211538461538461
+   ],
+   "p": 0.2298,
+   "rows": {
+    "all_answerable": 211
+   },
+   "lineages": {
+    "all_answerable": 101
+   },
+   "p_holm": 0.4596,
+   "verdict": "không đủ bằng chứng",
+   "predicted": 1
+  },
+  "XN3": {
+   "estimate": 0.04739336492890994,
+   "ci95": [
+    0.02251999757605138,
+    0.0776255707762557
+   ],
+   "p": 0.0,
+   "rows": {
+    "all_answerable": 211
+   },
+   "lineages": {
+    "all_answerable": 101
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "XN4": {
+   "estimate": 0.028436018957345988,
+   "ci95": [
+    -0.014354066985645925,
+    0.07239819004524886
+   ],
+   "p": 0.2348,
+   "rows": {
+    "all_answerable": 211
+   },
+   "lineages": {
+    "all_answerable": 101
+   },
+   "p_holm": 0.4596,
+   "verdict": "không đủ bằng chứng",
+   "predicted": 1
+  }
+ }
+}
