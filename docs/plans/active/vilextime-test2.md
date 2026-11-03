@@ -416,6 +416,10 @@ Q4 ba mức; amendment ADR 0005. Cỡ đợt: giữ ~520 câu, sức người 43
 
 ## Decisions
 
+- 2026-11-03 (Claude): E1 trên test 2 chạy một lần (`runs/E1_test2/test`, commit `8f00817`), nhãn LLM. So với v1.0 (`runs/E1/test`, release
+  `vilextime.jsonl`), TV-Recall@1 trên dòng có đáp án: XN1 +0,028 [−0,014; +0,072] (v1.0 +0,051 ủng hộ); XN3 +0,047 ủng hộ (v1.0 +0,138
+  ủng hộ); XN4 +0,028 không đủ (v1.0 +0,051 ủng hộ). Cùng chiều, test 2 yếu hơn, `b7pp` = `b7plus`. Test 2 101 lineage, 211 dòng có đáp án.
+  Chưa chạy tầng sinh (XN2, XN8, XN9) và XN5–XN7.
 - 2026-11-03 (CMT, qua /goal): dùng agent LLM thay A/B và hòa giải để có nhãn "silver" cho test2. Làm: LLM-A (Sonnet 5.5) và
   LLM-B (Codex) gán độc lập 138 câu, đồng thuận chưa đạt cổng thẻ 4.0 (AC1 Q1–Q3 0,77–0,91; p_neg Q1 0,48, Q2 0,22, Q3 0,13,
   nhãn suy ra 0,38); 53 câu lệch do Opus hòa giải; kết quả `data/review/test2_llm/test2_LLM_silver.tsv`: 103 `dat`
