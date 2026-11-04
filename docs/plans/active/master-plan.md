@@ -312,6 +312,7 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 
 | Ngày | Thay đổi | Bằng chứng |
 |---|---|---|
+| 2026-11-04 | Có bản nháp chương 2–6 và phụ lục khai báo AI trong `docs/thesis/`; chưa có người duyệt | `docs/thesis/chuong-2-co-so-ly-thuyet.md`, `chuong-3-kho-van-ban-va-do-thi.md`, `chuong-4-vilextime.md`, `chuong-5-phuong-phap.md`, `chuong-6-thuc-nghiem.md`, `phu-luc-khai-bao-ai.md` |
 | 2026-11-04 | Cập nhật GĐ5–7 đang làm, E1 và sáu hệ E3 trên hai bộ; E7 mới có phân rã máy và phiếu mù, chưa có người mã hóa. M4 giữ 🟡, chờ nhóm chốt. Hạn chạy 31/10 đã trễ; nộp cuối 12/2026 thay lịch cũ 01/02/2027 | `a36039d`, `6b53896`; `runs/E3_v1/test/confirm.json`, `runs/E3_test2/rescore/confirm.json`; `docs/reports/e7_phan_ra_loi.md`, `data/review/e7/phieu_*.tsv` |
 | 2026-09-04 | Xong Stage 1–5b, delta crawl, bảng mã trạng thái | `docs/plans/completed/2026-09-04-truoc-stage-6.md` |
 | 2026-09-11 → 12 | Lõi domain thời gian, resolver, adapter Neo4j (chưa chạy server thật) | commit `a9170a9` → `10b33ab` |

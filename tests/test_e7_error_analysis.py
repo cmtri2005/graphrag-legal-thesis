@@ -1,6 +1,8 @@
 from collections import Counter
+import csv
+import sqlite3
 
-from e7_error_analysis import classify, sample_errors, summarize
+from e7_error_analysis import classify, sample_errors, summarize, write_sheets
 
 
 def test_exclusive_priority_reuses_scorer_correctness_and_version_direction():
@@ -39,3 +41,26 @@ def test_sampling_is_reproducible_stratified_and_only_errors():
     assert len(sample) == 80 and not any(r['correct'] for r in sample)
     assert set(Counter((r['system'], r['row']['group']) for r in sample).values()) == {20}
     assert {r['system'] for r in sample[:30]} == {'b1', 'b7'}
+
+
+def test_human_sheet_hides_system_and_joins_machine_sheet_by_stt(tmp_path):
+    corpus = tmp_path / 'derived/corpus'
+    corpus.mkdir(parents=True)
+    with sqlite3.connect(corpus / 'index.sqlite') as db:
+        db.execute('CREATE TABLE units (unit_id TEXT, text TEXT)')
+    row = {'id': 'r', 'group': 'T2', 'lineage_id': 'p', 'question': 'question', 'as_of': '2020-01-01',
+           'answerable': True, 'answer': 'gold', 'short_answer': 'gold'}
+    records = [{'system': s, 'row': row, 'pred': {}, 'correct': False, 'layer': 'RET-UNIT',
+                'wrong_version': False, 'mixed_direction': False,
+                'resolved_gold_without_accepted_id': False} for s in ('b1', 'proposed')]
+    dest = tmp_path / 'sheets'
+    write_sheets('fixture', records, dest, tmp_path)
+    with (dest / 'phieu_fixture.tsv').open() as f:
+        reader = csv.DictReader(f, delimiter='\t')
+        assert 'he' not in reader.fieldnames and 'tang_may' not in reader.fieldnames
+        human = list(reader)
+    with (dest / 'phieu_fixture_may.tsv').open() as f:
+        machine = list(csv.DictReader(f, delimiter='\t'))
+    assert [(r['stt'], r['id']) for r in human] == [(r['stt'], r['id']) for r in machine]
+    assert {r['he'] for r in machine} == {'b1', 'proposed'}
+    assert all(r[k] == '' for r in human for k in ('ma_loi_A', 'ghi_chu_A', 'ma_loi_B', 'ghi_chu_B'))

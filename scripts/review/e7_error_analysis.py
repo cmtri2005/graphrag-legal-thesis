@@ -170,14 +170,14 @@ def write_sheets(name: str, records: list[dict], dest: Path, data: Path) -> None
     machine = dest / f'phieu_{name}_may.tsv'
     with human.open('w', encoding='utf-8', newline='') as h, machine.open('w', encoding='utf-8', newline='') as m:
         hw, mw = csv.writer(h, delimiter='\t'), csv.writer(m, delimiter='\t')
-        hw.writerow(['stt', 'cung_ma_hoa_30', 'he', 'nhom', 'id', 'lineage_id', 'cau_hoi', 'moc',
+        hw.writerow(['stt', 'cung_ma_hoa_30', 'nhom', 'id', 'lineage_id', 'cau_hoi', 'moc',
                      'co_dap_an', 'dap_an_vang', 'dap_an_ngan', 'tra_loi', 'answerable_du_doan',
                      'can_cu_trich', 'can_cu_prompt', 'ma_loi_A', 'ghi_chu_A', 'ma_loi_B', 'ghi_chu_B'])
         mw.writerow(['stt', 'he', 'nhom', 'id', 'tang_may', 'wrong_version',
                      'mixed_direction', 'resolved_gold_without_accepted_id'])
         for i, r in enumerate(sampled, 1):
             row, pred = r['row'], r['pred']
-            hw.writerow([i, 'co' if i <= 30 else '', r['system'], row['group'], row['id'], row['lineage_id'],
+            hw.writerow([i, 'co' if i <= 30 else '', row['group'], row['id'], row['lineage_id'],
                          row['question'], row['as_of'], row['answerable'], row['answer'], row['short_answer'],
                          pred.get('answer'), pred.get('answerable'), evidence(pred.get('citations') or []),
                          evidence(pred.get('retrieved') or []), '', '', '', ''])
