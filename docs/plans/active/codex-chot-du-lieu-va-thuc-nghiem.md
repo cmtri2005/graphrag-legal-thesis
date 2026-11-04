@@ -296,6 +296,35 @@ Trễ ở A2/A3 thì C dời theo, **không** chạy test trên bản chưa fina
 
 ## Progress
 
+### Đối soát C1–C11 — 04/11/2026 (Codex)
+
+Hạn chạy 31/10 đã trễ; nộp khóa luận cuối 12/2026. Không coi sáu hệ hiện có là xong toàn bộ thí nghiệm.
+Đường dẫn thực tế E2/E3/E4 được gom trong `runs/E3_v1/test` và `runs/E3_test2/test` (`a36039d`),
+khác thư mục dự kiến trong bảng C. Test 2 là nhãn LLM; số hợp lệ lấy ở `runs/E3_test2/rescore`.
+
+| Bước | Hiện trạng | Bằng chứng / phần còn lại |
+|---|---|---|
+| C1 | Xong | `runs/E1/test/ladder.score.json`, `runs/E1_test2/test/ladder.score.json`; commit `a36039d` đã có cả hai bộ. Accuracy trong E1 test 2 cũ không dùng (amendment 04/11) |
+| C2 | Một phần | Có `b1`, `b2ctx` trong hai bộ E3; chưa có kết quả test `b2 b3 b4` ở các đường dẫn đã kiểm |
+| C3 | Một phần | Có `b7 b7pp proposed` trong hai bộ E3; thiếu sinh `b7v b7plus` |
+| C4 | Chưa có kết quả test | Chưa có `a1 a2 a3 a4` trong hai bộ E3 hoặc `runs/E5/test`; kết quả dev không thay kết quả test |
+| C5 | Một phần | Có `b5` trong hai bộ E3; thiếu `b6`; LightRAG chưa có bằng chứng test |
+| C6 | Hoãn, không đánh dấu xong | Quyết định 29/10 ghi tại Phần C và Progress; chưa có model độ bền qua cổng |
+| C7 | Một phần, đủ họ Holm 6/6 | `runs/E3_v1/test/confirm.json`, `runs/E3_test2/rescore/confirm.json`: XN1–4, XN6–9 có số, XN5 chưa chạy vì thiếu `b7plus` sinh |
+| C8 | Chưa có kết quả | Chưa có bằng chứng E6 trên gold độc lập; giữ chờ gold người |
+| C9 | Xong cho sáu hệ hiện có | `docs/reports/ket_qua_e3_v1.md`, `ket_qua_e3_test2.md`, commit `6b53896`; phải bổ sung khi có các hệ còn lại |
+| C10 | Chưa có kết quả test | Oracle context dev 0,854 ở `runs/B2_dev/dev/all.score.json`; không dùng dev để đánh dấu xong test |
+| C11 | Hoãn, không đánh dấu xong | Quyết định 29/10 ghi tại Phần C và Progress; chưa có bảng nhiều LLM test |
+
+E7: `scripts/review/e7_error_analysis.py` phân rã mô tả theo scorer, báo cáo hai bộ riêng tại
+`docs/reports/e7_phan_ra_loi.md`; phiếu mù `data/review/e7/phieu_{v1,test2}.tsv`, tối đa 20 lỗi/ô,
+seed `vilextime-e7-0411`, 30 dòng đầu cùng mã hóa. Tầng máy nằm riêng trong `phieu_*_may.tsv`.
+Chưa có người mã hóa; không đánh dấu E7 xong. M4 giữ 🟡: v1.0 XN1 ủng hộ, test 2 XN1 không đủ
+bằng chứng; việc chốt hướng đóng góp thuộc nhóm.
+
+Chưa đối soát lại toàn bộ P1–P9 của master plan, cổng nhãn người/gold độc lập, chi phí Colab,
+và các đầu việc khóa API/duyệt đề xuất cũ; giữ trạng thái cũ ở những mục đó.
+
 - 29/10, Claude, C1 xong: E1 trên test, 5 hệ × 441 dòng, chấm `--ci 10000` → `runs/E1/test/ladder.score.json`
   (số ở `runs/README.md`). Sự cố `b7pp` (hai tiến trình cùng ghi sau khi phiên bị ngắt) đã xử lý như ghi ở sổ chạy:
   giữ file gốc, bản sạch đủ 441/441 ID. Bài học: trước khi chạy tiếp một runner, kiểm `ps` xem tiến trình cũ đã
@@ -460,7 +489,7 @@ Trễ ở A2/A3 thì C dời theo, **không** chạy test trên bản chưa fina
 - [x] B4 script bảng kết quả
 - [ ] B5: B4 RRF và ngữ cảnh đúng xong trên dev; bảng nhiều LLM chờ model thứ hai (cổng Phi-3.5)
 - [x] Cổng G
-- [ ] C1–C11
+- [ ] C1–C11 toàn bộ (xem đối soát 04/11: C1 và C9 cho sáu hệ đã xong; còn các phần thiếu/hoãn).
 
 ### Nhật ký 27/10 — Codex
 

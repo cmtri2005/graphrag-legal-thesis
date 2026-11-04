@@ -160,12 +160,22 @@ chạy thử trên file này); `score_vilextime.py --release` đã đối chiế
 
 ## Progress
 
+- 04/11 (Codex): hạn chạy 31/10 đã trễ; nộp khóa luận cuối 12/2026. E1 trên v1.0 và test 2
+  có ở `runs/E1/test`, `runs/E1_test2/test`; sáu hệ sinh `b1 b2ctx b5 b7 b7pp proposed`
+  có ở `runs/E3_v1/test`, `runs/E3_test2/test` (`a36039d`). Test 2 chỉ lấy số chấm lại ở
+  `runs/E3_test2/rescore`, nhãn LLM. Bảng riêng `docs/reports/ket_qua_e3_v1.md` và
+  `ket_qua_e3_test2.md` (`6b53896`). Các hệ còn lại và ablation chưa đủ; không đánh dấu xong E1–E6.
+- 04/11: E7 máy và phiếu người gán tại `docs/reports/e7_phan_ra_loi.md`, `data/review/e7/`;
+  có seed, 30 dòng đầu để hai người cùng mã hóa, tầng máy ở file riêng. Chưa có người kiểm;
+  E7 vẫn đang làm. M4 chưa chốt: v1.0 XN1 ủng hộ, test 2 XN1 không đủ bằng chứng; nhóm quyết định.
 - [x] Soạn kế hoạch (21/10, Claude).
 - [ ] CMT bổ sung, nhóm duyệt các mục [đề xuất].
 - [ ] Khóa API cho cổng chọn generator (`.env` hiện chỉ có Groq, DeepSeek).
-- [ ] E0, E1 dev trên bản mới.
-- [ ] Chọn generator, ghi amendment ADR 0004.
-- [ ] Cập nhật ADR 0005 theo bản final; Accepted; commit.
+- [x] E0, E1 dev trên bản mới: `runs/E0_final/dev/probes.score.json`,
+  `runs/E1_ladder/dev/ladder.score.json`; bằng chứng ở `runs/README.md` và Progress 29/10 của plan chốt.
+- [x] Chọn generator Qwen3-4B, amendment 29/10 ADR 0004; `runs/B2_dev/dev/all.score.json`,
+  Cổng G ghi trong plan chốt (29/10). Model độ bền chưa có.
+- [x] Cập nhật ADR 0005 theo bản final; Accepted; commit `a64a5bc` trước E1 test.
 - [ ] Chạy test E1–E6; XN1–XN9.
 - [ ] E7.
 

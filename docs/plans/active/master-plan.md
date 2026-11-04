@@ -1,14 +1,19 @@
 # Master Plan — Khóa luận Temporal-Aware KG RAG
 
-Date: 2026-09-14 · Cập nhật gần nhất: 2026-10-11 (chỉ GĐ4)
+Date: 2026-09-14 · Cập nhật gần nhất: 2026-11-04 (Tổng quan, Mốc, Nhật ký)
 
 > **Nguồn sự thật về tiến độ dự án.** Timeline bám theo mục "Kế hoạch thực hiện"
 > trong `DeCuongKLTN_23521635_23521643.docx` (01/09/2026 – 01/02/2027).
 > Mọi tài liệu kế hoạch khác chỉ còn giá trị lịch sử.
 
+**Cập nhật lịch 04/11:** 01/02/2027 và các khoảng giai đoạn dưới đây là lịch đề cương cũ.
+Hạn chạy thực nghiệm là **31/10/2026, đã trễ**; hạn nộp khóa luận thật là **cuối 12/2026**.
+Chi tiết chạy hiện theo `codex-chot-du-lieu-va-thuc-nghiem.md`; chưa đối soát lại toàn bộ P1–P9.
+
 ## Status
 
-Active. Giai đoạn 2 hoàn thành; Giai đoạn 3 đang đi trước kế hoạch.
+Active. E1 và sáu hệ sinh đã có kết quả test trên v1.0 và test 2; GĐ5–7 đang làm.
+Chưa đủ các hệ, gold độc lập và phân tích lỗi do người; chưa chốt điểm quyết định B7.
 
 ## Cách đọc và cập nhật file này
 
@@ -29,12 +34,12 @@ Active. Giai đoạn 2 hoàn thành; Giai đoạn 3 đang đi trước kế ho�
 | 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | ✅ | 12/12 | Backfill v2 xong, snapshot đóng băng trước M1 |
 | 3 | 06/10 – 26/10 | Xây dựng đồ thị tri thức (L0–L3) | 🟡 | 13/19 | Bắt đầu sớm; **đường găng** |
 | 4 | 27/10 – 16/11 | Bộ dữ liệu ViLexTime | 🟡 | 5/9 | Bắt đầu sớm từ 21/09 ([plan](phase-4-vilextime.md)); còn nhãn người, luật sư, gold độc lập |
-| 5 | 17/11 – 30/11 | Cài đặt & đánh giá đường cơ sở | ⬜ | 0/14 | — |
-| 6 | 01/12 – 21/12 | Hệ thống đề xuất (L4–L5) | ⬜ | 0/7 | — |
-| 7 | 22/12 – 04/01 | Thực nghiệm & phân tích | ⬜ | 0/5 | — |
+| 5 | 17/11 – 30/11 (lịch cũ) | Cài đặt & đánh giá đường cơ sở | 🟡 | Chưa đối soát P5 | Test `b1 b2ctx b5 b7 b7pp proposed`: `runs/E3_v1/test`, `runs/E3_test2/test`; còn các hệ C2–C5 |
+| 6 | 01/12 – 21/12 (lịch cũ) | Hệ thống đề xuất (L4–L5) | 🟡 | Chưa đối soát P6 | `proposed.jsonl` ở hai bộ E3; chưa xác nhận đầy đủ P6.1–P6.7 |
+| 7 | 22/12 – 04/01 (lịch cũ) | Thực nghiệm & phân tích | 🟡 | Chưa đối soát P7 | Bảng E3 riêng hai bộ (`docs/reports/ket_qua_e3_*.md`, `6b53896`); E7 do máy, chờ người kiểm |
 | 8 | 05/01 – 11/01 | Viết bài báo khoa học | ⬜ | 0/3 | — |
-| 9 | 12/01 – 01/02 | Hoàn thiện khóa luận | ⬜ | 0/5 | — |
-| | | **Tổng** | | **32/80** | |
+| 9 | Cuối 12/2026 | Hoàn thiện khóa luận | ⬜ | 0/5 | Hạn nộp mới; chưa có bằng chứng để đổi trạng thái viết/nộp |
+| | | **Tổng** | | **Chưa đối soát** | Không suy ra số việc hoàn tất từ việc đã có sáu hệ E3 |
 
 ### Mốc kiểm tra
 
@@ -42,12 +47,12 @@ Active. Giai đoạn 2 hoàn thành; Giai đoạn 3 đang đi trước kế ho�
 |---|---|---|---|
 | M1 | 05/10 | **Snapshot v2** đóng băng sau backfill, tải về kiểm tra được ([plan](../completed/2026-09-17-backfill-corpus-v2.md)) | ✅ (17/09, trước hạn) |
 | M2 | 26/10 | Chuỗi phiên bản thật trong Neo4j; `snapshot(u,t)` đúng trên 100 truy vấn đối chiếu tay | ⬜ |
-| M3 | 16/11 | ViLexTime đủ 1.150 câu; Cohen κ ≥ 0,6 trên 300 câu | 🟡 1.225 dòng ranh giới / 653 câu hỏi (chờ khoa chốt "câu"); bộ kiểm chéo dựng lại 11/10, chưa gán xong; thước đo chính là AC1, chọn sau pilot 07/10 |
-| M4 | 30/11 | **Điểm quyết định B7**: chọn hướng đóng góp phương pháp hay tài nguyên–phân tích | ⬜ |
-| M5 | 21/12 | Hệ thống end-to-end trả lời (x, t) kèm trích dẫn đã qua Verifier | ⬜ |
-| M6 | 04/01 | Đủ kết quả A1–A7, phân rã theo T1–T6 | ⬜ |
+| M3 | 16/11 (lịch cũ) | ViLexTime đủ 1.150 câu; Cohen κ ≥ 0,6 trên 300 câu | 🟡 v1.0 final đã đóng băng (`3e487c4`, tag `vilextime-v1.0`); test 2 nhãn LLM (`a36039d`); chưa xác nhận đạt tiêu chí cũ về cỡ mẫu/nhãn người |
+| M4 | 31/10, đã trễ | **Điểm quyết định B7**: chọn hướng đóng góp phương pháp hay tài nguyên–phân tích | 🟡 v1.0 XN1 ủng hộ; test 2 XN1 không đủ bằng chứng (`runs/E3_v1/test/confirm.json`, `runs/E3_test2/rescore/confirm.json`). Chưa chốt; quyết định của nhóm |
+| M5 | 21/12 (lịch cũ) | Hệ thống end-to-end trả lời (x, t) kèm trích dẫn đã qua Verifier | 🟡 Có `proposed.jsonl` và provenance trong hai bộ E3 (`a36039d`); chưa xác nhận đủ phạm vi mốc cũ |
+| M6 | 31/10, đã trễ | Đủ kết quả A1–A7, phân rã theo T1–T6 | 🟡 E1, sáu hệ E3 và bảng riêng hai bộ đã có (`a36039d`, `6b53896`); ablation và các hệ còn lại chưa đủ |
 | M7 | 11/01 | Nộp bài báo | ⬜ |
-| M8 | 01/02 | Nộp khóa luận, demo chạy được | ⬜ |
+| M8 | Cuối 12/2026 | Nộp khóa luận, demo chạy được | ⬜ Chưa có bằng chứng nộp/demo; 01/02/2027 là lịch cũ |
 
 ### Đường găng
 
@@ -307,6 +312,7 @@ Các quyết định cũ **đã bị thay thế**: serialization envelope, repos
 
 | Ngày | Thay đổi | Bằng chứng |
 |---|---|---|
+| 2026-11-04 | Cập nhật GĐ5–7 đang làm, E1 và sáu hệ E3 trên hai bộ; E7 mới có phân rã máy và phiếu mù, chưa có người mã hóa. M4 giữ 🟡, chờ nhóm chốt. Hạn chạy 31/10 đã trễ; nộp cuối 12/2026 thay lịch cũ 01/02/2027 | `a36039d`, `6b53896`; `runs/E3_v1/test/confirm.json`, `runs/E3_test2/rescore/confirm.json`; `docs/reports/e7_phan_ra_loi.md`, `data/review/e7/phieu_*.tsv` |
 | 2026-09-04 | Xong Stage 1–5b, delta crawl, bảng mã trạng thái | `docs/plans/completed/2026-09-04-truoc-stage-6.md` |
 | 2026-09-11 → 12 | Lõi domain thời gian, resolver, adapter Neo4j (chưa chạy server thật) | commit `a9170a9` → `10b33ab` |
 | 2026-09-12 | Audit corpus: 22.550 VB, lỗ hổng thời gian 4,4% | `docs/audit_dataset.md` |
