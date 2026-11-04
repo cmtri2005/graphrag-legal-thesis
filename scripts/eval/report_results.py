@@ -37,17 +37,18 @@ def score_section(path: Path) -> list[str]:
     data = json.loads(path.read_text(encoding="utf-8"))
     systems = [k for k in data if " − " not in k]
     diffs = [k for k in data if " − " in k]
+    groups = [g for g in GROUPS if g in data[systems[0]][MODE]]
     rows = data[systems[0]][MODE]["all"]["rows"]
-    out = [f"## `{path}`", "", f"Chế độ `{MODE}`, {rows} dòng (T1, T2, T3, T6). KTC 95% bootstrap theo lineage.",
+    out = [f"## `{path}`", "", f"Chế độ `{MODE}`, {rows} dòng ({', '.join(groups)}). KTC 95% bootstrap theo lineage.",
            "", "| Hệ | " + " | ".join(h for _, h in MAIN) + " |", "|---" * (len(MAIN) + 1) + "|"]
     for s in systems:
         a = data[s][MODE]["all"]
         cells = [num(a[m]) + (ci(a["ci95"].get(m)) if m == "accuracy" else "") for m, _ in MAIN]
         out.append(f"| `{s}` | " + " | ".join(cells) + " |")
     out += ["", "Acc theo nhóm (số dòng trong ngoặc):", "",
-            "| Hệ | " + " | ".join(f"{g} ({data[systems[0]][MODE][g]['rows']})" for g in GROUPS) + " |",
-            "|---" * (len(GROUPS) + 1) + "|"]
-    out += [f"| `{s}` | " + " | ".join(num(data[s][MODE][g]["accuracy"]) for g in GROUPS) + " |"
+            "| Hệ | " + " | ".join(f"{g} ({data[systems[0]][MODE][g]['rows']})" for g in groups) + " |",
+            "|---" * (len(groups) + 1) + "|"]
+    out += [f"| `{s}` | " + " | ".join(num(data[s][MODE][g]["accuracy"]) for g in groups) + " |"
             for s in systems]
     if diffs:
         out += ["", "Hiệu ghép cặp với hệ đứng trước trong file (KTC 95%):", "",

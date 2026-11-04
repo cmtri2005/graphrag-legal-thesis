@@ -1,6 +1,8 @@
 """ViLexTime scorer on hand-made rows: formulas 6–9 of the proposal and the 28/09 choices."""
 import json
 
+import pytest
+
 from score_vilextime import load_rows, nearest, probe, resolve, score
 
 # provision P: v1 in force 2019-01-01..2021-01-01, v2 from then (written by event E2);
@@ -41,6 +43,20 @@ def test_the_gold_scores_perfectly():
     assert (s["recall@1"], s["tv_recall@1"], s["mrr"], s["accuracy"], s["tcs"]) == (1, 1, 1, 1, 1)
     assert (s["tver"], s["vcr"], s["cited_rows"]) == (0, 0, 3)
     assert s["em"] == 0.5          # r2 exact after normalisation; r1 has words between the spans
+
+
+@pytest.mark.parametrize("short", [None, "", " … "])
+def test_scoring_rejects_answerable_rows_without_gold_spans(short):
+    rows = [{**ROWS[0], "short_answer": short}, {**ROWS[1], "short_answer": short}]
+    with pytest.raises(ValueError, match="2 answerable rows.*r1, r2"):
+        score(rows, {}, UNITS)
+
+
+def test_empty_short_answer_outside_scored_split_is_allowed():
+    from score_vilextime import report
+
+    rows = [{**ROWS[0], "split": "test"}, {**ROWS[1], "split": "dev", "short_answer": None}]
+    assert report(rows, {}, UNITS, "test")["giua_khoang"]["all"]["rows"] == 1
 
 
 def test_published_release_restores_lead_in_and_written_citation(tmp_path):

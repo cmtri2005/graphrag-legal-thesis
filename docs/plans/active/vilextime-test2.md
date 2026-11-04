@@ -85,6 +85,11 @@ Out of scope:
 
 ## Progress
 
+- [x] 04/11: chặn dòng có đáp án nhưng thiếu span vàng tại hàm chấm chung; chấm lại từ dự đoán
+  có sẵn với 10.000 mẫu, bốn JSON score/confirm của v1.0 và test 2 khớp từng byte với bản lưu.
+  Sinh riêng [báo cáo E3 v1.0](../../reports/ket_qua_e3_v1.md) và
+  [báo cáo E3 test 2](../../reports/ket_qua_e3_test2.md); test 2 ghi rõ nhãn LLM và lần chấm sai
+  theo amendment ADR 0005 ngày 04/11. Không hoàn tất kế hoạch hay điền Result.
 - [x] 29/10: chẩn đoán lệch A–B, đếm kho ứng viên, soạn plan và thẻ 4.0 (Claude).
 - [x] 29/10: CMT duyệt thẻ 4.0 và hai ngưỡng; luật sư rảnh, A và B gán đôi 100%.
 - [ ] Luật sư xem thẻ 4.0 trước lô 0.

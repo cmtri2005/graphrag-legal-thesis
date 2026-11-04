@@ -247,6 +247,11 @@ def score(rows: list[dict], preds: dict[str, dict], units: dict, ks=KS, draws: i
     With `draws`, also each headline metric's 95% interval (`ci95`) and the resamples
     behind it (`_draws`, for `difference`).
     """
+    missing = [r["id"] for r in rows if r["answerable"] and not spans(r.get("short_answer") or "")]
+    if missing:
+        raise ValueError(f"{len(missing)} answerable rows have no gold short_answer spans "
+                         f"(ADR 0005 amendment 2026-11-04); use a release with gold spans. "
+                         f"IDs: {', '.join(missing[:5])}")
     per_row = {r["id"]: row_scores(r, preds.get(r["id"], {}), units, ks) for r in rows}
     out: dict = {"rows": len(rows), "cited_rows": sum(s["tver"] is not None for s in per_row.values()),
                  "contrast_rows": sum(bool(r.get("_distractors")) for r in rows)}
