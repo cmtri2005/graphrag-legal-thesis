@@ -126,6 +126,9 @@ Hai LLM gán độc lập, các trường hợp lệch được hòa giải bằ
 <!-- nguồn: data/review/test2_llm/agreement.json -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 
+Lời dặn dùng khi gán nhãn test 2 cũng có giới hạn, được phát hiện khi rà ngày 04/11. Model chỉ nhận thẻ gán nhãn viết cho người và vài dòng dặn thêm, không có các định nghĩa mà thẻ trỏ tới và không có bước hiệu chuẩn. Model không được tra cứu ngoài các đoạn trích, nên Q4 = Không phần lớn chỉ có nghĩa là không thấy quy định khác trong phần được đưa; chỉ sáu câu phân vân được agent tra luật kiểm lại. Lời dặn còn yêu cầu "phải khắt khe" ngoài nội dung của thẻ, và với cùng lời dặn, hai model loại 45 và 24 trên 138 câu. Nguyên văn lời dặn được lưu ở `prompts/vilextime/test2_gan_v1.md`. Phép kiểm độ nhạy theo lời dặn bản 2 được khai báo trong amendment 04/11 (b). [CHỜ KẾT QUẢ: hiệu chuẩn và độ nhạy]
+<!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
+
 Có một lần chấm E3 test 2 — nhãn LLM — sai do release thiếu đáp án ngắn và phép kiểm chứa span coi tập span rỗng là thỏa. Amendment ngày 04/11 khai báo sửa trường đáp án ngắn và chấm lại các dự đoán đã có, không sinh hoặc truy xuất lại. Mọi Accuracy của test 2 trong khóa luận chỉ lấy từ `runs/E3_test2/rescore/`; bản kết quả cũ được giữ làm hồ sơ sai sót, không được trích như số hợp lệ. Bộ chấm hiện từ chối dòng có đáp án nhưng thiếu span vàng trong phần đang chấm.
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 <!-- nguồn: scripts/eval/score_vilextime.py -->

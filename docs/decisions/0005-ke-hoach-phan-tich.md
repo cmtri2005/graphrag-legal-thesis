@@ -266,3 +266,33 @@ phán quyết dựa trên nó (XN8 "không đủ bằng chứng", XN9 "bác"). *
 6. **Kết quả kiểm điều kiện ở mục 4 (ghi sau khi chấm lại).** Ước lượng, KTC, `p` và phán quyết của XN1, XN2, XN3, XN4, XN6 giống hệt lần chấm đầu.
    Trường duy nhất đổi là `p_Holm` của XN1 và XN4 (0,6894 → 0,4596). Mục 4 viết "giống hệt" nhưng chưa tách trường này; nó đổi là đúng vì
    Holm phụ thuộc `p` của cả họ, trong đó XN8 và XN9 đã đổi. Phán quyết của XN1 và XN4 không đổi.
+
+## Amendment 2026-11-04 (b): kiểm độ nhạy của test 2 theo lời dặn gán nhãn v2
+
+Ngày: 04/11/2026. Người duyệt: CMT (đồng ý phương án bốn bước trong phiên làm việc 04/11). Amendment này chỉ thêm một phép phân tích
+độ nhạy. **Không đổi bảng chính, phán quyết hay kết luận H0 của test 2.** Nếu nhãn v2 đầu tiên có thời điểm sớm hơn commit này thì amendment
+mất hiệu lực.
+
+**Lúc viết amendment này đã thấy kết quả test nào:** toàn bộ E1 và E3 của v1.0 và test 2, gồm `runs/E3_test2/rescore/`, cùng các nhãn LLM cũ.
+Người viết lời dặn v2 đã thấy các số này. Phiên gán v2 chạy ở thư mục riêng ngoài repo, không có khóa, nhãn cũ hay kết quả hệ thống.
+
+1. **Vì sao cần.** Rà ngày 04/11 thấy lời dặn gán nhãn test 2 không có file trong repo. Bản dựng lại khớp từng byte với bản các phiên gán đã đọc:
+   `prompts/vilextime/test2_gan_v1.md` (sha256 `761811d39e87fdd47c0fdcb4d3afa6adce426419e69e258f673f6a9b824e51a5`) và `test2_hoa_giai_v1.md` (sha256 `a981f2863660c38f17fe093d0939d4603cc9c4be06c85eba847a1da1c5a13bac`).
+   Lời dặn này chỉ gồm thẻ 4.0 và vài dòng: thiếu các định nghĩa mà thẻ trỏ tới, nói về "phần tô màu" mà model không thấy, cấm tra cứu ngoài đoạn trích
+   nên Q4 phần lớn chỉ có nghĩa "không thấy trong đoạn trích", thêm chỉ dẫn "phải khắt khe" ngoài thẻ, và không được hiệu chuẩn.
+2. **Lời dặn v2.** `prompts/vilextime/test2_gan_v2.md` (sha256 `400b5b7b37c8ae7831d01124220a31d9276558dfa0db10f2bb83759447f01542`) và `test2_hoa_giai_v2.md` (sha256 `cde19b8aaf03f6c226345de699d3d30a4aef6ec643dcaa521c60e65b59a766de`).
+   Nội dung lấy từ `docs/vilextime-dinh-nghia.md`, `docs/vilextime-annotation.md` §3, §4, §7 và điều chuyển tiếp của `test2_loc.md`. Phần viết mới: ranh giới Q1, Q2, Q3;
+   cách xử lý khi thiếu đoạn nguồn; câu nói rõ giới hạn của Q4; bỏ chỉ dẫn "khắt khe". Gói có thêm chuỗi phiên bản với chỗ đổi, gợi ý chỗ chuyển (T6) và quy định giống nhất trong kho (T2, T3),
+   dựng bằng `scripts/review/test2_relabel.py` và `kiem_hints.py`. Hai bên gán cùng bằng chứng. Không sửa lời dặn sau commit này.
+3. **Quy trình.** LLM-A Sonnet 5.5 và LLM-B Codex gán độc lập trong phiên mới, không tra web; phiên Opus 5.5 hòa giải các câu lệch, không biết nhãn nào của model nào. Model thực tế ghi vào `runs/`. Không phải người hay luật sư.
+4. **Hiệu chuẩn, trước khi gán test 2.** 68 câu của v1.0 có nhãn người độc lập (A và B cùng nhãn, hoặc luật sư tự chốt, không có phiếu AI hỗ trợ); khóa `gan_v2_key.tsv` sha256
+   `2906af67cca9f5ca981ed4d9767f2b14ac0e3834ce766a685c2cef7dfe9ce8cc`, gói sha256 `11ee6bc82ed45bc2639bd1601c3e5b5898ca73ee1580e972c68104a4b10b5836`. Câu xấu khi có ít nhất một mốc `khong_dat`.
+   Bỏ một câu trùng ví dụ trong lời dặn. **Cổng:** nhãn cuối so với người trên toàn tập đạt AC1 ≥ 0,80 và p_neg ≥ 0,60 (cùng ngưỡng định nghĩa §6). Báo thêm LLM-A, LLM-B, và T2, T3, T6.
+   **Không đạt thì dừng:** không gán test 2, không sửa lời dặn, không đổi ngưỡng, không chạy lại; ghi kết quả vào khóa luận và phần phân tích dưới đây không tồn tại.
+   Giới hạn đã biết: mẫu có 29 câu xấu nhưng 25 câu ở T6, T2 và T3 chỉ có 4, nên cổng gần như không đo được khả năng bắt câu xấu ở T2, T3; câu hỏi v1.0 viết theo quy trình khác test 2.
+5. **Gán test 2.** 138 câu của phiếu v3, gói sha256 `632e5fd36d5d4527e27fc9f64cd3ef293dafa637af5b88f73f168566412ce851`. Lần duy nhất, chỉ chạy lại câu lỗi định dạng.
+   Sau đó một agent tra luật (Lawgical) kiểm Q4 của các câu T6 đang đạt, không phải luật sư. Câu Q4 thành `co` hoặc `khong_chac` thì không đạt. Số câu chưa kịp kiểm được báo kèm.
+6. **Phân tích.** Lọc `test2_release_v2.jsonl` chỉ còn lineage đạt theo nhãn v2 bằng `test2_relabel.py subset`; chạy `score_vilextime.py` và `confirm_vilextime.py` với `--split test --draws 10000` trên dự đoán đã có
+   (`runs/E1_test2/test`, `runs/E3_test2/test`). Không sinh hay truy xuất lại. Câu đạt theo v2 nhưng ngoài release chưa có dự đoán, chỉ báo số đếm. Holm trên sáu kiểm định như §4, chạy một lần.
+7. **Diễn giải.** Sáu phán quyết không đổi thì ghi "kết luận test 2 vững với lời dặn v2"; có phán quyết đổi thì ghi "kết luận nhạy với cách gán nhãn" và nêu kiểm định nào. Dù theo hướng nào, bảng chính và H0 vẫn
+   theo amendment 03/11 và 04/11; phân tích này không được dùng để chọn bảng đẹp hơn. Luôn gọi là nhãn LLM, không chung bảng với v1.0.
