@@ -239,3 +239,30 @@ Dựng release test 2 bằng `scripts/pipeline/enrich_vilextime.py` (thêm `acce
 (T2 ranh giới 120, giữa khoảng 120, trước hiệu lực 38; T3 75 và 75; T6 32 và 32) trong
 `data/vilextime/test2_release.jsonl`, sha256 `8c140f5c14b1dbc00a7d34954abf161d1a94fd6e69d3a56ee16d3e80c0bd4c28`.
 Con số 107 / 240 ở mục 1 phía trên là trước bước này. Thang truy xuất chạy với `--release` file này và `--split test`.
+
+## Amendment 2026-11-04: sửa đáp án ngắn của test 2 sau lần chấm E3 đầu
+
+Ngày: 04/11/2026. Người duyệt: CMT (đồng ý phương án trong phiên làm việc 04/11). Amendment này viết **sau** khi đã chấm E3
+một lần, nên đây là sửa lỗi có khai báo, không phải khai báo trước.
+
+**Lúc viết amendment này đã thấy kết quả test nào:** toàn bộ E1 và E3 của v1.0; E1 của test 2; lần chấm E3 đầu của test 2 trong
+`runs/E3_test2/test/` với Accuracy sai (`b1` 0,903; `b2ctx` 0,855; `b5` 0,872; `b7` 0,885; `b7pp` 0,885; `proposed` 0,894) và các
+phán quyết dựa trên nó (XN8 "không đủ bằng chứng", XN9 "bác"). **Chưa tính Accuracy, XN7, XN8, XN9 nào trên đáp án ngắn đúng.**
+
+1. **Lỗi.** `scripts/pipeline/enrich_vilextime.py` chỉ đọc `short_answers.jsonl`, nên `data/vilextime/test2_release.jsonl` (sha256
+   `8c140f5c…`) chỉ có đáp án ngắn ở 12/460 dòng có đáp án (6/211 ở `giua_khoang`). `contains()` coi đáp án ngắn rỗng là đúng, nên ở các
+   dòng còn lại, câu trả lời nào không ghi "không" cũng được tính đúng.
+2. **Sửa.** Chấm bằng `data/vilextime/test2_release_v2.jsonl` (sha256
+   `b299408327e3bb5c0e520d4457b27225d866afe3c7976e1c3b0aff2b8093855c`), dựng bằng `scripts/review/test2_fill_shorts.py` từ
+   `data/vilextime/short_answers_test2.jsonl` (sha256 `9c827eb0…`, commit `f6ee3c0` trước release và trước mọi lần chạy trên test 2).
+   Chỉ trường `short_answer` thay đổi: 448 dòng được điền, 6 dòng được thay, 6 dòng giữ nguyên. Khi hai nguồn khác nhau, lấy file của
+   test 2. Cả 460 dòng đều qua `check_short_answer`.
+3. **Không chạy lại gì.** Prompt không dùng đáp án ngắn, nên giữ nguyên câu trả lời của E3 và dự đoán của E1. Đây là lần chấm lại duy
+   nhất; định nghĩa chỉ số, cấu hình, họ Holm và chiều dự đoán không đổi.
+4. **Điều kiện hợp lệ.** XN1, XN2, XN3, XN4 và XN6 phải giống hệt lần chấm đầu, vì không phụ thuộc đáp án ngắn. Nếu khác thì dừng và
+   tìm nguyên nhân, không báo số mới.
+5. **Báo cáo.** Mọi số Accuracy trên test 2 lấy từ `runs/E3_test2/rescore/`. Khóa luận phải nêu lần chấm sai đầu tiên. Cột Accuracy
+   trong `runs/E1_test2/test/ladder.score.json` cũng sai vì cùng lỗi, và không được dùng (thang này chỉ truy xuất, không sinh câu trả lời).
+6. **Kết quả kiểm điều kiện ở mục 4 (ghi sau khi chấm lại).** Ước lượng, KTC, `p` và phán quyết của XN1, XN2, XN3, XN4, XN6 giống hệt lần chấm đầu.
+   Trường duy nhất đổi là `p_Holm` của XN1 và XN4 (0,6894 → 0,4596). Mục 4 viết "giống hệt" nhưng chưa tách trường này; nó đổi là đúng vì
+   Holm phụ thuộc `p` của cả họ, trong đó XN8 và XN9 đã đổi. Phán quyết của XN1 và XN4 không đổi.

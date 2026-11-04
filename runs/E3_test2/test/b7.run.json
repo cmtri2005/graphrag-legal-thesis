@@ -1,0 +1,44 @@
+{
+  "system": "b7",
+  "split": "test",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "ec4cad378cdf2db357faf0d8f67d99888b82c9330b34cb22d4923e6244ae423c",
+  "raw_file_sha256": "e8b0ad2a67d06b255e38686401eb13942048033b0452f47673279498c5a0d062",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+  "gpu": [
+    "Tesla T4"
+  ],
+  "rows": 227,
+  "format_ok": 224,
+  "truncated": 0,
+  "prompt_tokens_mean": 4607.7753303964755,
+  "completion_tokens_mean": 102.90748898678414,
+  "generation_seconds": 2804.371472114007,
+  "export": {
+    "system": "b7",
+    "spec": {
+      "name": "b7-lex",
+      "layer": "asis",
+      "lexical": true,
+      "dense": false,
+      "rerank": false,
+      "temporal": "document",
+      "context": true,
+      "expand": 0,
+      "expand_edges": "none",
+      "verify": "off",
+      "k": 20,
+      "note": "B7 — document-level date filter, no graph (the main control)"
+    },
+    "split": "test",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": true,
+    "embed": null,
+    "embed_sha256": null,
+    "rows": 227,
+    "release_sha256": "8c140f5c14b1dbc00a7d34954abf161d1a94fd6e69d3a56ee16d3e80c0bd4c28",
+    "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+    "prompt_file_sha256": "ec4cad378cdf2db357faf0d8f67d99888b82c9330b34cb22d4923e6244ae423c"
+  }
+}

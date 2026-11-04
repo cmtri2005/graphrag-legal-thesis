@@ -1,0 +1,189 @@
+{
+ "split": "test",
+ "draws": 10000,
+ "tests_run": 6,
+ "files": {
+  "retrieval/b7": {
+   "path": "runs/E1_test2/test/b7.jsonl",
+   "sha256": "33c3628aef9210e49a9bd1e10c6b909a66871bdca3728ec6e9cae183cce7ba7b"
+  },
+  "retrieval/b7pp": {
+   "path": "runs/E1_test2/test/b7pp.jsonl",
+   "sha256": "e052f8b677cbbae13d41be67505e2eaf7dae772108187d927decd85073efa238"
+  },
+  "generation/b7": {
+   "path": "runs/E3_test2/test/b7.jsonl",
+   "sha256": "e3f1fce4c2f06169039b84eed6e34325d1969d9dcb3c0beb295d930876ee7d59"
+  },
+  "generation/b7pp": {
+   "path": "runs/E3_test2/test/b7pp.jsonl",
+   "sha256": "8e7e3cdb273f6b647807a7e176f3cad5cd423052e77113e01ab989835be4f29b"
+  },
+  "retrieval/b2ctx": {
+   "path": "runs/E1_test2/test/b2ctx.jsonl",
+   "sha256": "71f79bcaab62422e9dd315083d79fc8011c114a7f0327fae65abe86fa054a1d8"
+  },
+  "retrieval/b7plus": {
+   "path": "runs/E1_test2/test/b7plus.jsonl",
+   "sha256": "bd5f8ce3ac2dd11b7732d89c4d227f5e96c2db526a0a866b27d101df4430da26"
+  },
+  "generation/b2ctx": {
+   "path": "runs/E3_test2/test/b2ctx.jsonl",
+   "sha256": "edda1219353dee05f76c530dd66cd32f6b0ea6cff15bbbcf917e56457fc7815f"
+  },
+  "generation/proposed": {
+   "path": "runs/E3_test2/test/proposed.jsonl",
+   "sha256": "f1078b1bc5bdb24a27e9227e29d7f5863c911ced63940a7a8c5b70fad477b92a"
+  },
+  "generation/b5": {
+   "path": "runs/E3_test2/test/b5.jsonl",
+   "sha256": "430458816b8662916c89f3553ec06f55e0f5b4eb7b50c84193236ddd77534f28"
+  },
+  "generation/b1": {
+   "path": "runs/E3_test2/test/b1.jsonl",
+   "sha256": "0a92b619231feaac11b92c4ff72386d1bdfa2b343ab3f3399467012ee1729874"
+  }
+ },
+ "results": {
+  "XN1": {
+   "estimate": 0.028436018957345988,
+   "ci95": [
+    -0.014152620048287578,
+    0.07211538461538461
+   ],
+   "p": 0.2298,
+   "rows": {
+    "all_answerable": 211
+   },
+   "lineages": {
+    "all_answerable": 101
+   },
+   "p_holm": 0.6894,
+   "verdict": "không đủ bằng chứng",
+   "predicted": 1
+  },
+  "XN2": {
+   "estimate": -0.21875,
+   "ci95": [
+    -0.2731282631750694,
+    -0.16517754750982963
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 227
+   },
+   "lineages": {
+    "all": 101
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": -1
+  },
+  "XN3": {
+   "estimate": 0.04739336492890994,
+   "ci95": [
+    0.02251999757605138,
+    0.0776255707762557
+   ],
+   "p": 0.0,
+   "rows": {
+    "all_answerable": 211
+   },
+   "lineages": {
+    "all_answerable": 101
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "XN4": {
+   "estimate": 0.028436018957345988,
+   "ci95": [
+    -0.014354066985645925,
+    0.07239819004524886
+   ],
+   "p": 0.2348,
+   "rows": {
+    "all_answerable": 211
+   },
+   "lineages": {
+    "all_answerable": 101
+   },
+   "p_holm": 0.6894,
+   "verdict": "không đủ bằng chứng",
+   "predicted": 1
+  },
+  "XN6": {
+   "estimate": 0.09999999999999998,
+   "ci95": [
+    -0.06666666666666668,
+    0.2777777777777778
+   ],
+   "p": 0.2706,
+   "rows": {
+    "t2_near": 30,
+    "t2_regular": 90
+   },
+   "lineages": {
+    "t2_near": 15,
+    "t2_regular": 45
+   },
+   "p_holm": null,
+   "verdict": "thăm dò",
+   "predicted": 1
+  },
+  "XN7": {
+   "estimate": -0.010256410256410331,
+   "ci95": [
+    -0.02577319587628868,
+    0.0
+   ],
+   "p": 0.2602,
+   "rows": {
+    "t6": 32,
+    "t2_t3": 195
+   },
+   "lineages": {
+    "t6": 16,
+    "t2_t3": 85
+   },
+   "p_holm": null,
+   "verdict": "thăm dò",
+   "predicted": 1
+  },
+  "XN8": {
+   "estimate": 0.022026431718061623,
+   "ci95": [
+    -0.017094017094017033,
+    0.05983102918586791
+   ],
+   "p": 0.2904,
+   "rows": {
+    "all": 227
+   },
+   "lineages": {
+    "all": 101
+   },
+   "p_holm": 0.6894,
+   "verdict": "không đủ bằng chứng",
+   "predicted": 1
+  },
+  "XN9": {
+   "estimate": -0.048458149779735726,
+   "ci95": [
+    -0.09133367230962494,
+    -0.013100436681222738
+   ],
+   "p": 0.008,
+   "rows": {
+    "all": 227
+   },
+   "lineages": {
+    "all": 101
+   },
+   "p_holm": 0.032,
+   "verdict": "bác",
+   "predicted": 1
+  }
+ }
+}

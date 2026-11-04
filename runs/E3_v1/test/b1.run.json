@@ -1,0 +1,44 @@
+{
+  "system": "b1",
+  "split": "test",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "1eae3c6c8b431c42157a522ca9568a9461be724755918c4fa774ffec41225532",
+  "raw_file_sha256": "2caa775eabf9ad8c6422d1cfac5f8885911d42540bb1516cefe1363aa16ea9a4",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+  "gpu": [
+    "Tesla T4"
+  ],
+  "rows": 211,
+  "format_ok": 208,
+  "truncated": 3,
+  "prompt_tokens_mean": 554.3080568720379,
+  "completion_tokens_mean": 35.62559241706161,
+  "generation_seconds": 702.7713332410005,
+  "export": {
+    "system": "b1",
+    "spec": {
+      "name": "b1",
+      "layer": null,
+      "lexical": false,
+      "dense": false,
+      "rerank": false,
+      "temporal": "none",
+      "context": false,
+      "expand": 0,
+      "expand_edges": "none",
+      "verify": "off",
+      "k": 20,
+      "note": "B1 — the generator alone, no retrieval"
+    },
+    "split": "test",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": true,
+    "embed": null,
+    "embed_sha256": null,
+    "rows": 211,
+    "release_sha256": "7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366",
+    "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+    "prompt_file_sha256": "1eae3c6c8b431c42157a522ca9568a9461be724755918c4fa774ffec41225532"
+  }
+}
