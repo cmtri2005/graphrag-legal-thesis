@@ -61,18 +61,20 @@ FAMILY = tuple(t for t in TESTS if t[0] not in EXPLORATORY)
 
 
 def final_family(rows: list[dict], proposed: str = "proposed2") -> tuple[tuple, frozenset]:
-    """Master plan §6; tooling only until the final amendment is committed."""
+    """ADR 0006 §3 (Proposed); tooling only until that ADR is Accepted and committed."""
     tests = (
         ("F1", "RQ2: lai ghép", "paired", "accuracy", ("all",), "generation", ("b4", proposed), +1),
         ("F2", "RQ2: đồ thị phi thời gian", "paired", "accuracy", ("all",), "generation", ("b5", proposed), +1),
-        ("F3", "RQ3: lọc văn bản", "paired", "tv_recall@1", ("all_answerable",), "retrieval", ("b2ctx", "b7"), +1),
-        ("F4", "RQ3: phiên bản", "paired", "tv_recall@1", ("all_answerable",), "retrieval", ("b7", "b7plus"), +1),
-        ("F5", "H0: truy xuất", "paired", "tv_recall@1", ("all_answerable",), "retrieval", ("b7", "b7pp"), +1),
-        ("F6", "H0: câu trả lời", "paired", "tver", ("all",), "generation", ("b7", "b7pp"), -1),
-        ("F7", "T6: lan truyền", "paired", "accuracy", ("t6_unanswerable",), "generation", ("b7pp", proposed), +1),
+        ("F3", "RQ2: lỗi sai phiên bản", "paired", "wrong_version", ("all",), "generation", ("b4", proposed), -1),
+        ("F4", "RQ3: lọc văn bản", "paired", "tv_recall@1", ("all_answerable",), "retrieval", ("b2ctx", "b7"), +1),
+        ("F5", "RQ3: phiên bản", "paired", "tv_recall@1", ("all_answerable",), "retrieval", ("b7", "b7plus"), +1),
+        ("F6", "H0: truy xuất", "paired", "tv_recall@1", ("all_answerable",), "retrieval", ("b7", "b7pp"), +1),
+        ("F7", "T6: không đáp án", "paired", "accuracy", ("t6_unanswerable",), "generation", ("b7pp", proposed), +1),
+        # ADR 0006 §3: TVER shares the graph's windows with the gold, so it is never confirmatory.
+        ("F8", "Nhất quán nội bộ: TVER", "paired", "tver", ("all",), "generation", ("b7", "b7pp"), -1),
     )
     n = len({r['lineage_id'] for r in rows if r['group'] == 'T6' and not r['answerable']})
-    return tests, frozenset({'F7'} if n < 20 else ())
+    return tests, frozenset({'F8'} | ({'F7'} if n < 20 else set()))
 
 
 SLICES['t6_unanswerable'] = lambda r: r['group'] == 'T6' and not r['answerable']
@@ -168,8 +170,9 @@ def main() -> None:
     lines = [f"ADR 0005 · split {args.split} · {args.draws:,} lần lấy mẫu lại · "
              f"Holm trên {len(ran)}/{family_size} kiểm định" + ("" if len(ran) == family_size else " (CHƯA ĐỦ HỌ)")]
     if args.family == 'final':
-        lines.append('Họ final: công cụ chờ amendment được commit; dev chỉ tập dượt.')
-        if exploratory:
+        lines.append('Họ final (ADR 0006): công cụ chờ ADR được Accepted và commit; dev chỉ tập dượt.')
+        lines.append('F8 (TVER) luôn ngoài Holm: kiểm nhất quán nội bộ, dùng chung cửa sổ đồ thị với gold.')
+        if 'F7' in exploratory:
             lines.append('F7 tự chuyển thăm dò: T6 không đáp án có dưới 20 lineage; ngoài Holm.')
     for name, hypothesis, kind, metric, slices, source, systems, sign in tests:
         r = results.get(name)
@@ -196,7 +199,7 @@ def main() -> None:
             "split": args.split, "draws": args.draws, "tests_run": len(ran),
             "family": args.family, "family_size": family_size, "proposed": args.proposed,
             "test_definitions": tests, "exploratory": sorted(exploratory),
-            "family_note": 'F7 thăm dò: dưới 20 lineage' if args.family == 'final' and exploratory else None,
+            "family_note": 'F7 thăm dò: dưới 20 lineage' if args.family == 'final' and 'F7' in exploratory else None,
             "files": {f"{s}/{n}": {"path": str(p), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
                       for (s, n), p in files.items()},
             "results": results}, ensure_ascii=False, indent=1), encoding="utf-8")

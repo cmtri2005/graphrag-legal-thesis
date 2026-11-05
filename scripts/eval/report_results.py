@@ -64,7 +64,7 @@ def confirm_section(path: Path) -> list[str]:
     final = data.get('family') == 'final'
     size = data.get('family_size', len(FAMILY))
     tests = data.get('test_definitions', TESTS)
-    out = [f"## {'F1–F7' if final else 'XN1–XN9'} (`{path}`)", "",
+    out = [f"## {'F1–F8' if final else 'XN1–XN9'} (`{path}`)", "",
            f"{data['draws']:,} lần lấy mẫu lại".replace(",", ".") + f", Holm trên {data['tests_run']}/{size} kiểm định"
            + ("" if data["tests_run"] == size else " (**chưa đủ họ**)")
            + ("; họ final là công cụ chờ amendment được commit. " + (data.get('family_note') or '') if final

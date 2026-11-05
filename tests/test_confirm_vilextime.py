@@ -47,7 +47,8 @@ def test_final_family_holm_counts_and_exploratory_threshold(tmp_path, monkeypatc
     from report_results import confirm_section
     rows = [_row(f'L{i}', 'T6', answerable=False) for i in range(lineages)]
     tests, exploratory = confirm.final_family(rows, 'P')
-    assert len(tests) == 7 and len(tests) - len(exploratory) == expected_size
+    assert len(tests) == 8 and len(tests) - len(exploratory) == expected_size
+    assert 'F8' in exploratory and tests[2][3] == 'wrong_version' and tests[2][7] == -1
     assert tests[0][6] == ('b4', 'P') and tests[6][6] == ('b7pp', 'P')
     release = tmp_path / 'release.jsonl'
     release.write_text('[]')
@@ -71,4 +72,4 @@ def test_final_family_holm_counts_and_exploratory_threshold(tmp_path, monkeypatc
     assert data['results']['F7']['p_holm'] is None if lineages < 20 else data['results']['F7']['p_holm'] is not None
     text = '\n'.join(confirm_section(out))
     assert f'Holm trên {expected_size}/{expected_size}' in text
-    assert 'F1–F7' in text and ('F7 thăm dò' in text) == (lineages < 20)
+    assert 'F1–F8' in text and ('F7 thăm dò' in text) == (lineages < 20)
