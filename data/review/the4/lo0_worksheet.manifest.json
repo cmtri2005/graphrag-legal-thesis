@@ -1,0 +1,16 @@
+{
+  "seed": "vilextime-g1-0511",
+  "questions": 30,
+  "strata": {
+    "T2": 10,
+    "T2 gần giống": 5,
+    "T3": 5,
+    "T6 đích danh": 7,
+    "T6 cấp trên": 3
+  },
+  "inputs_sha256": {
+    "data/review/test2_candidate_worksheet_v3.jsonl": "c0925d5bee759d4b6c188cb4b419d367158a591cb53111b066b3609ccda9d2d1",
+    "data/vilextime/test2_release_v2.jsonl": "b299408327e3bb5c0e520d4457b27225d866afe3c7976e1c3b0aff2b8093855c"
+  },
+  "output_sha256": "c690e2a1712d73a91990780154b0efa21bb0d8be203b14f7c730eb51935a9347"
+}

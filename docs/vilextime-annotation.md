@@ -1,19 +1,31 @@
 # Hướng dẫn gán nhãn ViLexTime
 
-**Phiên bản 3.0** (20/10/2026; viết gọn lại 24/10/2026, không đổi quy tắc). Hướng dẫn này cài đặt
-`docs/vilextime-dinh-nghia.md`; hai tài liệu mâu thuẫn thì định nghĩa đúng. ⚖ đánh dấu quy tắc
-pháp lý luật sư đã đồng ý (21/10/2026). Bản 1.2 và 2.0 xem trong lịch sử git; mỗi nhãn ghi phiên
-bản đã dùng ở cột `guideline_version`.
+**Phiên bản 4.0** (05/11/2026). **Chờ luật sư xem trước lô thử.**
+Hướng dẫn này cài đặt `docs/vilextime-dinh-nghia.md`; hai tài liệu mâu thuẫn thì định nghĩa đúng.
+⚖ đánh dấu quy tắc pháp lý luật sư đã đồng ý (21/10/2026).
+Bản 3.0 đọc ở commit `32c66ed`; đó là bản đã dùng cho v1.0.
+Bản 1.2 và 2.0 xem trong lịch sử git; mỗi nhãn ghi phiên bản đã dùng ở `guideline_version`.
+Bản 4.0 gộp hướng dẫn 3.0 và thẻ 4.0, chỉ đổi cách hỏi, không đổi quy tắc.
+Căn cứ: định nghĩa §3 R1–R7, §6 tám điều kiện, §7 mã loại; sổ quyết định ở §7 dưới đây.
 
-## 1. Bạn kiểm cái gì
+## 1. Bạn gán cái gì
 
-Mỗi dòng gồm một câu hỏi, một mốc `as_of` và đáp án chuẩn, tức nội dung có hiệu lực tại mốc đó.
-Máy dựng đáp án, model viết nháp câu hỏi. Mỗi dòng bạn trả lời một câu:
+**Một câu hỏi**, không phải một dòng. Trên màn hình có: câu hỏi; các mốc và đáp án ở mỗi mốc (chỗ khác
+nhau giữa các phiên bản được tô màu, đoạn đáp án ngắn in đậm); trích văn bản tác động; link văn bản gốc.
 
-> Một luật sư đọc câu hỏi, biết ngày `as_of`, tra đúng văn bản. Người đó có trả lời **đúng bằng
-> cột đáp án** không, và chỉ trả lời được **một cách** không?
+Nhóm chỉ có ba:
 
-Có thì gán `dat`. Không thì gán `khong_dat` kèm mã lý do.
+| Nhóm | Câu hỏi đúng là câu hỏi mà… |
+|---|---|
+| **T2** | hỏi ở hai mốc thì ra **hai đáp án khác nhau**. Thẻ "gần giống": hai bản giống ≥ 90%, khác ở một con số hay một cụm |
+| **T3** | hỏi qua các mốc thì ra **ít nhất ba đáp án khác nhau** |
+| **T6** | mốc trước có đáp án; mốc sau điều khoản **đã bị bãi bỏ** (đích danh hoặc theo điều khoản cấp trên), nên đáp án đúng là "không còn quy định" |
+
+Mỗi mốc gồm ngày `as_of` và đáp án chuẩn, tức nội dung có hiệu lực tại mốc đó.
+Máy dựng đáp án, model viết nháp câu hỏi.
+
+> Một luật sư đọc câu hỏi, biết ngày `as_of` ở mỗi mốc, tra đúng văn bản. Người đó có trả lời **đúng bằng
+> đáp án ở từng mốc** không, và chỉ trả lời được **một cách** không?
 
 Ba quy tắc nền:
 
@@ -28,50 +40,60 @@ Ba quy tắc nền:
 
 ## 2. Điền phiếu
 
-| Ô | Điền gì | Dòng nào |
-|---|---|---|
-| `verdict` | `dat` hoặc `khong_dat`. Đồng thuận tính trên ô này | mọi dòng |
-| `reasons` | một hoặc nhiều mã ở bảng dưới, cách nhau bằng dấu phẩy | chỉ dòng `khong_dat` |
-| `note` | tự do; phân vân thì ghi `[phân vân] …` | bắt buộc với `gold_wrong`, `relocated`, `superseded_by_other_norm`, `other` |
-| `da_xem_van_ban_tac_dong` | số hiệu các văn bản tác động đã xem, hoặc "không có" | mọi dòng |
-| `cham_lan_sua` | những ngày chuyển mà câu hỏi chạm tới | T2, T3, T4 |
-| `noi_dung_con_o_dau` | "không có", chỗ mới (văn bản, Điều, Khoản), hoặc "không chắc" | T6 |
-| `phut` | số phút đã dùng (số nguyên) | mọi dòng |
+Trả lời đủ bốn câu. Nhãn `dat` / `khong_dat` do máy suy ra: `dat` khi Q1 Đúng, Q2 Có, Q3 Có, Q4 Không.
+Chọn câu trả lời "xấu" thì chọn thêm **một lý do** trong danh sách ngay dưới câu đó.
 
-Bốn ô cuối là dẫn chứng để dòng vào tập test, nên chỉ bắt buộc với người kiểm tập test (A); thiếu thì phiếu
-không nạp được. B gán mẫu gán đôi để đo đồng thuận, chỉ cần `verdict`, `reasons`, `note` (24/10/2026).
+**Q1. Đáp án ở mỗi mốc có đúng văn bản không?** (định nghĩa §6 điều 1, 5, 8)
+Mở văn bản tác động, đọc câu sửa đổi hoặc bãi bỏ và điều hiệu lực của nó. Đối chiếu cả đoạn đầy đủ
+lẫn đoạn ngắn in đậm.
+- ○ Đúng
+- ○ Sai → `gold_wrong` (sai phiên bản, sai ngày, chữ hỏng dấu) · `reference_only` (đáp án chỉ là
+  "thực hiện theo…") · `other` (đoạn ngắn thiếu ý câu hỏi hỏi; ghi ý thiếu)
 
-**Mã lý do** (danh sách đóng, không thêm mã trong đợt kiểm; cách dùng ở §3). `note` bắt buộc
-với mã in đậm.
+**Q2. Câu hỏi có hỏi vào đúng phần tô màu không?** (§6 điều 2)
+Đọc câu hỏi, che đáp án, tự hỏi: ở hai mốc, người trả lời có phải nói hai điều khác nhau không?
+T6: câu hỏi phải hỏi nội dung, không chỉ hỏi "còn hay không".
+- ○ Có
+- ○ Không → `group_mismatch` · `cosmetic_only` (phần tô màu chỉ là hình thức) · `rename_only`
+  (chỉ đổi tên cơ quan do sắp xếp, nhiệm vụ giữ nguyên) · `auto_reference_update`
 
-| Bước | Mã |
-|---|---|
-| 1. Đúng phiên bản | **`gold_wrong`** · `transitional_rule` |
-| 2. Chạm chỗ đổi | `group_mismatch` · `cosmetic_only` · `rename_only` · `auto_reference_update` |
-| 3. Một điều khoản, một cách | `question_ambiguous` · `unanswerable_as_asked` |
-| 4. Không để lộ | `question_leaks` |
-| 5. Nội dung pháp lý | `reference_only` |
-| 6. Không bị đè | **`superseded_by_other_norm`** · `restructuring_2025` |
-| 7. T6 chuyển chỗ | **`relocated`** · `relocation_unclear` |
-| 8. Đáp án ngắn, lỗi khác | **`other`** |
+**Q3. Câu hỏi có rõ không?** (§6 điều 3, 4) Rõ là: chỉ một điều khoản trả lời được, một đáp án, không
+lộ ngày, số hiệu, Điều, Khoản, ký hiệu mục, không chép sẵn đáp án.
+- ○ Có
+- ○ Không → `question_ambiguous` · `unanswerable_as_asked` · `question_leaks`
 
-Lớp phụ, chỉ có ở `data/review/labels.tsv` và không tính vào đồng thuận: `meta_issues` ghi lỗi siêu
-dữ liệu không làm sai đáp án (`valid_to_wrong` · `valid_from_wrong` · `group_wrong` ·
-`citation_path_wrong` · `doc_number_wrong` · `lead_in_wrong` · `other`).
+**Q4. Có quy định nào khác đang thay cho đáp án này không?** (§6 điều 6, 7)
+T2, T3: văn bản cấp cao hơn hoặc ban hành sau quy định khác mà không sửa điều khoản này; mốc sau sắp
+xếp bộ máy 2025 mà đáp án còn nêu cơ quan, cấp cũ; điều khoản chuyển tiếp. T6: nội dung bị bãi bỏ có
+chuyển sang chỗ khác không (bảy yếu tố, §3 Q4, Bước 7).
+- ○ Không
+- ○ Có → `superseded_by_other_norm` · `restructuring_2025` · `transitional_rule` · `relocated`
+  (ghi chỗ mới)
+- ○ Không chắc → `relocation_unclear` (ghi chỗ nghi)
 
-## 3. Kiểm tám bước
+### Dẫn chứng (bắt buộc, thiếu thì phiếu không lưu)
 
-Kiểm theo thứ tự dưới đây, đủ cả tám bước. Bước nào không đạt thì ghi mã của bước đó; một dòng có
-thể mang nhiều mã. Đạt cả tám bước thì gán `dat`. Gợi ý của máy (`cac_phien_ban`, `goi_y_cho_moi`,
-`note_for_annotator`) chỉ cho biết chỗ cần nhìn, không cho biết nhãn.
+- Dán **một câu trích nguyên văn** từ văn bản tác động mà bạn đã đọc.
+- T6, Q4 = Không: ghi đã tìm ở đâu ("cùng văn bản bãi bỏ; khoản anh em; …").
+- Phân vân: vẫn chọn, ghi `[phân vân] …` ở ghi chú để hỏi luật sư.
+
+## 3. Kiểm theo bốn câu
+
+Kiểm đủ tám bước dưới bốn câu Q1–Q4. Ở mỗi bước, kiểm các mốc có trên trang.
+Bước nào không đạt thì chọn câu trả lời và một lý do ở Q tương ứng theo §2.
+Mã `transitional_rule` ở Bước 1 được ghi ở Q4 theo §2.
+Nhãn `dat` / `khong_dat` do máy suy ra theo §2.
+Các bước có nhắc T1, T4, T5 là quy tắc giữ từ bản 3.0; bộ đang gán chỉ có T2, T3, T6.
+
+### Q1. Đáp án ở mỗi mốc có đúng văn bản không?
 
 **Bước 1. Đáp án đúng phiên bản có hiệu lực tại `as_of`.** Đối chiếu cả lời văn và câu dẫn với văn
-bản gốc, văn bản tác động, `cac_phien_ban` (dòng đang kiểm là bản đánh dấu ◀) và chữ đỏ đậm trong
-`answer` (chữ phiên bản khác không có).
+bản gốc, văn bản tác động, các mốc và đáp án trên trang (chỗ khác nhau giữa các phiên bản được tô màu,
+đoạn đáp án ngắn in đậm).
 - Sai phiên bản, hoặc lời văn thiếu hay thừa so với văn bản gốc → `gold_wrong`.
 - Văn bản gốc trên cổng đã là lời văn sau sửa, nên vế trước không đúng → `gold_wrong`.
 - Văn bản tác động có hiệu lực tách phần ("trừ quy định tại khoản 2, 3 Điều này", "các quy định
-  về … có hiệu lực kể từ ngày ký"): đọc điều hiệu lực của nó. Lần sửa của dòng thuộc phần ngoại lệ
+  về … có hiệu lực kể từ ngày ký"): đọc điều hiệu lực của nó. Lần sửa ở mốc đang kiểm thuộc phần ngoại lệ
   → `gold_wrong`, ghi ngày đúng. Danh sách văn bản cần đọc: `data/review/hieu_luc_tach.tsv`.
 - Chữ hỏng dấu hoặc ký tự ẩn do trích xuất ("sản xuât", "giây phép") → `gold_wrong`, ghi chữ đúng theo
   Công báo. Không sửa tay lời văn. Danh sách chỗ nghi: `data/review/chu_hong_dau.tsv` (khoảng một nửa là
@@ -86,8 +108,18 @@ bản gốc, văn bản tác động, `cac_phien_ban` (dòng đang kiểm là b�
 - Điều khoản chuyển tiếp giữ bản cũ cho đúng quan hệ câu hỏi tự nêu, hoặc buộc chính sự việc phát sinh
   tại `as_of` theo bản cũ → `transitional_rule`, ghi Điều chuyển tiếp ở `note`.
 
+**Bước 5. Đáp án là nội dung pháp lý** (R5). Đáp án chỉ dẫn chiếu ("thực hiện theo quy định tại
+Chương IV Thông tư này") → `reference_only`, kể cả khi khớp lời văn.
+
+**Bước 8. Đáp án ngắn đúng và đủ.** Sai, hoặc thiếu ý mà câu hỏi hỏi → `other`. Ghi ở `note` ý bị
+thiếu và đoạn đúng **trích nguyên từ đáp án**; không viết lời mới. Nếu lỗi thật ra nằm ở câu hỏi
+(câu hỏi rộng hơn đáp án, hoặc vấn đề còn được quy định ở văn bản khác) thì dùng mã của bước 3
+hoặc bước 6.
+
+### Q2. Câu hỏi có hỏi vào đúng phần tô màu không?
+
 **Bước 2. Câu hỏi chạm đúng chỗ đổi** (T2–T6).
-- T2, T4: hai dòng cùng câu hỏi, hai mốc, gán riêng từng dòng. Hai mốc trả lời như nhau →
+- T2, T4: một câu hỏi, hai mốc, kiểm cả hai mốc. Hai mốc trả lời như nhau →
   `group_mismatch`. Ở T4, chỗ đổi thường chỉ là một con số hay một cụm từ; câu hỏi phải hỏi vào
   đúng chỗ đó.
 - T3: câu hỏi phải ra ít nhất 3 đáp án khác nhau qua các mốc; chỉ ra 2 → `group_mismatch`. Lần đổi
@@ -102,6 +134,8 @@ bản gốc, văn bản tác động, `cac_phien_ban` (dòng đang kiểm là b�
   danh sách đơn vị hành chính không tương ứng 1-1, ví dụ "xã, phường, thị trấn" → "xã, phường, đặc
   khu" (cấp xã không còn thị trấn, Luật 72/2025/QH15 Điều 1 khoản 1 điểm b).
 
+### Q3. Câu hỏi có rõ không?
+
 **Bước 3. Câu hỏi chỉ khớp một điều khoản và trả lời được bằng đáp án này, một cách.**
 - Với mục trong danh sách (kể cả T1), câu hỏi phải ghim đúng mục. Câu hỏi chung mà nhiều khoản cùng
   trả lời được → `question_ambiguous`.
@@ -109,12 +143,11 @@ bản gốc, văn bản tác động, `cac_phien_ban` (dòng đang kiểm là b�
   `unanswerable_as_asked`.
 
 **Bước 4. Câu hỏi không để lộ** ngày, số hiệu văn bản, Điều, Khoản, ký hiệu mục ("loại c)"), và không
-chép sẵn đáp án. Không đạt → `question_leaks`. Câu hỏi chứa sẵn vế trước của đáp án thì gán ở dòng
-mốc trước. Câu hỏi nêu sẵn cụm của bản cũ mà bản mới đã đổi (ví dụ "xã, phường, thị trấn") thì gán
+chép sẵn đáp án. Không đạt → `question_leaks`. Câu hỏi chứa sẵn vế trước của đáp án thì Q3 Không khi kiểm
+mốc trước. Câu hỏi nêu sẵn cụm của bản cũ mà bản mới đã đổi (ví dụ "xã, phường, thị trấn") thì Q3 Không
 ở cả hai mốc.
 
-**Bước 5. Đáp án là nội dung pháp lý** (R5). Đáp án chỉ dẫn chiếu ("thực hiện theo quy định tại
-Chương IV Thông tư này") → `reference_only`, kể cả khi khớp lời văn.
+### Q4. Có quy định nào khác đang thay cho đáp án này không?
 
 **Bước 6. Không có quy phạm khác đè lên, không vướng sắp xếp bộ máy.**
 - ⚖ Văn bản cấp cao hơn, hoặc văn bản cùng cơ quan ban hành sau, quy định khác về cùng vấn đề mà
@@ -122,7 +155,7 @@ Chương IV Thông tư này") → `reference_only`, kể cả khi khớp lời v
 - ⚖ `as_of` sau ngày sắp xếp (bộ: 01/03/2025; cấp huyện, tỉnh: 01/07/2025) mà đáp án vẫn nêu cơ
   quan, cấp, địa danh cũ chưa được sửa lời văn → `restructuring_2025` (R4).
 
-**Bước 7. (T6) Nội dung bị bãi bỏ còn ở đâu** ⚖ (R2). Luôn làm bước này; bắt đầu từ `goi_y_cho_moi`.
+**Bước 7. (T6) Nội dung bị bãi bỏ còn ở đâu** ⚖ (R2). Luôn làm bước này.
 Tìm theo thứ tự: (a) cùng văn bản bãi bỏ, ở các cụm "Bổ sung…", "Sửa đổi Điều… như sau" cùng đợt;
 (b) khoản cha, khoản anh em của cùng điều; (c) văn bản khác có hiệu lực cùng ngày hoặc được dẫn
 tới; (d) văn bản cấp cao hơn quy định cùng vấn đề, khi đó dùng `superseded_by_other_norm`.
@@ -146,11 +179,6 @@ hỏi không hỏi (ví dụ thẩm quyền cho loại hàng khác) thì không 
   thì đáp án rỗng là đúng. Trước khi kết luận có khoảng trống, kiểm: chuyển tiếp có giữ khoản cũ
   không; văn bản khác có quy định cùng vấn đề trong giai đoạn đó không; quy định mới có hồi tố về A
   không; A và B có thật khác nhau không.
-
-**Bước 8. Đáp án ngắn đúng và đủ.** Sai, hoặc thiếu ý mà câu hỏi hỏi → `other`. Ghi ở `note` ý bị
-thiếu và đoạn đúng **trích nguyên từ đáp án**; không viết lời mới. Nếu lỗi thật ra nằm ở câu hỏi
-(câu hỏi rộng hơn đáp án, hoặc vấn đề còn được quy định ở văn bản khác) thì dùng mã của bước 3
-hoặc bước 6.
 
 **Ba lỗi hay gặp.**
 - Gán `dat` khi mới nhìn qua. Ở lô 0, cả 12 dòng gán như vậy đều bị luật sư chốt `khong_dat`. Dòng
@@ -177,42 +205,43 @@ hoặc bước 6.
 
 ## 5. Quy trình
 
-1. **Công cụ.** Gán trên trang web (tự đo `phut`, lưu sau mỗi dòng) hoặc trên phiếu Excel. Hai
-   người nhận cùng một bộ dẫn chứng do máy chuẩn bị; máy không điền nhãn.
-2. **Độc lập.** Dòng gán đôi (mẫu `data/review/kiem_cheo.txt`) do A và B làm độc lập, không trao đổi
-   trong lúc làm, và không biết dòng nào là dòng gán đôi. Tên thật chỉ ghi ở plan.
-3. **Lô 0 hiệu chuẩn** (khoảng 20 dòng, nghiêng về T6 và T2 gần giống). Hai người làm độc lập và gửi
-   trước, rồi cùng luật sư xem các dòng lệch. Kết luận dạng quy tắc chung ghi vào §7 trước khi làm lô
-   1. Lô 0 không tính vào AC1.
-4. **Lô 30–50 dòng.** Sau lô 3, 6, 9, 12, 15 đo đồng thuận trên các dòng chung. Dưới ngưỡng thì hiệu
-   chuẩn lại trên dòng mới, **không sửa nhãn đã gán**: nhãn thô chính là số đo đồng thuận.
-5. **Một phiên bản hướng dẫn cho mọi nhãn.** Nhãn D4 (bản 1.2, 2.0) đang có trong phiếu phải được xác
-   nhận lại theo 3.0; để nguyên thì dòng đó vẫn tính là chưa kiểm.
-6. **Phân vân.** Vẫn chọn một nhãn theo câu hỏi ở §1, ghi `[phân vân] …` ở `note` để hỏi luật sư.
-7. **Đồng thuận.** Ngưỡng: AC1 ≥ 0,80 và p_neg ≥ 0,60; κ báo kèm; báo theo nhóm và theo phiên bản
-   hướng dẫn. AC1 được chọn làm chỉ số chính **sau lượt pilot ngày 07/10/2026**, vì nghịch lý
+1. **Công cụ.** A và B gán trên trang web. Trang lưu sau mỗi câu và ghi thời gian từng câu.
+   Hai người nhận cùng một bộ dẫn chứng do máy chuẩn bị; máy không điền nhãn.
+2. **Độc lập.** A và B gán độc lập, không trao đổi trong lúc làm. Không hỏi bất kỳ AI nào về câu
+   đang gán. Người gán không thấy nhãn, gợi ý hay ghi chú của AI, và không thấy kết quả hệ.
+   Tên thật chỉ ghi ở plan.
+3. **Lô 0 hiệu chuẩn** (lô thử). Hai người làm độc lập và gửi trước, rồi cùng luật sư xem các câu
+   lệch. Kết luận dạng quy tắc chung ghi vào §7 trước khi làm lô 1. Lô 0 không tính vào AC1.
+4. **Lô 30–50 câu.** Sau lô 3, 6, 9, 12, 15 đo đồng thuận trên các câu chung. Dưới ngưỡng thì hiệu
+   chuẩn lại trên câu mới, **không sửa nhãn đã gán**: nhãn thô chính là số đo đồng thuận.
+5. **Một phiên bản hướng dẫn cho mọi nhãn.** Mọi nhãn trong đợt này dùng bản 4.0.
+   Không tái dùng nhãn cũ cho câu chưa được kiểm theo bản 4.0.
+6. **Phân vân.** Vẫn chọn câu trả lời Q1–Q4, ghi `[phân vân] …` ở `note` để hỏi luật sư.
+7. **Đồng thuận.** AC1 và p_neg đo trên **từng câu Q1–Q4** và trên nhãn suy ra; ngưỡng AC1 ≥ 0,80
+   và p_neg ≥ 0,60; κ báo kèm; báo theo nhóm và theo phiên bản hướng dẫn.
+   Q4: AC1 giữ trên ba mức. Khi tính p_neg, `Có` và `Không chắc` gộp thành một mức bất lợi
+   (Không so với {Có, Không chắc}); căn cứ ADR 0005, điều chỉnh 03/11/2026 mục 3.
+   AC1 được chọn làm chỉ số chính **sau lượt pilot ngày 07/10/2026**, vì nghịch lý
    prevalence của κ; đây không phải chỉ số đăng ký trước.
 8. **Hòa giải.** Dòng lệch do người thứ ba là luật sư quyết, không dùng AI; cột `adjudicator` ghi
-   đúng người quyết. Nhãn thô của từng người giữ nguyên và được phát hành (ADR 0003 §9).
+   đúng người quyết. Không có phiếu AI. Nhãn thô của từng người giữ nguyên và được phát hành
+   (ADR 0003 §9).
 9. **Dòng `khong_dat` sau hòa giải bị loại** bằng mã tương ứng, hoặc thay bằng câu dự trữ. Không sửa
    đáp án chuẩn bằng tay.
-
-Lệnh cho người điều phối:
-
-| Việc | Lệnh (`scripts/review/`) |
-|---|---|
-| Dựng phiếu kiểm | `kiem_hints.py` → `crosscheck.py kiem` → `crosscheck_xlsx.py export --set kiem` |
-| Gán trên web | `label_ui.py --who A` (thêm `--ids data/review/kiem_cheo.txt` để chỉ hiện dòng gán đôi) |
-| Nạp phiếu Excel | `crosscheck_xlsx.py import --set kiem --who A` |
-| Đo đồng thuận | `crosscheck.py kappa --set kiem` |
-| Hòa giải | `adjudicate.py export --set kiem`, rồi `adjudicate.py import --set kiem --by "luật sư <tên>"` |
-| Văn bản có hiệu lực tách phần | `effect_split_scan.py` → `data/review/hieu_luc_tach.tsv` |
-| Chữ hỏng dấu, ký tự ẩn | `diacritic_scan.py` → `data/review/chu_hong_dau.tsv` |
 
 ## 6. Nhãn do model gán
 
 Nhãn model **không được tính là kiểm định**. Đo ngày 19/10/2026: trên 13 dòng D4 có nhãn model, chỉ
-7 dòng khớp kết luận cuối của người, và model gán `khong_dat` ít hơn người nhiều lần. Nhãn model chỉ
+7 dòng khớp kết luận cuối của người, và model gán `khong_dat` ít hơn người nhiều lần.
+Dòng chỉ có nhãn model là dòng chưa kiểm (`not_verified`) và không vào tập test do người kiểm.
+Quy trình hiện tại theo §5: người gán không thấy nhãn hay gợi ý của AI.
+
+### Lịch sử v1.0
+
+Các đoạn dưới đây ghi lại quy trình v1.0, không áp dụng cho đợt người gán theo §5.
+Đọc đầy đủ ở commit `32c66ed` và định nghĩa §6.
+
+Nhãn model chỉ
 dùng để xếp thứ tự dòng cần người xem trước. Nhãn model cũ ở `data/review/labels.tsv` giữ nguyên để
 phân tích phụ, có ghi `labeler`. Dòng chỉ có nhãn model là dòng chưa kiểm (`not_verified`) và không
 vào tập test.
@@ -224,6 +253,10 @@ trên dòng có nhãn người, đạt AC1 ≥ 0,80 và p_neg ≥ 0,60, và lu�
 
 **Giới hạn từ 28/10/2026 (CMT):** agent không đạt AC1 0,80 ở mức toàn tập (0,721), nên nhãn agent chỉ
 có giá trị ở nhóm T1 và T6; xem mục 6 của định nghĩa.
+
+Lớp phụ, chỉ có ở `data/review/labels.tsv` và không tính vào đồng thuận: `meta_issues` ghi lỗi siêu
+dữ liệu không làm sai đáp án (`valid_to_wrong` · `valid_from_wrong` · `group_wrong` ·
+`citation_path_wrong` · `doc_number_wrong` · `lead_in_wrong` · `other`).
 
 ## 7. Hỏi đáp (sổ quyết định)
 
@@ -254,3 +287,7 @@ tăng phiên bản hướng dẫn.
      trước ngày hiệu lực lấy đáp án bản mới, như T5a (bước 1).
 - **D4, biên bản D5 §2.** Ba bài học: luôn làm bước 7 ở T6; dùng một phiên bản hướng dẫn cho mọi
   nhãn (§5 mục 5); so câu hỏi với chỗ đổi (bước 2).
+
+### Kết luận của lô thử bản 4.0
+
+(Lô 0 ghi kết luận ở đây: ngày, người chốt, câu hỏi chung, kết luận.)

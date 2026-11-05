@@ -98,7 +98,7 @@ def shortpack(data: Path, questions_path: Path, out: Path) -> dict:
     return {"questions": len(records), "versions": sum(len(r["versions"]) for r in records)}
 
 
-def source_links(data: Path, evidence: dict[str, dict]) -> None:
+def source_links(data: Path, evidence: dict[str, dict], *, strict: bool = True) -> None:
     """Recover original actor URLs from document metadata without inventing links."""
     by_number = collections.defaultdict(list)
     db_path = (data / "temporal.sqlite").resolve()
@@ -116,6 +116,9 @@ def source_links(data: Path, evidence: dict[str, dict]) -> None:
                     candidates = matches
             urls = {d["source_url"] for d in candidates if d["source_url"]}
             if len(urls) != 1:
+                if not strict:
+                    ev.setdefault("missing", []).append(f"actor_url:{a.get('document')}")
+                    continue
                 raise ValueError(f"{ev['id']}/{a.get('document')}: chưa xác định duy nhất link văn bản tác động; "
                                  "đối chiếu metadata và bổ sung source_url trước khi gán Q1.")
             a["source_url"] = next(iter(urls))
@@ -171,6 +174,60 @@ def contrast_audit(data: Path, questions_path: Path, short_paths: list[Path], ou
     return {k: v for k, v in report.items() if k != "findings"}
 
 
+def prepare_records(questions: dict, rows: dict, shorts: dict, evidence: dict,
+                    *, strict: bool = True) -> tuple[list[dict], list[dict]]:
+    """Shared v3 assembly. Existing silver is audited, never filtered or repaired."""
+    result, thieu = [], []
+    for lid, q in questions.items():
+        prepared, actors, base = [], {}, None
+        for source in rows[lid]:
+            r = {k: v for k, v in source.items() if k not in ("review", "question_source")}
+            r["question"] = q["question"]
+            if strict:
+                r["question_source"] = {"kind": "llm", **{k: q[k] for k in ("provider", "model", "prompt_sha")}}
+                r["question_source"].update({k: q[k] for k in ("edited_by", "edited_at") if k in q})
+            r["as_of_strategy"] = "ranh_gioi"
+            r["short_answer"] = None
+            if r["answerable"]:
+                s = shorts.get((lid, r["version_id"]))
+                if not s or not str(s.get("short_answer") or "").strip() or (strict and (not s.get("by") or not s.get("at"))):
+                    if strict:
+                        raise ValueError(f"{lid}/{r['version_id']}: thiếu đáp án ngắn có nguồn; làm shortpack trước Q1.")
+                    thieu.append({"lineage_id": lid, "row_id": r["id"], "field": "short_answer"})
+                    s = {"short_answer": None, "by": "", "at": ""}
+                if strict and not check_short_answer(s["short_answer"], r["answer"], r["target"].get("lead_in")):
+                    raise ValueError(f"{lid}/{r['version_id']}: đáp án ngắn không là trích đoạn; kiểm lại lời văn.")
+                r["short_answer"] = s["short_answer"]
+                if s.get("by") and s.get("at"):
+                    r["short_answer_source"] = {"by": s["by"], "at": s["at"]}
+            if r["id"] not in evidence and strict:
+                raise ValueError(f"{r['id']}: thiếu trích văn bản gốc/tác động; chạy crosscheck_evidence.py.")
+            ev = evidence.get(r["id"], {"base": {}, "actors": [], "missing": ["sources"]})
+            missing = list(ev.get("missing", []))
+            if not ev.get("base", {}).get("passage"):
+                missing.append("base_passage")
+            if not source.get("source_url"):
+                missing.append("base_url")
+            if not ev.get("actors"):
+                missing.append("actors")
+            if missing:
+                thieu.append({"lineage_id": lid, "row_id": r["id"], "field": "sources",
+                              "missing": sorted(set(missing))})
+            base = base or {**ev["base"], "source_url": r.get("source_url")}
+            for a in ev["actors"]:
+                # Keep raw passages, including effective-date and transitional clauses.
+                actors[json.dumps(a, ensure_ascii=False, sort_keys=True)] = a
+            r["source_missing"] = ev.get("missing", [])
+            prepared.append(r)
+        if strict and (problems := contrast_problems(q["group"], prepared, shorts)):
+            raise ValueError(f"{lid}: {'; '.join(problems)}. Rà đáp án/câu hỏi trước khi đưa cho A/B; "
+                             "không sửa lời luật để tạo khác biệt.")
+        result.append({"lineage_id": lid, "group": q["group"], "stratum": stratum(rows[lid][0]),
+                       "question": q["question"], "rows": prepared,
+                       "sources": {"base": base, "actors": list(actors.values())}})
+    return result, thieu
+
+
 def worksheet(data: Path, questions_path: Path, short_paths: list[Path], evidence_paths: list[Path], out: Path) -> dict:
     manifest_path = out.with_suffix(".manifest.json")
     for path in (out, manifest_path):
@@ -194,39 +251,7 @@ def worksheet(data: Path, questions_path: Path, short_paths: list[Path], evidenc
     evidence = {i: e for i, e in evidence.items() if i in wanted_ids}
     source_links(data, evidence)
 
-    result = []
-    for lid, q in questions.items():
-        prepared, actors, base = [], {}, None
-        for source in rows[lid]:
-            r = {k: v for k, v in source.items() if k not in ("review", "question_source")}
-            r["question"] = q["question"]
-            r["question_source"] = {"kind": "llm", **{k: q[k] for k in ("provider", "model", "prompt_sha")}}
-            r["question_source"].update({k: q[k] for k in ("edited_by", "edited_at") if k in q})
-            r["as_of_strategy"] = "ranh_gioi"
-            r["short_answer"] = None
-            if r["answerable"]:
-                s = shorts.get((lid, r["version_id"]))
-                if not s or not s.get("by") or not s.get("at") or not s.get("short_answer"):
-                    raise ValueError(f"{lid}/{r['version_id']}: thiếu đáp án ngắn có nguồn; làm shortpack trước Q1.")
-                if not check_short_answer(s["short_answer"], r["answer"], r["target"].get("lead_in")):
-                    raise ValueError(f"{lid}/{r['version_id']}: đáp án ngắn không là trích đoạn; kiểm lại lời văn.")
-                r["short_answer"] = s["short_answer"]
-                r["short_answer_source"] = {"by": s["by"], "at": s["at"]}
-            if r["id"] not in evidence:
-                raise ValueError(f"{r['id']}: thiếu trích văn bản gốc/tác động; chạy crosscheck_evidence.py.")
-            ev = evidence[r["id"]]
-            base = base or {**ev["base"], "source_url": r.get("source_url")}
-            for a in ev["actors"]:
-                # Keep raw passages, including effective-date and transitional clauses.
-                actors[json.dumps(a, ensure_ascii=False, sort_keys=True)] = a
-            r["source_missing"] = ev.get("missing", [])
-            prepared.append(r)
-        if problems := contrast_problems(q["group"], prepared, shorts):
-            raise ValueError(f"{lid}: {'; '.join(problems)}. Rà đáp án/câu hỏi trước khi đưa cho A/B; "
-                             "không sửa lời luật để tạo khác biệt.")
-        result.append({"lineage_id": lid, "group": q["group"], "stratum": stratum(rows[lid][0]),
-                       "question": q["question"], "rows": prepared,
-                       "sources": {"base": base, "actors": list(actors.values())}})
+    result, _ = prepare_records(questions, rows, shorts, evidence)
     write_new(out, result)
     manifest = {"status": "unlabelled_candidates", "guideline_version": "4.0", "questions": len(result),
                 "boundary_rows": sum(len(r["rows"]) for r in result),

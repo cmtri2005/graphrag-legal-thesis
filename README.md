@@ -12,7 +12,7 @@ Khi hai nơi mâu thuẫn, nơi đứng trên đúng.
 |---|---|---|
 | 1 | Đã cam kết gì | `docs/DeCuongKLTN_23521635_23521643_UIT.docx` (không bao giờ sửa, xóa) |
 | 2 | Quy tắc phân tích, cấu hình đã khóa | `docs/decisions/0005-ke-hoach-phan-tich.md` và các ADR khác |
-| 3 | Thế nào là một câu hỏi đúng | `docs/vilextime-dinh-nghia.md`, `docs/vilextime-the-gan-nhan.md`, `docs/vilextime-annotation.md` |
+| 3 | Thế nào là một câu hỏi đúng | `docs/vilextime-dinh-nghia.md`, `docs/vilextime-annotation.md` (4.0) |
 | 4 | Đang làm gì, tiếp theo là gì | `docs/plans/active/master-plan.md` |
 | 5 | Một con số đến từ đâu | `runs/README.md` trỏ tới file điểm trong `runs/` |
 | 6 | Bộ dữ liệu là gì | `data/vilextime_dataset/manifest.json`, `docs/vilextime-datasheet.md` |

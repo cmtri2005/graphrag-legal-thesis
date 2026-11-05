@@ -1,0 +1,144 @@
+{
+  "seed": "vilextime-silver-0511",
+  "questions": 168,
+  "groups": {
+    "T2": 137,
+    "T3": 31
+  },
+  "boundary_rows": 369,
+  "thieu": [
+    {
+      "lineage_id": "provision:50814a68-eb70-11f0-a2e2-556e765c3bc7",
+      "row_id": "vilextime:T2:provision:50814a68-eb70-11f0-a2e2-556e765c3bc7:2026-06-30",
+      "field": "sources",
+      "missing": [
+        "actor_url:78/2026/TT-BTC"
+      ]
+    },
+    {
+      "lineage_id": "provision:50814a68-eb70-11f0-a2e2-556e765c3bc7",
+      "row_id": "vilextime:T2:provision:50814a68-eb70-11f0-a2e2-556e765c3bc7:2026-07-01",
+      "field": "sources",
+      "missing": [
+        "actor_url:78/2026/TT-BTC"
+      ]
+    },
+    {
+      "lineage_id": "provision:9edeb73c-df44-11f0-8ab4-c1404df4b3ea#k1",
+      "row_id": "vilextime:T2:provision:9edeb73c-df44-11f0-8ab4-c1404df4b3ea#k1:2015-11-30",
+      "field": "sources",
+      "missing": [
+        "actor_passage:53/2015/TT-BGTVT"
+      ]
+    },
+    {
+      "lineage_id": "provision:9edeb73c-df44-11f0-8ab4-c1404df4b3ea#k1",
+      "row_id": "vilextime:T2:provision:9edeb73c-df44-11f0-8ab4-c1404df4b3ea#k1:2015-12-01",
+      "field": "sources",
+      "missing": [
+        "actor_passage:53/2015/TT-BGTVT"
+      ]
+    },
+    {
+      "lineage_id": "provision:746ee898-eb72-11f0-a645-6bade352d545#k3",
+      "row_id": "vilextime:T3:provision:746ee898-eb72-11f0-a645-6bade352d545#k3:2022-02-28",
+      "field": "sources",
+      "missing": [
+        "actor_passage:22/2023/TT-BGTVT"
+      ]
+    },
+    {
+      "lineage_id": "provision:746ee898-eb72-11f0-a645-6bade352d545#k3",
+      "row_id": "vilextime:T3:provision:746ee898-eb72-11f0-a645-6bade352d545#k3:2023-08-14",
+      "field": "sources",
+      "missing": [
+        "actor_passage:22/2023/TT-BGTVT"
+      ]
+    },
+    {
+      "lineage_id": "provision:746ee898-eb72-11f0-a645-6bade352d545#k3",
+      "row_id": "vilextime:T3:provision:746ee898-eb72-11f0-a645-6bade352d545#k3:2023-08-15",
+      "field": "sources",
+      "missing": [
+        "actor_passage:22/2023/TT-BGTVT"
+      ]
+    },
+    {
+      "lineage_id": "provision:746f107a-eb72-11f0-b305-2db0ea131db1#k1",
+      "row_id": "vilextime:T3:provision:746f107a-eb72-11f0-b305-2db0ea131db1#k1:2022-02-28",
+      "field": "sources",
+      "missing": [
+        "actor_passage:22/2023/TT-BGTVT"
+      ]
+    },
+    {
+      "lineage_id": "provision:746f107a-eb72-11f0-b305-2db0ea131db1#k1",
+      "row_id": "vilextime:T3:provision:746f107a-eb72-11f0-b305-2db0ea131db1#k1:2023-08-14",
+      "field": "sources",
+      "missing": [
+        "actor_passage:22/2023/TT-BGTVT"
+      ]
+    },
+    {
+      "lineage_id": "provision:746f107a-eb72-11f0-b305-2db0ea131db1#k1",
+      "row_id": "vilextime:T3:provision:746f107a-eb72-11f0-b305-2db0ea131db1#k1:2023-08-15",
+      "field": "sources",
+      "missing": [
+        "actor_passage:22/2023/TT-BGTVT"
+      ]
+    },
+    {
+      "lineage_id": "provision:ec4a796a-df40-11f0-b831-318b010cb040",
+      "row_id": "vilextime:T3:provision:ec4a796a-df40-11f0-b831-318b010cb040:2024-12-24",
+      "field": "sources",
+      "missing": [
+        "actor_passage:38/2025/TT-BCT"
+      ]
+    },
+    {
+      "lineage_id": "provision:ec4a796a-df40-11f0-b831-318b010cb040",
+      "row_id": "vilextime:T3:provision:ec4a796a-df40-11f0-b831-318b010cb040:2025-06-30",
+      "field": "sources",
+      "missing": [
+        "actor_passage:38/2025/TT-BCT"
+      ]
+    },
+    {
+      "lineage_id": "provision:ec4a796a-df40-11f0-b831-318b010cb040",
+      "row_id": "vilextime:T3:provision:ec4a796a-df40-11f0-b831-318b010cb040:2026-05-28",
+      "field": "sources",
+      "missing": [
+        "actor_passage:38/2025/TT-BCT"
+      ]
+    },
+    {
+      "lineage_id": "provision:ec4a796a-df40-11f0-b831-318b010cb040",
+      "row_id": "vilextime:T3:provision:ec4a796a-df40-11f0-b831-318b010cb040:2026-05-29",
+      "field": "sources",
+      "missing": [
+        "actor_passage:38/2025/TT-BCT"
+      ]
+    }
+  ],
+  "missing_source_lineages": 5,
+  "inputs_sha256": {
+    "data/vilextime_dataset/vilextime_silver.jsonl": "c864a545a52279883303c703c17ec2eba98797cad42b544c8d6c5199e8030c4b",
+    "data/vilextime/test2_release_v2.jsonl": "b299408327e3bb5c0e520d4457b27225d866afe3c7976e1c3b0aff2b8093855c",
+    "data/vilextime_dataset/vilextime.jsonl": "7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366",
+    "data/vilextime_dataset/vilextime_meta.jsonl": "b43dc0cc6ff01bbcbf0bd3b054f8a0cfc9dd01ecb799e95b76cf69acd039f8a7"
+  },
+  "exclusion_check": {
+    "test2": 0,
+    "v1.0": 0,
+    "dev_documents": 0
+  },
+  "batches": {
+    "1": 30,
+    "2": 30,
+    "3": 30,
+    "4": 30,
+    "5": 30,
+    "6": 18
+  },
+  "output_sha256": "6b3d878334a24d6c46c6694c5d0afdc78ab4619e2fad82f8bd6cd789bf7f8442"
+}

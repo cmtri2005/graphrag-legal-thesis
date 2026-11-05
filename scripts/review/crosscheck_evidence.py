@@ -131,14 +131,17 @@ def main() -> None:
     assert len(rows) == len(order), f"{len(order) - len(rows)} dòng không còn trong {release.name}"
 
     closers = collections.defaultdict(list)     # provision -> applied events that closed one of its versions
+    operations = {}
     for line in (d / "derived/event_log.jsonl").open(encoding="utf-8"):
         e = json.loads(line)
         if e["outcome"] == "applied":
+            operations[e["event_id"]] = e["operation"]
             for v in e["closed_version_ids"]:
                 closers["provision:" + v.split(":")[1]].append((e["event_id"], e["operation"]))
 
     def acts_of(r: dict) -> list[tuple[str, str]]:
-        acts = [(x["event_id"], x["op"]) for x in r["derivation"]["transitions"]]
+        acts = [(x["event_id"], x.get("op") or operations[x["event_id"]])
+                for x in r["derivation"]["transitions"]]
         if r.get("repealed_by"):
             acts.append((r["repealed_by"]["event_id"], "repeal_ancestor"))
         if r.get("retroactive") and r["retroactive"]["event_id"] not in {e for e, _ in acts}:

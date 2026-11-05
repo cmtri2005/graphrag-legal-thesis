@@ -136,3 +136,21 @@ def test_t3_requires_three_distinct_short_answers_without_claiming_semantic_vali
     shorts[("p", "v2")]["short_answer"] = "thủ tục chung"
     shorts[("p", "v3")]["short_answer"] = "thủ tục chung"
     assert any("ít nhất 3 đáp án ngắn khác nhau" in p for p in contrast_problems("T3", rows, shorts))
+
+
+def test_silver_assembly_audits_missing_fields_without_filtering_or_repair(tmp_path):
+    from test2_prepare import prepare_records, source_links
+    data, question_path, short_path, evidence_path = fixture(tmp_path)
+    qs = {r['lineage_id']: r for r in jsonl(question_path)}
+    rows = {'new': jsonl(data / 'derived/vilextime/T2.jsonl')}
+    evidence = {r['id']: r for r in jsonl(evidence_path)}
+    evidence['r1']['actors'][0]['document'] = 'unknown'
+    source_links(data, evidence, strict=False)
+    assert evidence['r1']['missing'] == ['actor_url:unknown']
+    result, missing = prepare_records(qs, rows, {}, evidence, strict=False)
+    assert len(result) == 1 and len(result[0]['rows']) == 2
+    assert [r['short_answer'] for r in result[0]['rows']] == [None, None]
+    assert len([r for r in missing if r['field'] == 'short_answer']) == 2
+    assert any('actor_url:unknown' in r.get('missing', []) for r in missing)
+    assert not any('question_source' in r for r in result[0]['rows'])
+    assert not (tmp_path / 'worksheet.jsonl').exists()
