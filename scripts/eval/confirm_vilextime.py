@@ -60,6 +60,24 @@ EXPLORATORY = frozenset({"XN5", "XN6", "XN7"})
 FAMILY = tuple(t for t in TESTS if t[0] not in EXPLORATORY)
 
 
+def final_family(rows: list[dict], proposed: str = "proposed2") -> tuple[tuple, frozenset]:
+    """Master plan §6; tooling only until the final amendment is committed."""
+    tests = (
+        ("F1", "RQ2: lai ghép", "paired", "accuracy", ("all",), "generation", ("b4", proposed), +1),
+        ("F2", "RQ2: đồ thị phi thời gian", "paired", "accuracy", ("all",), "generation", ("b5", proposed), +1),
+        ("F3", "RQ3: lọc văn bản", "paired", "tv_recall@1", ("all_answerable",), "retrieval", ("b2ctx", "b7"), +1),
+        ("F4", "RQ3: phiên bản", "paired", "tv_recall@1", ("all_answerable",), "retrieval", ("b7", "b7plus"), +1),
+        ("F5", "H0: truy xuất", "paired", "tv_recall@1", ("all_answerable",), "retrieval", ("b7", "b7pp"), +1),
+        ("F6", "H0: câu trả lời", "paired", "tver", ("all",), "generation", ("b7", "b7pp"), -1),
+        ("F7", "T6: lan truyền", "paired", "accuracy", ("t6_unanswerable",), "generation", ("b7pp", proposed), +1),
+    )
+    n = len({r['lineage_id'] for r in rows if r['group'] == 'T6' and not r['answerable']})
+    return tests, frozenset({'F7'} if n < 20 else ())
+
+
+SLICES['t6_unanswerable'] = lambda r: r['group'] == 'T6' and not r['answerable']
+
+
 def holm(p: dict[str, float]) -> dict[str, float]:
     """Holm-adjusted p: the i-th smallest times (m − i), kept monotone."""
     out, running = {}, 0.0
@@ -117,10 +135,19 @@ def main() -> None:
     ap.add_argument("--release", type=Path, help="a published vilextime.jsonl (export_release.py) "
                                                  "instead of <data>/derived/vilextime/release.jsonl")
     ap.add_argument("--out", type=Path)
+    ap.add_argument("--family", choices=("xn", "final"), default="xn")
+    ap.add_argument("--proposed", default="proposed2", help="P in the final family only")
     args = ap.parse_args()
 
+    release = load_rows(args.release or args.data / "derived/vilextime/release.jsonl")
+    extra = distractors(release)
+    rows = [{**r, "_distractors": extra.get(r["id"], [])} for r in release
+            if r.get("split") == args.split and r["as_of_strategy"] == "giua_khoang"]
+    tests, exploratory = final_family(rows, args.proposed) if args.family == 'final' else (TESTS, EXPLORATORY)
+    family_size = len(tests) - len(exploratory)
+
     files, preds = {}, {}
-    for test in TESTS:
+    for test in tests:
         folder = {"retrieval": args.retrieval, "generation": args.generation}[test[5]]
         for system in test[6]:
             path = folder / f"{system}.jsonl" if folder else None
@@ -129,28 +156,28 @@ def main() -> None:
     for key, path in files.items():
         preds[key] = {p["id"]: p for p in map(json.loads, path.open(encoding="utf-8"))}
 
-    release = load_rows(args.release or args.data / "derived/vilextime/release.jsonl")
-    extra = distractors(release)
-    rows = [{**r, "_distractors": extra.get(r["id"], [])} for r in release
-            if r.get("split") == args.split and r["as_of_strategy"] == "giua_khoang"]
     units = units_of(args.data, {f"{s}/{n}": p for (s, n), p in preds.items()})[0]
 
     results = {}
-    for test in TESTS:
+    for test in tests:
         name, _, _, _, _, source, systems, _ = test
         if all((source, s) in preds for s in systems):
             results[name] = run(test, rows, {s: preds[(source, s)] for s in systems}, units, args.draws)
-    ran = {k: v["p"] for k, v in results.items() if v["p"] is not None and k not in EXPLORATORY}
+    ran = {k: v["p"] for k, v in results.items() if v["p"] is not None and k not in exploratory}
     adjusted = holm(ran)
     lines = [f"ADR 0005 · split {args.split} · {args.draws:,} lần lấy mẫu lại · "
-             f"Holm trên {len(ran)}/{len(FAMILY)} kiểm định" + ("" if len(ran) == len(FAMILY) else " (CHƯA ĐỦ HỌ)")]
-    for name, hypothesis, kind, metric, slices, source, systems, sign in TESTS:
+             f"Holm trên {len(ran)}/{family_size} kiểm định" + ("" if len(ran) == family_size else " (CHƯA ĐỦ HỌ)")]
+    if args.family == 'final':
+        lines.append('Họ final: công cụ chờ amendment được commit; dev chỉ tập dượt.')
+        if exploratory:
+            lines.append('F7 tự chuyển thăm dò: T6 không đáp án có dưới 20 lineage; ngoài Holm.')
+    for name, hypothesis, kind, metric, slices, source, systems, sign in tests:
         r = results.get(name)
         what = f"{name} {hypothesis}: {' − '.join(reversed(systems))} · {metric} · {'/'.join(slices)}"
         if r is None or r["p"] is None:
             lines.append(f"{what}: chưa chạy" + ("" if r is None else " (đại lượng không xác định)"))
             continue
-        if name in EXPLORATORY:
+        if name in exploratory:
             r.update(p_holm=None, verdict="thăm dò", predicted=sign)
         else:
             r.update(p_holm=adjusted[name], verdict=verdict(r["estimate"], adjusted[name], sign), predicted=sign)
@@ -167,6 +194,9 @@ def main() -> None:
     if args.out:
         args.out.write_text(json.dumps({
             "split": args.split, "draws": args.draws, "tests_run": len(ran),
+            "family": args.family, "family_size": family_size, "proposed": args.proposed,
+            "test_definitions": tests, "exploratory": sorted(exploratory),
+            "family_note": 'F7 thăm dò: dưới 20 lineage' if args.family == 'final' and exploratory else None,
             "files": {f"{s}/{n}": {"path": str(p), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
                       for (s, n), p in files.items()},
             "results": results}, ensure_ascii=False, indent=1), encoding="utf-8")

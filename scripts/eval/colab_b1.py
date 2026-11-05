@@ -21,6 +21,7 @@ from run_vilextime import EMBED, INDEX, RELEASE, queries, retriever  # noqa: E40
 
 
 ORACLE = "oracle"
+ORACLE_NOW = "oracle_now"
 SPLITS = ("dev", "test")
 ADR = Path(__file__).resolve().parents[2] / "docs/decisions/0005-ke-hoach-phan-tich.md"
 
@@ -46,6 +47,18 @@ def read_jsonl(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
 
 
+def latest_unit(corpus: Corpus, provision_id: str) -> str:
+    """X8: last stored version of this exact provision, even after repeal."""
+    # Fetch the small provision chain first: SQLite otherwise chooses units_layer
+    # and scans every version in the corpus for each question.
+    chain = [r for r in corpus.db.execute(
+        "SELECT unit_id, layer, ordinal FROM units WHERE provision_id=?", (provision_id,))
+             if r['layer'] == 'version']
+    if not chain:
+        raise SystemExit(f"oracle_now: no stored version for {provision_id}")
+    return max(chain, key=lambda r: r['ordinal'])['unit_id']
+
+
 def export_prompts(args) -> None:
     if args.split not in SPLITS or args.as_of_strategy != "giua_khoang":
         raise SystemExit("Colab export requires --split dev|test --as-of-strategy giua_khoang")
@@ -55,7 +68,7 @@ def export_prompts(args) -> None:
     # B5 oracle context: the gold unit alone (the version in force, or for a repealed row the
     # repeal), an upper bound kept out of the runner, which never sees gold. Adding the repealed
     # row's last version was tried on dev and scored lower (runs/README.md, 29/10).
-    oracle = name == ORACLE
+    oracle = name in (ORACLE, ORACLE_NOW)
     spec = systems.get("b2ctx" if oracle else name)
     if getattr(args, "no_dense", False) and spec.dense:
         spec = spec.variant(f"{spec.name}-lex", dense=False, rerank=False)
@@ -66,6 +79,10 @@ def export_prompts(args) -> None:
     search = None if oracle else retriever(spec, corpus, args.hits_cache, embed=embed)
     gold = {r["id"]: [r["version_id"]] if r["version_id"] else r["accepted_evidence"]
             for r in read_jsonl(args.release)} if oracle else {}
+    if name == ORACLE_NOW:
+        gold = {r['id']: [latest_unit(corpus, r['lineage_id'])]
+                for r in read_jsonl(args.release)
+                if r.get('split') == args.split and r['as_of_strategy'] == args.as_of_strategy}
     rows = []
     limit = args.limit if args.limit > 0 else None
     for q in queries(args.release, args.split, limit, args.as_of_strategy):
@@ -129,7 +146,7 @@ def import_completions(args) -> None:
         if (export_record["system"] != system_name or export_record["rows"] != len(prompts)
                 or export_record["prompt_file_sha256"] != hashlib.sha256(args.prompts.read_bytes()).hexdigest()):
             raise SystemExit("B2 prompt export record mismatch")
-    spec = None if system_name == ORACLE else systems.get(system_name)
+    spec = None if system_name in (ORACLE, ORACLE_NOW) else systems.get(system_name)
     corpus = Corpus(getattr(args, "index", INDEX)) if spec and spec.verify != "off" else None
     completions = read_jsonl(args.raw)
     seen, models, predictions = set(), set(), []
@@ -211,7 +228,7 @@ def main() -> None:
     ex.add_argument("--split", required=True)
     ex.add_argument("--as-of-strategy", required=True)
     ex.add_argument("--limit", type=int, default=100, help="0 exports every dev giua_khoang row")
-    ex.add_argument("--system", choices=sorted(systems.REGISTRY) + [ORACLE], default="b2ctx")
+    ex.add_argument("--system", choices=sorted(systems.REGISTRY) + [ORACLE, ORACLE_NOW], default="b2ctx")
     ex.add_argument("--no-dense", action="store_true")
     ex.add_argument("--hybrid", action="store_true", help="BM25 + dense (RRF), no reranker: the proposal's L4")
     ex.add_argument("--embed", type=Path, default=EMBED, help="embeddings for dense systems (b3, b4)")

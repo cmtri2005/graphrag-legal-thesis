@@ -34,3 +34,41 @@ def test_xn5_to_xn7_are_outside_the_holm_family():
     from confirm_vilextime import EXPLORATORY, FAMILY
     assert [t[0] for t in FAMILY] == ["XN1", "XN2", "XN3", "XN4", "XN8", "XN9"]
     assert EXPLORATORY == {"XN5", "XN6", "XN7"} and len(TESTS) == 9
+
+
+import pytest
+
+
+@pytest.mark.parametrize('lineages, expected_size', [(19, 6), (20, 7)])
+def test_final_family_holm_counts_and_exploratory_threshold(tmp_path, monkeypatch, lineages, expected_size):
+    import json
+    import sys
+    import confirm_vilextime as confirm
+    from report_results import confirm_section
+    rows = [_row(f'L{i}', 'T6', answerable=False) for i in range(lineages)]
+    tests, exploratory = confirm.final_family(rows, 'P')
+    assert len(tests) == 7 and len(tests) - len(exploratory) == expected_size
+    assert tests[0][6] == ('b4', 'P') and tests[6][6] == ('b7pp', 'P')
+    release = tmp_path / 'release.jsonl'
+    release.write_text('[]')
+    for system in {s for t in tests for s in t[6]}:
+        (tmp_path / f'{system}.jsonl').write_text('')
+    monkeypatch.setattr(confirm, 'load_rows', lambda p: [{**r, 'split': 'dev'} for r in rows])
+    monkeypatch.setattr(confirm, 'distractors', lambda rows: {})
+    monkeypatch.setattr(confirm, 'units_of', lambda *a: ({}, set(), set()))
+    def result(test, *args):
+        return dict(estimate=0.1, ci95=[0.01, 0.2], p=int(test[0][1:]) / 1000,
+                    rows={s: lineages for s in test[4]}, lineages={s: lineages for s in test[4]})
+    monkeypatch.setattr(confirm, 'run', result)
+    out = tmp_path / 'confirm.json'
+    monkeypatch.setattr(sys, 'argv', ['confirm', '--split', 'dev', '--family', 'final', '--proposed', 'P',
+        '--release', str(release), '--generation', str(tmp_path), '--retrieval', str(tmp_path), '--out', str(out)])
+    confirm.main()
+    data = json.loads(out.read_text())
+    assert data['tests_run'] == data['family_size'] == expected_size
+    assert data['results']['F1']['p_holm'] == pytest.approx(expected_size * .001)
+    assert data['results']['F2']['p_holm'] == pytest.approx((expected_size - 1) * .002)
+    assert data['results']['F7']['p_holm'] is None if lineages < 20 else data['results']['F7']['p_holm'] is not None
+    text = '\n'.join(confirm_section(out))
+    assert f'Holm trên {expected_size}/{expected_size}' in text
+    assert 'F1–F7' in text and ('F7 thăm dò' in text) == (lineages < 20)

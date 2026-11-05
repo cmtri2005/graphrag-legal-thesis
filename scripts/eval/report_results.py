@@ -61,13 +61,17 @@ def score_section(path: Path) -> list[str]:
 
 def confirm_section(path: Path) -> list[str]:
     data = json.loads(path.read_text(encoding="utf-8"))
-    out = [f"## XN1–XN9 (`{path}`)", "",
-           f"{data['draws']:,} lần lấy mẫu lại".replace(",", ".") + f", Holm trên {data['tests_run']}/{len(FAMILY)} kiểm định"
-           + ("" if data["tests_run"] == len(FAMILY) else " (**chưa đủ họ**)")
-           + "; XN5–XN7 là thăm dò, ngoài Holm (ADR 0005 §1).", "",
-           "| XN | Giả thuyết | So sánh · thước đo · lát | Ước lượng [KTC 95%] | p | p Holm | Kết luận | Dòng/lineage |",
+    final = data.get('family') == 'final'
+    size = data.get('family_size', len(FAMILY))
+    tests = data.get('test_definitions', TESTS)
+    out = [f"## {'F1–F7' if final else 'XN1–XN9'} (`{path}`)", "",
+           f"{data['draws']:,} lần lấy mẫu lại".replace(",", ".") + f", Holm trên {data['tests_run']}/{size} kiểm định"
+           + ("" if data["tests_run"] == size else " (**chưa đủ họ**)")
+           + ("; họ final là công cụ chờ amendment được commit. " + (data.get('family_note') or '') if final
+              else "; XN5–XN7 là thăm dò, ngoài Holm (ADR 0005 §1)."), "",
+           f"| {'F' if final else 'XN'} | Giả thuyết | So sánh · thước đo · lát | Ước lượng [KTC 95%] | p | p Holm | Kết luận | Dòng/lineage |",
            "|---|---|---|---|---|---|---|---|"]
-    for name, hypothesis, _, metric, slices, _, systems, _ in TESTS:
+    for name, hypothesis, _, metric, slices, _, systems, _ in tests:
         what = f"{' − '.join(f'`{s}`' for s in reversed(systems))} · {metric} · {'/'.join(slices)}"
         r = data["results"].get(name)
         if r is None or r.get("p") is None:

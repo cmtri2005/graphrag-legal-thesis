@@ -77,3 +77,49 @@ def test_test_split_export_waits_for_a_committed_accepted_adr(tmp_path):
     assert not adr_accepted(adr)          # the working tree alone does not count
     git("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qam", "a")
     assert adr_accepted(adr)
+
+
+@pytest.mark.parametrize('versions, expected', [(1, True), (2, False)])
+def test_oracle_now_uses_same_template_and_latest_exact_provision(corpus, tmp_path, versions, expected):
+    import colab_b1
+    from test_rag_corpus import CLAUSE, DOC
+
+    uid = f'version:{CLAUSE.split(":")[1]}:1'
+    if versions == 2:
+        import sqlite3
+        with sqlite3.connect(corpus.path) as db:
+            db.execute("INSERT INTO units (unit_id,layer,kind,provision_id,document_id,ordinal,text) "
+                       "VALUES (?,?,?,?,?,?,?)", ('version:k1:2', 'version', 'version', CLAUSE, DOC, 2, 'Lời văn mới.'))
+    release = tmp_path / 'release.jsonl'
+    release.write_text(json.dumps(dict(id='old', group='T1' if versions == 1 else 'T2', split='dev',
+        as_of_strategy='giua_khoang', question='Nội dung là gì?', as_of='2021-01-01', lineage_id=CLAUSE,
+        version_id=uid, accepted_evidence=[], short_answer='SECRET GOLD', answer='SECRET GOLD')) + '\n')
+    prompts = []
+    for system in ('oracle', 'oracle_now'):
+        dest = tmp_path / f'{system}.jsonl'
+        colab_b1.export_prompts(SimpleNamespace(system=system, split='dev', as_of_strategy='giua_khoang',
+            release=release, index=corpus.path, limit=0, out=dest, hits_cache=None, b2=True))
+        prompt = json.loads(dest.read_text())
+        assert 'SECRET GOLD' not in json.dumps(prompt)
+        prompts.append(prompt)
+    assert prompts[0]['system'] == prompts[1]['system']
+    assert (prompts[0]['user'] == prompts[1]['user']) is expected
+    assert prompts[1]['retrieved'] == [uid if versions == 1 else 'version:k1:2']
+
+
+def test_oracle_now_repealed_row_supplies_last_wording_without_instruction(corpus, tmp_path):
+    import colab_b1
+    from test_rag_corpus import CLAUSE
+    release = tmp_path / 'release.jsonl'
+    release.write_text(json.dumps(dict(id='repealed', split='dev', as_of_strategy='giua_khoang',
+        question='Nội dung là gì?', as_of='2023-01-01', lineage_id=CLAUSE, version_id=None,
+        accepted_evidence=['asis:event:e1'])) + '\n')
+    dest = tmp_path / 'oracle_now.jsonl'
+    colab_b1.export_prompts(SimpleNamespace(system='oracle_now', split='dev', as_of_strategy='giua_khoang',
+        release=release, index=corpus.path, limit=0, out=dest, hits_cache=None, b2=True))
+    prompt = json.loads(dest.read_text())
+    assert prompt['retrieved'] == ['version:k1:1']
+    assert 'Bãi bỏ Điều 1.' not in prompt['user']
+
+
+from test_rag_corpus import corpus, data  # noqa: E402,F401
