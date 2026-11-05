@@ -1,6 +1,6 @@
 # Chương 3. Kho văn bản và đồ thị tri thức có phiên bản
 
-> Bản nháp dựa trên trạng thái kho mã tại commit `68364f3`. Các kết quả kiểm chứng lịch sử được ghi đúng phạm vi đo; chưa thay thế kiểm định pháp lý độc lập.
+> Bản nháp cập nhật cho mốc 08/11/2026, theo kế hoạch ngày 05/11. Các kết quả kiểm chứng lịch sử được ghi đúng phạm vi đo; chưa thay thế kiểm định pháp lý độc lập.
 
 **Câu hỏi của chương:** Có thể biến văn bản nguồn và các lệnh sửa đổi thành những đơn vị truy xuất theo mốc thời gian như thế nào, và bằng chứng hiện có cho phép tin cậy quá trình đó đến đâu?
 
@@ -48,7 +48,7 @@ Corpus dùng trong thực nghiệm hiện tại có quy mô được manifest gh
 
 <!-- nguồn: data/derived/corpus/manifest.json -->
 
-Phễu dữ liệu có thể mô tả bằng chuỗi: dữ liệu cổng → chuẩn hóa và khử trùng quan hệ → điều kiện tham gia benchmark → cấu trúc điều khoản và sự kiện → chuỗi phiên bản → corpus truy xuất. Manifest corpus lưu mã băm đầu vào và đầu ra để truy nguyên đúng bản dẫn xuất. Tuy nhiên, chưa có một bảng phễu duy nhất, cùng ngày chụp, liên kết mọi bước thu thập với corpus hiện tại. [CẦN XÁC MINH: đối soát phễu thu thập–backfill–eligibility trên cùng snapshot trước khi điền tỷ lệ hao hụt toàn pipeline].
+Phễu dữ liệu có thể mô tả bằng chuỗi: dữ liệu cổng → chuẩn hóa và khử trùng quan hệ → điều kiện tham gia benchmark → cấu trúc điều khoản và sự kiện → chuỗi phiên bản → corpus truy xuất. Manifest corpus lưu mã băm đầu vào và đầu ra để truy nguyên đúng bản dẫn xuất. Tuy nhiên, chưa có một bảng phễu duy nhất, cùng ngày chụp, liên kết mọi bước thu thập với corpus hiện tại. [CẦN: đối soát phễu thu thập–backfill–eligibility trên cùng snapshot trước khi điền tỷ lệ hao hụt toàn pipeline].
 <!-- nguồn: data/derived/corpus/manifest.json -->
 <!-- nguồn: docs/audit_dataset.md -->
 
@@ -105,26 +105,35 @@ Tài liệu kiến trúc ban đầu nhấn mạnh Neo4j và Milvus. Đường th
 
 Các số đo chất lượng dưới đây là mô tả thăm dò trên phạm vi kiểm lịch sử, không thuộc họ XN của thực nghiệm hỏi đáp.
 
-Kết quả kiểm tay L2 lịch sử ghi 58/60 sự kiện áp được là đúng, tương ứng 96,7%, khoảng Wilson 95% từ 88,6% đến 99,1%. Phép đo này có mẫu nhỏ và chỉ lấy trong các sự kiện đã áp được. Recall đối chiếu theo `expiryProvisions` được ghi là 62,2%. Hai số đo không cùng mẫu số, không được nhân hoặc diễn giải thành xác suất “toàn đồ thị đúng”. Các mở rộng pipeline sau thời điểm đo cũng chưa đương nhiên được xác nhận bởi mẫu đó.
-<!-- nguồn: docs/plans/active/l2-event-store.md @51f36c7 -->
+Kết quả kiểm tay L2 lịch sử ghi 58/60 sự kiện áp được là đúng, tương ứng 96,7%, khoảng Wilson 95% từ 88,6% đến 99,1%. Phép đo này có mẫu nhỏ và chỉ lấy trong các sự kiện đã áp được. Recall đối chiếu theo `expiryProvisions` mới đạt 62,2% (5.007/8.046 cặp). Hai số đo không cùng mẫu số, không được nhân hoặc diễn giải thành xác suất “toàn đồ thị đúng”. Các mở rộng pipeline sau thời điểm đo cũng chưa đương nhiên được xác nhận bởi mẫu đó.
+<!-- nguồn: docs/plans/active/l2-event-store.md @51f36c7; docs/plans/active/master-plan.md -->
 
 Đối chiếu tự động với văn bản hợp nhất có 51 văn bản đủ điều kiện, 5.762/7.201 cặp lời văn khớp chính xác, tương ứng 80,02%; 299 văn bản trong kiểm kê thiếu body nên không thuộc phạm vi so sánh. Đây là phép kiểm trên phần quan sát được, không phải độ chính xác của toàn corpus hoặc kiểm định pháp lý độc lập.
 <!-- nguồn: docs/plans/active/phase-3-kg-l0-l3.md @51f36c7 -->
 
 M2 yêu cầu bộ truy vấn đối chiếu tay; kế hoạch vẫn để mở phần kiểm tay 100 truy vấn. Vì chưa có bằng chứng hoàn tất tương ứng, bản nháp này coi **M2 chưa đạt**. Việc các phép tính khoảng hiệu lực nội bộ khớp `ValidityService` chỉ chứng minh hai đường thực hiện cùng mô hình nhất quán với nhau; chúng có thể cùng bỏ sót một sự kiện trong nguồn. Không có cơ sở để dùng kiểm tra nội bộ làm thay thế M2.
 <!-- nguồn: docs/plans/active/phase-3-kg-l0-l3.md @51f36c7 -->
-<!-- nguồn: docs/plans/active/master-plan.md @51f36c7 -->
+<!-- nguồn: docs/plans/active/master-plan.md -->
+
+### Kế hoạch đối chiếu VBHN và gold mù
+
+M2 vẫn **chưa đạt**. Kế hoạch hiện hành yêu cầu đối chiếu rộng bằng văn bản hợp nhất (VBHN), sau đó để người đọc nguồn đầy đủ phân xử các cặp lệch. Gold mù được lấy từ bộ test cuối: người kiểm đọc văn bản gốc hoặc VBHN, không thấy lời văn phiên bản do đồ thị dựng. Phần này cần kiểm riêng ngày dùng để dựng snapshot và nguồn gốc từng bằng chứng; độ giống chữ không thay được kết luận về hiệu lực.
+<!-- nguồn: docs/plans/active/master-plan.md -->
+
+Phép thử tải hiện có nhận được 40/48 PDF đã chọn; chỉ 18 văn bản căn được theo bộ dò ban đầu. Báo cáo đã nêu các lỗi tách đoạn, chú thích và giới hạn so sánh phần đầu lời văn. Đây là bằng chứng khảo sát khả năng dùng nguồn, chưa phải kết quả gold độc lập. Chưa có `docs/reports/doi-chieu-vbhn.md` tại lúc soạn. [CHỜ G4: báo cáo đối chiếu VBHN hoàn chỉnh và kết quả gold mù được kiểm ở G2; không dùng phép thử tải để công bố M2 đạt].
+<!-- nguồn: docs/reports/thu-tai-vbhn-20261105.md -->
+<!-- nguồn: docs/plans/active/master-plan.md -->
 
 ## 3.6. Câu trả lời có thể rút ra
 
 Kho hiện có hỗ trợ tách danh tính điều khoản, lịch sử lời văn và khoảng sử dụng theo mô hình thời gian. Provenance, nhật ký sự kiện và các kiểm tra chuỗi tạo điều kiện truy nguyên và tái dựng. Bằng chứng kiểm tay và đối chiếu tự động cho thấy pipeline có khả năng tạo lịch sử hữu ích, đồng thời chỉ rõ độ phủ chưa hoàn chỉnh. Đóng góp có thể bảo vệ là một cơ chế dẫn xuất và truy nguyên phiên bản trên nguồn đã thu thập; chưa thể khẳng định đồ thị đúng hoặc đầy đủ về pháp lý.
 <!-- nguồn: scripts/pipeline/build_versions.py -->
-<!-- nguồn: docs/plans/active/l2-event-store.md @51f36c7 -->
+<!-- nguồn: docs/plans/active/l2-event-store.md @51f36c7; docs/plans/active/master-plan.md -->
 <!-- nguồn: docs/plans/active/phase-3-kg-l0-l3.md @51f36c7 -->
 
 ## Việc còn thiếu trước khi nộp
 
 - Hoàn tất hoặc công bố việc chưa hoàn tất M2; lưu từng truy vấn và chứng cứ người kiểm.
 - Đối soát phễu dữ liệu trên cùng snapshot; không trộn quy mô audit cũ với corpus cuối.
-- Bổ sung hình lược đồ và ví dụ chuỗi có provenance từ dữ liệu thật. [CẦN XÁC MINH: chọn và kiểm độc lập một ví dụ pháp lý trước khi đưa lời văn điều luật vào chương].
+- Bổ sung hình lược đồ và ví dụ chuỗi có provenance từ dữ liệu thật. [CẦN: chọn và kiểm độc lập một ví dụ pháp lý trước khi đưa lời văn điều luật vào chương].
 - Đo lại chất lượng các phần L2 đã mở rộng sau mẫu kiểm tay lịch sử; báo cả lỗi bỏ sót.

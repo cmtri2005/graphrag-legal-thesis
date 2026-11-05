@@ -24,9 +24,21 @@ flowchart LR
     G --> H["Câu trả lời, cờ answerable, ID căn cứ"]
 ```
 
-Sơ đồ mô tả đường thực nghiệm chính dùng truy xuất từ vựng. Các cấu hình dense/hybrid có nhánh xếp hạng riêng nhưng chưa được dùng để đưa ra kết luận test trong bản nháp này.
+Sơ đồ mô tả `proposed` đã chạy ở hai vòng thử, chỉ dùng truy xuất từ vựng. Các cấu hình dense/hybrid có nhánh xếp hạng riêng nhưng chưa được dùng để đưa ra kết luận test trong bản nháp này.
 <!-- nguồn: src/vilexgraph/framework/retrieve.py -->
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
+<!-- nguồn: docs/plans/active/master-plan.md -->
+
+### Kiến trúc L0–L5 theo đề cương và trạng thái thực hiện
+
+Đề cương chia xử lý thành các tầng ngoại tuyến và trực tuyến. Bảng sau giữ các ranh giới cam kết; không suy rằng thành phần có trong kiến trúc đã được đánh giá đầy đủ.
+
+| Tầng | Chức năng theo đề cương | Hiện trạng được phép mô tả |
+|---|---|---|
+| L0–L1 | Phân tích Văn bản → Chương → Mục → Điều → Khoản → Điểm; siêu dữ liệu, quan hệ sửa đổi, thay thế, dẫn chiếu | Pipeline cấu trúc và quan hệ đã có; độ phủ sự kiện và kiểm chứng còn giới hạn |
+| L2–L3 | Trích thao tác sửa đổi, bổ sung, bãi bỏ, thay thế; hợp nhất chuỗi phiên bản, xác định hiệu lực | Đã dựng lớp phiên bản và khoảng hiệu lực; M2 chưa đạt, cần VBHN và gold mù |
+| L4 | Lọc hiệu lực trước truy xuất; kết hợp từ vựng, ngữ nghĩa và mở rộng đồ thị | `proposed` đã chạy vòng thử chỉ dùng từ vựng; `proposed2` lai ghép mới đo truy xuất trên dev |
+| L5 | Sinh có trích dẫn cấp Điều/Khoản/Điểm; Temporal Verifier kiểm trích dẫn tại mốc | Có generator và bộ kiểm ID; chưa có bằng chứng Verifier sửa đầu ra khi bộ lọc cùng tier đã áp dụng |
+<!-- nguồn: docs/DeCuongKLTN_23521635_23521643_UIT.docx; runs/README.md; docs/plans/active/master-plan.md -->
 
 ## 5.2. Bộ lọc theo mức thông tin thời gian
 
@@ -44,12 +56,12 @@ Cần phân biệt hai cách xử lý đơn vị lệnh. Truy xuất ban đầu 
 
 ## 5.3. Truy xuất và ngữ cảnh cấu trúc
 
-Đường chính dùng SQLite FTS5 để tính thứ hạng từ vựng. Code tạo biểu thức truy vấn từ các từ của câu hỏi, kết hợp các từ bằng OR và cho phép giới hạn vào phần body hoặc thêm phần context. Cấu hình có context đưa tiêu đề cấu trúc vào văn bản truy xuất; phần ngữ cảnh này là lợi ích chunk header thông thường, không tự được xem là hiệu ứng đồ thị. Tài liệu nền về BM25 được quản lý trong danh mục [@robertson2009bm25]; mô tả cài đặt ở đây dựa trên code FTS5 thực tế. [CẦN XÁC MINH: đọc bản gốc tài liệu BM25 và xác nhận metadata thư mục tài liệu tham khảo trước khi nộp].
+Đường chính dùng SQLite FTS5 để tính thứ hạng từ vựng. Code tạo biểu thức truy vấn từ các từ của câu hỏi, kết hợp các từ bằng OR và cho phép giới hạn vào phần body hoặc thêm phần context. Cấu hình có context đưa tiêu đề cấu trúc vào văn bản truy xuất; phần ngữ cảnh này là lợi ích chunk header thông thường, không tự được xem là hiệu ứng đồ thị. Tài liệu nền về BM25 được quản lý trong danh mục [@robertson2009bm25]; mô tả cài đặt ở đây dựa trên code FTS5 thực tế. [CẦN: đọc bản gốc tài liệu BM25 và xác nhận metadata thư mục tài liệu tham khảo trước khi nộp].
 <!-- nguồn: src/vilexgraph/framework/retrieve.py -->
 <!-- nguồn: src/vilexgraph/framework/corpus.py -->
 <!-- nguồn: references.bib -->
 
-Kích thước danh sách ban đầu được khóa ở (k=20). Chế độ giảm số từ truy vấn để chạy nhanh không được dùng cho số báo cáo. Đường dense hiện có quét điểm tích vô hướng trên các vector, sau đó kiểm bộ lọc trước khi gom top-k hợp lệ; nó không dùng Milvus. Cấu hình B4 trộn hai thứ hạng bằng tổng đóng góp (1/(60+rank)), không có reranker. Đây là mô tả cấu hình, không phải kết quả chất lượng của B4 trên test. [CẦN TRÍCH DẪN: nguồn gốc phương pháp reciprocal rank fusion; references.bib chưa có khóa tương ứng].
+Kích thước danh sách ban đầu được khóa ở (k=20). Chế độ giảm số từ truy vấn để chạy nhanh không được dùng cho số báo cáo. Đường dense hiện có quét điểm tích vô hướng trên các vector, sau đó kiểm bộ lọc trước khi gom top-k hợp lệ; nó không dùng Milvus. Cấu hình B4 trộn hai thứ hạng bằng tổng đóng góp (1/(60+rank)), không có reranker. Đây là mô tả cấu hình, không phải kết quả chất lượng của B4 trên test. [CẦN: nguồn gốc phương pháp reciprocal rank fusion; references.bib chưa có khóa tương ứng].
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 <!-- nguồn: src/vilexgraph/framework/retrieve.py -->
 
@@ -74,6 +86,7 @@ Thang chính giữ truy xuất từ vựng, generator, prompt và kích thước
 | `b7plus` | B | version | Có | Không | Tắt |
 | `b7pp` | B | propagated | Có | Không | Tắt |
 | `proposed` | B | propagated | Có | Quan hệ lệnh | reject |
+| `proposed2` (dev, lai ghép) | B | propagated | Có | `rel_up`, tìm lệnh ở đích và tổ tiên | reject |
 | `b5` | A | none | Có | Quan hệ lệnh | Tắt |
 | `b6` | A | none | Có | Cha–con | Tắt |
 
@@ -84,7 +97,7 @@ Sự khác nhau `b7 → b7v` là đưa vào lời văn phiên bản đã hợp n
 
 Các ablation được định nghĩa trong code: `a1` bỏ ràng buộc thời gian; `a2` bỏ mở rộng; `a3` tắt Verifier; `a4` thay tier lan truyền bằng tier phiên bản. Việc có cấu hình không có nghĩa đã có kết quả test. Vai trò riêng của từng thành phần chỉ có thể được đánh giá sau khi có kết quả ablation phù hợp.
 <!-- nguồn: src/vilexgraph/framework/systems.py -->
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
+<!-- nguồn: docs/plans/active/master-plan.md -->
 
 ## 5.5. Mở rộng quan hệ
 
@@ -98,6 +111,18 @@ Trong code, số seed là 5 và fanout giới hạn ở 3 cho các truy vấn l�
 Cài đặt trực tuyến lấy quan hệ bằng truy vấn SQL trên cây điều khoản và các đơn vị lệnh đã phân giải. Nó không thực hiện tìm đường nhiều bước trên toàn bộ loại cạnh có trong Neo4j, cũng không cài cơ chế cộng đồng và tóm tắt cộng đồng của một hệ GraphRAG khác. Vì vậy, tên “GraphRAG” trong mô tả rộng của dự án phải đi kèm phạm vi: đồ thị phiên bản ngoại tuyến và mở rộng láng giềng hạn chế trực tuyến.
 <!-- nguồn: src/vilexgraph/framework/graphx.py -->
 <!-- nguồn: docs/decisions/0004-framework-truy-xuat-va-sinh.md -->
+
+### `proposed2`: lai ghép và `rel_up`
+
+`proposed2` kết hợp BM25 và dense bằng trộn thứ hạng, không reranker, giữ lọc `propagated`, đổi mở rộng sang `rel_up`. Khác với `rel` chỉ tìm lệnh nhắm trực tiếp đích của hit, `rel_up` tìm lệnh nhắm cả đích và các nút tổ tiên. Seed được lấy từ các kết quả tốt trước bộ lọc ngày: sau bãi bỏ, điều khoản liên quan có thể đã biến mất khỏi danh sách hợp lệ, nên mở rộng từ danh sách sau lọc sẽ không tìm ra lệnh cần thiết. Lệnh bổ sung vẫn được xét theo hiệu lực của văn bản ban hành lệnh. Đi lên chuỗi cha phục vụ tìm lệnh tác động, chưa phải thuật toán suy luận tùy ý trên mọi quan hệ.
+<!-- nguồn: src/vilexgraph/framework/graphx.py -->
+<!-- nguồn: src/vilexgraph/framework/retrieve.py; src/vilexgraph/framework/systems.py -->
+
+Lúc truy xuất, FTS, đơn vị corpus và khoảng hiệu lực được đọc từ chỉ mục SQLite; cây tổ tiên được đọc từ `data/temporal.sqlite`. Dense dùng vector cục bộ để tính điểm. Đường thực nghiệm này không gọi Neo4j hoặc Milvus. Vai trò của đồ thị nằm ở biểu diễn ngoại tuyến và truy vấn quan hệ qua SQL, cần được phân biệt với lựa chọn phần mềm lưu đồ thị.
+<!-- nguồn: src/vilexgraph/framework/corpus.py; src/vilexgraph/framework/retrieve.py; src/vilexgraph/framework/graphx.py -->
+
+Chỉ số `proposed2` hiện có là truy xuất trên dev; chưa có câu trả lời và chưa có Accuracy của cấu hình này. [CHỜ COLAB: sinh dev cho `b7pp --hybrid`, `proposed2`, `p2a2`, `p2a3`]. [CHỜ G4: cấu hình đã khóa và kết quả bộ test cuối].
+<!-- nguồn: runs/README.md; docs/plans/active/master-plan.md -->
 
 ## 5.6. Sinh câu trả lời và phân biệt từ chối với hết hiệu lực
 
@@ -121,9 +146,12 @@ Verifier kiểm các ID được câu trả lời trích, không kiểm đúng s
 <!-- nguồn: scripts/eval/colab_b1.py -->
 <!-- nguồn: src/vilexgraph/framework/verify.py -->
 
-Trong cấu hình đề xuất, truy xuất, mở rộng và Verifier dùng cùng tier. Những đơn vị đã được cho vào prompt vì thế thường cũng qua được kiểm của Verifier. Chính docstring ghi Verifier có thể là phép kiểm không thay đổi đầu ra theo thiết kế. Không được gán mức tăng Accuracy cho Verifier nếu chưa có bằng chứng nó đã sửa hoặc bác câu nào; cũng không coi TVER thấp là bằng chứng rằng câu trả lời nhận ra đúng việc bãi bỏ.
+Trong cấu hình đề xuất, truy xuất, mở rộng và Verifier dùng cùng tier. Trên dev đã chạy, Verifier không bác câu nào; `a3` và `proposed` cho đầu ra trùng nhau. Khi bộ lọc đã áp cùng điều kiện, chưa có bằng chứng về tác dụng tăng thêm của Verifier. Kế hoạch yêu cầu đo nó trên cấu hình chưa có bộ lọc đủ mạnh trước khi đánh giá vai trò riêng.
+<!-- nguồn: runs/README.md; docs/plans/active/master-plan.md -->
+
+ Những đơn vị đã được cho vào prompt vì thế thường cũng qua được kiểm của Verifier. Chính docstring ghi Verifier có thể là phép kiểm không thay đổi đầu ra theo thiết kế. Không được gán mức tăng Accuracy cho Verifier nếu chưa có bằng chứng nó đã sửa hoặc bác câu nào; cũng không coi TVER thấp là bằng chứng rằng câu trả lời nhận ra đúng việc bãi bỏ.
 <!-- nguồn: src/vilexgraph/framework/verify.py -->
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
+<!-- nguồn: docs/plans/active/master-plan.md -->
 
 ## 5.8. Điều kiện so sánh công bằng và khả năng tái lập
 
@@ -146,7 +174,7 @@ Phương pháp hiện thực hóa việc truy xuất theo mốc bằng cách k�
 
 ## Việc còn thiếu trước khi nộp
 
-- [CẦN XÁC MINH: đối soát topology GPU thực tế; sổ chạy nói hai T4 nhưng trường gpu trong provenance E3 hiện chỉ liệt kê một tên Tesla T4].
+- [CẦN: đối soát topology GPU thực tế; sổ chạy nói hai T4 nhưng trường gpu trong provenance E3 hiện chỉ liệt kê một tên Tesla T4].
 - Bổ sung kết quả ablation trước khi đánh giá tác dụng riêng của mở rộng hoặc Verifier.
 - Đọc bản gốc tài liệu BM25; bổ sung tài liệu RRF sau khi nhóm xác nhận khóa thư mục tài liệu tham khảo, không tự tạo khóa mới.
 - Hoàn thiện hình kiến trúc theo cài đặt thực; giữ phân biệt phương pháp dự kiến với cấu hình đã đo.

@@ -1,5 +1,8 @@
 # Chương 4. Bộ dữ liệu ViLexTime
 
+> v1.0 và test 2 là hai vòng thử có khai báo. Bộ test cuối do người kiểm đang được chuẩn bị, chưa có kết quả.
+<!-- nguồn: docs/plans/active/master-plan.md -->
+
 **Câu hỏi của chương:** ViLexTime đo khả năng chọn và sử dụng phiên bản điều khoản như thế nào, và nguồn gốc đáp án, nhãn kiểm tra cùng quy trình chọn mẫu giới hạn độ tin cậy của phép đo ra sao?
 
 ## 4.1. Đối tượng và đơn vị đánh giá
@@ -64,9 +67,9 @@ Schema công bố tách nội dung đối chiếu `context` khỏi đáp án ng�
 <!-- nguồn: docs/vilextime-schema-phat-hanh.md -->
 <!-- nguồn: scripts/pipeline/export_release.py -->
 
-## 4.4. Quy mô bản v1.0 được dùng trong thực nghiệm
+## 4.4. Vòng thử v1.0: quy mô bản đã chạy
 
-Tên phát hành `vilextime-v1.0` khác với phiên bản schema `2.0.0`. Manifest final ghi 769 dòng chính và 859 dòng silver. Bảng kết quả chính của test dùng 211 dòng giữa khoảng, thuộc 165 lineage; silver không được gộp vào bảng này. Datasheet vẫn có bảng quy mô của một bản dựng cũ, nên chỉ dùng manifest final và file kết quả tương ứng để mô tả bản đã chạy.
+Tên phát hành `vilextime-v1.0` khác với phiên bản schema `2.0.0`; đây là vòng thử đã chạy theo ADR, không phải bộ test cuối của kế hoạch hiện hành. Manifest final ghi 769 dòng chính và 859 dòng silver. Bảng kết quả chính của test dùng 211 dòng giữa khoảng, thuộc 165 lineage; silver không được gộp vào bảng này. Datasheet vẫn có bảng quy mô của một bản dựng cũ, nên chỉ dùng manifest final và file kết quả tương ứng để mô tả bản đã chạy.
 <!-- nguồn: data/vilextime_dataset/manifest.json -->
 <!-- nguồn: runs/E3_v1/test/confirm.json -->
 <!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
@@ -82,19 +85,20 @@ Tên phát hành `vilextime-v1.0` khác với phiên bản schema `2.0.0`. Manif
 <!-- nguồn: data/vilextime_dataset/vilextime.jsonl -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 
-Sự nhỏ đi của các lát sau kiểm nhãn là đặc điểm thực của tập cuối. Không dùng quota dự kiến để mô tả số mẫu đã được xác nhận. Đặc biệt, loại các câu có nội dung chuyển chỗ làm thay đổi mạnh tập bãi bỏ, nên kết quả không đại diện cho mọi trường hợp một điều khoản từng bị bãi bỏ ở vị trí cũ.
+Sự nhỏ đi của các lát sau kiểm nhãn là đặc điểm thực của bản v1.0 đã chạy, không phải quy mô bộ test cuối đang chuẩn bị. Không dùng quota dự kiến để mô tả số mẫu đã được xác nhận. Đặc biệt, loại các câu có nội dung chuyển chỗ làm thay đổi mạnh tập bãi bỏ, nên kết quả không đại diện cho mọi trường hợp một điều khoản từng bị bãi bỏ ở vị trí cũ.
 <!-- nguồn: docs/vilextime-datasheet.md -->
 <!-- nguồn: data/vilextime_dataset/manifest.json -->
 
 ## 4.5. Độ đồng thuận và nguồn nhãn v1.0
 
-Các số đo đồng thuận và audit là thống kê mô tả thăm dò về chất lượng nhãn, không phải phán quyết thuộc họ XN.
+Các số đo đồng thuận và audit là thống kê mô tả về chất lượng nhãn, không phải phán quyết thuộc họ XN. Kế hoạch ngày 05/11 ghi A gán khoảng 5 giây mỗi dòng trong đợt 26/10. Thời gian này không đủ làm cơ sở tin rằng các bước đối chiếu được thực hiện đầy đủ; AC1 không được diễn giải như phép đo đồng thuận pháp lý đáng tin cậy chỉ vì có hai tên người gán.
+<!-- nguồn: docs/plans/active/master-plan.md, D1 -->
 
 Biên bản D5 lịch sử báo AC1 0,612, khoảng tin cậy 95% [0,511; 0,697], và κ 0,323 trên 300 dòng của đợt kiểm cũ. Manifest final ghi phép đo theo hướng dẫn hiện hành trên 246 dòng: AC1 0,377, khoảng [0,250; 0,496], κ 0,235, khoảng [0,144; 0,320], và thỏa thuận nhãn âm 0,395. Hai phép đo khác bộ mẫu và phiên bản hướng dẫn; không lấy số thuận lợi hơn để thay số của tập được dùng. Cả hai đều không chứng minh đạt cổng đồng thuận. Việc chọn AC1 diễn ra sau pilot, không được mô tả là đã đăng ký trước.
 <!-- nguồn: docs/reports/D5_bien_ban.md -->
 <!-- nguồn: data/vilextime_dataset/manifest.json -->
 
-Tại các dòng ranh giới của test v1.0, metadata ghi 88 dòng do A và B cùng nhãn, 33 dòng có nhãn phân xử/kiểm của luật sư và 90 dòng dùng nhãn agent. Trong phần luật sư có 10 dòng ghi đã dùng phiếu Claude hỗ trợ; không đồng nhất việc có chữ “luật sư” với một quy trình hoàn toàn độc lập khỏi AI. Các nhãn này được truyền sang dòng giữa khoảng tương ứng, không phải một lượt người gán mới ở mỗi mốc.
+Tại các dòng ranh giới của test v1.0, metadata ghi 88 dòng do A và B cùng nhãn, 33 dòng có nhãn phân xử/kiểm của luật sư và 90 dòng chỉ có nhãn Codex (T1: 75; T6: 15). Trong phần luật sư có 10 dòng ghi đã dùng phiếu Claude hỗ trợ; không đồng nhất việc có chữ “luật sư” với một quy trình hoàn toàn độc lập khỏi AI. Các nhãn này được truyền sang dòng giữa khoảng tương ứng, không phải một lượt người gán mới ở mỗi mốc.
 <!-- nguồn: data/vilextime_dataset/vilextime_meta.jsonl -->
 <!-- nguồn: docs/vilextime-datasheet.md -->
 
@@ -102,13 +106,13 @@ Agent có AC1 0,721 và thỏa thuận âm 0,610 trên mẫu hiệu chuẩn mù 
 <!-- nguồn: docs/vilextime-datasheet.md -->
 <!-- nguồn: scripts/pipeline/export_release.py -->
 
-Quy tắc phát hành hiện hành ưu tiên nhãn luật sư, tiếp đến A/B đồng thuận, rồi nhãn agent đúng phạm vi. Khi A lệch agent trong nhánh được phép, code lấy verdict của agent; test ngoài phạm vi không được coi là đã kiểm chỉ với một nhãn người. Điều này khác mô tả cũ trong tài liệu schema rằng một người là đủ. Vì vậy, nhãn của tập cuối phải được giải thích bằng `final_labels` và metadata thực tế.
+Quy tắc phát hành v1.0 ưu tiên nhãn luật sư, tiếp đến A/B đồng thuận, rồi nhãn agent đúng phạm vi. Khi A lệch agent trong nhánh được phép, code lấy verdict của agent; test ngoài phạm vi không được coi là đã kiểm chỉ với một nhãn người. Điều này khác mô tả cũ trong tài liệu schema rằng một người là đủ. Vì vậy, nhãn của bản v1.0 phải được giải thích bằng `final_labels` và metadata thực tế.
 <!-- nguồn: scripts/pipeline/export_release.py -->
 <!-- nguồn: docs/vilextime-schema-phat-hanh.md -->
 
-## 4.6. Test 2 — nhãn LLM
+## 4.6. Vòng thử test 2 — nhãn LLM
 
-Test 2 là bản lặp lại dùng **nhãn LLM**, không phải nhãn người hoặc luật sư. Sau khi loại các lineage thuộc văn bản dev, release có 101 lineage và 492 dòng ở mọi chế độ. Lát giữa khoảng dùng trong E3 có quy mô dưới đây. Bộ này được báo riêng, không cộng vào v1.0 để tăng cỡ mẫu hay tạo một bảng kết quả chung.
+Test 2 là vòng thử lặp lại có khai báo dùng **nhãn LLM**, không phải nhãn người hoặc luật sư. Sau khi loại các lineage thuộc văn bản dev, release có 101 lineage và 492 dòng ở mọi chế độ. Lát giữa khoảng dùng trong E3 có quy mô dưới đây. Bộ này được báo riêng, không cộng vào v1.0 để tăng cỡ mẫu hay tạo một bảng kết quả chung.
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 <!-- nguồn: runs/E3_test2/rescore/confirm.json -->
 
@@ -134,13 +138,72 @@ Có một lần chấm E3 test 2 — nhãn LLM — sai do release thiếu đáp 
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 <!-- nguồn: scripts/eval/score_vilextime.py -->
 
-## 4.7. Độ tin cậy, giới hạn và tài liệu hóa
+## 4.7. Đối chiếu Bảng 1 của đề cương và kế hoạch dữ liệu
+
+Bảng dưới đếm cặp (câu hỏi, mốc) ở chế độ ranh giới trên các phần dữ liệu, khác bảng test giữa khoảng của vòng thử. T4 là lát của T2 và T3 nên không cộng lần nữa vào tổng. “Đang có” bao gồm silver chưa kiểm và nhãn LLM; không phải tổng mẫu đã được người xác nhận.
+<!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
+
+<!-- nguồn: docs/DeCuongKLTN_23521635_23521643_UIT.docx; docs/plans/active/master-plan.md, mục 5 -->
+| Nhóm | Đề cương | v1.0 | Silver chưa kiểm | Test 2, nhãn LLM | Đang có | Dự báo sau kiểm |
+|---|---:|---:|---:|---:|---:|---:|
+| T1 | 250 | 141 | 0 | 0 | 141 | 251 (thêm 110) |
+| T2 | 400 | 118 | 274 | 120 | 512 | ~490 |
+| T3 | 200 | 31 | 95 | 75 | 201 | ~200 |
+| T4 (lát) | 150 | 24 | 102 | 30 | 156 | ~130 |
+| T5 | 50 | 0 | 20 | 0 | 20 | ~12 |
+| T6 | 100 | 72 | 0 | 32 | 104 | ~155 |
+| Tổng, không trùng T4 | 1.150 | 362 | 389 | 227 | 978 | ~1.100 |
+<!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
+
+Cột cuối là **dự báo của kế hoạch**, giả định 60% câu qua kiểm và hoàn tất phần bổ sung; không phải kết quả quan sát. Tổng theo Bảng 1 của đề cương cũng cần giải thích lại khi T4 được tính như lát chồng lắp theo quyết định A2. Số phát hành thực tế phải thay bằng kết quả G2, phân biệt tầng người gán đôi và luật sư với tầng LLM/agent, không gộp hai tầng trong bảng chính.
+<!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
+<!-- nguồn: docs/DeCuongKLTN_23521635_23521643_UIT.docx -->
+
+## 4.8. Thiết kế bộ test cuối và quy trình người gán
+
+Bộ test cuối chỉ dùng lineage chưa có hệ nào chạy. Theo kiểm kê trong kế hoạch, nguồn silver chưa có dự đoán trong `runs/`, không trùng lineage của v1.0 và test 2, không trùng văn bản đích với dev. Đây là điều kiện tuyển chọn, chưa phải tuyên bố bộ cuối đã khóa. T1 bổ sung làm đối chứng và đối chiếu quy mô; không vào bộ tương phản cuối vì không có thay đổi lời văn cần phân biệt.
+<!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
+
+Các nguồn đưa cho người kiểm dưới đây là kế hoạch, chưa phải mẫu đạt. Dự báo được giữ nguyên từ master plan để tránh biến mong muốn về cỡ mẫu thành dữ liệu đã có.
+
+<!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
+| Nguồn | Câu đưa cho người | Dự báo qua kiểm |
+|---|---:|---:|
+| Silver T2, gồm phần gần giống | 137 | ~82 |
+| Silver T3 | 31 | ~19 |
+| Silver T5, báo riêng | 10 | ~6 |
+| T6 mới, LLM lọc trước | 60 | ~25 |
+| T3 mới | 20 | ~12 |
+| T2 mới nếu đủ giờ | 60 | ~45 |
+<!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
+
+Kế hoạch đặt cổng G2 tối thiểu 130 lineage người kiểm, mục tiêu khoảng 180; nếu thiếu giờ thì cắt nguồn ưu tiên thấp, không hạ tiêu chuẩn nhãn hoặc bỏ kiểm gold mù. Lô thử G1 lấy 30 câu từ test 2, không lấy silver để giữ nguyên nguồn bộ cuối. Những con số này là ngưỡng và mục tiêu có sẵn trong kế hoạch, chưa phải cỡ mẫu đã thu được.
+<!-- nguồn: docs/plans/active/master-plan.md, mục 5 và 7 -->
+
+Thẻ gán theo câu hỏi gồm các câu kiểm sau; phải đối chiếu mọi mốc được đưa, không gán độc lập một nhãn mới cho mỗi bản sao mốc.
+
+| Câu kiểm | Nội dung thẻ | Dẫn chứng cần đọc |
+|---|---|---|
+| Q1 | Đáp án ở mỗi mốc có đúng văn bản không? | Văn bản tác động, câu sửa/bãi bỏ, điều hiệu lực; cả lời văn đầy đủ và span ngắn |
+| Q2 | Câu hỏi có hỏi vào đúng phần tô màu không? | Nội dung thay đổi phải làm đổi đáp án; T6 hỏi nội dung |
+| Q3 | Câu hỏi có rõ không? | Một điều khoản trả lời được, không mơ hồ và không lộ đáp án |
+| Q4 | Có quy định nào khác đang thay cho đáp án này không? | Quy định cấp cao hơn, quy định ban hành sau, chuyển tiếp và nơi nội dung chuyển đến |
+<!-- nguồn: docs/vilextime-annotation.md, mục 2 -->
+
+Nhãn đạt được suy ra khi Q1 Đúng, Q2 Có, Q3 Có và Q4 Không. Q4 Không chắc không vào bảng chính. Người gán phải dán một câu trích nguyên văn từ văn bản tác động đã đọc; với T6 và Q4 Không, phải ghi nơi đã tìm. Hai người gán độc lập, không thấy nhãn, gợi ý hoặc ghi chú LLM và không thấy kết quả hệ. Luật sư chốt dòng lệch mà không có phiếu AI hỗ trợ. Đây là quy trình bộ cuối, khác thực hành của các vòng thử.
+<!-- nguồn: docs/vilextime-annotation.md -->
+<!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
+
+Trang gán phải ghi thời gian từng câu. Cổng G1 yêu cầu AC1 ≥ 0,80 và p_neg ≥ 0,60 trên từng Q1–Q4 cùng trung vị thời gian ≥ 90 giây/câu; dưới mức thời gian đó phải dừng và xem lại. Thời gian là dấu hiệu tuân thủ quy trình, không phải bảo đảm người gán đúng. [CHỜ G4: số thực tế của lô thử, nhãn bộ cuối, AC1/p_neg và phân bố thời gian được khóa ở G1–G2].
+<!-- nguồn: docs/plans/active/master-plan.md, mục 5 và 7 -->
+
+## 4.9. Độ tin cậy, giới hạn và tài liệu hóa
 
 Gold và hệ đề xuất cùng dựa vào kho sự kiện và phiên bản. Khi kho bỏ sót một lần sửa đổi, hệ thống và bộ đánh giá có thể cùng sử dụng lời văn sai mà vẫn đồng ý với nhau. Gold độc lập vẫn chưa hoàn tất; không thể dùng độ chính xác trên ViLexTime để suy ra trực tiếp độ đúng pháp lý ngoài kho. Khả năng phát hiện lỗi gold qua kiểm câu hỏi cũng phụ thuộc năng lực và thời gian người kiểm.
 <!-- nguồn: docs/vilextime-datasheet.md -->
 <!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
 
-Datasheet của dự án tự khai được tổ chức theo hướng tài liệu hóa bộ dữ liệu [@gebru2021datasheets]. Tuy nhiên, tài liệu hiện chứa cả trạng thái và số liệu lịch sử lẫn cập nhật cuối; sự tồn tại của datasheet không chứng minh dữ liệu đã đạt chất lượng yêu cầu. [CẦN XÁC MINH: đọc bản gốc tài liệu Datasheets for Datasets trước khi hoàn tất trích dẫn; references.bib hiện ghi mới kiểm tóm tắt].
+Datasheet của dự án tự khai được tổ chức theo hướng tài liệu hóa bộ dữ liệu [@gebru2021datasheets]. Tuy nhiên, tài liệu hiện chứa cả trạng thái và số liệu lịch sử lẫn cập nhật cuối; sự tồn tại của datasheet không chứng minh dữ liệu đã đạt chất lượng yêu cầu. [CẦN: đọc bản gốc tài liệu Datasheets for Datasets trước khi hoàn tất trích dẫn; references.bib hiện ghi mới kiểm tóm tắt].
 <!-- nguồn: docs/vilextime-datasheet.md -->
 <!-- nguồn: references.bib -->
 
@@ -148,7 +211,7 @@ Các nguy cơ còn lại gồm thiên lệch chọn câu dễ diễn đạt, qua
 <!-- nguồn: docs/vilextime-datasheet.md -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 
-## 4.8. Câu trả lời có thể rút ra
+## 4.10. Câu trả lời có thể rút ra
 
 ViLexTime cung cấp phép đo theo câu hỏi–mốc với truy nguyên phiên bản và một cơ chế kiểm tra tương phản giữa các lời văn. Các bước loại và hòa giải giúp nhận diện những trường hợp không thể đơn giản coi là “hết hiệu lực nên không có đáp án”. Tuy nhiên, đồng thuận thấp, sự tham gia rộng của LLM và thiếu gold độc lập giới hạn mức khẳng định về chất lượng. Giá trị hiện có của bộ dữ liệu là một tài nguyên đánh giá có công bố xuất xứ và sai sót; chưa phải chuẩn vàng pháp lý đã được kiểm độc lập đầy đủ.
 <!-- nguồn: docs/vilextime-datasheet.md -->
@@ -158,6 +221,6 @@ ViLexTime cung cấp phép đo theo câu hỏi–mốc với truy nguyên phiên
 ## Việc còn thiếu trước khi nộp
 
 - Hoàn tất hoặc công bố chưa hoàn tất gold độc lập và các lượt audit người còn thiếu.
-- [CẦN XÁC MINH: đối soát phễu chọn ứng viên, phân bố năm và loại văn bản trên bản final, không dùng bảng lịch sử thay thế].
+- [CẦN: đối soát phễu chọn ứng viên, phân bố năm và loại văn bản trên bản final, không dùng bảng lịch sử thay thế].
 - Chuẩn hóa số câu hỏi khác nhau, số lineage và số dòng theo yêu cầu của khoa; trình bày rõ chỗ lệch với đề cương.
 - Kiểm tài liệu gốc cho trích dẫn phương pháp tài liệu hóa dữ liệu; giữ nguyên nhãn LLM của test 2 trong mọi lần biên tập.

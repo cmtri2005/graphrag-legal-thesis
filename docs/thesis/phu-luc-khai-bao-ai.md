@@ -10,7 +10,7 @@ Công trình sử dụng AI trong lập trình, chuẩn bị dữ liệu, hỗ t
 <!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
 
 Phụ lục chỉ xác nhận những hoạt động có hồ sơ trong kho. CMT và NMT là các vai trò thành viên được dùng trong kế hoạch; A/B là vai trò người gán. Không suy tên thật của người gán từ model hoặc tên file. Không công bố danh tính luật sư vượt quá vai trò mà hồ sơ cho phép. Các khẳng định chưa có biên bản kiểm được ghi là đang chờ, không được chuyển thành “đã xác nhận” khi biên tập.
-<!-- nguồn: docs/plans/active/master-plan.md @51f36c7 -->
+<!-- nguồn: docs/plans/active/master-plan.md -->
 <!-- nguồn: docs/reports/D5_bien_ban.md -->
 
 ## A.2. Bảng vai trò, kiểm tra và giới hạn
@@ -50,6 +50,14 @@ Các phiếu E7 người gán không chứa cột hệ hoặc tầng máy. File 
 <!-- nguồn: scripts/review/e7_error_analysis.py -->
 <!-- nguồn: tests/test_e7_error_analysis.py -->
 
+### Khai báo bổ sung về đợt gán và hòa giải 26/10
+
+Kế hoạch hiện hành ghi A gán khoảng 5 giây một dòng trong đợt 26/10. AC1 0,377 trên 246 dòng vì thế đi kèm một giới hạn quy trình nghiêm trọng: chưa thể coi đây là phép đo đồng thuận pháp lý đáng tin cậy. Số thời gian phải được công bố cùng số đồng thuận, không chỉ báo chỉ số thống kê.
+<!-- nguồn: docs/plans/active/master-plan.md, D1 -->
+
+Trong vòng theo hướng dẫn 3.0 có 101 dòng lệch, 97 dòng là A đạt và B không đạt; luật sư đứng về phía B ở 87/101 dòng, nhưng đã có phiếu Claude hỗ trợ. Metadata test v1.0 ghi 10 dòng luật sư có hỗ trợ Claude. Hai phạm vi này khác nhau: không dùng số ở test thay số của toàn vòng hòa giải 26/10. Cần gọi ghi chú Claude là **bản nháp hỗ trợ**, không phải nhận định độc lập của người hoặc bằng chứng luật sư đã tự kiểm không có gợi ý.
+<!-- nguồn: docs/plans/active/master-plan.md, D1; data/vilextime_dataset/vilextime_meta.jsonl -->
+
 ## A.4. Bản nháp hiện tại và trách nhiệm tác giả
 
 Các chương trong thư mục `docs/thesis/` là bản nháp do trợ lý Codex hỗ trợ soạn từ các artifact của dự án, chưa phải bản tác giả đã xác nhận để nộp. Nguồn được đặt cạnh đoạn có số liệu hoặc mô tả cơ chế; các khoảng trống được đánh dấu để tác giả kiểm tiếp. Đây là mô tả về lần soạn hiện tại, không phải chứng nhận độc lập về chất lượng bản thảo.
@@ -58,16 +66,27 @@ Các chương trong thư mục `docs/thesis/` là bản nháp do trợ lý Codex
 <!-- nguồn: docs/thesis/chuong-5-phuong-phap.md -->
 <!-- nguồn: docs/thesis/chuong-6-thuc-nghiem.md -->
 
-Trước khi nhận bản nháp làm nội dung của khóa luận, tác giả cần tự giải thích cơ chế, kiểm được nguồn của từng số và quyết định cách trình bày đóng góp. Các kết luận nhóm chưa chốt, đặc biệt M4, vẫn phải do nhóm quyết định. Việc AI tạo đoạn văn, test hoặc bảng không chuyển trách nhiệm học thuật và trách nhiệm nộp bài sang công cụ.
+Trước khi nhận bản nháp làm nội dung của khóa luận, tác giả cần tự giải thích cơ chế, kiểm được nguồn của từng số và quyết định cách trình bày đóng góp. Hướng A của paper được dùng cho đợt nháp này theo yêu cầu tác giả; các kết luận chính vẫn chờ bộ cuối và phải do tác giả kiểm, quyết định cách trình bày. Việc AI tạo đoạn văn, test hoặc bảng không chuyển trách nhiệm học thuật và trách nhiệm nộp bài sang công cụ.
 <!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
-<!-- nguồn: docs/plans/active/master-plan.md @51f36c7 -->
+<!-- nguồn: docs/plans/active/master-plan.md -->
 
 Tài liệu tham khảo có trong `references.bib` chưa đồng nghĩa đã được đọc toàn văn. Những khóa được dùng trong bản nháp chỉ trỏ đến bản ghi hiện có; các mục mới kiểm tóm tắt hoặc chưa đọc gốc còn được đánh dấu. Không tạo thêm tên bài, tác giả, DOI hay khóa trích dẫn từ trí nhớ để lấp phần thiếu.
 <!-- nguồn: references.bib -->
 
+### Đợt agent ngày 05/11 và bản nháp mốc 08/11
+
+Claude đã soạn bản nháp paper ban đầu; Codex cập nhật các chương mở đầu, dữ liệu, phương pháp, thực nghiệm, kết luận, phụ lục và template paper theo hợp đồng C9 của tác giả. Bản paper được dựng bằng `paper_build.py`, đối chiếu với chương bằng `paper_check.py`. Script kiểm số chỉ kiểm được các bảng và chuỗi nó được thiết kế để kiểm, không chứng nhận toàn bộ lập luận hoặc nội dung pháp lý.
+<!-- nguồn: scripts/paper/paper_template.md; scripts/paper/paper_build.py; scripts/paper/paper_check.py -->
+
+Ở đợt này, agent tổng hợp và biên tập từ file cục bộ; không gọi mạng, không gửi bản thảo cho LLM ngoài, không tạo nhãn người hoặc điền kết quả còn thiếu. Không có lượt kiểm độc lập mới của Claude trong chính phiên soạn này. Quy trình dự kiến “Codex làm, Claude kiểm” trong kế hoạch chưa được khai thành việc đã xảy ra. Hai sinh viên vẫn phải đọc, sửa và kiểm từng kết luận trước khi gửi GVHD.
+<!-- nguồn: docs/plans/active/master-plan.md; yêu cầu C9 của tác giả ngày 05/11/2026 -->
+
+Theo quy trình bộ cuối, AI có thể hỗ trợ mã, chuẩn bị phiếu và diễn đạt ứng viên; AI không gợi ý nhãn, nháp ghi chú hay hòa giải cho người gán bộ cuối. Khi mô tả dữ liệu cũ, phải giữ nguyên khai báo rằng các vòng trước đã có các can thiệp đó. [CHỜ G4: hồ sơ kiểm người và khai báo công cụ của các lượt tiếp theo].
+<!-- nguồn: docs/plans/active/master-plan.md, mục 9 -->
+
 ## A.5. Quy định cơ sở đào tạo
 
-Quy định cụ thể của UIT về sử dụng và khai báo AI trong khóa luận **chưa được xác minh**. Hồ sơ hướng dẫn nghiên cứu của dự án cũng ghi tình trạng này là chưa biết. Phụ lục này là bản khai báo theo bằng chứng dự án, không phải kết luận rằng cách dùng AI hiện tại phù hợp quy định của trường. [CẦN XÁC MINH: quy định hiện hành của UIT, yêu cầu của khoa và hướng dẫn của GVHD về phạm vi sử dụng, hình thức khai báo AI trước khi nộp].
+Quy định cụ thể của UIT về sử dụng và khai báo AI trong khóa luận **chưa được xác minh**. Hồ sơ hướng dẫn nghiên cứu của dự án cũng ghi tình trạng này là chưa biết. Phụ lục này là bản khai báo theo bằng chứng dự án, không phải kết luận rằng cách dùng AI hiện tại phù hợp quy định của trường. [CẦN: quy định hiện hành của UIT, yêu cầu của khoa và hướng dẫn của GVHD về phạm vi sử dụng, hình thức khai báo AI trước khi nộp].
 <!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
 
 ## A.6. Câu trả lời có thể rút ra

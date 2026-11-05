@@ -2,13 +2,13 @@
 
 **Câu hỏi của chương:** Các kết quả đã có cho biết gì về giá trị của bộ lọc thời gian, biểu diễn phiên bản và mở rộng đồ thị; những kết luận nào vẫn chưa đủ bằng chứng?
 
-> Bản nháp chỉ sử dụng kết quả đã lưu. Mọi phân tích ngoài họ xác nhận được ghi là **thăm dò**. Test 2 là **nhãn LLM**, được trình bày riêng với v1.0. Không dùng số dev để kết luận trên test.
+> Bộ test cuối chưa chạy. v1.0 và test 2 là hai vòng thử có khai báo; các bảng dưới giữ kết quả và phán quyết lịch sử, không phải kết luận cuối của khóa luận. Bản nháp chỉ sử dụng kết quả đã lưu. Mọi phân tích ngoài họ xác nhận được ghi là **thăm dò**. Test 2 là **nhãn LLM**, được trình bày riêng với v1.0. Không dùng số dev để kết luận trên test.
 
 ## 6.1. Thiết kế phép đo và phạm vi kết quả
 
-Các hệ hiện có đầu ra test là `b1`, `b2ctx`, `b5`, `b7`, `b7pp`, `proposed`. Cùng generator Qwen3-4B-Instruct-2507 và cấu hình bị khóa ở ADR được dùng cho hai bộ; lời văn, nhãn và thành phần nhóm của hai bộ khác nhau. Phạm vi hiện có chưa bao gồm đầy đủ mọi hệ trong kế hoạch E2–E6.
+Các hệ hiện có đầu ra test là `b1`, `b2ctx`, `b5`, `b7`, `b7pp`, `proposed`. Cùng generator Qwen3-4B-Instruct-2507 và cấu hình bị khóa ở ADR được dùng cho hai bộ; lời văn, nhãn và thành phần nhóm của hai bộ khác nhau. Phạm vi hiện có chưa bao gồm đầy đủ mọi hệ trong kế hoạch E2–E6. `proposed` của hai vòng thử chỉ dùng truy xuất từ vựng; không dùng nó để mô tả kết quả của kiến trúc lai ghép `proposed2`.
 <!-- nguồn: runs/README.md -->
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
+<!-- nguồn: docs/plans/active/master-plan.md -->
 
 Bảng chính dùng `giua_khoang`, nhóm all gồm T1, T2, T3, T6 khi nhóm tương ứng có mặt. TV-Recall chấm đúng ID phiên bản hoặc bằng chứng được chấp nhận; Recall có thể chấp nhận điều khoản ở phiên bản khác. Accuracy là phép chấm tương phản trên span ngắn, không phải mức tương đồng ngữ nghĩa do người phán xét. Câu trả lời phải chứa các span gold và tránh các span chỉ thuộc phiên bản khác. Dòng không có đáp án chỉ đúng khi dự đoán khẳng định `answerable=False`.
 <!-- nguồn: scripts/eval/score_vilextime.py -->
@@ -24,9 +24,29 @@ Theo ADR, kết luận “ủng hộ” cần p sau Holm dưới ngưỡng và �
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 <!-- nguồn: scripts/eval/confirm_vilextime.py -->
 
-## 6.2. Kết quả v1.0
+### Bộ test cuối: thiết kế sẽ dùng để kết luận
 
-Lát giữa khoảng của test v1.0 có 211 dòng thuộc 165 lineage. Các kiểm định truy xuất dùng 196 dòng có đáp án, vẫn thuộc 165 lineage. Đây là bản phát hành final, không phải bảng quy mô ứng viên trước kiểm.
+Kế hoạch hiện hành dành kết luận chính cho bộ test cuối mới, sau kiểm nhãn người, gold mù và khóa hệ. Bảng thiết kế sau không thay đổi phán quyết lịch sử trong ADR: amendment cuối vẫn phải được khóa trước lần chạy cuối, ghi rõ đã thấy các vòng thử nào. Chưa có kết quả bộ cuối trong chương này.
+<!-- nguồn: docs/plans/active/master-plan.md, mục 6 và 7 -->
+
+| Câu hỏi | So sánh / phép đo dự kiến | Loại kết luận |
+|---|---|---|
+| RQ1, RAG | TVER, wrong_version, VCR của `b2ctx`, `b4` | Mô tả có KTC |
+| RQ1, LLM | Sai phiên bản trên câu có trả lời của các LLM không truy xuất | Mô tả, bảng phụ |
+| RQ2 | Accuracy: `proposed2` − `b4`, `proposed2` − `b5` | Xác nhận sau amendment |
+| RQ3, lọc văn bản | TV-Recall@1: `b7` − `b2ctx` | Xác nhận sau amendment |
+| RQ3 / giả thuyết, phiên bản | TV-Recall@1: `b7plus` − `b7`, `b7pp` − `b7` | Xác nhận sau amendment |
+| Giả thuyết, câu trả lời | TVER: `b7pp` − `b7`, kèm gold mù | Xác nhận sau amendment |
+| T6 lan truyền | Accuracy dòng bãi bỏ: `proposed2` − `b7pp` | Xác nhận nếu đủ ≥ 20 lineage; không thì thăm dò |
+| Thành phần | `p2a2`, `p2a3` so với `proposed2` | Mô tả |
+<!-- nguồn: docs/plans/active/master-plan.md, mục 6 -->
+
+Các chỉ số Recall@k, MRR, TV-Recall, Accuracy, EM/F1, TVER, VCR và TCS được giữ theo scorer. Giám khảo LLM cần hiệu chuẩn với người trước khi sử dụng; chưa có điểm giám khảo hợp lệ để điền. Mỗi cấu hình bộ cuối chỉ chạy một lần sau khi khóa; mọi thay đổi hoặc chấm lại do lỗi cần hồ sơ amendment. [CHỜ G4: danh sách xác nhận và họ Holm cuối đã khóa ở G3].
+<!-- nguồn: docs/plans/active/master-plan.md; docs/decisions/0005-ke-hoach-phan-tich.md -->
+
+## 6.2. Vòng thử v1.0 — nhãn hỗn hợp người và agent
+
+Lát giữa khoảng của test v1.0 có 211 dòng thuộc 165 lineage. Các kiểm định truy xuất dùng 196 dòng có đáp án, vẫn thuộc 165 lineage. Đây là bản phát hành v1.0 đã chạy. Tên trường `final` trong manifest chỉ trạng thái bản phát hành lịch sử, không phải bộ test cuối theo kế hoạch mới. Nhãn test gồm nguồn người và agent như Chương 4; không gọi toàn bộ bảng là kết quả trên nhãn người.
 <!-- nguồn: runs/E3_v1/test/confirm.json -->
 
 ### 6.2.1. Kết quả tổng thể v1.0 — mô tả thăm dò
@@ -73,7 +93,7 @@ Trên v1.0, tất cả các kiểm định trong họ đều có phán quyết *
 <!-- nguồn: runs/E3_v1/test/confirm.log -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 
-## 6.3. Kết quả test 2 — nhãn LLM
+## 6.3. Vòng thử test 2 — nhãn LLM
 
 Test 2 dùng nhãn LLM, không phải nhãn người hoặc luật sư. Lát giữa khoảng có 227 dòng, 101 lineage; phần có đáp án gồm 211 dòng. Không gộp bộ này vào v1.0 hoặc xem nó như gold độc lập do người kiểm.
 <!-- nguồn: runs/E3_test2/rescore/confirm.json -->
@@ -121,12 +141,14 @@ Lần chấm E3 đầu của test 2 — nhãn LLM — đã sai: release thiếu 
 
 <!-- nguồn: runs/E3_test2/rescore/confirm.json -->
 
-Trên test 2 — nhãn LLM — XN2, XN3, XN8 và XN9 **ủng hộ**, còn XN1 và XN4 **không đủ bằng chứng**. Các khoảng của XN1 và XN4 chứa không; không được đổi lời kết luận thành “bác” hay coi ước lượng điểm dương là bằng chứng đủ. XN2 ủng hộ nhưng XN1 không được ủng hộ, nên theo đúng ADR 0005 §6, H0 của bộ này đi vào nhánh **“điểm quyết định B7”**. Log xác nhận in cùng kết luận. ADR xác định đây là kết quả đã khai báo trước, không phải thất bại. Kết luận theo từng bộ không thay thế quyết định M4 của nhóm: v1.0 là bảng chính, còn test 2 — nhãn LLM — là bản lặp lại và hai bộ cho hai kết quả H0 khác nhau.
+Trên test 2 — nhãn LLM — XN2, XN3, XN8 và XN9 **ủng hộ**, còn XN1 và XN4 **không đủ bằng chứng**. Các khoảng của XN1 và XN4 chứa không; không được đổi lời kết luận thành “bác” hay coi ước lượng điểm dương là bằng chứng đủ. XN2 ủng hộ nhưng XN1 không được ủng hộ, nên theo đúng ADR 0005 §6, H0 của bộ này đi vào nhánh **“điểm quyết định B7”**. Log xác nhận in cùng kết luận. ADR xác định đây là kết quả đã khai báo trước, không phải thất bại. Đó là vai trò bảng chính và bảng lặp lại trong thiết kế lịch sử của ADR. Theo kế hoạch hiện hành, cả hai là vòng thử; hai kết quả H0 khác nhau không thay thế kết luận chính còn chờ G4.
 <!-- nguồn: runs/E3_test2/rescore/confirm.json -->
 <!-- nguồn: runs/E3_test2/rescore/confirm.log -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 
-### 6.3.4. Mức lặp lại giữa hai bộ
+## 6.4. So sánh hai vòng thử
+
+### 6.4.1. Mức lặp lại của các phán quyết lịch sử
 
 Amendment 03/11 yêu cầu xét cùng chiều khi mô tả sự lặp lại và cấm gộp hai bộ thành một bảng. XN2 đều có ước lượng âm; XN3, XN8 và XN9 đều dương. Các phép so sánh này cùng chiều và đều có phán quyết **ủng hộ** trên cả v1.0 lẫn test 2 — nhãn LLM. Nhận định chỉ áp dụng cho các phép đo tương ứng và không loại được sai lệch gold chung.
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
@@ -146,15 +168,15 @@ Về độ lớn, XN9 trên v1.0 là +0,474 còn trên test 2 — nhãn LLM — 
 <!-- nguồn: data/vilextime_dataset/manifest.json -->
 <!-- nguồn: data/vilextime/test2_release_v2.jsonl -->
 
-## 6.4. Mức tăng đến từ đâu?
+### 6.4.2. Phân rã chênh lệch — mô tả
 
-### 6.4.1. Phân rã mô tả v1.0 — thăm dò
+**Vòng thử v1.0 — thăm dò.**
 
 Chênh lệch `b7 − b5` là +0,161, KTC 95% [+0,104; +0,217], trong khi `proposed − b7pp` chỉ +0,019 [+0,005; +0,039]. XN8 đo cả khoảng cách giữa một cấu hình phi thời gian và hệ đề xuất, nên không thể dùng nó như ước lượng riêng của đóng góp đồ thị trực tuyến. Đối chiếu các mốc cấu hình cho thấy phần lớn mức tăng quan sát được xuất hiện trước phần mở rộng trực tuyến, tại các hệ có lọc ngày. Tuy nhiên, b7 và b5 còn khác việc mở rộng, nên đây là phân rã mô tả, không phải phép nhận diện nhân quả sạch của riêng bộ lọc.
 <!-- nguồn: runs/E3_v1/test/all.score.json -->
 <!-- nguồn: src/vilexgraph/framework/systems.py -->
 
-### 6.4.2. Phân rã mô tả test 2 — nhãn LLM, thăm dò
+**Vòng thử test 2 — nhãn LLM, thăm dò.**
 
 Chênh lệch `b7 − b5` là +0,159, KTC 95% [+0,107; +0,212], còn `proposed − b7pp` là +0,018 [−0,026; +0,058]. Khoảng của phần trực tuyến chứa không. Không kết luận phần trực tuyến có lợi ích đã xác nhận và không quy mức tăng XN8 cho đồ thị. Các số này gợi ý giá trị thực dụng của bộ lọc ngày và biểu diễn hơn là một hiệu ứng trực tuyến lớn đã được chứng minh.
 <!-- nguồn: runs/E3_test2/rescore/all.score.json -->
@@ -181,12 +203,12 @@ Chênh lệch `b7 − b5` là +0,159, KTC 95% [+0,107; +0,212], còn `proposed �
 <!-- nguồn: runs/E3_test2/test/b1.jsonl -->
 <!-- nguồn: data/vilextime/test2_release_v2.jsonl -->
 
-## 6.5. E7 do máy — thăm dò
+### 6.4.4. E7 do máy — thăm dò
 
 Các bảng sau phân loại toàn bộ dòng sai theo thứ tự ưu tiên đã công bố. ABST dùng cờ khẳng định hiệu lực trong dự đoán; RET-UNIT kiểm sự hiện diện của điều khoản; RET-VER phân biệt hướng cũ/mới khi thiếu gold; GEN-BLANK và GEN-MISREAD chỉ xét sau khi căn cứ đúng đã có trong prompt. Một lỗi chỉ thuộc một tầng, nên đây là cách phân bổ ưu tiên, không chứng minh nguyên nhân nhân quả duy nhất. Cột “chứa bản khác” là tập con của MISREAD, không cộng thêm vào tổng.
 <!-- nguồn: scripts/review/e7_error_analysis.py -->
 
-### 6.5.1. v1.0 — thăm dò, do máy phân loại
+**Vòng thử v1.0 — thăm dò, do máy phân loại.**
 
 | Hệ | ABST | RET-UNIT | RET-VER-OLD | RET-VER-NEW | GEN-BLANK | GEN-MISREAD | Chứa bản khác | Tổng sai |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -204,7 +226,7 @@ Các bảng sau phân loại toàn bộ dòng sai theo thứ tự ưu tiên đã
 
 <!-- nguồn: docs/reports/e7_phan_ra_loi.md -->
 
-### 6.5.2. Test 2 — nhãn LLM, thăm dò, do máy phân loại
+**Vòng thử test 2 — nhãn LLM, thăm dò, do máy phân loại.**
 
 | Hệ | ABST | RET-UNIT | RET-VER-OLD | RET-VER-NEW | GEN-BLANK | GEN-MISREAD | Chứa bản khác | Tổng sai |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -231,55 +253,71 @@ Phân tích máy cho thấy hai chỗ nghẽn có thể cùng tồn tại: thi�
 <!-- nguồn: data/review/e7/phieu_v1.tsv -->
 <!-- nguồn: data/review/e7/phieu_test2.tsv -->
 
-## 6.6. Các phân tích thăm dò khác đã có số
+### 6.4.5. Các phân tích thăm dò khác đã có số
 
-### 6.6.1. v1.0 — thăm dò
+**Vòng thử v1.0 — thăm dò.**
 
 XN6 có ước lượng −0,059, KTC 95% [−0,263; +0,191], trên các lát gần giống và thường của T2. XN7 có ước lượng −0,154 [−0,274; −0,051]. Dù khoảng XN7 nằm về một phía, ADR xếp phép đo này là thăm dò; không dùng nó để tự đưa ra phán quyết ủng hộ hoặc bác giả thuyết xác nhận. XN5 chưa có vì thiếu đầu ra sinh của hệ cần so sánh.
 <!-- nguồn: runs/E3_v1/test/confirm.json -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 
-### 6.6.2. Test 2 — nhãn LLM, thăm dò
+**Vòng thử test 2 — nhãn LLM, thăm dò.**
 
 XN6 có ước lượng +0,100, KTC 95% [−0,067; +0,278]; XN7 là −0,031 [−0,078; +0,015]. Hai khoảng đều rộng và chứa không. Chúng chỉ mô tả mẫu hiện có, không khẳng định hiệu ứng của độ gần giống hoặc lợi ích riêng ở nhóm bãi bỏ. XN5 vẫn chưa có đầu ra sinh cần thiết.
 <!-- nguồn: runs/E3_test2/rescore/confirm.json -->
 
-## 6.7. Các phần đang chờ kết quả
+## 6.5. Thử nghiệm `proposed2` trên dev — mô tả để phát triển hệ
 
-### E2: các baseline phẳng còn thiếu
+Các số dưới chỉ đánh giá truy xuất trên dev. Việc thay `rel` bằng `rel_up` được chọn sau khi xem lỗi dev; không phải kiểm định xác nhận, chưa có sinh câu trả lời. Tên file `proposed-hyb` của lượt đồ thị đi lên cha tương ứng cấu hình được gọi là `proposed2` trong kế hoạch hiện tại.
+<!-- nguồn: runs/README.md; src/vilexgraph/framework/systems.py -->
 
-[CHỜ KẾT QUẢ: E2 b2 b3 b4 trên test]
+Trước khi thay mở rộng, phép thử lai ghép trên 151 dòng dev ghi R@1 của `b7pp` và `proposed` từ 0,424 xuống 0,411, trong khi R@10 từ 0,722 lên 0,735. Không có cơ sở nói lai ghép đã làm tốt hơn trên mọi vị trí. Cấu hình được kiểm tiếp để hoàn thiện L4 của đề cương; kết quả này không dùng để chọn dựa trên test.
+<!-- nguồn: runs/hybrid_20261105/dev/retrieval.score.json; runs/README.md -->
 
-### E4: mở rộng cấu trúc và đối chứng đồ thị bổ sung
+Sau khi tìm lệnh tác động ở chuỗi cha, R@30 trên dòng T6 không có đáp án từ 0/21 lên 15/21; trên toàn dev từ 122/151 = 0,808 lên 137/151 = 0,907. R@1 vẫn 62/151 và R@10 vẫn 111/151. Đây là Recall theo danh sách truy xuất mở rộng, không phải Accuracy và không phải bằng chứng generator đã nhận ra bãi bỏ. Mức R@30 trước sửa dùng số đã chấm lại từ file, không dùng số ghi nhầm trong kế hoạch cũ.
+<!-- nguồn: runs/hybrid_20261105/dev_graph2/proposed-hyb.jsonl; runs/hybrid_20261105/dev/proposed-hyb.jsonl; runs/README.md -->
 
-[CHỜ KẾT QUẢ: E4 b6 trên test]
+[CHỜ COLAB: đầu ra sinh và chấm dev cho `b7pp --hybrid`, `proposed2`, `p2a2`, `p2a3`]. Cần đo tác dụng Verifier khi chưa có bộ lọc mạnh; trên dev cũ, Verifier không bác câu nào và ablation tắt nó trùng đầu ra. Thông báo bãi bỏ có cấu trúc và kiểm độ bền generator còn là công việc theo kế hoạch, không điền số giả định.
+<!-- nguồn: docs/plans/active/master-plan.md; runs/README.md -->
 
-[CHỜ KẾT QUẢ: E4 LightRAG trên tập con nếu được thực hiện]
+## 6.6. Bộ test cuối — chưa có kết quả
 
-### E5: ablation
+Bảng này dành cho kết luận chính sau G4. Không đưa số vòng thử hoặc dev vào thay. Tầng nhãn chính phải là người kiểm theo quy trình đã khóa; phần LLM/agent báo riêng. Cỡ mẫu, miền, thời gian gán, gold mù và cấu hình cuối phải dẫn về bản khóa dữ liệu/hệ trước khi diễn giải kết quả.
+<!-- nguồn: docs/plans/active/master-plan.md -->
 
-[CHỜ KẾT QUẢ: E5 a1 a2 a3 a4 trên test]
+| Hạng mục | Kết quả | Tình trạng |
+|---|---|---|
+| Cỡ mẫu và nguồn nhãn bộ cuối | [CHỜ G4: bản khóa G2] | Chưa báo là đã chạy |
+| RQ1: sai phiên bản của LLM / RAG | [CHỜ G4: bảng mô tả, mẫu số có trả lời và KTC] | Chưa có kết luận cuối |
+| RQ2: `proposed2` so với RAG phẳng và đối chứng đồ thị | [CHỜ G4: Accuracy, KTC, kiểm định đã khóa] | Chưa có kết luận cuối |
+| RQ3 và giả thuyết về cấp lọc | [CHỜ G4: thang truy xuất, TVER kèm gold mù] | Chưa có kết luận cuối |
+| T6 lan truyền | [CHỜ G4: cỡ lát và loại phân tích đúng amendment] | Chưa có kết luận cuối |
+| Thành phần, nhóm và miền | [CHỜ G4: ablation, phân rã và KTC] | Mô tả theo thiết kế |
+| Gold mù và E7 người kiểm | [CHỜ G4: độ khớp nguồn ngoài, mã hóa lỗi và đồng thuận] | Chưa có bằng chứng độc lập |
+| Giám khảo LLM | [CHỜ G4: hiệu chuẩn và điểm nếu đạt] | Không thay điểm người bằng nhãn LLM |
+<!-- nguồn: docs/plans/active/master-plan.md, mục 6 và 7 -->
 
-### E6: gold độc lập
+Các lượt bổ sung cho **vòng thử cũ** vẫn báo riêng, không dùng chọn cấu hình cuối:
 
-[CHỜ KẾT QUẢ: E6 trên gold độc lập do người kiểm]
+- [CHỜ COLAB: `b7plus b7v` trên test 2].
+- [CHỜ COLAB: `b7plus b7v a4 b2 b6 oracle b3 b4 a1 a2 a3` trên v1.0].
+- [CHỜ G4: LightRAG trên tập con sau G3, báo riêng vì không cùng corpus].
+<!-- nguồn: docs/plans/active/master-plan.md, X7 và C3 -->
 
-### E7: phân tích người gán
+## 6.7. Mối đe dọa tính hợp lệ
 
-[CHỜ KẾT QUẢ: E7 người gán, độ đồng thuận và ví dụ lỗi đã kiểm]
+**Gold tự chấm và TVER do cách dựng.** Gold phiên bản lấy từ cùng đồ thị mà bộ lọc `b7pp` sử dụng; khi sự kiện bị bỏ sót, cả hai có thể cùng sai. TVER = 0 của `b7pp` phần lớn do cách dựng: bộ lọc đã loại phiên bản không hợp lệ theo chính khoảng hiệu lực mà scorer tham chiếu. Nó kiểm được tính nhất quán trong mô hình, chưa xác nhận độc lập độ đúng pháp lý. Bảng TVER phải đọc cùng gold mù, độ phủ trích dẫn và khả năng trả lời dòng bãi bỏ. [CHỜ G4: TVER và thứ hạng cấu hình trên gold mù].
+<!-- nguồn: docs/plans/active/master-plan.md, D2; src/vilexgraph/framework/temporal.py; scripts/eval/score_vilextime.py -->
 
-### Cận trên bằng ngữ cảnh đúng
-
-[CHỜ KẾT QUẢ: oracle context trên test; không thay bằng oracle dev]
-
-## 6.8. Các nguy cơ đối với độ tin cậy
+**Giới hạn thành phần.** Các so sánh `proposed` trong vòng thử chỉ đo mở rộng quan hệ một bước cùng Verifier trên đường từ vựng; không suy ra “đồ thị không giúp” cho mọi GraphRAG. `proposed2` chưa được đánh giá câu trả lời. Chuyển từ kết quả một bước sang kết luận về suy luận đồ thị nhiều bước sẽ vượt phạm vi thực nghiệm.
+<!-- nguồn: src/vilexgraph/framework/graphx.py; runs/README.md -->
 
 Nhãn v1.0 gồm nguồn người và agent, các cổng đồng thuận không đạt như trình bày ở Chương 4. Test 2 — nhãn LLM — không có lượt xác nhận độc lập của người. Hai bộ cùng dẫn xuất từ một kho phiên bản, còn gold độc lập chưa có và M2 kiểm tay vẫn mở. Vì thế, sự lặp lại của một chiều hiệu ứng trên hai bộ không tự loại được sai lệch chung của nguồn gold và hệ đề xuất.
 <!-- nguồn: docs/vilextime-datasheet.md -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 <!-- nguồn: docs/plans/active/phase-3-kg-l0-l3.md @51f36c7 -->
 
-Kết quả chỉ dùng một generator và các cấu hình từ vựng hiện có. Sổ chạy dev ghi 553/553 đầu ra giống nhau ở các prompt trùng giữa các biến thể chạy; điều này không chứng minh mọi phần cứng và thư viện đều cho kết quả giống nhau. Chi phí Colab chưa được đối soát đầy đủ. [CẦN XÁC MINH: cấu hình GPU, phiên bản thư viện và chi phí thực tế của từng lượt từ provenance và biên nhận; không suy từ ước tính trước chạy].
+Kết quả chỉ dùng một generator và các cấu hình từ vựng hiện có. Sổ chạy dev ghi 553/553 đầu ra giống nhau ở các prompt trùng giữa các biến thể chạy; điều này không chứng minh mọi phần cứng và thư viện đều cho kết quả giống nhau. Chi phí Colab chưa được đối soát đầy đủ. [CẦN: cấu hình GPU, phiên bản thư viện và chi phí thực tế của từng lượt từ provenance và biên nhận; không suy từ ước tính trước chạy].
 <!-- nguồn: runs/README.md -->
 <!-- nguồn: docs/decisions/0004-framework-truy-xuat-va-sinh.md -->
 <!-- nguồn: runs/E3_v1/test/proposed.run.json -->
@@ -288,7 +326,7 @@ Các cảnh báo ID `asis:event:` không phân giải được phản ánh phạ
 <!-- nguồn: scripts/eval/score_vilextime.py -->
 <!-- nguồn: runs/README.md -->
 
-### 6.8.1. Đối chiếu điều kiện sử dụng từ “cải thiện”
+### 6.7.1. Đối chiếu điều kiện diễn giải chênh lệch
 
 ADR 0005 §6 yêu cầu thêm các điều kiện của MASTER_RESEARCH_GUIDE §8.6 (tài liệu nội bộ, commit `51f36c7`) ngoài phán quyết thống kê. Bản nháp vì thế dùng “chênh lệch”, “ước lượng” hoặc phán quyết XN, không gọi một chênh lệch quan sát được là cải thiện đã đáp ứng đầy đủ các điều kiện. Các điều kiện đã kiểm được và phần còn thiếu được phân biệt dưới đây.
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
@@ -312,33 +350,26 @@ Về độ phủ trích dẫn, b7 và b7pp có cùng độ phủ tổng thể tr
 <!-- nguồn: runs/E3_test2/rescore/all.score.json -->
 
 Điều kiện cùng chiều trên các chế độ as_of và gold độc lập chưa được xác nhận đầy đủ: tầng sinh hiện chỉ có lát giữa khoảng và E6 chưa có. Điều kiện không bị một nhóm hoặc vài văn bản chi phối cũng chưa được kiểm bằng phân tích bỏ lần lượt nhóm/văn bản đã lưu. Các bảng theo nhóm giúp quan sát khác biệt nhưng không thay thế phép kiểm độ bền này.
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
+<!-- nguồn: docs/plans/active/master-plan.md -->
 <!-- nguồn: runs/E3_v1/test/all.score.json -->
 <!-- nguồn: runs/E3_test2/rescore/all.score.json -->
 
 Điều kiện không hệ nào vượt oracle trên cùng test **chưa kiểm được**, vì oracle context test chưa có. Oracle context dev chỉ là đối chiếu mô tả; oracle probe tất định của scorer kiểm đường chấm, không phải generator nhận căn cứ gold trên test. Các điều kiện của §8.6 vì thế chưa đồng thời hoàn tất, dù các phán quyết ủng hộ đã báo trong họ XN vẫn giữ nguyên.
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
+<!-- nguồn: docs/plans/active/master-plan.md -->
 <!-- nguồn: runs/README.md -->
 <!-- nguồn: scripts/eval/score_vilextime.py -->
 
-## 6.9. Câu trả lời có bằng chứng và hai nhánh M4
+## 6.8. Điều có thể diễn giải ở bản nháp
 
-Đối với RQ1, XN9 ủng hộ giá trị của truy xuất trong cấu hình hiện tại, nhưng baseline không truy xuất hầu như không trả lời; đây là giới hạn trực tiếp của sức khái quát. Đối với RQ2, XN8 ủng hộ chênh lệch giữa hệ đề xuất và đối chứng phi thời gian, nhưng phân rã thăm dò không cho phép quy toàn bộ mức tăng cho đồ thị. Đối với RQ3, XN3 ủng hộ giá trị bộ lọc cấp văn bản; bằng chứng bổ sung của chuỗi phiên bản có trên v1.0 nhưng chưa được xác nhận lại đầy đủ trên test 2 — nhãn LLM.
-<!-- nguồn: runs/E3_v1/test/confirm.json -->
-<!-- nguồn: runs/E3_test2/rescore/confirm.json -->
-<!-- nguồn: runs/E3_v1/test/all.score.json -->
-<!-- nguồn: runs/E3_test2/rescore/all.score.json -->
+Ở mức **xác nhận trong vòng thử**, các phán quyết lịch sử của XN được giữ nguyên; chúng không trở thành xác nhận trên bộ test cuối. Ở mức **mô tả**, RAG phẳng còn trích sai phiên bản, trong khi baseline LLM không truy xuất gần như không trả lời, nên vế LLM của RQ1 chưa đo được đủ. Ở mức **thăm dò**, lợi ích mở rộng một bước trên toàn tập nhỏ và chưa nhất quán giữa hai vòng; phân rã lỗi máy gợi ý cả nút thắt tìm và đọc căn cứ. Nguồn nhãn hỗn hợp của v1.0 và nhãn LLM của test 2 giới hạn các diễn giải này.
+<!-- nguồn: runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json; docs/reports/e7_phan_ra_loi.md -->
 
-M4 chưa được nhóm chốt. Trên bảng chính v1.0, H0 được ủng hộ; trên bản lặp lại test 2 — nhãn LLM — ADR dẫn đến nhánh “điểm quyết định B7”, một kết quả đã khai báo trước, không phải thất bại. Nhánh đóng góp phương pháp có thể dựa vào kết quả XN1 cùng XN2 ủng hộ trên v1.0, nhưng phải công bố giới hạn gold và sự không lặp lại đầy đủ ở test 2 — nhãn LLM. Nhánh tài nguyên–phân tích có căn cứ từ XN1 không đủ bằng chứng trên test 2 — nhãn LLM — và từ vai trò lớn của phép đối chứng lọc ngày. Bản nháp trình bày cả hai nhánh; không lựa chọn thay nhóm, không đổi lời kết luận thống kê để làm phù hợp một nhánh mong muốn.
-<!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
-<!-- nguồn: docs/plans/active/master-plan.md @51f36c7 -->
-<!-- nguồn: runs/E3_v1/test/confirm.json -->
-<!-- nguồn: runs/E3_test2/rescore/confirm.json -->
+Bản nháp đi theo hướng tài nguyên và phép đo có đối chứng của master plan: sửa thước đo, hoàn thiện hệ trên dev rồi chạy bộ cuối. Chưa kết luận hệ đề xuất thắng, cũng chưa bác giả thuyết đề cương từ việc một khoảng tin cậy chứa không. [CHỜ G4: kết luận chính của khóa luận, kể cả kết quả không đủ bằng chứng hoặc ngược chiều dự kiến].
+<!-- nguồn: docs/plans/active/master-plan.md -->
 
 ## Việc còn thiếu trước khi nộp
 
-- Bổ sung đúng các phần đánh dấu chờ khi có kết quả, giữ nguyên khoảng tin cậy và trạng thái thăm dò.
-- Hoàn tất E7 người gán và E6, hoặc nêu rõ chưa hoàn tất trong giới hạn của khóa luận.
-- Nhóm quyết định M4 và sửa phần đóng góp sau quyết định đó; không sửa kết quả đã quan sát.
-- Đối soát chi phí, topology GPU và phần mềm; chưa tự suy chi phí từ thời gian chạy.
-- Kiểm liên kết nguồn sau khi chuyển sang mẫu trình bày chính thức, bảo đảm mọi bảng test 2 đều ghi nhãn LLM.
+- Hoàn tất nguồn nhãn người, gold mù và đối chiếu VBHN; giữ nguồn LLM ở bảng riêng.
+- Nhập và chấm lượt Colab đã khai báo, không dùng vòng thử để tinh chỉnh.
+- Khóa amendment, chạy và báo bộ test cuối; điền đúng các bảng đang chờ.
+- Hoàn tất E7 người kiểm, kiểm giám khảo, chi phí và độ bền; phần không có bằng chứng tiếp tục ghi chờ.

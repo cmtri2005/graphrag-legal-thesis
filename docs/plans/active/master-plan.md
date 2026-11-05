@@ -232,6 +232,7 @@ Mỗi việc có điều kiện dừng. Không đạt thì bỏ, ghi lại, khô
 | X4 | Đo Verifier khi không có bộ lọc (`b4`, `b7`) | thấp | Báo đúng vai trò của Verifier |
 | X5 | Lưu sổ chạy dev hôm 05/11. Dùng số chấm lại R@30 0,808 (không dùng 0,801 ghi nhầm trong plan cũ) | rất thấp | Luôn làm |
 | X6 | Embedding tốt hơn (`AITeamVN`, đúng quyết định C1) trên GPU. Khâu tìm là nút thắt lớn nhất (top 20 của test 2 chỉ 0,529) | Colab ~1 phiên | Chạy. Chỉ giữ cho hệ khi R@10 dev tăng, KTC > 0 |
+| X8 | Điều kiện cấp sẵn căn cứ: bản đúng mốc và bản hiện hành, theo nhóm T1 (đối chứng), T2, T3, T6. Đo cái giá của đọc sai văn bản, tách lỗi tìm khỏi lỗi đọc. Dev trước, rồi trên bộ test cuối | Colab ~1 giờ | Luôn chạy; so được với NitiBench+, LawInForce-eCFR |
 | X7 | Colab đợt 2: `b7plus b7v` trên test 2; `b7plus b7v a4 b2 b6 oracle b3 b4 a1 a2 a3` trên v1.0. Hoàn tất các hệ ADR 0005 đã khai báo, điền chỗ chờ ở chương 6. Mỗi cấu hình một lần | Colab ~10 giờ | Chạy. Kết quả chỉ để mô tả; không dùng để chọn cấu hình |
 
 **Đã cắt, không mở lại nếu không có lý do mới:** cào toàn bộ; reranker (CMT cắt 05/11).
@@ -340,9 +341,21 @@ Hồ sơ đầy đủ về những gì đã xóa: `docs/plans/completed/2026-11-
 
 ---
 
-## 10. Hàng việc của agent
+## 10. Công trình gần nhất và hệ quả (đọc 05/11)
 
-Mục tiêu (CMT 05/11): agent làm hết phần của agent, cuối cùng chỉ còn việc người ở mục 11. Mỗi việc do Codex hoặc agent làm, Claude kiểm độc lập, rồi commit và push `develop`.
+Hồ sơ: `related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md`. Lead đã tự mở tóm tắt hai bài đầu.
+- **LawInForce-eCFR** (AACL 2026): 805 cặp có người kiểm, luật Mỹ, BM25 có/không lọc ngày, kết luận hai nút thắt. **NitiBench+** (arXiv 02–03/11/2026): luật Thái, đo cái giá khi đọc văn bản hiện hành thay vì văn bản đúng mốc.
+
+Hệ quả cho paper:
+1. Không nói "đầu tiên". Khoảng trống còn giữ được: pháp luật Việt Nam, và tách có đối chứng trên cùng dữ liệu ba nấc: ngày văn bản, khoảng hiệu lực phiên bản, lan truyền từ nút cha.
+2. "Lọc thời gian đáng giá" và "hai nút thắt" không còn là phát hiện riêng. Phần riêng: nhận diện bãi bỏ, thang ba nấc.
+3. **Bắt buộc có điều kiện cấp sẵn căn cứ** trên bộ test: đúng mốc và bản hiện hành (X8). Thiếu là reviewer hỏi ngay.
+4. **Đồng thuận người gán là thế yếu nhất:** LawInForce báo thỏa thuận 95,28% (theo báo cáo đọc), ViLexTime 0,377. G1 và G2 quyết định paper có đứng được không.
+5. Lĩnh vực đang đi nhanh, nên nộp sớm có giá trị thật.
+
+## 11. Hàng việc của agent
+
+Mục tiêu (CMT 05/11): agent làm hết phần của agent, cuối cùng chỉ còn việc người ở mục 12. Mỗi việc do Codex hoặc agent làm, Claude kiểm độc lập, rồi commit và push `develop`.
 
 | Mã | Việc | Xong khi | Phụ thuộc |
 |---|---|---|---|
@@ -365,10 +378,13 @@ Mục tiêu (CMT 05/11): agent làm hết phần của agent, cuối cùng chỉ
 | A17 | Nháp amendment ADR 0005 cho bộ test cuối; datasheet và tuyên bố dữ liệu | Nháp sẵn, chờ số G2 và người duyệt | A4 |
 | A18 | Phản biện độc lập bản nháp (`thesis-critic`), sửa chỗ sai | Danh sách lỗi đã xử lý | A8 |
 | A19 | Nhập và chấm Colab khi CMT tải về; điền chương 6 | Không còn `[CHỜ COLAB]` | CMT chạy Colab |
+| A20 | X8: hệ `oracle` bản hiện hành, gói Colab dev | Gói sẵn, không có đáp án trong prompt | — |
+| A21 | Sửa chương 2 và `references.bib` theo báo cáo đọc 05/11 mục 3; gỡ các `[CẦN XÁC MINH]` đã đóng | Hết lỗi mô tả đã biết | — |
+| A22 | Đo lại X4: tier `document` cho lớp `asis`. Số `propagated` trên `asis` không dùng được vì lớp này không có cửa sổ | Báo cáo có ý nghĩa, sổ chạy đúng | — |
 
 **Thứ tự thật sự quan trọng:** gold mù phải đi trước khi người gán thấy đáp án đồ thị của cùng câu đó (B6). Vì vậy câu gold của mỗi người được giữ lại khỏi các lô gán của chính người đó, cho đến khi họ điền xong phiếu gold.
 
-## 11. Việc chỉ người làm được
+## 12. Việc chỉ người làm được
 
 Khi hàng việc trên xong, chỉ còn:
 1. Hai người gán: lô thử; silver; T6, T3, T2 mới; T1; gold mù; mã hóa lỗi E7; mẫu giám khảo.
