@@ -474,7 +474,8 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
 - [x] 05/11 A2: đối chiếu VBHN xong, độ phủ rất thấp.
 - [x] 05/11 A9: đọc nguồn và khảo sát tính mới; `related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md`.
 - [x] 05/11 A21, A22, A20: chương 2 đã sửa; X4 đo lại (b7 0/151); gói X8 sẵn ở `colab_upload/dev_x8/`.
-- [ ] A4: 31/51 gói lọc xong (`~/vilextime_loc/gan5`; 2 gói Claude Sonnet, 29 gói Codex). 20 gói còn lại dừng vì Codex chạm hạn mức theo tuần, mở lại 9/11 7:49. Sau đó: chấm hiệu chuẩn, viết câu hỏi, đáp án ngắn, phiếu lô 7+.
+- [x] 05/11 A4 bước lọc: 51/51 gói; đạt cổng hiệu chuẩn sát ngưỡng (loại đúng 28/28, loại nhầm 11/40). Giữ T2 157, T2 gần giống 63, T6 cấp trên 48, T6 đích danh 50; T3 0. Phễu: `docs/reports/pheu-loc-lo-moi.md`.
+- [ ] A4 bước viết câu hỏi: 275/318 mục đã viết; kiểm máy: 149 đạt (T2 79, T2 gần giống 31, T6 cấp trên 21, T6 đích danh 18), 36 viết lại, 90 không đủ ngữ cảnh (dừng theo quy tắc). Còn 2 gói và lượt viết lại, tự chạy khi Codex mở lại (6/11 04:05). Sau đó: đáp án ngắn, phiếu lô 7+, gold mù đợt 2 có T6.
 - [x] 05/11 A10: tập dượt trên dev, 151/151 hash khớp mỗi hệ, 17/17 hệ trùng điểm và KTC (`runs/final_rehearsal_dev/`).
 - [x] 05/11 A18: phản biện xong (`docs/reports/phan-bien-ban-nhap-20261105.md`); bản nháp đã sửa theo, 0 số thiếu nguồn, mẫu 30 số khớp 30.
 - [ ] CMT gửi file Word cho luật sư, mời NMT vào trang, chạy Colab (dev_x1, dev_x2, dev_x8, round2).
