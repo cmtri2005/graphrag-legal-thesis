@@ -496,3 +496,193 @@ def test_silver_stops_over_ten_percent_missing_sources(tmp_path, monkeypatch):
     manifest = json.loads(out.with_suffix('.manifest.json').read_text())
     assert manifest['status'] == 'stopped_missing_sources_over_10_percent'
     assert len(manifest['thieu']) == 17
+
+
+@pytest.fixture
+def adjudication_case(tmp_path, record, valid):
+    from copy import deepcopy
+    records = []
+    for lid, batch in (("pilot", 0), ("different_verdict", 1), ("same_verdict", 1), ("agreed", 1), ("next_batch", 2)):
+        r = deepcopy(record)
+        r.update(lineage_id=lid, batch=batch)
+        r["sources"]["base"] = {"source_url": "https://example.org/base", "note": "SECRET_BASE_AI"}
+        r.update(review={"verdict": "SECRET_AI_LABEL"}, note="SECRET_AI_NOTE", advice="SECRET_AI_ADVICE")
+        r["rows"][0]["review"] = "SECRET_ROW_AI"
+        r["rows"][0]["target"] = {"lead_in": "Quy định chung", "note": "SECRET_TARGET_AI"}
+        r["rows"][1]["source_evidence"] = {"actors": [{"url": "https://example.org/second-actor", "review": "SECRET_ACTOR_AI"}]}
+        records.append(r)
+    paths = {who: tmp_path / f"test2_{who}.tsv" for who in ("A", "B")}
+    for r in records:
+        for who in paths:
+            body = {**valid, "note": "=Đọc nguyên văn"}
+            if r["lineage_id"] == "same_verdict" or (who == "B" and r["lineage_id"] != "agreed"):
+                body.update(q2="khong", q2_reason="cosmetic_only")
+            if who == "B" and r["lineage_id"] == "same_verdict":
+                body.update(q3="khong", q3_reason="question_ambiguous")
+            assert not labels.save_label(paths[who], records, who, r["lineage_id"], body)["errors"]
+    return records, paths, {who: labels.read_labels(path) for who, path in paths.items()}
+
+
+def fill_adjudication(path, **changes):
+    from openpyxl import load_workbook
+    wb = load_workbook(path)
+    ws = wb[labels.ADJ_SHEET]
+    for row in range(2, ws.max_row + 1):
+        for key, value in {**{"chot_" + q: v for q, v in labels.GOOD.items()}, **changes}.items():
+            ws.cell(row, labels.ADJ_COLUMNS.index(key) + 1, value)
+    wb.save(path)
+
+
+def test_adjudicate_export_blind_locked_and_exact_disagreements(tmp_path, adjudication_case):
+    from openpyxl import load_workbook
+    from zipfile import ZipFile
+    records, paths, own = adjudication_case
+    xlsx = tmp_path / "hoa_giai.xlsx"
+    assert labels.adjudicate_export(records, own["A"], own["B"], xlsx, 1) == 2
+    wb = load_workbook(xlsx)
+    ws = wb[labels.ADJ_SHEET]
+    assert [ws.cell(i, 1).value for i in (2, 3)] == ["different_verdict", "same_verdict"]
+    assert wb["Đọc trước"].protection.sheet and ws.protection.sheet
+    for row in ws.iter_rows(min_row=2):
+        for cell in row:
+            assert cell.protection.locked == (labels.ADJ_COLUMNS[cell.column - 1] not in labels.ADJ_EDIT)
+    for sheet in wb:
+        assert not any(c.data_type == "f" for row in sheet for c in row)
+    assert ws.cell(2, labels.ADJ_COLUMNS.index("A_note") + 1).value == "=Đọc nguyên văn"
+    assert "30 ngày" in ws.cell(2, labels.ADJ_COLUMNS.index("cac_moc_va_dap_an") + 1).value
+    assert "https://example.org/base" in ws.cell(2, labels.ADJ_COLUMNS.index("van_ban_goc") + 1).value
+    assert "https://example.org/second-actor" in ws.cell(2, labels.ADJ_COLUMNS.index("van_ban_tac_dong") + 1).value
+    with ZipFile(xlsx) as z:
+        assert all(b"SECRET_" not in z.read(n) for n in z.namelist())
+    choices = {str(d.sqref): d.formula1 for d in ws.data_validations.dataValidation}
+    for q, options in labels.OPTIONS.items():
+        from openpyxl.utils import get_column_letter
+        col = get_column_letter(labels.ADJ_COLUMNS.index("chot_" + q) + 1)
+        assert choices[f"{col}2:{col}3"] == '"' + ','.join(options) + '"'
+    for q, answers in labels.REASONS.items():
+        for answer, reasons in answers.items():
+            name = q + "_" + answer
+            sheet, ref = next(wb.defined_names[name].destinations)
+            assert tuple(c.value for row in wb[sheet][ref] for c in row) == reasons
+            col = get_column_letter(labels.ADJ_COLUMNS.index("chot_" + q + "_reason") + 1)
+            assert name in choices[f"{col}2"]
+    assert labels.adjudicate_export(records, own["A"], own["B"], tmp_path / "pilot.xlsx", 0) == 1
+    assert labels.adjudicate_export(records, own["A"], own["B"], tmp_path / "all.xlsx") == 3
+    with pytest.raises(ValueError, match="không ghi đè"):
+        labels.adjudicate_export(records, own["A"], own["B"], xlsx, 1)
+
+
+def test_adjudicate_import_unfinished_then_roundtrip_and_raw_ac1(tmp_path, adjudication_case):
+    records, paths, own = adjudication_case
+    before = {who: p.read_bytes() for who, p in paths.items()}
+    xlsx, out = tmp_path / "card.xlsx", tmp_path / "done.tsv"
+    labels.adjudicate_export(records, own["A"], own["B"], xlsx, 1)
+    with pytest.raises(ValueError, match="Chưa chốt"):
+        labels.adjudicate_import(xlsx, records, own["A"], own["B"], "luật sư X", out)
+    assert not out.exists()
+    fill_adjudication(xlsx)
+    assert labels.adjudicate_import(xlsx, records, own["A"], own["B"], "luật sư X", out) == 2
+    adjudicated = labels.read_labels(out)
+    assert all(r["verdict"] == "dat" and r["adjudicator"] == "luật sư X" and not r["quote"] for r in adjudicated.values())
+    raw = labels.agreement_report(records, own["A"], own["B"], batch=1)
+    final = labels.agreement_report(records, own["A"], own["B"], batch=1, adjudicated=adjudicated)
+    assert final["metrics"] == raw["metrics"]
+    assert final["after_adjudication"] == {"dat": 3, "final_lineage_ids": ["different_verdict", "same_verdict", "agreed"], "unresolved": []}
+    assert labels.agreement_report(records, own["A"], own["B"], batch=1, adjudicated={})["after_adjudication"]["unresolved"] == raw["disagreements"]
+    assert {who: p.read_bytes() for who, p in paths.items()} == before
+    own["A"]["different_verdict"]["note"] = "Nhãn gốc đã đổi"
+    with pytest.raises(ValueError, match="nhãn gốc đã đổi"):
+        labels.agreement_report(records, own["A"], own["B"], batch=1, adjudicated=adjudicated)
+
+
+@pytest.mark.parametrize("mutation", ["question", "A_note", "lineage_id", "delete", "duplicate", "header", "guide", "vocab", "formula"])
+def test_adjudicate_import_rejects_tampered_cells_without_writing(tmp_path, adjudication_case, mutation):
+    from openpyxl import load_workbook
+    records, _, own = adjudication_case
+    xlsx, out = tmp_path / "card.xlsx", tmp_path / "done.tsv"
+    labels.adjudicate_export(records, own["A"], own["B"], xlsx, 1)
+    fill_adjudication(xlsx)
+    wb = load_workbook(xlsx)
+    ws = wb[labels.ADJ_SHEET]
+    if mutation == "delete":
+        ws.delete_rows(2)
+    elif mutation == "duplicate":
+        ws.append([c.value for c in ws[2]])
+    elif mutation == "header":
+        ws.cell(1, 1, "renamed")
+    elif mutation == "guide":
+        wb["Đọc trước"]["A2"] = "changed"
+    elif mutation == "vocab":
+        wb["Mã lý do"]["B1"] = "changed"
+    elif mutation == "formula":
+        ws.cell(2, labels.ADJ_COLUMNS.index("chot_q1") + 1, '=IF(1,"dung","")')
+    else:
+        ws.cell(2, labels.ADJ_COLUMNS.index(mutation) + 1, "changed")
+    wb.save(xlsx)
+    out.write_bytes(b"existing output must survive")
+    with pytest.raises(ValueError, match="khóa bị sửa|thiếu/thừa|công thức"):
+        labels.adjudicate_import(xlsx, records, own["A"], own["B"], "luật sư X", out)
+    assert out.read_bytes() == b"existing output must survive"
+
+
+@pytest.mark.parametrize("changes,error", [
+    ({"chot_q4": "co", "chot_q4_reason": "relocation_unclear"}, "Q4:"),
+    ({"chot_q4": "co", "chot_q4_reason": "relocated"}, "note:"),
+    ({"chot_q1": "sai", "chot_q1_reason": "other"}, "note:"),
+    ({"chot_q2_reason": "cosmetic_only"}, "Q2:"),
+    ({"chot_q3": "unknown"}, "Q3:"),
+])
+def test_adjudicate_import_uses_card_validation(tmp_path, adjudication_case, changes, error):
+    records, _, own = adjudication_case
+    xlsx, out = tmp_path / "card.xlsx", tmp_path / "done.tsv"
+    labels.adjudicate_export(records, own["A"], own["B"], xlsx, 1)
+    fill_adjudication(xlsx, **changes)
+    with pytest.raises(ValueError, match=error):
+        labels.adjudicate_import(xlsx, records, own["A"], own["B"], "luật sư X", out)
+    assert not out.exists()
+    fill_adjudication(xlsx, **changes, ghi_chu_luat_su="Nghi chuyển sang Điều 3.")
+    if error == "note:":
+        labels.adjudicate_import(xlsx, records, own["A"], own["B"], "luật sư X", out)
+        assert all(r["verdict"] == "khong_dat" for r in labels.read_labels(out).values())
+
+
+def test_adjudicate_cli_export_import_report(tmp_path, adjudication_case, monkeypatch, capsys):
+    import sys
+    records, paths, _ = adjudication_case
+    worksheet = tmp_path / "worksheet.jsonl"
+    worksheet.write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in records), encoding="utf-8")
+    xlsx, out = tmp_path / "card.xlsx", tmp_path / "done.tsv"
+    common = ["--worksheet", str(worksheet), "--a", str(paths["A"]), "--b", str(paths["B"])]
+    def run(*args):
+        monkeypatch.setattr(sys, "argv", ["test2_labels.py", *args])
+        labels.main()
+        return capsys.readouterr().out
+    assert "2 câu" in run("adjudicate", "export", *common, "--batch", "1", "--out", str(xlsx))
+    fill_adjudication(xlsx)
+    assert "2 câu" in run("adjudicate", "import", *common, "--xlsx", str(xlsx), "--by", "luật sư X", "--out", str(out))
+    report = json.loads(run("report", *common, "--batch", "1", "--adjudicated", str(out)))
+    assert report["after_adjudication"]["dat"] == 3
+    with pytest.raises(SystemExit, match="không ghi đè nhãn thô"):
+        run("adjudicate", "import", *common, "--xlsx", str(xlsx), "--by", "luật sư X", "--out", str(paths["A"]))
+    with pytest.raises(SystemExit, match="không có tệp hòa giải"):
+        run("report", *common, "--adjudicated", str(tmp_path / "absent.tsv"))
+
+
+def test_adjudicate_t6_search_and_empty_export(tmp_path, adjudication_case):
+    records, _, own = adjudication_case
+    records = [r for r in records if r["lineage_id"] == "different_verdict"]
+    lid = records[0]["lineage_id"]
+    own = {who: {lid: own[who][lid]} for who in own}
+    for who in own:
+        own[who][lid].update(q4="co", q4_reason="superseded_by_other_norm", search_log="", verdict="khong_dat")
+    xlsx, out = tmp_path / "card.xlsx", tmp_path / "done.tsv"
+    labels.adjudicate_export(records, own["A"], own["B"], xlsx)
+    fill_adjudication(xlsx)
+    with pytest.raises(ValueError, match="search_log:"):
+        labels.adjudicate_import(xlsx, records, own["A"], own["B"], "luật sư X", out)
+    fill_adjudication(xlsx, ghi_chu_luat_su="Đã tìm ở văn bản bãi bỏ, khoản anh em.")
+    labels.adjudicate_import(xlsx, records, own["A"], own["B"], "luật sư X", out)
+    assert labels.read_labels(out)[lid]["search_log"] == "Đã tìm ở văn bản bãi bỏ, khoản anh em."
+    empty = tmp_path / "empty.xlsx"
+    assert labels.adjudicate_export(records, own["A"], own["B"], empty, batch=99) == 0
+    assert labels.adjudicate_import(empty, records, own["A"], own["B"], "luật sư X", out) == 0
