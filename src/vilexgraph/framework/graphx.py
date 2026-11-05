@@ -43,6 +43,7 @@ SEEDS = 5
 FANOUT = 3
 TEMPORAL_DB = Path("data/temporal.sqlite")
 SIGNAL = "graph"
+MAX_DEPTH = 8     # Điều → Khoản → Điểm is three deep; the cap only guards a malformed tree
 
 
 class Graph:
@@ -76,6 +77,16 @@ class Graph:
             "SELECT unit_id FROM units WHERE kind='instruction' AND provision_id=?"
             " ORDER BY unit_id LIMIT ?", (provision_id, FANOUT))]
 
+    def up(self, provision_id: str) -> list[str]:
+        """The provision, then its ancestors: a repeal aimed at an ancestor ends this one too."""
+        out = [provision_id]
+        while len(out) <= MAX_DEPTH:
+            row = self.tree.execute("SELECT parent_id FROM provisions WHERE id=?", (out[-1],)).fetchone()
+            if not row or not row[0] or row[0] in out:
+                break
+            out.append(row[0])
+        return out
+
     # -- units ---------------------------------------------------------------------------
 
     def _units_of(self, provision_ids: list[str], layer: str) -> list[str]:
@@ -105,26 +116,35 @@ class Graph:
         return [u for u in unit_ids if u in kept]
 
 
-def expand(graph: Graph, spec: SystemSpec, hits: list[Hit], as_of: str) -> list[Hit]:
+def expand(graph: Graph, spec: SystemSpec, hits: list[Hit], as_of: str,
+           seeds: list[Hit] | None = None) -> list[Hit]:
     """`hits` followed by their admitted neighbours, each with a `graph` signal.
 
     A neighbour already among the hits is not added again, and its first
     appearance keeps the signal it was ranked with.
+
+    With `rel_up` the repeal of an ancestor ends a provision too, so
+    the instruction is looked up on the whole chain, and `seeds` — the best matches
+    *before* the date filter — start the walk: the provision a question is about
+    has already been filtered out of `hits` once something repealed it, and then
+    there is nothing left to expand from. Other edge sets are unchanged.
     """
-    if not spec.expand or spec.expand_edges == "none" or not hits:
+    if not spec.expand or spec.expand_edges == "none" or not (hits or seeds):
         return hits
     corpus = graph.corpus
     seen = {h.unit_id for h in hits}
     extra: list[Hit] = []
-    for rank, hit in enumerate(hits[:SEEDS]):
+    source = seeds if spec.expand_edges == "rel_up" and seeds is not None else hits
+    for rank, hit in enumerate(source[:SEEDS]):
         unit = corpus.unit(hit.unit_id)
         if unit is None or unit.provision_id is None:
             continue
         found: list[str] = []
         if spec.expand_edges == "part":
             found += graph._units_of(graph.part(unit.provision_id), spec.layer)
-        if spec.expand_edges == "rel":
-            found += graph.rel(unit.provision_id)
+        if spec.expand_edges in ("rel", "rel_up"):
+            for target in (graph.up(unit.provision_id) if spec.expand_edges == "rel_up" else [unit.provision_id]):
+                found += graph.rel(target)
         for unit_id in graph._admit(found, spec.temporal, as_of):
             if unit_id not in seen:
                 seen.add(unit_id)

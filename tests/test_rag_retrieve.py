@@ -121,6 +121,24 @@ def test_b4_searches_both_sources_without_reranking(indexed: Corpus) -> None:
     assert REGISTRY["b4"].rerank is False
 
 
+def test_hybrid_variant_runs_the_proposed_system_without_a_reranker(indexed: Corpus) -> None:
+    """`--hybrid`: the proposal's L4 is lexical + dense; only the unbuilt reranker is dropped."""
+    class FakeDense:
+        def __init__(self) -> None:
+            self.asked = []
+
+        def search(self, corpus, question, as_of, *, layer, tier, k):
+            self.asked.append((layer, tier, k))
+            return []
+
+    hybrid = REGISTRY["b7pp"].variant("b7pp-hyb", rerank=False)
+    dense = FakeDense()
+    searcher(indexed, hybrid, dense=dense)("nội dung khoản", "2024-01-01")
+    assert dense.asked == [("version", "propagated", hybrid.k)]      # the same filter reaches dense
+    with pytest.raises(RuntimeError, match="embeddings"):            # never silently lexical-only
+        searcher(indexed, hybrid)
+
+
 def test_searcher_refuses_unbuilt_reranker(indexed: Corpus) -> None:
     with pytest.raises(NotImplementedError, match="reranker"):
         searcher(indexed, REGISTRY["proposed"])

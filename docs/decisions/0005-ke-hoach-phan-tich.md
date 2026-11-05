@@ -296,3 +296,8 @@ Người viết lời dặn v2 đã thấy các số này. Phiên gán v2 chạy
    (`runs/E1_test2/test`, `runs/E3_test2/test`). Không sinh hay truy xuất lại. Câu đạt theo v2 nhưng ngoài release chưa có dự đoán, chỉ báo số đếm. Holm trên sáu kiểm định như §4, chạy một lần.
 7. **Diễn giải.** Sáu phán quyết không đổi thì ghi "kết luận test 2 vững với lời dặn v2"; có phán quyết đổi thì ghi "kết luận nhạy với cách gán nhãn" và nêu kiểm định nào. Dù theo hướng nào, bảng chính và H0 vẫn
    theo amendment 03/11 và 04/11; phân tích này không được dùng để chọn bảng đẹp hơn. Luôn gọi là nhãn LLM, không chung bảng với v1.0.
+8. **Kết quả hiệu chuẩn (ghi sau khi chạy, 04/11): KHÔNG ĐẠT, dừng theo mục 4.** Nhãn cuối so với người trên 68 câu: AC1 **0,530** (ngưỡng 0,80), p_neg 0,758 (ngưỡng 0,60). LLM-A: 0,652 và 0,800.
+   LLM-B: 0,412 và 0,697. Nhãn cuối theo nhóm: T2 0,667 và 0,364 (30 câu, 2 xấu); T3 0,333 và 0,667 (6 câu, 2 xấu); T6 0,659 và 0,857 (32 câu, 25 xấu). Trong 29 câu người gán xấu, nhãn cuối bắt 25;
+   trong 39 câu người gán tốt, nhãn cuối loại nhầm 12. Chưa gán câu nào của test 2 bằng v2, không sửa lời dặn, không đổi ngưỡng, không chạy lại. Mục 5–7 không thực hiện; **không có phân tích độ nhạy**.
+   Bảng chính test 2 giữ nguyên, nhãn LLM. Kết quả này đo lời dặn v2, không đo trực tiếp nhãn test 2 đang dùng (lời dặn v1 chưa từng được hiệu chuẩn). Hồ sơ: `data/review/test2_llm_v2/`.
+   Hai ghi chú quy trình: trước khi chạy có một lượt thử định dạng trên một câu của mẫu (nhãn thử bị bỏ, phiên riêng); `test2_relabel.py` có sửa cách đọc tham số dòng lệnh sau commit, không đổi logic. Sonnet và Opus theo log là `claude-sonnet-5-5`, `claude-opus-5-5`; Codex dùng model trong cấu hình máy (`gpt-6.1-sol`), log không xác nhận.

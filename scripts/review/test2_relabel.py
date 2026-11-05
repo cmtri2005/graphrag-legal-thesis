@@ -240,7 +240,7 @@ def main() -> None:
     ap.add_argument("--release", type=Path)
     ap.add_argument("--silver", type=Path)
     ap.add_argument("--evidence", type=Path, nargs="*", default=[])
-    args = ap.parse_args()
+    args = ap.parse_intermixed_args()
     if args.cmd == "build":
         build(args.files[0], args.out, args.key, args.evidence)
     elif args.cmd == "collect":

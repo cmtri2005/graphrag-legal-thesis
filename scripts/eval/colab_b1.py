@@ -58,6 +58,8 @@ def export_prompts(args) -> None:
     spec = systems.get("b2ctx" if oracle else name)
     if getattr(args, "no_dense", False) and spec.dense:
         spec = spec.variant(f"{spec.name}-lex", dense=False, rerank=False)
+    if getattr(args, "hybrid", False) and spec.rerank:
+        spec = spec.variant(f"{spec.name}-hyb", rerank=False)
     embed = getattr(args, "embed", EMBED) if spec.dense and not oracle else None
     corpus = Corpus(args.index) if spec.retrieves else None
     search = None if oracle else retriever(spec, corpus, args.hits_cache, embed=embed)
@@ -89,6 +91,7 @@ def export_prompts(args) -> None:
         manifest = args.index.parent / "manifest.json"
         export_record = {"system": name, "spec": None if oracle else asdict(spec), "split": args.split,
                          "as_of_strategy": "giua_khoang", "no_dense": bool(getattr(args, "no_dense", False)),
+                         "hybrid": bool(getattr(args, "hybrid", False)),
                          "embed": str(embed) if embed else None,
                          "embed_sha256": hashlib.sha256(embed.with_suffix(".sha256").read_bytes()).hexdigest()
                          if embed and embed.with_suffix(".sha256").exists() else None,
@@ -207,6 +210,7 @@ def main() -> None:
     ex.add_argument("--limit", type=int, default=100, help="0 exports every dev giua_khoang row")
     ex.add_argument("--system", choices=sorted(systems.REGISTRY) + [ORACLE], default="b2ctx")
     ex.add_argument("--no-dense", action="store_true")
+    ex.add_argument("--hybrid", action="store_true", help="BM25 + dense (RRF), no reranker: the proposal's L4")
     ex.add_argument("--embed", type=Path, default=EMBED, help="embeddings for dense systems (b3, b4)")
     ex.add_argument("--b2", action="store_true", help="include B2 metadata for b2ctx prompts")
     ex.add_argument("--out", required=True, type=Path)

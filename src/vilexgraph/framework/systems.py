@@ -26,7 +26,7 @@ from dataclasses import dataclass, replace
 from .temporal import LAYER_B_ONLY, TIERS
 
 LAYERS = ("asis", "version")
-EXPAND_EDGES = ("none", "rel", "part")
+EXPAND_EDGES = ("none", "rel", "part", "rel_up")
 VERIFY_MODES = ("off", "warn", "reject")
 
 
@@ -69,6 +69,8 @@ class SystemSpec:
             raise SystemError_(
                 f"{self.name}: tier {self.temporal!r} needs layer 'version' — layer A units "
                 f"carry no version window, so the filter would reject every candidate")
+        if self.expand_edges == "rel_up" and self.temporal != "propagated":
+            raise SystemError_(f"{self.name}: rel_up needs tier propagated")
         if self.expand and self.expand_edges == "none":
             raise SystemError_(f"{self.name}: expand={self.expand} needs an edge set")
 
@@ -90,6 +92,8 @@ _B7 = SystemSpec(name="b7", layer="asis", lexical=True, dense=True, rerank=True,
 _B7PLUS = SystemSpec(name="b7plus", layer="version", lexical=True, dense=True, rerank=True,
                      temporal="version", context=True,
                      note="B7+ — version-level filter; the proposed system minus the online graph")
+
+_PROPOSED2 = _PROPOSED.variant("proposed2", rerank=False, expand_edges="rel_up")
 
 REGISTRY: dict[str, SystemSpec] = {s.name: s for s in (
     SystemSpec(name="b1", note="B1 — the generator alone, no retrieval"),
@@ -114,6 +118,9 @@ REGISTRY: dict[str, SystemSpec] = {s.name: s for s in (
     _B7PLUS.variant("b7pp", temporal="propagated",
                     note="B7+ with propagated windows: the ladder's top rung, no online graph (K-07)"),
     _PROPOSED,
+    _PROPOSED2,
+    _PROPOSED2.variant("p2a2", expand=0, expand_edges="none"),
+    _PROPOSED2.variant("p2a3", verify="off"),
     _PROPOSED.variant("a1", temporal="none", note="A1 — drop the effectivity constraint"),
     _PROPOSED.variant("a2", expand=0, expand_edges="none", note="A2 — drop graph expansion"),
     _PROPOSED.variant("a3", verify="off", note="A3 — drop the Temporal Verifier"),

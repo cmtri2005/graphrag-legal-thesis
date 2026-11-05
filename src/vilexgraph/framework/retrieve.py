@@ -337,8 +337,12 @@ def searcher(corpus, spec: SystemSpec, cache: "RetrievalCache | None" = None, *,
             found = lexical(corpus, question, as_of, layer=spec.layer, tier=spec.temporal,
                             context=spec.context, k=spec.k, fast=fast)
         if graph is not None:
-            from .graphx import expand
-            found = expand(graph, spec, found, as_of)
+            from .graphx import SEEDS, expand
+            seeds = None
+            if spec.expand_edges == "rel_up":
+                seeds = lexical(corpus, question, as_of, layer=spec.layer, tier="none",
+                                context=spec.context, k=SEEDS, fast=fast)
+            found = expand(graph, spec, found, as_of, seeds)
         if key is not None:
             cache.put(key, found)
         return found

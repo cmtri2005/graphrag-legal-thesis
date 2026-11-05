@@ -13,6 +13,7 @@ from test_rag_corpus import ARTICLE, CLAUSE, DOC, data, write  # noqa: F401  (fi
 SEED = f"asis:{CLAUSE}"
 PARENT = f"asis:{ARTICLE}"
 COMMAND = "asis:event:e2"
+REPEAL_UP = "asis:event:e3"     # aimed at the article, not at the clause
 
 
 @pytest.fixture
@@ -26,6 +27,8 @@ def graph(data, tmp_path):
          "level": "Article", "text": "Điều 1. Phạm vi"},
         {"unit_id": COMMAND, "kind": "instruction", "event_id": "event:e2", "operation": "amend",
          "document_id": DOC, "target_provision_id": CLAUSE, "text": "Sửa đổi khoản 1."},
+        {"unit_id": REPEAL_UP, "kind": "instruction", "event_id": "event:e3", "operation": "repeal",
+         "document_id": DOC, "target_provision_id": ARTICLE, "text": "Bãi bỏ Điều 1."},
     ])
     build(data, tmp_path / "index.sqlite")
     corpus = Corpus(tmp_path / "index.sqlite")
@@ -85,3 +88,22 @@ def test_the_verifier_judges_an_instruction_by_its_document_like_expansion(graph
     _, corpus = graph
     assert invalid_units(corpus, tier, "2021-01-01", [COMMAND]) == ()
     assert invalid_units(corpus, tier, "2019-06-01", [COMMAND]) == (COMMAND,)
+
+
+def test_propagated_follows_a_repeal_aimed_at_an_ancestor_from_seeds_the_filter_removed(graph) -> None:
+    """The clause is gone from `hits` once its article is repealed; the seeds still reach the repeal."""
+    g, _ = graph
+    seeds = [Hit(SEED, {"lexical": 1.0})]
+    up = spec(layer="version", expand_edges="rel_up", temporal="propagated")
+    assert ids(expand(g, up, [], "2021-01-01", seeds)) == [COMMAND, REPEAL_UP]
+    assert ids(expand(g, up, [Hit(PARENT, {"lexical": 1.0})], "2021-01-01")) == [PARENT, REPEAL_UP]
+    # other tiers keep one hop: a repeal of the article is not found from the clause
+    assert ids(expand(g, spec(expand_edges="rel", temporal="document"), seeds, "2021-01-01")) == [SEED, COMMAND]
+
+
+def test_rel_keeps_one_hop_even_with_propagation(graph):
+    g, _ = graph
+    hits = [Hit(SEED, {"lexical": 1.0})]
+    old = spec(layer="version", expand_edges="rel", temporal="propagated")
+    assert ids(expand(g, old, hits, "2021-01-01")) == [SEED, COMMAND]
+    assert expand(g, old, [], "2021-01-01", hits) == []

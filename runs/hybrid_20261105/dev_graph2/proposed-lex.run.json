@@ -1,0 +1,60 @@
+[
+ {
+  "spec": {
+   "name": "proposed-lex",
+   "layer": "version",
+   "lexical": true,
+   "dense": false,
+   "rerank": false,
+   "temporal": "propagated",
+   "context": true,
+   "expand": 1,
+   "expand_edges": "rel",
+   "verify": "reject",
+   "k": 20,
+   "note": "L4–L5: 𝒰ₜ by formula (3), hybrid ranking, citation-constrained answer, Verifier"
+  },
+  "as_of_strategy": "giua_khoang",
+  "embed": null,
+  "argv": [
+   "--system",
+   "proposed",
+   "--no-dense",
+   "--retrieval-only",
+   "--release",
+   "data/vilextime_dataset/vilextime.jsonl",
+   "--split",
+   "dev",
+   "--as-of-strategy",
+   "giua_khoang",
+   "--embed",
+   "data/derived/embed/version-vietnamese-embedding",
+   "--out",
+   "runs/hybrid_20261105/dev_graph2/proposed-lex.jsonl"
+  ],
+  "commit": "51f36c7ef721ea068eb9b5505d0429d8be8b5213",
+  "uncommitted": "de564be99936e064ef14a1bd03011d45340d2cc2479008742e1ed9cca0847bb1",
+  "release_sha256": "7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366",
+  "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+  "index_counts": {
+   "documents": 17333,
+   "units_asis": 1509363,
+   "units_version": 1477089,
+   "instructions": 53991,
+   "propagated_windows": 1476957,
+   "versions_with_local_window": 1477089,
+   "provisions_with_context": 1700484
+  },
+  "prompt_sha256": "88e5bb0e72eefae70be63d72ea8b1e6be04abb1c8fd9d12c4d23dfe609af4006",
+  "python": "3.12.3",
+  "started": "2026-11-05T11:39:21+00:00",
+  "finished": true,
+  "ended": "2026-11-05T12:09:20+00:00",
+  "written": 151,
+  "cached": 0,
+  "failed": 0,
+  "models": {
+   "none/none": 151
+  }
+ }
+]

@@ -421,6 +421,9 @@ Q4 ba mức; amendment ADR 0005. Cỡ đợt: giữ ~520 câu, sức người 43
 
 ## Decisions
 
+- 2026-11-04 (CMT đồng ý phương án bốn bước; commit `51f36c7` trước khi gán): rà thấy lời dặn gán nhãn test 2 quá mỏng và không có trong repo. Đã khôi phục
+  `prompts/vilextime/test2_gan_v1.md`, viết v2, khai báo amendment ADR 0005 04/11 (b). Hiệu chuẩn v2 trên 68 câu nhãn người: AC1 0,530, p_neg 0,758, **không đạt**, nên dừng:
+  không gán test 2 bằng v2, không có độ nhạy. Hồ sơ `data/review/test2_llm_v2/`. Nhãn test 2 đang dùng vẫn chưa có số đo so với người; cách đo trực tiếp là người kiểm một mẫu.
 - 2026-11-03 (Claude): E1 trên test 2 chạy một lần (`runs/E1_test2/test`, commit `8f00817`), nhãn LLM. So với v1.0 (`runs/E1/test`, release
   `vilextime.jsonl`), TV-Recall@1 trên dòng có đáp án: XN1 +0,028 [−0,014; +0,072] (v1.0 +0,051 ủng hộ); XN3 +0,047 ủng hộ (v1.0 +0,138
   ủng hộ); XN4 +0,028 không đủ (v1.0 +0,051 ủng hộ). Cùng chiều, test 2 yếu hơn, `b7pp` = `b7plus`. Test 2 101 lineage, 211 dòng có đáp án.

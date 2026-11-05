@@ -145,6 +145,9 @@ def main() -> None:
     ap.add_argument("--model")
     ap.add_argument("--no-dense", action="store_true",
                     help="run a dense-capable system on lexical retrieval alone")
+    ap.add_argument("--hybrid", action="store_true",
+                    help="run a reranker-declaring system on BM25 + dense (RRF) without the reranker, "
+                         "which is not built: the retrieval the proposal's L4 commits to")
     ap.add_argument("--embed", type=Path, default=EMBED,
                     help="embeddings written by scripts/eval/embed_corpus.py (dense systems)")
     ap.add_argument("--cache", type=Path, default=CACHE)
@@ -164,6 +167,8 @@ def main() -> None:
     spec = systems.get(args.system)
     if args.no_dense and spec.dense:
         spec = spec.variant(f"{spec.name}-lex", dense=False, rerank=False)
+    if args.hybrid and spec.rerank:
+        spec = spec.variant(f"{spec.name}-hyb", rerank=False)
     if args.k:
         spec = spec.variant(spec.name, k=args.k)
 

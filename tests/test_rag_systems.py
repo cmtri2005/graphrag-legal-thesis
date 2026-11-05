@@ -94,3 +94,24 @@ def test_variant_renames_and_overrides() -> None:
     assert (lex.name, lex.dense, lex.rerank) == ("proposed-lex", False, False)
     assert lex.temporal == "propagated"
     assert REGISTRY["proposed"].dense is True, "variants must not mutate the registry"
+
+
+def test_rel_up_requires_propagated_and_new_ablations_change_one_switch():
+    with pytest.raises(SystemError_, match="rel_up needs tier propagated"):
+        SystemSpec(name="bad", layer="version", lexical=True, expand=1,
+                   expand_edges="rel_up", temporal="version")
+    base = REGISTRY["proposed2"]
+    assert (base.rerank, base.expand_edges) == (False, "rel_up")
+    assert [a for a in AXES if getattr(base, a) != getattr(REGISTRY["proposed"], a)] == [
+        "rerank", "expand_edges"]
+    assert [a for a in AXES if getattr(base, a) != getattr(REGISTRY["p2a2"], a)] == [
+        "expand", "expand_edges"]
+    assert [a for a in AXES if getattr(base, a) != getattr(REGISTRY["p2a3"], a)] == ["verify"]
+
+
+def test_rel_up_has_its_own_retrieval_cache_key():
+    from vilexgraph.framework.retrieve import RetrievalCache
+
+    old = REGISTRY["proposed"].variant("proposed-hyb", rerank=False)
+    assert RetrievalCache.key(old, "q", "2021-01-01") != RetrievalCache.key(
+        REGISTRY["proposed2"], "q", "2021-01-01")
