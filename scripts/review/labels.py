@@ -41,7 +41,7 @@ A model label must be audited (guideline §6) when it is `khong_dat` or has
 dropped ones).
 
 Usage:
-    python scripts/review/labels.py import-excel "Gán Nhãn Bộ Dữ Liệu ViLexTime.xlsx"
+    python scripts/review/labels.py import-excel "data/review/Gán Nhãn Bộ Dữ Liệu ViLexTime.xlsx"
     python scripts/review/labels.py add batch.tsv
     python scripts/review/labels.py report
     python scripts/review/labels.py mark-audit

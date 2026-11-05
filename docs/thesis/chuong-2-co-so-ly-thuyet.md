@@ -12,7 +12,7 @@
 ## 2.1. Phạm vi khảo sát và mức độ bằng chứng
 
 Khảo sát được tổ chức quanh các trục: truy xuất kết hợp sinh; biểu diễn cấu trúc và phiên bản; hỏi đáp nhạy thời gian; tài nguyên pháp luật tiếng Việt; và phương pháp đánh giá. Việc chia nhóm nhằm xác định phép đối chứng và nguy cơ sai lệch cần kiểm, không nhằm xếp hạng mọi công trình trên cùng một thang điểm. Các tác vụ chọn điều khoản, sinh câu trả lời, tổng hợp toàn corpus và dự đoán phán quyết có đầu ra và mẫu số khác nhau.
-<!-- nguồn: MASTER_RESEARCH_GUIDE.md -->
+<!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
 
 | Mức sử dụng trong chương | Các khóa |
 |---|---|
@@ -23,10 +23,10 @@ Khảo sát được tổ chức quanh các trục: truy xuất kết hợp sinh
 
 Các PDF được đọc qua phần chữ trích bằng `pdftotext`, tập trung vào tóm tắt, thiết kế dữ liệu, phương pháp và giới hạn liên quan. Chương dùng tên mục để định vị nội dung, không khẳng định đã kiểm chứng phân trang PDF. Công cụ preflight trong môi trường hiện tại không đủ phụ thuộc để xác nhận cấu trúc phân trang. [CẦN XÁC MINH: đối chiếu trực quan PDF và tính đầy đủ của bản trích trước khi chốt định vị trang hoặc nhận mức đọc toàn văn].
 
-Ghi chú `related_paper/notes/` và bản dịch FiscalQA giúp xác định những đoạn cần đọc trực tiếp. Báo cáo tổng hợp trong `reports/` tự phân biệt mức đọc và thừa nhận một số phần chưa đọc. Vì vậy, chương không chép các bảng số từ báo cáo tổng hợp, không coi nhãn “đã xác minh” trong bảng hướng dẫn là bằng chứng đã đọc toàn văn ở lần soạn này. Khi nguồn thứ cấp và bản gốc khác nhau về phạm vi khẳng định, nội dung được giới hạn theo phần gốc đã kiểm.
+Ghi chú `related_paper/notes/` và bản dịch FiscalQA giúp xác định những đoạn cần đọc trực tiếp. Báo cáo tổng hợp trong `related_paper/notes/` tự phân biệt mức đọc và thừa nhận một số phần chưa đọc. Vì vậy, chương không chép các bảng số từ báo cáo tổng hợp, không coi nhãn “đã xác minh” trong bảng hướng dẫn là bằng chứng đã đọc toàn văn ở lần soạn này. Khi nguồn thứ cấp và bản gốc khác nhau về phạm vi khẳng định, nội dung được giới hạn theo phần gốc đã kiểm.
 <!-- nguồn: related_paper/notes/README.md -->
-<!-- nguồn: related_work_paper/FiscalQA.md -->
-<!-- nguồn: reports/Tham khảo bộ dữ liệu pháp luật có hiệu lực và phiên bản.md -->
+<!-- nguồn: related_paper/notes/FiscalQA.md -->
+<!-- nguồn: related_paper/notes/Tham khảo bộ dữ liệu pháp luật có hiệu lực và phiên bản.md -->
 
 ## 2.2. Truy xuất, sinh câu trả lời và sự phù hợp của căn cứ
 
@@ -103,7 +103,7 @@ Bài chấm bằng các nugget có thể kiểm tất định, phân biệt đ�
 
 Phụ lục bản gốc phân biệt artifact công khai với bộ truy xuất end-to-end có thành phần độc quyền. Sự công khai của corpus hoặc câu trả lời không tự làm mọi điều kiện end-to-end tái lập được. Với khóa luận này, bài học phương pháp là phải công bố cả đơn vị gold, điều kiện cấp căn cứ và phần pipeline có thể dựng lại. Bản dịch tiếng Việt trong repo chỉ hỗ trợ đọc thuật ngữ; nội dung khẳng định ở đây được đối chiếu PDF gốc.
 <!-- nguồn: related_paper/2608.09393v1.pdf -->
-<!-- nguồn: related_work_paper/FiscalQA.md -->
+<!-- nguồn: related_paper/notes/FiscalQA.md -->
 
 ## 2.4. Tài nguyên và hệ pháp luật tiếng Việt
 
@@ -132,13 +132,13 @@ Mục Seeded Retrieval and Propagation mô tả lấy các nút seed, mở rộn
 
 Các ghi chú trong repo cũng nhắc quan hệ sửa đổi và validity tracing của ViHERMES. Vì thế, cách viết phủ định tuyệt đối rằng công trình trong nước chưa xét quan hệ hoặc tính hợp lệ sẽ bỏ qua chính phần đã xác minh. Khóa luận chỉ dùng đối chiếu này để xác định yêu cầu thử nghiệm theo ngày, không khẳng định đã có một phép so sánh trực tiếp với hệ ViHERMES trên cùng dữ liệu.
 <!-- nguồn: related_paper/notes/03-vihermes.md -->
-<!-- nguồn: reports/Tham khảo bộ dữ liệu pháp luật có hiệu lực và phiên bản.md -->
+<!-- nguồn: related_paper/notes/Tham khảo bộ dữ liệu pháp luật có hiệu lực và phiên bản.md -->
 
 ### 2.4.3. Giới hạn phạm vi khảo sát trong nước
 
 Bản ghi ALQAC trong thư mục tham khảo hiện là bài tổng kết cuộc thi với khóa [@thanh2021alqac]. Không được thay nó bằng một bài tổng kết năm khác chỉ vì tên cuộc thi giống nhau. [CẦN XÁC MINH: đọc bản gốc ALQAC đã có khóa, xác định tác vụ và phạm vi corpus; không sử dụng mục chưa xác minh của đề cương để khẳng định nội dung].
 <!-- nguồn: references.bib -->
-<!-- nguồn: MASTER_RESEARCH_GUIDE.md -->
+<!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
 
 Repo còn các ghi chú về VietLegal, LegalGraphRAG và một khung suy luận có kiểm chứng; chúng cho thấy khảo sát chưa nên dừng ở các khóa hiện có. Chương chưa dùng các ghi chú này để khẳng định kết quả hoặc tính mới. [CẦN TRÍCH DẪN: hoàn tất xác minh bản gốc và khóa bib cho các công trình trong nước/bổ sung còn nằm ngoài references.bib trước khi đưa vào đối chiếu học thuật].
 <!-- nguồn: related_paper/notes/05-vietlegal-benchmark.md -->
@@ -165,7 +165,7 @@ Bảng tách nội dung được xác nhận trực tiếp với phần mới nh
 <!-- nguồn: related_paper/An_Ontology_Driven_GraphRAG_for_LegalNorms.pdf -->
 <!-- nguồn: related_paper/ViHERMES.pdf -->
 <!-- nguồn: related_paper/VLQA_ The First Comprehensive, Large, and High-Quality Vietnamese Dataset for Legal Question Answering.pdf -->
-<!-- nguồn: reports/Tham khảo bộ dữ liệu pháp luật có hiệu lực và phiên bản.md -->
+<!-- nguồn: related_paper/notes/Tham khảo bộ dữ liệu pháp luật có hiệu lực và phiên bản.md -->
 
 ## 2.6. Cơ sở đánh giá và độ tin cậy
 
@@ -181,7 +181,7 @@ Trong cài đặt ViLexTime, Recall đo lấy được điều khoản hoặc b�
 
 Bản ghi về contrast sets được giữ trong danh mục [@gardner2020contrast]. [CẦN XÁC MINH: đọc bản gốc contrast sets trước khi khẳng định quan hệ chính xác giữa contrast consistency trong bài và TCS của ViLexTime; không tuyên bố TCS là chỉ số mới].
 <!-- nguồn: references.bib -->
-<!-- nguồn: MASTER_RESEARCH_GUIDE.md -->
+<!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
 
 ### 2.6.2. Chất lượng gold và đơn vị độc lập
 
@@ -202,7 +202,7 @@ Các phần gốc đã kiểm cho thấy có tiền lệ về temporal legal QA,
 <!-- nguồn: related_paper/2608.09393v1.pdf -->
 <!-- nguồn: related_paper/An_Ontology_Driven_GraphRAG_for_LegalNorms.pdf -->
 <!-- nguồn: related_paper/ViHERMES.pdf -->
-<!-- nguồn: MASTER_RESEARCH_GUIDE.md -->
+<!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
 
 Một mục tiêu hẹp hơn là xây phép đánh giá theo mốc trên nguồn pháp luật tiếng Việt của dự án và dùng B7 cùng thang biểu diễn để kiểm nguồn gốc chênh lệch. Việc này nối câu hỏi về tài nguyên với câu hỏi về phép đối chứng: có cần lời văn hợp nhất và khoảng phiên bản, hay phần lớn lợi ích quan sát được đã xuất hiện ở bộ lọc cấp văn bản? Đây là câu hỏi thực nghiệm được đặt ra, không phải một kết luận mới về hiệu quả phương pháp.
 <!-- nguồn: docs/decisions/0004-framework-truy-xuat-va-sinh.md -->
@@ -211,7 +211,7 @@ Một mục tiêu hẹp hơn là xây phép đánh giá theo mốc trên nguồn
 ### 2.7.2. Điều chưa đủ để khẳng định tính mới
 
 Guide yêu cầu một lượt tìm có mục tiêu trước khi dùng tuyên bố hẹp kèm cụm “theo khảo sát của chúng tôi”. Lượt soạn này không có mạng và không tiến hành tìm mới. Chưa thể chuyển việc chưa thấy một artifact tương ứng trong repo thành bằng chứng chưa có ai làm. [CẦN XÁC MINH: hoàn tất hoặc tìm lại biên bản khảo sát có truy vấn, phạm vi, ngày tra và kết quả trước khi chốt tuyên bố tính mới hẹp].
-<!-- nguồn: MASTER_RESEARCH_GUIDE.md -->
+<!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
 
 Với SAT-Graph RAG, phần đã đọc xác nhận mô hình cấu trúc–thời gian và các chính sách truy vấn, nhưng chưa đủ để kết luận toàn bộ công trình không có một phép đối chứng cụ thể nếu chưa kiểm các phiên bản liên quan. Với VersionRAG và các công trình temporal QA còn mới đọc metadata, càng không được viết một mệnh đề phủ định về điều tác giả “chưa làm”. Khoảng trống hiện được trình bày như nhu cầu kiểm chứng của khóa luận, chờ hoàn tất khảo sát, thay vì chứng nhận sự vắng mặt của mọi tiền lệ.
 <!-- nguồn: related_paper/An_Ontology_Driven_GraphRAG_for_LegalNorms.pdf -->

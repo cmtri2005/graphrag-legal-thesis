@@ -1,0 +1,26 @@
+{
+  "system": "b5",
+  "spec": {
+    "name": "b5-lex",
+    "layer": "asis",
+    "lexical": true,
+    "dense": false,
+    "rerank": false,
+    "temporal": "none",
+    "context": true,
+    "expand": 1,
+    "expand_edges": "rel",
+    "verify": "off",
+    "k": 20,
+    "note": "B5 — non-temporal GraphRAG; reduced corpus, see the plan"
+  },
+  "split": "test",
+  "as_of_strategy": "giua_khoang",
+  "no_dense": true,
+  "embed": null,
+  "embed_sha256": null,
+  "rows": 227,
+  "release_sha256": "8c140f5c14b1dbc00a7d34954abf161d1a94fd6e69d3a56ee16d3e80c0bd4c28",
+  "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+  "prompt_file_sha256": "a7d637760ae673e838f8371bfc0db4bdbbd9c2c3ba618ceab0d4aa7d0ceaf6d5"
+}

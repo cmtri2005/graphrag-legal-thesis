@@ -231,7 +231,7 @@ Mỗi mục ghi: ngày, người chốt, câu hỏi chung (không nêu dòng gá
 vào hướng dẫn. Kết luận chỉ làm rõ cách áp quy tắc đã có. Quy tắc mới thì phải sửa định nghĩa và
 tăng phiên bản hướng dẫn.
 
-- **24/10/2026, luật sư, lô 0** (`docs/hoa_giai_lo0_chot.xlsx`). 12/21 dòng lệch; cả 12 là một người
+- **24/10/2026, luật sư, lô 0** (`data/review/hoa_giai_lo0_chot.xlsx`). 12/21 dòng lệch; cả 12 là một người
   gán `dat` không ghi `note`, người kia gán `khong_dat` kèm lý do. Luật sư chốt cả 12 là `khong_dat`.
   Sáu kết luận:
   1. T6 xét bảy yếu tố trong phạm vi câu hỏi: điều khoản sang văn bản mới mà nội dung được hỏi giữ

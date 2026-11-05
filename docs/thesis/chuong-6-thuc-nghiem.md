@@ -8,7 +8,7 @@
 
 Các hệ hiện có đầu ra test là `b1`, `b2ctx`, `b5`, `b7`, `b7pp`, `proposed`. Cùng generator Qwen3-4B-Instruct-2507 và cấu hình bị khóa ở ADR được dùng cho hai bộ; lời văn, nhãn và thành phần nhóm của hai bộ khác nhau. Phạm vi hiện có chưa bao gồm đầy đủ mọi hệ trong kế hoạch E2–E6.
 <!-- nguồn: runs/README.md -->
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md -->
+<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
 
 Bảng chính dùng `giua_khoang`, nhóm all gồm T1, T2, T3, T6 khi nhóm tương ứng có mặt. TV-Recall chấm đúng ID phiên bản hoặc bằng chứng được chấp nhận; Recall có thể chấp nhận điều khoản ở phiên bản khác. Accuracy là phép chấm tương phản trên span ngắn, không phải mức tương đồng ngữ nghĩa do người phán xét. Câu trả lời phải chứa các span gold và tránh các span chỉ thuộc phiên bản khác. Dòng không có đáp án chỉ đúng khi dự đoán khẳng định `answerable=False`.
 <!-- nguồn: scripts/eval/score_vilextime.py -->
@@ -277,7 +277,7 @@ XN6 có ước lượng +0,100, KTC 95% [−0,067; +0,278]; XN7 là −0,031 [�
 Nhãn v1.0 gồm nguồn người và agent, các cổng đồng thuận không đạt như trình bày ở Chương 4. Test 2 — nhãn LLM — không có lượt xác nhận độc lập của người. Hai bộ cùng dẫn xuất từ một kho phiên bản, còn gold độc lập chưa có và M2 kiểm tay vẫn mở. Vì thế, sự lặp lại của một chiều hiệu ứng trên hai bộ không tự loại được sai lệch chung của nguồn gold và hệ đề xuất.
 <!-- nguồn: docs/vilextime-datasheet.md -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
-<!-- nguồn: docs/plans/active/phase-3-kg-l0-l3.md -->
+<!-- nguồn: docs/plans/active/phase-3-kg-l0-l3.md @51f36c7 -->
 
 Kết quả chỉ dùng một generator và các cấu hình từ vựng hiện có. Sổ chạy dev ghi 553/553 đầu ra giống nhau ở các prompt trùng giữa các biến thể chạy; điều này không chứng minh mọi phần cứng và thư viện đều cho kết quả giống nhau. Chi phí Colab chưa được đối soát đầy đủ. [CẦN XÁC MINH: cấu hình GPU, phiên bản thư viện và chi phí thực tế của từng lượt từ provenance và biên nhận; không suy từ ước tính trước chạy].
 <!-- nguồn: runs/README.md -->
@@ -290,9 +290,9 @@ Các cảnh báo ID `asis:event:` không phân giải được phản ánh phạ
 
 ### 6.8.1. Đối chiếu điều kiện sử dụng từ “cải thiện”
 
-ADR 0005 §6 yêu cầu thêm các điều kiện của MASTER_RESEARCH_GUIDE §8.6 ngoài phán quyết thống kê. Bản nháp vì thế dùng “chênh lệch”, “ước lượng” hoặc phán quyết XN, không gọi một chênh lệch quan sát được là cải thiện đã đáp ứng đầy đủ các điều kiện. Các điều kiện đã kiểm được và phần còn thiếu được phân biệt dưới đây.
+ADR 0005 §6 yêu cầu thêm các điều kiện của MASTER_RESEARCH_GUIDE §8.6 (tài liệu nội bộ, commit `51f36c7`) ngoài phán quyết thống kê. Bản nháp vì thế dùng “chênh lệch”, “ước lượng” hoặc phán quyết XN, không gọi một chênh lệch quan sát được là cải thiện đã đáp ứng đầy đủ các điều kiện. Các điều kiện đã kiểm được và phần còn thiếu được phân biệt dưới đây.
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
-<!-- nguồn: MASTER_RESEARCH_GUIDE.md -->
+<!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
 
 Về khoảng tin cậy, các hiệu số thuộc họ trên v1.0 có khoảng không chứa không. Trên test 2 — nhãn LLM — điều này được xác nhận ở XN2, XN3, XN8, XN9; không đạt ở XN1 và XN4. Phần trực tuyến proposed − b7pp trên test 2 — nhãn LLM — cũng có khoảng chứa không. Đây là kiểm tra điều kiện thống kê, chưa thay thế các điều kiện còn lại.
 <!-- nguồn: runs/E3_v1/test/confirm.json -->
@@ -312,12 +312,12 @@ Về độ phủ trích dẫn, b7 và b7pp có cùng độ phủ tổng thể tr
 <!-- nguồn: runs/E3_test2/rescore/all.score.json -->
 
 Điều kiện cùng chiều trên các chế độ as_of và gold độc lập chưa được xác nhận đầy đủ: tầng sinh hiện chỉ có lát giữa khoảng và E6 chưa có. Điều kiện không bị một nhóm hoặc vài văn bản chi phối cũng chưa được kiểm bằng phân tích bỏ lần lượt nhóm/văn bản đã lưu. Các bảng theo nhóm giúp quan sát khác biệt nhưng không thay thế phép kiểm độ bền này.
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md -->
+<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
 <!-- nguồn: runs/E3_v1/test/all.score.json -->
 <!-- nguồn: runs/E3_test2/rescore/all.score.json -->
 
 Điều kiện không hệ nào vượt oracle trên cùng test **chưa kiểm được**, vì oracle context test chưa có. Oracle context dev chỉ là đối chiếu mô tả; oracle probe tất định của scorer kiểm đường chấm, không phải generator nhận căn cứ gold trên test. Các điều kiện của §8.6 vì thế chưa đồng thời hoàn tất, dù các phán quyết ủng hộ đã báo trong họ XN vẫn giữ nguyên.
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md -->
+<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
 <!-- nguồn: runs/README.md -->
 <!-- nguồn: scripts/eval/score_vilextime.py -->
 
@@ -331,7 +331,7 @@ Về độ phủ trích dẫn, b7 và b7pp có cùng độ phủ tổng thể tr
 
 M4 chưa được nhóm chốt. Trên bảng chính v1.0, H0 được ủng hộ; trên bản lặp lại test 2 — nhãn LLM — ADR dẫn đến nhánh “điểm quyết định B7”, một kết quả đã khai báo trước, không phải thất bại. Nhánh đóng góp phương pháp có thể dựa vào kết quả XN1 cùng XN2 ủng hộ trên v1.0, nhưng phải công bố giới hạn gold và sự không lặp lại đầy đủ ở test 2 — nhãn LLM. Nhánh tài nguyên–phân tích có căn cứ từ XN1 không đủ bằng chứng trên test 2 — nhãn LLM — và từ vai trò lớn của phép đối chứng lọc ngày. Bản nháp trình bày cả hai nhánh; không lựa chọn thay nhóm, không đổi lời kết luận thống kê để làm phù hợp một nhánh mong muốn.
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
-<!-- nguồn: docs/plans/active/master-plan.md -->
+<!-- nguồn: docs/plans/active/master-plan.md @51f36c7 -->
 <!-- nguồn: runs/E3_v1/test/confirm.json -->
 <!-- nguồn: runs/E3_test2/rescore/confirm.json -->
 

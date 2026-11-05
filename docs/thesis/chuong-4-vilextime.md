@@ -69,7 +69,7 @@ Schema công bố tách nội dung đối chiếu `context` khỏi đáp án ng�
 Tên phát hành `vilextime-v1.0` khác với phiên bản schema `2.0.0`. Manifest final ghi 769 dòng chính và 859 dòng silver. Bảng kết quả chính của test dùng 211 dòng giữa khoảng, thuộc 165 lineage; silver không được gộp vào bảng này. Datasheet vẫn có bảng quy mô của một bản dựng cũ, nên chỉ dùng manifest final và file kết quả tương ứng để mô tả bản đã chạy.
 <!-- nguồn: data/vilextime_dataset/manifest.json -->
 <!-- nguồn: runs/E3_v1/test/confirm.json -->
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md -->
+<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
 
 | Nhóm v1.0, test, giữa khoảng | Dòng | Lineage |
 |---|---:|---:|
@@ -138,7 +138,7 @@ Có một lần chấm E3 test 2 — nhãn LLM — sai do release thiếu đáp 
 
 Gold và hệ đề xuất cùng dựa vào kho sự kiện và phiên bản. Khi kho bỏ sót một lần sửa đổi, hệ thống và bộ đánh giá có thể cùng sử dụng lời văn sai mà vẫn đồng ý với nhau. Gold độc lập vẫn chưa hoàn tất; không thể dùng độ chính xác trên ViLexTime để suy ra trực tiếp độ đúng pháp lý ngoài kho. Khả năng phát hiện lỗi gold qua kiểm câu hỏi cũng phụ thuộc năng lực và thời gian người kiểm.
 <!-- nguồn: docs/vilextime-datasheet.md -->
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md -->
+<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
 
 Datasheet của dự án tự khai được tổ chức theo hướng tài liệu hóa bộ dữ liệu [@gebru2021datasheets]. Tuy nhiên, tài liệu hiện chứa cả trạng thái và số liệu lịch sử lẫn cập nhật cuối; sự tồn tại của datasheet không chứng minh dữ liệu đã đạt chất lượng yêu cầu. [CẦN XÁC MINH: đọc bản gốc tài liệu Datasheets for Datasets trước khi hoàn tất trích dẫn; references.bib hiện ghi mới kiểm tóm tắt].
 <!-- nguồn: docs/vilextime-datasheet.md -->

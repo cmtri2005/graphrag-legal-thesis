@@ -79,3 +79,10 @@ data/*
 # Harness core maintenance binary
 scripts/bin/harness
 scripts/bin/harness.exe
+
+# Rác đầu ra ở gốc repo
+/*.jsonl
+/*_last_message*.txt
+/colab_upload/
+/vilextime_*/
+/raw_*.jsonl

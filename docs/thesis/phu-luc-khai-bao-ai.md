@@ -5,12 +5,12 @@
 ## A.1. Phạm vi khai báo
 
 Công trình sử dụng AI trong lập trình, chuẩn bị dữ liệu, hỗ trợ kiểm nhãn, viết tài liệu và sinh câu trả lời thực nghiệm. Các vai trò này phải được khai riêng. Việc một model là đối tượng đánh giá không biến các nội dung do model khác hỗ trợ tạo thành dữ liệu hoàn toàn do người xây dựng. Ngược lại, việc có người duyệt một artifact cũng không đồng nghĩa mọi nội dung trong artifact đã được người đó kiểm độc lập với nguồn gốc.
-<!-- nguồn: MASTER_RESEARCH_GUIDE.md -->
+<!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
 <!-- nguồn: docs/vilextime-datasheet.md -->
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md -->
+<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
 
 Phụ lục chỉ xác nhận những hoạt động có hồ sơ trong kho. CMT và NMT là các vai trò thành viên được dùng trong kế hoạch; A/B là vai trò người gán. Không suy tên thật của người gán từ model hoặc tên file. Không công bố danh tính luật sư vượt quá vai trò mà hồ sơ cho phép. Các khẳng định chưa có biên bản kiểm được ghi là đang chờ, không được chuyển thành “đã xác nhận” khi biên tập.
-<!-- nguồn: docs/plans/active/master-plan.md -->
+<!-- nguồn: docs/plans/active/master-plan.md @51f36c7 -->
 <!-- nguồn: docs/reports/D5_bien_ban.md -->
 
 ## A.2. Bảng vai trò, kiểm tra và giới hạn
@@ -30,7 +30,7 @@ Phụ lục chỉ xác nhận những hoạt động có hồ sơ trong kho. CMT
 <!-- nguồn: docs/vilextime-datasheet.md -->
 <!-- nguồn: docs/reports/D5_bien_ban.md -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md -->
+<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
 <!-- nguồn: scripts/pipeline/export_release.py -->
 <!-- nguồn: scripts/review/e7_error_analysis.py -->
 
@@ -59,8 +59,8 @@ Các chương trong thư mục `docs/thesis/` là bản nháp do trợ lý Codex
 <!-- nguồn: docs/thesis/chuong-6-thuc-nghiem.md -->
 
 Trước khi nhận bản nháp làm nội dung của khóa luận, tác giả cần tự giải thích cơ chế, kiểm được nguồn của từng số và quyết định cách trình bày đóng góp. Các kết luận nhóm chưa chốt, đặc biệt M4, vẫn phải do nhóm quyết định. Việc AI tạo đoạn văn, test hoặc bảng không chuyển trách nhiệm học thuật và trách nhiệm nộp bài sang công cụ.
-<!-- nguồn: MASTER_RESEARCH_GUIDE.md -->
-<!-- nguồn: docs/plans/active/master-plan.md -->
+<!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
+<!-- nguồn: docs/plans/active/master-plan.md @51f36c7 -->
 
 Tài liệu tham khảo có trong `references.bib` chưa đồng nghĩa đã được đọc toàn văn. Những khóa được dùng trong bản nháp chỉ trỏ đến bản ghi hiện có; các mục mới kiểm tóm tắt hoặc chưa đọc gốc còn được đánh dấu. Không tạo thêm tên bài, tác giả, DOI hay khóa trích dẫn từ trí nhớ để lấp phần thiếu.
 <!-- nguồn: references.bib -->
@@ -68,7 +68,7 @@ Tài liệu tham khảo có trong `references.bib` chưa đồng nghĩa đã đ�
 ## A.5. Quy định cơ sở đào tạo
 
 Quy định cụ thể của UIT về sử dụng và khai báo AI trong khóa luận **chưa được xác minh**. Hồ sơ hướng dẫn nghiên cứu của dự án cũng ghi tình trạng này là chưa biết. Phụ lục này là bản khai báo theo bằng chứng dự án, không phải kết luận rằng cách dùng AI hiện tại phù hợp quy định của trường. [CẦN XÁC MINH: quy định hiện hành của UIT, yêu cầu của khoa và hướng dẫn của GVHD về phạm vi sử dụng, hình thức khai báo AI trước khi nộp].
-<!-- nguồn: MASTER_RESEARCH_GUIDE.md -->
+<!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
 
 ## A.6. Câu trả lời có thể rút ra
 

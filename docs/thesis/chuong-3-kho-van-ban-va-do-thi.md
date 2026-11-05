@@ -106,21 +106,21 @@ Tài liệu kiến trúc ban đầu nhấn mạnh Neo4j và Milvus. Đường th
 Các số đo chất lượng dưới đây là mô tả thăm dò trên phạm vi kiểm lịch sử, không thuộc họ XN của thực nghiệm hỏi đáp.
 
 Kết quả kiểm tay L2 lịch sử ghi 58/60 sự kiện áp được là đúng, tương ứng 96,7%, khoảng Wilson 95% từ 88,6% đến 99,1%. Phép đo này có mẫu nhỏ và chỉ lấy trong các sự kiện đã áp được. Recall đối chiếu theo `expiryProvisions` được ghi là 62,2%. Hai số đo không cùng mẫu số, không được nhân hoặc diễn giải thành xác suất “toàn đồ thị đúng”. Các mở rộng pipeline sau thời điểm đo cũng chưa đương nhiên được xác nhận bởi mẫu đó.
-<!-- nguồn: docs/plans/active/l2-event-store.md -->
+<!-- nguồn: docs/plans/active/l2-event-store.md @51f36c7 -->
 
 Đối chiếu tự động với văn bản hợp nhất có 51 văn bản đủ điều kiện, 5.762/7.201 cặp lời văn khớp chính xác, tương ứng 80,02%; 299 văn bản trong kiểm kê thiếu body nên không thuộc phạm vi so sánh. Đây là phép kiểm trên phần quan sát được, không phải độ chính xác của toàn corpus hoặc kiểm định pháp lý độc lập.
-<!-- nguồn: docs/plans/active/phase-3-kg-l0-l3.md -->
+<!-- nguồn: docs/plans/active/phase-3-kg-l0-l3.md @51f36c7 -->
 
 M2 yêu cầu bộ truy vấn đối chiếu tay; kế hoạch vẫn để mở phần kiểm tay 100 truy vấn. Vì chưa có bằng chứng hoàn tất tương ứng, bản nháp này coi **M2 chưa đạt**. Việc các phép tính khoảng hiệu lực nội bộ khớp `ValidityService` chỉ chứng minh hai đường thực hiện cùng mô hình nhất quán với nhau; chúng có thể cùng bỏ sót một sự kiện trong nguồn. Không có cơ sở để dùng kiểm tra nội bộ làm thay thế M2.
-<!-- nguồn: docs/plans/active/phase-3-kg-l0-l3.md -->
-<!-- nguồn: docs/plans/active/master-plan.md -->
+<!-- nguồn: docs/plans/active/phase-3-kg-l0-l3.md @51f36c7 -->
+<!-- nguồn: docs/plans/active/master-plan.md @51f36c7 -->
 
 ## 3.6. Câu trả lời có thể rút ra
 
 Kho hiện có hỗ trợ tách danh tính điều khoản, lịch sử lời văn và khoảng sử dụng theo mô hình thời gian. Provenance, nhật ký sự kiện và các kiểm tra chuỗi tạo điều kiện truy nguyên và tái dựng. Bằng chứng kiểm tay và đối chiếu tự động cho thấy pipeline có khả năng tạo lịch sử hữu ích, đồng thời chỉ rõ độ phủ chưa hoàn chỉnh. Đóng góp có thể bảo vệ là một cơ chế dẫn xuất và truy nguyên phiên bản trên nguồn đã thu thập; chưa thể khẳng định đồ thị đúng hoặc đầy đủ về pháp lý.
 <!-- nguồn: scripts/pipeline/build_versions.py -->
-<!-- nguồn: docs/plans/active/l2-event-store.md -->
-<!-- nguồn: docs/plans/active/phase-3-kg-l0-l3.md -->
+<!-- nguồn: docs/plans/active/l2-event-store.md @51f36c7 -->
+<!-- nguồn: docs/plans/active/phase-3-kg-l0-l3.md @51f36c7 -->
 
 ## Việc còn thiếu trước khi nộp
 

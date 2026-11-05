@@ -26,7 +26,7 @@ flowchart LR
 
 Sơ đồ mô tả đường thực nghiệm chính dùng truy xuất từ vựng. Các cấu hình dense/hybrid có nhánh xếp hạng riêng nhưng chưa được dùng để đưa ra kết luận test trong bản nháp này.
 <!-- nguồn: src/vilexgraph/framework/retrieve.py -->
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md -->
+<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
 
 ## 5.2. Bộ lọc theo mức thông tin thời gian
 
@@ -84,7 +84,7 @@ Sự khác nhau `b7 → b7v` là đưa vào lời văn phiên bản đã hợp n
 
 Các ablation được định nghĩa trong code: `a1` bỏ ràng buộc thời gian; `a2` bỏ mở rộng; `a3` tắt Verifier; `a4` thay tier lan truyền bằng tier phiên bản. Việc có cấu hình không có nghĩa đã có kết quả test. Vai trò riêng của từng thành phần chỉ có thể được đánh giá sau khi có kết quả ablation phù hợp.
 <!-- nguồn: src/vilexgraph/framework/systems.py -->
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md -->
+<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
 
 ## 5.5. Mở rộng quan hệ
 
@@ -123,7 +123,7 @@ Verifier kiểm các ID được câu trả lời trích, không kiểm đúng s
 
 Trong cấu hình đề xuất, truy xuất, mở rộng và Verifier dùng cùng tier. Những đơn vị đã được cho vào prompt vì thế thường cũng qua được kiểm của Verifier. Chính docstring ghi Verifier có thể là phép kiểm không thay đổi đầu ra theo thiết kế. Không được gán mức tăng Accuracy cho Verifier nếu chưa có bằng chứng nó đã sửa hoặc bác câu nào; cũng không coi TVER thấp là bằng chứng rằng câu trả lời nhận ra đúng việc bãi bỏ.
 <!-- nguồn: src/vilexgraph/framework/verify.py -->
-<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md -->
+<!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
 
 ## 5.8. Điều kiện so sánh công bằng và khả năng tái lập
 
