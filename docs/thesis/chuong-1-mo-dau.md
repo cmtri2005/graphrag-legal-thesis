@@ -1,6 +1,6 @@
 # Chương 1. Mở đầu
 
-> Bản nháp cho GVHD xem hướng tại mốc Chủ nhật 08/11/2026. Các kết quả hiện có là kết quả vòng thử; bộ test cuối chưa chạy.
+> Bản nháp cho GVHD xem hướng tại mốc Chủ nhật 08/11/2026. Các kết quả hiện có được đổi vai thành vòng thử ngày 05/11 sau khi đã thấy kết quả; bộ test cuối chưa chạy.
 <!-- nguồn: docs/plans/active/master-plan.md -->
 
 **Tên đề tài:** TRUY XUẤT TĂNG CƯỜNG DỰA TRÊN ĐỒ THỊ TRI THỨC CÓ NHẬN BIẾT THỜI GIAN CHO HỎI ĐÁP PHÁP LUẬT VIỆT NAM THEO MỐC HIỆU LỰC.
@@ -17,7 +17,7 @@ Hướng tiếp cận của khóa luận là biểu diễn điều khoản cùng
 <!-- nguồn: docs/DeCuongKLTN_23521635_23521643_UIT.docx -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 
-Bài toán có tiền lệ gần trong Prior, LawInForce-eCFR và NitiBench+ về lọc luật theo mốc, điều kiện cấp sẵn căn cứ và lỗi đọc phiên bản [@prior2026oldfriend] [@yao2026lawinforce] [@akarajaradwong2026nitibenchplus]. Vì vậy, “lọc thời gian có lợi” và “hai nút thắt tìm–đọc” không được coi là phát hiện riêng. Luận điểm của khóa luận được thu hẹp vào phép đo trên pháp luật Việt Nam, nhận diện bãi bỏ và tách ba nấc thông tin trên cùng dữ liệu: ngày văn bản, khoảng hiệu lực phiên bản và lan truyền từ nút cha. Khảo sát đã có log, nhưng còn nguồn bị chặn và bài chỉ đọc một phần; chưa xác lập thứ tự công bố hay phủ định tiền lệ khác.
+Bài toán có tiền lệ gần trong Prior, LawInForce-eCFR và NitiBench+ về lọc luật theo mốc, điều kiện cấp sẵn căn cứ và lỗi đọc phiên bản [@prior2026oldfriend] [@yao2026lawinforce] [@akarajaradwong2026nitibenchplus]. Vì vậy, “lọc thời gian có lợi” và “hai nút thắt tìm–đọc” không được coi là phát hiện riêng. Luận điểm của khóa luận được thu hẹp vào phép đo trên pháp luật Việt Nam, hai nấc đã đo trên cùng dữ liệu: ngày văn bản và khoảng hiệu lực phiên bản. Lan truyền từ nút cha chưa có bằng chứng lợi ích; nhóm bãi bỏ đã có ở NitiBench+, nên chỉ giữ phạm vi lệnh nằm ở văn bản khác và bãi bỏ qua nút cha của nguồn Việt Nam. Khảo sát đã có log, nhưng còn nguồn bị chặn và bài chỉ đọc một phần; chưa xác lập thứ tự công bố hay phủ định tiền lệ khác.
 <!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md; docs/plans/active/master-plan.md, mục 10 -->
 
 ## 1.2. Phát biểu bài toán
@@ -82,6 +82,25 @@ Bảng sau ghi các lệch đã được kế hoạch chính yêu cầu giải t
 | T5 thiếu, T4 có thể dưới 150 | Điều kiện pháp lý hẹp | Báo số thật, không nới định nghĩa để đủ quota |
 | Kho rộng hơn bốn miền | Cần đóng kín quan hệ sửa đổi | Giải thích trong phần dữ liệu và datasheet |
 <!-- nguồn: docs/plans/active/master-plan.md, mục 4 -->
+
+Các lệch bổ sung so với đề cương và định nghĩa cần công bố:
+
+| Cam kết / định nghĩa | Thực hiện và giới hạn |
+|---|---|
+| T1 250 câu | Định nghĩa giảm còn 150 cho đối chứng; không đồng nhất với số đã kiểm |
+| T3 200 câu | Định nghĩa sàn 120, mục tiêu 150; thực tế nhóm đòi từ ba đáp án theo mốc, không bắt buộc truy vết A→B→C như đề cương |
+| T4 riêng 150 câu | Đổi thành lát chồng lắp của T2, không cộng hai lần |
+| T5 hồi tố “có lợi”, 50 câu | T5a bỏ vế “có lợi”, T5b là đã ký chưa hiệu lực; hiện chỉ chẩn đoán |
+| T6 100 câu | Định nghĩa T6a sàn 100, T6b sàn 200; bộ cuối chưa đủ bằng chứng cho quota hay lợi ích lan truyền |
+| 1.100–1.300 câu hỏi kiểm thủ công | Hiện đếm nhiều cặp câu hỏi–mốc và tầng nhãn; mọi tầng có 515 lineage chưa tính T5: test v1.0 165, dev 81, test 2 101, silver 168; không phải 515 câu người kiểm đạt |
+| LLM chỉ hỗ trợ diễn đạt | Thực tế model viết nháp, Claude chọn span đáp án (tiêu chí chấm), agent kiểm phần test, và LLM lọc trước khi đưa người; có thiên lệch chọn mẫu |
+| Bốn miền tiêu biểu | Test v1.0 có 136/211 dòng `khac`, silver 243/389; đất đai ở test chỉ 5 dòng/3 lineage; kho rộng không có nghĩa đánh giá cân bằng bốn miền |
+| Chỉ số đề cương | TCS, VCR, MRR, EM/F1 bổ sung mô tả ở Chương 6; LLM-judge chưa có điểm hiệu chuẩn hợp lệ |
+| L4 lọc trước truy xuất | `rel_up` lấy seed trước bộ lọc ngày để tìm lệnh tác động rồi lọc văn bản lệnh; lệch thứ tự cam kết |
+<!-- nguồn: docs/vilextime-dinh-nghia.md, mục 11; docs/DeCuongKLTN_23521635_23521643_UIT.docx; data/vilextime_dataset/vilextime.jsonl; data/vilextime/test2_release_v2.jsonl; data/vilextime_dataset/vilextime_silver.jsonl; data/vilextime_dataset/vilextime_meta.jsonl; runs/domain_e3/report.json; src/vilexgraph/framework/graphx.py; docs/vilextime-datasheet.md -->
+
+V1.0 được khai là bản xác nhận lần 1 trong ADR 0005; amendment 03/11 gọi test 2 là bản lặp lại. Ngày 05/11, sau khi đã thấy kết quả (XN1 được ủng hộ ở v1.0, không đủ bằng chứng ở test 2), kế hoạch mới đổi vai cả hai thành vòng thử và mở bộ cuối. Đây là thay đổi sau quan sát, không phải vai trò được định trước. Giữ cả ba phán quyết cạnh nhau, không gộp điểm hoặc chọn phán quyết thuận lợi. [CHỜ G3: amendment ghi lịch sử các lần nhìn và quy tắc kết luận trước bộ cuối].
+<!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md, §1 và amendment 03/11; runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json; docs/plans/active/master-plan.md, xử lý C3 -->
 
 Ngoài các lệch trên, trạng thái chưa hoàn tất cũng phải được công bố: M2 kiểm chứng snapshot chưa đạt; cấu hình `proposed` đã chạy dùng từ vựng; `proposed2` lai ghép mới có số truy xuất trên dev; Verifier chưa cho thấy tác dụng khi bộ lọc đã loại căn cứ không hợp lệ. Chương phương pháp phân biệt kiến trúc cam kết với cấu hình đã đo, còn chương thực nghiệm để trống kết quả bộ cuối.
 <!-- nguồn: docs/plans/active/master-plan.md -->

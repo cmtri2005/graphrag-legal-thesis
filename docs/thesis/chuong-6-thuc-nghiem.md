@@ -2,7 +2,7 @@
 
 **Câu hỏi của chương:** Các kết quả đã có cho biết gì về giá trị của bộ lọc thời gian, biểu diễn phiên bản và mở rộng đồ thị; những kết luận nào vẫn chưa đủ bằng chứng?
 
-> Bộ test cuối chưa chạy. v1.0 và test 2 là hai vòng thử có khai báo; các bảng dưới giữ kết quả và phán quyết lịch sử, không phải kết luận cuối của khóa luận. Bản nháp chỉ sử dụng kết quả đã lưu. Mọi phân tích ngoài họ xác nhận được ghi là **thăm dò**. Test 2 là **nhãn LLM**, được trình bày riêng với v1.0. Không dùng số dev để kết luận trên test.
+> Bộ test cuối chưa chạy. v1.0 và test 2 được đổi vai thành vòng thử ngày 05/11 sau khi đã thấy kết quả; các bảng dưới giữ kết quả và phán quyết lịch sử, không phải kết luận cuối của khóa luận. Bản nháp chỉ sử dụng kết quả đã lưu. Mọi phân tích ngoài họ xác nhận được ghi là **thăm dò**. Test 2 là **nhãn LLM**, được trình bày riêng với v1.0. Không dùng số dev để kết luận trên test.
 
 ## 6.1. Thiết kế phép đo và phạm vi kết quả
 
@@ -16,13 +16,22 @@ Bảng chính dùng `giua_khoang`, nhóm all gồm T1, T2, T3, T6 khi nhóm tư�
 TVER chỉ có mẫu số ở các dòng có trích dẫn phân giải theo định nghĩa scorer; TVER thấp phải đọc cùng độ phủ và `tver_strict`. VCR cần trích dẫn mang phiên bản; `wrong_version` xét đoạn văn bản khác phiên bản trong nội dung trả lời trên phần có span phân biệt. Không dùng các tỷ lệ có mẫu số khác nhau thay thế lẫn nhau.
 <!-- nguồn: scripts/eval/score_vilextime.py -->
 
-Khoảng tin cậy 95% dùng bootstrap theo cụm lineage với 10.000 lần lấy mẫu lại. Họ Holm gồm XN1–XN4, XN8, XN9; ngưỡng 0,05. XN5–XN7 nằm ngoài họ và chỉ thăm dò. Ba phép so sánh tầng truy xuất XN1, XN3, XN4 chỉ dùng dòng có đáp án. Ước lượng và khoảng dưới đây dùng thang tỷ lệ; nhân với 100 sẽ đổi sang điểm phần trăm, không phải phần trăm tăng tương đối.
+Khoảng tin cậy 95% dùng bootstrap theo cụm lineage với 10.000 lần lấy mẫu lại. Họ Holm lịch sử gồm XN1–XN4, XN8, XN9; ngưỡng 0,05. XN5–XN7 nằm ngoài họ và chỉ thăm dò. Ba phép so sánh tầng truy xuất XN1, XN3, XN4 chỉ dùng dòng có đáp án. Ước lượng và khoảng dưới đây dùng thang tỷ lệ; nhân với 100 sẽ đổi sang điểm phần trăm, không phải phần trăm tăng tương đối.
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 <!-- nguồn: scripts/eval/confirm_vilextime.py -->
 
-Theo ADR, kết luận “ủng hộ” cần p sau Holm dưới ngưỡng và ước lượng đúng chiều; “bác” cần p dưới ngưỡng nhưng ngược chiều; các trường hợp còn lại là “không đủ bằng chứng”. Những giá trị p lưu bằng không là kết quả hữu hạn của Monte Carlo trong file, không có nghĩa xác suất lý thuyết bằng không. Với 10.000 lần lấy mẫu, các ô p Holm đó hiển thị `< 0,0001` trong bảng; giá trị gốc trong JSON được giữ nguyên. Không dùng số ngoài họ để tự bổ sung một phán quyết xác nhận.
-<!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
-<!-- nguồn: scripts/eval/confirm_vilextime.py -->
+Theo ADR, phán quyết lịch sử giữ quy tắc đúng chiều và p sau Holm dưới ngưỡng. Không dùng số ngoài họ để thêm phán quyết xác nhận.
+† Với các ô JSON lưu p bằng 0 sau 10.000 lần bootstrap, bảng dùng quy ước độ phân giải p thô < 0,0002, p Holm ≤ 0,0012 cho họ sáu phép lịch sử. Đây là cách trình bày độ phân giải Monte Carlo, không phải khẳng định p lý thuyết bằng 0 hoặc cận tin cậy của p. Các p khác giữ nguyên; không tính lại họ lịch sử khi bỏ XN2 khỏi thiết kế bộ cuối.
+<!-- nguồn: scripts/eval/confirm_vilextime.py, run và holm; runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json -->
+
+V1.0 được khai là bản xác nhận lần 1 trong ADR 0005; amendment 03/11 gọi test 2 là bản lặp lại. Ngày 05/11, sau khi đã thấy kết quả (XN1 được ủng hộ ở v1.0, không đủ bằng chứng ở test 2), kế hoạch mới đổi vai cả hai thành vòng thử và mở bộ cuối. Đây là thay đổi sau quan sát, không phải vai trò được định trước. Giữ cả ba phán quyết cạnh nhau, không gộp điểm hoặc chọn phán quyết thuận lợi. [CHỜ G3: amendment ghi lịch sử các lần nhìn và quy tắc kết luận trước bộ cuối].
+<!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md, §1 và amendment 03/11; runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json; docs/plans/active/master-plan.md, xử lý C3 -->
+
+TVER tự động đọc `effective_intervals` của cùng đồ thị mà bộ lọc và gold sử dụng; gold mù của một dòng chỉ kiểm phiên bản đích, không kiểm mọi trích dẫn hệ trả về. Vì thế không gọi việc chấm lại dòng gold mù là “TVER độc lập”. Theo hướng xử lý đã chấp nhận, XN2 được đưa ra khỏi họ xác nhận của bộ cuối, giữ như kiểm nhất quán nội bộ; giả thuyết đề cương được quyết bằng TV-Recall của XN1 sau amendment. Phán quyết XN2 lịch sử vẫn giữ nguyên nhãn lịch sử.
+<!-- nguồn: scripts/eval/score_vilextime.py, row_scores và units_of; runs/x4_verifier_dev/report.json; docs/plans/active/master-plan.md, xử lý C1 -->
+
+TVER theo người là phép đo riêng còn chờ: lấy khoảng 100 đơn vị thực sự được trích từ các hệ, người đọc nguồn gốc và mốc hỏi mà không thấy cửa sổ đồ thị, kết luận còn hiệu lực hay không. Báo mẫu số, tỷ lệ sai, Wilson và phụ thuộc do cùng lineage; không thay bằng gold phiên bản. [CHỜ G4: phiếu, kết quả và khoảng Wilson của TVER theo người].
+<!-- nguồn: docs/plans/active/master-plan.md, xử lý C1 và việc người thêm -->
 
 ### Bộ test cuối: thiết kế sẽ dùng để kết luận
 
@@ -33,13 +42,30 @@ Kế hoạch hiện hành dành kết luận chính cho bộ test cuối mới, 
 |---|---|---|
 | RQ1, RAG | TVER, wrong_version, VCR của `b2ctx`, `b4` | Mô tả có KTC |
 | RQ1, LLM | Sai phiên bản trên câu có trả lời của các LLM không truy xuất | Mô tả, bảng phụ |
-| RQ2 | Accuracy: `proposed2` − `b4`, `proposed2` − `b5` | Xác nhận sau amendment |
+| RQ2 | `wrong_version` cùng Accuracy; khóa một hệ và đối chứng cùng chế độ truy xuất | [CHỜ G3: amendment] |
 | RQ3, lọc văn bản | TV-Recall@1: `b7` − `b2ctx` | Xác nhận sau amendment |
 | RQ3 / giả thuyết, phiên bản | TV-Recall@1: `b7plus` − `b7`, `b7pp` − `b7` | Xác nhận sau amendment |
-| Giả thuyết, câu trả lời | TVER: `b7pp` − `b7`, kèm gold mù | Xác nhận sau amendment |
-| T6 lan truyền | Accuracy dòng bãi bỏ: `proposed2` − `b7pp` | Xác nhận nếu đủ ≥ 20 lineage; không thì thăm dò |
+| Giả thuyết, câu trả lời | TVER tự động: kiểm nhất quán; TVER theo người là phép đo riêng | Mô tả, ngoài họ xác nhận |
+| T6 | Accuracy/precision/recall của hệ cuối trên gold mù; `proposed2 − b7pp` đo mở rộng trực tuyến | [CHỜ G3: điều kiện cỡ lát và loại phân tích] |
+| Lan truyền hiệu lực | XN5: Accuracy `b7pp − b7plus` trên T6 qua nút cha | [CHỜ: đầu ra sinh, khai trong amendment] |
 | Thành phần | `p2a2`, `p2a3` so với `proposed2` | Mô tả |
 <!-- nguồn: docs/plans/active/master-plan.md, mục 6 -->
+
+Trước G3, amendment còn phải liệt kê từng thay đổi về đại lượng so với ADR và kết quả đã thấy: RQ1 lịch sử có Accuracy/`wrong_version`, thiết kế mới thêm TVER/VCR; RQ2 phải báo `wrong_version` cùng Accuracy thay vì chỉ Accuracy; XN2 chuyển thành nhất quán nội bộ; vai trò XN8 và XN9 trên bộ cuối phải khai rõ, không âm thầm bỏ. RQ3 giữ nguyên câu hỏi về biểu diễn đồ thị của đề cương. [CHỜ G3: tên một hệ cuối, generator, embedding, baseline cùng chế độ truy xuất và họ xác nhận cuối].
+<!-- nguồn: docs/plans/active/master-plan.md, mục "Phản biện 05/11 và cách xử lý"; docs/decisions/0005-ke-hoach-phan-tich.md -->
+
+V1.0 giữ phán quyết lịch sử ủng hộ và test 2 (nhãn LLM) giữ “điểm quyết định B7”. Với lần nhìn mới, dự kiến quy tắc sau cần khóa ở G3: nếu XN1 bộ cuối ủng hộ thì chỉ nói ủng hộ có điều kiện trên bộ cuối, kèm sự không lặp đầy đủ trước đó; nếu không đủ bằng chứng thì giả thuyết không được ủng hộ; nếu ngược chiều có ý nghĩa thì bác trên bộ cuối. Không dùng hai bộ cũ để đảo phán quyết cuối, không gộp ba lần nhìn. [CHỜ G3: khóa bảng ba phán quyết và quy tắc này trong amendment; chưa phải đăng ký trước đã hoàn tất].
+<!-- nguồn: docs/plans/active/master-plan.md, mục "Phản biện 05/11 và cách xử lý"; docs/decisions/0005-ke-hoach-phan-tich.md -->
+
+Bảng ba phán quyết cần điền sau G4; chỉ bộ cuối dùng cho xác nhận mới:
+
+| Phán quyết v1.0 theo ADR | Phán quyết test 2 (nhãn LLM) theo ADR | XN1 bộ cuối (chưa chạy) | Diễn giải cần khóa G3 |
+|---|---|---|---|
+| Ủng hộ | Điểm quyết định B7 | [CHỜ G4: nếu ủng hộ] | Ủng hộ có điều kiện trên bộ cuối; chưa lặp đầy đủ qua ba lần nhìn |
+| Ủng hộ | Điểm quyết định B7 | [CHỜ G4: nếu không đủ bằng chứng] | Giả thuyết không được ủng hộ; không lấy bộ cũ bù |
+| Ủng hộ | Điểm quyết định B7 | [CHỜ G4: nếu bác] | Bác trên bộ cuối; giữ công khai cả ba phán quyết |
+<!-- nguồn: runs/E3_v1/test/confirm.log; runs/E3_test2/rescore/confirm.log; docs/plans/active/master-plan.md, xử lý C1 và C3; quy tắc dự kiến chưa khóa G3 -->
+
 
 Các chỉ số Recall@k, MRR, TV-Recall, Accuracy, EM/F1, TVER, VCR và TCS được giữ theo scorer. Giám khảo LLM cần hiệu chuẩn với người trước khi sử dụng; chưa có điểm giám khảo hợp lệ để điền. Mỗi cấu hình bộ cuối chỉ chạy một lần sau khi khóa; mọi thay đổi hoặc chấm lại do lỗi cần hồ sơ amendment. [CHỜ G4: danh sách xác nhận và họ Holm cuối đã khóa ở G3].
 <!-- nguồn: docs/plans/active/master-plan.md; docs/decisions/0005-ke-hoach-phan-tich.md -->
@@ -83,15 +109,15 @@ Lát giữa khoảng của test v1.0 có 211 dòng thuộc 165 lineage. Các ki�
 | XN | So sánh và đại lượng | Ước lượng [KTC 95%] | p Holm | Dòng / lineage | Kết luận |
 |---|---|---|---:|---|---|
 | XN1 | b7pp − b7, TV-R@1 (E1, có đáp án) | +0,051 [+0,021; +0,088] | 0,0008 | 196/165 | ủng hộ |
-| XN2 | b7pp − b7, TVER (E3) | -0,133 [-0,179; -0,090] | < 0,0001 | 211/165 | ủng hộ |
-| XN3 | b7 − b2ctx, TV-R@1 (E1, có đáp án) | +0,138 [+0,089; +0,191] | < 0,0001 | 196/165 | ủng hộ |
+| XN2 | b7pp − b7, TVER (E3) | -0,133 [-0,179; -0,090] | ≤ 0,0012† | 211/165 | ủng hộ |
+| XN3 | b7 − b2ctx, TV-R@1 (E1, có đáp án) | +0,138 [+0,089; +0,191] | ≤ 0,0012† | 196/165 | ủng hộ |
 | XN4 | b7plus − b7, TV-R@1 (E1, có đáp án) | +0,051 [+0,020; +0,087] | 0,0008 | 196/165 | ủng hộ |
-| XN8 | proposed − b5, Accuracy | +0,175 [+0,115; +0,234] | < 0,0001 | 211/165 | ủng hộ |
-| XN9 | b2ctx − b1, Accuracy | +0,474 [+0,409; +0,542] | < 0,0001 | 211/165 | ủng hộ |
+| XN8 | proposed − b5, Accuracy | +0,175 [+0,115; +0,234] | ≤ 0,0012† | 211/165 | ủng hộ |
+| XN9 | b2ctx − b1, Accuracy | +0,474 [+0,409; +0,542] | ≤ 0,0012† | 211/165 | ủng hộ |
 
 <!-- nguồn: runs/E3_v1/test/confirm.json -->
 
-Trên v1.0, tất cả các kiểm định trong họ đều có phán quyết **ủng hộ**; XN1 và XN2 đều ủng hộ, nên **H0 được ủng hộ** theo đúng ADR 0005 §6. Công cụ cũng ghi “H0: ủng hộ” trong log xác nhận. Phạm vi khẳng định là bộ dữ liệu, generator và cấu hình đã đo. Đây chưa đủ để khẳng định ưu thế chung của suy luận đồ thị, vì các kiểm định không tách hết biểu diễn, lọc ngày và phần trực tuyến; gold độc lập cũng chưa có.
+Trên v1.0, tất cả các kiểm định trong họ đều có phán quyết **ủng hộ**; XN1 và XN2 đều ủng hộ, nên **H0 được ủng hộ theo quy tắc lịch sử** của ADR 0005 §6; đây không phải xác nhận pháp lý vì XN2 phụ thuộc cùng đồ thị. Công cụ cũng ghi “H0: ủng hộ” trong log xác nhận. Phạm vi khẳng định là bộ dữ liệu, generator và cấu hình đã đo. Đây chưa đủ để khẳng định ưu thế chung của suy luận đồ thị, vì các kiểm định không tách hết biểu diễn, lọc ngày và phần trực tuyến; gold độc lập cũng chưa có.
 <!-- nguồn: runs/E3_v1/test/confirm.json -->
 <!-- nguồn: runs/E3_v1/test/confirm.log -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
@@ -139,11 +165,11 @@ Lần chấm E3 đầu của test 2 — nhãn LLM — đã sai: release thiếu 
 | XN | So sánh và đại lượng | Ước lượng [KTC 95%] | p Holm | Dòng / lineage | Kết luận |
 |---|---|---|---:|---|---|
 | XN1 | b7pp − b7, TV-R@1 (E1, có đáp án) | +0,028 [-0,014; +0,072] | 0,4596 | 211/101 | không đủ bằng chứng |
-| XN2 | b7pp − b7, TVER (E3) | -0,219 [-0,273; -0,165] | < 0,0001 | 227/101 | ủng hộ |
-| XN3 | b7 − b2ctx, TV-R@1 (E1, có đáp án) | +0,047 [+0,023; +0,078] | < 0,0001 | 211/101 | ủng hộ |
+| XN2 | b7pp − b7, TVER (E3) | -0,219 [-0,273; -0,165] | ≤ 0,0012† | 227/101 | ủng hộ |
+| XN3 | b7 − b2ctx, TV-R@1 (E1, có đáp án) | +0,047 [+0,023; +0,078] | ≤ 0,0012† | 211/101 | ủng hộ |
 | XN4 | b7plus − b7, TV-R@1 (E1, có đáp án) | +0,028 [-0,014; +0,072] | 0,4596 | 211/101 | không đủ bằng chứng |
-| XN8 | proposed − b5, Accuracy | +0,185 [+0,127; +0,246] | < 0,0001 | 227/101 | ủng hộ |
-| XN9 | b2ctx − b1, Accuracy | +0,150 [+0,109; +0,195] | < 0,0001 | 227/101 | ủng hộ |
+| XN8 | proposed − b5, Accuracy | +0,185 [+0,127; +0,246] | ≤ 0,0012† | 227/101 | ủng hộ |
+| XN9 | b2ctx − b1, Accuracy | +0,150 [+0,109; +0,195] | ≤ 0,0012† | 227/101 | ủng hộ |
 
 <!-- nguồn: runs/E3_test2/rescore/confirm.json -->
 
@@ -224,13 +250,12 @@ Các bảng sau phân loại toàn bộ dòng sai theo thứ tự ưu tiên đã
 
 <!-- nguồn: docs/reports/e7_phan_ra_loi.md -->
 
-| Hệ | TV-R@20 | Đúng khi có căn cứ trong prompt |
+| Hệ | TV-R@20, chỉ dòng có đáp án | Đúng khi prompt có căn cứ, chỉ dòng có đáp án |
 |---|---|---|
-| b7 | 178/211 = 0,844 | 135/178 = 0,758 |
-| b7pp | 177/211 = 0,839 | 134/177 = 0,757 |
-| proposed | 177/211 = 0,839 | 138/177 = 0,780 |
-
-<!-- nguồn: docs/reports/e7_phan_ra_loi.md -->
+| b7 | 175/196 = 0,893 | 135/175 = 0,771 |
+| b7pp | 177/196 = 0,903 | 134/177 = 0,757 |
+| proposed | 177/196 = 0,903 | 138/177 = 0,780 |
+<!-- nguồn: docs/reports/e7_phan_ra_loi.md, cột "Chỉ dòng có đáp án"; data/vilextime_dataset/vilextime.jsonl; runs/E3_v1/test/{b7,b7pp,proposed}.jsonl; scripts/paper/paper_values.py -->
 
 **Vòng thử test 2 — nhãn LLM, thăm dò, do máy phân loại.**
 
@@ -242,35 +267,156 @@ Các bảng sau phân loại toàn bộ dòng sai theo thứ tự ưu tiên đã
 
 <!-- nguồn: docs/reports/e7_phan_ra_loi.md -->
 
-| Hệ | TV-R@20 | Đúng khi có căn cứ trong prompt |
+| Hệ | TV-R@20, chỉ dòng có đáp án | Đúng khi prompt có căn cứ, chỉ dòng có đáp án |
 |---|---|---|
-| b7 | 118/227 = 0,520 | 67/118 = 0,568 |
-| b7pp | 120/227 = 0,529 | 70/120 = 0,583 |
-| proposed | 120/227 = 0,529 | 74/121 = 0,612 |
+| b7 | 118/211 = 0,559 | 67/118 = 0,568 |
+| b7pp | 120/211 = 0,569 | 70/120 = 0,583 |
+| proposed | 120/211 = 0,569 | 74/121 = 0,612 |
+<!-- nguồn: docs/reports/e7_phan_ra_loi.md, cột "Chỉ dòng có đáp án"; data/vilextime/test2_release_v2.jsonl; runs/E3_test2/test/{b7,b7pp,proposed}.jsonl; scripts/paper/paper_values.py -->
 
-<!-- nguồn: docs/reports/e7_phan_ra_loi.md -->
-
-Trong phân tích thăm dò trên test 2 — nhãn LLM — căn cứ đúng ở top-20 chỉ đạt khoảng 52–53%; khi đã có căn cứ trong prompt, tỷ lệ trả lời đúng vẫn chỉ khoảng 57–61%. Trên v1.0, tỷ lệ có điều kiện tương ứng khoảng 76–78%. Oracle context dev đạt 0,854 (129/151), nhưng khác split, phân bố và điều kiện căn cứ; không dùng các tỷ lệ này để kiểm định chênh lệch với oracle hoặc lấy dev làm cận trên test đã đo. Các tỷ lệ có điều kiện chưa có KTC trong báo cáo E7 hiện tại, nên chỉ là thống kê mô tả.
-<!-- nguồn: docs/reports/e7_phan_ra_loi.md -->
-<!-- nguồn: runs/B2_dev/dev/all.score.json -->
+Hai tỷ lệ dùng mẫu số khác nhau: top-20 chỉ xét danh sách đầu, còn prompt gồm mọi căn cứ mở rộng. Với `proposed` test 2 (nhãn LLM), 120 dòng có căn cứ ở top-20 nhưng 121 trong toàn prompt. Không bỏ căn cứ ngoài top-20 hoặc gộp hai định nghĩa. Dòng không có đáp án không vào mẫu số truy xuất này; các tần suất lỗi phía trên vẫn dùng toàn bộ dòng sai. Tỷ lệ có điều kiện chỉ mô tả, chưa có KTC.
+<!-- nguồn: docs/reports/e7_phan_ra_loi.md; scripts/review/e7_error_analysis.py -->
 
 Phân tích máy cho thấy hai chỗ nghẽn có thể cùng tồn tại: thiếu căn cứ và dùng sai căn cứ đã có. Nó chưa tách được lỗi gold, câu hỏi mơ hồ, đọc sai ngữ nghĩa hay rào đón theo đánh giá của người. Phiếu người gán đã được lấy mẫu có seed; cột hệ và tầng máy được giữ ngoài phiếu người, nối với file máy bằng `stt`. Việc tạo phiếu không đồng nghĩa đã có kết quả E7 do người kiểm.
 <!-- nguồn: scripts/review/e7_error_analysis.py -->
 <!-- nguồn: data/review/e7/phieu_v1.tsv -->
 <!-- nguồn: data/review/e7/phieu_test2.tsv -->
 
-### 6.4.5. Các phân tích thăm dò khác đã có số
+### 6.4.5. Các phân tích bổ sung
 
-**Vòng thử v1.0 — thăm dò.**
+### XN5–XN7 và đầy đủ các nhóm — thăm dò
 
-XN6 có ước lượng −0,059, KTC 95% [−0,263; +0,191], trên các lát gần giống và thường của T2. XN7 có ước lượng −0,154 [−0,274; −0,051]. Dù khoảng XN7 nằm về một phía, ADR xếp phép đo này là thăm dò; không dùng nó để tự đưa ra phán quyết ủng hộ hoặc bác giả thuyết xác nhận. XN5 chưa có vì thiếu đầu ra sinh của hệ cần so sánh.
+XN5 là Accuracy `b7pp − b7plus` trên bãi bỏ qua tổ tiên; XN6 là VCR `b2ctx` giữa T2 gần giống và thường; XN7 là chênh lệch của hiệu Accuracy `proposed − b7` giữa T6 và T2/T3. p dưới đây là p thô, không Holm; XN7 v1.0 ngược chiều dự đoán H2, nhưng vẫn chỉ là thăm dò.
+<!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md, §4; scripts/eval/confirm_vilextime.py -->
+
+**V1.0**
+
+| Mã | Ước lượng [KTC 95%] | p thô | Dòng / lineage theo lát |
+|---|---|---:|---|
+| XN5 | [CHỜ: đầu ra sinh `b7plus`] | — | — |
+| XN6 | -0,059 [-0,263; +0,191] | 0,5738 | 8/4 và 38/19 |
+| XN7 | -0,154 [-0,274; -0,051] | 0,0042 | 30/15 và 58/27 |
 <!-- nguồn: runs/E3_v1/test/confirm.json -->
-<!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 
-**Vòng thử test 2 — nhãn LLM, thăm dò.**
+**Test 2 (nhãn LLM)**
 
-XN6 có ước lượng +0,100, KTC 95% [−0,067; +0,278]; XN7 là −0,031 [−0,078; +0,015]. Hai khoảng đều rộng và chứa không. Chúng chỉ mô tả mẫu hiện có, không khẳng định hiệu ứng của độ gần giống hoặc lợi ích riêng ở nhóm bãi bỏ. XN5 vẫn chưa có đầu ra sinh cần thiết.
+| Mã | Ước lượng [KTC 95%] | p thô | Dòng / lineage theo lát |
+|---|---|---:|---|
+| XN5 | [CHỜ: đầu ra sinh `b7plus`] | — | — |
+| XN6 | +0,100 [-0,067; +0,278] | 0,2706 | 30/15 và 90/45 |
+| XN7 | -0,031 [-0,078; +0,015] | 0,2314 | 32/16 và 195/85 |
 <!-- nguồn: runs/E3_test2/rescore/confirm.json -->
+
+Hiệu Accuracy [KTC 95%] theo đủ nhóm có mặt; đây là phân tích sau quan sát, ngoài họ kiểm định và chưa hiệu chỉnh đa so sánh. Bảng gồm cả chiều âm, không chỉ chọn T2 thuận lợi.
+
+**V1.0**
+
+| Nhóm | `b7pp − b7`, Accuracy [KTC] | `proposed − b7pp`, Accuracy [KTC] |
+|---|---|---|
+| T1 | -0,024 [-0,057; +0,000] | +0,000 [+0,000; +0,000] |
+| T2 | +0,065 [-0,022; +0,152] | +0,087 [+0,022; +0,174] |
+| T3 | +0,000 [+0,000; +0,000] | +0,000 [+0,000; +0,000] |
+| T6 | -0,033 [-0,100; +0,000] | +0,000 [+0,000; +0,000] |
+<!-- nguồn: runs/E3_v1/test/all.score.json -->
+
+**Test 2 (nhãn LLM)**
+
+| Nhóm | `b7pp − b7`, Accuracy [KTC] | `proposed − b7pp`, Accuracy [KTC] |
+|---|---|---|
+| T2 | -0,025 [-0,083; +0,042] | +0,067 [+0,017; +0,117] |
+| T3 | +0,067 [-0,013; +0,160] | -0,053 [-0,147; +0,027] |
+| T6 | +0,000 [+0,000; +0,000] | +0,000 [+0,000; +0,000] |
+<!-- nguồn: runs/E3_test2/rescore/all.score.json -->
+
+### Chỉ số bổ sung — mô tả, không thêm kiểm định
+
+TCS yêu cầu cả cặp T2 đúng; VCR đo sai phiên bản của trích dẫn theo scorer. MRR tính trên toàn lát, EM/F1 chỉ trên dòng có đáp án; EM đòi khớp lời đáp ngắn nên khác Accuracy chứa span. Không dùng các mẫu số này thay cho nhau.
+<!-- nguồn: scripts/eval/score_vilextime.py, row_scores và score -->
+
+**V1.0**
+
+| Hệ | TCS (cặp T2) | VCR | MRR | EM | F1 |
+|---|---:|---:|---:|---:|---:|
+| `b1` | 0,000 (23) | — | 0,000 | 0,000 | 0,020 |
+| `b2ctx` | 0,000 (23) | 0,095 | 0,509 | 0,138 | 0,594 |
+| `b5` | 0,000 (23) | 0,095 | 0,509 | 0,133 | 0,589 |
+| `b7` | 0,435 (23) | 0,052 | 0,602 | 0,189 | 0,633 |
+| `b7pp` | 0,609 (23) | 0,000 | 0,573 | 0,189 | 0,630 |
+| `proposed` | 0,652 (23) | 0,005 | 0,573 | 0,184 | 0,633 |
+<!-- nguồn: runs/E3_v1/test/all.score.json; scripts/paper/paper_values.py -->
+
+**Test 2 (nhãn LLM)**
+
+| Hệ | TCS (cặp T2) | VCR | MRR | EM | F1 |
+|---|---:|---:|---:|---:|---:|
+| `b1` | 0,000 (60) | — | 0,000 | 0,000 | 0,002 |
+| `b2ctx` | 0,000 (60) | 0,197 | 0,242 | 0,081 | 0,410 |
+| `b5` | 0,000 (60) | 0,188 | 0,242 | 0,081 | 0,405 |
+| `b7` | 0,167 (60) | 0,121 | 0,270 | 0,161 | 0,448 |
+| `b7pp` | 0,233 (60) | 0,000 | 0,224 | 0,185 | 0,428 |
+| `proposed` | 0,233 (60) | 0,004 | 0,224 | 0,190 | 0,450 |
+<!-- nguồn: runs/E3_test2/rescore/all.score.json; scripts/paper/paper_values.py -->
+
+### Precision và recall khẳng định hết hiệu lực — mô tả
+
+Dự đoán dương là cờ `answerable=False`, không phải mọi câu bỏ trống hay “không rõ”. Recall = đúng trên tổng dòng không có đáp án; precision = đúng trên mọi khẳng định đó, bao gồm khẳng định sai ở dòng có đáp án.
+<!-- nguồn: src/vilexgraph/framework/generate.py; scripts/eval/score_vilextime.py -->
+
+**V1.0**
+
+| Hệ | Đúng / dòng bãi bỏ (recall) | Sai trên dòng có đáp án | Precision |
+|---|---|---:|---|
+| `b1` | 0/15 = 0,000 | 0 | — (không khẳng định) |
+| `b2ctx` | 0/15 = 0,000 | 2 | 0/2 = 0,000 |
+| `b5` | 0/15 = 0,000 | 2 | 0/2 = 0,000 |
+| `b7` | 0/15 = 0,000 | 0 | — (không khẳng định) |
+| `b7pp` | 0/15 = 0,000 | 0 | — (không khẳng định) |
+| `proposed` | 0/15 = 0,000 | 0 | — (không khẳng định) |
+<!-- nguồn: data/vilextime_dataset/vilextime.jsonl; runs/E3_v1/test/{b1,b2ctx,b5,b7,b7pp,proposed}.jsonl; scripts/paper/paper_values.py -->
+
+**Test 2 (nhãn LLM)**
+
+| Hệ | Đúng / dòng bãi bỏ (recall) | Sai trên dòng có đáp án | Precision |
+|---|---|---:|---|
+| `b1` | 0/16 = 0,000 | 0 | — (không khẳng định) |
+| `b2ctx` | 1/16 = 0,062 | 12 | 1/13 = 0,077 |
+| `b5` | 0/16 = 0,000 | 7 | 0/7 = 0,000 |
+| `b7` | 1/16 = 0,062 | 6 | 1/7 = 0,143 |
+| `b7pp` | 1/16 = 0,062 | 5 | 1/6 = 0,167 |
+| `proposed` | 1/16 = 0,062 | 4 | 1/5 = 0,200 |
+<!-- nguồn: data/vilextime/test2_release_v2.jsonl; runs/E3_test2/test/{b1,b2ctx,b5,b7,b7pp,proposed}.jsonl; scripts/paper/paper_values.py -->
+
+[CHỜ COLAB: precision, recall và số khẳng định sai của `proposed3` trên dev và từng bộ T6 đã thấy, báo riêng; CHỜ G4: trên bộ cuối đã qua gold mù]. Không suy các số này từ TVER hoặc từ việc đã có thông báo bãi bỏ.
+<!-- nguồn: docs/plans/active/master-plan.md, xử lý C2, N8 và V5 -->
+
+### Đóng góp XN1 theo nhóm và độ nhạy cỡ mẫu — thăm dò
+
+Bảng chỉ đếm TV-hit@1 trên dòng có đáp án E1; tăng/mất là chuyển trạng thái theo từng dòng, không phải số dòng độc lập.
+
+**V1.0**
+
+| Nhóm | Dòng có đáp án / lineage | Tăng hit / mất hit | Chênh lệch số hit |
+|---|---|---|---:|
+| T1 | 123/123 | 0/0 | +0 |
+| T2 | 46/23 | 6/0 | +6 |
+| T3 | 12/4 | 4/0 | +4 |
+| T6 | 15/15 | 0/0 | +0 |
+<!-- nguồn: runs/E1/test/b7.jsonl; runs/E1/test/b7pp.jsonl; data/vilextime_dataset/vilextime.jsonl; scripts/paper/paper_values.py -->
+
+**Test 2 (nhãn LLM)**
+
+| Nhóm | Dòng có đáp án / lineage | Tăng hit / mất hit | Chênh lệch số hit |
+|---|---|---|---:|
+| T2 | 120/60 | 10/5 | +5 |
+| T3 | 75/25 | 3/2 | +1 |
+| T6 | 16/16 | 0/0 | +0 |
+<!-- nguồn: runs/E1_test2/test/b7.jsonl; runs/E1_test2/test/b7pp.jsonl; data/vilextime/test2_release_v2.jsonl; scripts/paper/paper_values.py -->
+
+Ở v1.0, chênh lệch đến từ 10 dòng của T2/T3, T1 đóng góp 0. Lát bỏ T1 có 10/73 = +0,137; không đối chiếu độ lớn toàn tập v1.0 với bộ cuối không có T1. Silver theo quy trình viết của v1.0, còn test 2 (nhãn LLM) có cổng trùng chữ; “lặp lại” chưa độc lập với cách sinh câu hỏi. [CHỜ G4: phân tầng kết quả bộ cuối theo nguồn silver/T2 mới/T3 mới/T6 mới và quy trình sinh].
+<!-- nguồn: data/vilextime_dataset/vilextime.jsonl; data/vilextime/test2_release_v2.jsonl; scripts/review/test2_packs.py; scripts/paper/paper_values.py; docs/plans/active/master-plan.md, mục 10 -->
+
+Xấp xỉ chuẩn hai phía lấy hiệu +0,028 và phương sai theo cụm lineage từ E1 test 2 (nhãn LLM): SE 0,022; nếu giữ phân bố đó và có 150 lineage thì SE dự phóng 0,018, power tại α = 0,05 là 0,346. Nếu phải vượt ngay ngưỡng Holm bảo thủ α/6 của họ sáu phép lịch sử, power còn 0,141; các bậc Holm muộn hơn có thể cao hơn. Không có một power sau Holm duy nhất khi chưa khóa họ và chưa biết thứ tự p. Đây là phân tích độ nhạy sau quan sát, không phải power đo được của bộ cuối. [CHỜ G3: họ cuối và giả định cỡ mẫu đã khóa].
+<!-- nguồn: runs/E1_test2/test/b7.jsonl; runs/E1_test2/test/b7pp.jsonl; data/vilextime/test2_release_v2.jsonl; runs/E3_test2/rescore/confirm.json; scripts/paper/paper_values.py, phương sai tỷ số theo cụm và NormalDist; docs/plans/active/master-plan.md, dự báo mục 10 -->
 
 ## 6.5. Thử nghiệm `proposed2` trên dev — mô tả để phát triển hệ
 
@@ -291,6 +437,12 @@ Sau khi tìm lệnh tác động ở chuỗi cha, R@30 trên dòng T6 không có
 `proposed3` kế thừa `proposed2` và bật `repeal_note`, đưa thông báo bãi bỏ có cấu trúc từ đồ thị vào prompt; đây là phần việc trong A7. Chương chưa có đầu ra sinh đã chấm để kết luận tác dụng của cấu hình này. Không mang số `proposed` hay số truy xuất `proposed2` sang nhãn mới. [CHỜ COLAB: đầu ra dev, provenance và điểm `proposed3`; xác nhận cấu hình được khóa trước khi chạy bộ cuối].
 <!-- nguồn: docs/plans/active/master-plan.md, A7; src/vilexgraph/framework/systems.py; src/vilexgraph/framework/generate.py; runs/README.md -->
 
+`proposed3` đưa `repeal_note` từ sự kiện `repeal` đã phân giải vào prompt; gold “không có đáp án” của T6 cũng dẫn từ nguồn sự kiện đó. Accuracy T6 vì vậy là cận trên có điều kiện khi đồ thị đúng, chưa phải bằng chứng pháp lý độc lập. Chỉ kết luận trên T6 đã qua gold mù; phải báo cả recall, precision và số khẳng định sai trên dòng có đáp án. Các lượt bổ sung trên T6 của v1.0 và test 2 phải gắn nhãn “đã thấy”, báo riêng từng bộ, không gộp với nhau hay với bộ cuối vì cấu hình được thiết kế sau khi xem lỗi của chúng.
+<!-- nguồn: src/vilexgraph/framework/graphx.py, _repeals và repeal_notes; docs/plans/active/master-plan.md, xử lý C2 và N8 -->
+
+Trên dev T6 không có đáp án, Qwen3-4B đúng 6/21 ở `oracle` và 3/21 ở `oracle_v2` dù được cấp ngữ cảnh; các lượt khác prompt nên không gộp. Nhận định “nhận diện bãi bỏ yếu” chỉ nói về Qwen3-4B trong điều kiện này. [CHỜ COLAB: X3 với generator khác, tối thiểu ngữ cảnh đúng của T6; chưa thực hiện và không suy giới hạn chung của LLM].
+<!-- nguồn: data/vilextime_dataset/vilextime.jsonl; runs/B2_dev/dev/oracle.jsonl; runs/B2_dev/dev/oracle_v2.jsonl; docs/plans/active/master-plan.md, X3 -->
+
 X8 phải so hai điều kiện **cấp sẵn căn cứ đúng mốc** và **cấp sẵn căn cứ hiện hành**, theo T1 (đối chứng), T2, T3, T6. Mục đích là đo sai lệch do đọc bản hiện hành, tách khỏi lỗi tìm trên toàn kho. Phải chạy dev trước, rồi bộ test cuối sau các cổng khóa. Oracle dev đã có chỉ cho biết kết quả trong điều kiện căn cứ của lượt đó; chưa phải kết quả X8 hay oracle trên test.
 <!-- nguồn: docs/plans/active/master-plan.md, X8 và mục 10 -->
 
@@ -300,7 +452,7 @@ X8 phải so hai điều kiện **cấp sẵn căn cứ đúng mốc** và **c�
 | Bộ cuối: đúng mốc so với hiện hành, từng nhóm | [CHỜ COLAB: chỉ chạy sau khóa dữ liệu, hệ và phân tích; chưa có số X8 test] |
 <!-- nguồn: docs/plans/active/master-plan.md, X8 -->
 
-Lọc thời gian có lợi và hai nút thắt tìm–đọc đã có tiền lệ [@prior2026oldfriend] [@yao2026lawinforce] [@akarajaradwong2026nitibenchplus]. Phân rã E7 hiện tại là mô tả/thăm dò trên pháp luật Việt Nam; không tuyên bố phát hiện riêng hai nút thắt. Phần cần kiểm của khóa luận là nhận diện bãi bỏ và tách có đối chứng các nấc thời gian trên cùng dữ liệu. Không đưa số nghiên cứu khác vào bảng điểm chung khi khác tác vụ, gold hoặc mẫu số.
+Lọc thời gian có lợi và hai nút thắt tìm–đọc đã có tiền lệ [@prior2026oldfriend] [@yao2026lawinforce] [@akarajaradwong2026nitibenchplus]. Phân rã E7 hiện tại là mô tả/thăm dò trên pháp luật Việt Nam; không tuyên bố phát hiện riêng hai nút thắt. Phần có thể kiểm là hai nấc ngày văn bản và khoảng phiên bản; lan truyền chưa có lợi ích đo được. Nhóm bãi bỏ đã có ở NitiBench+, nên chỉ giữ đặc thù lệnh nằm ở văn bản khác và bãi bỏ qua nút cha của Việt Nam. Không đưa số nghiên cứu khác vào bảng điểm chung khi khác tác vụ, gold hoặc mẫu số.
 <!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md; docs/plans/active/master-plan.md, mục 10 -->
 
 ## 6.6. Bộ test cuối — chưa có kết quả
@@ -312,11 +464,11 @@ Bảng này dành cho kết luận chính sau G4. Không đưa số vòng thử 
 |---|---|---|
 | Cỡ mẫu và nguồn nhãn bộ cuối | [CHỜ G4: bản khóa G2] | Chưa báo là đã chạy |
 | RQ1: sai phiên bản của LLM / RAG | [CHỜ G4: bảng mô tả, mẫu số có trả lời và KTC] | Chưa có kết luận cuối |
-| RQ2: `proposed2` so với RAG phẳng và đối chứng đồ thị | [CHỜ G4: Accuracy, KTC, kiểm định đã khóa] | Chưa có kết luận cuối |
-| RQ3 và giả thuyết về cấp lọc | [CHỜ G4: thang truy xuất, TVER kèm gold mù] | Chưa có kết luận cuối |
-| T6 lan truyền | [CHỜ G4: cỡ lát và loại phân tích đúng amendment] | Chưa có kết luận cuối |
+| RQ2: hệ chốt ở G3 so với RAG phẳng và đối chứng đồ thị | [CHỜ G4: wrong_version, Accuracy, KTC, kiểm định và tên hệ đã khóa] | Chưa có kết luận cuối |
+| RQ3 và giả thuyết về cấp lọc | [CHỜ G4: XN1 truy xuất; TVER nội bộ và TVER theo người báo riêng] | Chưa có kết luận cuối |
+| T6 và lan truyền (phép đo riêng) | [CHỜ G4: cỡ lát và loại phân tích đúng amendment] | Chưa có kết luận cuối |
 | Thành phần, nhóm và miền | [CHỜ G4: ablation, phân rã và KTC] | Mô tả theo thiết kế |
-| Gold mù và E7 người kiểm | [CHỜ G4: độ khớp nguồn ngoài, mã hóa lỗi và đồng thuận] | Chưa có bằng chứng độc lập |
+| Gold mù và E7 người kiểm | [CHỜ G4: độ khớp do người tự đọc nguồn, mã hóa lỗi và đồng thuận] | Chưa có bằng chứng độc lập |
 | Giám khảo LLM | [CHỜ G4: hiệu chuẩn và điểm nếu đạt] | Không thay điểm người bằng nhãn LLM |
 <!-- nguồn: docs/plans/active/master-plan.md, mục 6 và 7 -->
 
@@ -331,7 +483,7 @@ Các lượt bổ sung cho **vòng thử cũ** vẫn báo riêng, không dùng c
 
 ## 6.7. Mối đe dọa tính hợp lệ
 
-**Gold tự chấm và TVER do cách dựng.** Gold phiên bản lấy từ cùng đồ thị mà bộ lọc `b7pp` sử dụng; khi sự kiện bị bỏ sót, cả hai có thể cùng sai. TVER = 0 của `b7pp` phần lớn do cách dựng: bộ lọc đã loại phiên bản không hợp lệ theo chính khoảng hiệu lực mà scorer tham chiếu. Nó kiểm được tính nhất quán trong mô hình, chưa xác nhận độc lập độ đúng pháp lý. Bảng TVER phải đọc cùng gold mù, độ phủ trích dẫn và khả năng trả lời dòng bãi bỏ. [CHỜ G4: TVER và thứ hạng cấu hình trên gold mù].
+**Gold tự chấm và TVER do cách dựng.** Gold phiên bản lấy từ cùng đồ thị mà bộ lọc `b7pp` sử dụng; khi sự kiện bị bỏ sót, cả hai có thể cùng sai. TVER = 0 của `b7pp` phần lớn do cách dựng: bộ lọc đã loại phiên bản không hợp lệ theo chính khoảng hiệu lực mà scorer tham chiếu. Nó kiểm được tính nhất quán trong mô hình, chưa xác nhận độc lập độ đúng pháp lý. Bảng TVER phải đọc cùng gold mù, độ phủ trích dẫn và khả năng trả lời dòng bãi bỏ. [CHỜ G4: TVER theo người trên các đơn vị được trích, không đồng nhất với gold mù phiên bản].
 <!-- nguồn: docs/plans/active/master-plan.md, D2; src/vilexgraph/framework/temporal.py; scripts/eval/score_vilextime.py -->
 
 **Giới hạn thành phần.** Các so sánh `proposed` trong vòng thử chỉ đo mở rộng quan hệ một bước cùng Verifier trên đường từ vựng; không suy ra “đồ thị không giúp” cho mọi GraphRAG. `proposed2` chưa được đánh giá câu trả lời. Chuyển từ kết quả một bước sang kết luận về suy luận đồ thị nhiều bước sẽ vượt phạm vi thực nghiệm.

@@ -32,7 +32,7 @@ for v in S:
         V[f'd.tvr1.{v}.{k.replace(" − ","_")}']=m(L[v][k]['giua_khoang']['all'],'tv_recall@1',True)
     for x,r in X[v].items():
         V[f'{x}.{v}.est']=n(r['estimate'],3,True); V[f'{x}.{v}.ci']=ci(r['ci95'],3,True); V[f'{x}.{v}.verdict']=r['verdict']
-        V[f'{x}.{v}.ph']='—' if r.get('p_holm') is None else ('< 0,0001' if r['p_holm']==0 else n(r['p_holm'],4))
+        V[f'{x}.{v}.ph']='—' if r.get('p_holm') is None else ('≤ 0,0012†' if r['p_holm']==0 else n(r['p_holm'],4))
         V[f'{x}.{v}.rows']=' và '.join(f"{r['rows'][q]}/{r['lineages'][q]}" for q in r['rows'])
     g=[r for r in REL[v] if r['split']=='test' and r['as_of_strategy']=='giua_khoang'] if v=='v1' else [r for r in REL[v] if r['as_of_strategy']=='giua_khoang']
     V[f'rows.{v}']=str(len(g)); V[f'lin.{v}']=str(len({r['lineage_id'] for r in g})); V[f'ans.{v}']=str(sum(r['answerable'] for r in g))
@@ -104,3 +104,88 @@ for x in jl('data/vilextime/questions.jsonl'): _q[x['lineage_id']]=x
 _ids={r['lineage_id'] for r in REL['v1'] if r['split']=='test'}
 _c=C.Counter(_q[i].get('provider') for i in _ids)
 V['q.claude']=str(_c['claude-code']); V['q.deepseek']=str(_c['deepseek'])
+
+# C12: bảng mô tả, đọc số gốc; không chạy hệ hoặc sửa bộ kiểm.
+from math import sqrt
+from statistics import NormalDist
+
+for v in S:
+    extra = ['| Hệ | TCS (cặp T2) | VCR | MRR | EM | F1 |', '|---|---:|---:|---:|---:|---:|']
+    refusal = ['| Hệ | Đúng / dòng bãi bỏ (recall) | Sai trên dòng có đáp án | Precision |',
+               '|---|---|---:|---|']
+    rows = [r for r in REL[v] if r['split']=='test' and r['as_of_strategy']=='giua_khoang']
+    for s in ('b1','b2ctx','b5','b7','b7pp','proposed'):
+        a = S[v][s]['giua_khoang']['all']
+        extra.append(f"| `{s}` | {n(a['tcs'])} ({a['tcs_pairs']}) | {n(a['vcr'])} | {n(a['mrr'])} | {n(a['em'])} | {n(a['f1'])} |")
+        pred = {r['id']:r for r in jl(PRED[v]/f'{s}.jsonl')}
+        tp = sum(not r['answerable'] and pred[r['id']].get('answerable') is False for r in rows)
+        fp = sum(r['answerable'] and pred[r['id']].get('answerable') is False for r in rows)
+        neg = sum(not r['answerable'] for r in rows)
+        prec = f'{tp}/{tp+fp} = {n(tp/(tp+fp))}' if tp+fp else '— (không khẳng định)'
+        refusal.append(f'| `{s}` | {tp}/{neg} = {n(tp/neg)} | {fp} | {prec} |')
+    V[f'extra.{v}'] = '\n'.join(extra)
+    V[f'refusal.{v}'] = '\n'.join(refusal)
+    exploratory = ['| Mã | Ước lượng [KTC 95%] | p thô | Dòng / lineage theo lát |', '|---|---|---:|---|']
+    for code in ('XN5','XN6','XN7'):
+        if code not in X[v]:
+            exploratory.append(f'| {code} | [CHỜ: đầu ra sinh `b7plus`] | — | — |')
+        else:
+            a = X[v][code]
+            exploratory.append(f"| {code} | {n(a['estimate'],sign=True)} {ci(a['ci95'],sign=True)} | {n(a['p'],4)} | {V[f'{code}.{v}.rows']} |")
+    V[f'exploratory.{v}'] = '\n'.join(exploratory)
+    subgroup = ['| Nhóm | `b7pp − b7`, Accuracy [KTC] | `proposed − b7pp`, Accuracy [KTC] |', '|---|---|---|']
+    for g in ('T1','T2','T3','T6'):
+        if g in S[v]['b7pp']['giua_khoang']:
+            subgroup.append(f"| {g} | {m(S[v]['b7pp − b7']['giua_khoang'][g],'accuracy',True)} | {m(S[v]['proposed − b7pp']['giua_khoang'][g],'accuracy',True)} |")
+    V[f'subgroup.{v}'] = '\n'.join(subgroup)
+
+    # XN1: đếm chuyển trạng thái TV-hit@1 trên từng dòng có đáp án E1.
+    pred = {s:{r['id']:r for r in jl(Path('runs/E1/test' if v=='v1' else 'runs/E1_test2/test')/f'{s}.jsonl')}
+            for s in ('b7','b7pp')}
+    clusters = C.defaultdict(lambda:[0,0])
+    contribution = ['| Nhóm | Dòng có đáp án / lineage | Tăng hit / mất hit | Chênh lệch số hit |', '|---|---|---|---:|']
+    for g in ('T1','T2','T3','T6'):
+        rr = [r for r in rows if r['answerable'] and r['group']==g]
+        if not rr: continue
+        wins = losses = 0
+        for r in rr:
+            accepted = set(r['accepted_evidence']) | {r['version_id']}
+            hit = {s:bool(pred[s][r['id']].get('retrieved',[])[:1] and pred[s][r['id']]['retrieved'][0] in accepted) for s in pred}
+            d = int(hit['b7pp'])-int(hit['b7'])
+            wins += d>0; losses += d<0
+            clusters[r['lineage_id']][0] += d
+            clusters[r['lineage_id']][1] += 1
+        contribution.append(f"| {g} | {len(rr)}/{len({r['lineage_id'] for r in rr})} | {wins}/{losses} | {wins-losses:+d} |")
+    V[f'contribution.{v}'] = '\n'.join(contribution)
+    if v=='v1':
+        non_t1 = [r for r in rows if r['answerable'] and r['group']!='T1']
+        non_t1_ids = {r['lineage_id'] for r in non_t1}
+        gain = sum(clusters[i][0] for i in non_t1_ids)
+        V['xn1.non_t1'] = f"{gain}/{len(non_t1)} = {n(gain/len(non_t1),sign=True)}"
+    else:
+        count = sum(c[1] for c in clusters.values()); delta = sum(c[0] for c in clusters.values())/count
+        assert abs(delta-X[v]['XN1']['estimate']) < 1e-12
+        # Delta method cho tỷ số tổng hit/tổng dòng, sandwich theo lineage.
+        size = len(clusters)
+        se = sqrt(size/(size-1)*sum((d-delta*k)**2 for d,k in clusters.values()))/count
+        plan = (R/'docs/plans/active/master-plan.md').read_text(encoding='utf-8')
+        target = int(re.search(r'tổng khoảng (\d+) lineage', plan).group(1))
+        projected = se*sqrt(size/target)
+        normal = NormalDist()
+        def power(alpha):
+            z = normal.inv_cdf(1-alpha/2); shift = delta/projected
+            return normal.cdf(-z-shift)+1-normal.cdf(z-shift)
+        V.update({'power.se':n(se), 'power.target_se':n(projected), 'power.raw':n(power(.05)),
+                  'power.holm6':n(power(.05/6)), 'power.delta':n(delta,sign=True)})
+
+# E7: tách top-20 khỏi toàn prompt và bỏ số 0 cấu trúc khỏi mẫu số truy xuất.
+for v,t in sec.items():
+    for s in ('b7','b7pp','proposed'):
+        line = re.search(rf'^\| {s} \| all \| (\d+/\d+) \((\S+)\) \| (\d+/\d+) \((\S+)\) \| (\d+/\d+) \((\S+)\) \| (\d+/\d+) \((\S+)\) \|',t,re.M).groups()
+        # Top-20 ở b7 có thể có accepted repeal trên dòng không đáp án:
+        # tính lại đúng lát, không chỉ đổi mẫu số của tử số toàn tập.
+        rr = [r for r in REL[v] if r['split']=='test' and r['as_of_strategy']=='giua_khoang' and r['answerable']]
+        pred = {r['id']:r for r in jl(PRED[v]/f'{s}.jsonl')}
+        hits = sum(any(u in set(r['accepted_evidence']) or u==r['version_id'] for u in pred[r['id']].get('retrieved',[])[:20]) for r in rr)
+        V[f'e7.{v}.{s}.r20'] = f'{hits}/{len(rr)} = {n(hits/len(rr))}'
+        V[f'e7.{v}.{s}.cond'] = f"{line[6]} = {line[7].replace('.',',')}"

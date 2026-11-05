@@ -115,14 +115,16 @@ M2 yêu cầu bộ truy vấn đối chiếu tay; kế hoạch vẫn để mở 
 <!-- nguồn: docs/plans/active/phase-3-kg-l0-l3.md @51f36c7 -->
 <!-- nguồn: docs/plans/active/master-plan.md -->
 
-### Kế hoạch đối chiếu VBHN và gold mù
+### Đối chiếu VBHN và gold mù
 
-M2 vẫn **chưa đạt**. Kế hoạch hiện hành yêu cầu đối chiếu rộng bằng văn bản hợp nhất (VBHN), sau đó để người đọc nguồn đầy đủ phân xử các cặp lệch. Gold mù được lấy từ bộ test cuối: người kiểm đọc văn bản gốc hoặc VBHN, không thấy lời văn phiên bản do đồ thị dựng. Phần này cần kiểm riêng ngày dùng để dựng snapshot và nguồn gốc từng bằng chứng; độ giống chữ không thay được kết luận về hiệu lực.
-<!-- nguồn: docs/plans/active/master-plan.md -->
+Đối chiếu VBHN đã có báo cáo: chỉ phủ 2/819 mốc silver, 0/492 mốc test 2 và 2/487 mốc v1.0 trong phạm vi T2/T3/T6; các mốc trùng phiên bản không nhất thiết trùng ngày hỏi. Chỉ 2 cặp có đủ toàn văn để so, xác nhận khớp 1; cặp còn lại chưa phân xử, không tự tính là sai. Rà dấu bãi bỏ cho thấy lệch 2/2 ở nguồn đạt cổng; khảo sát căn ban đầu ghi lệch 10/24 và 344 đơn vị có độ giống dưới 0,90. Đây là tín hiệu cần phân xử, không phải tỷ lệ lỗi pháp lý toàn đồ thị. VBHN hiện không đủ làm gold của benchmark hoặc thay gold mù.
+<!-- nguồn: docs/reports/doi-chieu-vbhn.md; data/vbhn_files/c7_summary.json; docs/reports/thu-tai-vbhn-20261105.md; data/vbhn_files/pdf_compare.reproduced.json -->
 
-Phép thử tải hiện có nhận được 40/48 PDF đã chọn; chỉ 18 văn bản căn được theo bộ dò ban đầu. Báo cáo đã nêu các lỗi tách đoạn, chú thích và giới hạn so sánh phần đầu lời văn. Đây là bằng chứng khảo sát khả năng dùng nguồn, chưa phải kết quả gold độc lập. Chưa có `docs/reports/doi-chieu-vbhn.md` tại lúc soạn. [CHỜ G4: báo cáo đối chiếu VBHN hoàn chỉnh và kết quả gold mù được kiểm ở G2; không dùng phép thử tải để công bố M2 đạt].
-<!-- nguồn: docs/reports/thu-tai-vbhn-20261105.md -->
-<!-- nguồn: docs/plans/active/master-plan.md -->
+PDF VBHN được tải từ `vbpl-bientap-gateway.moj.gov.vn`, cùng cổng vbpl với văn bản gốc. Nó là đối chiếu lời văn theo một quy trình biên tập khác, không phải nguồn thu thập độc lập; dự án vẫn phụ thuộc một nguồn. “Độc lập” của kiểm người chỉ nói đến việc người tự đọc và không thấy đáp án/cửa sổ đồ thị. M2 và kiểm gold còn chờ.
+<!-- nguồn: docs/reports/thu-tai-vbhn-20261105.md; docs/reports/doi-chieu-vbhn.md -->
+
+[CHỜ G4: M2, gold mù và TVER theo người; chưa có bằng chứng hoàn tất].
+<!-- nguồn: docs/plans/active/master-plan.md, mục "Phản biện 05/11 và cách xử lý"; docs/decisions/0005-ke-hoach-phan-tich.md -->
 
 ## 3.6. Câu trả lời có thể rút ra
 

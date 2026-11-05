@@ -146,12 +146,16 @@ Verifier kiểm các ID được câu trả lời trích, không kiểm đúng s
 <!-- nguồn: scripts/eval/colab_b1.py -->
 <!-- nguồn: src/vilexgraph/framework/verify.py -->
 
-Trong cấu hình đề xuất, truy xuất, mở rộng và Verifier dùng cùng tier. Trên dev đã chạy, Verifier không bác câu nào; `a3` và `proposed` cho đầu ra trùng nhau. Khi bộ lọc đã áp cùng điều kiện, chưa có bằng chứng về tác dụng tăng thêm của Verifier. Kế hoạch yêu cầu đo nó trên cấu hình chưa có bộ lọc đủ mạnh trước khi đánh giá vai trò riêng.
+Trong cấu hình đề xuất, truy xuất, mở rộng và Verifier dùng cùng tier. Trên dev đã chạy, Verifier không bác câu nào; `a3` và `proposed` cho đầu ra trùng nhau. Khi bộ lọc đã áp cùng điều kiện, chưa có bằng chứng về tác dụng tăng thêm của Verifier. L5 hiện là phép kiểm nhất quán, tác dụng tăng thêm đo được trên dev bằng 0; sự tương đương `p2a3 ≡ proposed2` còn được kế hoạch ghi là do cách dựng. Đo trên cấu hình thiếu bộ lọc có thể tạo cờ nhưng vẫn dùng cùng khoảng hiệu lực với TVER, không trở thành bằng chứng pháp lý độc lập.
+<!-- nguồn: runs/x4_verifier_dev/report.json; docs/plans/active/master-plan.md, Risks và xử lý V8 -->
 <!-- nguồn: runs/README.md; docs/plans/active/master-plan.md -->
 
  Những đơn vị đã được cho vào prompt vì thế thường cũng qua được kiểm của Verifier. Chính docstring ghi Verifier có thể là phép kiểm không thay đổi đầu ra theo thiết kế. Không được gán mức tăng Accuracy cho Verifier nếu chưa có bằng chứng nó đã sửa hoặc bác câu nào; cũng không coi TVER thấp là bằng chứng rằng câu trả lời nhận ra đúng việc bãi bỏ.
 <!-- nguồn: src/vilexgraph/framework/verify.py -->
 <!-- nguồn: docs/plans/active/master-plan.md -->
+
+`proposed3` đưa `repeal_note` từ sự kiện `repeal` đã phân giải vào prompt; gold “không có đáp án” của T6 cũng dẫn từ nguồn sự kiện đó. Accuracy T6 vì vậy là cận trên có điều kiện khi đồ thị đúng, chưa phải bằng chứng pháp lý độc lập. Chỉ kết luận trên T6 đã qua gold mù; phải báo cả recall, precision và số khẳng định sai trên dòng có đáp án. Các lượt bổ sung trên T6 của v1.0 và test 2 phải gắn nhãn “đã thấy”, báo riêng từng bộ, không gộp với nhau hay với bộ cuối vì cấu hình được thiết kế sau khi xem lỗi của chúng.
+<!-- nguồn: src/vilexgraph/framework/graphx.py, _repeals và repeal_notes; docs/plans/active/master-plan.md, xử lý C2 và N8 -->
 
 ## 5.8. Điều kiện so sánh công bằng và khả năng tái lập
 

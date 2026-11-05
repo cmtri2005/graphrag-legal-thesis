@@ -9,7 +9,7 @@ Khóa luận đã hình thành đường ống đi từ văn bản nguồn và q
 <!-- nguồn: docs/thesis/chuong-3-kho-van-ban-va-do-thi.md -->
 <!-- nguồn: scripts/pipeline/build_versions.py; src/vilexgraph/build/temporal/effective_intervals.py -->
 
-ViLexTime hiện cung cấp dữ liệu cho hai vòng thử có khai báo và một cơ chế chấm tương phản theo phiên bản. V1.0 có nhãn hỗn hợp người và agent; test 2 có nhãn LLM, chưa có kiểm người trực tiếp cho bộ nhãn đang dùng. Giá trị có thể trình bày là tài nguyên có xuất xứ và hồ sơ sai sót, cùng phép đánh giá tách đúng điều khoản, đúng phiên bản và đúng câu trả lời. Chưa gọi tài nguyên này là chuẩn vàng pháp lý đã được kiểm độc lập đầy đủ.
+ViLexTime hiện cung cấp dữ liệu cho xác nhận lần 1 và lần lặp lại, đổi vai thành vòng thử ngày 05/11 sau khi thấy kết quả và một cơ chế chấm tương phản theo phiên bản. V1.0 có nhãn hỗn hợp người và agent; test 2 có nhãn LLM, chưa có kiểm người trực tiếp cho bộ nhãn đang dùng. Giá trị có thể trình bày là tài nguyên có xuất xứ và hồ sơ sai sót, cùng phép đánh giá tách đúng điều khoản, đúng phiên bản và đúng câu trả lời. Chưa gọi tài nguyên này là chuẩn vàng pháp lý đã được kiểm độc lập đầy đủ.
 <!-- nguồn: data/vilextime_dataset/manifest.json; data/vilextime_dataset/vilextime_meta.jsonl -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 
@@ -21,7 +21,7 @@ ViLexTime hiện cung cấp dữ liệu cho hai vòng thử có khai báo và m�
 <!-- nguồn: runs/E3_v1/test/all.score.json; runs/E3_test2/rescore/all.score.json -->
 <!-- nguồn: runs/README.md; src/vilexgraph/framework/graphx.py -->
 
-Phân rã lỗi máy là **thăm dò**: hệ có thể không tìm được căn cứ hoặc đọc sai khi đã được cấp căn cứ. Nhận diện bãi bỏ vẫn yếu. Việc `b7pp` có TVER bằng không chủ yếu phản ánh bộ lọc và gold dùng chung mô hình hiệu lực; tránh trích phiên bản bị loại không đồng nghĩa nhận ra đúng việc quy định đã hết hiệu lực. Vì thế, không dùng riêng TVER để khẳng định thành công của kiến trúc.
+Phân rã lỗi máy là **thăm dò**: hệ có thể không tìm được căn cứ hoặc đọc sai khi đã được cấp căn cứ. Nhận diện bãi bỏ của Qwen3-4B trong điều kiện đã thử vẫn yếu; chưa có X3 để khái quát sang generator khác. Việc `b7pp` có TVER bằng không chủ yếu phản ánh bộ lọc và gold dùng chung mô hình hiệu lực; tránh trích phiên bản bị loại không đồng nghĩa nhận ra đúng việc quy định đã hết hiệu lực. Vì thế, không dùng riêng TVER để khẳng định thành công của kiến trúc.
 <!-- nguồn: docs/reports/e7_phan_ra_loi.md; docs/plans/active/master-plan.md, D2 -->
 
 ## 7.2. Điều chưa thể kết luận
@@ -29,11 +29,12 @@ Phân rã lỗi máy là **thăm dò**: hệ có thể không tìm được căn
 Chưa thể trả lời đầy đủ RQ1 ở vế LLM không truy xuất; cần đo trên phần câu có trả lời và các cấu hình LLM đã định trước. Chưa thể xác nhận RQ2 cho kiến trúc lai ghép đúng đề cương: `proposed` đã chạy vòng thử chỉ dùng từ vựng, còn `proposed2` mới có số truy xuất dev và chưa sinh câu trả lời. Với RQ3, chưa thể chốt lợi ích thêm của chuỗi phiên bản hoặc lan truyền hiệu lực trên bộ cuối. Không đủ bằng chứng cũng chưa phải bằng chứng hiệu ứng bằng không.
 <!-- nguồn: docs/plans/active/master-plan.md, mục 3 và 6; runs/README.md -->
 
-Chất lượng thước đo là giới hạn cần giải quyết trước. Đồng thuận người gán thấp đi kèm tốc độ gán rất nhanh của A; một phần test v1.0 chỉ có nhãn Codex; lời dặn LLM bản mới không qua hiệu chuẩn. Gold từ cùng đồ thị với hệ còn tạo nguy cơ hệ và đáp án cùng sai. M2 chưa đạt và thử căn VBHN hiện mới là khảo sát kỹ thuật, chưa thay được việc người kiểm nguồn độc lập.
+Chất lượng thước đo là giới hạn cần giải quyết trước. Đồng thuận người gán thấp; thời gian thực của A chưa được xác minh bằng log; một phần test v1.0 chỉ có nhãn Codex; lời dặn LLM bản mới không qua hiệu chuẩn. Gold từ cùng đồ thị với hệ còn tạo nguy cơ hệ và đáp án cùng sai. M2 chưa đạt; báo cáo VBHN đã có cho thấy độ phủ quá hẹp để dùng làm gold. VBHN và văn bản gốc cùng cổng vbpl nên không độc lập về nguồn; vẫn cần người đọc nguồn mà không thấy đáp án đồ thị.
+<!-- nguồn: docs/reports/doi-chieu-vbhn.md; docs/reports/thu-tai-vbhn-20261105.md; data/review/kiem_A.tsv -->
 <!-- nguồn: docs/plans/active/master-plan.md, D1–D2 -->
 <!-- nguồn: data/review/test2_llm_v2/calib_score.json; docs/reports/thu-tai-vbhn-20261105.md -->
 
-Log khảo sát và báo cáo đọc hiện đã xác nhận các tiền lệ gần về lợi ích lọc theo mốc và hai nút thắt tìm–đọc, gồm Prior, LawInForce-eCFR và NitiBench+ [@prior2026oldfriend] [@yao2026lawinforce] [@akarajaradwong2026nitibenchplus]. Khóa luận chỉ giữ luận điểm hẹp: phép đo pháp luật Việt Nam, nhận diện bãi bỏ và đối chứng cùng dữ liệu giữa ngày văn bản, khoảng phiên bản và lan truyền từ cha. Chưa có bằng chứng cho thứ tự công bố hoặc ưu thế chung; các nguồn bị chặn và phần chưa đọc vẫn có thể đổi cách định vị. [CẦN: đọc đủ các phần và phiên bản còn thiếu đã nêu trong chương tổng quan].
+Log khảo sát và báo cáo đọc hiện đã xác nhận các tiền lệ gần về lợi ích lọc theo mốc và hai nút thắt tìm–đọc, gồm Prior, LawInForce-eCFR và NitiBench+ [@prior2026oldfriend] [@yao2026lawinforce] [@akarajaradwong2026nitibenchplus]. Khóa luận chỉ giữ luận điểm hẹp: phép đo pháp luật Việt Nam, hai nấc ngày văn bản và khoảng phiên bản đã đo. Lan truyền chưa có bằng chứng lợi ích, còn nhóm bãi bỏ đã có ở NitiBench+; đặc thù cần kiểm là lệnh ở văn bản khác và bãi bỏ qua nút cha của nguồn Việt Nam. Chưa có bằng chứng cho thứ tự công bố hoặc ưu thế chung; các nguồn bị chặn và phần chưa đọc vẫn có thể đổi cách định vị. [CẦN: đọc đủ các phần và phiên bản còn thiếu đã nêu trong chương tổng quan].
 <!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md; docs/plans/active/master-plan.md, mục 10 -->
 
 ## 7.3. Phần kết luận chờ bộ test cuối
@@ -47,8 +48,14 @@ Bảng dưới là vị trí kết luận sau khi có bằng chứng G4, không 
 | RQ2, hệ lai ghép so với các đối chứng | [CHỜ G4: ước lượng, KTC và phán quyết theo amendment] |
 | RQ3 và giả thuyết đề cương | [CHỜ G4: nguồn gốc chênh lệch qua thang lọc và phiên bản] |
 | Bãi bỏ ở nút cha, tác dụng thành phần | [CHỜ G4: kết quả và phân loại xác nhận/thăm dò/mô tả] |
-| Độ bền khi dùng gold mù | [CHỜ G4: mức khớp nguồn độc lập và ảnh hưởng đến kết luận] |
+| Độ bền khi dùng gold mù | [CHỜ G4: mức khớp do người tự đọc nguồn, độ mù và ảnh hưởng đến kết luận] |
 <!-- nguồn: docs/plans/active/master-plan.md -->
+
+Trước G3, amendment còn phải liệt kê từng thay đổi về đại lượng so với ADR và kết quả đã thấy: RQ1 lịch sử có Accuracy/`wrong_version`, thiết kế mới thêm TVER/VCR; RQ2 phải báo `wrong_version` cùng Accuracy thay vì chỉ Accuracy; XN2 chuyển thành nhất quán nội bộ; vai trò XN8 và XN9 trên bộ cuối phải khai rõ, không âm thầm bỏ. RQ3 giữ nguyên câu hỏi về biểu diễn đồ thị của đề cương. [CHỜ G3: tên một hệ cuối, generator, embedding, baseline cùng chế độ truy xuất và họ xác nhận cuối].
+<!-- nguồn: docs/plans/active/master-plan.md, mục "Phản biện 05/11 và cách xử lý"; docs/decisions/0005-ke-hoach-phan-tich.md -->
+
+V1.0 giữ phán quyết lịch sử ủng hộ và test 2 (nhãn LLM) giữ “điểm quyết định B7”. Với lần nhìn mới, dự kiến quy tắc sau cần khóa ở G3: nếu XN1 bộ cuối ủng hộ thì chỉ nói ủng hộ có điều kiện trên bộ cuối, kèm sự không lặp đầy đủ trước đó; nếu không đủ bằng chứng thì giả thuyết không được ủng hộ; nếu ngược chiều có ý nghĩa thì bác trên bộ cuối. Không dùng hai bộ cũ để đảo phán quyết cuối, không gộp ba lần nhìn. [CHỜ G3: khóa bảng ba phán quyết và quy tắc này trong amendment; chưa phải đăng ký trước đã hoàn tất].
+<!-- nguồn: docs/plans/active/master-plan.md, mục "Phản biện 05/11 và cách xử lý"; docs/decisions/0005-ke-hoach-phan-tich.md -->
 
 ## 7.4. Hướng phát triển
 

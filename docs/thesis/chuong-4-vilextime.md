@@ -1,6 +1,6 @@
 # Chương 4. Bộ dữ liệu ViLexTime
 
-> v1.0 và test 2 là hai vòng thử có khai báo. Bộ test cuối do người kiểm đang được chuẩn bị, chưa có kết quả.
+> v1.0 và test 2 được đổi vai thành vòng thử ngày 05/11 sau khi đã thấy kết quả xác nhận lần 1 và lần lặp lại. Bộ test cuối do người kiểm đang được chuẩn bị, chưa có kết quả.
 <!-- nguồn: docs/plans/active/master-plan.md -->
 
 **Câu hỏi của chương:** ViLexTime đo khả năng chọn và sử dụng phiên bản điều khoản như thế nào, và nguồn gốc đáp án, nhãn kiểm tra cùng quy trình chọn mẫu giới hạn độ tin cậy của phép đo ra sao?
@@ -69,7 +69,7 @@ Schema công bố tách nội dung đối chiếu `context` khỏi đáp án ng�
 
 ## 4.4. Vòng thử v1.0: quy mô bản đã chạy
 
-Tên phát hành `vilextime-v1.0` khác với phiên bản schema `2.0.0`; đây là vòng thử đã chạy theo ADR, không phải bộ test cuối của kế hoạch hiện hành. Manifest final ghi 769 dòng chính và 859 dòng silver. Bảng kết quả chính của test dùng 211 dòng giữa khoảng, thuộc 165 lineage; silver không được gộp vào bảng này. Datasheet vẫn có bảng quy mô của một bản dựng cũ, nên chỉ dùng manifest final và file kết quả tương ứng để mô tả bản đã chạy.
+Tên phát hành `vilextime-v1.0` khác với phiên bản schema `2.0.0`; ADR từng khai đây là bản final dùng xác nhận; ngày 05/11 mới đổi vai thành vòng thử sau quan sát, không phải bộ test cuối của kế hoạch hiện hành. Manifest final ghi 769 dòng chính và 859 dòng silver. Bảng kết quả chính của test dùng 211 dòng giữa khoảng, thuộc 165 lineage; silver không được gộp vào bảng này. Datasheet vẫn có bảng quy mô của một bản dựng cũ, nên chỉ dùng manifest final và file kết quả tương ứng để mô tả bản đã chạy.
 <!-- nguồn: data/vilextime_dataset/manifest.json -->
 <!-- nguồn: runs/E3_v1/test/confirm.json -->
 <!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
@@ -91,8 +91,11 @@ Sự nhỏ đi của các lát sau kiểm nhãn là đặc điểm thực của 
 
 ## 4.5. Độ đồng thuận và nguồn nhãn v1.0
 
-Các số đo đồng thuận và audit là thống kê mô tả về chất lượng nhãn, không phải phán quyết thuộc họ XN. Kế hoạch ngày 05/11 ghi A gán khoảng 5 giây mỗi dòng trong đợt 26/10. Thời gian này không đủ làm cơ sở tin rằng các bước đối chiếu được thực hiện đầy đủ; AC1 không được diễn giải như phép đo đồng thuận pháp lý đáng tin cậy chỉ vì có hai tên người gán.
-<!-- nguồn: docs/plans/active/master-plan.md, D1 -->
+Các số đo đồng thuận và audit là mô tả chất lượng nhãn, không phải phán quyết XN. Không giữ số “5 giây/dòng” làm kết quả đo vì chưa có log thời gian thực để xác minh. Trong phiếu A, cột `phut` do người điền có 971 giá trị trên 1.120 dòng (cũng là 971 dòng có verdict), trung vị 1,0 phút, tổng 990 phút. Đây là thời lượng khai trong phiếu, không phải timestamp tự động; chưa đủ giải thích mâu thuẫn với ước tính trong plan. [CHỜ: log bắt đầu/kết thúc thực và xác nhận ý nghĩa cột `phut`].
+<!-- nguồn: data/review/kiem_A.tsv; docs/plans/active/master-plan.md, D1; docs/reports/phan-bien-ban-nhap-20261105.md, L2 -->
+
+Hai người gán A/B là chính hai tác giả Cao Minh Trí (CMT) và Nguyễn Minh Trí (NMT), đồng thời tham gia dựng hệ, gold mù và mã hóa E7. Mù với nhãn/hệ không làm họ độc lập với quá trình phát triển. Chưa có hồ sơ xác nhận năng lực pháp lý cho Q4; mẫu luật sư kiểm ngẫu nhiên 30 câu `dat` của bộ cuối sẽ là thước đo độ đúng riêng, chưa được thực hiện. [CHỜ G4: kết quả mẫu luật sư, mẫu số và quy trình rút mẫu].
+<!-- nguồn: docs/plans/active/master-plan.md, "Ai làm gì" và xử lý N1; docs/reports/phan-bien-ban-nhap-20261105.md, N1 -->
 
 Biên bản D5 lịch sử báo AC1 0,612, khoảng tin cậy 95% [0,511; 0,697], và κ 0,323 trên 300 dòng của đợt kiểm cũ. Manifest final ghi phép đo theo hướng dẫn hiện hành trên 246 dòng: AC1 0,377, khoảng [0,250; 0,496], κ 0,235, khoảng [0,144; 0,320], và thỏa thuận nhãn âm 0,395. Hai phép đo khác bộ mẫu và phiên bản hướng dẫn; không lấy số thuận lợi hơn để thay số của tập được dùng. Cả hai đều không chứng minh đạt cổng đồng thuận. Việc chọn AC1 diễn ra sau pilot, không được mô tả là đã đăng ký trước.
 <!-- nguồn: docs/reports/D5_bien_ban.md -->
@@ -112,7 +115,7 @@ Quy tắc phát hành v1.0 ưu tiên nhãn luật sư, tiếp đến A/B đồng
 
 ## 4.6. Vòng thử test 2 — nhãn LLM
 
-Test 2 là vòng thử lặp lại có khai báo dùng **nhãn LLM**, không phải nhãn người hoặc luật sư. Sau khi loại các lineage thuộc văn bản dev, release có 101 lineage và 492 dòng ở mọi chế độ. Lát giữa khoảng dùng trong E3 có quy mô dưới đây. Bộ này được báo riêng, không cộng vào v1.0 để tăng cỡ mẫu hay tạo một bảng kết quả chung.
+Test 2 được khai là bản lặp lại ngày 03/11, đổi vai thành vòng thử ngày 05/11 sau khi thấy kết quả, dùng **nhãn LLM**, không phải nhãn người hoặc luật sư. Sau khi loại các lineage thuộc văn bản dev, release có 101 lineage và 492 dòng ở mọi chế độ. Lát giữa khoảng dùng trong E3 có quy mô dưới đây. Bộ này được báo riêng, không cộng vào v1.0 để tăng cỡ mẫu hay tạo một bảng kết quả chung.
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 <!-- nguồn: runs/E3_test2/rescore/confirm.json -->
 
@@ -144,7 +147,7 @@ Bảng dưới đếm cặp (câu hỏi, mốc) ở chế độ ranh giới trê
 <!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
 
 <!-- nguồn: docs/DeCuongKLTN_23521635_23521643_UIT.docx; docs/plans/active/master-plan.md, mục 5 -->
-| Nhóm | Đề cương | v1.0 | Silver chưa kiểm | Test 2, nhãn LLM | Đang có | Dự báo sau kiểm |
+| Nhóm | Đề cương | v1.0 | Silver chưa kiểm | Test 2, nhãn LLM | Đang có | Dự báo cũ ở mục 5 |
 |---|---:|---:|---:|---:|---:|---:|
 | T1 | 250 | 141 | 0 | 0 | 141 | 251 (thêm 110) |
 | T2 | 400 | 118 | 274 | 120 | 512 | ~490 |
@@ -155,7 +158,7 @@ Bảng dưới đếm cặp (câu hỏi, mốc) ở chế độ ranh giới trê
 | Tổng, không trùng T4 | 1.150 | 362 | 389 | 227 | 978 | ~1.100 |
 <!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
 
-Cột cuối là **dự báo của kế hoạch**, giả định 60% câu qua kiểm và hoàn tất phần bổ sung; không phải kết quả quan sát. Tổng theo Bảng 1 của đề cương cũng cần giải thích lại khi T4 được tính như lát chồng lắp theo quyết định A2. Số phát hành thực tế phải thay bằng kết quả G2, phân biệt tầng người gán đôi và luật sư với tầng LLM/agent, không gộp hai tầng trong bảng chính.
+Cột cuối là **dự báo cũ ở mục 5 của kế hoạch**, giả định 60% câu qua kiểm và hoàn tất phần bổ sung; không phải kết quả quan sát hay cỡ mẫu bộ test cuối. Dự báo cập nhật mục 10 đã hạ bộ cuối xuống khoảng 150 lineage, trình bày ở mục 4.8; không dùng bảng quota cũ này để khẳng định đủ dữ liệu. Tổng theo Bảng 1 của đề cương cũng cần giải thích lại khi T4 được tính như lát chồng lắp theo quyết định A2. Số phát hành thực tế phải thay bằng kết quả G2, phân biệt tầng người gán đôi và luật sư với tầng LLM/agent, không gộp hai tầng trong bảng chính.
 <!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
 <!-- nguồn: docs/DeCuongKLTN_23521635_23521643_UIT.docx -->
 
@@ -164,21 +167,21 @@ Cột cuối là **dự báo của kế hoạch**, giả định 60% câu qua ki
 Bộ test cuối chỉ dùng lineage chưa có hệ nào chạy. Theo kiểm kê trong kế hoạch, nguồn silver chưa có dự đoán trong `runs/`, không trùng lineage của v1.0 và test 2, không trùng văn bản đích với dev. Đây là điều kiện tuyển chọn, chưa phải tuyên bố bộ cuối đã khóa. T1 bổ sung làm đối chứng và đối chiếu quy mô; không vào bộ tương phản cuối vì không có thay đổi lời văn cần phân biệt.
 <!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
 
-Các nguồn đưa cho người kiểm dưới đây là kế hoạch, chưa phải mẫu đạt. Dự báo được giữ nguyên từ master plan để tránh biến mong muốn về cỡ mẫu thành dữ liệu đã có.
+Các nguồn đưa cho người kiểm dưới đây là kế hoạch, chưa phải mẫu đạt. Dự báo cập nhật lấy từ mục 10 của master plan để tránh biến mong muốn về cỡ mẫu thành dữ liệu đã có.
 
-<!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
+<!-- nguồn: docs/plans/active/master-plan.md, mục 5 và cập nhật dự báo mục 10 -->
 | Nguồn | Câu đưa cho người | Dự báo qua kiểm |
 |---|---:|---:|
 | Silver T2, gồm phần gần giống | 137 | ~82 |
 | Silver T3 | 31 | ~19 |
 | Silver T5, báo riêng | 10 | ~6 |
-| T6 mới, LLM lọc trước | 60 | ~25 |
-| T3 mới | 20 | ~12 |
-| T2 mới nếu đủ giờ | 60 | ~45 |
-<!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
+| T6 mới, sau LLM lọc (dự báo mới) | ~24 | ~14 |
+| T3 mới (dự báo mới) | tối đa 8 | ~5 |
+| T2 mới (dự báo mới) | ~46–63 | ~30 |
+<!-- nguồn: docs/plans/active/master-plan.md, mục 5 và cập nhật dự báo mục 10 -->
 
-Kế hoạch đặt cổng G2 tối thiểu 130 lineage người kiểm, mục tiêu khoảng 180; nếu thiếu giờ thì cắt nguồn ưu tiên thấp, không hạ tiêu chuẩn nhãn hoặc bỏ kiểm gold mù. Lô thử G1 lấy 30 câu từ test 2, không lấy silver để giữ nguyên nguồn bộ cuối. Những con số này là ngưỡng và mục tiêu có sẵn trong kế hoạch, chưa phải cỡ mẫu đã thu được.
-<!-- nguồn: docs/plans/active/master-plan.md, mục 5 và 7 -->
+Kế hoạch đặt cổng G2 tối thiểu 130 lineage người kiểm, dự báo cập nhật khoảng 150 (thay dự báo 180 cũ; chưa đo); nếu thiếu giờ thì cắt nguồn ưu tiên thấp, không hạ tiêu chuẩn nhãn hoặc bỏ kiểm gold mù. Lô thử G1 lấy 30 câu từ test 2, không lấy silver để giữ nguyên nguồn bộ cuối. Những con số này là ngưỡng và mục tiêu có sẵn trong kế hoạch, chưa phải cỡ mẫu đã thu được.
+<!-- nguồn: docs/plans/active/master-plan.md, mục 5, 7 và dự báo cập nhật mục 10 -->
 
 Thẻ gán theo câu hỏi gồm các câu kiểm sau; phải đối chiếu mọi mốc được đưa, không gán độc lập một nhãn mới cho mỗi bản sao mốc.
 
@@ -195,7 +198,13 @@ Nhãn đạt được suy ra khi Q1 Đúng, Q2 Có, Q3 Có và Q4 Không. Q4 Kh�
 <!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
 
 Trang gán phải ghi thời gian từng câu. Cổng G1 yêu cầu AC1 ≥ 0,80 và p_neg ≥ 0,60 trên từng Q1–Q4 cùng trung vị thời gian ≥ 90 giây/câu; dưới mức thời gian đó phải dừng và xem lại. Thời gian là dấu hiệu tuân thủ quy trình, không phải bảo đảm người gán đúng. [CHỜ G2: số thực tế của lô thử, nhãn bộ cuối, AC1/p_neg và phân bố thời gian được khóa ở G1–G2].
-<!-- nguồn: docs/plans/active/master-plan.md, mục 5 và 7 -->
+<!-- nguồn: docs/plans/active/master-plan.md, mục 5, 7 và dự báo cập nhật mục 10 -->
+
+Bước LLM lọc trước đã nhìn chuỗi phiên bản và gợi ý chỗ chuyển do đồ thị dựng; cổng hiệu chuẩn lọc từng chấp nhận loại nhầm đến 30%. Hiệu chuẩn lời dặn gán v2 cũng loại nhầm 12/39 câu người cho là tốt, nhưng đó là quy trình khác, không phải ước lượng trực tiếp tỷ lệ loại nhầm của phễu ứng viên mới. Kết quả T6 chỉ có điều kiện trên tập vượt bộ lọc, có thể ưu tiên lệnh bãi bỏ rõ mà `proposed3` dễ dùng.
+<!-- nguồn: scripts/review/test2_packs.py, mô tả gói và FALSE_REJECT_MAX; data/review/test2_llm_v2/calib_key.tsv; data/review/test2_llm_v2/calib_silver.tsv -->
+
+Tỷ lệ giữ T6 trong kế hoạch chưa có file phễu gốc trong repo nên chưa dùng làm kết quả đo. [CHỜ: phễu lọc ứng viên mới theo nhóm và mã lý do, kèm số vào/giữ/loại và nguồn từng dòng]. [CHỜ: người kiểm ngẫu nhiên 20 câu T6 bị LLM loại, ước lượng loại nhầm và khoảng bất định]. Không coi việc đã ghi kế hoạch là đã hoàn tất kiểm này.
+<!-- nguồn: docs/plans/active/master-plan.md, xử lý N3; docs/reports/phan-bien-ban-nhap-20261105.md, N3 -->
 
 ### Tiếp xúc trước với đáp án đồ thị và gold mù theo người
 
@@ -207,6 +216,9 @@ Trang gán phải ghi thời gian từng câu. Cổng G1 yêu cầu AC1 ≥ 0,80
 
 Gói hiện có ở `data/review/the4/gold1/` chia câu theo người. `gold_sample.tsv` có **60 dòng mẫu**: **22 chỉ A**, **23 chỉ B**, **15 cả hai**; từ đó `gold_A.tsv` có **37 phiếu**, `gold_B.tsv` có **38 phiếu**. Đối chiếu với các lineage A đã gán cho thấy **0** lineage đó được giao A ở gold1; phần chỉ B có **23** lineage A đã gán. Với B, giao giữa lineage B đã gán trong `kiem_B.tsv` và phần giao B cũng bằng **0**. Đây là kiểm tra cấu trúc phân công, chưa chứng minh người không xem ngoài phiếu hoặc đã hoàn thành gold. Các cột `hieu_luc`, `noi_dung`, `van_ban_ap_dung` của cả hai phiếu đều trống. Không nhầm lô chuẩn bị hiện có với mục tiêu gold mù của kế hoạch.
 <!-- nguồn: data/review/the4/gold1/gold_sample.tsv; data/review/the4/gold1/gold_A.tsv; data/review/the4/gold1/gold_B.tsv; data/review/kiem_A.tsv; data/review/kiem_B.tsv -->
+
+Trong silver T2/T3, phần A chưa thấy chỉ còn 37 lineage, đúng bằng số phiếu gold1 giao A; phần cả hai chưa thấy là 26 lineage và gold1 chỉ có 15 câu gán đôi. AC1 mới phải báo riêng phần A chưa thấy và phần đã thấy, không gọi AC1 gộp là mù với đồ thị. Không thể lấy thêm gold mù cho A từ cùng silver sau khi đã dùng hết phần chưa thấy. Dự báo T2/T3/T6 mới không bảo đảm đủ gold; [CHỜ G2: bảng nguồn bù gold theo người/lineage và số thực đạt, giữ gold trước lô nhãn của chính người đó].
+<!-- nguồn: data/review/kiem_A.tsv; data/review/kiem_B.tsv; data/vilextime_dataset/vilextime_silver.jsonl; data/review/the4/gold1/gold_sample.tsv; data/review/the4/gold1/gold_A.tsv; docs/plans/active/master-plan.md, xử lý N2 -->
 
 Theo A6, câu gold của mỗi người phải được giữ khỏi lô gán của chính người đó cho đến khi họ điền xong gold. Việc gán lại nhãn câu hỏi và việc tự tìm đáp án từ văn bản gốc/VBHN là hai loại bằng chứng; phải lưu riêng. [CHỜ G2: gold1 được người điền và đối soát độ mù theo người; khai báo tiếp xúc cũ khi thu nhãn mới].
 <!-- nguồn: docs/plans/active/master-plan.md, A6 và quy tắc sau mục 11; data/review/the4/gold1/ -->

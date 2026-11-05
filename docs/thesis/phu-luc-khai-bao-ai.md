@@ -9,7 +9,7 @@ Công trình sử dụng AI trong lập trình, chuẩn bị dữ liệu, hỗ t
 <!-- nguồn: docs/vilextime-datasheet.md -->
 <!-- nguồn: docs/plans/active/codex-chot-du-lieu-va-thuc-nghiem.md @51f36c7 -->
 
-Phụ lục chỉ xác nhận những hoạt động có hồ sơ trong kho. CMT và NMT là các vai trò thành viên được dùng trong kế hoạch; A/B là vai trò người gán. Không suy tên thật của người gán từ model hoặc tên file. Không công bố danh tính luật sư vượt quá vai trò mà hồ sơ cho phép. Các khẳng định chưa có biên bản kiểm được ghi là đang chờ, không được chuyển thành “đã xác nhận” khi biên tập.
+Phụ lục chỉ xác nhận những hoạt động có hồ sơ trong kho. A/B là hai tác giả Cao Minh Trí (CMT) và Nguyễn Minh Trí (NMT), đồng thời tham gia dựng hệ, gold mù và E7; không phải hai chuyên gia pháp lý độc lập bên ngoài. Không công bố danh tính luật sư vượt quá vai trò mà hồ sơ cho phép. Các khẳng định chưa có biên bản kiểm được ghi là đang chờ, không được chuyển thành “đã xác nhận” khi biên tập.
 <!-- nguồn: docs/plans/active/master-plan.md -->
 <!-- nguồn: docs/reports/D5_bien_ban.md -->
 
@@ -54,7 +54,8 @@ Các phiếu E7 người gán không chứa cột hệ hoặc tầng máy. File 
 
 ### Khai báo bổ sung về đợt gán và hòa giải 26/10
 
-Kế hoạch hiện hành ghi A gán khoảng 5 giây một dòng trong đợt 26/10. AC1 0,377 trên 246 dòng vì thế đi kèm một giới hạn quy trình nghiêm trọng: chưa thể coi đây là phép đo đồng thuận pháp lý đáng tin cậy. Số thời gian phải được công bố cùng số đồng thuận, không chỉ báo chỉ số thống kê.
+Ước tính 5 giây/dòng trong kế hoạch chưa có log thực để xác minh, nên không dùng làm số đo. Phiếu A có 971 dòng điền `phut` trên 1.120 dòng tổng, trung vị 1,0 phút và tổng 990 phút; đây là thời lượng khai trong phiếu, không phải timestamp tự động. AC1 0,377 trên 246 dòng vẫn là phép đo người–người có đồng thuận thấp, không tự xác nhận chất lượng pháp lý.
+<!-- nguồn: data/review/kiem_A.tsv; data/vilextime_dataset/manifest.json -->
 <!-- nguồn: docs/plans/active/master-plan.md, D1 -->
 
 Trong vòng theo hướng dẫn 3.0 có 101 dòng lệch, 97 dòng là A đạt và B không đạt; luật sư đứng về phía B ở 87/101 dòng, nhưng đã có phiếu Claude hỗ trợ. Metadata test v1.0 ghi 10 dòng luật sư có hỗ trợ Claude. Hai phạm vi này khác nhau: không dùng số ở test thay số của toàn vòng hòa giải 26/10. Cần gọi ghi chú Claude là **bản nháp hỗ trợ**, không phải nhận định độc lập của người hoặc bằng chứng luật sư đã tự kiểm không có gợi ý.
@@ -90,6 +91,14 @@ Theo quy trình bộ cuối, AI có thể hỗ trợ mã, chuẩn bị phiếu v
 
 Codex sửa chương tổng quan theo báo cáo đọc nguồn của AI ngày 05/11, cập nhật mức đọc trong bibliography và bảng tham khảo sinh tự động; đo lại tiếp xúc trước của A, rà nguồn số và đối chiếu một mẫu có seed từ file. Script kiểm số của lượt này đặt ngoài repo; bộ kiểm paper được giữ nguyên. Báo cáo đọc cũ là bằng chứng về phạm vi AI đã truy cập, không thay việc hai tác giả tự đọc tài liệu gốc. Lượt C9b không chạy bộ test cuối và chưa có lượt người duyệt hoặc phản biện độc lập mới.
 <!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md; scripts/paper/paper_refs.py; scripts/paper/paper_build.py; scripts/paper/paper_check.py; yêu cầu C9b của tác giả -->
+
+Lượt C12 sửa theo phản biện 05/11 chỉ đọc artifact cục bộ, tính thêm bảng TCS/VCR/MRR/EM/F1, precision/recall, đóng góp XN1 và độ nhạy power; dựng lại paper từ template. Không gọi mạng, generator hay giám khảo LLM; không chạy bộ test cuối. Phản biện do AI trong dự án làm, không phải phản biện ngoài. Các góp ý về power và mẫu số thời gian được kiểm lại thay vì chép nguyên con số.
+<!-- nguồn: docs/reports/phan-bien-ban-nhap-20261105.md; scripts/paper/paper_values.py; yêu cầu C12 của tác giả -->
+
+### Đối chiếu lại các con số phản biện C12
+
+Không chép số power sau Holm 0,25 ở V2: với cùng hiệu và phương sai theo cụm từ file, xấp xỉ chuẩn cho 150 lineage cho 0,346 ở α = 0,05, và 0,141 ở ngưỡng α/6; kết quả phụ thuộc bậc Holm, không có một số cố định trước khóa họ. L2 nói 971/971 nhưng đó là phần có verdict/thời gian, còn toàn phiếu có 1.120 dòng; giữ 971/1.120 và phân biệt số tự khai với log thực. Các ý cảnh báo của V2/L2 vẫn được tiếp thu, chỉ không nhận các con số chưa đúng phạm vi.
+<!-- nguồn: scripts/paper/paper_values.py; runs/E1_test2/test/b7.jsonl; runs/E1_test2/test/b7pp.jsonl; data/vilextime/test2_release_v2.jsonl; data/review/kiem_A.tsv; docs/reports/phan-bien-ban-nhap-20261105.md, V2 và L2 -->
 
 ## A.5. Quy định cơ sở đào tạo
 

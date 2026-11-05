@@ -9,14 +9,14 @@
 
 # Phần A. Hiện trạng trong một trang
 
-**Bản nháp theo hướng A: bộ đánh giá và phép đo có đối chứng.** V1.0 và test 2 là hai vòng thử có khai báo; bảng kết luận chính dành cho bộ test cuối chưa chạy. Yêu cầu C9 của tác giả cho phép viết theo hướng này; bản nháp không thay các quyết định phân tích đã Accepted. Hai sinh viên cần đọc và sửa trước khi gửi GVHD.
+**Bản nháp theo hướng A: bộ đánh giá và phép đo có đối chứng.** V1.0 và test 2 (nhãn LLM) được đổi vai thành vòng thử ngày 05/11 sau khi thấy kết quả; bảng kết luận chính dành cho bộ test cuối chưa chạy. Yêu cầu C9 của tác giả cho phép viết theo hướng này; bản nháp không thay các quyết định phân tích đã Accepted. Hai sinh viên cần đọc và sửa trước khi gửi GVHD.
 <!-- nguồn: docs/plans/active/master-plan.md; yêu cầu C9 của tác giả ngày 05/11/2026 -->
 
 | Phần của paper | Hiện trạng | Phần cần hoàn tất |
 |---|---|---|
 | Câu hỏi và giả thuyết | Có trong đề cương; ADR lưu khai báo lịch sử | Amendment trước bộ cuối, ghi rõ đã thấy các vòng thử |
-| Dữ liệu vòng thử | v1.0 nhãn hỗn hợp người/agent; test 2 nhãn LLM | Công bố nguồn nhãn, không dùng làm bộ cuối |
-| Chất lượng nhãn | AC1 người {{iaa.ac1}}; lời dặn LLM v2 {{c.f.all.ac1}} | Thẻ Q1–Q4, gán mù, ghi thời gian, cổng G1–G2 |
+| Dữ liệu vòng thử | v1.0 nhãn hỗn hợp người/agent; test 2 (nhãn LLM) nhãn LLM | Công bố nguồn nhãn, không dùng làm bộ cuối |
+| Chất lượng nhãn | AC1 người–người {{iaa.ac1}}; AC1 LLM v2–người {{c.f.all.ac1}} (hai phép đo khác loại) | Thẻ Q1–Q4, gán mù, ghi thời gian, cổng G1–G2 |
 | Gold | Dẫn xuất từ cùng đồ thị với hệ; M2 chưa đạt | Đối chiếu VBHN và gold mù do người kiểm |
 | Kiến trúc | `proposed` vòng thử chỉ từ vựng; `proposed2` lai ghép có số truy xuất dev | Sinh dev, khóa hệ; chưa có Accuracy `proposed2` |
 | Kết quả chính | [CHỜ G4: bộ test cuối] | Không lấy vòng thử hoặc dev điền vào |
@@ -35,7 +35,7 @@ Bài hướng tới công bố tài nguyên có nguồn gốc rõ và đo phần
 
 ## Tóm tắt
 
-Hỏi đáp pháp luật theo mốc đòi hỏi chọn đúng lời văn có hiệu lực tại thời điểm áp dụng. Bản nháp trình bày ViLexTime và một thang đối chứng để phân biệt vai trò của lọc thời gian, biểu diễn phiên bản và mở rộng quan hệ một bước. Kết luận chính được thiết kế cho bộ test cuối do người kiểm, với gold đối chiếu nguồn độc lập; bộ này chưa chạy. Hai vòng thử có khai báo được báo riêng: v1.0 có {{rows.v1}} dòng thuộc {{lin.v1}} lineage, nhãn hỗn hợp người và agent; test 2 (nhãn LLM) có {{rows.t2}} dòng thuộc {{lin.t2}} lineage. Trong phạm vi các vòng thử, kiểm định về lọc cấp văn bản được ủng hộ ở cả hai bộ; kiểm định về truy xuất phiên bản được ủng hộ ở v1.0 nhưng chưa đủ bằng chứng ở bộ nhãn LLM. Phân rã mô tả chưa cho phép quy toàn bộ chênh lệch cho đồ thị trực tuyến. Gold dùng chung kho với hệ, đồng thuận nhãn thấp và khả năng nhận diện bãi bỏ yếu giới hạn diễn giải. [CHỜ G4: kết quả và kết luận chính trên bộ cuối; chưa khẳng định hệ đề xuất thắng].
+Hỏi đáp pháp luật theo mốc đòi hỏi chọn đúng lời văn có hiệu lực tại thời điểm áp dụng. Bản nháp trình bày ViLexTime và một thang đối chứng để phân biệt vai trò của lọc thời gian, biểu diễn phiên bản và mở rộng quan hệ một bước. Kết luận chính được thiết kế cho bộ test cuối do người kiểm, với gold do người đọc nguồn mà không thấy đáp án đồ thị; bộ này chưa chạy. Xác nhận lần 1 và lần lặp lại được đổi vai sau quan sát ngày 05/11, báo riêng: v1.0 có {{rows.v1}} dòng thuộc {{lin.v1}} lineage, nhãn hỗn hợp người và agent; test 2 (nhãn LLM) có {{rows.t2}} dòng thuộc {{lin.t2}} lineage. Trong phạm vi các vòng thử, kiểm định về lọc cấp văn bản được ủng hộ ở cả hai bộ; kiểm định về truy xuất phiên bản được ủng hộ ở v1.0 nhưng chưa đủ bằng chứng ở bộ nhãn LLM. Phân rã mô tả chưa cho phép quy toàn bộ chênh lệch cho đồ thị trực tuyến. Gold dùng chung kho với hệ, đồng thuận nhãn thấp và khả năng nhận diện bãi bỏ yếu của Qwen3-4B giới hạn diễn giải. [CHỜ G4: kết quả và kết luận chính trên bộ cuối; chưa khẳng định hệ đề xuất thắng].
 <!-- nguồn: runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json; docs/plans/active/master-plan.md -->
 
 **Từ khóa:** RAG pháp luật, truy xuất theo thời gian, phiên bản văn bản, bộ đánh giá, tiếng Việt.
@@ -50,20 +50,20 @@ Một câu hỏi chưa rõ là lợi ích đến từ đâu. Nếu một bộ l�
 
 - **RQ1.** LLM và RAG hiện có mắc lỗi áp dụng sai phiên bản ở mức nào trên pháp luật Việt Nam?
 - **RQ2.** Biểu diễn theo phiên bản có giảm lỗi so với RAG phẳng và đồ thị phi thời gian không?
-- **RQ3.** Lợi ích đến từ biểu diễn phiên bản hay chỉ từ lọc theo siêu dữ liệu thời gian?
+- **RQ3.** Lợi ích thu được đến từ biểu diễn đồ thị, hay chỉ đơn thuần đến từ việc lọc theo siêu dữ liệu thời gian?
 <!-- nguồn: docs/plans/active/master-plan.md -->
 
 **Các nội dung đóng góp được chuẩn bị theo hướng A:**
 
-1. **Tài nguyên ViLexTime và quy trình kiểm:** bản v1.0 hiện có {{rows.main}} dòng chính; bộ test cuối được tách riêng và cần người kiểm. Số dòng phát hành không đồng nghĩa số mẫu đã kiểm độc lập về pháp lý.
+1. **Tài nguyên ViLexTime và quy trình kiểm:** bản v1.0 hiện có {{rows.main}} dòng chính gồm dev/test và các chế độ mốc; test có {{lin.v1}} lineage, {{lab.n}} dòng ranh giới, trong đó 121 dòng có nguồn nhãn người ({{lab.ab}} A+B và {{lab.law}} luật sư), {{lab.agent}} chỉ agent. Bộ test cuối được tách riêng và cần người kiểm. Số dòng phát hành không đồng nghĩa số mẫu đã kiểm độc lập về pháp lý.
 2. **Phép đo có đối chứng:** thang cấu hình tách các mức thông tin thời gian, giữ hồ sơ hai vòng thử và dành bảng kết luận cho bộ cuối. Chỉ các nấc kề nhau đổi một thành phần; các so sánh xa hơn chưa cô lập tác dụng riêng.
-3. **Phân tích giới hạn trên pháp luật Việt Nam:** hai nút thắt tìm và dùng căn cứ đã được báo trên dữ liệu khác [@yao2026lawinforce]; phần riêng ở đây là nhận diện bãi bỏ và chất lượng nhãn. Phân loại máy và so sánh nhãn LLM chỉ là thăm dò; kết luận chính còn chờ người kiểm và G4.
+3. **Phân tích giới hạn trên pháp luật Việt Nam:** hai nút thắt tìm và dùng căn cứ đã được báo trên dữ liệu khác [@yao2026lawinforce]; nhận diện bãi bỏ cũng đã có ở NitiBench+ [@akarajaradwong2026nitibenchplus]. Phạm vi Việt Nam là dựng lời văn từ lệnh ở văn bản khác và bãi bỏ qua nút cha; chưa có bằng chứng lợi ích lan truyền. Phân loại máy và so sánh nhãn LLM chỉ là thăm dò; kết luận chính còn chờ người kiểm và G4.
 <!-- nguồn: data/vilextime_dataset/manifest.json; docs/plans/active/master-plan.md; docs/reports/e7_phan_ra_loi.md -->
 
 ## 2. Công trình liên quan
 <!-- nguồn: references.bib; docs/thesis/chuong-2-co-so-ly-thuyet.md -->
 
-**Hỏi đáp pháp luật theo thời gian.** FiscalQA Pro phân biệt chỉ mục chỉ có bản hiện hành với chỉ mục nhiều phiên bản điều kiện theo ngày, và chấm bằng nugget tất định [@cymbler2026fiscalqa]. Điều kiện RAG tĩnh của bài đó được cấp sẵn điều luật gold, khác với bài toán tự tìm trên toàn kho của chúng tôi. Prior và cộng sự dùng 312 cặp hỏi đáp luật Đức, lọc theo mốc ngày như một ràng buộc cứng, và chấm việc áp đúng phiên bản [@prior2026oldfriend]. LawInForce-eCFR dựng 805 cặp sửa đổi có người kiểm trên quy định liên bang Mỹ, với 3.220 câu đúng/sai; Recall@1 tăng từ 2,80% của BM25 có lọc ngày lên 30,90% của bộ truy xuất đề xuất, và bài kết luận có hai nút thắt là tìm đúng luật đang có hiệu lực và áp dụng quy tắc số [@yao2026lawinforce]. NitiBench+ (bản nháp, đang phản biện) cho thấy với luật Thái, đọc văn bản hiện hành thay vì văn bản đúng mốc làm giảm 0,25 điểm ở luật đã sửa và 0,79 điểm ở luật đã bãi bỏ [@akarajaradwong2026nitibenchplus]. Vì vậy giá trị của việc lấy đúng văn bản không còn là điều mới. Bài này tập trung vào phần các công trình đó chưa tách, theo những gì chúng tôi đã đọc: trên cùng dữ liệu, phần đóng góp riêng của lọc theo ngày văn bản, lọc theo khoảng hiệu lực phiên bản và lan truyền hiệu lực từ nút cha, trên pháp luật Việt Nam. [CẦN: đọc phụ lục NitiBench+, LawInForce-eCFR trước khi nộp]
+**Hỏi đáp pháp luật theo thời gian.** FiscalQA Pro phân biệt chỉ mục chỉ có bản hiện hành với chỉ mục nhiều phiên bản điều kiện theo ngày, và chấm bằng nugget tất định [@cymbler2026fiscalqa]. Điều kiện RAG tĩnh của bài đó được cấp sẵn điều luật gold, khác với bài toán tự tìm trên toàn kho của chúng tôi. Prior và cộng sự dùng 312 cặp hỏi đáp luật Đức, lọc theo mốc ngày như một ràng buộc cứng, và chấm việc áp đúng phiên bản [@prior2026oldfriend]. LawInForce-eCFR dựng 805 cặp sửa đổi có người kiểm trên quy định liên bang Mỹ, với 3.220 câu đúng/sai; Recall@1 tăng từ 2,80% của BM25 có lọc ngày lên 30,90% của bộ truy xuất đề xuất, và bài kết luận có hai nút thắt là tìm đúng luật đang có hiệu lực và áp dụng quy tắc số [@yao2026lawinforce]. NitiBench+ (bản nháp, đang phản biện) cho thấy với luật Thái, đọc văn bản hiện hành thay vì văn bản đúng mốc làm giảm 0,25 điểm ở luật đã sửa và 0,79 điểm ở luật đã bãi bỏ [@akarajaradwong2026nitibenchplus]. Vì vậy giá trị của việc lấy đúng văn bản không còn là điều mới. Bài này đo hai nấc ngày văn bản và khoảng hiệu lực phiên bản trên cùng dữ liệu Việt Nam; lan truyền từ nút cha hiện chưa cho thấy lợi ích. Các nguồn gần chưa có đủ hồ sơ đọc không cho phép xác lập khoảng trống toàn lĩnh vực. [CẦN: đọc phụ lục NitiBench+, LawInForce-eCFR trước khi nộp]
 <!-- nguồn: references.bib; docs/thesis/chuong-2-co-so-ly-thuyet.md -->
 
 **Mô hình hóa phiên bản.** Các phần đã đọc của SAT-Graph RAG trình bày cấu trúc và thời gian của quy phạm, chính sách truy vấn tất định và case study định tính [@demartim2025satgraph]. VersionRAG dựng đồ thị phiên bản cho tài liệu kỹ thuật (Node.js, Spark, Bootstrap), không có dữ liệu luật và không xử lý mốc ngày, nên chỉ là đối chứng về biểu diễn [@huwiler2025versionrag]. Một nghiên cứu dùng LLM áp lệnh sửa đổi lên luật Đức cho thấy rủi ro của lời văn hợp nhất tự động [@prior2025consolidation]; cách làm và mẫu số khác nên chúng tôi không đặt số của bài đó cạnh số của mình.
@@ -74,8 +74,14 @@ Một câu hỏi chưa rõ là lợi ích đến từ đâu. Nếu một bộ l�
 
 **GraphRAG.** Bài này không chạy GraphRAG [@edge2024graphrag] hay LightRAG [@guo2025lightrag]. Hai hệ đó dựng đồ thị thực thể do LLM trích; mở rộng của chúng tôi đi theo quan hệ sửa đổi tất định có sẵn trong kho, nên kết quả **không phải** phép đánh giá các hệ đó. [CHỜ G4: LightRAG trên tập con sau G3, báo riêng vì khác corpus]
 
-**Khoảng trống, trong phạm vi đã tìm.** Trong các truy vấn ghi ở phụ lục, chạy ngày 05/11/2026 trên arXiv, Crossref, OpenAlex (4/12 truy vấn), danh mục tiêu đề ACL Anthology và tìm kiếm web, chúng tôi không thấy (a) bộ đánh giá nào cho pháp luật Việt Nam gán gold đến phiên bản điều khoản theo mốc và chấm nhầm phiên bản, và (b) công trình nào so sánh có đối chứng, trên cùng dữ liệu, giữa lọc theo ngày văn bản, lọc theo khoảng hiệu lực phiên bản và lan truyền hiệu lực từ nút cha. Semantic Scholar, ACM DL, IEEE Xplore, Google Scholar, SSRN và DBLP không mở được ở lượt này, và một số bài liên quan mới xem đến bản ghi. Chúng tôi không đưa ra tuyên bố nào về thứ tự công bố, cũng không khẳng định chưa có ai làm. [CẦN: chạy lại phần bị chặn trước khi nộp]
-<!-- nguồn: references.bib; docs/thesis/chuong-2-co-so-ly-thuyet.md -->
+Các tiền lệ đã có trong danh mục gồm LawInForce-eCFR và NitiBench+: bài sau đã có nhóm luật bãi bỏ, nên nhận diện bãi bỏ không tự tạo tính mới [@yao2026lawinforce; @akarajaradwong2026nitibenchplus]. Phạm vi Việt Nam cần kiểm là lời văn dựng lại từ lệnh ở văn bản khác và bãi bỏ qua nút cha. Ở thang hiện có, hai nấc đã đo được là ngày văn bản và khoảng phiên bản; bước lan truyền không đổi TV-Recall@1 ở mọi nhóm trên cả hai bộ. XN5 về Accuracy lan truyền chưa chạy, nên chưa xác lập đóng góp này.
+<!-- nguồn: references.bib; related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md; runs/E1/test/ladder.score.json; runs/E1_test2/test/ladder.score.json; runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json -->
+
+Log khảo sát còn nêu các nguồn gần chưa có khóa trong `references.bib`: [CẦN: Retrieving What Is Still True]; [CẦN: arXiv 2604.14220, CFR và cạnh SUPERSEDES]; [CẦN: Version-Aware KG for Multi-Version Legal QA]; [CẦN: FourCorners]; [CẦN: Temporal Legal-RAG]. Chưa thêm hay dùng chúng làm bằng chứng chi tiết khi chưa có mục bib và lượt đọc đủ. Do đó rút khẳng định phủ định “không thấy công trình nào” về phép đối chứng; phạm vi khảo sát hiện chưa đủ xác lập khoảng trống toàn lĩnh vực.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md, bảng công trình và log truy vấn; references.bib -->
+
+Log truy vấn nằm trong `related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md`, không phải phụ lục paper. Phần nguồn bị chặn và bài chỉ đọc metadata còn chờ; không dùng sự vắng mặt của kết quả tìm để xác nhận tính mới.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
 
 ## 3. Dữ liệu
 <!-- nguồn: references.bib; docs/thesis/chuong-2-co-so-ly-thuyet.md -->
@@ -86,8 +92,14 @@ Một câu hỏi chưa rõ là lợi ích đến từ đâu. Nếu một bộ l�
 Dữ liệu thu thập từ vbpl.vn. Pipeline nhận dạng câu lệnh sửa đổi và bãi bỏ, phân giải điều khoản đích, rồi dựng chuỗi phiên bản với khoảng hiệu lực nửa mở. Khoảng hiệu lực thực của một phiên bản là giao của khoảng cục bộ với độ phủ của các nút tổ tiên và văn bản sở hữu. Kho thực nghiệm gồm 17.333 văn bản, 1.455.372 đơn vị lời văn gốc (lớp A), 53.991 đơn vị lệnh (lớp A) và 1.477.089 đơn vị phiên bản (lớp B).
 <!-- nguồn: data/derived/corpus/manifest.json; docs/thesis/chuong-3-kho-van-ban-va-do-thi.md -->
 
-Kiểm chất lượng lịch sử ghi 58/60 sự kiện áp đúng (Wilson 95% từ 88,6% đến 99,1%), recall theo `expiryProvisions` 62,2% (5.007/8.046 cặp), và 5.762/7.201 cặp lời văn (80,02%) khớp chính xác với văn bản hợp nhất trên 51 văn bản. Ba số này khác mẫu số, không gộp thành một độ chính xác chung. M2 chưa đạt. Phép thử tải/căn PDF VBHN hiện chỉ là khảo sát kỹ thuật; chưa có báo cáo đối chiếu hoàn chỉnh và gold mù. [CHỜ G4: bằng chứng M2 và gold mù từ nguồn ngoài được kiểm ở G2]
+Kiểm chất lượng lịch sử ghi 58/60 sự kiện áp đúng (Wilson 95% từ 88,6% đến 99,1%), recall theo `expiryProvisions` 62,2% (5.007/8.046 cặp), và 5.762/7.201 cặp lời văn (80,02%) khớp chính xác với văn bản hợp nhất trên 51 văn bản. Ba số này khác mẫu số, không gộp thành một độ chính xác chung. M2 chưa đạt; gold mù chưa hoàn tất.
 <!-- nguồn: data/derived/corpus/manifest.json; docs/thesis/chuong-3-kho-van-ban-va-do-thi.md -->
+
+Đối chiếu VBHN đã có báo cáo: chỉ phủ 2/819 mốc silver, 0/492 mốc test 2 (nhãn LLM) và 2/487 mốc v1.0 trong phạm vi T2/T3/T6; các mốc trùng phiên bản không nhất thiết trùng ngày hỏi. Chỉ 2 cặp có đủ toàn văn để so, xác nhận khớp 1; cặp còn lại chưa phân xử, không tự tính là sai. Rà dấu bãi bỏ cho thấy lệch 2/2 ở nguồn đạt cổng; khảo sát căn ban đầu ghi lệch 10/24 và 344 đơn vị có độ giống dưới 0,90. Đây là tín hiệu cần phân xử, không phải tỷ lệ lỗi pháp lý toàn đồ thị. VBHN hiện không đủ làm gold của benchmark hoặc thay gold mù.
+<!-- nguồn: docs/reports/doi-chieu-vbhn.md; data/vbhn_files/c7_summary.json; docs/reports/thu-tai-vbhn-20261105.md; data/vbhn_files/pdf_compare.reproduced.json -->
+
+PDF VBHN được tải từ `vbpl-bientap-gateway.moj.gov.vn`, cùng cổng vbpl với văn bản gốc. Nó là đối chiếu lời văn theo một quy trình biên tập khác, không phải nguồn thu thập độc lập; dự án vẫn phụ thuộc một nguồn. “Độc lập” của kiểm người chỉ nói đến việc người tự đọc và không thấy đáp án/cửa sổ đồ thị. M2 và kiểm gold còn chờ.
+<!-- nguồn: docs/reports/thu-tai-vbhn-20261105.md; docs/reports/doi-chieu-vbhn.md -->
 
 ### 3.2. Vòng thử ViLexTime v1.0 — nhãn hỗn hợp
 <!-- nguồn: data/vilextime_dataset/manifest.json; data/vilextime_dataset/vilextime_meta.jsonl; docs/vilextime-datasheet.md; docs/plans/active/master-plan.md -->
@@ -110,8 +122,12 @@ Một dòng là một cặp câu hỏi và mốc. Các dòng cùng lineage dùng
 **Nguồn nhãn.** Trên {{lab.n}} dòng ranh giới của test: {{lab.ab}} dòng do A và B cùng nhãn, {{lab.law}} dòng do luật sư chốt (trong đó {{lab.law_ai}} dòng có phiếu Claude hỗ trợ), {{lab.agent}} dòng do agent gán. Nhãn agent chỉ được dùng ở T1 và T6; T2 và T3 của test đều có nguồn người.
 <!-- nguồn: data/vilextime_dataset/manifest.json; data/vilextime_dataset/vilextime_meta.jsonl; docs/vilextime-datasheet.md; docs/plans/active/master-plan.md -->
 
-**Đồng thuận thấp, và phải nói rõ.** Trên {{iaa.n}} dòng gán đôi theo hướng dẫn hiện hành: AC1 {{iaa.ac1}} {{iaa.ac1ci}}, κ {{iaa.k}}, thỏa thuận nhãn âm {{iaa.pneg}}. Theo nhóm, AC1 của T1 là {{iaa.T1}} (n={{iaa.T1.n}}), T2 {{iaa.T2}} (n={{iaa.T2.n}}), T3 {{iaa.T3}} (n={{iaa.T3.n}}), T6 {{iaa.T6}} (n={{iaa.T6.n}}). A gán khoảng 5 giây mỗi dòng trong đợt 26/10 theo hồ sơ kế hoạch; do đó chỉ số đồng thuận chưa chứng minh việc đối chiếu được làm đầy đủ. AC1 được chọn sau pilot, không khai báo trước; tài liệu nền đã có bản ghi [@gwet2008ac1], còn chờ đọc gốc. Agent đạt AC1 0,721 và p_neg 0,610 trên 178 dòng hiệu chuẩn, không đạt ngưỡng AC1 0,80. Luật sư kiểm 50 dòng nhãn agent và đồng ý 43.
+**Đồng thuận thấp, và phải nói rõ.** Trên {{iaa.n}} dòng gán đôi theo hướng dẫn hiện hành: AC1 {{iaa.ac1}} {{iaa.ac1ci}}, κ {{iaa.k}}, thỏa thuận nhãn âm {{iaa.pneg}}. Theo nhóm, AC1 của T1 là {{iaa.T1}} (n={{iaa.T1.n}}), T2 {{iaa.T2}} (n={{iaa.T2.n}}), T3 {{iaa.T3}} (n={{iaa.T3.n}}), T6 {{iaa.T6}} (n={{iaa.T6.n}}). Cột `phut` của phiếu A có 971/1.120 dòng điền, trung vị 1,0 phút và tổng 990 phút; đây là thời lượng khai trong phiếu, chưa phải log thời gian thực. Bỏ ước tính 5 giây/dòng chưa kiểm chứng. [CHỜ: log thực và xác nhận ý nghĩa `phut`].
+<!-- nguồn: data/review/kiem_A.tsv --> AC1 được chọn sau pilot, không khai báo trước; tài liệu nền đã có bản ghi [@gwet2008ac1], còn chờ đọc gốc. Agent đạt AC1 0,721 và p_neg 0,610 trên 178 dòng hiệu chuẩn, không đạt ngưỡng AC1 0,80. Luật sư kiểm 50 dòng nhãn agent và đồng ý 43.
 <!-- nguồn: data/vilextime_dataset/manifest.json; data/vilextime_dataset/vilextime_meta.jsonl; docs/vilextime-datasheet.md; docs/plans/active/master-plan.md -->
+
+Hai người gán A/B là chính hai tác giả Cao Minh Trí (CMT) và Nguyễn Minh Trí (NMT), đồng thời tham gia dựng hệ, gold mù và mã hóa E7. Mù với nhãn/hệ không làm họ độc lập với quá trình phát triển. Chưa có hồ sơ xác nhận năng lực pháp lý cho Q4; mẫu luật sư kiểm ngẫu nhiên 30 câu `dat` của bộ cuối sẽ là thước đo độ đúng riêng, chưa được thực hiện. [CHỜ G4: kết quả mẫu luật sư, mẫu số và quy trình rút mẫu].
+<!-- nguồn: docs/plans/active/master-plan.md, "Ai làm gì" và xử lý N1; docs/reports/phan-bien-ban-nhap-20261105.md, N1 -->
 
 **T6 bị thu hẹp mạnh.** Hơn một trăm lineage bị loại vì không chắc nội dung có chuyển sang văn bản khác không ({{drop.unclear}} lineage `relocation_unclear`, {{drop.reloc}} lineage `relocated`). Vì thế T6 không đại diện cho mọi điều khoản từng bị bãi bỏ.
 <!-- nguồn: data/vilextime_dataset/manifest.json; data/vilextime_dataset/vilextime_meta.jsonl; docs/vilextime-datasheet.md; docs/plans/active/master-plan.md -->
@@ -119,7 +135,7 @@ Một dòng là một cặp câu hỏi và mốc. Các dòng cùng lineage dùng
 ### 3.3. Test 2 (nhãn LLM)
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md; data/review/test2_llm/agreement.json; data/review/test2_llm_v2/calib_score.json -->
 
-Test 2 là vòng thử lặp lại có khai báo, gồm T2, T3 và T6, **nhãn do LLM gán, không có người hay luật sư kiểm**. Nó được báo riêng và không gộp với v1.0. Câu hỏi bị giới hạn trùng chữ với lời văn ở mức tối đa 40%.
+Test 2 được khai là bản lặp lại ngày 03/11 và đổi vai sau quan sát ngày 05/11, gồm T2, T3 và T6, **nhãn do LLM gán, không có người hay luật sư kiểm**. Nó được báo riêng và không gộp với v1.0. Câu hỏi bị giới hạn trùng chữ với lời văn ở mức tối đa 40%.
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md; data/review/test2_llm/agreement.json; data/review/test2_llm_v2/calib_score.json -->
 
 **Bảng 2. Test 2 (nhãn LLM), giữa khoảng**
@@ -152,8 +168,20 @@ Test 2 là vòng thử lặp lại có khai báo, gồm T2, T3 và T6, **nhãn d
 Bộ cuối tuyển lineage chưa có hệ nào chạy, không trùng lineage của các vòng thử và không trùng văn bản đích với dev. Quy trình dự kiến gán theo câu hỏi, kiểm Q1 (đúng văn bản/mốc), Q2 (hỏi nội dung thay đổi), Q3 (rõ và không lộ đáp án), Q4 (quy định khác hoặc nơi nội dung chuyển đến). Hai người độc lập, mù với nhãn và gợi ý LLM cũng như kết quả hệ; luật sư chốt lệch không có phiếu AI. Phải trích câu nguồn, trang gán ghi thời gian từng câu. Gold mù đọc văn bản gốc hoặc VBHN, không thấy lời văn phiên bản đồ thị.
 <!-- nguồn: docs/plans/active/master-plan.md; docs/vilextime-annotation.md -->
 
+Trong silver T2/T3, phần A chưa thấy chỉ còn 37 lineage, đúng bằng số phiếu gold1 giao A; phần cả hai chưa thấy là 26 lineage và gold1 chỉ có 15 câu gán đôi. AC1 mới phải báo riêng phần A chưa thấy và phần đã thấy, không gọi AC1 gộp là mù với đồ thị. Không thể lấy thêm gold mù cho A từ cùng silver sau khi đã dùng hết phần chưa thấy. Dự báo T2/T3/T6 mới không bảo đảm đủ gold; [CHỜ G2: bảng nguồn bù gold theo người/lineage và số thực đạt, giữ gold trước lô nhãn của chính người đó].
+<!-- nguồn: data/review/kiem_A.tsv; data/review/kiem_B.tsv; data/vilextime_dataset/vilextime_silver.jsonl; data/review/the4/gold1/gold_sample.tsv; data/review/the4/gold1/gold_A.tsv; docs/plans/active/master-plan.md, xử lý N2 -->
+
+Bước LLM lọc trước đã nhìn chuỗi phiên bản và gợi ý chỗ chuyển do đồ thị dựng; cổng hiệu chuẩn lọc từng chấp nhận loại nhầm đến 30%. Hiệu chuẩn lời dặn gán v2 cũng loại nhầm 12/39 câu người cho là tốt, nhưng đó là quy trình khác, không phải ước lượng trực tiếp tỷ lệ loại nhầm của phễu ứng viên mới. Kết quả T6 chỉ có điều kiện trên tập vượt bộ lọc, có thể ưu tiên lệnh bãi bỏ rõ mà `proposed3` dễ dùng.
+<!-- nguồn: scripts/review/test2_packs.py, mô tả gói và FALSE_REJECT_MAX; data/review/test2_llm_v2/calib_key.tsv; data/review/test2_llm_v2/calib_silver.tsv -->
+
+Tỷ lệ giữ T6 trong kế hoạch chưa có file phễu gốc trong repo nên chưa dùng làm kết quả đo. [CHỜ: phễu lọc ứng viên mới theo nhóm và mã lý do, kèm số vào/giữ/loại và nguồn từng dòng]. [CHỜ: người kiểm ngẫu nhiên 20 câu T6 bị LLM loại, ước lượng loại nhầm và khoảng bất định]. Không coi việc đã ghi kế hoạch là đã hoàn tất kiểm này.
+<!-- nguồn: docs/plans/active/master-plan.md, xử lý N3; docs/reports/phan-bien-ban-nhap-20261105.md, N3 -->
+
 Cỡ mẫu và tầng chất lượng phải báo theo bản khóa, không điền bằng dự báo quota. [CHỜ G4: quy mô thực tế, phân tầng người/LLM, đồng thuận, thời gian và gold mù của bộ cuối]. Mức trùng chữ giữa các vòng thử cần phép đo lưu thành file trước khi công bố số; bản nháp này bỏ các giá trị chỉ từng in ra màn hình. [CẦN: lưu phân tích trùng chữ tái lập trước khi diễn giải nguyên nhân chênh lệch]
 <!-- nguồn: docs/plans/active/master-plan.md; scripts/paper/paper_values.py -->
+
+`proposed3` đưa `repeal_note` từ sự kiện `repeal` đã phân giải vào prompt; gold “không có đáp án” của T6 cũng dẫn từ nguồn sự kiện đó. Accuracy T6 vì vậy là cận trên có điều kiện khi đồ thị đúng, chưa phải bằng chứng pháp lý độc lập. Chỉ kết luận trên T6 đã qua gold mù; phải báo cả recall, precision và số khẳng định sai trên dòng có đáp án. Các lượt bổ sung trên T6 của v1.0 và test 2 (nhãn LLM) phải gắn nhãn “đã thấy”, báo riêng từng bộ, không gộp với nhau hay với bộ cuối vì cấu hình được thiết kế sau khi xem lỗi của chúng.
+<!-- nguồn: src/vilexgraph/framework/graphx.py, _repeals và repeal_notes; docs/plans/active/master-plan.md, xử lý C2 và N8 -->
 
 ## 4. Các hệ so sánh
 <!-- nguồn: src/vilexgraph/framework/systems.py; src/vilexgraph/framework/graphx.py; runs/README.md -->
@@ -194,16 +222,44 @@ Các tầng L0–L3 ngoại tuyến phân tích cấu trúc, trích tác động
 ## 5. Thiết kế thực nghiệm
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md; scripts/eval/score_vilextime.py -->
 
+V1.0 được khai là bản xác nhận lần 1 trong ADR 0005; amendment 03/11 gọi test 2 (nhãn LLM) là bản lặp lại. Ngày 05/11, sau khi đã thấy kết quả (XN1 được ủng hộ ở v1.0, không đủ bằng chứng ở test 2 (nhãn LLM)), kế hoạch mới đổi vai cả hai thành vòng thử và mở bộ cuối. Đây là thay đổi sau quan sát, không phải vai trò được định trước. Giữ cả ba phán quyết cạnh nhau, không gộp điểm hoặc chọn phán quyết thuận lợi. [CHỜ G3: amendment ghi lịch sử các lần nhìn và quy tắc kết luận trước bộ cuối].
+<!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md, §1 và amendment 03/11; runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json; docs/plans/active/master-plan.md, xử lý C3 -->
+
 **Khai báo các vòng thử.** ADR 0005 khóa giả thuyết, đại lượng, lát dữ liệu, chiều dự đoán và quy tắc kết luận trước khi chạy test. Mỗi cấu hình chỉ chạy một lần trên test. Mọi thay đổi sau đó ghi thành amendment, nói rõ lúc đó đã thấy kết quả nào. Đây là khai báo trong git, không phải đăng ký công khai.
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md; scripts/eval/score_vilextime.py -->
 
 **Chỉ số.** *Accuracy* là phép chấm tương phản: câu trả lời phải chứa các đoạn gold và tránh đoạn chỉ thuộc phiên bản khác; dòng bãi bỏ chỉ đúng khi hệ khẳng định hết hiệu lực. *TV-Recall@k* cần đúng phiên bản; *Recall@k* chỉ cần đúng điều khoản. *TVER* là tỷ lệ dòng có ít nhất một trích dẫn không có hiệu lực tại mốc, tính trên các dòng có trích dẫn phân giải được, nên luôn đọc cùng độ phủ trích dẫn. *wrong_version* xét nội dung câu trả lời có chứa đoạn chỉ phiên bản khác có, trên các dòng có đoạn phân biệt. Chưa dùng LLM làm giám khảo. [CHỜ G4: hiệu chuẩn LLM-as-judge với người theo kế hoạch; chưa có điểm hợp lệ]
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md; scripts/eval/score_vilextime.py -->
 
-**Thống kê.** Bootstrap theo cụm lineage, 10.000 lần lấy mẫu lại, khoảng phân vị 95%. Bootstrap theo cụm vì các dòng của một lineage không độc lập, một vấn đề được nêu mà chưa có lời giải chung [@dror2018hitchhiker]. [CẦN: nguồn đã xác minh cho bootstrap theo cụm] Họ xác nhận gồm sáu kiểm định với hiệu chỉnh Holm, α = 0,05. [CẦN: nguồn đã xác minh cho Holm] "Ủng hộ" cần p sau Holm < 0,05 và đúng chiều dự đoán; ngược chiều là "bác"; còn lại là "không đủ bằng chứng". XN5, XN6, XN7 chỉ thăm dò vì lát quá nhỏ. Mọi so sánh ngoài họ đều là mô tả.
+**Thống kê.** Bootstrap theo cụm lineage, 10.000 lần lấy mẫu lại, khoảng phân vị 95%. Bootstrap theo cụm vì các dòng của một lineage không độc lập, một vấn đề được nêu mà chưa có lời giải chung [@dror2018hitchhiker]. [CẦN: nguồn đã xác minh cho bootstrap theo cụm] Họ xác nhận lịch sử gồm sáu kiểm định với hiệu chỉnh Holm, α = 0,05. [CẦN: nguồn đã xác minh cho Holm] "Ủng hộ" cần p sau Holm < 0,05 và đúng chiều dự đoán; ngược chiều là "bác"; còn lại là "không đủ bằng chứng". XN5, XN6, XN7 chỉ thăm dò vì lát quá nhỏ. Mọi so sánh ngoài họ đều là mô tả.
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md; scripts/eval/score_vilextime.py -->
 
-## 6. Hai vòng thử có khai báo
+TVER tự động đọc `effective_intervals` của cùng đồ thị mà bộ lọc và gold sử dụng; gold mù của một dòng chỉ kiểm phiên bản đích, không kiểm mọi trích dẫn hệ trả về. Vì thế không gọi việc chấm lại dòng gold mù là “TVER độc lập”. Theo hướng xử lý đã chấp nhận, XN2 được đưa ra khỏi họ xác nhận của bộ cuối, giữ như kiểm nhất quán nội bộ; giả thuyết đề cương được quyết bằng TV-Recall của XN1 sau amendment. Phán quyết XN2 lịch sử vẫn giữ nguyên nhãn lịch sử.
+<!-- nguồn: scripts/eval/score_vilextime.py, row_scores và units_of; runs/x4_verifier_dev/report.json; docs/plans/active/master-plan.md, xử lý C1 -->
+
+TVER theo người là phép đo riêng còn chờ: lấy khoảng 100 đơn vị thực sự được trích từ các hệ, người đọc nguồn gốc và mốc hỏi mà không thấy cửa sổ đồ thị, kết luận còn hiệu lực hay không. Báo mẫu số, tỷ lệ sai, Wilson và phụ thuộc do cùng lineage; không thay bằng gold phiên bản. [CHỜ G4: phiếu, kết quả và khoảng Wilson của TVER theo người].
+<!-- nguồn: docs/plans/active/master-plan.md, xử lý C1 và việc người thêm -->
+
+† Với các ô JSON lưu p bằng 0 sau 10.000 lần bootstrap, bảng dùng quy ước độ phân giải p thô < 0,0002, p Holm ≤ 0,0012 cho họ sáu phép lịch sử. Đây là cách trình bày độ phân giải Monte Carlo, không phải khẳng định p lý thuyết bằng 0 hoặc cận tin cậy của p. Các p khác giữ nguyên; không tính lại họ lịch sử khi bỏ XN2 khỏi thiết kế bộ cuối.
+<!-- nguồn: scripts/eval/confirm_vilextime.py, run và holm; runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json -->
+
+Trước G3, amendment còn phải liệt kê từng thay đổi về đại lượng so với ADR và kết quả đã thấy: RQ1 lịch sử có Accuracy/`wrong_version`, thiết kế mới thêm TVER/VCR; RQ2 phải báo `wrong_version` cùng Accuracy thay vì chỉ Accuracy; XN2 chuyển thành nhất quán nội bộ; vai trò XN8 và XN9 trên bộ cuối phải khai rõ, không âm thầm bỏ. RQ3 giữ nguyên câu hỏi về biểu diễn đồ thị của đề cương. [CHỜ G3: tên một hệ cuối, generator, embedding, baseline cùng chế độ truy xuất và họ xác nhận cuối].
+<!-- nguồn: docs/plans/active/master-plan.md, mục "Phản biện 05/11 và cách xử lý"; docs/decisions/0005-ke-hoach-phan-tich.md -->
+
+V1.0 giữ phán quyết lịch sử ủng hộ và test 2 (nhãn LLM) giữ “điểm quyết định B7”. Với lần nhìn mới, dự kiến quy tắc sau cần khóa ở G3: nếu XN1 bộ cuối ủng hộ thì chỉ nói ủng hộ có điều kiện trên bộ cuối, kèm sự không lặp đầy đủ trước đó; nếu không đủ bằng chứng thì giả thuyết không được ủng hộ; nếu ngược chiều có ý nghĩa thì bác trên bộ cuối. Không dùng hai bộ cũ để đảo phán quyết cuối, không gộp ba lần nhìn. [CHỜ G3: khóa bảng ba phán quyết và quy tắc này trong amendment; chưa phải đăng ký trước đã hoàn tất].
+<!-- nguồn: docs/plans/active/master-plan.md, mục "Phản biện 05/11 và cách xử lý"; docs/decisions/0005-ke-hoach-phan-tich.md -->
+
+Bảng ba phán quyết cần điền sau G4; chỉ bộ cuối dùng cho xác nhận mới:
+
+| Phán quyết v1.0 theo ADR | Phán quyết test 2 (nhãn LLM) theo ADR | XN1 bộ cuối (chưa chạy) | Diễn giải cần khóa G3 |
+|---|---|---|---|
+| Ủng hộ | Điểm quyết định B7 | [CHỜ G4: nếu ủng hộ] | Ủng hộ có điều kiện trên bộ cuối; chưa lặp đầy đủ qua ba lần nhìn |
+| Ủng hộ | Điểm quyết định B7 | [CHỜ G4: nếu không đủ bằng chứng] | Giả thuyết không được ủng hộ; không lấy bộ cũ bù |
+| Ủng hộ | Điểm quyết định B7 | [CHỜ G4: nếu bác] | Bác trên bộ cuối; giữ công khai cả ba phán quyết |
+<!-- nguồn: runs/E3_v1/test/confirm.log; runs/E3_test2/rescore/confirm.log; docs/plans/active/master-plan.md, xử lý C1 và C3; quy tắc dự kiến chưa khóa G3 -->
+
+
+## 6. Hai vòng thử sau đổi vai
 <!-- nguồn: runs/E3_v1/test/all.score.json; runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/all.score.json; runs/E3_test2/rescore/confirm.json -->
 
 Các bảng dưới là kết quả vòng thử, được báo riêng theo kế hoạch lịch sử và giữ nguyên phán quyết. Bộ test cuối dùng cho kết luận chính chưa chạy. Các kiểm định gọi là xác nhận chỉ trong thiết kế vòng thử tương ứng; không trở thành xác nhận trên bộ cuối. Số trong bảng được dựng từ file, làm tròn theo hàm định dạng.
@@ -331,11 +387,73 @@ Ba điều lặp lại về chiều trên cả hai bộ (mô tả, ngoài họ):
 | XN9 | `b2ctx` − `b1`, Accuracy | {{XN9.t2.est}} {{XN9.t2.ci}} | {{XN9.t2.ph}} | {{XN9.t2.rows}} | {{XN9.t2.verdict}} |
 <!-- nguồn: runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json -->
 
-Theo quy tắc khai báo: H0 được ủng hộ trên v1.0. Trên test 2 (nhãn LLM), XN1 không được ủng hộ nên đi vào nhánh "điểm quyết định B7", một kết quả đã khai báo trước. XN2, XN3, XN8, XN9 cùng chiều và cùng được ủng hộ ở cả hai bộ. XN1 và XN4 cùng chiều nhưng trên test 2 (nhãn LLM) không đủ bằng chứng, nên **không gọi là đã lặp lại**.
+Theo quy tắc lịch sử: H0 được ủng hộ trên v1.0, với XN2 chỉ phản ánh nhất quán đồ thị; đây không phải xác nhận pháp lý. Trên test 2 (nhãn LLM), XN1 không được ủng hộ nên đi vào nhánh "điểm quyết định B7", một kết quả đã khai báo trước. XN2, XN3, XN8, XN9 cùng chiều và cùng được ủng hộ ở cả hai bộ. XN1 và XN4 cùng chiều nhưng trên test 2 (nhãn LLM) không đủ bằng chứng, nên **không gọi là đã lặp lại**.
 <!-- nguồn: runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json -->
 
 XN5 (lan truyền trên T6 có nút cha bị bãi bỏ) chưa có. [CHỜ COLAB: `b7plus` có sinh câu trả lời trên hai vòng thử]
 <!-- nguồn: runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json -->
+
+### Chỉ số bổ sung — mô tả, không thêm kiểm định
+
+TCS yêu cầu cả cặp T2 đúng; VCR đo sai phiên bản của trích dẫn theo scorer. MRR tính trên toàn lát, EM/F1 chỉ trên dòng có đáp án; EM đòi khớp lời đáp ngắn nên khác Accuracy chứa span. Không dùng các mẫu số này thay cho nhau.
+<!-- nguồn: scripts/eval/score_vilextime.py, row_scores và score -->
+
+**V1.0**
+
+{{extra.v1}}
+<!-- nguồn: runs/E3_v1/test/all.score.json; scripts/paper/paper_values.py -->
+
+**Test 2 (nhãn LLM)**
+
+{{extra.t2}}
+<!-- nguồn: runs/E3_test2/rescore/all.score.json; scripts/paper/paper_values.py -->
+
+### XN5–XN7 và đầy đủ các nhóm — thăm dò
+
+XN5 là Accuracy `b7pp − b7plus` trên bãi bỏ qua tổ tiên; XN6 là VCR `b2ctx` giữa T2 gần giống và thường; XN7 là chênh lệch của hiệu Accuracy `proposed − b7` giữa T6 và T2/T3. p dưới đây là p thô, không Holm; XN7 v1.0 ngược chiều dự đoán H2, nhưng vẫn chỉ là thăm dò.
+<!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md, §4; scripts/eval/confirm_vilextime.py -->
+
+**V1.0**
+
+{{exploratory.v1}}
+<!-- nguồn: runs/E3_v1/test/confirm.json -->
+
+**Test 2 (nhãn LLM)**
+
+{{exploratory.t2}}
+<!-- nguồn: runs/E3_test2/rescore/confirm.json -->
+
+Hiệu Accuracy [KTC 95%] theo đủ nhóm có mặt; đây là phân tích sau quan sát, ngoài họ kiểm định và chưa hiệu chỉnh đa so sánh. Bảng gồm cả chiều âm, không chỉ chọn T2 thuận lợi.
+
+**V1.0**
+
+{{subgroup.v1}}
+<!-- nguồn: runs/E3_v1/test/all.score.json -->
+
+**Test 2 (nhãn LLM)**
+
+{{subgroup.t2}}
+<!-- nguồn: runs/E3_test2/rescore/all.score.json -->
+
+### Đóng góp XN1 theo nhóm và độ nhạy cỡ mẫu — thăm dò
+
+Bảng chỉ đếm TV-hit@1 trên dòng có đáp án E1; tăng/mất là chuyển trạng thái theo từng dòng, không phải số dòng độc lập.
+
+**V1.0**
+
+{{contribution.v1}}
+<!-- nguồn: runs/E1/test/b7.jsonl; runs/E1/test/b7pp.jsonl; data/vilextime_dataset/vilextime.jsonl; scripts/paper/paper_values.py -->
+
+**Test 2 (nhãn LLM)**
+
+{{contribution.t2}}
+<!-- nguồn: runs/E1_test2/test/b7.jsonl; runs/E1_test2/test/b7pp.jsonl; data/vilextime/test2_release_v2.jsonl; scripts/paper/paper_values.py -->
+
+Ở v1.0, chênh lệch đến từ 10 dòng của T2/T3, T1 đóng góp 0. Lát bỏ T1 có {{xn1.non_t1}}; không đối chiếu độ lớn toàn tập v1.0 với bộ cuối không có T1. Silver theo quy trình viết của v1.0, còn test 2 (nhãn LLM) có cổng trùng chữ; “lặp lại” chưa độc lập với cách sinh câu hỏi. [CHỜ G4: phân tầng kết quả bộ cuối theo nguồn silver/T2 mới/T3 mới/T6 mới và quy trình sinh].
+<!-- nguồn: data/vilextime_dataset/vilextime.jsonl; data/vilextime/test2_release_v2.jsonl; scripts/review/test2_packs.py; scripts/paper/paper_values.py; docs/plans/active/master-plan.md, mục 10 -->
+
+Xấp xỉ chuẩn hai phía lấy hiệu {{power.delta}} và phương sai theo cụm lineage từ E1 test 2 (nhãn LLM): SE {{power.se}}; nếu giữ phân bố đó và có 150 lineage thì SE dự phóng {{power.target_se}}, power tại α = 0,05 là {{power.raw}}. Nếu phải vượt ngay ngưỡng Holm bảo thủ α/6 của họ sáu phép lịch sử, power còn {{power.holm6}}; các bậc Holm muộn hơn có thể cao hơn. Không có một power sau Holm duy nhất khi chưa khóa họ và chưa biết thứ tự p. Đây là phân tích độ nhạy sau quan sát, không phải power đo được của bộ cuối. [CHỜ G3: họ cuối và giả định cỡ mẫu đã khóa].
+<!-- nguồn: runs/E1_test2/test/b7.jsonl; runs/E1_test2/test/b7pp.jsonl; data/vilextime/test2_release_v2.jsonl; runs/E3_test2/rescore/confirm.json; scripts/paper/paper_values.py, phương sai tỷ số theo cụm và NormalDist; docs/plans/active/master-plan.md, dự báo mục 10 -->
 
 ### 6.4. Chênh lệch đến từ đâu (mô tả, ngoài họ)
 <!-- nguồn: runs/E3_v1/test/all.score.json; runs/E3_test2/rescore/all.score.json -->
@@ -376,6 +494,27 @@ Trên cả hai bộ, Accuracy tăng chủ yếu ở bước `b7` − `b5`. Bư�
 **Baseline không truy xuất.** `b1` để trống {{blank.v1}}/{{ansn.v1}} câu có đáp án trên v1.0 và {{blank.t2}}/{{ansn.t2}} trên test 2 (nhãn LLM). Vì vậy XN9 chủ yếu cho thấy generator này gần như không trả lời khi không có căn cứ, không phải LLM nói chung kém.
 <!-- nguồn: runs/E3_v1/test/b1.jsonl; runs/E3_test2/test/b1.jsonl; scripts/paper/paper_values.py -->
 
+### Precision và recall khẳng định hết hiệu lực — mô tả
+
+Dự đoán dương là cờ `answerable=False`, không phải mọi câu bỏ trống hay “không rõ”. Recall = đúng trên tổng dòng không có đáp án; precision = đúng trên mọi khẳng định đó, bao gồm khẳng định sai ở dòng có đáp án.
+<!-- nguồn: src/vilexgraph/framework/generate.py; scripts/eval/score_vilextime.py -->
+
+**V1.0**
+
+{{refusal.v1}}
+<!-- nguồn: data/vilextime_dataset/vilextime.jsonl; runs/E3_v1/test/{b1,b2ctx,b5,b7,b7pp,proposed}.jsonl; scripts/paper/paper_values.py -->
+
+**Test 2 (nhãn LLM)**
+
+{{refusal.t2}}
+<!-- nguồn: data/vilextime/test2_release_v2.jsonl; runs/E3_test2/test/{b1,b2ctx,b5,b7,b7pp,proposed}.jsonl; scripts/paper/paper_values.py -->
+
+[CHỜ COLAB: precision, recall và số khẳng định sai của `proposed3` trên dev và từng bộ T6 đã thấy, báo riêng; CHỜ G4: trên bộ cuối đã qua gold mù]. Không suy các số này từ TVER hoặc từ việc đã có thông báo bãi bỏ.
+<!-- nguồn: docs/plans/active/master-plan.md, xử lý C2, N8 và V5 -->
+
+Qwen3-4B được cấp căn cứ đúng trên dev T6 vẫn chỉ đúng 6/21 (`oracle`) và 3/21 (`oracle_v2`); chưa có X3 với generator khác. Kết luận yếu ở bãi bỏ chỉ áp dụng cho model và điều kiện đã thử. [CHỜ COLAB: X3 tối thiểu trên ngữ cảnh đúng T6].
+<!-- nguồn: data/vilextime_dataset/vilextime.jsonl; runs/B2_dev/dev/oracle.jsonl; runs/B2_dev/dev/oracle_v2.jsonl; docs/plans/active/master-plan.md, X3 -->
+
 ### 6.6. Phân rã lỗi do máy (thăm dò)
 <!-- nguồn: docs/reports/e7_phan_ra_loi.md -->
 
@@ -383,7 +522,7 @@ Trên cả hai bộ, Accuracy tăng chủ yếu ở bước `b7` − `b5`. Bư�
 <!-- nguồn: docs/reports/e7_phan_ra_loi.md -->
 
 <!-- nguồn: docs/reports/e7_phan_ra_loi.md -->
-| Hệ | Có căn cứ đúng trong top 20 | Đúng khi prompt đã có căn cứ | Sai tổng | Bãi bỏ | Thiếu điều khoản | Đọc sai |
+| Hệ | TV-R@20, chỉ dòng có đáp án | Đúng khi prompt có căn cứ, chỉ dòng có đáp án | Sai tổng | Bãi bỏ | Thiếu điều khoản | Đọc sai |
 |---|---|---|---:|---:|---:|---:|
 | `b7` | {{e7.v1.b7.r20}} | {{e7.v1.b7.cond}} | {{e7.v1.b7.wrong}} | {{e7.v1.b7.abst}} | {{e7.v1.b7.ret}} | {{e7.v1.b7.mis}} |
 | `b7pp` | {{e7.v1.b7pp.r20}} | {{e7.v1.b7pp.cond}} | {{e7.v1.b7pp.wrong}} | {{e7.v1.b7pp.abst}} | {{e7.v1.b7pp.ret}} | {{e7.v1.b7pp.mis}} |
@@ -394,12 +533,15 @@ Trên cả hai bộ, Accuracy tăng chủ yếu ở bước `b7` − `b5`. Bư�
 <!-- nguồn: docs/reports/e7_phan_ra_loi.md -->
 
 <!-- nguồn: docs/reports/e7_phan_ra_loi.md -->
-| Hệ | Có căn cứ đúng trong top 20 | Đúng khi prompt đã có căn cứ | Sai tổng | Bãi bỏ | Thiếu điều khoản | Đọc sai |
+| Hệ | TV-R@20, chỉ dòng có đáp án | Đúng khi prompt có căn cứ, chỉ dòng có đáp án | Sai tổng | Bãi bỏ | Thiếu điều khoản | Đọc sai |
 |---|---|---|---:|---:|---:|---:|
 | `b7` | {{e7.t2.b7.r20}} | {{e7.t2.b7.cond}} | {{e7.t2.b7.wrong}} | {{e7.t2.b7.abst}} | {{e7.t2.b7.ret}} | {{e7.t2.b7.mis}} |
 | `b7pp` | {{e7.t2.b7pp.r20}} | {{e7.t2.b7pp.cond}} | {{e7.t2.b7pp.wrong}} | {{e7.t2.b7pp.abst}} | {{e7.t2.b7pp.ret}} | {{e7.t2.b7pp.mis}} |
 | `proposed` | {{e7.t2.proposed.r20}} | {{e7.t2.proposed.cond}} | {{e7.t2.proposed.wrong}} | {{e7.t2.proposed.abst}} | {{e7.t2.proposed.ret}} | {{e7.t2.proposed.mis}} |
 <!-- nguồn: docs/reports/e7_phan_ra_loi.md -->
+
+Top-20 và toàn prompt có phạm vi khác nhau: `proposed` test 2 (nhãn LLM) có 120 dòng với gold ở top-20, 121 trong prompt sau mở rộng. Cột truy xuất loại dòng không có đáp án khỏi cả tử và mẫu số; cột tỷ lệ đúng dùng “Chỉ dòng có đáp án” của E7. Tần suất lỗi vẫn tính trên toàn lát.
+<!-- nguồn: docs/reports/e7_phan_ra_loi.md; scripts/paper/paper_values.py; runs/E3_v1/test/{b7,b7pp,proposed}.jsonl; runs/E3_test2/test/{b7,b7pp,proposed}.jsonl -->
 
 Mỗi lỗi chỉ vào một tầng theo thứ tự ưu tiên, nên đây là phân bổ, không phải nguyên nhân duy nhất. Ở v1.0, lỗi lớn nhất là đọc sai khi đã có căn cứ. Ở test 2 (nhãn LLM), lỗi lớn nhất là không tìm được điều khoản. [CHỜ G4: E7 người gán]
 <!-- nguồn: docs/reports/e7_phan_ra_loi.md -->
@@ -413,9 +555,9 @@ Bảng này chỉ được điền sau khóa dữ liệu G2, khóa hệ và amen
 | Câu hỏi / phép đo | Kết quả chính | Loại |
 |---|---|---|
 | RQ1, RAG và LLM không truy xuất | [CHỜ G4: sai phiên bản, độ phủ, mẫu số và KTC] | Mô tả |
-| RQ2, `proposed2` − `b4`, `proposed2` − `b5` | [CHỜ G4: Accuracy, KTC và phán quyết] | Xác nhận sau amendment |
-| RQ3 / giả thuyết, thang cấp lọc | [CHỜ G4: TV-Recall và TVER kèm gold mù] | Xác nhận sau amendment |
-| T6 lan truyền và thành phần | [CHỜ G4: cỡ lát và kết quả] | Theo điều kiện đã khóa |
+| RQ2, hệ chốt G3 so với `b4`, `b5` cùng chế độ truy xuất | [CHỜ G4: wrong_version, Accuracy, KTC và phán quyết sau khóa hệ] | Xác nhận sau amendment |
+| RQ3 / giả thuyết, thang cấp lọc | [CHỜ G4: XN1 TV-Recall; TVER nội bộ và TVER theo người báo riêng] | Xác nhận sau amendment |
+| T6 và thành phần (tách lan truyền với mở rộng) | [CHỜ G4: cỡ lát và kết quả] | Theo điều kiện đã khóa |
 | Nhóm, miền, E7 và giám khảo | [CHỜ G4: bảng mô tả và hiệu chuẩn] | Mô tả / thăm dò |
 <!-- nguồn: docs/plans/active/master-plan.md, mục 6 -->
 
@@ -427,13 +569,13 @@ Bảng này chỉ được điền sau khóa dữ liệu G2, khóa hệ và amen
 **Biểu diễn phiên bản cần được đọc theo từng chỉ số.** Trên toàn tập, bước `b7pp` − `b7` không tách được về Accuracy, song TVER giảm rõ trên cả hai bộ. TVER gần 0 một phần là **do thiết kế**, vì bộ lọc đã loại bản hết hiệu lực, nên nó không nên là con số chính. wrong_version đo nội dung câu trả lời nên có ý nghĩa hơn. Nó giảm rõ trên test 2 (nhãn LLM), còn trên v1.0 khoảng tin cậy chạm 0, mẫu số chỉ {{contrast.v1}} dòng, và chỉ số này nằm ngoài họ kiểm định.
 <!-- nguồn: runs/E3_v1/test/all.score.json; runs/E3_test2/rescore/all.score.json; data/review/test2_llm_v2/calib_score.json; docs/plans/active/master-plan.md -->
 
-**Toàn tập có thể che bớt tác dụng ở nhóm nhạy thời gian.** T1 là nhóm đối chứng, chiếm {{rows.v1.T1}}/{{rows.v1}} dòng của test v1.0, và lớp phiên bản không có lợi ở đó (`b7` {{acc.v1.b7.T1}}, `b7pp` {{acc.v1.b7pp.T1}}). Riêng ở T2, hiệu `proposed` − `b7pp` có khoảng không chứa 0 trên cả hai bộ: {{d.acc.v1.proposed_b7pp.T2}} trên v1.0 và {{d.acc.t2.proposed_b7pp.T2}} trên test 2 (nhãn LLM). Đây là dấu hiệu thăm dò cần kiểm trên bộ cuối. Tuy nhiên, đây là so sánh thăm dò, ngoài họ kiểm định, được chọn sau khi thấy số và chưa hiệu chỉnh đa so sánh. Ở T3, hiệu này là {{d.acc.v1.proposed_b7pp.T3}} trên v1.0 và {{d.acc.t2.proposed_b7pp.T3}} trên test 2 (nhãn LLM). Hiệu `b7pp` − `b7` ở T2 cũng chưa nhất quán: {{d.acc.v1.b7pp_b7.T2}} trên v1.0 và {{d.acc.t2.b7pp_b7.T2}} trên test 2 (nhãn LLM). [CHỜ COLAB: ablation `a2`, tức bỏ riêng phần mở rộng]
-<!-- nguồn: runs/E3_v1/test/all.score.json; runs/E3_test2/rescore/all.score.json; data/review/test2_llm_v2/calib_score.json; docs/plans/active/master-plan.md -->
+Các hiệu theo nhóm được trình bày đầy đủ ở bảng thăm dò, gồm chiều âm ở T1/T3 và hai bộ; không dùng riêng T2 thuận lợi để xác lập kết luận. [CHỜ COLAB: ablation bỏ riêng mở rộng].
+<!-- nguồn: runs/E3_v1/test/all.score.json; runs/E3_test2/rescore/all.score.json -->
 
 **Về đồ thị, chỉ được nói hẹp.** Trên toàn tập, mở rộng một bước gần như không đổi Accuracy khi không có thời gian (`b5` − `b2ctx`), và thêm rất ít khi có thời gian (`proposed` − `b7pp`). Kết luận này chỉ áp dụng cho kiểu mở rộng đã đo, và ở T2 có dấu hiệu ngược lại như nêu trên. Vai trò ngoại tuyến của đồ thị (dựng chuỗi, tính khoảng hiệu lực) lại là nền của các hệ lớp B. Bài này không đánh giá GraphRAG nói chung.
 <!-- nguồn: runs/E3_v1/test/all.score.json; runs/E3_test2/rescore/all.score.json; data/review/test2_llm_v2/calib_score.json; docs/plans/active/master-plan.md -->
 
-**Nhận diện bãi bỏ là khoảng trống rõ nhất.** Bộ lọc giúp hệ không trích bản cũ, nhưng generator không chuyển điều đó thành câu trả lời "đã hết hiệu lực". Đây là bài toán mở, và benchmark đo được nó.
+**Nhận diện bãi bỏ của Qwen3-4B còn yếu trong điều kiện đã đo.** Bộ lọc giúp hệ không trích bản cũ, nhưng generator không chuyển điều đó thành câu trả lời "đã hết hiệu lực". Đây là bài toán mở, và benchmark đo được nó.
 
 **Khoảng cách lớn giữa hai bộ chưa được giải thích.** Mức Accuracy của `proposed` trên hai bộ khác nhau nhiều, kể cả khi so cùng nhóm. Một giả thuyết cần kiểm là mức trùng chữ của câu hỏi: truy xuất từ vựng phụ thuộc các từ khớp lời văn. Chưa có phép đo lưu file đủ để đưa số này vào bản nháp. Thành phần nhóm, nguồn nhãn và loại văn bản cũng khác nhau. **Chưa đo độ chính xác theo mức trùng chữ, và chưa có truy xuất dense trên test để đối chứng.** [CẦN: phân tích theo mức trùng chữ, ghi là thăm dò]
 
@@ -443,7 +585,7 @@ Bảng này chỉ được điền sau khóa dữ liệu G2, khóa hệ và amen
 ## 8. Giới hạn và nguy cơ
 <!-- nguồn: runs/E3_v1/test/all.score.json; runs/E3_test2/rescore/all.score.json; data/review/test2_llm_v2/calib_score.json; docs/plans/active/master-plan.md -->
 
-- **Gold và hệ dùng chung kho.** Khi kho bỏ sót một lần sửa đổi, hệ và gold có thể cùng sai mà vẫn khớp nhau. Gold độc lập theo kiểm kê vẫn trống và M2 chưa đạt. TVER bằng không của `b7pp` phần lớn do cách dựng gold và bộ lọc cùng mô hình, chưa chứng minh độ đúng pháp lý. Đây là nguy cơ lớn nhất của cả bài.
+- **Gold và hệ dùng chung kho.** Khi kho bỏ sót một lần sửa đổi, hệ và gold có thể cùng sai mà vẫn khớp nhau. Gold mù theo kiểm kê vẫn trống và M2 chưa đạt; VBHN cùng cổng vbpl, không độc lập về nguồn. TVER bằng không của `b7pp` phần lớn do cách dựng gold và bộ lọc cùng mô hình, chưa chứng minh độ đúng pháp lý. Đây là nguy cơ lớn nhất của cả bài.
 - **Chất lượng nhãn.** Đồng thuận người gán thấp ở v1.0, nhãn agent chiếm {{lab.agent}}/{{lab.n}} dòng test, test 2 (nhãn LLM) chưa có người kiểm.
 - **Mẫu nhỏ ở các nhóm quan trọng.** Trên test v1.0, T3 có {{lin.v1.T3}} lineage và T6 có {{lin.v1.T6}} lineage. T1 chiếm {{rows.v1.T1}}/{{rows.v1}} dòng.
 - **Một generator cỡ nhỏ.** Mọi kết luận gắn với Qwen3-4B. Dao động bằng 0 mới đo trên dev (553/553 dòng), chưa đo khi đổi phần cứng hoặc thư viện.
@@ -483,7 +625,7 @@ Hai vòng thử cung cấp dấu hiệu về lỗi sai phiên bản và vai trò
 | # | Câu hỏi | Hiện trả lời được gì | Cần làm |
 |---|---|---|---|
 | 1 | Gold lấy từ chính kho của hệ, vậy kết quả có vòng lặp không? | Có khai báo, chưa có đối chứng độc lập | E6 khoảng 120 dòng, M2 |
-| 2 | Nhãn test 2 đáng tin đến đâu? | Chưa có số đo; lời dặn v2 không đạt cổng | Người kiểm một mẫu test 2 |
+| 2 | Nhãn test 2 (nhãn LLM) đáng tin đến đâu? | Chưa có số đo; lời dặn v2 không đạt cổng | Người kiểm một mẫu test 2 (nhãn LLM) |
 | 3 | Đồng thuận AC1 {{iaa.ac1}} thì v1.0 có dùng được không? | Có quy tắc chọn nhãn và mẫu luật sư 43/50; số vẫn thấp | Trình bày thẳng; cân nhắc báo riêng theo nguồn nhãn |
 | 4 | Sao không so với GraphRAG hay LightRAG? | Không có | Chạy E4 trên tập con, hoặc thu hẹp kết luận (bản nháp đã thu hẹp) |
 | 5 | Dense ở đâu? BM25 có phải baseline quá yếu? | Chưa có số test | Colab đợt bổ sung; bộ cuối sau G3 |
@@ -500,8 +642,8 @@ Hai vòng thử cung cấp dấu hiệu về lỗi sai phiên bản và vai trò
 <!-- nguồn: runs/E3_v1/test/all.score.json; runs/E3_test2/rescore/all.score.json; data/review/test2_llm_v2/calib_score.json; docs/plans/active/master-plan.md -->
 | Việc | Ai làm | Phụ thuộc |
 |---|---|---|
-| Gold độc lập (E6) và kiểm mẫu test 2 | Luật sư, người trong nhóm | Mình soạn phiếu |
-| Colab đợt 2 (v1.0, test 2) và lần chạy cuối ở G4 | Nhóm | Đợt 2 chạy được ngay; lần cuối chờ G1–G3 của `docs/plans/active/master-plan.md` |
+| Gold độc lập (E6) và kiểm mẫu test 2 (nhãn LLM) | Luật sư, người trong nhóm | Mình soạn phiếu |
+| Colab đợt 2 (v1.0, test 2 (nhãn LLM)) và lần chạy cuối ở G4 | Nhóm | Đợt 2 chạy được ngay; lần cuối chờ G1–G3 của `docs/plans/active/master-plan.md` |
 | Đọc nguồn còn thiếu; khảo sát có log | Nhóm, mình hỗ trợ | Cần tác giả tự đọc |
 | M2 hoặc khai báo chưa đạt | Nhóm | Truy vấn đối chiếu tay |
 | Rà hướng A và chốt hội nghị | Nhóm, GVHD | Bản nháp C9 theo hướng A, chưa phải quyết định nộp |
@@ -512,20 +654,20 @@ Hai vòng thử cung cấp dấu hiệu về lỗi sai phiên bản và vai trò
 
 # Phần E. Nguồn số liệu
 
-Mọi số trong bảng và phần lớn số trong câu do `scripts/paper/paper_build.py` đọc trực tiếp từ các file dưới đây. `scripts/paper/paper_check.py` đối chiếu Bảng 6, 7, 10, 11 và quy mô kho với chương 3, 6, quét câu chữ cấm, và phải bắt được ba lỗi cấy sẵn. Chạy từ thư mục gốc của repo. Chưa có lượt phản biện độc lập.
+Mọi số trong bảng và phần lớn số trong câu do `scripts/paper/paper_build.py` đọc trực tiếp từ các file dưới đây. `scripts/paper/paper_check.py` đối chiếu Bảng 6, 7, 10, 11 và quy mô kho với chương 3, 6, quét câu chữ cấm, và phải bắt được ba lỗi cấy sẵn. Chạy từ thư mục gốc của repo. Đã sửa theo phản biện nội bộ AI ngày 05/11 và tự đối chiếu artifact; chưa có lượt người duyệt hoặc phản biện ngoài.
 <!-- nguồn: runs/E3_v1/test/all.score.json; runs/E3_test2/rescore/all.score.json; data/review/test2_llm_v2/calib_score.json; docs/plans/active/master-plan.md -->
 
 <!-- nguồn: runs/E3_v1/test/all.score.json; runs/E3_test2/rescore/all.score.json; data/review/test2_llm_v2/calib_score.json; docs/plans/active/master-plan.md -->
 | Số liệu | File |
 |---|---|
 | E3 v1.0, kiểm định | `runs/E3_v1/test/all.score.json`, `confirm.json` |
-| E3 test 2 (chỉ dùng bản chấm lại) | `runs/E3_test2/rescore/all.score.json`, `confirm.json` |
+| E3 test 2 (nhãn LLM) (chỉ dùng bản chấm lại) | `runs/E3_test2/rescore/all.score.json`, `confirm.json` |
 | E1 | `runs/E1/test/ladder.score.json`, `runs/E1_test2/test/ladder.score.json` (chỉ lấy cột truy xuất) |
 | Bãi bỏ, `b1` để trống | Các file `.jsonl` trong `runs/E3_v1/test`, `runs/E3_test2/test` |
 | Phân rã lỗi | `docs/reports/e7_phan_ra_loi.md` |
 | Quy mô, đồng thuận, nguồn nhãn v1.0 | `data/vilextime_dataset/manifest.json`, `vilextime_meta.jsonl` |
 | Quy mô kho | `data/derived/corpus/manifest.json` |
-| Nhãn test 2 | `data/review/test2_llm/agreement.json`, các file TSV cùng thư mục |
+| Nhãn test 2 (nhãn LLM) | `data/review/test2_llm/agreement.json`, các file TSV cùng thư mục |
 | Hiệu chuẩn lời dặn bản 2 | `data/review/test2_llm_v2/calib_score.json`, `calib_key.tsv`, `calib_silver.tsv` |
 | Mức trùng chữ | [CẦN: lưu phép đo thành file; đã bỏ số chỉ từng in màn hình khỏi bài] |
 | Kiểm chất lượng kho, agent, luật sư | `docs/thesis/chuong-3…`, `chuong-4…`; nguồn gốc ghi trong chú thích của từng chương |

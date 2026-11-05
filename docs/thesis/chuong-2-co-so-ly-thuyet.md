@@ -208,21 +208,14 @@ AC1 có tài liệu nền [@gwet2008ac1], nhưng hồ sơ chỉ đọc tóm tắ
 
 ### 2.7.1. Điều có thể nói từ phạm vi đã khảo sát
 
-Các phần đã đọc cho thấy tiền lệ trực tiếp: Prior nghiên cứu statutory QA theo mốc; LawInForce-eCFR phân biệt nút thắt tìm luật đang hiệu lực và áp dụng quy tắc; NitiBench+ đo bản hiện hành so với bản đúng mốc. Do đó, lợi ích của lọc thời gian và việc tách lỗi tìm khỏi lỗi đọc không còn là phát hiện riêng của khóa luận. Chương chỉ đề xuất đo những hiện tượng đó trên pháp luật Việt Nam, nhấn vào nhận diện bãi bỏ và tách có đối chứng các nấc thông tin thời gian.
-<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
-<!-- nguồn: docs/plans/active/master-plan.md, mục 10 -->
+Các tiền lệ đã có trong danh mục gồm LawInForce-eCFR và NitiBench+: bài sau đã có nhóm luật bãi bỏ, nên nhận diện bãi bỏ không tự tạo tính mới [@yao2026lawinforce; @akarajaradwong2026nitibenchplus]. Phạm vi Việt Nam cần kiểm là lời văn dựng lại từ lệnh ở văn bản khác và bãi bỏ qua nút cha. Ở thang hiện có, hai nấc đã đo được là ngày văn bản và khoảng phiên bản; bước lan truyền không đổi TV-Recall@1 ở mọi nhóm trên cả hai bộ. XN5 về Accuracy lan truyền chưa chạy, nên chưa xác lập đóng góp này.
+<!-- nguồn: references.bib; related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md; runs/E1/test/ladder.score.json; runs/E1_test2/test/ladder.score.json; runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json -->
 
-Mục tiêu hẹp là kiểm trên cùng dữ liệu và đường ống ba nấc: ngày hiệu lực văn bản, khoảng hiệu lực phiên bản và lan truyền từ nút cha. Điều kiện X8 cấp sẵn căn cứ đúng mốc và căn cứ hiện hành giúp tách lỗi tìm khỏi lỗi đọc; đây vẫn là phép đo còn chờ, phải làm dev trước rồi trên bộ cuối. Chưa có kết quả X8 để xác lập đóng góp thực nghiệm.
-<!-- nguồn: docs/plans/active/master-plan.md, mục 6 và 10 -->
+Log khảo sát còn nêu các nguồn gần chưa có khóa trong `references.bib`: [CẦN: Retrieving What Is Still True]; [CẦN: arXiv 2604.14220, CFR và cạnh SUPERSEDES]; [CẦN: Version-Aware KG for Multi-Version Legal QA]; [CẦN: FourCorners]; [CẦN: Temporal Legal-RAG]. Chưa thêm hay dùng chúng làm bằng chứng chi tiết khi chưa có mục bib và lượt đọc đủ. Do đó rút khẳng định phủ định “không thấy công trình nào” về phép đối chứng; phạm vi khảo sát hiện chưa đủ xác lập khoảng trống toàn lĩnh vực.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md, bảng công trình và log truy vấn; references.bib -->
 
-### 2.7.2. Phạm vi khảo sát và phần còn thiếu
-
-Theo log ngày 05/11, các truy vấn trên arXiv, Crossref, phần OpenAlex mở được, danh mục tiêu đề ACL Anthology và tìm kiếm web chưa tìm thấy phép đối chứng ba nấc nêu trên trong phần đã xem. Đây là nhận xét có giới hạn của lượt tìm; không phải chứng nhận toàn lĩnh vực. Semantic Scholar và nhiều chỉ mục/nhà xuất bản không mở được; các nguồn tiếng Việt mới chỉ đọc một phần có thể làm đổi nhận xét. [CẦN XÁC MINH: chạy lại các mục bị chặn và đọc đủ các công trình gần nhất, phụ lục LawInForce-eCFR và NitiBench+ trước khi chốt định vị đóng góp].
-<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
-
-Với SAT-Graph RAG, chỉ các mục cục bộ đã đọc mới làm căn cứ cho mô hình cấu trúc–thời gian. Với VLegal-Bench và ViLegalExpert, kết quả tìm từ khóa không cho phép khẳng định toàn bộ bài thiếu đánh giá phiên bản. Khoảng trống được giữ như nhu cầu kiểm của khóa luận trong phạm vi khảo sát có log, không suy ra từ sự vắng mặt của một ghi chú trong repo.
-<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
-<!-- nguồn: related_paper/An_Ontology_Driven_GraphRAG_for_LegalNorms.pdf -->
+Điều kiện X8 đúng mốc/hiện hành còn chờ, phải đo dev trước rồi bộ cuối; không suy lợi ích lan truyền từ mục tiêu thiết kế.
+<!-- nguồn: docs/plans/active/master-plan.md, mục "Phản biện 05/11 và cách xử lý"; docs/decisions/0005-ke-hoach-phan-tich.md -->
 
 Các khái niệm chuẩn hóa như Akoma Ntoso và LRMoo được nhắc trong SAT-Graph RAG. Chương chỉ mô tả cách bài đó sử dụng các khái niệm, không nhận đã xác minh đầy đủ chính tiêu chuẩn gốc. [CẦN TRÍCH DẪN: tài liệu chuẩn gốc của Akoma Ntoso và LRMoo nếu khóa luận trình bày độc lập cấu trúc hoặc bảo đảm của chúng; hiện chưa có khóa phù hợp trong references.bib].
 <!-- nguồn: related_paper/An_Ontology_Driven_GraphRAG_for_LegalNorms.pdf -->
