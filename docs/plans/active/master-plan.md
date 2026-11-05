@@ -353,6 +353,14 @@ Hệ quả cho paper:
 4. **Đồng thuận người gán là thế yếu nhất:** LawInForce báo thỏa thuận 95,28% (theo báo cáo đọc), ViLexTime 0,377. G1 và G2 quyết định paper có đứng được không.
 5. Lĩnh vực đang đi nhanh, nên nộp sớm có giá trị thật.
 
+### Đo được thêm ngày 05/11, đổi kỳ vọng
+
+- **VBHN gần như không phủ được benchmark:** silver 21/168 lineage có cạnh VBHN, chỉ 2/819 mốc so được; cả ba bộ chỉ có 2 cặp so được, khớp xác nhận 1 (`docs/reports/doi-chieu-vbhn.md`). Vì vậy **gold mù do người là đường duy nhất để phá vòng tự chấm**. Không cắt gold mù trong mọi trường hợp.
+- **T6 và T3 thiếu thật:** tỷ lệ giữ T6 cộng dồn chỉ 5,6%. Lọc hết kho còn lại dự báo khoảng 24 phiếu T6, T3 mới tối đa 8. T2 dư (khoảng 46–63 phiếu).
+- **Dự báo bộ test cuối sau kiểm của người (60%):** silver T2 ~82, T3 ~19; T2 mới ~30, T6 mới ~14, T3 mới ~5: tổng khoảng 150 lineage. Chưa đo, thay bằng số thật ở G2.
+- **F7 (T6) nhiều khả năng dưới 20 lineage, thành thăm dò.** Cách bù, khai báo trước trong amendment: chạy thêm `proposed2`, `proposed3` trên T6 của v1.0 và test 2, báo gộp có ghi rõ là thăm dò vì các dòng đó đã được xem.
+- **A đã gán 131/168 lineage silver** ở vòng 25/10 và đã thấy đáp án đồ thị. Nhãn mới của A vẫn độc lập với B, nhưng phải khai trong khóa luận. Gold mù chia theo người.
+
 ## 11. Hàng việc của agent
 
 Mục tiêu (CMT 05/11): agent làm hết phần của agent, cuối cùng chỉ còn việc người ở mục 12. Mỗi việc do Codex hoặc agent làm, Claude kiểm độc lập, rồi commit và push `develop`.
@@ -435,8 +443,16 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
 - [x] 05/11 X1, X7: gói Colab đã kiểm (dev 4 file × 151 dòng, không có đáp án, `p2a2` ≡ `b7pp`, `p2a3` ≡ `proposed2`; đợt 2 13/13 file khớp hash). Ở `colab_upload/` (gitignore).
 - [ ] CMT chạy Colab: dev rồi đợt 2. Claude nhập và chấm.
 - [ ] X2: thiết kế thông báo bãi bỏ trong prompt, sau khi có X1.
-- [ ] Gộp `docs/vilextime-the-gan-nhan.md` vào `docs/vilextime-annotation.md`, bản 4.0, không thêm quy tắc. Gửi luật sư.
-- [ ] D0: bản nháp 7 chương và paper.
+- [x] 05/11 A1: hướng dẫn 4.0 gộp xong; trang gán https://claude.ai/artifact/MMptLRDAjna7AeZakF2cxC (lô thử và 108 câu silver); file Word cho luật sư.
+- [x] 05/11 A6 đợt 1: gold mù 60 câu T2, T3, phiếu Excel, 0 dòng người được giao đã thấy. Đợt 2 (T6, T1) chờ A4, A5.
+- [x] 05/11 A2: đối chiếu VBHN xong, độ phủ rất thấp.
+- [x] 05/11 A9: đọc nguồn và khảo sát tính mới; `related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md`.
+- [x] 05/11 A21, A22, A20: chương 2 đã sửa; X4 đo lại (b7 0/151); gói X8 sẵn ở `colab_upload/dev_x8/`.
+- [ ] A4: 51 gói lọc đang chạy (`~/vilextime_loc/gan5`). Sau đó viết câu hỏi, đáp án ngắn, phiếu lô 7+.
+- [ ] A10: tập dượt lần chạy cuối trên dev đang chạy.
+- [ ] A18: phản biện bản nháp đang chạy.
+- [ ] CMT gửi file Word cho luật sư, mời NMT vào trang, chạy Colab (dev_x1, dev_x2, dev_x8, round2).
+- [ ] D0: bản nháp 7 chương và paper. Đã có nháp đủ, 0/437 số thiếu nguồn, chờ phản biện và Colab.
 
 ## Decisions
 
