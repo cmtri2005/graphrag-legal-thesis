@@ -1,11 +1,8 @@
 # Chương 2. Cơ sở lý thuyết và công trình liên quan
 
-> **Tình trạng đọc của bản nháp:** trong 18 khóa được dẫn trong chương, **4 khóa đã đối chiếu bản gốc ở các phần được sử dụng**, **14 khóa mới đối chiếu metadata**, chưa đọc bản gốc trong lượt này. Không tự nhận đã đọc toàn văn các bài chỉ kiểm theo mục; không trích kết quả định lượng của các công trình ngoài dự án. Ghi chú và bản dịch trong repo dùng để định hướng, không tự thay thế bản gốc. Thống kê này chỉ áp dụng các khóa của chương, không phải toàn bộ `references.bib`.
-<!-- nguồn: references.bib -->
-<!-- nguồn: related_paper/2608.09393v1.pdf -->
-<!-- nguồn: related_paper/An_Ontology_Driven_GraphRAG_for_LegalNorms.pdf -->
-<!-- nguồn: related_paper/ViHERMES.pdf -->
-<!-- nguồn: related_paper/VLQA_ The First Comprehensive, Large, and High-Quality Vietnamese Dataset for Legal Question Answering.pdf -->
+> **Tình trạng đọc của bản nháp:** các khóa dẫn trong chương được phân mức theo hồ sơ đọc của AI trong dự án, không phải xác nhận tác giả đã đọc. Có **23 khóa**: **6 khóa đọc hết thân bài**, **1 khóa đọc thân bài chưa trọn** (LawShift còn thiếu một đoạn cuối), **15 khóa đọc một phần** và **1 khóa chỉ đọc tóm tắt**. “Đọc thân bài” không bao gồm phụ lục. Lượt C9b dùng hồ sơ cục bộ, không mở mạng hay tự nâng mức đọc. Chương không dùng số từ bảng PDF bị vỡ hoặc số ngoài câu văn mà báo cáo xác nhận đã đọc.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
+<!-- nguồn: references.bib; các PDF và phần đọc cục bộ được liệt kê ở bảng dưới -->
 
 **Câu hỏi của chương:** Những khái niệm và công trình nào giúp xác định bài toán hỏi đáp đúng phiên bản theo mốc; phần nào của hướng tiếp cận đã có tiền lệ và phần nào còn cần được kiểm bằng thực nghiệm của khóa luận?
 
@@ -16,17 +13,19 @@ Khảo sát được tổ chức quanh các trục: truy xuất kết hợp sinh
 
 | Mức sử dụng trong chương | Các khóa |
 |---|---|
-| Đã đọc trực tiếp các phần được phân tích của PDF gốc cục bộ | `cymbler2026fiscalqa`, `demartim2025satgraph`, `nguyen2026vihermes`, `nguyen2025vlqa` |
-| Mới đối chiếu metadata; nội dung chuyên biệt còn chờ đọc gốc | `lewis2020rag`, `karpukhin2020dpr`, `robertson2009bm25`, `edge2024graphrag`, `guo2025lightrag`, `huwiler2025versionrag`, `prior2026oldfriend`, `prior2025consolidation`, `han2025lawshift`, `chen2021timeqa`, `dhingra2022templama`, `thanh2021alqac`, `gardner2020contrast`, `dror2018hitchhiker` |
+| Đọc thân bài theo báo cáo ngày 05/11; chưa đọc phụ lục | `dror2018hitchhiker`, `huwiler2025versionrag`, `prior2026oldfriend` (v2), `prior2025consolidation`, `han2025lawshift` (thiếu đoạn cuối), `thanh2021alqac`, `yao2026lawinforce` |
+| Đọc một phần trong lượt báo cáo | `lewis2020rag`, `karpukhin2020dpr`, `robertson2009bm25`, `edge2024graphrag` (v2), `guo2025lightrag`, `chen2021timeqa`, `dhingra2022templama`, `gardner2020contrast` |
+| Đọc theo mục từ PDF cục bộ ở lượt trước | `cymbler2026fiscalqa`, `demartim2025satgraph`, `nguyen2026vihermes`, `nguyen2025vlqa` |
+| Đọc một phần của nguồn bổ sung | `akarajaradwong2026nitibenchplus` (v2: p.1–7, 10–14, 27), `dong2026vietlegal` (tìm từ khóa và đoạn ở v5/v7), `nguyen2026vilegalexpert` (v1: p.1–6, tìm từ khóa) |
+| Chỉ đọc tóm tắt | `gwet2008ac1` (PubMed; PDF tác giả không mở được) |
 
-<!-- nguồn: references.bib -->
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
 
-Các PDF được đọc qua phần chữ trích bằng `pdftotext`, tập trung vào tóm tắt, thiết kế dữ liệu, phương pháp và giới hạn liên quan. Chương dùng tên mục để định vị nội dung, không khẳng định đã kiểm chứng phân trang PDF. Công cụ preflight trong môi trường hiện tại không đủ phụ thuộc để xác nhận cấu trúc phân trang. [CẦN XÁC MINH: đối chiếu trực quan PDF và tính đầy đủ của bản trích trước khi chốt định vị trang hoặc nhận mức đọc toàn văn].
+Các lượt đọc dùng chữ trích bằng `pdftotext`; mức đọc không đồng nghĩa đã kiểm trực quan mọi trang và bảng. [CẦN XÁC MINH: đối chiếu trực quan PDF và tính đầy đủ của bản trích trước khi chốt định vị trang]. Bốn nguồn đọc theo mục ở lượt trước vẫn giữ nguyên giới hạn đó; không được nâng thành đọc toàn văn từ tên file.
+<!-- nguồn: related_paper/2608.09393v1.pdf; related_paper/An_Ontology_Driven_GraphRAG_for_LegalNorms.pdf; related_paper/ViHERMES.pdf; related_paper/VLQA_ The First Comprehensive, Large, and High-Quality Vietnamese Dataset for Legal Question Answering.pdf -->
 
-Ghi chú `related_paper/notes/` và bản dịch FiscalQA giúp xác định những đoạn cần đọc trực tiếp. Báo cáo tổng hợp trong `related_paper/notes/` tự phân biệt mức đọc và thừa nhận một số phần chưa đọc. Vì vậy, chương không chép các bảng số từ báo cáo tổng hợp, không coi nhãn “đã xác minh” trong bảng hướng dẫn là bằng chứng đã đọc toàn văn ở lần soạn này. Khi nguồn thứ cấp và bản gốc khác nhau về phạm vi khẳng định, nội dung được giới hạn theo phần gốc đã kiểm.
-<!-- nguồn: related_paper/notes/README.md -->
-<!-- nguồn: related_paper/notes/FiscalQA.md -->
-<!-- nguồn: related_paper/notes/Tham khảo bộ dữ liệu pháp luật có hiệu lực và phiên bản.md -->
+Báo cáo ngày 05/11 ghi cả truy vấn khảo sát, nguồn mở được và nguồn bị chặn. Chương dùng nó làm hồ sơ về các phần gốc đã đọc, đồng thời giữ giới hạn truy cập và phiên bản. Không coi ghi chú, bản dịch hay nhãn “đã xác minh” là bằng chứng rằng tác giả đã tự đọc hoặc mọi kết luận trong nguồn đã được kiểm.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
 
 ## 2.2. Truy xuất, sinh câu trả lời và sự phù hợp của căn cứ
 
@@ -37,8 +36,8 @@ Trong khung thực thi của khóa luận, hệ RAG nhận câu hỏi, tìm các
 <!-- nguồn: src/vilexgraph/framework/generate.py -->
 <!-- nguồn: scripts/review/e7_error_analysis.py -->
 
-Bản ghi nền tảng về Retrieval-Augmented Generation được quản lý bằng khóa [@lewis2020rag]. Trong bản nháp này, định nghĩa thao tác ở trên dựa vào cài đặt dự án; chưa dùng bài nền tảng để khẳng định các mức tăng, kết quả hay bảo đảm của RAG. [CẦN XÁC MINH: đọc bản gốc Lewis và cộng sự về kiến trúc RAG, phạm vi tác vụ và điều kiện đánh giá trước khi bổ sung diễn giải chuyên biệt].
-<!-- nguồn: references.bib -->
+Lewis và cộng sự kết hợp mô hình seq2seq với chỉ mục vector Wikipedia được truy cập qua bộ truy xuất neural đã tiền huấn luyện [@lewis2020rag]. Cấu trúc này đã được đọc ở tóm tắt và phần kiến trúc của arXiv v4; chưa đọc toàn bài. Nó hỗ trợ phân biệt bộ nhớ tham số với căn cứ truy xuất, không bảo đảm hệ áp đúng hiệu lực của căn cứ pháp luật.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
 
 ### 2.2.2. Mức liên quan khác với điều kiện sử dụng
 
@@ -46,8 +45,8 @@ Bộ truy xuất của dự án có đường từ vựng, đường dense và �
 <!-- nguồn: src/vilexgraph/framework/retrieve.py -->
 <!-- nguồn: src/vilexgraph/framework/temporal.py -->
 
-BM25 và Dense Passage Retrieval là các tài liệu nền được nhận diện trong bibliography [@robertson2009bm25] [@karpukhin2020dpr]. Metadata đủ để xác định tài liệu cần đọc, chưa đủ để chép công thức, cách huấn luyện hoặc kết quả của chúng. [CẦN XÁC MINH: đọc bản gốc BM25 và DPR; đối chiếu giả định của phương pháp với FTS5 và model embedding thực tế của dự án].
-<!-- nguồn: references.bib -->
+Chuyên khảo BM25 đặt phương pháp trong khung truy xuất xác suất; DPR dùng bộ mã hóa kép để tìm đoạn [@robertson2009bm25] [@karpukhin2020dpr]. Lượt đọc chỉ bao phủ mở đầu BM25 và tóm tắt cùng một đoạn DPR, nên chưa chép công thức hoặc dùng điểm bài gốc để dự đoán hiệu quả trên kho luật. [CẦN XÁC MINH: đối chiếu giả định BM25 với FTS5 và DPR với model embedding thực tế]. Metadata BM25 còn mâu thuẫn: trang đầu PDF ghi tập 3, số 4, tr.333–389; Crossref ghi tập 4, số 1–2, tr.1–174. Chưa chọn một bộ tập/trang để điền khi chưa đối chiếu bản nhà xuất bản.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
 
 Với chính cài đặt hiện tại, điểm từ vựng được tính trong SQLite FTS5, còn dữ liệu phiên bản và khoảng hiệu lực nằm ở các bảng dẫn xuất. Đây là mô tả engine đã được kiểm qua code, không phải khẳng định rằng mọi hệ RAG đều dùng cùng cơ chế hoặc rằng điểm dense sẽ giải quyết được khác biệt nhỏ giữa các phiên bản.
 <!-- nguồn: src/vilexgraph/framework/corpus.py -->
@@ -59,8 +58,8 @@ Tên GraphRAG có thể bao phủ nhiều cách đưa quan hệ vào xử lý. �
 <!-- nguồn: src/vilexgraph/framework/systems.py -->
 <!-- nguồn: docs/decisions/0004-framework-truy-xuat-va-sinh.md -->
 
-Hai bản ghi nền trong repo là công trình GraphRAG của Edge và cộng sự và LightRAG [@edge2024graphrag] [@guo2025lightrag]. Chương chưa xác nhận trực tiếp từ bản gốc cấu trúc đồ thị, cơ chế truy xuất hoặc kết quả so sánh của hai bài này. [CẦN XÁC MINH: đọc bản gốc GraphRAG và LightRAG; chưa dùng tóm tắt hoặc tên bài để suy rằng chúng không xử lý thời gian hay kém hơn phương pháp của khóa luận].
-<!-- nguồn: references.bib -->
+GraphRAG của Edge và cộng sự dựng đồ thị thực thể rồi tạo trước tóm tắt cộng đồng cho câu hỏi toàn kho [@edge2024graphrag]. LightRAG trích đồ thị thực thể bằng LLM và truy xuất từ khóa hai mức; bài cũng lấy láng giềng một bước [@guo2025lightrag]. Vì vậy, “một bước” không đủ để phân biệt cài đặt của khóa luận với LightRAG. Khác biệt được xác định ở loại quan hệ sửa đổi tất định và cơ chế truy xuất, thay vì đồ thị thực thể và từ khóa hai mức. Các phần cơ chế đã đọc đủ để đóng yêu cầu xác minh này, nhưng chưa tạo một phép so sánh thực nghiệm. [CẦN XÁC MINH: đối chiếu cấu hình và corpus nếu so sánh trực tiếp với GraphRAG hoặc LightRAG].
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
 
 ## 2.3. Danh tính điều khoản, phiên bản và thời điểm áp dụng
 
@@ -87,8 +86,11 @@ Trong ViLexTime, đầu vào có mốc `as_of` tường minh. Câu hỏi cần b
 <!-- nguồn: scripts/eval/score_vilextime.py -->
 <!-- nguồn: src/vilexgraph/build/temporal/effective_intervals.py -->
 
-Các bản ghi TimeQA và TempLAMA được đưa vào lộ trình đọc về hỏi đáp nhạy thời gian [@chen2021timeqa] [@dhingra2022templama]. Chương chỉ nhận diện phạm vi nghiên cứu qua metadata, chưa khẳng định schema, cách lấy mốc hoặc độ chính xác của các bài. [CẦN XÁC MINH: đọc bản gốc TimeQA và TempLAMA trước khi dùng chúng làm tiền lệ cụ thể cho thiết kế một câu hỏi ở nhiều mốc].
-<!-- nguồn: references.bib -->
+TimeQA lấy sự kiện thay đổi theo thời gian từ WikiData rồi gióng với Wikipedia, là tiền lệ cho việc kiểm một nội dung ở nhiều mốc [@chen2021timeqa]. TempLAMA là bộ thử kiến thức trong thiết lập đóng và nghiên cứu mô hình hóa văn bản kèm dấu thời gian, không phải tiền lệ đánh giá RAG [@dhingra2022templama]. Hai bài mới được đọc một phần, nên chương chỉ sử dụng các cơ chế này.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
+
+VersionRAG thuộc nhóm biểu diễn phiên bản cho **tài liệu kỹ thuật**, không xếp vào hỏi đáp pháp luật [@huwiler2025versionrag]. Bài dựng đồ thị category–document–version–content–change và định tuyến theo loại câu hỏi. Giới hạn tác giả nêu là chưa ánh xạ ngày lịch sang bản phát hành; vì vậy nó không trực tiếp giải quyết đầu vào `as_of`. Phép so với RAG không nhận biết phiên bản của bài cũng chưa tách riêng nấc chỉ lọc siêu dữ liệu như RQ3.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
 
 ### 2.3.3. Sai lệch căn cứ theo thời gian trong FiscalQA Pro
 
@@ -124,7 +126,7 @@ PDF VLQA cục bộ còn phần mẫu định dạng ACM chưa hoàn thiện, tr
 
 ### 2.4.2. ViHERMES: quan hệ pháp lý và mở rộng căn cứ
 
-ViHERMES nghiên cứu hỏi đáp đa bước trên quy định y tế tiếng Việt [@nguyen2026vihermes]. Bản gốc mô tả dữ liệu có căn cứ và chú giải suy luận, cùng hệ graph-aware sử dụng các quan hệ sửa đổi, thay thế, bổ sung và dẫn chiếu. Vì đã có công trình như vậy, không được tuyên bố khóa luận là trường hợp đầu tiên dùng quan hệ đồ thị cho hỏi đáp pháp luật tiếng Việt.
+ViHERMES nghiên cứu hỏi đáp đa bước trên quy định y tế tiếng Việt [@nguyen2026vihermes]. Bản gốc mô tả dữ liệu có căn cứ và chú giải suy luận, cùng hệ graph-aware sử dụng các quan hệ sửa đổi, thay thế, bổ sung và dẫn chiếu. Đây là tiền lệ về dùng quan hệ đồ thị cho hỏi đáp pháp luật tiếng Việt, cần được phản ánh khi định vị đóng góp.
 <!-- nguồn: related_paper/ViHERMES.pdf -->
 
 Mục Seeded Retrieval and Propagation mô tả lấy các nút seed, mở rộng theo loại quan hệ và ưu tiên nút cuối chuỗi sửa đổi như căn cứ có thể áp dụng. Phần phương pháp đã đọc không đặc tả việc chọn một phiên bản theo mốc `as_of` tường minh như ViLexTime; kết luận của bài đặt việc làm giàu temporal validity vào hướng tiếp tục. Sự khác biệt cần nêu là cách điều kiện hóa bằng chứng theo mốc, không phải quy ViHERMES thành hệ “không biết gì về sửa đổi”.
@@ -134,20 +136,20 @@ Các ghi chú trong repo cũng nhắc quan hệ sửa đổi và validity tracin
 <!-- nguồn: related_paper/notes/03-vihermes.md -->
 <!-- nguồn: related_paper/notes/Tham khảo bộ dữ liệu pháp luật có hiệu lực và phiên bản.md -->
 
-### 2.4.3. Giới hạn phạm vi khảo sát trong nước
+### 2.4.3. ALQAC và các tài nguyên bổ sung
 
-Bản ghi ALQAC trong thư mục tham khảo hiện là bài tổng kết cuộc thi với khóa [@thanh2021alqac]. Không được thay nó bằng một bài tổng kết năm khác chỉ vì tên cuộc thi giống nhau. [CẦN XÁC MINH: đọc bản gốc ALQAC đã có khóa, xác định tác vụ và phạm vi corpus; không sử dụng mục chưa xác minh của đề cương để khẳng định nội dung].
-<!-- nguồn: references.bib -->
-<!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
+Bài tổng kết ALQAC có khóa trong danh mục mô tả truy xuất điều luật, entailment và trả lời đúng/sai; gold trong bài chỉ gồm `law_id` và `article_id`, không nêu trường ngày hoặc phiên bản [@thanh2021alqac]. Báo cáo đã đọc toàn bài tổng kết này, nên yêu cầu đọc gốc cho mô tả tác vụ được đóng. Không dùng nó thay một bài tổng kết năm khác chỉ vì cùng tên cuộc thi.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
 
-Repo còn các ghi chú về VietLegal, LegalGraphRAG và một khung suy luận có kiểm chứng; chúng cho thấy khảo sát chưa nên dừng ở các khóa hiện có. Chương chưa dùng các ghi chú này để khẳng định kết quả hoặc tính mới. [CẦN TRÍCH DẪN: hoàn tất xác minh bản gốc và khóa bib cho các công trình trong nước/bổ sung còn nằm ngoài references.bib trước khi đưa vào đối chiếu học thuật].
-<!-- nguồn: related_paper/notes/05-vietlegal-benchmark.md -->
-<!-- nguồn: related_paper/notes/08-legalgraphrag-acl2026.md -->
-<!-- nguồn: related_paper/notes/09-verifiable-reasoning-framework-icoco2026.md -->
+VLegal-Bench/VietLegal đánh giá kiến thức pháp luật tiếng Việt, có KG và RAG có lọc thời gian [@dong2026vietlegal]. Phần đã xem ở arXiv v5 tự nhận benchmark tĩnh dù theo dõi phiên bản tại lúc dựng; v7 đổi tên và kết quả tìm từ khóa không đủ để suy mọi phần giữ nguyên. ViLegalExpert tập trung truy xuất và hỏi đáp từ tư vấn thực tế, có bằng chứng cấp điều/khoản [@nguyen2026vilegalexpert]. Báo cáo mới đọc phần đầu và tìm từ khóa; chưa thấy gold phiên bản theo mốc trong phần đã xem không chứng minh toàn bộ hai công trình không xử lý thời gian. Không trích quy mô QA của ViLegalExpert vì câu văn và bảng trong nguồn lệch nhau.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
+
+[CẦN XÁC MINH: đọc đầy đủ VLegal-Bench/VietLegal và ViLegalExpert; các ghi chú LegalGraphRAG và khung suy luận có kiểm chứng chưa đủ bản ghi gốc để đưa vào đối chiếu học thuật]. Chương chỉ dẫn các khóa đã có trong `references.bib`.
+<!-- nguồn: references.bib; related_paper/notes/08-legalgraphrag-acl2026.md; related_paper/notes/09-verifiable-reasoning-framework-icoco2026.md -->
 
 ## 2.5. Bảng đối chiếu các công trình gần nhất
 
-Bảng tách nội dung được xác nhận trực tiếp với phần mới nhận diện qua metadata. “Chưa xác minh” là trạng thái đọc của bản nháp, không có nghĩa công trình thiếu thành phần đó. Không trình bày điểm số của các tác vụ khác nhau thành bảng xếp hạng chung.
+Bảng ghi riêng cơ chế đã đọc và giới hạn truy cập của từng nguồn. “Chưa xác minh” là trạng thái đọc của bản nháp, không có nghĩa công trình thiếu thành phần đó. Không trình bày điểm số của các tác vụ khác nhau thành bảng xếp hạng chung.
 
 | Công trình | Bài toán hoặc cơ chế được phép mô tả ở bản nháp | Quan hệ với khóa luận | Đã xác minh ở đâu | Giới hạn sử dụng |
 |---|---|---|---|---|
@@ -155,11 +157,16 @@ Bảng tách nội dung được xác nhận trực tiếp với phần mới nh
 | SAT-Graph RAG [@demartim2025satgraph] | Work/Expression, phiên bản thành phần, Action, chính sách truy vấn | Tiền lệ mô hình cấu trúc–thời gian và truy nguyên | PDF `An_Ontology_Driven_GraphRAG_for_LegalNorms.pdf`, Proposed Framework, Case Study, Discussion | Bản gốc đã đọc là arXiv v5; case study định tính; còn đối soát bản kỷ yếu |
 | ViHERMES [@nguyen2026vihermes] | Graph-aware multihop QA; mở rộng theo quan hệ; ưu tiên cuối chuỗi sửa đổi | Đối chiếu trong nước về vai trò đồ thị và điều kiện thời gian | PDF `ViHERMES.pdf`, SRKG, Seeded Retrieval and Propagation, Conclusion | Không biến tracing sửa đổi thành phủ định “không có thời gian”; chưa so trực tiếp cùng benchmark |
 | VLQA [@nguyen2025vlqa] | Câu hỏi tư vấn, corpus điều luật, kiểm chuyên gia; loại điều khoản bãi bỏ | Đối chiếu dữ liệu tiếng Việt và nguồn gốc nhãn | PDF VLQA, Dataset Construction và Expert Annotation | Cần xác nhận thông tin xuất bản; không suy chất lượng ViLexTime từ quy trình của VLQA |
-| VersionRAG [@huwiler2025versionrag] | Metadata nhận diện công trình nhận biết phiên bản cho tài liệu thay đổi | Ứng viên đối chiếu trực tiếp về biểu diễn phiên bản | `references.bib`, trường title/eprint/checked | [CẦN XÁC MINH: đọc bản gốc VersionRAG trước khi mô tả đồ thị, định tuyến, dữ liệu hoặc kết quả] |
-| Statutory QA theo thời gian [@prior2026oldfriend] | Metadata nhận diện bài chẩn đoán failure modes trong statutory QA | Ứng viên đối chiếu trực tiếp về ngày áp dụng và thiết kế benchmark | `references.bib`; báo cáo tổng hợp chỉ dùng làm chỉ dẫn đọc | [CẦN XÁC MINH: đọc bản gốc Prior và cộng sự về temporal statutory QA; chưa xác nhận bộ nhãn, IAA hoặc kết quả lọc ngày] |
-| Hợp nhất luật tự động [@prior2025consolidation] | Metadata nhận diện nghiên cứu về rủi ro và giới hạn hợp nhất | Nguồn cần kiểm để lập luận về chất lượng lời văn dẫn xuất | `references.bib`, trường title/DOI/checked | [CẦN XÁC MINH: đọc bản gốc Risks and Limits of Automatic Consolidation of Statutes; chưa sử dụng tỷ lệ khớp từ bản tóm tắt] |
-| LawShift [@han2025lawshift] | Metadata ghi bài toán dự đoán phán quyết khi luật thay đổi | Hướng đối chiếu về loại biến đổi, khác đầu ra QA theo mốc | `references.bib`; báo cáo repo ghi có đọc một số phần nhưng chưa đủ toàn bài | [CẦN XÁC MINH: đối chiếu bản gốc LawShift trước khi mượn taxonomy, cách tạo thay đổi và quy trình chuyên gia] |
+| VersionRAG [@huwiler2025versionrag] | Đồ thị nhiều tầng và định tuyến câu hỏi cho tài liệu kỹ thuật | Đối chiếu biểu diễn phiên bản, không phải dữ liệu luật | Báo cáo đọc §2.2: thân bài v1 | Chưa ánh xạ ngày lịch; không có đối chứng chỉ lọc metadata |
+| Statutory QA theo thời gian [@prior2026oldfriend] | Luật Đức, lọc mốc như ràng buộc cứng, chấm áp đúng phiên bản | Tiền lệ trực tiếp về temporal QA và lợi ích lọc | Báo cáo §2.5: thân bài v2 | Nguồn buzer.de không chính thức; không có nấc lọc ngày văn bản; không có số IAA người–người trong thân bài |
+| Hợp nhất luật tự động [@prior2025consolidation] | LLM áp lệnh sửa đổi lên luật Đức | Rủi ro của lời văn dẫn xuất | Báo cáo §2.6: thân bài | Khác cách làm và mẫu số, không đặt tỷ lệ khớp cạnh tỷ lệ của khóa luận |
+| LawShift [@han2025lawshift] | Kiểm thử biến hình cho dự đoán phán quyết luật hình sự Trung Quốc | Đối chiếu loại thay đổi, khác đầu ra QA theo mốc | Báo cáo §2.7: thân bài, thiếu đoạn cuối | Loại thay đổi lấy từ sửa đổi thật, nhưng bản kiểm do chuyên gia tự soạn; không có đầu vào `as_of` |
+| LawInForce-eCFR [@yao2026lawinforce] | Khoảng hiệu lực, cặp đổi đáp án, BM25 có/không lọc ngày và oracle | Đối chứng thiết kế gần: tìm đúng luật và đọc quy tắc | Báo cáo §4.1: thân bài | Quy định liên bang Mỹ, ngưỡng số, đúng/sai; không tách lọc ngày văn bản hay lan truyền và bãi bỏ |
+| NitiBench+ [@akarajaradwong2026nitibenchplus] | Luật Thái, bản hiện hành so với bản đúng mốc, nhóm sửa đổi/bãi bỏ và đối chứng | Đối chứng cho X8 về điều kiện cấp sẵn căn cứ | Báo cáo §4.1: một phần arXiv v2 | Chưa xác nhận phản biện; chưa đọc hết thân bài/phụ lục; không có thang lọc trong phần đã xem |
+| VLegal-Bench/VietLegal [@dong2026vietlegal] | Tiếng Việt, KG và RAG có lọc thời gian | Đối chiếu trong nước về tài nguyên và căn cứ | Báo cáo §4.1: tìm từ khóa/đoạn v5, v7 | V5 tự nhận tĩnh; phải phân biệt phiên bản khi dẫn; còn chờ đọc đầy đủ |
+| ViLegalExpert [@nguyen2026vilegalexpert] | Truy xuất, QA tư vấn tiếng Việt, căn cứ cấp điều/khoản | Đối chiếu trong nước về dữ liệu | Báo cáo §4.1: p.1–6 và tìm từ khóa v1 | Chưa đọc đủ; số QA trong nguồn tự lệch; chưa suy phủ định về phiên bản |
 
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
 <!-- nguồn: references.bib -->
 <!-- nguồn: related_paper/2608.09393v1.pdf -->
 <!-- nguồn: related_paper/An_Ontology_Driven_GraphRAG_for_LegalNorms.pdf -->
@@ -179,9 +186,9 @@ FiscalQA Pro phân biệt kiểm nugget nội dung với provenance của phiên
 Trong cài đặt ViLexTime, Recall đo lấy được điều khoản hoặc bằng chứng chấp nhận; TV-Recall yêu cầu phiên bản hoặc ID bằng chứng gold. Accuracy kiểm các span bắt buộc và tránh span riêng của phiên bản khác. TVER chỉ xét phạm vi trích dẫn theo định nghĩa của scorer, nên cần báo kèm độ phủ và strict. Đây là các định nghĩa thao tác của bộ đánh giá, không phải khẳng định đã tạo ra một họ chỉ số mới.
 <!-- nguồn: scripts/eval/score_vilextime.py -->
 
-Bản ghi về contrast sets được giữ trong danh mục [@gardner2020contrast]. [CẦN XÁC MINH: đọc bản gốc contrast sets trước khi khẳng định quan hệ chính xác giữa contrast consistency trong bài và TCS của ViLexTime; không tuyên bố TCS là chỉ số mới].
-<!-- nguồn: references.bib -->
-<!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
+Gardner và cộng sự định nghĩa contrast consistency là dự đoán đúng mọi phần tử trong một nhóm tương phản [@gardner2020contrast]. TCS của ViLexTime yêu cầu **cả hai dòng** của cặp T2 cùng lineage và chế độ mốc đều đúng Accuracy; do đó tương ứng contrast consistency cho nhóm cỡ hai. Accuracy tương phản tính riêng từng dòng không phải contrast consistency. Khác biệt về dữ liệu là cặp ViLexTime lấy từ phiên bản luật thật trong kho, còn contrast sets của bài được tác giả sửa tay để đổi nhãn. Không coi TCS là một chỉ số mới.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
+<!-- nguồn: scripts/eval/score_vilextime.py, TCS và aggregate -->
 
 ### 2.6.2. Chất lượng gold và đơn vị độc lập
 
@@ -189,40 +196,40 @@ Một pipeline chạy tất định có thể tái tạo cùng lỗi nhiều l�
 <!-- nguồn: related_paper/An_Ontology_Driven_GraphRAG_for_LegalNorms.pdf -->
 <!-- nguồn: docs/vilextime-datasheet.md -->
 
-Các dòng cùng lineage chia sẻ câu hỏi và bằng chứng. Phân tích của dự án vì thế lấy lineage làm cụm lấy mẫu lại thay vì giả định mỗi dòng là quan sát độc lập. Họ kiểm định, chiều dự đoán và ngưỡng được quy định trong ADR; số thăm dò không tự trở thành xác nhận khi thấy một khoảng tin cậy thuận lợi. Tài liệu nền về kiểm định trong NLP đã có khóa [@dror2018hitchhiker], nhưng chưa được đọc gốc trong lượt này. [CẦN XÁC MINH: đọc bản gốc tài liệu kiểm định NLP trước khi dùng nó để biện minh cho lựa chọn thống kê cụ thể; hiện đặc tả được dẫn từ ADR và code].
-<!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
-<!-- nguồn: scripts/eval/confirm_vilextime.py -->
-<!-- nguồn: references.bib -->
+Các dòng cùng lineage chia sẻ câu hỏi và bằng chứng. Phân tích dự án lấy lineage làm cụm lấy mẫu lại, theo ADR và code. Dror và cộng sự bàn về bootstrap và nêu vấn đề quan sát phụ thuộc [@dror2018hitchhiker]; bài không bàn Holm và không đặc tả bootstrap theo cụm. Vì vậy không dùng bài này làm nguồn cho hai lựa chọn đó. Họ kiểm định, chiều và ngưỡng là đặc tả phân tích của dự án; số thăm dò không tự trở thành xác nhận khi thấy khoảng tin cậy thuận lợi. [CẦN TRÍCH DẪN: nguồn gốc đã xác minh cho Holm và bootstrap theo cụm; chưa có khóa phù hợp trong references.bib].
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
+<!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md; scripts/eval/confirm_vilextime.py -->
+
+AC1 có tài liệu nền [@gwet2008ac1], nhưng hồ sơ chỉ đọc tóm tắt PubMed; PDF tác giả không mở được. Chương chỉ dùng nguồn để nhận diện hệ số, không chép công thức hay suy ra ngưỡng chất lượng. Việc dự án chọn AC1 sau pilot phải được khai riêng ở chương dữ liệu, không biến thành lựa chọn đã đăng ký trước nhờ dẫn tài liệu này.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
+<!-- nguồn: docs/vilextime-datasheet.md -->
 
 ## 2.7. Khoảng trống nghiên cứu và ranh giới tuyên bố
 
 ### 2.7.1. Điều có thể nói từ phạm vi đã khảo sát
 
-Các phần gốc đã kiểm cho thấy có tiền lệ về temporal legal QA, mô hình điều khoản có phiên bản và graph-aware QA tiếng Việt. Vì vậy, đóng góp của khóa luận không thể được xác lập bằng các tuyên bố rộng như “đầu tiên mô hình hóa phiên bản luật”, “đầu tiên làm benchmark pháp luật theo thời gian” hoặc “đầu tiên dùng đồ thị cho RAG pháp luật tiếng Việt”. Sự có mặt của các tiền lệ này cần được phản ánh ngay cả khi cài đặt, ngôn ngữ hoặc cách đánh giá của chúng khác khóa luận.
-<!-- nguồn: related_paper/2608.09393v1.pdf -->
+Các phần đã đọc cho thấy tiền lệ trực tiếp: Prior nghiên cứu statutory QA theo mốc; LawInForce-eCFR phân biệt nút thắt tìm luật đang hiệu lực và áp dụng quy tắc; NitiBench+ đo bản hiện hành so với bản đúng mốc. Do đó, lợi ích của lọc thời gian và việc tách lỗi tìm khỏi lỗi đọc không còn là phát hiện riêng của khóa luận. Chương chỉ đề xuất đo những hiện tượng đó trên pháp luật Việt Nam, nhấn vào nhận diện bãi bỏ và tách có đối chứng các nấc thông tin thời gian.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
+<!-- nguồn: docs/plans/active/master-plan.md, mục 10 -->
+
+Mục tiêu hẹp là kiểm trên cùng dữ liệu và đường ống ba nấc: ngày hiệu lực văn bản, khoảng hiệu lực phiên bản và lan truyền từ nút cha. Điều kiện X8 cấp sẵn căn cứ đúng mốc và căn cứ hiện hành giúp tách lỗi tìm khỏi lỗi đọc; đây vẫn là phép đo còn chờ, phải làm dev trước rồi trên bộ cuối. Chưa có kết quả X8 để xác lập đóng góp thực nghiệm.
+<!-- nguồn: docs/plans/active/master-plan.md, mục 6 và 10 -->
+
+### 2.7.2. Phạm vi khảo sát và phần còn thiếu
+
+Theo log ngày 05/11, các truy vấn trên arXiv, Crossref, phần OpenAlex mở được, danh mục tiêu đề ACL Anthology và tìm kiếm web chưa tìm thấy phép đối chứng ba nấc nêu trên trong phần đã xem. Đây là nhận xét có giới hạn của lượt tìm; không phải chứng nhận toàn lĩnh vực. Semantic Scholar và nhiều chỉ mục/nhà xuất bản không mở được; các nguồn tiếng Việt mới chỉ đọc một phần có thể làm đổi nhận xét. [CẦN XÁC MINH: chạy lại các mục bị chặn và đọc đủ các công trình gần nhất, phụ lục LawInForce-eCFR và NitiBench+ trước khi chốt định vị đóng góp].
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
+
+Với SAT-Graph RAG, chỉ các mục cục bộ đã đọc mới làm căn cứ cho mô hình cấu trúc–thời gian. Với VLegal-Bench và ViLegalExpert, kết quả tìm từ khóa không cho phép khẳng định toàn bộ bài thiếu đánh giá phiên bản. Khoảng trống được giữ như nhu cầu kiểm của khóa luận trong phạm vi khảo sát có log, không suy ra từ sự vắng mặt của một ghi chú trong repo.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
 <!-- nguồn: related_paper/An_Ontology_Driven_GraphRAG_for_LegalNorms.pdf -->
-<!-- nguồn: related_paper/ViHERMES.pdf -->
-<!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
-
-Một mục tiêu hẹp hơn là xây phép đánh giá theo mốc trên nguồn pháp luật tiếng Việt của dự án và dùng B7 cùng thang biểu diễn để kiểm nguồn gốc chênh lệch. Việc này nối câu hỏi về tài nguyên với câu hỏi về phép đối chứng: có cần lời văn hợp nhất và khoảng phiên bản, hay phần lớn lợi ích quan sát được đã xuất hiện ở bộ lọc cấp văn bản? Đây là câu hỏi thực nghiệm được đặt ra, không phải một kết luận mới về hiệu quả phương pháp.
-<!-- nguồn: docs/decisions/0004-framework-truy-xuat-va-sinh.md -->
-<!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
-
-### 2.7.2. Điều chưa đủ để khẳng định tính mới
-
-Guide yêu cầu một lượt tìm có mục tiêu trước khi dùng tuyên bố hẹp kèm cụm “theo khảo sát của chúng tôi”. Lượt soạn này không có mạng và không tiến hành tìm mới. Chưa thể chuyển việc chưa thấy một artifact tương ứng trong repo thành bằng chứng chưa có ai làm. [CẦN XÁC MINH: hoàn tất hoặc tìm lại biên bản khảo sát có truy vấn, phạm vi, ngày tra và kết quả trước khi chốt tuyên bố tính mới hẹp].
-<!-- nguồn: MASTER_RESEARCH_GUIDE.md @51f36c7 -->
-
-Với SAT-Graph RAG, phần đã đọc xác nhận mô hình cấu trúc–thời gian và các chính sách truy vấn, nhưng chưa đủ để kết luận toàn bộ công trình không có một phép đối chứng cụ thể nếu chưa kiểm các phiên bản liên quan. Với VersionRAG và các công trình temporal QA còn mới đọc metadata, càng không được viết một mệnh đề phủ định về điều tác giả “chưa làm”. Khoảng trống hiện được trình bày như nhu cầu kiểm chứng của khóa luận, chờ hoàn tất khảo sát, thay vì chứng nhận sự vắng mặt của mọi tiền lệ.
-<!-- nguồn: related_paper/An_Ontology_Driven_GraphRAG_for_LegalNorms.pdf -->
-<!-- nguồn: references.bib -->
 
 Các khái niệm chuẩn hóa như Akoma Ntoso và LRMoo được nhắc trong SAT-Graph RAG. Chương chỉ mô tả cách bài đó sử dụng các khái niệm, không nhận đã xác minh đầy đủ chính tiêu chuẩn gốc. [CẦN TRÍCH DẪN: tài liệu chuẩn gốc của Akoma Ntoso và LRMoo nếu khóa luận trình bày độc lập cấu trúc hoặc bảo đảm của chúng; hiện chưa có khóa phù hợp trong references.bib].
 <!-- nguồn: related_paper/An_Ontology_Driven_GraphRAG_for_LegalNorms.pdf -->
 
 ## 2.8. Câu trả lời có bằng chứng
 
-Các nguồn gốc đã đối chiếu hỗ trợ việc phân biệt hiệu lực theo ngày, danh tính điều khoản, lời văn phiên bản và provenance; đồng thời cho thấy đồ thị và xử lý lịch sử không phải các ý tưởng chưa từng được nghiên cứu. Tài nguyên tiếng Việt đã có kiểm chuyên gia và truy xuất theo quan hệ, nhưng thiết kế theo mốc và phép đối chứng cụ thể vẫn cần được xem xét trên từng công trình. Cách lập luận có thể bảo vệ cho khóa luận là xác định rõ đầu vào–đầu ra, công bố nguồn gold và kiểm nguồn gốc chênh lệch trong phạm vi đã đo. Chưa có cơ sở để tuyên bố đứng đầu hoặc đầu tiên trên toàn lĩnh vực.
+Các nguồn gốc đã đối chiếu hỗ trợ việc phân biệt hiệu lực theo ngày, danh tính điều khoản, lời văn phiên bản và provenance; đồng thời cho thấy đồ thị và xử lý lịch sử không phải các ý tưởng chưa từng được nghiên cứu. Tài nguyên tiếng Việt đã có kiểm chuyên gia và truy xuất theo quan hệ, nhưng thiết kế theo mốc và phép đối chứng cụ thể vẫn cần được xem xét trên từng công trình. Cách lập luận có thể bảo vệ cho khóa luận là xác định rõ đầu vào–đầu ra, công bố nguồn gold và kiểm nguồn gốc chênh lệch trong phạm vi đã đo. Chưa có cơ sở để tuyên bố ưu thế hay thứ tự công bố trên toàn lĩnh vực.
 <!-- nguồn: related_paper/2608.09393v1.pdf -->
 <!-- nguồn: related_paper/An_Ontology_Driven_GraphRAG_for_LegalNorms.pdf -->
 <!-- nguồn: related_paper/ViHERMES.pdf -->
@@ -232,6 +239,6 @@ Các nguồn gốc đã đối chiếu hỗ trợ việc phân biệt hiệu l�
 
 - Đọc bản gốc các mục còn mới đối chiếu metadata, ghi chính xác phần đã đọc và chỉ bổ sung số liệu sau khi đọc đủ phạm vi.
 - Kiểm trực quan PDF, phiên bản SAT-Graph RAG, thông tin xuất bản VLQA và định vị trích dẫn; không suy nơi công bố từ mẫu trình bày.
-- Hoàn tất khảo sát có mục tiêu trước khi xác lập tính mới; tránh mọi khẳng định phủ định toàn lĩnh vực.
+- Tiếp tục khảo sát từ log đã có, mở lại phần bị chặn; tránh mọi khẳng định phủ định toàn lĩnh vực.
 - Nhóm xác minh các nguồn còn thiếu khóa khi có điều kiện; bản nháp này không tự thêm tài liệu vào bibliography.
 - Tác giả kiểm nội dung phương pháp luận và thuật ngữ; ghi chú/bản dịch do AI hỗ trợ không thay việc đọc gốc.

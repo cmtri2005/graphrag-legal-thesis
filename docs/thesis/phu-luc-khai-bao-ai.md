@@ -22,11 +22,13 @@ Phụ lục chỉ xác nhận những hoạt động có hồ sơ trong kho. CMT
 | Đáp án ngắn v1.0 | Claude chọn các span từ lời văn gold hoặc câu dẫn | Kiểm span bằng code, kết hợp quy trình nhãn của dòng | Hợp lệ về span không chứng minh đủ và đúng nghĩa pháp lý |
 | Nhãn và đề xuất loại v1.0 | Model gán trước hoặc đề xuất; Codex cung cấp nhãn agent ở phạm vi được phép | Hiệu chuẩn với nhãn người, mẫu luật sư kiểm, quy tắc ưu tiên trong `final_labels` | Cổng đồng thuận toàn tập không đạt; nhãn agent không được gọi là nhãn người |
 | Hòa giải D4 | AI soạn bản nháp và đối chiếu kho gốc theo biên bản | A xác nhận bản được ghi trong biên bản | Chưa phải lượt hòa giải độc lập hoàn toàn do người; một số nháp tự ghi chưa đối chiếu nguồn |
+| Silver T2–T3 và tiếp xúc trước của A | Phiếu A chứa đáp án và chuỗi phiên bản đồ thị; AI không chỉ hỗ trợ diễn đạt | Đo lại từ phiếu có verdict và silver: A đã gán 131/168 lineage, 283 dòng, 280 `dat` trong vòng 25/10 | A đã thấy đáp án đồ thị ở phần này; nhãn gán lại không được khai là một lượt mù mới; gold1 chia theo người, còn trống |
 | Test 2 — nhãn LLM | Hai LLM gán độc lập, model hòa giải và agent hỗ trợ các ca phân vân | Chưa có người hoặc luật sư xác nhận nhãn theo amendment | Luôn gọi là nhãn LLM; không coi là gold độc lập của người |
 | Generator thực nghiệm | Qwen sinh câu trả lời từ prompt đã khóa | Cổng định dạng, kiểm hash, parser và scorer; hồ sơ có CMT đọc mẫu dev | Chỉ một generator, chưa có kiểm độ bền khác họ; điểm scorer không thay thế đánh giá người |
 | E7 lượt máy | Script phân loại lỗi theo quy tắc ưu tiên, tạo thống kê và phiếu | Assert tổng, test hành vi và đối chiếu với score đã lưu | Chưa có người mã hóa; tầng máy là phân tích thăm dò |
 | Tài liệu và bản nháp khóa luận | AI hỗ trợ tổng hợp code, ADR, số đo và soạn văn bản | Bản nháp hiện chờ tác giả và người hướng dẫn rà nội dung, số liệu, cách diễn giải | Không khai rằng đã được GVHD hoặc UIT phê duyệt |
 
+<!-- nguồn: data/review/kiem_A.tsv; data/vilextime_dataset/vilextime_silver.jsonl; data/review/the4/gold1/gold_sample.tsv; data/review/the4/gold1/gold_A.tsv; data/review/the4/gold1/gold_B.tsv; yêu cầu C9b của tác giả -->
 <!-- nguồn: docs/vilextime-datasheet.md -->
 <!-- nguồn: docs/reports/D5_bien_ban.md -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
@@ -83,6 +85,11 @@ Claude đã soạn bản nháp paper ban đầu; Codex cập nhật các chươn
 
 Theo quy trình bộ cuối, AI có thể hỗ trợ mã, chuẩn bị phiếu và diễn đạt ứng viên; AI không gợi ý nhãn, nháp ghi chú hay hòa giải cho người gán bộ cuối. Khi mô tả dữ liệu cũ, phải giữ nguyên khai báo rằng các vòng trước đã có các can thiệp đó. [CHỜ G4: hồ sơ kiểm người và khai báo công cụ của các lượt tiếp theo].
 <!-- nguồn: docs/plans/active/master-plan.md, mục 9 -->
+
+### Cập nhật C9b
+
+Codex sửa chương tổng quan theo báo cáo đọc nguồn của AI ngày 05/11, cập nhật mức đọc trong bibliography và bảng tham khảo sinh tự động; đo lại tiếp xúc trước của A, rà nguồn số và đối chiếu một mẫu có seed từ file. Script kiểm số của lượt này đặt ngoài repo; bộ kiểm paper được giữ nguyên. Báo cáo đọc cũ là bằng chứng về phạm vi AI đã truy cập, không thay việc hai tác giả tự đọc tài liệu gốc. Lượt C9b không chạy bộ test cuối và chưa có lượt người duyệt hoặc phản biện độc lập mới.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md; scripts/paper/paper_refs.py; scripts/paper/paper_build.py; scripts/paper/paper_check.py; yêu cầu C9b của tác giả -->
 
 ## A.5. Quy định cơ sở đào tạo
 

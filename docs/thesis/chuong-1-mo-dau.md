@@ -17,15 +17,15 @@ Hướng tiếp cận của khóa luận là biểu diễn điều khoản cùng
 <!-- nguồn: docs/DeCuongKLTN_23521635_23521643_UIT.docx -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 
-Bài toán có các tiền lệ về hỏi đáp theo thời gian, biểu diễn phiên bản và khai thác quan hệ pháp luật. Chương tổng quan trình bày phần tài liệu đã đọc và phần mới có metadata. Bản nháp không khẳng định tính mới hay sự vắng mặt của công trình tương tự. [CẦN: hoàn tất khảo sát có ghi phạm vi, truy vấn và phiên bản tài liệu trước khi định vị đóng góp học thuật].
-<!-- nguồn: docs/thesis/chuong-2-co-so-ly-thuyet.md; references.bib -->
+Bài toán có tiền lệ gần trong Prior, LawInForce-eCFR và NitiBench+ về lọc luật theo mốc, điều kiện cấp sẵn căn cứ và lỗi đọc phiên bản [@prior2026oldfriend] [@yao2026lawinforce] [@akarajaradwong2026nitibenchplus]. Vì vậy, “lọc thời gian có lợi” và “hai nút thắt tìm–đọc” không được coi là phát hiện riêng. Luận điểm của khóa luận được thu hẹp vào phép đo trên pháp luật Việt Nam, nhận diện bãi bỏ và tách ba nấc thông tin trên cùng dữ liệu: ngày văn bản, khoảng hiệu lực phiên bản và lan truyền từ nút cha. Khảo sát đã có log, nhưng còn nguồn bị chặn và bài chỉ đọc một phần; chưa xác lập thứ tự công bố hay phủ định tiền lệ khác.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md; docs/plans/active/master-plan.md, mục 10 -->
 
 ## 1.2. Phát biểu bài toán
 
 Theo đề cương, đầu vào là một câu hỏi pháp lý \(x\) bằng tiếng Việt kèm mốc thời gian áp dụng \(t\), tức thời điểm phát sinh hành vi hoặc quan hệ pháp luật cần tra cứu. Đầu ra là câu trả lời \(a\) và tập bằng chứng \(E\) gồm các đơn vị pháp lý ở cấp Điều/Khoản/Điểm có hiệu lực tại \(t\). Với \(U\) là tập đơn vị pháp lý trong kho, ràng buộc đầu ra được viết:
 
 \[
-(x,t)\longmapsto(a,E),\qquad E\subseteq U,\quad orall u\in E:\operatorname{valid}(u,t).
+(x,t)\longmapsto(a,E),\qquad E\subseteq U,\quad \forall u\in E:\operatorname{valid}(u,t).
 \]
 <!-- nguồn: docs/DeCuongKLTN_23521635_23521643_UIT.docx -->
 
@@ -57,6 +57,9 @@ Các câu hỏi và giả thuyết dưới đây được giữ nguyên văn đ�
 
 Ở trạng thái hiện tại, đóng góp có thể trình bày là đường ống dẫn xuất phiên bản có truy nguyên, tài nguyên đánh giá công bố nguồn nhãn, và phép so sánh giúp phân biệt các mức thông tin thời gian. Việc hoàn tất hệ theo đề cương và kiểm định trên bộ cuối còn đang chờ. Đóng góp không được định nghĩa bằng yêu cầu hệ đề xuất phải thắng; một kết quả không đủ bằng chứng vẫn trả lời được giới hạn của cách biểu diễn đã thử nếu phép đo đáng tin cậy.
 <!-- nguồn: docs/plans/active/master-plan.md -->
+
+Điều kiện X8 sẽ cấp sẵn căn cứ đúng mốc và căn cứ hiện hành cho các nhóm T1, T2, T3, T6 để đo cái giá của việc đọc sai văn bản, tách khỏi lỗi tìm. Phải làm trên dev trước rồi bộ test cuối; oracle dev hiện có không thay được hai điều kiện đó. [CHỜ COLAB: X8 đúng mốc/hiện hành; chưa có kết quả để kết luận].
+<!-- nguồn: docs/plans/active/master-plan.md, X8 và mục 10 -->
 
 ## 1.5. Phạm vi và giới hạn
 

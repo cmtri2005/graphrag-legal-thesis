@@ -56,10 +56,10 @@ Cần phân biệt hai cách xử lý đơn vị lệnh. Truy xuất ban đầu 
 
 ## 5.3. Truy xuất và ngữ cảnh cấu trúc
 
-Đường chính dùng SQLite FTS5 để tính thứ hạng từ vựng. Code tạo biểu thức truy vấn từ các từ của câu hỏi, kết hợp các từ bằng OR và cho phép giới hạn vào phần body hoặc thêm phần context. Cấu hình có context đưa tiêu đề cấu trúc vào văn bản truy xuất; phần ngữ cảnh này là lợi ích chunk header thông thường, không tự được xem là hiệu ứng đồ thị. Tài liệu nền về BM25 được quản lý trong danh mục [@robertson2009bm25]; mô tả cài đặt ở đây dựa trên code FTS5 thực tế. [CẦN: đọc bản gốc tài liệu BM25 và xác nhận metadata thư mục tài liệu tham khảo trước khi nộp].
+Đường chính dùng SQLite FTS5 để tính thứ hạng từ vựng. Code tạo biểu thức truy vấn từ các từ của câu hỏi, kết hợp các từ bằng OR và cho phép giới hạn vào phần body hoặc thêm phần context. Cấu hình có context đưa tiêu đề cấu trúc vào văn bản truy xuất; phần ngữ cảnh này là lợi ích chunk header thông thường, không tự được xem là hiệu ứng đồ thị. Tài liệu nền về BM25 được quản lý trong danh mục [@robertson2009bm25]; mô tả cài đặt ở đây dựa trên code FTS5 thực tế. Báo cáo đọc mới xem trang đầu và mở đầu. [CẦN: đọc phần công thức BM25, đối chiếu FTS5 và giải quyết mâu thuẫn tập/trang trước khi nộp].
 <!-- nguồn: src/vilexgraph/framework/retrieve.py -->
 <!-- nguồn: src/vilexgraph/framework/corpus.py -->
-<!-- nguồn: references.bib -->
+<!-- nguồn: references.bib; related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
 
 Kích thước danh sách ban đầu được khóa ở (k=20). Chế độ giảm số từ truy vấn để chạy nhanh không được dùng cho số báo cáo. Đường dense hiện có quét điểm tích vô hướng trên các vector, sau đó kiểm bộ lọc trước khi gom top-k hợp lệ; nó không dùng Milvus. Cấu hình B4 trộn hai thứ hạng bằng tổng đóng góp (1/(60+rank)), không có reranker. Đây là mô tả cấu hình, không phải kết quả chất lượng của B4 trên test. [CẦN: nguồn gốc phương pháp reciprocal rank fusion; references.bib chưa có khóa tương ứng].
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
@@ -176,5 +176,5 @@ Phương pháp hiện thực hóa việc truy xuất theo mốc bằng cách k�
 
 - [CẦN: đối soát topology GPU thực tế; sổ chạy nói hai T4 nhưng trường gpu trong provenance E3 hiện chỉ liệt kê một tên Tesla T4].
 - Bổ sung kết quả ablation trước khi đánh giá tác dụng riêng của mở rộng hoặc Verifier.
-- Đọc bản gốc tài liệu BM25; bổ sung tài liệu RRF sau khi nhóm xác nhận khóa thư mục tài liệu tham khảo, không tự tạo khóa mới.
+- Đọc tiếp phần công thức BM25 và đối chiếu FTS5; bổ sung tài liệu RRF sau khi nhóm xác nhận khóa thư mục tài liệu tham khảo, không tự tạo khóa mới.
 - Hoàn thiện hình kiến trúc theo cài đặt thực; giữ phân biệt phương pháp dự kiến với cấu hình đã đo.

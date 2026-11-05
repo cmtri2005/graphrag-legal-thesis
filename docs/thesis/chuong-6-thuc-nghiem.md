@@ -50,6 +50,7 @@ Lát giữa khoảng của test v1.0 có 211 dòng thuộc 165 lineage. Các ki�
 <!-- nguồn: runs/E3_v1/test/confirm.json -->
 
 ### 6.2.1. Kết quả tổng thể v1.0 — mô tả thăm dò
+<!-- nguồn: runs/E3_v1/test/all.score.json -->
 
 | Hệ | Accuracy [KTC 95%] | TV-R@1 [KTC 95%] | TVER [KTC 95%] | Phủ trích dẫn [KTC 95%] | TVER strict [KTC 95%] |
 |---|---|---:|---:|---:|---:|
@@ -63,6 +64,7 @@ Lát giữa khoảng của test v1.0 có 211 dòng thuộc 165 lineage. Các ki�
 <!-- nguồn: runs/E3_v1/test/all.score.json -->
 
 ### 6.2.2. Accuracy theo nhóm v1.0 — thăm dò
+<!-- nguồn: runs/E3_v1/test/all.score.json -->
 
 | Hệ | T1 | T2 | T3 | T6 |
 |---|---|---|---|---|
@@ -76,6 +78,7 @@ Lát giữa khoảng của test v1.0 có 211 dòng thuộc 165 lineage. Các ki�
 <!-- nguồn: runs/E3_v1/test/all.score.json -->
 
 ### 6.2.3. Họ kiểm định xác nhận v1.0
+<!-- nguồn: runs/E3_v1/test/confirm.json -->
 
 | XN | So sánh và đại lượng | Ước lượng [KTC 95%] | p Holm | Dòng / lineage | Kết luận |
 |---|---|---|---:|---|---|
@@ -103,6 +106,7 @@ Lần chấm E3 đầu của test 2 — nhãn LLM — đã sai: release thiếu 
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 
 ### 6.3.1. Kết quả tổng thể test 2 — nhãn LLM, mô tả thăm dò
+<!-- nguồn: runs/E3_test2/rescore/all.score.json -->
 
 | Hệ | Accuracy [KTC 95%] | TV-R@1 [KTC 95%] | TVER [KTC 95%] | Phủ trích dẫn [KTC 95%] | TVER strict [KTC 95%] |
 |---|---|---:|---:|---:|---:|
@@ -116,6 +120,7 @@ Lần chấm E3 đầu của test 2 — nhãn LLM — đã sai: release thiếu 
 <!-- nguồn: runs/E3_test2/rescore/all.score.json -->
 
 ### 6.3.2. Accuracy theo nhóm test 2 — nhãn LLM, thăm dò
+<!-- nguồn: runs/E3_test2/rescore/all.score.json -->
 
 | Hệ | T2 | T3 | T6 |
 |---|---|---|---|
@@ -129,6 +134,7 @@ Lần chấm E3 đầu của test 2 — nhãn LLM — đã sai: release thiếu 
 <!-- nguồn: runs/E3_test2/rescore/all.score.json -->
 
 ### 6.3.3. Họ kiểm định xác nhận test 2 — nhãn LLM
+<!-- nguồn: runs/E3_test2/rescore/confirm.json -->
 
 | XN | So sánh và đại lượng | Ước lượng [KTC 95%] | p Holm | Dòng / lineage | Kết luận |
 |---|---|---|---:|---|---|
@@ -280,6 +286,23 @@ Sau khi tìm lệnh tác động ở chuỗi cha, R@30 trên dòng T6 không có
 [CHỜ COLAB: đầu ra sinh và chấm dev cho `b7pp --hybrid`, `proposed2`, `p2a2`, `p2a3`]. Cần đo tác dụng Verifier khi chưa có bộ lọc mạnh; trên dev cũ, Verifier không bác câu nào và ablation tắt nó trùng đầu ra. Thông báo bãi bỏ có cấu trúc và kiểm độ bền generator còn là công việc theo kế hoạch, không điền số giả định.
 <!-- nguồn: docs/plans/active/master-plan.md; runs/README.md -->
 
+### 6.5.1. `proposed3` và điều kiện cấp sẵn căn cứ X8 — còn chờ
+
+`proposed3` kế thừa `proposed2` và bật `repeal_note`, đưa thông báo bãi bỏ có cấu trúc từ đồ thị vào prompt; đây là phần việc trong A7. Chương chưa có đầu ra sinh đã chấm để kết luận tác dụng của cấu hình này. Không mang số `proposed` hay số truy xuất `proposed2` sang nhãn mới. [CHỜ COLAB: đầu ra dev, provenance và điểm `proposed3`; xác nhận cấu hình được khóa trước khi chạy bộ cuối].
+<!-- nguồn: docs/plans/active/master-plan.md, A7; src/vilexgraph/framework/systems.py; src/vilexgraph/framework/generate.py; runs/README.md -->
+
+X8 phải so hai điều kiện **cấp sẵn căn cứ đúng mốc** và **cấp sẵn căn cứ hiện hành**, theo T1 (đối chứng), T2, T3, T6. Mục đích là đo sai lệch do đọc bản hiện hành, tách khỏi lỗi tìm trên toàn kho. Phải chạy dev trước, rồi bộ test cuối sau các cổng khóa. Oracle dev đã có chỉ cho biết kết quả trong điều kiện căn cứ của lượt đó; chưa phải kết quả X8 hay oracle trên test.
+<!-- nguồn: docs/plans/active/master-plan.md, X8 và mục 10 -->
+
+| Điều kiện X8 | Kết quả |
+|---|---|
+| Dev: đúng mốc so với hiện hành, từng nhóm | [CHỜ COLAB: điểm, mẫu số và chênh lệch ghép cặp X8 dev] |
+| Bộ cuối: đúng mốc so với hiện hành, từng nhóm | [CHỜ COLAB: chỉ chạy sau khóa dữ liệu, hệ và phân tích; chưa có số X8 test] |
+<!-- nguồn: docs/plans/active/master-plan.md, X8 -->
+
+Lọc thời gian có lợi và hai nút thắt tìm–đọc đã có tiền lệ [@prior2026oldfriend] [@yao2026lawinforce] [@akarajaradwong2026nitibenchplus]. Phân rã E7 hiện tại là mô tả/thăm dò trên pháp luật Việt Nam; không tuyên bố phát hiện riêng hai nút thắt. Phần cần kiểm của khóa luận là nhận diện bãi bỏ và tách có đối chứng các nấc thời gian trên cùng dữ liệu. Không đưa số nghiên cứu khác vào bảng điểm chung khi khác tác vụ, gold hoặc mẫu số.
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md; docs/plans/active/master-plan.md, mục 10 -->
+
 ## 6.6. Bộ test cuối — chưa có kết quả
 
 Bảng này dành cho kết luận chính sau G4. Không đưa số vòng thử hoặc dev vào thay. Tầng nhãn chính phải là người kiểm theo quy trình đã khóa; phần LLM/agent báo riêng. Cỡ mẫu, miền, thời gian gán, gold mù và cấu hình cuối phải dẫn về bản khóa dữ liệu/hệ trước khi diễn giải kết quả.
@@ -297,9 +320,11 @@ Bảng này dành cho kết luận chính sau G4. Không đưa số vòng thử 
 | Giám khảo LLM | [CHỜ G4: hiệu chuẩn và điểm nếu đạt] | Không thay điểm người bằng nhãn LLM |
 <!-- nguồn: docs/plans/active/master-plan.md, mục 6 và 7 -->
 
-Các lượt bổ sung cho **vòng thử cũ** vẫn báo riêng, không dùng chọn cấu hình cuối:
+### 6.6.1. Colab đợt 2 — các vòng thử cũ, còn chờ
 
-- [CHỜ COLAB: `b7plus b7v` trên test 2].
+Các lượt bổ sung cho **vòng thử cũ** vẫn báo riêng, không dùng chọn cấu hình cuối; mỗi cấu hình chạy một lần theo X7:
+
+- [CHỜ COLAB: `b7plus b7v` trên test 2, nhãn LLM].
 - [CHỜ COLAB: `b7plus b7v a4 b2 b6 oracle b3 b4 a1 a2 a3` trên v1.0].
 - [CHỜ G4: LightRAG trên tập con sau G3, báo riêng vì không cùng corpus].
 <!-- nguồn: docs/plans/active/master-plan.md, X7 và C3 -->

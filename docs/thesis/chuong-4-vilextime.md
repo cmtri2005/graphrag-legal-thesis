@@ -194,8 +194,22 @@ Nhãn đạt được suy ra khi Q1 Đúng, Q2 Có, Q3 Có và Q4 Không. Q4 Kh�
 <!-- nguồn: docs/vilextime-annotation.md -->
 <!-- nguồn: docs/plans/active/master-plan.md, mục 5 -->
 
-Trang gán phải ghi thời gian từng câu. Cổng G1 yêu cầu AC1 ≥ 0,80 và p_neg ≥ 0,60 trên từng Q1–Q4 cùng trung vị thời gian ≥ 90 giây/câu; dưới mức thời gian đó phải dừng và xem lại. Thời gian là dấu hiệu tuân thủ quy trình, không phải bảo đảm người gán đúng. [CHỜ G4: số thực tế của lô thử, nhãn bộ cuối, AC1/p_neg và phân bố thời gian được khóa ở G1–G2].
+Trang gán phải ghi thời gian từng câu. Cổng G1 yêu cầu AC1 ≥ 0,80 và p_neg ≥ 0,60 trên từng Q1–Q4 cùng trung vị thời gian ≥ 90 giây/câu; dưới mức thời gian đó phải dừng và xem lại. Thời gian là dấu hiệu tuân thủ quy trình, không phải bảo đảm người gán đúng. [CHỜ G2: số thực tế của lô thử, nhãn bộ cuối, AC1/p_neg và phân bố thời gian được khóa ở G1–G2].
 <!-- nguồn: docs/plans/active/master-plan.md, mục 5 và 7 -->
+
+### Tiếp xúc trước với đáp án đồ thị và gold mù theo người
+
+Đối chiếu lại `lineage_id` của silver T2–T3 với các dòng **có verdict không rỗng** trong phiếu A cho thấy: ở vòng 25/10 theo hồ sơ tác giả, A đã gán **131/168 lineage**, tương ứng **283 dòng**, trong đó **280 `dat`** và **3 `khong_dat`**. Các dòng này có trường `answer` và `cac_phien_ban`: A đã được cho thấy đáp án cùng lịch sử phiên bản do đồ thị dựng. Không đếm các dòng phiếu còn trống là đã gán, cũng không coi đây là bằng chứng A đã đọc đủ nguồn pháp lý.
+<!-- nguồn: data/review/kiem_A.tsv; data/vilextime_dataset/vilextime_silver.jsonl; phép đo: lấy lineage T2/T3 silver, giao phiếu A có verdict khác rỗng, đếm dòng/lineage/verdict; ngày vòng theo yêu cầu C9b của tác giả -->
+
+Điều kiện “hệ chưa chạy” của silver vẫn khác điều kiện “người chưa thấy đáp án”. Khi thu nhãn mới, cần khai lần tiếp xúc này; một lượt A gán lại trên cùng lineage không trở thành một quan sát mù mới. Quy trình bộ cuối yêu cầu không thấy gợi ý hoặc nhãn LLM và kết quả hệ; gold độc lập còn đòi không thấy lời văn do đồ thị dựng. Vì vậy phải xác định độ mù theo từng người và từng lineage, không chỉ gọi chung cả silver là mới.
+<!-- nguồn: data/review/kiem_A.tsv; docs/plans/active/master-plan.md, mục 5 và A6 -->
+
+Gói hiện có ở `data/review/the4/gold1/` chia câu theo người. `gold_sample.tsv` có **60 dòng mẫu**: **22 chỉ A**, **23 chỉ B**, **15 cả hai**; từ đó `gold_A.tsv` có **37 phiếu**, `gold_B.tsv` có **38 phiếu**. Đối chiếu với các lineage A đã gán cho thấy **0** lineage đó được giao A ở gold1; phần chỉ B có **23** lineage A đã gán. Với B, giao giữa lineage B đã gán trong `kiem_B.tsv` và phần giao B cũng bằng **0**. Đây là kiểm tra cấu trúc phân công, chưa chứng minh người không xem ngoài phiếu hoặc đã hoàn thành gold. Các cột `hieu_luc`, `noi_dung`, `van_ban_ap_dung` của cả hai phiếu đều trống. Không nhầm lô chuẩn bị hiện có với mục tiêu gold mù của kế hoạch.
+<!-- nguồn: data/review/the4/gold1/gold_sample.tsv; data/review/the4/gold1/gold_A.tsv; data/review/the4/gold1/gold_B.tsv; data/review/kiem_A.tsv; data/review/kiem_B.tsv -->
+
+Theo A6, câu gold của mỗi người phải được giữ khỏi lô gán của chính người đó cho đến khi họ điền xong gold. Việc gán lại nhãn câu hỏi và việc tự tìm đáp án từ văn bản gốc/VBHN là hai loại bằng chứng; phải lưu riêng. [CHỜ G2: gold1 được người điền và đối soát độ mù theo người; khai báo tiếp xúc cũ khi thu nhãn mới].
+<!-- nguồn: docs/plans/active/master-plan.md, A6 và quy tắc sau mục 11; data/review/the4/gold1/ -->
 
 ## 4.9. Độ tin cậy, giới hạn và tài liệu hóa
 

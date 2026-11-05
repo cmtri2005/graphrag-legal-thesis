@@ -5,7 +5,8 @@
 % `checked` ghi ngày, nguồn và mức đọc. Styles chuẩn không in trường này. Mức đọc:
 %   tóm tắt  — đã mở trang tóm tắt hoặc trang nhà xuất bản, chưa đọc toàn văn
 %   chưa đọc — mới xác minh siêu dữ liệu
-% Không trích một con số từ bài có mức đọc khác "toàn văn". Đọc xong thì sửa `checked`.
+% Số chỉ dùng khi hồ sơ đọc ghi rõ câu văn gốc đã đọc; không lấy số từ bảng trích bị vỡ.
+% Mức thân bài, một phần và tóm tắt phải giữ riêng (hợp đồng C9b, 05/11/2026).
 %
 % Chưa có trong file vì chưa xác minh được (MASTER_RESEARCH_GUIDE §6.4): mục [4] ALQAC 2024,
 % [6] Pham và Phan, [7] Huynh và cộng sự của đề cương; bản ACIIDS 2026 của ViHERMES.
@@ -22,7 +23,7 @@
   publisher = {Curran Associates, Inc.},
   year      = {2020},
   url       = {https://proceedings.neurips.cc/paper_files/paper/2020/file/6b493230205f780e1bc26945df7481e5-Paper.pdf},
-  checked   = {2026-10-11; NeurIPS Proceedings; tóm tắt (arXiv 2005.11401)}
+  checked   = {2026-11-05; arXiv v4; một phần: tóm tắt, p.1-2, đoạn p.4; NeurIPS mới xác nhận trang tồn tại}
 }
 
 @inproceedings{karpukhin2020dpr,
@@ -35,18 +36,18 @@
   year      = {2020},
   doi       = {10.18653/v1/2020.emnlp-main.550},
   url       = {https://aclanthology.org/2020.emnlp-main.550/},
-  checked   = {2026-10-11; ACL Anthology; tóm tắt}
+  checked   = {2026-11-05; ACL Anthology; một phần: tóm tắt, đoạn p.2}
 }
 
 @misc{edge2024graphrag,
   author        = {Edge, Darren and Trinh, Ha and Cheng, Newman and Bradley, Joshua and Chao, Alex and Mody, Apurva and Truitt, Steven and Metropolitansky, Dasha and Ness, Robert Osazuwa and Larson, Jonathan},
-  title         = {From Local to Global: A Graph {RAG} Approach to Query-Focused Summarization},
-  year          = {2024},
+  title         = {From Local to Global: A {GraphRAG} Approach to Query-Focused Summarization},
+  year          = {2025},
   eprint        = {2404.16130},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},
-  url           = {https://arxiv.org/abs/2404.16130},
-  checked       = {2026-10-11; arXiv (năm của bản v1; bản ghi arXiv hiện ghi 2025 theo phiên bản mới nhất); tóm tắt}
+  url           = {https://arxiv.org/abs/2404.16130v2},
+  checked       = {2026-11-05; arXiv v2 (2025-02-19); một phần: tóm tắt, p.3, p.8-9, tìm từ khóa; tiêu đề theo v2}
 }
 
 @inproceedings{guo2025lightrag,
@@ -59,7 +60,7 @@
   year      = {2025},
   doi       = {10.18653/v1/2025.findings-emnlp.568},
   url       = {https://aclanthology.org/2025.findings-emnlp.568/},
-  checked   = {2026-10-11; ACL Anthology; tóm tắt (arXiv 2410.05779)}
+  checked   = {2026-11-05; ACL Anthology; một phần: tóm tắt, p.4-6, p.9}
 }
 
 % ------------------------------------------------------------------ luật theo thời gian, phiên bản
@@ -72,7 +73,7 @@
   archivePrefix = {arXiv},
   primaryClass  = {cs.IR},
   url           = {https://arxiv.org/abs/2510.08109},
-  checked       = {2026-10-11; arXiv; tóm tắt}
+  checked       = {2026-11-05; arXiv v1; đọc thân bài, chưa đọc phụ lục; tài liệu kỹ thuật, chưa ánh xạ ngày lịch}
 }
 
 @incollection{demartim2025satgraph,
@@ -95,7 +96,7 @@
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},
   url           = {https://arxiv.org/abs/2605.23497},
-  checked       = {2026-10-11; arXiv (bài ICAIL 2026 theo MASTER_RESEARCH_GUIDE; chưa thấy bản kỷ yếu); tóm tắt}
+  checked       = {2026-11-05; arXiv v2 (2026-09-25); đọc thân bài, chưa đọc phụ lục; arXiv ghi accepted as full paper at ICAIL 2026, nominated for Best Paper Award; ACM DL bị chặn, chưa xác minh bản kỷ yếu, giữ misc}
 }
 
 @inproceedings{prior2025consolidation,
@@ -108,7 +109,7 @@
   year      = {2025},
   doi       = {10.18653/v1/2025.nllp-1.29},
   url       = {https://aclanthology.org/2025.nllp-1.29/},
-  checked   = {2026-10-11; ACL Anthology; tóm tắt}
+  checked   = {2026-11-05; ACL Anthology; đọc thân bài, chưa đọc phụ lục}
 }
 
 @misc{cymbler2026fiscalqa,
@@ -123,26 +124,28 @@
 }
 
 @inproceedings{han2025lawshift,
-  author    = {Han, Zhuo and Yang, Yi and Feng, Yi and Huang, Wanhong and Xuxing, Ding and Li, Chuanyi and Ge, Jidong and Ng, Vincent},
+  author    = {Han, Zhuo and Yang, Yi and Feng, Yi and Huang, Wanhong and Ding, Xuxing and Li, Chuanyi and Ge, Jidong and Ng, Vincent},
   title     = {{LawShift}: Benchmarking Legal Judgment Prediction Under Statute Shifts},
   booktitle = {Advances in Neural Information Processing Systems},
   volume    = {38},
+  pages     = {133131--133163},
   publisher = {Curran Associates, Inc.},
   year      = {2025},
   doi       = {10.52202/085713-4010},
   url       = {https://papers.nips.cc/paper_files/paper/2025/hash/adf82a0a1d52d93961476458b9566a2b-Abstract-Datasets_and_Benchmarks_Track.html},
-  checked   = {2026-10-11; NeurIPS Proceedings, Datasets and Benchmarks Track; tóm tắt}
+  checked   = {2026-11-05; NeurIPS Datasets and Benchmarks; thân bài p.1-10, thiếu khoảng 2.000 ký tự cuối; chưa đọc phụ lục; tác giả Ding, Xuxing theo PDF (sửa đảo tên Crossref); trang theo Crossref}
 }
 
-@misc{chen2021timeqa,
+@inproceedings{chen2021timeqa,
   author        = {Chen, Wenhu and Wang, Xinyi and Wang, William Yang},
   title         = {A Dataset for Answering Time-Sensitive Questions},
+  booktitle     = {NeurIPS Datasets and Benchmarks 2021},
   year          = {2021},
   eprint        = {2108.06314},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},
   url           = {https://arxiv.org/abs/2108.06314},
-  checked       = {2026-10-11; arXiv; tóm tắt}
+  checked       = {2026-11-05; NeurIPS Datasets and Benchmarks 2021 đã mở bản ghi; một phần: tóm tắt, p.2, p.4, p.7, p.9}
 }
 
 @article{dhingra2022templama,
@@ -154,7 +157,7 @@
   year      = {2022},
   doi       = {10.1162/tacl_a_00459},
   url       = {https://aclanthology.org/2022.tacl-1.15/},
-  checked   = {2026-10-11; ACL Anthology; tóm tắt}
+  checked   = {2026-11-05; ACL Anthology; một phần: tóm tắt, p.2-3}
 }
 
 @inproceedings{louis2023finding,
@@ -172,15 +175,19 @@
 
 % ------------------------------------------------------------------ pháp luật Việt Nam
 
-@misc{nguyen2026vihermes,
+@incollection{nguyen2026vihermes,
   author        = {Nguyen, Long S. T. and Bui, Quan M. and Ngo, Tin T. and Vo, Quynh T. N. and Le, Dung N. H. and Quan, Tho T.},
   title         = {{ViHERMES}: A Graph-Grounded Multihop Question Answering Benchmark and System for {Vietnamese} Healthcare Regulations},
   year          = {2026},
+  booktitle     = {Intelligent Information and Database Systems},
+  pages         = {321--336},
+  publisher     = {Springer},
+  doi           = {10.1007/978-981-92-0071-9_22},
   eprint        = {2602.07361},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},
-  url           = {https://arxiv.org/abs/2602.07361},
-  checked       = {2026-10-11; arXiv; tóm tắt}
+  url           = {https://doi.org/10.1007/978-981-92-0071-9_22},
+  checked       = {2026-11-05; Crossref xác minh metadata bản LNCS, không ghi tên hội nghị; nội dung theo PDF arXiv đã đọc một số mục (SRKG, Seeded Retrieval and Propagation, Conclusion), chưa đối soát toàn văn bản LNCS}
 }
 
 @misc{nguyen2025vlqa,
@@ -203,7 +210,7 @@
   year      = {2021},
   doi       = {10.1109/KSE53942.2021.9648724},
   url       = {https://arxiv.org/abs/2204.10717},
-  checked   = {2026-10-11; doi.org và arXiv 2204.10717; tóm tắt}
+  checked   = {2026-11-05; bản gốc; toàn văn theo báo cáo đọc; không nêu cỡ dữ liệu}
 }
 
 % ------------------------------------------------------------------ đánh giá, đồng thuận, thống kê
@@ -218,7 +225,7 @@
   year      = {2020},
   doi       = {10.18653/v1/2020.findings-emnlp.117},
   url       = {https://aclanthology.org/2020.findings-emnlp.117/},
-  checked   = {2026-10-11; ACL Anthology; tóm tắt}
+  checked   = {2026-11-05; ACL Anthology; một phần: tóm tắt, p.2, p.4}
 }
 
 @article{artstein2008agreement,
@@ -244,7 +251,7 @@
   year      = {2008},
   doi       = {10.1348/000711006X126600},
   url       = {https://doi.org/10.1348/000711006X126600},
-  checked   = {2026-10-11; doi.org (Wiley); tóm tắt (bản PDF của tác giả)}
+  checked   = {2026-11-05; PubMed; chỉ tóm tắt; PDF tác giả trả HTTP 404, chưa đọc toàn văn}
 }
 
 @article{feinstein1990kappa1,
@@ -283,7 +290,7 @@
   year      = {2018},
   doi       = {10.18653/v1/P18-1128},
   url       = {https://aclanthology.org/P18-1128/},
-  checked   = {2026-10-11; ACL Anthology; tóm tắt}
+  checked   = {2026-11-05; ACL Anthology; đọc thân bài, chưa đọc phụ lục; không bàn Holm hay bootstrap theo cụm}
 }
 
 @inproceedings{card2020power,
@@ -345,7 +352,7 @@
   year      = {2009},
   doi       = {10.1561/1500000019},
   url       = {https://doi.org/10.1561/1500000019},
-  checked   = {2026-10-11; doi.org và Crossref; chưa đọc. Crossref ghi tập 4, số 1-2, trang 1-174, có vẻ không khớp độ dài bài: lấy tập, số, trang từ trang đầu của bản PDF rồi mới điền}
+  checked   = {2026-11-05; PDF tác giả: trang đầu và mở đầu; chưa đọc công thức. Chưa chốt tập/trang: PDF ghi 3(4):333-389, Crossref ghi 4(1-2):1-174; Emerald bị chặn, cần đối chiếu bản nhà xuất bản trước khi điền}
 }
 
 % ------------------------------------------------------------------ Bổ sung 05/11/2026
@@ -368,7 +375,7 @@
   eprint = {2611.03576},
   archivePrefix = {arXiv},
   url = {https://arxiv.org/abs/2611.03576},
-  checked = {2026-11-05; arXiv v2, đang phản biện; đọc một phần}
+  checked = {2026-11-05; arXiv v2; một phần: p.1-7, p.10-14, p.27; chưa xác nhận phản biện}
 }
 
 @misc{dong2026vietlegal,

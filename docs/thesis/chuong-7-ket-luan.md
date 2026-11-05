@@ -33,13 +33,13 @@ Chất lượng thước đo là giới hạn cần giải quyết trước. Đ�
 <!-- nguồn: docs/plans/active/master-plan.md, D1–D2 -->
 <!-- nguồn: data/review/test2_llm_v2/calib_score.json; docs/reports/thu-tai-vbhn-20261105.md -->
 
-Bản nháp cũng chưa có cơ sở khẳng định tính mới của bài toán hoặc phương pháp. Những công trình mới có metadata còn chờ đọc bản gốc; sự thiếu một nội dung trong ghi chú repo không phải bằng chứng nội dung đó vắng mặt trong nghiên cứu trước. [CẦN: hoàn tất khảo sát và đối chiếu các công trình gần nhất, giữ đúng phiên bản trích dẫn trong references.bib].
-<!-- nguồn: docs/thesis/chuong-2-co-so-ly-thuyet.md; references.bib -->
+Log khảo sát và báo cáo đọc hiện đã xác nhận các tiền lệ gần về lợi ích lọc theo mốc và hai nút thắt tìm–đọc, gồm Prior, LawInForce-eCFR và NitiBench+ [@prior2026oldfriend] [@yao2026lawinforce] [@akarajaradwong2026nitibenchplus]. Khóa luận chỉ giữ luận điểm hẹp: phép đo pháp luật Việt Nam, nhận diện bãi bỏ và đối chứng cùng dữ liệu giữa ngày văn bản, khoảng phiên bản và lan truyền từ cha. Chưa có bằng chứng cho thứ tự công bố hoặc ưu thế chung; các nguồn bị chặn và phần chưa đọc vẫn có thể đổi cách định vị. [CẦN: đọc đủ các phần và phiên bản còn thiếu đã nêu trong chương tổng quan].
+<!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md; docs/plans/active/master-plan.md, mục 10 -->
 
 ## 7.3. Phần kết luận chờ bộ test cuối
 
 Bảng dưới là vị trí kết luận sau khi có bằng chứng G4, không phải danh sách kết quả được dự đoán. Phải điền cả trường hợp không đủ bằng chứng hoặc khác chiều giả thuyết.
-<!-- nguồn: docs/plans/active/master-plan.md, mục 6 và 7 -->
+<!-- nguồn: docs/plans/active/master-plan.md, mục 6, 7 và 10 -->
 
 | Nội dung | Kết luận chính |
 |---|---|
@@ -55,8 +55,8 @@ Bảng dưới là vị trí kết luận sau khi có bằng chứng G4, không 
 Ưu tiên trước mắt là kiểm nhãn theo câu hỏi, bắt buộc dẫn chứng và ghi thời gian, để người gán độc lập với nhãn hoặc gợi ý AI. Dòng lệch do luật sư phân xử không có phiếu AI. Gold mù từ văn bản gốc và VBHN cần giúp phát hiện lỗi của đồ thị, đồng thời tách lỗi trích/căn PDF khỏi lỗi dựng phiên bản. Chất lượng của bước này quyết định mức độ có thể bảo vệ các kết luận sau cùng.
 <!-- nguồn: docs/plans/active/master-plan.md, mục 5 và 7 -->
 
-Về hệ thống, cần hoàn thiện truy xuất lai ghép và `rel_up` trên dev, đo khả năng generator hiểu thông báo bãi bỏ, và kiểm Verifier trong điều kiện bộ lọc chưa loại hết trích dẫn sai. Các baseline còn thiếu, oracle trên test, kiểm độ bền generator và E7 người kiểm phải được báo theo kế hoạch. Chỉ sau khi khóa dữ liệu, hệ và phân tích mới chạy bộ test cuối; kết quả vòng thử không được dùng để tiếp tục chọn cấu hình.
-<!-- nguồn: docs/plans/active/master-plan.md, mục 6 và 7 -->
+Về hệ thống, cần hoàn thiện truy xuất lai ghép và `rel_up` trên dev, đo khả năng generator hiểu thông báo bãi bỏ, và kiểm Verifier trong điều kiện bộ lọc chưa loại hết trích dẫn sai. Các baseline còn thiếu, kiểm độ bền generator và E7 người kiểm phải được báo theo kế hoạch. X8 phải so căn cứ được cấp sẵn đúng mốc với căn cứ hiện hành ở T1 (đối chứng), T2, T3, T6, trên dev trước rồi bộ cuối; oracle dev chưa thay được phép so này. [CHỜ COLAB: X8 đúng mốc/hiện hành và phân rã lỗi tìm–đọc]. Chỉ sau khi khóa dữ liệu, hệ và phân tích mới chạy bộ test cuối; kết quả vòng thử không được dùng để tiếp tục chọn cấu hình.
+<!-- nguồn: docs/plans/active/master-plan.md, mục 6, 7 và 10 -->
 
 Về phạm vi dài hạn, xử lý đầy đủ ngoại lệ theo đối tượng, không gian và xung đột quy phạm cần một thiết kế và bằng chứng riêng. Những nội dung này nằm ngoài giới hạn đề cương hiện tại, không được hứa là kết quả của lần chạy sắp tới. [CẦN: tác giả và GVHD rà cách trình bày đóng góp, phạm vi và các phần chưa hoàn tất trước khi nộp].
 <!-- nguồn: docs/DeCuongKLTN_23521635_23521643_UIT.docx -->

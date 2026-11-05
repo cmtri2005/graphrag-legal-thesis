@@ -160,3 +160,75 @@ def test_pending_keeps_old_draw_and_prompt_but_omits_done_calibration_and_dev(tm
     assert result.read_bytes() == before
     with pytest.raises(FileExistsError):
         pending(out, old, [result], data, key)
+
+
+def test_inventory_draw_excludes_old_attempts_and_is_order_independent(tmp_path):
+    from test2_packs import inventory_draw
+    inventory = tmp_path / 'pool.tsv'
+    inventory.write_text('lineage\ttầng\ttrạng thái\tnguồn\n'
+                         'a\tT2\tunfiltered\tx\n'
+                         'b\tT2\tquestion_attempted_rejected_or_pending\tx\n'
+                         'c\tT2\tunfiltered\tx\n'
+                         'd\tT2\texcluded:dev_document\tx\n')
+    seed = 'vilextime-final-0511'
+    picked = inventory_draw(inventory, {'T2': ['a', 'b', 'c', 'd']}, {'T2': 2}, seed)
+    assert set(picked) == {'a', 'c'}
+    assert inventory_draw(inventory, {'T2': ['d', 'c', 'b', 'a']}, {'T2': 2}, seed) == picked
+    with pytest.raises(ValueError, match='chỉ còn 2'):
+        inventory_draw(inventory, {'T2': ['a', 'b', 'c', 'd']}, {'T2': 3}, seed)
+    with pytest.raises(ValueError, match='quota'):
+        inventory_draw(inventory, {}, {'invented': 1}, seed)
+
+
+def test_inventory_build_refuses_overwrite_and_private_inside_packs(tmp_path):
+    from test2_packs import build
+    out, private = tmp_path / 'packs', tmp_path / 'private'
+    kwargs = dict(inventory=tmp_path / 'pool.tsv', quotas={}, private_dir=private)
+    with pytest.raises(ValueError, match='tách khỏi'):
+        build(out, tmp_path, **{**kwargs, 'private_dir': out / 'private'})
+    out.mkdir()
+    with pytest.raises(FileExistsError):
+        build(out, tmp_path, **kwargs)
+
+
+def test_pack_size_forty_bounds_worker_input(tmp_path):
+    from test2_packs import write_packs
+    out = tmp_path / 'packs'
+    out.mkdir()
+    write_packs(out, [{'item': str(i)} for i in range(81)], 40)
+    assert [len(p.read_text().splitlines()) for p in sorted(out.glob('*.jsonl'))] == [40, 40, 1]
+
+
+def test_hint_version_lookup_uses_provision_index_without_changing_rows():
+    import sqlite3
+    from test2_packs import HintConnection
+    db = sqlite3.connect(':memory:')
+    db.executescript('CREATE TABLE units (layer TEXT, provision_id TEXT, ordinal INTEGER, '
+                     'local_from TEXT, local_to TEXT, text TEXT); '
+                     'CREATE INDEX units_layer ON units(layer); '
+                     'CREATE INDEX units_provision ON units(provision_id);')
+    db.executemany('INSERT INTO units VALUES (?,?,?,?,?,?)', [
+        ('version', 'p', 2, '2021', None, 'new'),
+        ('asis', 'p', None, None, None, 'base'),
+        ('version', 'q', 1, '2020', None, 'other'),
+        ('version', 'p', 1, '2020', '2021', 'old')])
+    db.execute('PRAGMA query_only=ON')
+    sql = "SELECT ordinal, local_from, local_to, text FROM units WHERE layer='version' AND provision_id=? ORDER BY ordinal"
+    planned = HintConnection(db)
+    assert planned.execute(sql, ('p',)).fetchall() == db.execute(sql, ('p',)).fetchall()
+    assert any('units_provision' in r[3] for r in planned.execute('EXPLAIN QUERY PLAN ' + sql, ('p',)))
+
+
+def test_hint_term_cache_preserves_counts_and_absent_terms():
+    import sqlite3
+    from test2_packs import HintConnection
+    db = sqlite3.connect(':memory:')
+    db.executescript("CREATE TABLE units (id TEXT); CREATE VIRTUAL TABLE words USING fts5(text);"
+                     "CREATE VIRTUAL TABLE units_vocab USING fts5vocab(words, 'row');"
+                     "INSERT INTO words VALUES ('alpha beta'); INSERT INTO words VALUES ('alpha gamma');")
+    planned = HintConnection(db)
+    sql = 'SELECT term, doc FROM units_vocab WHERE term IN (?,?,?)'
+    first, second = ('alpha', 'beta', 'absent'), ('alpha', 'gamma', 'absent')
+    assert dict(planned.execute(sql, first)) == dict(db.execute(sql, first))
+    assert dict(planned.execute(sql, second)) == dict(db.execute(sql, second))
+    assert planned.frequencies == {'alpha': 2, 'beta': 1, 'gamma': 1, 'absent': None}

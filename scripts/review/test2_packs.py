@@ -27,6 +27,7 @@ import random
 import shutil
 import subprocess
 import sys
+from concurrent.futures import ProcessPoolExecutor
 from datetime import date
 from pathlib import Path
 
@@ -117,10 +118,91 @@ def published_scope(data: Path) -> tuple[set[str], set[str]]:
     return {r["lineage_id"] for r in main}, set(docs.values())
 
 
-def build(out: Path, data: Path, second_round: bool = False, third: bool = False) -> None:
+def inventory_draw(inventory: Path, pool: dict[str, list[str]], quotas: dict[str, int], seed: str) -> list[str]:
+    """Draw only fresh rows from an explicitly audited inventory, in stable order."""
+    with inventory.open(encoding="utf-8", newline="") as f:
+        fresh = {r["lineage"] for r in csv.DictReader(f, delimiter="\t") if r["trạng thái"] == "unfiltered"}
+    if set(quotas) - set(QUOTA) or any(type(n) is not int or n < 0 for n in quotas.values()):
+        raise ValueError("quota phải là số nguyên không âm theo tầng của QUOTA")
+    rng, picked = random.Random(seed), []
+    for st, n in sorted(quotas.items()):
+        candidates = sorted(set(pool.get(st, [])) & fresh)
+        if n > len(candidates):
+            raise ValueError(f"{st}: yêu cầu {n}, chỉ còn {len(candidates)} ứng viên mới")
+        rng.shuffle(candidates)
+        picked.extend(candidates[:n])
+    return picked
+
+
+class HintConnection:
+    """Keep version lookup on its provision index; SQLite may choose layer instead.
+
+    This changes only the query plan on the read-only corpus, never its rows.
+    The native schema used in small fixtures need not have the optional index.
+    """
+    def __init__(self, db):
+        self.db = db
+        self.indexed = any(r[1] == "units_provision" for r in db.execute("PRAGMA index_list(units)"))
+        self.frequencies = {}
+
+    def execute(self, sql, params=()):
+        if sql.startswith("SELECT term, doc FROM units_vocab WHERE term IN ("):
+            # Read-only FTS vocabulary counts are expensive and repeat across
+            # legal provisions. Cache exact counts, including absent terms.
+            missing = list(dict.fromkeys(t for t in params if t not in self.frequencies))
+            if missing:
+                found = dict(self.db.execute(
+                    "SELECT term, doc FROM units_vocab WHERE term IN (" +
+                    ",".join("?" for _ in missing) + ")", missing))
+                self.frequencies.update((t, found.get(t)) for t in missing)
+            return iter((t, self.frequencies[t]) for t in dict.fromkeys(params)
+                        if self.frequencies[t] is not None)
+        if self.indexed:
+            sql = sql.replace("FROM units WHERE layer='version' AND provision_id=?",
+                              "FROM units INDEXED BY units_provision WHERE layer='version' AND provision_id=?")
+        return self.db.execute(sql, params)
+
+    def __getattr__(self, name):
+        return getattr(self.db, name)
+
+
+def pack_corpus(path: Path):
+    from vilexgraph.framework.corpus import Corpus
+    corpus = Corpus(path)
+    corpus.db = HintConnection(corpus.db)
+    return corpus
+
+
+def pack_hints_chunk(args: tuple[Path, list[dict]]) -> dict:
+    """Same native hints, with a separate read-only SQLite connection per process."""
+    from kiem_hints import hints
+    corpus_path, rows = args
+    # The input database is read-only and fixed for this build. Reuse its page
+    # cache across jobs instead of reopening the multi-GB index per lineage.
+    global _hint_corpus
+    if "_hint_corpus" not in globals() or _hint_corpus.path != corpus_path:
+        _hint_corpus = pack_corpus(corpus_path)
+        _hint_corpus.db.execute("PRAGMA cache_size=-65536")
+    return hints(rows, _hint_corpus)
+
+
+def build(out: Path, data: Path, second_round: bool = False, third: bool = False, *,
+          inventory: Path | None = None, quotas: dict[str, int] | None = None,
+          seed: str = SEED, private_dir: Path | None = None, pack_size: int = PACK,
+          hint_workers: int = 1, hints_cache: Path | None = None) -> None:
+    if inventory and (second_round or third or not private_dir or quotas is None):
+        raise ValueError("build --inventory cần --quota, --private-dir và không dùng --second/--third")
+    if not 1 <= pack_size <= 40:
+        raise ValueError("pack-size phải từ 1 đến 40")
+    if not 1 <= hint_workers <= 4:
+        raise ValueError("hint-workers phải từ 1 đến 4")
+    if inventory and (out.exists() or private_dir.exists()):
+        raise FileExistsError("gói/khóa đã tồn tại; dùng thư mục mới, không ghi đè")
+    if inventory and (private_dir.resolve().is_relative_to(out.resolve()) or
+                      out.resolve().is_relative_to(private_dir.resolve())):
+        raise ValueError("private-dir phải tách khỏi thư mục gói")
     from export_release import final_labels
     from kiem_hints import hints, versions_of
-    from vilexgraph.framework.corpus import Corpus
 
     rows = [json.loads(l) for g in GROUPS for l in (data / f"derived/vilextime/{g}.jsonl").open(encoding="utf-8")]
     by_lineage: dict[str, list[dict]] = collections.defaultdict(list)
@@ -137,14 +219,19 @@ def build(out: Path, data: Path, second_round: bool = False, third: bool = False
             reviews[lineage_of[i]].append(rev)
     truth = {lid: t for lid, revs in reviews.items() if (t := lineage_truth(revs))}
 
-    rng = random.Random(SEED)
+    rng = random.Random(seed)
     pool: dict[str, list[str]] = collections.defaultdict(list)
     for lid in sorted(by_lineage):
         # a lineage someone already labelled is calibration or was dropped, never a fresh candidate
         if lid not in used and lid not in reviews and doc_of[lid] not in dev_docs:
             pool[stratum(by_lineage[lid][0])].append(lid)
-    picked, later = draw(pool, rng)
-    work = out.parent.parent
+    if inventory:
+        picked, later = inventory_draw(inventory, pool, quotas, seed), []
+    else:
+        picked, later = draw(pool, rng)
+    work = private_dir if inventory else out.parent.parent
+    if inventory:
+        work.mkdir(parents=True, exist_ok=False)
     tag = "_3" if third else "_2" if second_round else ""
     if third:
         taken, r3 = set(read_tsv(work / "key_loc.tsv")), random.Random(SEED + "-r3")
@@ -176,8 +263,25 @@ def build(out: Path, data: Path, second_round: bool = False, third: bool = False
                     "--ids", str(work / f"ids{tag}.txt"), "--release", str(work / f"rows{tag}.jsonl"),
                     "--out", str(work / f"evidence{tag}.jsonl")], check=True)
     evidence = {e["id"]: e for e in map(json.loads, (work / f"evidence{tag}.jsonl").open(encoding="utf-8"))}
-    corpus = Corpus(data / "derived/corpus/index.sqlite")
-    hint = hints(item_rows, corpus)
+    corpus = pack_corpus(data / "derived/corpus/index.sqlite")
+    hint = {}
+    if hints_cache:
+        hint = {r["id"]: r for r in map(json.loads, hints_cache.open(encoding="utf-8"))}
+        if set(hint) - {r["id"] for r in item_rows}:
+            raise ValueError("hints-cache có mục ngoài lần rút này; dùng checkpoint cùng đầu vào")
+    missing = [lid for lid in sorted(items) if not all(r["id"] in hint for r in by_lineage[lid])]
+    if hint_workers == 1:
+        hint.update(hints([r for lid in missing for r in by_lineage[lid]], corpus))
+    else:
+        jobs = [(data / "derived/corpus/index.sqlite", by_lineage[lid]) for lid in missing]
+        with ProcessPoolExecutor(max_workers=hint_workers) as executor, (work / "hints.jsonl").open("x", encoding="utf-8") as checkpoint:
+            checkpoint.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in hint.values())
+            for n, result in enumerate(executor.map(pack_hints_chunk, jobs), 1):
+                hint.update(result)
+                checkpoint.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in result.values())
+                checkpoint.flush()
+                if n % 25 == 0:
+                    print(f"  hints {n}/{len(items)} lineage", flush=True)
 
     def record(lid: str) -> dict:
         rs = sorted(by_lineage[lid], key=lambda r: r["as_of"])
@@ -195,7 +299,7 @@ def build(out: Path, data: Path, second_round: bool = False, third: bool = False
                 "van_ban_goc": evidence[rs[0]["id"]]["base"],
                 "van_ban_tac_dong": list(actors.values())}
 
-    write_packs(out, [record(lid) for lid in items])
+    write_packs(out, [record(lid) for lid in items], pack_size)
     key = work / "key_loc.tsv"
     if second_round or third:
         with key.open("a", encoding="utf-8") as f:
@@ -209,17 +313,17 @@ def build(out: Path, data: Path, second_round: bool = False, third: bool = False
             role, (fact, codes) = ("hieu_chuan", truth[lid]) if lid in truth else ("ung_vien", ("", []))
             f.write(f"{lid}\t{stratum(by_lineage[lid][0])}\t{role}\t{fact}\t{','.join(codes)}\n")
     calib = collections.Counter((stratum(by_lineage[l][0]), truth[l][0]) for l in truth)
-    print(f"{len(items)} mục ({len(truth)} hiệu chuẩn, {len(picked)} ứng viên) -> {-(-len(items) // PACK)} gói ở {out}")
+    print(f"{len(items)} mục ({len(truth)} hiệu chuẩn, {len(picked)} ứng viên) -> {-(-len(items) // pack_size)} gói ở {out}")
     print("  hiệu chuẩn:", dict(sorted(calib.items())))
-    print("  ứng viên:", {s: min(n, len(pool[s])) for s, n in QUOTA.items()}, "· kho còn:",
+    print("  ứng viên:", dict(collections.Counter(stratum(by_lineage[l][0]) for l in picked)), "· kho còn:",
           {s: len(v) for s, v in sorted(pool.items())})
     print(f"  khóa: {key}")
 
 
-def write_packs(out: Path, records: list[dict]) -> None:
-    for n in range(0, len(records), PACK):
-        with (out / f"pack_{n // PACK + 1:02d}.jsonl").open("w", encoding="utf-8") as f:
-            f.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in records[n:n + PACK])
+def write_packs(out: Path, records: list[dict], pack_size: int = PACK) -> None:
+    for n in range(0, len(records), pack_size):
+        with (out / f"pack_{n // pack_size + 1:02d}.jsonl").open("w", encoding="utf-8") as f:
+            f.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in records[n:n + pack_size])
 
 
 def install_instructions(out: Path, old: Path) -> None:
@@ -413,6 +517,13 @@ if __name__ == "__main__":
     ap.add_argument("--key", type=Path, help="khóa cho score; mặc định OUT/../../key_loc.tsv")
     ap.add_argument("--second", action="store_true", help="build: đợt 2 cùng thứ tự rút")
     ap.add_argument("--third", action="store_true", help="build: đợt 3, chỉ T2, seed mới, bỏ lineage đã trong khóa")
+    ap.add_argument("--inventory", type=Path, help="build: pool.tsv đã kiểm loại trừ; chỉ rút trạng thái unfiltered")
+    ap.add_argument("--quota", type=json.loads, help='build: JSON số ứng viên mỗi tầng')
+    ap.add_argument("--seed", default=SEED, help="build: seed rút và trộn gói")
+    ap.add_argument("--private-dir", type=Path, help="build --inventory: thư mục mới chứa khóa/nguồn, tách khỏi gói")
+    ap.add_argument("--pack-size", type=int, default=PACK, help="build: số mục/gói, tối đa 40")
+    ap.add_argument("--hint-workers", type=int, default=1, help="build: 1–4 tiến trình dựng cùng gợi ý máy, không gọi LLM")
+    ap.add_argument("--hints-cache", type=Path, help="build: checkpoint gợi ý native từ đúng lần rút/corpus này")
     ap.add_argument("--limit", type=int, help="qpack: chỉ rút chừng này mục để thử")
     ap.add_argument("--model", help="qcheck: ai viết câu hỏi")
     ap.add_argument("--provider", default="claude-code", help="qcheck: nguồn thực tế, ví dụ codex hoặc claude-code")
@@ -421,7 +532,9 @@ if __name__ == "__main__":
     ap.add_argument("--codes", default="transitional_rule", help="redo: mã đã sửa trong lời dặn, phẩy ngăn cách")
     args = ap.parse_intermixed_args()
     if args.cmd == "build":
-        build(args.out, args.data, args.second, args.third)
+        build(args.out, args.data, args.second, args.third, inventory=args.inventory, quotas=args.quota,
+              seed=args.seed, private_dir=args.private_dir, pack_size=args.pack_size,
+              hint_workers=args.hint_workers, hints_cache=args.hints_cache)
     elif args.cmd == "redo":
         redo(args.out, args.old, args.result[0], set(args.codes.split(",")))
     elif args.cmd == "pending":
