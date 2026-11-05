@@ -1,342 +1,392 @@
-# Master Plan — Khóa luận Temporal-Aware KG RAG
+# Master Plan — Khóa luận và paper Temporal-Aware KG-RAG
 
-Date: 2026-09-14 · Cập nhật gần nhất: 2026-11-04 (Tổng quan, Mốc, Nhật ký)
-
-> **Nguồn sự thật về tiến độ dự án.** Timeline bám theo mục "Kế hoạch thực hiện"
-> trong `DeCuongKLTN_23521635_23521643.docx` (01/09/2026 – 01/02/2027).
-> Mọi tài liệu kế hoạch khác chỉ còn giá trị lịch sử.
-
-**Cập nhật lịch 04/11:** 01/02/2027 và các khoảng giai đoạn dưới đây là lịch đề cương cũ.
-Hạn chạy thực nghiệm là **31/10/2026, đã trễ**; hạn nộp khóa luận thật là **cuối 12/2026**.
-Chi tiết chạy hiện theo `codex-chot-du-lieu-va-thuc-nghiem.md`; chưa đối soát lại toàn bộ P1–P9.
+Date: 2026-11-05 · Viết lại toàn bộ. Bản cũ và mọi plan cũ đọc ở commit `51f36c7`.
 
 ## Status
 
-Active. E1 và sáu hệ sinh đã có kết quả test trên v1.0 và test 2; GĐ5–7 đang làm.
-Chưa đủ các hệ, gold độc lập và phân tích lỗi do người; chưa chốt điểm quyết định B7.
+Active. Đây là **plan duy nhất** của dự án. Lead: Claude. Thực thi: Codex. Duyệt và commit: CMT.
+CMT đã trả lời Q1–Q3 và cho commit ngày 05/11. Còn Q4, Q7, Q8 ở mục "Cần chốt".
 
-## Cách đọc và cập nhật file này
+## Outcome
 
-- Ký hiệu trạng thái: ✅ xong · 🟡 đang làm / làm dở · ⬜ chưa bắt đầu · ⛔ bị chặn.
-- **Chỉ đổi trạng thái khi có bằng chứng**: file, commit, lệnh chạy được hoặc số
-  đo. Viết bằng chứng vào cột "Bằng chứng / tiêu chí xong".
-- Mỗi lần đổi trạng thái: cập nhật bảng Tổng quan và thêm một dòng vào Nhật ký.
-- Quyết định lâu dài ghi vào `docs/decisions/`; ở đây chỉ đặt link.
-- Phụ trách theo đề cương: **CMT** = Cao Minh Trí · **NMT** = Nguyễn Minh Trí.
+Đến 26/12/2026: nộp khóa luận khớp đề cương, có demo. Đến 01/2027: nộp một paper mà mỗi con số đều truy được về một lần chạy.
+
+"Xong" nghĩa là đạt đủ cổng G0–G5. Không có cổng nào yêu cầu hệ đề xuất phải thắng. Đề cương hứa hai đóng góp (ViLexTime và kiến trúc) và ba câu hỏi nghiên cứu. Đề cương không hứa một mức điểm.
 
 ---
 
-## 1. Tổng quan
+## 1. Đọc trong 2 phút
 
-| GĐ | Thời gian | Nội dung | Trạng thái | Việc xong | So với kế hoạch |
-|---|---|---|---|---:|---|
-| 1 | 01/09 – 14/09 | Hoàn thiện đề cương | 🟡 | 2/6 | **Quá hạn 6 ngày** (P1.2, P1.5) |
-| 2 | 15/09 – 05/10 | Thu thập & xử lý dữ liệu | ✅ | 12/12 | Backfill v2 xong, snapshot đóng băng trước M1 |
-| 3 | 06/10 – 26/10 | Xây dựng đồ thị tri thức (L0–L3) | 🟡 | 13/19 | Bắt đầu sớm; **đường găng** |
-| 4 | 27/10 – 16/11 | Bộ dữ liệu ViLexTime | 🟡 | 5/9 | Bắt đầu sớm từ 21/09 ([plan](phase-4-vilextime.md)); còn nhãn người, luật sư, gold độc lập |
-| 5 | 17/11 – 30/11 (lịch cũ) | Cài đặt & đánh giá đường cơ sở | 🟡 | Chưa đối soát P5 | Test `b1 b2ctx b5 b7 b7pp proposed`: `runs/E3_v1/test`, `runs/E3_test2/test`; còn các hệ C2–C5 |
-| 6 | 01/12 – 21/12 (lịch cũ) | Hệ thống đề xuất (L4–L5) | 🟡 | Chưa đối soát P6 | `proposed.jsonl` ở hai bộ E3; chưa xác nhận đầy đủ P6.1–P6.7 |
-| 7 | 22/12 – 04/01 (lịch cũ) | Thực nghiệm & phân tích | 🟡 | Chưa đối soát P7 | Bảng E3 riêng hai bộ (`docs/reports/ket_qua_e3_*.md`, `6b53896`); E7 do máy, chờ người kiểm |
-| 8 | 05/01 – 11/01 | Viết bài báo khoa học | ⬜ | 0/3 | — |
-| 9 | Cuối 12/2026 | Hoàn thiện khóa luận | ⬜ | 0/5 | Hạn nộp mới; chưa có bằng chứng để đổi trạng thái viết/nộp |
-| | | **Tổng** | | **Chưa đối soát** | Không suy ra số việc hoàn tất từ việc đã có sáu hệ E3 |
+**Đang ở đâu.** Theo đề cương, hôm nay vẫn thuộc giai đoạn 4 (24/10–13/11). Hai giai đoạn hệ thống và thực nghiệm còn phía trước. Mốc 31/10 của GVHD đã lỡ, nhưng hạn đề cương thì chưa trễ. Còn 7 tuần, đủ để làm đúng một lần. CMT báo hai người gán được ngay trong cuối tuần 07–08/11, nên lịch dưới đây rút ngắn và giai đoạn 4 kịp hạn 13/11.
 
-### Mốc kiểm tra
+**Vấn đề thật không phải điểm thấp.** Vấn đề là chúng ta chưa tin được thước đo. Nhãn chưa đáng tin, đáp án chuẩn lấy từ chính đồ thị của hệ, và hệ đã chạy chưa phải hệ đề cương mô tả. Khi thước đo còn lỗi, điểm cao hay thấp đều chưa nói được gì.
 
-| Mốc | Hạn | Điều phải chứng minh được | Trạng thái |
+**Hướng đi.** Sửa thước đo trước, rồi đo đúng một lần:
+
+1. Dọn repo, chỉ còn một plan (G0).
+2. Dựng **bộ test cuối** từ câu hệ chưa từng chạy, do người kiểm, đúng tinh thần đề cương (G1, G2).
+3. Kiểm đáp án bằng nguồn độc lập với đồ thị (G2).
+4. Hoàn thiện hệ đúng L4–L5 của đề cương, chỉ tinh chỉnh trên `dev` (G3).
+5. Khai báo trước, chạy test một lần, báo cáo mọi kết quả kể cả kết quả xấu (G4).
+
+v1.0 và test 2 không bị bỏ. Chúng trở thành hai vòng thử có khai báo, và phần lặp lại của paper.
+
+---
+
+## 2. Nguồn sự thật
+
+Khi hai nơi mâu thuẫn, nơi đứng trên đúng.
+
+| Thứ tự | Câu hỏi | Đọc ở đâu |
+|---|---|---|
+| 1 | Đã cam kết gì | `docs/DeCuongKLTN_23521635_23521643_UIT.docx` (không bao giờ sửa, xóa) |
+| 2 | Quy tắc phân tích, cấu hình đã khóa | `docs/decisions/0005-ke-hoach-phan-tich.md` và các ADR khác |
+| 3 | Thế nào là một câu hỏi đúng | `docs/vilextime-dinh-nghia.md`, `docs/vilextime-the-gan-nhan.md`, `docs/vilextime-annotation.md` |
+| 4 | Đang làm gì, tiếp theo là gì | File này |
+| 5 | Một con số đến từ đâu | `runs/README.md` trỏ tới file điểm trong `runs/` |
+| 6 | Bộ dữ liệu là gì | `data/vilextime_dataset/manifest.json`, `docs/vilextime-datasheet.md` |
+| 7 | Hệ làm gì thật | `src/vilexgraph/framework/`, `tests/` |
+
+Số test 2: chỉ lấy Accuracy từ `runs/E3_test2/rescore/`. Lần chấm đầu đã sai vì thiếu đáp án ngắn.
+
+---
+
+## 3. Chẩn đoán
+
+Xếp theo mức nguy hiểm cho kết luận. Mọi số đo lại ngày 05/11.
+
+### D1. Nhãn chưa đáng tin
+
+- Đồng thuận hai người trên 246 dòng: AC1 **0,377** [0,25; 0,50], ngưỡng 0,80. Theo nhóm: T1 0,88, T2 0,27, T3 0,38, T6 0,22.
+- Người A ghi `dat` 900/971 dòng, người B 230/385. Theo hướng dẫn 3.0 có 101 dòng lệch: 97 dòng là A `dat`, B `khong_dat`. Luật sư đứng về phía B 87/101, nhưng lúc đó có phiếu Claude hỗ trợ.
+- A gán khoảng 5 giây một dòng (đo 26/10), nên đây chưa phải phép đo đồng thuận thật. Phải nêu số này khi báo cáo.
+- 90/211 dòng test của v1.0 chỉ có nhãn Codex (T1 75, T6 15). Luật sư kiểm mẫu đồng ý 43/50, dưới ngưỡng 45/50. T2, T3 của test v1.0 thì do người chốt.
+- Test 2 (227 dòng) hoàn toàn là nhãn LLM, chưa từng so với người. Lời dặn v2 thử trên 68 câu chỉ đạt AC1 0,530.
+
+**Lệch đề cương:** đề cương ghi "kiểm định thủ công; LLM chỉ hỗ trợ diễn đạt câu hỏi". Đây là chỗ lệch lớn nhất cần sửa.
+
+### D2. Đáp án tự chấm chính nó
+
+Phiên bản đúng được dẫn từ cùng đồ thị mà hệ dùng. Vì vậy TVER = 0 của `b7pp` phần lớn do cách dựng, chưa phải bằng chứng.
+- Gold độc lập: `gold_A`, `gold_B` trống 0/75; phiếu `gold_sample.tsv` 0/120 và đã cũ.
+- M2 (100 truy vấn đối chiếu tay) chưa đạt. Recall sự kiện sửa đổi mới 62,2% (5.007/8.046 cặp), dù precision 58/60.
+- Reviewer sẽ hỏi điều này đầu tiên.
+
+### D3. Hệ đã chạy chưa phải hệ trong đề cương
+
+L4 hứa kết hợp từ vựng, ngữ nghĩa và đồ thị. `proposed` đã chạy test chỉ dùng từ vựng. `proposed2` (lai ghép và đồ thị đi lên cha) mới có trên dev, chưa sinh câu trả lời. Verifier (L5) chưa bác câu nào trên dev, vì bộ lọc đã loại hết trước đó.
+
+### D4. Bộ test lệch và nhỏ
+
+Test v1.0: T1 chiếm 58%, T3 chỉ 4 lineage, không có T5. Cả v1.0 lẫn test 2 đều đã chạy, nên không còn tinh chỉnh dựa trên chúng được. XN1 ủng hộ ở v1.0 (+0,051) nhưng chưa đủ bằng chứng ở test 2 (+0,028 [−0,014; +0,072]).
+
+### D5. "Điểm thấp" thực ra là ba chuyện khác nhau
+
+| Khâu | v1.0 (`b7pp`) | Test 2 (`b7pp`) | Đọc thế nào |
 |---|---|---|---|
-| M1 | 05/10 | **Snapshot v2** đóng băng sau backfill, tải về kiểm tra được ([plan](../completed/2026-09-17-backfill-corpus-v2.md)) | ✅ (17/09, trước hạn) |
-| M2 | 26/10 | Chuỗi phiên bản thật trong Neo4j; `snapshot(u,t)` đúng trên 100 truy vấn đối chiếu tay | ⬜ |
-| M3 | 16/11 (lịch cũ) | ViLexTime đủ 1.150 câu; Cohen κ ≥ 0,6 trên 300 câu | 🟡 v1.0 final đã đóng băng (`3e487c4`, tag `vilextime-v1.0`); test 2 nhãn LLM (`a36039d`); chưa xác nhận đạt tiêu chí cũ về cỡ mẫu/nhãn người |
-| M4 | 31/10, đã trễ | **Điểm quyết định B7**: chọn hướng đóng góp phương pháp hay tài nguyên–phân tích | 🟡 v1.0 XN1 ủng hộ; test 2 XN1 không đủ bằng chứng (`runs/E3_v1/test/confirm.json`, `runs/E3_test2/rescore/confirm.json`). Chưa chốt; quyết định của nhóm |
-| M5 | 21/12 (lịch cũ) | Hệ thống end-to-end trả lời (x, t) kèm trích dẫn đã qua Verifier | 🟡 Có `proposed.jsonl` và provenance trong hai bộ E3 (`a36039d`); chưa xác nhận đủ phạm vi mốc cũ |
-| M6 | 31/10, đã trễ | Đủ kết quả A1–A7, phân rã theo T1–T6 | 🟡 E1, sáu hệ E3 và bảng riêng hai bộ đã có (`a36039d`, `6b53896`); ablation và các hệ còn lại chưa đủ |
-| M7 | 11/01 | Nộp bài báo | ⬜ |
-| M8 | Cuối 12/2026 | Nộp khóa luận, demo chạy được | ⬜ Chưa có bằng chứng nộp/demo; 01/02/2027 là lịch cũ |
+| Tìm: đáp án có trong top 20 | 0,839 (T2: 0,978) | **0,529** (T2: 0,583) | Test 2 khó tìm hơn hẳn. Một lý do có thể: lời hỏi ít trùng chữ với đáp án hơn (0,30 so với 0,48). Chưa kiểm nguyên nhân |
+| Đọc: đúng khi đã có căn cứ | 0,757 | 0,583 | Generator 4B đọc chưa tốt. Trần ngữ cảnh đúng trên dev là 0,854 |
+| Nhận ra đã bãi bỏ | 0/15 | 1/16 | Ngay cả ngữ cảnh đúng cũng chỉ 6/21 trên dev |
 
-### Đường găng
+Ngoài ra, `b1` để trống 182/196 câu có đáp án. Vậy RQ1 ở vế "LLM không truy xuất" **chưa đo được**, dù XN9 ghi "ủng hộ". Vế RAG phẳng thì đã có số: TVER của `b2ctx` là 0,471 (v1.0) và 0,682 (test 2).
 
-Mọi việc phía sau đều phụ thuộc vào việc có **chuỗi phiên bản thật**:
+### D6. Thiếu kỷ luật
+
+15 plan cùng "active", một hướng dẫn 2.394 dòng, nhiều lịch khác nhau. Việc đổi hướng theo từng phiên agent. Đây là lý do mọi thứ mơ hồ. Mục 8 và mục 9 xử lý chuyện này.
+
+### Điều đã có và nói được ngay
+
+Đây là phần tốt, không phải làm lại:
+- Lọc thời gian giúp rõ: XN3 ủng hộ ở cả hai bộ (+0,138 và +0,047).
+- RAG phẳng trích nhiều điều khoản hết hiệu lực (RQ1, vế RAG).
+- Phần lớn lợi ích đến từ lọc, chưa thấy nhiều từ đồ thị trực tuyến: `proposed` − `b7pp` chỉ +0,019 [+0,005; +0,039] ở v1.0, và chứa 0 ở test 2. Đây chính là loại câu trả lời RQ3 cần.
+- Đường ống, scorer, kế hoạch khai báo trước và 615 test đều chạy được. Kho văn bản và chuỗi phiên bản đã có.
+- Kho ứng viên còn dư: T2 5.427, T6 2.828, T1 2.495, T3 475, T5 201 lineage. **Thiếu giờ người, không thiếu dữ liệu.** Không cần cào thêm.
+
+---
+
+## 4. Đối chiếu đề cương
+
+| Đề cương cam kết | Hiện trạng | Việc còn lại | Cổng |
+|---|---|---|---|
+| RQ1: mức lỗi sai phiên bản của LLM và RAG | Có vế RAG; vế LLM chưa đo được | Bảng LLM không truy xuất, 2–3 model | G4 |
+| RQ2: đồ thị theo phiên bản so với RAG phẳng, GraphRAG phi thời gian | Đã so bằng `proposed` chỉ từ vựng | Chạy `proposed2`; đủ `b4`, `b5`, `b6` | G4 |
+| RQ3 và giả thuyết: đồ thị hay chỉ lọc | Thang 5 nấc đã có, kết quả chưa nhất quán | Chạy lại trên bộ cuối | G4 |
+| ViLexTime 1.100–1.300 cặp, T1–T6 theo Bảng 1 | Xem mục 5 | Kiểm silver, thêm T6, T1 | G2 |
+| Kiểm định thủ công, LLM chỉ diễn đạt | Lệch (D1) | Bộ cuối do người gán | G2 |
+| L0–L3, kiểm chứng snapshot | Có; M2 chưa đạt | Đối chiếu VBHN, gold mù | G2 |
+| L4 lai ghép có ràng buộc thời gian | Có trên dev | Khóa `proposed2` | G3 |
+| L5 sinh, trích dẫn, Temporal Verifier | Có; Verifier chưa tác động | Đo Verifier khi không có bộ lọc; xử lý T6 | G3 |
+| Baseline: LLM; BM25, dense, lai; GraphRAG; KG phân cấp; lọc siêu dữ liệu | Có cấu hình; `b2 b3 b4 b6` chưa chạy test | Chạy trên bộ cuối | G4 |
+| Recall@k, MRR, TV-Recall, Accuracy, EM/F1, TVER, VCR, TCS | Có trong scorer | Giữ nguyên | G4 |
+| LLM-as-judge | Có công cụ, chưa hiệu chuẩn | 100 mẫu người (C4) | G4 |
+| Thí nghiệm chuyển miền | Chưa có | Phân rã theo miền (C5), ghi lệch | G4 |
+| Giao diện minh họa | Chưa có | Demo một file (E3) | G5 |
+
+**Bảng lệch phải giải trình trong khóa luận:**
+
+| Lệch | Lý do | Xử lý |
+|---|---|---|
+| Nhãn LLM ở v1.0 và test 2 | Thiếu giờ người khi chạy theo mốc 31/10 | Coi là vòng thử; bộ cuối do người gán |
+| "Chuyển miền" đổi thành phân rã theo miền | Hệ không huấn luyện lại, miền đa nhãn | Đã chốt C5 |
+| GraphRAG là bản xấp xỉ trong cùng đường ống | So sánh chỉ đổi một yếu tố; dựng GraphRAG thật trên 1,48 triệu đơn vị quá đắt | Nêu rõ tên và giới hạn |
+| T5 thiếu, T4 có thể dưới 150 | Điều kiện pháp lý hẹp | Báo số thật, không nới định nghĩa |
+| Kho rộng hơn bốn miền | Cần đóng kín quan hệ sửa đổi | Đã có trong datasheet |
+
+---
+
+## 5. Bộ dữ liệu cuối
+
+Đếm theo cặp (câu hỏi, mốc) ở chế độ ranh giới, đúng quyết định A2. T4 là lát của T2 và T3.
+
+| Nhóm | Đề cương | v1.0 | Silver (chưa kiểm) | Test 2 (nhãn LLM) | Đang có | Dự báo sau kiểm* |
+|---|---:|---:|---:|---:|---:|---:|
+| T1 | 250 | 141 | 0 | 0 | 141 | 251 (thêm 110) |
+| T2 | 400 | 118 | 274 | 120 | 512 | ~490 |
+| T3 | 200 | 31 | 95 | 75 | 201 | ~200 |
+| T4 (lát, gần giống ở T2) | 150 | 24 | 102 | 30 | 156 | ~130 |
+| T5 | 50 | 0 | 20 | 0 | 20 | ~12 |
+| T6 | 100 | 72 | 0 | 32 | 104 | ~155 |
+| **Tổng, không tính trùng T4** | **1.150** | **362** | **389** | **227** | **978** | **~1.100** |
+
+*Dự báo giả định 60% câu qua kiểm (v1.0: 246 lineage đạt, 185 không đạt), test 2 tính cả ở tầng LLM, và làm đủ T1, T2 mới. Đây là ước lượng. Số thật sẽ thay vào ở G2.
+
+**Mỗi dòng phát hành có tầng chất lượng:** người gán đôi và luật sư; hoặc LLM, agent. Không gộp hai tầng trong bảng chính.
+
+### Bộ test cuối, dùng để kết luận
+
+Chỉ gồm lineage chưa hệ nào chạy. Đã kiểm 05/11: silver không có dự đoán nào trong `runs/`, không trùng lineage với main và test 2, không trùng văn bản với dev.
+
+| Nguồn | Đưa cho người | Dự kiến qua kiểm |
+|---|---:|---:|
+| Silver T2 (51 lineage gần giống) | 137 | ~82 |
+| Silver T3 | 31 | ~19 |
+| Silver T5 (chỉ báo riêng) | 10 | ~6 |
+| T6 mới từ kho, có lọc LLM trước | 60 | ~25 |
+| T3 mới | 20 | ~12 |
+| T2 mới, làm nếu còn giờ | 60 | ~45 |
+
+Kết quả khoảng 180 lineage, hoặc 138 nếu không có T2 mới (chưa tính T5). Dựa trên sai số của test 2: 180 lineage cho khoảng tin cậy XN1 khoảng ±0,032, phát hiện được hiệu chừng 0,046 với power 80%; 138 lineage cho ±0,037 và 0,052. Đây là ước lượng. Hiệu +0,028 của test 2 vẫn khó phát hiện ở cả hai cỡ. Nếu vậy thì báo đúng như vậy.
+
+T1 không vào bộ này vì không có gì để tương phản. T1 mới chỉ để đủ Bảng 1 và làm đối chứng. Có thể kiểm T1 nhẹ hơn: một người, luật sư kiểm mẫu.
+
+### Quy tắc gán nhãn
+
+Theo thẻ 4.0, gán theo câu hỏi, Q1–Q4.
+- A và B gán độc lập. Dòng lệch do luật sư chốt, **không có phiếu AI**.
+- Người gán không thấy gợi ý, nhãn hay ghi chú của LLM, và không thấy kết quả hệ.
+- Bắt buộc dán một câu trích từ văn bản tác động. Trang gán ghi thời gian từng câu.
+
+### Giờ người ước tính
+
+| Việc | Công thức | Giờ công | Ưu tiên |
+|---|---|---:|---|
+| Lô thử G1 | 30 câu × 2 người × 5 phút | 5 | P0 |
+| Silver | 178 × 2 × 4 | 24 | P0 |
+| T6 mới | 60 × 2 × 5 | 10 | P0 |
+| T3 mới | 20 × 2 × 4 | 3 | P0 |
+| Gold mù 120 + 30 dòng (B6) | khoảng 10 phút một dòng | 25 | P0 |
+| Kiểm nhãn test 2: lô thử đã gồm 30 câu, thêm 10 câu | 10 × 2 × 4 | 1 | P0 |
+| T1: thêm 110, kiểm 30 nhãn Codex cũ | | 5 | P1 |
+| T2 mới | 60 × 2 × 4 | 8 | P1 |
+| Mã hóa lỗi E7, hiệu chuẩn giám khảo | | 12 | P1 |
+| Kiểm hết phần còn lại của test 2 (61 câu) | 61 × 2 × 4 | 8 | P1 |
+| **Tổng** | | **~96** | P0 = 68 |
+
+P0 là khoảng 34 giờ cho mỗi người. Luật sư đã nhận: xem thẻ 4.0, chốt khoảng 30–50 dòng lệch.
+
+**Thứ tự làm:** cuối tuần 07–08/11 là lô thử (G1) rồi silver T2, T3 (168 câu, khoảng 14 giờ mỗi người). T6 và T3 mới cần LLM lọc và viết câu hỏi trước, nên làm từ 09/11, cùng gold mù. **Nhanh không được đánh đổi chất lượng:** vòng trước A gán 5 giây một dòng nên đồng thuận không có giá trị. Trung vị dưới 90 giây/câu thì dừng và xem lại.
+
+**Lô thử không lấy từ silver:** rút 30 câu từ 101 câu của test 2 (phiếu v3 có sẵn), để silver còn nguyên cho bộ cuối, và đo luôn nhãn LLM của test 2 so với người.
+
+**Nếu không đủ giờ**, cắt theo thứ tự: T2 mới → T1 mới → T5 → giảm silver T2 còn 90 lineage (giữ đủ phần gần giống). Không cắt lô thử và gold mù.
+
+---
+
+## 6. Thiết kế thực nghiệm cuối
+
+### Câu hỏi và cách trả lời
+
+| Câu hỏi | Đại lượng | So sánh | Loại |
+|---|---|---|---|
+| RQ1, RAG | TVER, `wrong_version`, VCR | `b2ctx`, `b4` | Mô tả có khoảng tin cậy |
+| RQ1, LLM | Tỷ lệ sai phiên bản trên câu **có trả lời** | 2–3 LLM không truy xuất | Mô tả, bảng phụ |
+| RQ2 | Accuracy | `proposed2` − `b4`; `proposed2` − `b5` | Xác nhận |
+| RQ3, lọc văn bản | TV-Recall@1 | `b7` − `b2ctx` | Xác nhận |
+| RQ3 và giả thuyết, phiên bản | TV-Recall@1 | `b7plus` − `b7`; `b7pp` − `b7` | Xác nhận |
+| Giả thuyết, câu trả lời | TVER, **kèm bản tính trên gold mù** | `b7pp` − `b7` | Xác nhận |
+| T6 lan truyền | Accuracy, dòng bãi bỏ | `proposed2` − `b7pp` | Xác nhận nếu đủ ≥ 20 lineage; không thì thăm dò |
+| Thành phần | Bỏ đồ thị, bỏ Verifier | `p2a2`, `p2a3` | Mô tả |
+
+Danh sách chốt và Holm ghi vào amendment ADR 0005 tại G3. Kết quả v1.0 và test 2 được nêu trong amendment, nói rõ đã thấy.
+
+### Việc trên dev (trước G3)
+
+Mỗi việc có điều kiện dừng. Không đạt thì bỏ, ghi lại, không thử tiếp.
+
+| Mã | Việc | Chi phí | Giữ lại khi |
+|---|---|---|---|
+| X1 | Sinh câu trả lời `b7pp --hybrid`, `proposed2`, `p2a2`, `p2a3`. Prompt trùng thì dùng lại, không chạy GPU lại | Colab ≤ 3 giờ | Luôn chạy, đây là cam kết L4–L5 |
+| X2 | Đưa thông báo bãi bỏ có cấu trúc vào prompt, từ đồ thị | ít code, ≤ 1 giờ GPU | T6 không đáp án tăng rõ, KTC ghép cặp > 0, nhóm khác không giảm |
+| X3 | So một generator mạnh hơn (không thuộc họ Claude, DeepSeek), trên ngữ cảnh đúng | vài USD | Làm cột kiểm độ bền (B7). Chỉ đổi cột chính nếu Accuracy tăng ≥ 0,05, KTC > 0 |
+| X4 | Đo Verifier khi không có bộ lọc (`b4`, `b7`) | thấp | Báo đúng vai trò của Verifier |
+| X5 | Lưu sổ chạy dev hôm 05/11. Dùng số chấm lại R@30 0,808 (không dùng 0,801 ghi nhầm trong plan cũ) | rất thấp | Luôn làm |
+| X6 | Embedding tốt hơn (`AITeamVN`, đúng quyết định C1) trên GPU. Khâu tìm là nút thắt lớn nhất (top 20 của test 2 chỉ 0,529) | Colab ~1 phiên | Chạy. Chỉ giữ cho hệ khi R@10 dev tăng, KTC > 0 |
+| X7 | Colab đợt 2: `b7plus b7v` trên test 2; `b7plus b7v a4 b2 b6 oracle b3 b4 a1 a2 a3` trên v1.0. Hoàn tất các hệ ADR 0005 đã khai báo, điền chỗ chờ ở chương 6. Mỗi cấu hình một lần | Colab ~10 giờ | Chạy. Kết quả chỉ để mô tả; không dùng để chọn cấu hình |
+
+**Đã cắt, không mở lại nếu không có lý do mới:** cào toàn bộ; reranker (CMT cắt 05/11).
+
+**Giờ GPU không phải giới hạn (CMT 05/11):** việc nào cần và tốt cho khóa luận thì chạy. Điều kiện giữ lại ở bảng trên là để giữ kỷ luật khoa học, không phải để tiết kiệm. LightRAG thật (C3) vẫn giữ, làm sau G3 trên tập con, báo riêng vì không cùng corpus.
+
+---
+
+## 7. Lộ trình và cổng
+
+Bám giai đoạn của đề cương. Không qua cổng thì không làm bước sau.
+
+| Cổng | Hạn | Giai đoạn đề cương | Tiêu chí đo được | Làm gì nếu không đạt |
+|---|---|---|---|---|
+| **G0** Repo sạch | 07/11 | — | Một plan; `pytest` qua; hash dữ liệu không đổi; mục 8 đạt | Khôi phục từ bản sao lưu |
+| **G1** Thước đo gán nhãn | 07/11 | 4 | Lô 30 câu mới: AC1 ≥ 0,80 và p_neg ≥ 0,60 trên từng Q1–Q4; trung vị ≥ 90 giây/câu; luật sư đã xem thẻ 4.0 | Làm rõ thẻ với luật sư một lần, thử lô 30 câu khác. Trượt lần nữa: một người gán, luật sư kiểm mẫu, và báo đúng như vậy |
+| **G2** Khóa dữ liệu | 12/11 | 4 (kịp 13/11) | Bộ test cuối ≥ 130 lineage người kiểm (mục tiêu ~180); AC1, p_neg đo trên toàn bộ phần gán đôi; gold mù có số; đối chiếu VBHN có báo cáo; datasheet khớp manifest; không rò `dev` | Dưới 130: báo là chưa đủ cỡ mẫu, ghi power thật, không hạ tiêu chuẩn nhãn. Gold mù dưới ngưỡng: sửa lỗi đồ thị, người kiểm lại các dòng bị ảnh hưởng |
+| **G3** Khóa hệ | 20/11 | 5 (sớm hơn 04/12) | X1–X5 có kết quả; demo chạy; amendment ADR 0005 đã commit trước khi chạy test | Không chạy test khi chưa có commit này |
+| **G4** Chạy cuối | 30/11, muộn nhất 14/12 | 6 | Mỗi cấu hình chạy test một lần; `confirm.json`, bảng theo nhóm và miền, E7, giám khảo | Lỗi đường ống: amendment trước khi chấm lại, ghi cả lần sai |
+| **G5** Nộp | 26/12 | 7 | Khóa luận đủ chương, số khớp `runs/`; demo; tài liệu đã đọc bản gốc | — |
+| **G6** Paper | 01/2027 | Sau đề cương | Bản nộp qua `paper_check.py`; đã kiểm quy định ẩn danh (E2) | GVHD chọn nơi nộp |
+
+**Gold mù:** rút phân tầng từ bộ test cuối. Người gán đọc văn bản gốc hoặc VBHN, không thấy phiên bản đồ thị. Đạt khi ≥ 114/120 khớp (B6). Lấy 100 dòng làm M2. VBHN chạy tự động trước để kiểm rộng; dòng lệch do người phân xử. VBHN **không** thay nhãn người.
+
+**Nơi nộp, đề xuất cho GVHD:** ICAIL 2027, hạn báo là 28/01/2027, hợp đề tài pháp luật và AI. Phương án phụ: SIGIR 2027 (21/01/2027, chưa rõ track tài nguyên). Hai hạn này lấy từ trang tổng hợp, chưa kiểm trang chính thức.
+
+**Paper chọn hướng A:** bộ đánh giá và phép đo có đối chứng, kèm hệ đầy đủ. Hướng này đứng vững với mọi kết quả ở G4. Bản nháp ở `docs/paper/` sửa qua `scripts/paper/paper_template.md`.
+
+### Khóa luận
+
+| Chương | Hiện trạng | Hoàn thiện sau |
+|---|---|---|
+| 1 Mở đầu | Chưa viết | G2 |
+| 2 Cơ sở lý thuyết | Nháp; 14 nguồn mới có metadata | Đọc bản gốc trước G3 |
+| 3 Kho văn bản, đồ thị | Nháp | G2 (thêm M2, VBHN) |
+| 4 ViLexTime | Nháp theo v1.0 | G2 |
+| 5 Phương pháp | Nháp theo `proposed`. Phải nói đúng: lúc truy xuất, đồ thị đọc từ SQLite, không dùng Neo4j hay Milvus | G3 |
+| 6 Thực nghiệm | Nháp, 7 chỗ chờ | G4 (v1.0, test 2 thành vòng thử) |
+| 7 Kết luận | Chưa viết | G4 |
+| Phụ lục khai báo AI | Nháp | G5: gồm tốc độ gán của A, ghi chú Claude nháp, phiếu Claude ở vòng hòa giải, quy tắc A–agent, lần chấm sai, nhãn agent và LLM |
+
+### Ai làm gì
+
+| Việc | Người |
+|---|---|
+| Gán nhãn, gold mù, kiểm mẫu, mã hóa lỗi | CMT, NMT, luật sư. AI không tham gia |
+| Chạy Colab | CMT hoặc NMT, theo gói đã xuất sẵn |
+| Quyết định, commit, gửi GVHD | CMT |
+| Code, xuất gói, chấm, dựng bảng, soạn nháp | Codex làm, Claude kiểm |
+| Đặt hướng, viết hợp đồng việc, kiểm lại độc lập | Claude |
+
+---
+
+## 8. Dọn repo (G0)
+
+**Sao lưu xong trước khi dọn:** `/home/trica/UIT_Thesis/backup-pre-cleanup-20261105/` (diff chưa commit, 123 file chưa track, sha256). File đã track đọc lại ở commit `51f36c7`.
+
+**Quy tắc:**
+1. Không đụng: đề cương; file harness; ADR; định nghĩa và thẻ gán; `docs/thesis`, `docs/paper`; nhãn người, luật sư; dự đoán test; file có sha256 trong manifest; mọi dữ liệu gitignore tốn công dựng.
+2. Xóa khi có bằng chứng: không còn nơi sống nào nhắc tới, hoặc có bản thay thế nêu tên, hoặc trùng byte.
+3. Dữ liệu duy nhất nằm sai chỗ thì chuyển vào `runs/`, không xóa.
+4. Không viết lại ADR đã Accepted, không sửa file harness. README gốc ghi: tài liệu cũ mà ADR hoặc comment code nhắc tới thì đọc ở `51f36c7`.
+5. Không commit. CMT xem diff rồi commit.
+
+**Cây đích:**
 
 ```text
-P3.1 hạ tầng Docker ─► P3.4 loader Neo4j ─► P3.9 lưu event ─► P3.10/P3.11 event L2
-      ─► P3.15 áp event lên dữ liệu thật ─► P3.18 kiểm chứng 100 snapshot   (M2)
-      ─► P4.2 so khớp phiên bản ─► ViLexTime (M3) ─► baseline + B7 (M4)
-      ─► L4/L5 (M5) ─► ablation (M6)
+README.md            một trang: đề tài, nguồn sự thật, cách chạy
+AGENTS.md CLAUDE.md  harness, không đổi
+docs/
+  DeCuong...docx     bất biến
+  plans/active/master-plan.md   plan duy nhất
+  plans/completed/   việc đã xong
+  decisions/         ADR
+  vilextime-*.md     định nghĩa, thẻ gán, hướng dẫn, schema, datasheet
+  reports/           kết quả E3, phân rã lỗi E7, biên bản D5, thử tải VBHN
+  crawling-plan.md audit_dataset.md graph_justification.md gcs-source-snapshots.md   tài liệu kỹ thuật, nguồn cho chương 3
+  thesis/ paper/
+src/ scripts/ tests/ prompts/ notebooks/
+data/                dữ liệu; nhãn ở data/review
+runs/                README và các lượt còn được trích
+related_paper/ references.bib
 ```
 
-Lõi logic L3 (`src/vilexgraph/build/temporal/`) và chuỗi phiên bản offline trên dữ
-liệu thật đã có; Gói C (C1–C6) của plan Phase 3 đã hoàn thành, gồm khoảng
-hiệu lực thực và test chuỗi thật. D1–D3 đã nạp full corpus và 13 loại cạnh
-văn bản lên Neo4j hai lượt với số đếm ổn định; D5–D6 đã kiểm parity Cypher và
-đo tải/RAM. D4 đang tạm hoãn; còn thiếu kiểm chứng snapshot P3.18 để đạt M2.
+Hồ sơ đầy đủ về những gì đã xóa: `docs/plans/completed/2026-11-05-don-dep-repo.md`.
 
 ---
 
-## 2. Giai đoạn 1 — Hoàn thiện đề cương (01/09 – 14/09)
+## 9. Quy tắc làm việc từ nay
 
-| ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
-|---|---|---|---|---|
-| P1.1 | Rà soát phạm vi, RQ1–RQ3, giả thuyết | CMT, NMT | ✅ | `DeCuongKLTN_23521635_23521643.docx` (4 miền, khoảng 8.700 VB) |
-| P1.2 | Sửa mâu thuẫn trong đề cương (xem §12) | CMT, NMT | ⬜ | Không còn mục nào ở §12. Bản UIT đã nộp không sửa được nữa: khóa luận công bố các chỗ lệch theo bảng "Chỗ lệch với đề cương" của `docs/vilextime-datasheet.md` (JUDGE N6) |
-| P1.3 | Khảo sát RAG, GraphRAG, LightRAG, RAPTOR, IRCoT | CMT | 🟡 | Nháp `docs/graph_justification.md` §5; còn trích dẫn chưa kiểm |
-| P1.4 | Khảo sát temporal RAG và Legal NLP tiếng Việt | NMT | 🟡 | Nháp như trên; cần đối chiếu SAT-Graph RAG, VersionRAG với bài gốc |
-| P1.5 | Thống nhất giả thuyết H1–H4 và ký hiệu công thức với chương Phương pháp | CMT, NMT | ⬜ | H1–H4 được đưa vào đề cương hoặc bị loại có ghi lý do |
-| P1.6 | Chốt tech stack | CMT, NMT | ✅ | `docs/decisions/0001-neo4j-milvus-la-kho-dan-xuat.md` |
-
-## 3. Giai đoạn 2 — Thu thập & xử lý dữ liệu (15/09 – 05/10)
-
-| ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
-|---|---|---|---|---|
-| P2.1 | Crawl vbpl.vn 4 miền, lưu bản gốc | CMT | ✅ | 22.550 file `data/raw/`; `scripts/check/verify_pipeline.py` pass |
-| P2.2 | Ghi rõ nguồn và phương pháp thu thập | CMT | ✅ | `docs/crawling-plan.md`, `README.md` |
-| P2.3 | Bảng mã quan hệ và trạng thái hiệu lực đã kiểm chứng | CMT | ✅ | `data/reference_type_map.json`, `data/eff_status_map.json` |
-| P2.4 | Cây Chương/Mục/Điều/Khoản/Điểm | NMT | ✅ | `data/trees/` phủ 99,9% |
-| P2.5 | Gắn nội dung chữ vào từng nút | NMT | ✅ | `data/provisions/` phủ 98,97% nút khớp được; 778 VB trong hàng đợi review |
-| P2.6 | Delta crawl và mốc "as of" | CMT | ✅ | `scripts/pipeline/delta_crawl.py`, `data/delta_runs.jsonl` |
-| P2.7 | Sao lưu snapshot ra ngoài máy | CMT | ✅ | 14/09: `pull_snapshot.sh` tải v1 từ HF, sha256 OK, `verify_pipeline.py` pass trên bản tải về (backfill T0.1) |
-| P2.8 | Quy tắc phạm vi QPPL và cờ `temporal_anchor` | CMT, NMT | ✅ | 14/09: `vocab/scope.py` + `build_eligibility.py`; 20.318 QPPL trung ương, 16.993 đủ điều kiện benchmark; hàng đợi điền tay 308 (backfill T2) |
-| P2.9 | Sửa gốc pipeline; backfill 1.017 diagram; 19 VB không sinh cạnh | CMT | ✅ | 17/09: closure hội tụ, 0 genealogy target chưa tải, `edges.jsonl` hàm thuần của `data/raw` (backfill T1, T3.1) |
-| P2.10 | Candidate thời gian cấp văn bản: `effTo` từ văn bản bãi bỏ duy nhất, `issueDate` làm cận dưới | CMT, NMT | ✅ | 17/09: 381/388 candidate quyết định (367 accept, 14 reject) qua đối chiếu văn bản gốc, không chỉ tin referenceType (backfill T4) |
-| P2.11 | Tách Khoản/Điểm từ HTML của Điều | NMT | ✅ | 17/09: 424.409 node + 10.302 preamble; 100/100 mẫu kiểm tay đúng, vượt ngưỡng 95% (backfill T5) |
-| P2.12 | Đóng băng snapshot v2 (M1) | CMT | ✅ | 17/09: đẩy HF (`7d8ab0c`), tải về thư mục khác kiểm chứng `verify_pipeline.py` pass (backfill T3.3) |
-
-Chi tiết thực hiện P2.7–P2.12: [`2026-09-17-backfill-corpus-v2.md`](../completed/2026-09-17-backfill-corpus-v2.md).
-
-## 4. Giai đoạn 3 — Xây dựng đồ thị tri thức L0–L3 (06/10 – 26/10)
-
-Đề cương phân công: CMT làm L0–L2, NMT làm L3 và kiểm chứng snapshot.
-
-Kế hoạch chi tiết đến M2 (gói việc, lịch 5 tuần, quyết định Q1–Q6): [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md).
-
-### 3A. Hạ tầng (phát sinh từ ADR 0001)
-
-| ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
-|---|---|---|---|---|
-| P3.1 | `docker-compose` cho Neo4j và Milvus có giới hạn RAM; runbook bật/tắt | CMT | ✅ | 21/09: 4 container healthy, smoke Neo4j/Milvus assert đọc/ghi PASS, runbook có start/stop/giữ volume và số đo D6 |
-| P3.2 | Đo RAM thực tế khi nạp đủ corpus | CMT | ✅ | D6: cold load 704,0s; full MERGE 573,9s; Neo4j peak 3.813,4 MiB/4 GiB, toàn stack 3,95 GiB; 0 OOM/restart. Milvus chưa có vector, đo lại ở P5.3. [Bằng chứng](phase-3-kg-l0-l3.md#d6--21092026) |
-
-### 3B. L0–L1: cấu trúc và cạnh metadata
-
-| ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
-|---|---|---|---|---|
-| P3.3 | Domain model và ID tất định | NMT | ✅ | `temporal/models.py`, `temporal/ids.py`; 18/09 full SQLite có 0 ID thô; test pass |
-| P3.4 | Loader `data/` → Neo4j: Document, Provision, `CONTAINS`, Version | CMT | ✅ | D2 (19/09): 2 lượt full load cùng 23.139 Document, 1.700.484 Provision, 1.592.178 Version; 1.700.484 cạnh `CONTAINS`, 1.592.178 `VERSION_OF`; đối chiếu source IDs và count pass; [bằng chứng](phase-3-kg-l0-l3.md#d2--19092026) |
-| P3.5 | Nạp cạnh giữa văn bản thành quan hệ có kiểu | CMT | ✅ | D3 (19/09): snapshot v2 có 128.548 bộ ba phân biệt/13 loại; hai lượt Neo4j cùng 124.934 cạnh đủ hai đầu, 3.614 cạnh thiếu đích được audit (không tạo Document giả). Mốc M1 128.289 thuộc snapshot cũ. [Bằng chứng](phase-3-kg-l0-l3.md#d3--19092026) |
-| P3.6 | Chuyển `target_resolver` và `resolve_expiry_targets.py` sang Neo4j; bỏ index SQLite | CMT | ⬜ | **Hoãn (Q6, 20/09):** giữ SQLite cho pipeline offline, migrate sau. Khi làm: tỷ lệ resolve vẫn là 73,3%; xóa được `index.py`, `build_store.py` |
-
-### 3C. L2: trích xuất thao tác sửa đổi
-
-| ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
-|---|---|---|---|---|
-| P3.7 | Khuôn dữ liệu trích xuất | CMT | ✅ | `extraction/models.py`; test pass |
-| P3.8 | Target resolver ("Khoản 1, Điều 3" → id nút) | CMT | ✅ | `extraction/target_resolver.py`; 22.847/31.175 chuỗi expiry map được. Chưa kiểm tiêu đề bất thường |
-| P3.9 | Định dạng lưu event đã duyệt trong `data/` | CMT, NMT | ✅ | `data/derived/provision_events.jsonl` + `event_log.jsonl` giữ `id`, status, lời văn và outcome từng dòng; D2 đọc cả hai, nạp 50.540 LegalEvent từ 50.700 dòng (giữ audit dòng lặp); 16.254 event áp được. [Bằng chứng](phase-3-kg-l0-l3.md#d2--19092026) |
-| P3.10 | Event BÃI BỎ từ 228 VB chỉ có một văn bản tác động (843 bộ ba) | CMT | ✅ | Thay bằng mức `verified`: 2.819 event mà cổng liệt kê đúng nút. Không sinh event chỉ từ metadata, lý do trong [plan](l2-event-store.md) |
-| P3.11 | Bộ trích xuất regex: SỬA ĐỔI / BỔ SUNG / BÃI BỎ / THAY THẾ | CMT | 🟡 | `extraction/provision_ops.py`, `extraction/wording.py`, `scripts/pipeline/extract_provision_events.py` → `data/derived/provision_events.jsonl` (12.676 VB tác động; bỏ 768 không phải QPPL trung ương, 84 VB mà cổng trả nhầm thân văn bản). Ca không chắc chắn ghi `needs_review` kèm lý do. Còn thiếu: lời văn không ngoặc kép, thay đổi cấu trúc, BỔ SUNG nút mới ([plan](l2-event-store.md)) |
-| P3.12 | LLM cho ca phức tạp | CMT | ⬜ | Chỉ gọi khi regex bó tay; ghi `method=LLM` |
-| P3.13 | Đo độ chính xác L2 | CMT, NMT | 🟡 | `scripts/check/measure_provision_events.py`, `scripts/pipeline/build_versions.py` (2026-09-18). Precision kiểm tay trên 60 event áp được (seed 20260923, chưa dùng để sửa): 58/60 = 96,7% (Wilson 95%: 88,6–99,1%); lời văn mới 30/30 cắt đúng. Các vòng trước: v4 56/60 trên mọi event đã resolve (seed 20260921); seed 20260918–20 và 20260922 dùng để tìm lỗi. Recall theo expiryProvisions 62,2% (5.007/8.046 cặp); cùng actor với gold một-actor 98,2%; loại thao tác khớp hậu tố trạng thái 90,3% (HHL1P1=bãi bỏ, P2=đính chính, P3=sửa đổi, P4=thay thế). Hạn chế: câu hai thao tác ("Bãi bỏ … và sửa đổi …") gán thao tác thứ hai thành bãi bỏ. Chưa đạt 200 mẫu kiểm tay, NMT chưa kiểm chéo |
-
-### 3D. L3: hợp nhất phiên bản và lan truyền hiệu lực
-
-| ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
-|---|---|---|---|---|
-| P3.14 | Logic version chain, event applier, validity, snapshot | NMT | ✅ | `temporal/`; test pass (fixture tự tạo) |
-| P3.15 | Áp event lên dữ liệu thật → chuỗi phiên bản trong Neo4j | NMT | ✅ | D2 nạp 1.592.178 version và 37.640 cạnh version–event, hai lượt full load cùng số đếm; chuỗi A → B → C trong Neo4j đúng 3 text SHA-256 và cạnh event tạo/kết thúc. Đánh giá snapshot 100 mẫu vẫn ở P3.18. [Bằng chứng](phase-3-kg-l0-l3.md#d2--19092026) |
-| P3.16 | Tính trước khoảng hiệu lực thực của mỗi phiên bản (cách A) | NMT | 🟡 | C4 (19/09): `versions.jsonl` có `effective_intervals`; 6.108/6.108 cặp (nút, ngày) khớp `ValidityService`. **Đo lại 22/09 sau khi hợp nhất hai nhánh:** quy tắc §11 (nút không có text là trong suốt) trước đó bị bỏ trong nhánh phase3-v2, nên số cũ đo dưới luật khác. Xem [C7](phase-3-kg-l0-l3.md#c7--22092026) |
-| P3.17 | Hợp nhất định nghĩa "có hiệu lực tại t" | NMT | ✅ | C5 (19/09): bỏ `index.version_at`; tên API khoảng cục bộ (`VersionChain.local_at`) tách khỏi hiệu lực pháp lý; `ValidityService` là đường quyết định duy nhất |
-| P3.18 | Kiểm chứng snapshot trên 100 truy vấn đối chiếu tay | NMT | 🟡 | E1 (21/09): 356 VBHN được kiểm kê, 51 đủ điều kiện; 5.762/7.201 cặp Điều/Khoản khớp text tự động (80,02%), 299 VBHN thiếu body. [Bằng chứng](phase-3-kg-l0-l3.md#e1--21092026). Chưa có 100 đáp án kiểm tay E2–E3; không coi E1 là gold hoặc đạt M2 |
-| P3.19 | Giải dẫn chiếu chéo có nhận biết thời gian | NMT | ⬜ | "khoản 2 Điều 5 của Luật này" → đúng phiên bản tại t |
-
-**Tiêu chí xong Giai đoạn 3:**
-- ID ổn định, khoảng `[start, end)` dùng nhất quán.
-- Bốn thao tác chạy được ở cấp Điều/Khoản/Điểm; bãi bỏ nút cha vô hiệu đúng cây con.
-- Event chưa chắc chắn không bị áp âm thầm; có thống kê coverage và hàng đợi review.
-- Chuỗi A → B → C có test; P3.18 đạt; chạy lại không tạo phiên bản hay cạnh trùng.
-
-## 5. Giai đoạn 4 — Bộ dữ liệu ViLexTime (27/10 – 16/11)
-
-Đề cương phân công: NMT chủ trì quy trình diff-driven; CMT kiểm định chéo và làm việc với cố vấn luật.
-
-Kế hoạch chi tiết đến M3, bắt đầu sớm từ 21/09 vì 3 tuần không đủ: [`phase-4-vilextime.md`](phase-4-vilextime.md). Trữ lượng ứng viên đo ngày 20/09 đủ cho mọi nhóm trừ T3 (321 chuỗi ≥ 3 phiên bản cho 200 câu) và T5 (282 ứng viên hồi tố chưa lọc "có lợi").
-
-| ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
-|---|---|---|---|---|
-| P4.1 | Hướng dẫn gán nhãn; thống nhất định nghĩa T1–T6 | NMT | 🟡 | `docs/vilextime-annotation.md` 3.0 (20/10), theo định nghĩa chốt `docs/vilextime-dinh-nghia.md` |
-| P4.2 | So khớp phiên bản: cặp `snapshot(u,t₁) ≠ snapshot(u,t₂)` | NMT | ✅ | `scripts/pipeline/build_question_pool.py` → `data/derived/vilextime_pool.jsonl`: mỗi ngày hỏi có đáp án khác nhau; 11,1% cặp giống hệt nhau bị loại |
-| P4.3 | Trích khác biệt thành bộ ba (trước, sau, mốc chuyển) | NMT | ✅ | Mỗi dòng có `derivation.transitions` (ngày, phiên bản, `event_id`, văn bản tác động) và `changed_span`; `check_release.py` OK |
-| P4.4 | Sinh câu hỏi bằng LLM (chỉ để diễn đạt) | NMT | ✅ | `generate_questions.py` + bộ kiểm C2; gold dẫn xuất từ chuỗi phiên bản. Người viết: `claude-opus-5-5` khoảng 2/3, `deepseek-flash` khoảng 1/3 (datasheet §3) |
-| P4.5 | Đủ số lượng: T1 250 · T2 400 · T3 200 · T4 150 · T5 50 · T6 100 | NMT | 🟡 | 11/10: T1 150 · T2 450 (gồm 150 gần giống = T4) · T3 199 · T5 38 · T6 388; tổng 1.225 dòng ranh giới. T5 chờ luật sư; 276 dòng T6 chưa có nhãn |
-| P4.6 | Loại VB không neo thời gian khỏi benchmark | NMT | ✅ | `build_eligibility.py` (`benchmark_eligible`); pool chỉ lấy văn bản đủ điều kiện |
-| P4.7 | Kiểm định chéo 300 câu, Cohen κ | CMT | 🟡 | Lần đo 07/10 trên bộ cũ: κ 0,236 (T6 −0,02 do lỗi pool). Dựng lại 11/10, giữ 166 nhãn người; còn A 134, B 135 dòng |
-| P4.8 | Cố vấn chuyên môn luật cho T5, T6 | CMT | 🟡 | T6: phán quyết chuyển chỗ 05/10. T5: phiếu 8 văn bản chưa điền |
-| P4.9 | Chia tập dev/test | NMT | ✅ | Chia theo văn bản đích (dev ~20%), T5 luôn vào test; `check_release.py` kiểm không lineage/văn bản nào nằm ở hai tập |
-
-## 6. Giai đoạn 5 — Cài đặt & đánh giá đường cơ sở (17/11 – 30/11)
-
-Đề cương phân công: CMT làm B1–B4; NMT làm B5–B7 và tổng hợp điểm quyết định.
-
-| ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
-|---|---|---|---|---|
-| P5.1 | Chốt LLM sinh và embedding model | CMT, NMT | 🟡 | Ghi ở ADR 0004 §3–§4. Cột kết quả chính và LLM giám khảo dùng LLM **không thuộc họ Claude và không thuộc họ DeepSeek** (chốt 11/10): Claude viết đáp án ngắn và khoảng 2/3 câu hỏi, DeepSeek viết 225/653 lineage, gần như cả H3. Embedding đã chốt cài đặt 02/10; chưa chọn model LLM cụ thể |
-| P5.2 | Collection Milvus theo phiên bản: vector, `eff_from`/`eff_to` thực, level, doc | CMT | ⬜ | Kiểm chứng analyzer BM25 tiếng Việt trước |
-| P5.3 | Embedding khoảng 1,14 triệu nút có text | CMT | ⬜ | ⚠ CPU có thể mất nhiều ngày; ghi thời gian thực tế |
-| P5.4 | Chỉ số Recall@k, MRR, TV-Recall@k, Accuracy, EM/F1 | NMT | ✅ | `scripts/eval/score_vilextime.py` (V7 28/09, J1 29/09: Accuracy tương phản, trích dẫn chữ); `tests/test_score_vilextime.py` |
-| P5.5 | Chỉ số TVER, VCR, TCS (công thức 6–8) | NMT | ✅ | Như P5.4; thêm `tver_strict`, độ phủ trích dẫn |
-| P5.6 | LLM-as-judge hiệu chuẩn trên 100 mẫu | NMT | ⬜ | Báo cáo độ đồng thuận với người chấm. Phải bắt được câu trả lời rào đón (probe `hedge` của scorer) |
-| P5.7 | B1 — LLM không truy xuất | CMT | ⬜ | |
-| P5.8 | B2 — BM25 + sinh | CMT | ⬜ | |
-| P5.9 | B3 — Dense + sinh | CMT | ⬜ | |
-| P5.10 | B4 — Hybrid + reranker | CMT | ⬜ | |
-| P5.11 | B5 — GraphRAG phi thời gian (LightRAG) | NMT | ⬜ | |
-| P5.12 | B6 — KG phân cấp cho pháp luật Việt Nam | NMT | ⬜ | Tái hiện theo tài liệu [10], [11] của đề cương |
-| P5.13 | B7 — lọc metadata cấp văn bản, không dùng đồ thị | NMT | ⬜ | Làm sớm nhất có thể |
-| P5.13b | B7+ — lọc theo phiên bản (lớp B của corpus), không dùng đồ thị | NMT | ⬜ | Phép đối chứng chính cho RQ3 (JUDGE N2); báo RQ3 bằng TVER, VCR, TV-Recall@1 |
-| P5.14 | 🚩 Điểm quyết định B7 (M4) | CMT, NMT | ⬜ | Nếu B7 gần mức trần thì đánh giá lại L2–L4 |
-
-## 7. Giai đoạn 6 — Hệ thống đề xuất L4–L5 (01/12 – 21/12)
-
-Đề cương phân công: CMT làm L4; NMT làm L5.
-
-| ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
-|---|---|---|---|---|
-| P6.1 | Lọc 𝒰ₜ (công thức 4): Milvus lọc, Neo4j xác nhận top-k | CMT | ⬜ | Không trả bằng chứng mất hiệu lực trên tập dev |
-| P6.2 | Chấm điểm lai (công thức 5): từ vựng + ngữ nghĩa + láng giềng AMENDS/REFERS_TO | CMT | ⬜ | Lưu riêng từng tín hiệu để làm ablation |
-| P6.3 | Tinh chỉnh số bước mở rộng, λ, μ trên dev | CMT | ⬜ | |
-| P6.4 | Sinh câu trả lời ràng buộc trích dẫn Điều/Khoản/Điểm | NMT | ⬜ | |
-| P6.5 | Tác tử suy luận mốc thời gian | NMT | ⬜ | |
-| P6.6 | Temporal Verifier | NMT | ⬜ | Loại bỏ hoặc cảnh báo trích dẫn không hợp lệ tại t |
-| P6.7 | Giao diện chọn mốc t, xem đường dẫn bằng chứng | NMT | ⬜ | |
-
-## 8. Giai đoạn 7 — Thực nghiệm & phân tích (22/12 – 04/01)
-
-| ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
-|---|---|---|---|---|
-| P7.1 | Ablation A1–A4 (bỏ ràng buộc thời gian / mở rộng đồ thị / Verifier / trích xuất cấp khoản) | CMT | ⬜ | |
-| P7.2 | Phân tích lỗi miền giao thông đường bộ | CMT | ⬜ | |
-| P7.3 | Ablation A5–A6 (độ chi tiết đơn vị, quy mô model) | NMT | ⬜ | |
-| P7.4 | A7 — chuyển sang miền Thuế, không tinh chỉnh | NMT | ⬜ | |
-| P7.5 | Phân rã kết quả theo T1–T6 và kiểm định giả thuyết | CMT, NMT | ⬜ | |
-
-## 9. Giai đoạn 8 — Viết bài báo (05/01 – 11/01)
-
-| ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
-|---|---|---|---|---|
-| P8.1 | Phần phương pháp và thực nghiệm | CMT | ⬜ | |
-| P8.2 | Phần tổng quan, kết quả, thảo luận | NMT | ⬜ | Tái dùng `docs/graph_justification.md` |
-| P8.3 | Chọn hội nghị và nộp | CMT, NMT | ⬜ | |
-
-## 10. Giai đoạn 9 — Hoàn thiện khóa luận (12/01 – 01/02)
-
-| ID | Việc | Phụ trách | Trạng thái | Bằng chứng / tiêu chí xong |
-|---|---|---|---|---|
-| P9.1 | Demo phần hệ thống | CMT | ⬜ | |
-| P9.2 | Demo phần dữ liệu và đánh giá | NMT | ⬜ | |
-| P9.3 | Viết các chương | CMT, NMT | ⬜ | |
-| P9.4 | Công bố ViLexTime và code tái lập | CMT, NMT | ⬜ | |
-| P9.5 | Chuẩn bị bảo vệ | CMT, NMT | ⬜ | |
+1. **Một plan.** Việc mới vào file này. Việc đủ lớn mới tách plan riêng, xong thì chuyển `completed/`.
+2. **Trạng thái cần bằng chứng.** Chỉ đánh dấu xong khi có lệnh, file hoặc số đo.
+3. **Mọi số trong khóa luận và paper truy được** về một file trong `runs/`. Không chép số tay.
+4. **Không chạm test ngoài G4.** Mọi tinh chỉnh ở `dev`. Mọi thay đổi sau khi khai báo đều là amendment, có ngày, có ghi đã thấy gì.
+5. **Báo mọi kết quả đã khai báo,** kể cả xấu. Không có "chạy lại cho đẹp".
+6. **Nhãn người là của người.** AI không gợi ý, không nháp ghi chú, không hòa giải.
+7. **Quy trình với Codex:** Claude viết hợp đồng (phạm vi, cấm gì, bằng chứng gì) → Codex làm → Claude kiểm độc lập bằng lệnh riêng → chưa đạt thì trả lại, nói rõ sai ở đâu → CMT commit. Mỗi lần một phiên Codex ghi vào repo.
+8. **Nói rõ độ tin cậy.** Mọi kết luận ghi rõ: xác nhận, thăm dò hay mô tả; nhãn người hay nhãn LLM.
 
 ---
 
-## 11. Quyết định và nguyên tắc đang hiệu lực
+**Việc harness, chưa làm:** `docs/README.md` và `docs/product/README.md` là file mẫu của harness, nhắc tới file không có trong repo. Theo `AGENTS.md`, muốn sửa thì CMT phải yêu cầu `$improve-harness`. Không chặn việc gì.
 
-**Stack:** [0001 — Neo4j và Milvus là kho dẫn xuất từ `data/`](../../decisions/0001-neo4j-milvus-la-kho-dan-xuat.md).
+## Risks And Recovery
 
-**Dữ liệu:** [0002 — Phạm vi neo thời gian, vai trò VBHN và dữ liệu dẫn xuất](../../decisions/0002-pham-vi-neo-thoi-gian-va-du-lieu-dan-xuat.md). Chỉ QPPL được truy xuất theo mốc t; VBHN dùng để kiểm chứng L3; không ghi đè dữ liệu nguồn.
-
-**Nguyên tắc domain** (kế thừa từ roadmap cũ, vẫn đúng với code hiện tại):
-
-| # | Nguyên tắc | Nơi thể hiện |
+| Rủi ro | Dấu hiệu | Phòng và xử lý |
 |---|---|---|
-| D1 | Khoảng hiệu lực luôn nửa mở `[start, end)` | `TemporalInterval` |
-| D2 | Tách danh tính `Provision` khỏi nội dung `ProvisionVersion` | `temporal/models.py` |
-| D3 | Lõi logic thời gian không phụ thuộc DB | `temporal/` chỉ dùng stdlib |
-| D4 | Event thiếu ngày hoặc target duy nhất không được áp | `LegalEvent.is_applicable` |
-| D5 | Áp event nguyên tử: lỗi một target thì không đổi gì | `EventApplier.apply` |
-| D6 | Bãi bỏ nút cha không đóng phiên bản của cây con; hiệu lực con tính động | `ValidityService` |
-| D7 | Hai event cùng ngày trên cùng một nút phải gộp trước khi áp | `EventApplier` |
-| D8 | Tham chiếu mơ hồ chỉ giữ candidate, không chọn tạm | `extraction/models.py` |
-| D9 | "Thay cụm từ" phải chuyển thành toàn văn trước khi áp | `TextUpdate` |
-| D10 | Resolver chỉ nhận đúng một kết quả khớp cấu trúc, không fuzzy | `target_resolver.py` |
-| D11 | Bằng chứng truy xuất phải lấy từ đúng snapshot hợp lệ | Áp dụng khi làm L4 (P6.1) |
-| D12 | Nút không có phiên bản (Chương/Mục, hoặc Điều thiếu text) là **trong suốt** khi lan truyền hiệu lực; chỉ tổ tiên bị bãi bỏ hoặc văn bản hết hiệu lực mới chặn | `ValidityService`; chốt 20/09, xem [plan GĐ3](phase-3-kg-l0-l3.md) |
+| Không đủ giờ người | Hết 08/11 chưa xong nửa silver | Cắt theo mục 5. Báo power thật |
+| Gán quá nhanh | Trung vị dưới 90 giây/câu, hoặc hai người cùng tài khoản | Dừng, xem lại. Không tính lô đó vào đồng thuận |
+| Đồng thuận vẫn thấp | G1 trượt hai lần | Đổi quy trình như G1. Không hạ ngưỡng |
+| Gold mù lộ lỗi đồ thị | < 95/100 | Tìm nguyên nhân, sửa, người kiểm lại phần ảnh hưởng. Đây là kết quả có ích, phải báo |
+| Bộ cuối ra kết quả xấu | XN1, XN4 vẫn chưa đủ bằng chứng | Hướng A vẫn đứng được: báo đúng phần lợi ích đến từ đâu |
+| Colab hết hạn mức | Không chạy được | Xuất gói sớm, ưu tiên hệ chính, dùng lại prompt trùng |
+| Agent lại đổi hướng | Xuất hiện plan mới, cấu hình mới | Quy tắc 1 và 4; từ chối khi không có ghi vào file này |
 
-Các quyết định cũ **đã bị thay thế**: serialization envelope, repository Protocol, query schema riêng (bị xóa ở `5b8ee70`), và "Neo4j là nguồn sự thật" (bị thay bởi 0001).
+Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ `51f36c7`.
 
-**Nguyên tắc dữ liệu:**
-- Không xóa văn bản đã hết hiệu lực hoặc bất thường; loại trừ bằng skip-list ở tầng đọc.
-- Không tự lọc theo `documentFields`/`documentMajors`; chỉ tạo ứng viên để người duyệt.
-- Không đoán mã lạ; không coi mọi `createdDate` là ngày pháp lý.
-- Không coi "thiếu dữ liệu" là "dữ liệu nói khác"; không đoán căn chỉnh điều khoản.
-- Hiệu lực cấp văn bản không đại diện cho hiệu lực cấp điều khoản.
+## Cần chốt
 
-## 12. Vấn đề mở cần nhóm chốt
+| Mã | Quyết định | Đề xuất | Chặn gì |
+|---|---|---|---|
+| Q1 | Làm bộ test cuối do người gán? | **Có.** CMT 05/11: cuối tuần xong | Đã chốt |
+| Q2 | Luật sư còn làm được: xem thẻ 4.0, chốt 30–50 dòng lệch? | **Có** (CMT 05/11) | Đã chốt |
+| Q3 | Dừng Colab đợt 2? | **Không dừng.** CMT 05/11: không có khái niệm để dành, cái nào cần và tốt cho khóa luận thì chạy | Đã chốt (X7) |
+| Q4 | Paper hướng A (mốc M4)? | Có | Viết paper; không chặn thực nghiệm |
+| Q5 | Gold mù 100 + 20 thay vì 120 + 30 (B6)? | Bỏ đề xuất này: đủ giờ nên giữ B6 | Đã đóng |
+| Q6 | Bỏ LightRAG thật khỏi cam kết (C3)? | Bỏ đề xuất này: giữ C3, làm sau G3 | Đã đóng |
+| Q7 | Thêm T6, T1, T3 mới, tức nới quyết định B1? | Có; B1 đã bị test 2 vượt qua. Làm theo đề xuất, trừ khi CMT phản đối | G2 |
+| Q8 | GVHD đồng ý nơi nộp và lịch này? | CMT gửi | G6 |
 
-| Vấn đề | Chặn việc | Ghi chú |
-|---|---|---|
-| Đề cương ghi "bốn mục tiêu" nhưng liệt kê 5 | P1.2 | |
-| ~~Giả thuyết nhắc T1–T7~~ **Chốt 20/09: sáu nhóm T1–T6, nhóm hết hiệu lực một phần là T6.** `graph_justification.md` đã sửa; còn sửa `.docx` | P1.2 | Q1 của [plan GĐ4](phase-4-vilextime.md) |
-| ~~Kiểm định chéo ghi "300 câu (toàn bộ T3, T4, T5, T6…)"~~ **Chốt 20/09: 300 câu = toàn bộ T5, T6 + 50 mẫu mỗi nhóm T2, T3, T4.** Còn sửa `.docx` | P1.2 | Phát hiện và chốt 20/09; Q2 của [plan GĐ4](phase-4-vilextime.md) |
-| Hai công thức cùng đánh số (5); lỗi chính tả "driff-driven", "cuarm ô hình", "mình họa"; MSSV `23621643` khác tên file `23521643` | P1.2 | |
-| Câu "metadata giảm đáng kể chi phí gán nhãn": metadata cho biết *khoản nào* hết hiệu lực, không cho biết *khi nào* | P1.2 | `docs/audit_dataset.md` §9 |
-| T5 của ViLexTime mô tả là "hiệu lực trở về trước **có lợi cho đối tượng áp dụng**" — "có lợi" là chuẩn của Bộ luật Hình sự, không phải phép thử của Điều 152 Luật BHVBQPPL | P1.2, P4.1 | Cố vấn luật 20/09; xem [plan GĐ4](phase-4-vilextime.md) |
-| Có dùng H1–H4 không; A4 chỉ là proxy cho H3 | P1.5 | |
-| Chọn embedding model và LLM | P5.1 | |
-| Danh sách loại văn bản QPPL; "Quyết định" lẫn văn bản cá biệt | P2.8 | backfill T2.1 |
-| 1.626 QPPL có chữ nhưng không có cây Điều/Khoản: dựng cấu trúc hay dùng cả văn bản làm một đơn vị | P2.11, P3.4 | backfill T2 Validation |
-| Hội nghị mục tiêu | P8.3 | |
+## Progress
 
-## 13. Rủi ro
+- [x] 05/11 Đo lại hiện trạng, viết plan này. Sao lưu trước khi dọn.
+- [x] 05/11 G0: dọn repo. Chuyển 32 file, xóa 216 file (205 MB). Claude kiểm lại: 735 hash giữ nguyên trừ 1 file chỉ đổi comment nguồn; 611 test qua; nhập lại `b1` trùng 211/211; chấm lại `b7pp` ra đúng số cũ ở hai bộ; `paper_check` 0 sai lệch. Hồ sơ: `docs/plans/completed/2026-11-05-don-dep-repo.md`. **Chưa commit.**
+- [x] 05/11 X5: sổ chạy dev đã cập nhật, số tính lại từ file (`runs/README.md`).
+- [x] 05/11 CMT cho commit: tách ba commit (việc dở từ trước; dọn repo; master plan).
+- [x] 05/11 CMT trả lời Q1–Q3.
+- [ ] Trang gán nhãn thẻ 4.0 và lô thử G1 (30 câu từ test 2). Luật sư xem thẻ 4.0.
+- [ ] Phiếu silver T2, T3 cho cuối tuần.
+- [ ] X7: CMT chạy Colab đợt 2.
+- [ ] X1: xuất gói Colab dev (Codex đang làm, Claude kiểm).
+- [ ] X2: thiết kế thông báo bãi bỏ trong prompt, sau khi có X1.
 
-| Rủi ro | Ảnh hưởng | Giảm thiểu |
-|---|---|---|
-| L2 khó: 79,7% VB bị nhiều văn bản tác động, không biết văn bản nào bãi bỏ khoản nào | Trễ M2, kéo trễ mọi giai đoạn sau | Làm P3.10 (843 mẫu gold) trước; regex theo mẫu; LLM chỉ cho ca khó |
-| RAM 7 GB cho Neo4j + Milvus với full corpus | Không chạy được hoặc rất chậm | Đo ở P3.2; giới hạn RAM; tắt dịch vụ không cần |
-| Embedding khoảng 1,14 triệu nút trên CPU | Trễ M4 | Đo tốc độ sớm; tìm GPU; chạy nền theo lô có checkpoint |
-| Corpus không tái tạo được | Mất dữ liệu là mất đề tài | Hoàn tất P2.7 trước M1 |
-| Nhãn T5/T6 cần chuyên môn luật | κ thấp, trễ M3 | Liên hệ cố vấn luật từ Giai đoạn 3 |
+## Decisions
 
-## 14. Không làm (giới hạn theo đề cương)
-
-- Hiệu lực theo lãnh thổ và đối tượng áp dụng; giải xung đột quy phạm chỉ là mở rộng tùy chọn.
-- Văn bản địa phương; bảng biểu, phụ lục dạng ảnh.
-- Huấn luyện lại LLM.
-- Thao tác `SUSPEND`/`RESUME` là mở rộng, không bắt buộc.
+- 2026-11-05: Coi v1.0 và test 2 là vòng thử có khai báo. Kết luận chính dựa trên bộ test cuối mới.
+- 2026-11-05: Không yêu cầu hệ đề xuất phải thắng. Mục tiêu là đo đúng.
+- 2026-11-05 (CMT): giờ GPU không phải giới hạn; gán nhãn trong cuối tuần 07–08/11; luật sư tham gia; cho commit.
+- Quyết định cũ còn hiệu lực: A2, A3, B2, B6, B7, B9, C2, C3, C4, C5, E1–E5 (MASTER_RESEARCH_GUIDE §13.3 tại `51f36c7`), và reranker cắt 05/11.
 
 ## Validation
 
-- Repository: `python3 -m pytest` từ thư mục gốc.
-- Dữ liệu: `python3 scripts/check/verify_pipeline.py` sau mỗi lần crawl.
+- Plan không tự chứng minh điều gì. Mỗi cổng có tiêu chí đo được ở mục 7.
+- Lệnh nền: `.venv/bin/python -m pytest -q`, `git diff --check`, `scripts/paper/paper_check.py`.
 
-## Nhật ký
+## Result
 
-| Ngày | Thay đổi | Bằng chứng |
-|---|---|---|
-| 2026-11-04 | Có bản nháp chương 2–6 và phụ lục khai báo AI trong `docs/thesis/`; chưa có người duyệt | `docs/thesis/chuong-2-co-so-ly-thuyet.md`, `chuong-3-kho-van-ban-va-do-thi.md`, `chuong-4-vilextime.md`, `chuong-5-phuong-phap.md`, `chuong-6-thuc-nghiem.md`, `phu-luc-khai-bao-ai.md` |
-| 2026-11-04 | Cập nhật GĐ5–7 đang làm, E1 và sáu hệ E3 trên hai bộ; E7 mới có phân rã máy và phiếu mù, chưa có người mã hóa. M4 giữ 🟡, chờ nhóm chốt. Hạn chạy 31/10 đã trễ; nộp cuối 12/2026 thay lịch cũ 01/02/2027 | `a36039d`, `6b53896`; `runs/E3_v1/test/confirm.json`, `runs/E3_test2/rescore/confirm.json`; `docs/reports/e7_phan_ra_loi.md`, `data/review/e7/phieu_*.tsv` |
-| 2026-09-04 | Xong Stage 1–5b, delta crawl, bảng mã trạng thái | `docs/plans/completed/2026-09-04-truoc-stage-6.md` |
-| 2026-09-11 → 12 | Lõi domain thời gian, resolver, adapter Neo4j (chưa chạy server thật) | commit `a9170a9` → `10b33ab` |
-| 2026-09-12 | Audit corpus: 22.550 VB, lỗ hổng thời gian 4,4% | `docs/audit_dataset.md` |
-| 2026-09-13 | Refactor sang index SQLite, xóa adapter Neo4j/vector; snapshot lên HF | commit `5b8ee70`, `fa90cb5` |
-| 2026-09-14 | Chốt stack Neo4j + Milvus (ADR 0001); lập master plan; dọn tài liệu cũ | File này |
-| 2026-09-14 | Review bản nháp backfill; chốt phạm vi QPPL, vai trò VBHN, tách Khoản/Điểm, snapshot v2 (ADR 0002). Đo: 6.815/7.620 expiry chưa định vị có marker; ngày history `T00:00` lệch +1 | `../completed/2026-09-17-backfill-corpus-v2.md` |
-| 2026-09-14 | Backfill T0 (snapshot v1 kiểm chứng) và T1 (edges thuần từ raw, review queue chính xác, `align()` +4.199 node, chuẩn hóa ngày history, `anchor_problem`). Lộ 115 đích phả hệ chưa tải → T3.1 | `../completed/2026-09-17-backfill-corpus-v2.md` mục Validation |
-| 2026-09-14 | Backfill T2: phạm vi QPPL trung ương (20.318), hàng đợi điền tay 308, phát hiện 1.626 QPPL có chữ nhưng không có cấu trúc | `../completed/2026-09-17-backfill-corpus-v2.md` |
-| 2026-09-17 | Backfill T3.1: closure genealogy hội tụ (115→40→0 target chưa tải), vá bug `attach_provision_text.py` không ghi nhận `no_content` | `../completed/2026-09-17-backfill-corpus-v2.md` |
-| 2026-09-17 | Backfill T4.3: 381/388 candidate `effective_to` quyết định qua đối chiếu văn bản gốc (không chỉ tin referenceType); sửa 5 lỗi thuật toán so khớp; bắt thêm 2 candidate sai (`3639`, cùng lớp lỗi với `46742`) | `../completed/2026-09-17-backfill-corpus-v2.md` |
-| 2026-09-17 | Backfill T5.2: kiểm tra tính đầy đủ toàn bộ 65.216 Điều/Khoản phát hiện 15% mất câu dẫn nhập (2,57M ký tự) → thêm field `preambles`; 100/100 mẫu kiểm tay đúng | `src/vilexgraph/build/provisions/subtree.py`, `../completed/2026-09-17-backfill-corpus-v2.md` |
-| 2026-09-17 | Backfill T5.4: tái lập đúng phương pháp v1 — 243 văn bản một tác nhân, 919 bộ ba gold (v1: 228/843) | `../completed/2026-09-17-backfill-corpus-v2.md` |
-| 2026-09-17 | Backfill T3.3: commit code (`7794627`), đóng băng snapshot v2, đẩy HF (`7d8ab0c`), tải về thư mục khác kiểm chứng `verify_pipeline.py` pass — **M1 đạt trước hạn** | `../completed/2026-09-17-backfill-corpus-v2.md` |
-| 2026-09-18 | L2: event có `id`/`status`/lời văn mới; 16.804 event áp được (2.819 `verified`), 96,7% chạy qua `EventApplier`; precision 58/60. P3.10 xong qua mức `verified`; P3.9, P3.11, P3.13 🟡 | [`l2-event-store.md`](l2-event-store.md) |
-| 2026-09-18 | Phase 3 C1–C3: thống nhất ID; subtree có version; dựng 1.592.178 version thật và audit đủ 50.700 event. Hai lượt full corpus trùng SHA-256; 220 test pass. P3.15 🟡 vì chưa nạp Neo4j | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md) |
-| 2026-09-19 | Phase 3 C4–C6: khoảng hiệu lực thực đối chiếu 6.108 cặp với `ValidityService`; hợp nhất đường tính hiệu lực; 2 ca chuỗi thật pass, 2 lượt full build trùng SHA-256; 227 test pass. Gói C xong, P3.15 vẫn 🟡 vì chưa nạp Neo4j | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#c6--19092026) |
-| 2026-09-19 | Phase 3 D1: tạo và kiểm chứng 4 unique constraint `id` trên Neo4j thật; áp dụng hai lượt, check-only pass, 0 node/cạnh được nạp; 234 test pass. P3.4 🟡 đến khi D2 loader chạy được và đối chiếu corpus | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d1--19092026) |
-| 2026-09-19 | Phase 3 D2: hai lượt nạp full Neo4j khớp chín nhóm số đếm từ corpus, gồm 23.139 Document, 1.700.484 Provision, 1.592.178 Version, 50.540 LegalEvent; chuỗi thật A→B→C pass; 241 test pass. P3.4, P3.9, P3.15 ✅; D3–D6/P3.18 còn mở | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d2--19092026) |
-| 2026-09-19 | Phase 3 D3: 13 loại cạnh, 124.934 cạnh đủ hai Document nạp Neo4j hai lượt; 3.614 cạnh thiếu đích trong report (141 genealogy), 249 test pass. P3.5 ✅ theo phạm vi corpus hiện có; D4–D6/P3.18 còn mở | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d3--19092026) |
-| 2026-09-19 | Phase 3 D5: Cypher read model từ khoảng hiệu lực C4 đối chiếu `valid`/version ID/text với `SnapshotService`: 200/200 cặp trên 32 văn bản có cây (gồm ngày chuyển phiên bản, bãi bỏ cha/con); 257 test pass. D4 tạm bỏ qua, D6 và P3.18 vẫn mở | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d5--19092026) |
-| 2026-09-20 | Q1 chốt: ID miền theo `temporal/ids.py`, đổi ở `ingest.py`; ID event duy nhất. Q3, Q4, Q6 chốt cùng ngày (cố vấn luật cho Q3; hoãn migrate SQLite ở Q6) | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md), commit `c9b1eec`, `8b7e98e` |
-| 2026-09-20 | Lập kế hoạch Giai đoạn 4, bắt đầu sớm 21/09; đo trữ lượng ứng viên T1–T6; phát hiện mâu thuẫn phạm vi κ (300 vs 500) | [`phase-4-vilextime.md`](phase-4-vilextime.md) |
-| 2026-09-21 | Phase 3 D6: công cụ timing + Docker metrics; cold load 704,0s, full MERGE đo chi tiết 573,9s; Neo4j peak 3.813,4 MiB/4 GiB, toàn stack 3,95 GiB; 4 container healthy, 0 OOM/restart; 268 test pass. P3.1–P3.2 ✅; D4 tạm hoãn, P3.18 còn mở | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#d6--21092026) |
-| 2026-09-21 | Phase 3 E1 phép đo đầu: kiểm kê đủ 356 VBHN; 51 đủ điều kiện, 7.201 cặp text so được, 5.762 khớp (80,02%). 299 VBHN thiếu body hiển thị nên E1 chưa phủ đủ phạm vi; 1.393 sai khác text vào hàng đợi điều tra. Report có provenance/hash từng cặp; 275 test pass. P3.18 🟡, E2–E3 chưa làm, M2 chưa đạt | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#e1--21092026) |
-| 2026-09-22 | Hợp nhất `main` và `feature/phase3-v2` (C7): hai nhánh đã cài trùng P3.15–P3.17 nên 11 file xung đột. Giữ khoảng hiệu lực dạng nhiều khoảng rời (giữ được gap) và quy tắc §11 nút không text là trong suốt; P3.16 phải đo lại | [`phase-3-kg-l0-l3.md`](phase-3-kg-l0-l3.md#c7--22092026) |
-| 2026-10-11 | GĐ4: bản phát hành 11/10 (1.225 dòng ranh giới, 2.730 dòng; schema 1.4.0); lát T2 gần giống có suất 150 dòng; chế độ `truoc_hieu_luc`; T5 là tập chẩn đoán; bộ kiểm chéo dựng lại giữ 166 nhãn người. P4.2, P4.3, P4.4, P4.6, P4.9 ✅; P4.1, P4.5, P4.7, P4.8 🟡. Mục này chỉ cập nhật GĐ4, các giai đoạn khác giữ trạng thái 22/09 | [`phase-4-vilextime.md`](phase-4-vilextime.md), commit `3e19c94` → `85eec88` |
+Chưa hoàn tất.
