@@ -248,7 +248,7 @@ Bám giai đoạn của đề cương. Không qua cổng thì không làm bướ
 | Cổng | Hạn | Giai đoạn đề cương | Tiêu chí đo được | Làm gì nếu không đạt |
 |---|---|---|---|---|
 | **G0** Repo sạch | 07/11 | — | Một plan; `pytest` qua; hash dữ liệu không đổi; mục 8 đạt | Khôi phục từ bản sao lưu |
-| **G1** Thước đo gán nhãn | 07/11 | 4 | Lô 30 câu mới: AC1 ≥ 0,80 và p_neg ≥ 0,60 trên từng Q1–Q4; trung vị ≥ 90 giây/câu; luật sư đã xem thẻ 4.0 | Làm rõ thẻ với luật sư một lần, thử lô 30 câu khác. Trượt lần nữa: một người gán, luật sư kiểm mẫu, và báo đúng như vậy |
+| **G1** Thước đo gán nhãn | 07/11 | 4 | Lô 30 câu: AC1 ≥ 0,80 và p_neg ≥ 0,60 trên từng Q1–Q4 có ít nhất 5 nhãn âm; Q khác báo KTC; trung vị ≥ 90 giây/câu; luật sư đã xem hướng dẫn 4.0 | Làm rõ hướng dẫn với luật sư một lần, thử lô 30 câu khác. Trượt lần nữa: vẫn gán đôi, ghi "đồng thuận không đạt", không hạ ngưỡng |
 | **D0** Bản nháp | CN 08/11 | — | Đủ 7 chương và paper theo hướng mới; số khớp `runs/`; chỗ chưa có số ghi `[CHỜ]`; hai người đọc lại | Giao phần đã có, ghi rõ phần thiếu. Không chạy test để lấp chỗ trống |
 | **G2** Khóa dữ liệu | 12/11 | 4 (kịp 13/11) | Bộ test cuối ≥ 130 lineage người kiểm (mục tiêu ~180); AC1, p_neg đo trên toàn bộ phần gán đôi; gold mù có số; đối chiếu VBHN có báo cáo; datasheet khớp manifest; không rò `dev` | Dưới 130: báo là chưa đủ cỡ mẫu, ghi power thật, không hạ tiêu chuẩn nhãn. Gold mù dưới ngưỡng: sửa lỗi đồ thị, người kiểm lại các dòng bị ảnh hưởng |
 | **G3** Khóa hệ | 20/11 | 5 (sớm hơn 04/12) | X1–X5 có kết quả; demo chạy; amendment ADR 0005 đã commit trước khi chạy test | Không chạy test khi chưa có commit này |
@@ -360,6 +360,30 @@ Hệ quả cho paper:
 - **Dự báo bộ test cuối sau kiểm của người (60%):** silver T2 ~82, T3 ~19; T2 mới ~30, T6 mới ~14, T3 mới ~5: tổng khoảng 150 lineage. Chưa đo, thay bằng số thật ở G2.
 - **F7 (T6) nhiều khả năng dưới 20 lineage, thành thăm dò.** Cách bù, khai báo trước trong amendment: chạy thêm `proposed2`, `proposed3` trên T6 của v1.0 và test 2, báo gộp có ghi rõ là thăm dò vì các dòng đó đã được xem.
 - **A đã gán 131/168 lineage silver** ở vòng 25/10 và đã thấy đáp án đồ thị. Nhãn mới của A vẫn độc lập với B, nhưng phải khai trong khóa luận. Gold mù chia theo người.
+
+### Phản biện 05/11 và cách xử lý
+
+Hồ sơ: `docs/reports/phan-bien-ban-nhap-20261105.md` (do `thesis-critic` làm, chỉ đọc; đã đối chiếu hơn 40 số, khớp hết). Lead đã tự kiểm mục lan truyền. Các xử lý dưới đây chỉ siết thêm, không nới quy tắc nào, và sẽ vào amendment G3.
+
+| Mã | Vấn đề | Xử lý |
+|---|---|---|
+| C1 | TVER, Verifier dùng chung cửa sổ đồ thị với gold, nên TVER = 0 của `b7pp` là do cách dựng | TVER bỏ khỏi họ xác nhận, gọi là kiểm nhất quán nội bộ. H0 chỉ quyết bằng TV-Recall. Thêm **TVER theo người**: rút khoảng 100 đơn vị được trích, người đọc văn bản gốc mà không thấy cửa sổ đồ thị |
+| C2 | Thông báo bãi bỏ của `proposed3` lấy từ cùng sự kiện với gold T6 | Accuracy T6 của `proposed3` là cận trên khi đồ thị đúng. Chỉ kết luận trên dòng T6 đã qua gold mù. Báo precision của khẳng định "đã bãi bỏ" trên dòng có đáp án |
+| C3 | Gọi v1.0, test 2 là "vòng thử" sau khi đã thấy kết quả | Viết đúng lịch sử: xác nhận lần 1 và lần lặp, đổi vai ngày 05/11 sau khi thấy. Amendment ghi sẵn kết luận cho từng tổ hợp ba phán quyết, không gộp |
+| C4 | Bảng lệch §1.6 thiếu | Gộp mục 11 của định nghĩa, thêm: đếm câu hỏi theo lineage (515 hiện có), T3 không đòi truy vết, Claude viết đáp án ngắn, LLM lọc trước, bốn miền chỉ khoảng 36%, chỉ số chưa báo, `rel_up` lấy hạt giống trước bộ lọc |
+| C5 | Nấc lan truyền đo được bằng 0 ở tầng truy xuất (`b7pp` = `b7plus` mọi nhóm, cả hai bộ); bãi bỏ đã có ở NitiBench+ | Thu luận điểm về hai nấc đã đo. Lan truyền chỉ được nói nếu XN5 (sinh câu trả lời, `b7pp` − `b7plus` trên T6 cấp trên) cho thấy. Đưa `b7plus` vào lần sinh cuối. Phần bãi bỏ viết thành đặc thù Việt Nam: lệnh nằm ở văn bản khác, bãi bỏ qua nút cha |
+| N1 | Người gán là hai tác giả | Khai rõ. Luật sư kiểm ngẫu nhiên 30 dòng `dat` của bộ cuối |
+| N2 | A đã thấy phần lớn silver | AC1 báo riêng trên phần A chưa thấy, khai trước |
+| N3 | Bộ lọc LLM gây lệch chọn mẫu | Công bố phễu theo mã lý do. Người kiểm 20 câu T6 bị lọc loại, rút ngẫu nhiên, để ước tỷ lệ loại nhầm. Kết quả T6 ghi là có điều kiện theo bộ lọc |
+| N4 | Gold mù đợt 1 chưa có T6, T1 | Đợt 2: ít nhất 30 T6 và T1 cũ. Dòng gold sai thì giữ với gold đã sửa, không loại. Sửa đồ thị thì chạy lại mọi hệ trước G3 |
+| N6 | Paper bỏ XN6, XN7 | Thêm bảng XN5–XN7 và bảng đủ nhóm × hệ |
+| N7, N10 | Hệ cuối chưa chọn; đại lượng chính đổi | G3 ghi đúng một tên hệ, một generator, một embedding. RQ2 lấy thêm `wrong_version`. Giữ nguyên văn RQ3 của đề cương. Amendment liệt kê từng thay đổi kèm "đã thấy gì" |
+| N8 | Định gộp T6 đã thấy | Không gộp; báo riêng, gắn nhãn "đã thấy" |
+| N9 | G1 khó đo, đường lui là hạ chuẩn | Cổng chỉ tính trên câu Q có ít nhất 5 nhãn âm, các câu khác báo KTC. Trượt thì ghi "đồng thuận không đạt", không chuyển sang một người gán |
+| N11 | Colab đợt 2 chạy trên test trước G3 | **Niêm phong:** nhập raw, lưu hash, chỉ chấm sau khi amendment G3 commit |
+| V, L | Số chưa đồng bộ, power, mẫu số, TCS, precision từ chối, p | Sửa trong bản nháp |
+
+**Việc người thêm:** TVER theo người (khoảng 100 đơn vị, khoảng 8 giờ), kiểm 20 câu T6 bị lọc loại (khoảng 2 giờ), luật sư kiểm 30 dòng `dat`.
 
 ## 11. Hàng việc của agent
 
