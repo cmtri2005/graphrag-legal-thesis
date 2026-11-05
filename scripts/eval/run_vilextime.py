@@ -202,9 +202,13 @@ def main() -> None:
                         got = generate.Answer("", True, (), "", "none", "none")
                     else:
                         units = corpus.units([h.unit_id for h in hits]) if corpus and hits else []
+                        from vilexgraph.framework.graphx import repeal_notes
+                        notes = repeal_notes(corpus, spec, q.question, q.as_of, hits,
+                                             fast=args.fast_retrieval)
                         ask = lambda evidence: generate.answer(  # noqa: E731
                             q.question, q.as_of, evidence, with_context=spec.context,
-                            provider=args.provider, model=args.model, cache=cache)
+                            provider=args.provider, model=args.model, cache=cache,
+                            repeal_notes=notes)
                         got = ask(units)
                         if corpus and spec.verify != "off":
                             got, verdict = verify.verify(

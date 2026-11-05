@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import pytest
+from pathlib import Path
 
 from vilexgraph.framework.corpus import Corpus, build
 from vilexgraph.framework.graphx import Graph, expand
@@ -107,3 +108,48 @@ def test_rel_keeps_one_hop_even_with_propagation(graph):
     old = spec(layer="version", expand_edges="rel", temporal="propagated")
     assert ids(expand(g, old, hits, "2021-01-01")) == [SEED, COMMAND]
     assert expand(g, old, [], "2021-01-01", hits) == []
+
+
+@pytest.mark.parametrize("effective_on,operation,as_of,expected", [
+    ("2021-01-01", "repeal", "2021-01-01", True),
+    ("2021-01-02", "repeal", "2021-01-01", False),
+    ("2021-01-01", "amend", "2021-01-01", False),
+    ("2018-01-01", "repeal", "2019-01-01", False),  # acting document starts in 2020
+])
+@pytest.mark.parametrize("seed_id", [SEED, PARENT])
+def test_repeal_note_links_parent_and_keeps_other_prompts_identical(
+        graph, tmp_path, monkeypatch, effective_on, operation, as_of, expected, seed_id):
+    from vilexgraph.framework import generate, graphx, retrieve
+    g, corpus = graph
+    events = tmp_path / "events.jsonl"
+    write(events, [{"id": "event:e3", "operation": operation,
+                    "target_provision_id": ARTICLE, "effective_on": effective_on}])
+    monkeypatch.setattr(retrieve, "lexical", lambda *a, **kw: [Hit(seed_id)])
+    new = spec(layer="version", temporal="propagated", expand_edges="rel_up", repeal_note=True)
+    hits = [Hit(REPEAL_UP, {"graph": 1.0})]
+    notes = graphx.repeal_notes(corpus, new, "q", as_of, hits,
+                               temporal_db=g.tree.execute("PRAGMA database_list").fetchone()[2],
+                               events=events)
+    units = corpus.units([REPEAL_UP])
+    old_prompt = generate.build_prompt("q", as_of, units, with_context=True)
+    prompt = generate.build_prompt("q", as_of, units, with_context=True, repeal_notes=notes)
+    assert prompt[0] == old_prompt[0] == generate.SYSTEM
+    assert bool(notes) is expected
+    if expected:
+        assert "[1] BÃI BỎ" in prompt[1]
+        assert (CLAUSE if seed_id == SEED else ARTICLE) in prompt[1] and ARTICLE in prompt[1]
+        assert "ngày hiệu lực: 2021-01-01" in prompt[1]
+        assert "Điều 1" in prompt[1]
+        if seed_id == SEED:
+            assert "Khoản 1" in prompt[1]
+    else:
+        assert prompt == old_prompt
+
+
+def test_repeal_note_does_not_read_events_for_old_system_or_no_graph_command(graph):
+    from vilexgraph.framework.graphx import repeal_notes
+    _, corpus = graph
+    new = spec(layer="version", temporal="propagated", expand_edges="rel_up", repeal_note=True)
+    assert repeal_notes(corpus, new, "q", "2021-01-01", []) == []
+    assert repeal_notes(corpus, new.variant("old", repeal_note=False), "q", "2021-01-01",
+                        [Hit(REPEAL_UP, {"graph": 1.0})], events=Path("absent")) == []

@@ -58,6 +58,7 @@ Chi tiết tệp, lệnh dựng dữ liệu đầy đủ và lưu ý vận hành
 ## Lệnh thường dùng
 
 Chạy từ gốc repo với môi trường `.venv` đã cài.
+Demo: `.venv/bin/python scripts/demo.py --system proposed2`, mở `http://127.0.0.1:8000`; cấu hình LLM qua `vilexgraph.llm` (`.env`), thiếu khóa hoặc lỗi dịch vụ vẫn hiện căn cứ và báo chưa sinh câu trả lời.
 Các lệnh sau chỉ kiểm tra, chấm dự đoán có sẵn và dựng tài liệu.
 
 ```bash

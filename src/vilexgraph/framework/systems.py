@@ -50,6 +50,7 @@ class SystemSpec:
     verify: str = "off"               # off | warn | reject
     k: int = 20
     note: str = ""
+    repeal_note: bool = False         # graph-derived repeal links in the user prompt (X2)
 
     def __post_init__(self) -> None:
         if self.temporal not in TIERS:
@@ -119,6 +120,7 @@ REGISTRY: dict[str, SystemSpec] = {s.name: s for s in (
                     note="B7+ with propagated windows: the ladder's top rung, no online graph (K-07)"),
     _PROPOSED,
     _PROPOSED2,
+    _PROPOSED2.variant("proposed3", repeal_note=True),
     _PROPOSED2.variant("p2a2", expand=0, expand_edges="none"),
     _PROPOSED2.variant("p2a3", verify="off"),
     _PROPOSED.variant("a1", temporal="none", note="A1 — drop the effectivity constraint"),

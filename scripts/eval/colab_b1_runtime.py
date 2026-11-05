@@ -25,7 +25,7 @@ MODEL_ID = "Qwen/Qwen3-4B-Instruct-2507"
 MAX_NEW_TOKENS = 512
 MODELS = {"Qwen/Qwen3-4B-Instruct-2507", "microsoft/Phi-3.5-mini-instruct"}
 B2_SYSTEMS = {"b1", "b2ctx", "b3", "b4", "b7", "b7v", "b7plus", "b7pp", "proposed",
-              "b5", "b6", "a1", "a2", "a3", "a4", "oracle", "b2", "proposed2", "p2a2", "p2a3"}
+              "b5", "b6", "a1", "a2", "a3", "a4", "oracle", "b2", "proposed2", "p2a2", "p2a3", "proposed3"}
 BASE_FIELDS = {"id", "system", "user", "ids", "retrieved", "prompt_sha256"}
 B2_FIELDS = BASE_FIELDS | {"system_name", "split", "as_of", "signals"}
 assert MODEL_ID in MODELS

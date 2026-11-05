@@ -33,6 +33,9 @@ may be tuned on `dev` only (ADR 0003 §7):
 from __future__ import annotations
 
 import sqlite3
+import json
+from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 
 from .retrieve import Hit
@@ -44,6 +47,87 @@ FANOUT = 3
 TEMPORAL_DB = Path("data/temporal.sqlite")
 SIGNAL = "graph"
 MAX_DEPTH = 8     # Điều → Khoản → Điểm is three deep; the cap only guards a malformed tree
+EVENTS = Path("data/derived/provision_events.jsonl")
+
+
+@dataclass(frozen=True, slots=True)
+class RepealNote:
+    unit_id: str
+    seed: str
+    target: str
+    effective_on: str
+
+    def prompt_line(self, label: int) -> str:
+        return (f"[{label}] BÃI BỎ | điều khoản hạt giống: {self.seed} | "
+                f"đích bị bãi bỏ: {self.target} | ngày hiệu lực: {self.effective_on}")
+
+
+@lru_cache(maxsize=4)
+def _repeals(path: Path) -> dict:
+    """Typed resolved events, never benchmark labels or text-based guesses."""
+    with path.open(encoding="utf-8") as source:
+        return {f"asis:{e['id']}": e for e in map(json.loads, source)
+                if e.get("operation") == "repeal" and e.get("target_provision_id")
+                and e.get("effective_on")}
+
+
+def repeal_notes(corpus, spec: SystemSpec, question: str, as_of: str, hits: list[Hit], *,
+                 temporal_db: Path | str = TEMPORAL_DB, events: Path = EVENTS,
+                 fast: bool = False, enabled: bool | None = None) -> list[RepealNote]:
+    """Link only rel_up-added, effective repeals to its original unfiltered seeds.
+
+    `enabled` lets the demo display links for proposed2 without changing its prompt.
+    Reconstructing lexical seeds also works when hits came from the retrieval cache.
+    The acting document must still pass the existing expansion predicate.
+    """
+    if not (spec.repeal_note if enabled is None else enabled):
+        return []
+    if not spec.expand or spec.expand_edges != "rel_up":
+        return []
+    commands = [h.unit_id for h in hits if SIGNAL in h.signals]
+    if not commands:
+        return []
+    events_by_id = _repeals(Path(events))
+    commands = [u for u in commands if u in events_by_id
+                and events_by_id[u]["effective_on"] <= as_of]
+    if not commands:
+        return []
+    from .retrieve import lexical
+    seeds = lexical(corpus, question, as_of, layer=spec.layer, tier="none",
+                    context=spec.context, k=SEEDS, fast=fast)
+    graph = Graph(corpus, temporal_db)
+    try:
+        commands = graph._admit(commands, spec.temporal, as_of)
+
+        def describe(pid):
+            chain = graph.up(pid)
+            titles = [graph.tree.execute("SELECT title FROM provisions WHERE id=?", (p,)).fetchone()
+                      for p in reversed(chain)]
+            doc = graph.tree.execute(
+                "SELECT d.number FROM provisions p JOIN documents d ON d.id=p.document_id "
+                "WHERE p.id=?", (pid,)).fetchone()
+            label = " › ".join(([doc[0]] if doc else []) + [r[0] for r in titles if r and r[0]])
+            return f"{label} ({pid})"
+
+        notes = []
+        seen = set()
+        for hit in seeds:
+            seed = corpus.unit(hit.unit_id)
+            if seed is None or seed.provision_id is None:
+                continue
+            ancestors = graph.up(seed.provision_id)
+            for uid in commands:
+                event, command = events_by_id[uid], corpus.unit(uid)
+                target = event["target_provision_id"]
+                key = (uid, seed.provision_id)
+                if (command is not None and command.kind == "instruction"
+                        and command.provision_id == target and target in ancestors and key not in seen):
+                    seen.add(key)
+                    notes.append(RepealNote(uid, describe(seed.provision_id), describe(target),
+                                            event["effective_on"]))
+        return notes
+    finally:
+        graph.close()
 
 
 class Graph:

@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from vilexgraph.framework import generate, systems, verify  # noqa: E402
 from vilexgraph.framework.corpus import Corpus  # noqa: E402
+from vilexgraph.framework.graphx import repeal_notes  # noqa: E402
 from run_vilextime import EMBED, INDEX, RELEASE, queries, retriever  # noqa: E402
 
 
@@ -74,7 +75,9 @@ def export_prompts(args) -> None:
         if oracle and len(units) != len(retrieved):
             raise SystemExit(f"{q.id}: gold unit not in the corpus: {retrieved}")
         system, user, ids = generate.build_prompt(q.question, q.as_of, units,
-                                                   with_context=spec.context)
+                                                   with_context=spec.context,
+                                                   repeal_notes=repeal_notes(
+                                                       corpus, spec, q.question, q.as_of, hits))
         row = {"id": q.id, "system": system, "user": user, "ids": ids,
                "retrieved": retrieved}
         if name != "b2ctx" or getattr(args, "b2", False):

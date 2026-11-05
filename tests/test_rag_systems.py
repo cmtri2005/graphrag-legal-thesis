@@ -115,3 +115,11 @@ def test_rel_up_has_its_own_retrieval_cache_key():
     old = REGISTRY["proposed"].variant("proposed-hyb", rerank=False)
     assert RetrievalCache.key(old, "q", "2021-01-01") != RetrievalCache.key(
         REGISTRY["proposed2"], "q", "2021-01-01")
+
+
+def test_proposed3_only_enables_repeal_note():
+    from dataclasses import asdict
+    old, new = asdict(get("proposed2")), asdict(get("proposed3"))
+    assert {k for k in old if old[k] != new[k]} == {"name", "repeal_note"}
+    assert new["repeal_note"] is True
+    assert all(not s.repeal_note for n, s in REGISTRY.items() if n != "proposed3")

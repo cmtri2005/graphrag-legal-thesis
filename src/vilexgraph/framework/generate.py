@@ -89,7 +89,8 @@ class Answer:
     completion_tokens: int | None = None
 
 
-def build_prompt(question: str, as_of: str, units, *, with_context: bool) -> tuple[str, str, list[str]]:
+def build_prompt(question: str, as_of: str, units, *, with_context: bool,
+                 repeal_notes=()) -> tuple[str, str, list[str]]:
     """The two messages, and the unit id each `[n]` stands for."""
     blocks, ids = [], []
     for n, unit in enumerate(units, 1):
@@ -99,6 +100,10 @@ def build_prompt(question: str, as_of: str, units, *, with_context: bool) -> tup
     user = (f"MỐC THỜI GIAN: {as_of}\n"
             f"CÂU HỎI: {question}\n\n"
             f"CÁC ĐOẠN CĂN CỨ:\n{body}")
+    lines = [note.prompt_line(ids.index(note.unit_id) + 1) for note in repeal_notes
+             if note.unit_id in ids]
+    if lines:
+        user += "\n\nTHÔNG BÁO BÃI BỎ TỪ ĐỒ THỊ:\n" + "\n".join(lines)
     return SYSTEM, user, ids
 
 
@@ -200,9 +205,10 @@ class Cache:
 
 def answer(question: str, as_of: str, units, *, with_context: bool = True,
            provider: str | None = None, model: str | None = None,
-           cache: Cache | None = None, **kwargs) -> Answer:
+           cache: Cache | None = None, repeal_notes=(), **kwargs) -> Answer:
     """One answer for one (question, t). Never receives a gold field."""
-    system, user, ids = build_prompt(question, as_of, units, with_context=with_context)
+    system, user, ids = build_prompt(question, as_of, units, with_context=with_context,
+                                     repeal_notes=repeal_notes)
     key = Cache.key(system, user, provider, model)
     hit = cache.get(key) if cache else None
     if hit is not None:
