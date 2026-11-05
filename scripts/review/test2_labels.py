@@ -530,6 +530,8 @@ def main() -> None:
             p.add_argument('--port', type=int)
         if command == 'web':
             p.add_argument('--out', type=Path, required=True)
+            p.add_argument('--exclude', type=Path, action='append', default=[],
+                           help='TSV with lineage_id: held back until the blind gold sheets are done (B6)')
         if command == 'pull':
             p.add_argument('--from', dest='dump', type=Path, required=True)
         if command == 'report':
@@ -550,6 +552,9 @@ def main() -> None:
         if len({r['lineage_id'] for r in records}) != len(records):
             raise ValueError('lineage trùng giữa các phiếu')
         if args.command == 'web':
+            held = {r['lineage_id'] for f in args.exclude
+                    for r in csv.DictReader(f.open(encoding='utf-8'), delimiter='\t')}
+            records = [r for r in records if r['lineage_id'] not in held]
             page = web_page(records)
             args.out.parent.mkdir(parents=True, exist_ok=True)
             args.out.write_text(page, encoding='utf-8')

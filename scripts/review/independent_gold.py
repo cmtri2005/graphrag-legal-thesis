@@ -55,6 +55,13 @@ import re
 from pathlib import Path
 
 SEED = 20261011
+REVIEW: Path | None = None   # --review: a later sample keeps its own sheets beside the first
+
+
+def review_dir(data: Path) -> Path:
+    return REVIEW or data / "review"
+
+
 PER_STRATUM, SHARED = 20, 5
 STRATA = ("T1", "T2-regular", "T2-near", "T3", "T6-direct", "T6-ancestor")
 URL = "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID={}"
@@ -80,13 +87,13 @@ def stratum(r: dict) -> str:
     return r["group"]
 
 
-def seen_lineages(review: Path, lineage_of: dict[str, str]) -> set[str]:
-    """Lineages a person has already seen together with the KG's answer."""
+def seen_lineages(review: Path, lineage_of: dict[str, str], who: str = "AB") -> set[str]:
+    """Lineages `who` has already seen together with the KG's answer. Shared queues count for both."""
     seen = set()
     def lineage(row_id: str) -> str:   # an id from before 07/10 may be gone from the release
         return lineage_of.get(row_id) or row_id.split(":", 2)[-1].rsplit(":", 1)[0]
-    for name in ("crosscheck_A.tsv", "crosscheck_B.tsv", "audit_queue.tsv", "audit_queue_relocation.tsv",
-                 "audit_truoc_hieu_luc.tsv", "labels.tsv", "kiem_A.tsv", "kiem_B.tsv"):
+    for name in (*(f"crosscheck_{w}.tsv" for w in who), "audit_queue.tsv", "audit_queue_relocation.tsv",
+                 "audit_truoc_hieu_luc.tsv", "labels.tsv", *(f"kiem_{w}.tsv" for w in who)):
         path = review / name
         if not path.exists():
             continue
@@ -122,6 +129,45 @@ def draw(rows: list[dict], seen: set[str]) -> list[dict]:
     random.Random(SEED).shuffle(out)
     for i, item in enumerate(out, 1):
         item["key"] = f"G{i:03d}"
+    return out
+
+
+def draw_blind(rows: list[dict], seen: dict[str, set[str]], strata: tuple[str, ...], prefix: str) -> list[dict]:
+    """Like `draw`, for a pool one annotator has partly seen (master plan A6, 05/11).
+
+    Shared rows are unseen by both. Each other row goes to an annotator who has not seen it, turn by turn,
+    and to the other one when that annotator has seen everything left, so B6's blindness holds per person
+    even when the split comes out uneven. Raises rather than quietly giving a seen row or a short stratum.
+    """
+    pool = collections.defaultdict(lambda: collections.defaultdict(list))
+    for r in rows:
+        if r["as_of_strategy"] == "giua_khoang" and stratum(r) in strata:
+            pool[stratum(r)][r["lineage_id"]].append(r)
+    out = []
+    for s in strata:
+        lineages = sorted(pool[s])
+        random.Random(f"{SEED}:{prefix}:{s}").shuffle(lineages)
+        both = [x for x in lineages if x not in seen["A"] and x not in seen["B"]]
+        if len(both) < SHARED:
+            raise SystemExit(f"{s}: chỉ {len(both)} lineage chưa ai xem, cần {SHARED} để gán đôi")
+        chosen = [(x, "AB") for x in both[:SHARED]]
+        used = {x for x, _ in chosen}
+        for i in range(PER_STRATUM - SHARED):
+            who = "AB"[i % 2]
+            pick = next((x for x in lineages if x not in used and x not in seen[who]), None)
+            if pick is None:   # this annotator has seen the rest: the other one takes the row
+                who = "AB"[(i + 1) % 2]
+                pick = next((x for x in lineages if x not in used and x not in seen[who]), None)
+            if pick is None:
+                raise SystemExit(f"{s}: không còn lineage chưa xem cho ai")
+            used.add(pick)
+            chosen.append((pick, who))
+        for lineage, who in chosen:
+            row = random.Random(f"{SEED}:{lineage}").choice(sorted(pool[s][lineage], key=lambda r: r["as_of"]))
+            out.append({"row": row, "who": who})
+    random.Random(f"{SEED}:{prefix}").shuffle(out)
+    for i, item in enumerate(out, 1):
+        item["key"] = f"{prefix}{i:03d}"
     return out
 
 
@@ -187,12 +233,19 @@ def refuse_if_labelled(path: Path, cells: list[str]) -> None:
         raise SystemExit(f"{path} đã có nhãn; không ghi đè")
 
 
-def build(data: Path) -> None:
-    review = data / "review"
+def build(data: Path, only: Path | None = None, strata: tuple[str, ...] = STRATA, prefix: str = "G") -> None:
+    review = review_dir(data)
+    review.mkdir(parents=True, exist_ok=True)
     for who in "AB":
         refuse_if_labelled(review / f"gold_{who}.tsv", FILLED)
     rows = [json.loads(line) for line in (data / "derived/vilextime/release.jsonl").open(encoding="utf-8")]
-    items = draw(rows, seen_lineages(review, {r["id"]: r["lineage_id"] for r in rows}))
+    lineage_of = {r["id"]: r["lineage_id"] for r in rows}
+    if only:
+        ids = {json.loads(line)["id"] for line in only.open(encoding="utf-8")}
+        seen = {w: seen_lineages(data / "review", lineage_of, w) for w in "AB"}
+        items = draw_blind([r for r in rows if r["id"] in ids], seen, strata, prefix)
+    else:
+        items = draw(rows, seen_lineages(review, lineage_of))
     write(review / "gold_sample.tsv", ["khoa", "id", "lineage_id", "stratum", "annotators"],
           [{"khoa": i["key"], "id": i["row"]["id"], "lineage_id": i["row"]["lineage_id"],
             "stratum": stratum(i["row"]), "annotators": i["who"]} for i in items])
@@ -238,7 +291,7 @@ def export(data: Path, who: str) -> None:
     from openpyxl.utils import get_column_letter
     from openpyxl.worksheet.datavalidation import DataValidation
 
-    rows, out = read(data / f"review/gold_{who}.tsv"), data / f"review/gold_{who}.xlsx"
+    rows, out = read(review_dir(data) / f"gold_{who}.tsv"), review_dir(data) / f"gold_{who}.xlsx"
     if out.exists():
         have = {r["khoa"]: [r.get(c, "").strip() for c in FILLED] for r in rows}
         pending = [x["khoa"] for x in _from_xlsx(out)
@@ -291,8 +344,8 @@ def _from_xlsx(path: Path) -> list[dict]:
 
 
 def ingest(data: Path, who: str) -> None:
-    tsv = data / f"review/gold_{who}.tsv"
-    rows, got = read(tsv), {r["khoa"]: r for r in _from_xlsx(data / f"review/gold_{who}.xlsx")}
+    tsv = review_dir(data) / f"gold_{who}.tsv"
+    rows, got = read(tsv), {r["khoa"]: r for r in _from_xlsx(review_dir(data) / f"gold_{who}.xlsx")}
     errors = [f"xlsx có {len(got)} dòng, tsv có {len(rows)}"] if len(got) != len(rows) else []
     for r in rows:
         x = got.get(r["khoa"])
@@ -313,7 +366,7 @@ def ingest(data: Path, who: str) -> None:
 
 
 def reveal(data: Path, who: str) -> None:
-    review = data / "review"
+    review = review_dir(data)
     sheet = review / f"gold_{who}.tsv"
     answers = read(sheet)
     missing = [r["khoa"] for r in answers if r["hieu_luc"] not in FORCE or (r["hieu_luc"] == "còn" and not r["noi_dung"].strip())]
@@ -340,11 +393,17 @@ def main() -> None:
     ap.add_argument("command", choices=("build", "export", "import", "reveal"))
     ap.add_argument("annotator", nargs="?", choices=("A", "B"))
     ap.add_argument("--data", type=Path, default=Path("data"))
+    ap.add_argument("--review", type=Path, help="directory for this sample's sheets (default: DATA/review)")
+    ap.add_argument("--only", type=Path, help="build: draw only from these rows (a release JSONL), blind per annotator")
+    ap.add_argument("--strata", help="build with --only: comma-separated strata")
+    ap.add_argument("--prefix", default="G", help="build: prefix of the row keys")
     args = ap.parse_args()
+    global REVIEW
+    REVIEW = args.review
     if args.command != "build" and not args.annotator:
         ap.error(f"{args.command} needs A or B")
     if args.command == "build":
-        build(args.data)
+        build(args.data, args.only, tuple(args.strata.split(",")) if args.strata else STRATA, args.prefix)
     else:
         {"export": export, "import": ingest, "reveal": reveal}[args.command](args.data, args.annotator)
 

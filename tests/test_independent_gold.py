@@ -3,7 +3,7 @@ import collections
 
 import pytest
 
-from independent_gold import STRATA, draw, reveal, stratum
+from independent_gold import STRATA, draw, draw_blind, reveal, stratum
 
 FACETS = {"T1": ("T1", None, None), "T2-regular": ("T2", False, None), "T2-near": ("T2", True, None),
           "T3": ("T3", None, None), "T6-direct": ("T6", None, "direct"), "T6-ancestor": ("T6", None, "ancestor")}
@@ -67,3 +67,22 @@ def test_the_workbook_round_trip_loads_answers_and_refuses_an_edited_data_cell(t
     wb.save(book)
     with pytest.raises(SystemExit, match="cau_hoi"):
         ingest(tmp_path, "A")
+
+
+def test_draw_blind_never_gives_a_person_a_row_they_have_seen():
+    rows = [{"id": f"r{i}", "lineage_id": f"l{i}", "group": "T3", "as_of": "2020-01-01",
+             "as_of_strategy": "giua_khoang"} for i in range(40)]
+    seen = {"A": {f"l{i}" for i in range(20)}, "B": {f"l{i}" for i in range(10, 25)}}
+    items = draw_blind(rows, seen, ("T3",), "G1")
+    assert len(items) == 20 and len({i["row"]["lineage_id"] for i in items}) == 20
+    assert sum(i["who"] == "AB" for i in items) == 5
+    for item in items:
+        assert all(item["row"]["lineage_id"] not in seen[w] for w in item["who"])
+    assert sum(i["who"] == "A" for i in items) == sum(i["who"] == "B" for i in items) + 1
+
+
+def test_draw_blind_refuses_when_nothing_is_blind_for_both():
+    rows = [{"id": f"r{i}", "lineage_id": f"l{i}", "group": "T3", "as_of": "2020-01-01",
+             "as_of_strategy": "giua_khoang"} for i in range(30)]
+    with pytest.raises(SystemExit):
+        draw_blind(rows, {"A": {f"l{i}" for i in range(30)}, "B": set()}, ("T3",), "G1")
