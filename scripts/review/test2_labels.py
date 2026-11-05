@@ -38,6 +38,7 @@ from markdown_it import MarkdownIt
 from crosscheck import AC1_TARGET, PNEG_TARGET, gwet_ac1, specific_agreement
 
 GUIDELINE = "4.0"
+MIN_NEGATIVES = 5
 GOOD = {"q1": "dung", "q2": "co", "q3": "co", "q4": "khong"}
 OPTIONS = {"q1": ("dung", "sai"), "q2": ("co", "khong"), "q3": ("co", "khong"),
            "q4": ("khong", "co", "khong_chac")}
@@ -297,7 +298,14 @@ def agreement_report(records: list[dict], a: dict, b: dict, batch: int | None = 
             bb = ["dat" if x == "khong" else "khong_dat" for x in vb]
             metric.update(p_neg=specific_agreement(ba, bb).get("khong_dat"),
                           negative_category=["co", "khong_chac"])
-        metric["gate"] = "pass" if metric["ac1"] is not None and metric["ac1"] >= AC1_TARGET and metric["p_neg"] is not None and metric["p_neg"] >= PNEG_TARGET else "not_met"
+        # Master plan, G1 (05/11): a question is gated only with >= MIN_NEGATIVES adverse labels across A and B;
+        # with fewer, p_neg says almost nothing, so it is reported but cannot pass or fail the gate.
+        adverse = [x for x in va + vb if (x != GOOD[q] if q != "verdict" else x == "khong_dat")]
+        metric["adverse_labels"] = len(adverse)
+        if len(adverse) < MIN_NEGATIVES:
+            metric["gate"] = "not_evaluable"
+        else:
+            metric["gate"] = "pass" if metric["ac1"] is not None and metric["ac1"] >= AC1_TARGET and metric["p_neg"] is not None and metric["p_neg"] >= PNEG_TARGET else "not_met"
         metrics[q] = metric
     completeness = {"requested": limit, "selected": len(ids), "paired": len(shared),
                     "all_selected_paired": len(shared) == len(ids),
@@ -318,7 +326,8 @@ def agreement_report(records: list[dict], a: dict, b: dict, batch: int | None = 
                         for p in people.values())
     independent = (all(len(uid_sets[w]) == 1 and not people[w]["missing_uid"] for w in ("A", "B"))
                    and uid_sets["A"].isdisjoint(uid_sets["B"]))
-    agreement_met = all(metrics[q]["gate"] == "pass" for q in GOOD)
+    gated = [q for q in GOOD if metrics[q]["gate"] != "not_evaluable"]
+    agreement_met = bool(gated) and all(metrics[q]["gate"] == "pass" for q in gated)
     result = {"guideline_version": GUIDELINE, "selected": len(ids), "batch": batch, "limit": limit,
             "sample_completeness": completeness,
             "paired": len(shared), "missing_A": [i for i in ids if i not in a], "missing_B": [i for i in ids if i not in b],

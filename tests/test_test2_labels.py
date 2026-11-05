@@ -122,9 +122,9 @@ def test_report_excludes_pilot_and_preserves_undefined_negative_agreement(record
     assert report["selected"] == report["paired"] == 1
     assert report["metrics"]["q1"]["ac1"] == 1
     assert report["metrics"]["q1"]["p_neg"] is None
-    assert report["metrics"]["q1"]["gate"] == "not_met"
+    assert report["metrics"]["q1"]["gate"] == "not_evaluable"  # no adverse labels: p_neg undefined, not gated
     assert report["metrics"]["q4"]["p_neg"] is None
-    assert report["metrics"]["q4"]["gate"] == "not_met"
+    assert report["metrics"]["q4"]["gate"] == "not_evaluable"  # no adverse labels: p_neg undefined, not gated
     limited = labels.agreement_report([pilot, record], a, b, limit=50)
     assert limited["sample_completeness"]["status"] == "insufficient_selected"
     assert limited["sample_completeness"]["paired"] == 1
@@ -178,16 +178,17 @@ def test_q4_pneg_merges_co_and_khong_chac_but_ac1_keeps_three_levels(record, val
     assert metric["ac1"] == labels.gwet_ac1(va, vb) < 1
     assert metric["category_agreement"]["co"] == pytest.approx(2 / 3)
     assert metric["category_agreement"]["khong_chac"] == 0
-    assert metric["gate"] == "pass"
+    # Fewer than MIN_NEGATIVES adverse labels: reported, not gated (master plan G1, 05/11).
+    assert metric["gate"] == ("pass" if metric["adverse_labels"] >= labels.MIN_NEGATIVES else "not_evaluable")
     assert report["disagreements"] == ["0"]
     # All disagreement between the adverse levels still lowers three-level AC1.
     low = labels.agreement_report(records, own("A", ["co"] * 10), own("B", ["khong_chac"] * 10))
     assert low["metrics"]["q4"]["p_neg"] == 1
-    assert low["metrics"]["q4"]["gate"] == "not_met"
+    assert low["metrics"]["q4"]["gate"] == ("not_met" if low["metrics"]["q4"]["adverse_labels"] >= labels.MIN_NEGATIVES else "not_evaluable")
     # Different favourable/adverse answers lower p_neg and fail the gate.
     split = labels.agreement_report(records, a, own("B", ["khong"] * 10))
     assert split["metrics"]["q4"]["p_neg"] == 0
-    assert split["metrics"]["q4"]["gate"] == "not_met"
+    assert split["metrics"]["q4"]["gate"] == ("not_met" if split["metrics"]["q4"]["adverse_labels"] >= labels.MIN_NEGATIVES else "not_evaluable")
 
 
 def test_worksheet_rejects_duplicates_and_missing_question(tmp_path, record):
@@ -686,3 +687,24 @@ def test_adjudicate_t6_search_and_empty_export(tmp_path, adjudication_case):
     empty = tmp_path / "empty.xlsx"
     assert labels.adjudicate_export(records, own["A"], own["B"], empty, batch=99) == 0
     assert labels.adjudicate_import(empty, records, own["A"], own["B"], "luật sư X", out) == 0
+
+
+def test_gate_skips_questions_with_too_few_adverse_labels():
+    import test2_labels as L
+    recs = [{"lineage_id": f"l{i}", "group": "T2", "batch": 1, "question": "q", "rows": [{"id": f"r{i}"}],
+             "sources": {}} for i in range(12)]
+    good = {"q1": "dung", "q2": "co", "q3": "co", "q4": "khong", "verdict": "dat"}
+    def lab(i, who, q2):
+        return {**good, "q2": q2, "verdict": "dat" if q2 == "co" else "khong_dat", "lineage_id": f"l{i}"}
+    a = {f"l{i}": lab(i, "A", "khong" if i < 3 else "co") for i in range(12)}
+    b = {f"l{i}": lab(i, "B", "khong" if i < 3 else "co") for i in range(12)}
+    L.check_binding = lambda *x: None
+    L.validate_label = lambda r, row: (row, [])
+    for d, who in ((a, "A"), (b, "B")):
+        for row in d.values():
+            row.update(labeler=who, guideline_version=L.GUIDELINE)
+    report = L.agreement_report(recs, a, b)
+    assert report["metrics"]["q1"]["gate"] == "not_evaluable" and report["metrics"]["q1"]["adverse_labels"] == 0
+    assert report["metrics"]["q2"]["adverse_labels"] == 6 and report["metrics"]["q2"]["gate"] == "pass"
+    assert report["agreement_gate"] == "pass"
+
