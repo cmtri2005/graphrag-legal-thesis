@@ -416,6 +416,8 @@ Mục tiêu (CMT 05/11): agent làm hết phần của agent, cuối cùng chỉ
 
 **Thứ tự thật sự quan trọng:** gold mù phải đi trước khi người gán thấy đáp án đồ thị của cùng câu đó (B6). Vì vậy câu gold của mỗi người được giữ lại khỏi các lô gán của chính người đó, cho đến khi họ điền xong phiếu gold.
 
+**Giới hạn công cụ (05/11):** Codex chạm hạn mức tuần, mở lại 9/11 7:49. Claude có hạn mức 5 giờ dùng chung với phiên điều phối. Lọc một gói tốn khoảng 100 nghìn token. Hai bạn đã đủ việc đến 9/11 (lô thử, gold đợt 1, 108 câu silver), nên A4 làm tiếp sau 9/11 không chặn người. Nếu CMT mua thêm hạn mức Codex thì chạy ngay.
+
 ## 12. Việc chỉ người làm được
 
 Khi hàng việc trên xong, chỉ còn:
@@ -472,9 +474,9 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
 - [x] 05/11 A2: đối chiếu VBHN xong, độ phủ rất thấp.
 - [x] 05/11 A9: đọc nguồn và khảo sát tính mới; `related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md`.
 - [x] 05/11 A21, A22, A20: chương 2 đã sửa; X4 đo lại (b7 0/151); gói X8 sẵn ở `colab_upload/dev_x8/`.
-- [ ] A4: 51 gói lọc đang chạy (`~/vilextime_loc/gan5`). Sau đó viết câu hỏi, đáp án ngắn, phiếu lô 7+.
-- [ ] A10: tập dượt lần chạy cuối trên dev đang chạy.
-- [ ] A18: phản biện bản nháp đang chạy.
+- [ ] A4: 31/51 gói lọc xong (`~/vilextime_loc/gan5`; 2 gói Claude Sonnet, 29 gói Codex). 20 gói còn lại dừng vì Codex chạm hạn mức theo tuần, mở lại 9/11 7:49. Sau đó: chấm hiệu chuẩn, viết câu hỏi, đáp án ngắn, phiếu lô 7+.
+- [x] 05/11 A10: tập dượt trên dev, 151/151 hash khớp mỗi hệ, 17/17 hệ trùng điểm và KTC (`runs/final_rehearsal_dev/`).
+- [x] 05/11 A18: phản biện xong (`docs/reports/phan-bien-ban-nhap-20261105.md`); bản nháp đã sửa theo, 0 số thiếu nguồn, mẫu 30 số khớp 30.
 - [ ] CMT gửi file Word cho luật sư, mời NMT vào trang, chạy Colab (dev_x1, dev_x2, dev_x8, round2).
 - [ ] D0: bản nháp 7 chương và paper. Đã có nháp đủ, 0/437 số thiếu nguồn, chờ phản biện và Colab.
 
