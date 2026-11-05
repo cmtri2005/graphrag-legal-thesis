@@ -16,7 +16,7 @@ Chỉ upload các file `.jsonl`. Giữ lại các file `.export.json` ở máy n
 ## Cách chạy
 
 1. Colab mới, Runtime > GPU (T4).
-2. Cell 1: `%pip -q install -U 'transformers>=4.54,<5' accelerate bitsandbytes`
+2. Cell 1: `%pip -q install -U 'transformers==5.20.2' accelerate bitsandbytes`
 3. Cell 2: dán toàn bộ `../scripts/eval/colab_b1_runtime.py`, chạy, chọn 6 file `.jsonl` của MỘT thư mục khi hộp upload hiện.
 4. Kết quả ghi vào Google Drive: `MyDrive/vilextime_b2/<hệ>__Qwen__Qwen3-4B-Instruct-2507__<hash>.jsonl` kèm `.meta.json`.
    Có checkpoint từng dòng: nếu bị ngắt, chạy lại cell 2 với cùng file, nó tiếp tục.

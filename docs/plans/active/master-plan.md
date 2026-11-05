@@ -248,6 +248,7 @@ Bám giai đoạn của đề cương. Không qua cổng thì không làm bướ
 |---|---|---|---|---|
 | **G0** Repo sạch | 07/11 | — | Một plan; `pytest` qua; hash dữ liệu không đổi; mục 8 đạt | Khôi phục từ bản sao lưu |
 | **G1** Thước đo gán nhãn | 07/11 | 4 | Lô 30 câu mới: AC1 ≥ 0,80 và p_neg ≥ 0,60 trên từng Q1–Q4; trung vị ≥ 90 giây/câu; luật sư đã xem thẻ 4.0 | Làm rõ thẻ với luật sư một lần, thử lô 30 câu khác. Trượt lần nữa: một người gán, luật sư kiểm mẫu, và báo đúng như vậy |
+| **D0** Bản nháp | CN 08/11 | — | Đủ 7 chương và paper theo hướng mới; số khớp `runs/`; chỗ chưa có số ghi `[CHỜ]`; hai người đọc lại | Giao phần đã có, ghi rõ phần thiếu. Không chạy test để lấp chỗ trống |
 | **G2** Khóa dữ liệu | 12/11 | 4 (kịp 13/11) | Bộ test cuối ≥ 130 lineage người kiểm (mục tiêu ~180); AC1, p_neg đo trên toàn bộ phần gán đôi; gold mù có số; đối chiếu VBHN có báo cáo; datasheet khớp manifest; không rò `dev` | Dưới 130: báo là chưa đủ cỡ mẫu, ghi power thật, không hạ tiêu chuẩn nhãn. Gold mù dưới ngưỡng: sửa lỗi đồ thị, người kiểm lại các dòng bị ảnh hưởng |
 | **G3** Khóa hệ | 20/11 | 5 (sớm hơn 04/12) | X1–X5 có kết quả; demo chạy; amendment ADR 0005 đã commit trước khi chạy test | Không chạy test khi chưa có commit này |
 | **G4** Chạy cuối | 30/11, muộn nhất 14/12 | 6 | Mỗi cấu hình chạy test một lần; `confirm.json`, bảng theo nhóm và miền, E7, giám khảo | Lỗi đường ống: amendment trước khi chấm lại, ghi cả lần sai |
@@ -281,6 +282,12 @@ Bám giai đoạn của đề cương. Không qua cổng thì không làm bướ
 | Chạy Colab | CMT hoặc NMT, theo gói đã xuất sẵn |
 | Quyết định, commit, gửi GVHD | CMT |
 | Code, xuất gói, chấm, dựng bảng, soạn nháp | Codex làm, Claude kiểm |
+| Lọc trước và viết câu hỏi cho ứng viên T6, T3, T2 mới. Công bố phễu lọc | Agent; đề cương cho LLM diễn đạt câu hỏi |
+| Bổ sung đoạn văn gốc thiếu trong phiếu: chỉ trích nguyên văn, không kết luận | Agent |
+| Kéo nhãn, đo đồng thuận và thời gian mỗi lô, dừng khi tụt. Hai người gán chỉ nghe đạt hay không, không biết câu nào lệch | Claude chạy script |
+| Sau khi lô khóa: agent gán mù, người không thấy kết quả. Dùng để đo LLM so với người (thăm dò) và chọn câu nghi sai, trộn với câu ngẫu nhiên đưa luật sư | Agent chọn, luật sư đọc, không kèm lý do của AI |
+| Kiểm phiên bản đồ thị với VBHN và nguồn ngoài. Lawgical chỉ 20 lượt/ngày, để dành cho dòng lệch | Codex, `vn-law-verifier` |
+| Ghi chú đọc tài liệu có trích dẫn, phản biện bản nháp | `lit-scout`, `thesis-critic`; hai người vẫn phải đọc bản gốc |
 | Đặt hướng, viết hợp đồng việc, kiểm lại độc lập | Claude |
 
 ---
@@ -371,15 +378,19 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
 - [x] 05/11 CMT trả lời Q1–Q3.
 - [ ] Trang gán nhãn thẻ 4.0 và lô thử G1 (30 câu từ test 2). Luật sư xem thẻ 4.0.
 - [ ] Phiếu silver T2, T3 cho cuối tuần.
-- [ ] X7: CMT chạy Colab đợt 2.
-- [ ] X1: xuất gói Colab dev (Codex đang làm, Claude kiểm).
+- [x] 05/11 X1, X7: gói Colab đã kiểm (dev 4 file × 151 dòng, không có đáp án, `p2a2` ≡ `b7pp`, `p2a3` ≡ `proposed2`; đợt 2 13/13 file khớp hash). Ở `colab_upload/` (gitignore).
+- [ ] CMT chạy Colab: dev rồi đợt 2. Claude nhập và chấm.
 - [ ] X2: thiết kế thông báo bãi bỏ trong prompt, sau khi có X1.
+- [ ] Gộp `docs/vilextime-the-gan-nhan.md` vào `docs/vilextime-annotation.md`, bản 4.0, không thêm quy tắc. Gửi luật sư.
+- [ ] D0: bản nháp 7 chương và paper.
 
 ## Decisions
 
 - 2026-11-05: Coi v1.0 và test 2 là vòng thử có khai báo. Kết luận chính dựa trên bộ test cuối mới.
 - 2026-11-05: Không yêu cầu hệ đề xuất phải thắng. Mục tiêu là đo đúng.
 - 2026-11-05 (CMT): giờ GPU không phải giới hạn; gán nhãn trong cuối tuần 07–08/11; luật sư tham gia; cho commit.
+- 2026-11-05 (CMT): repo GitHub đang công khai, CMT biết và vẫn cho push lên `develop`. Claude tự commit và push `develop` sau mỗi việc đã kiểm. Quyết định E2 (giữ riêng tư đến khi kiểm quy định ẩn danh) coi như đổi; phải xem lại trước khi nộp hội nghị.
+- 2026-11-05 (CMT): cân nhắc giao agent gán toàn bộ rồi chọn **người gán**. Agent chỉ hỗ trợ ở các khâu ghi trong mục "Ai làm gì", không tính vào nhãn chính. CMT muốn có bản nháp Chủ nhật 08/11 (D0).
 - Quyết định cũ còn hiệu lực: A2, A3, B2, B6, B7, B9, C2, C3, C4, C5, E1–E5 (MASTER_RESEARCH_GUIDE §13.3 tại `51f36c7`), và reranker cắt 05/11.
 
 ## Validation
