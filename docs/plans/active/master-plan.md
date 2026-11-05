@@ -335,10 +335,48 @@ Hồ sơ đầy đủ về những gì đã xóa: `docs/plans/completed/2026-11-
 4. **Không chạm test ngoài G4.** Mọi tinh chỉnh ở `dev`. Mọi thay đổi sau khi khai báo đều là amendment, có ngày, có ghi đã thấy gì.
 5. **Báo mọi kết quả đã khai báo,** kể cả xấu. Không có "chạy lại cho đẹp".
 6. **Nhãn người là của người.** AI không gợi ý, không nháp ghi chú, không hòa giải.
-7. **Quy trình với Codex:** Claude viết hợp đồng (phạm vi, cấm gì, bằng chứng gì) → Codex làm → Claude kiểm độc lập bằng lệnh riêng → chưa đạt thì trả lại, nói rõ sai ở đâu → CMT commit. Mỗi lần một phiên Codex ghi vào repo.
+7. **Quy trình với Codex:** Claude viết hợp đồng (phạm vi, cấm gì, bằng chứng gì) → Codex làm → Claude kiểm độc lập bằng lệnh riêng → chưa đạt thì trả lại, nói rõ sai ở đâu → Claude commit và push `develop` (CMT cho phép 05/11). Nhiều phiên Codex chạy cùng lúc thì mỗi phiên một vùng file không chồng nhau.
 8. **Nói rõ độ tin cậy.** Mọi kết luận ghi rõ: xác nhận, thăm dò hay mô tả; nhãn người hay nhãn LLM.
 
 ---
+
+## 10. Hàng việc của agent
+
+Mục tiêu (CMT 05/11): agent làm hết phần của agent, cuối cùng chỉ còn việc người ở mục 11. Mỗi việc do Codex hoặc agent làm, Claude kiểm độc lập, rồi commit và push `develop`.
+
+| Mã | Việc | Xong khi | Phụ thuộc |
+|---|---|---|---|
+| A1 | Gộp hướng dẫn 4.0, file Word cho luật sư, cổng Q4 đúng ADR, trang gán | Trang đã đăng, kiểm được ghi và đọc | — |
+| A2 | Đối chiếu đáp án với VBHN | `docs/reports/doi-chieu-vbhn.md` có độ phủ và tỷ lệ khớp | — |
+| A3 | Kiểm kê ứng viên đã lọc | Biết còn thiếu bao nhiêu câu mỗi tầng | — |
+| A4 | Phiếu T6, T3, T2 mới: lọc, viết câu hỏi, đáp án ngắn | `data/review/the4/lo2_moi_worksheet.jsonl` đủ 60/20/60 hoặc nêu rõ thiếu | A3 |
+| A5 | T1 mới 110 câu; gói T5 cho luật sư | Phiếu sẵn | A4 |
+| A6 | **Gold mù:** rút mẫu 120 + 30 từ bộ test cuối, phiếu riêng từng người, đưa lên trang | Trang có phần gold không lộ đáp án đồ thị; mỗi người không thấy câu gold của mình ở lô gán cho đến khi điền xong | A1, A4 |
+| A7 | `proposed3`, Verifier khi không lọc, phân rã theo miền, demo | Có gói Colab, báo cáo, `scripts/demo.py` chạy được | — |
+| A8 | Bản nháp 7 chương và paper | Mốc D0 | — |
+| A9 | Đọc 14 nguồn, khảo sát tính mới có log | Ghi chú trong `related_paper/notes/`, sửa mô tả sai | — |
+| A10 | Tập dượt lần chạy cuối trên dev: từ phát hành, xuất, nhập, chấm, kiểm định, đến bảng | Một lệnh chạy hết trên dev, số khớp lần chấm cũ; có chặn thiếu đáp án ngắn | — |
+| A11 | Phiếu luật sư tự sinh từ dòng lệch, không có ý kiến AI; xuất bản phát hành có tầng chất lượng | `adjudicate`, `export_release` chạy được trên dữ liệu thử | A1 |
+| A12 | Agent gán mù sau khi lô khóa; chọn câu nghi sai trộn câu ngẫu nhiên cho luật sư | Script sẵn, khai báo trong amendment | A1 |
+| A13 | Bảng LLM không truy xuất (RQ1), generator kiểm độ bền (X3) trên dev | Có so sánh chi phí và kết quả | A7 |
+| A14 | Gói Colab embedding `AITeamVN` (X6): dữ liệu, notebook, lệnh nhập | CMT chỉ còn bấm chạy | — |
+| A15 | Giám khảo LLM: công cụ và mẫu 100 câu; phiếu mã hóa lỗi E7 | Mẫu sẵn cho người | A7 |
+| A16 | Hình và bảng tự sinh từ file kết quả cho khóa luận và paper | Một lệnh dựng lại | A10 |
+| A17 | Nháp amendment ADR 0005 cho bộ test cuối; datasheet và tuyên bố dữ liệu | Nháp sẵn, chờ số G2 và người duyệt | A4 |
+| A18 | Phản biện độc lập bản nháp (`thesis-critic`), sửa chỗ sai | Danh sách lỗi đã xử lý | A8 |
+| A19 | Nhập và chấm Colab khi CMT tải về; điền chương 6 | Không còn `[CHỜ COLAB]` | CMT chạy Colab |
+
+**Thứ tự thật sự quan trọng:** gold mù phải đi trước khi người gán thấy đáp án đồ thị của cùng câu đó (B6). Vì vậy câu gold của mỗi người được giữ lại khỏi các lô gán của chính người đó, cho đến khi họ điền xong phiếu gold.
+
+## 11. Việc chỉ người làm được
+
+Khi hàng việc trên xong, chỉ còn:
+1. Hai người gán: lô thử; silver; T6, T3, T2 mới; T1; gold mù; mã hóa lỗi E7; mẫu giám khảo.
+2. Luật sư: xem hướng dẫn 4.0; chốt dòng lệch; T5.
+3. Chạy Colab theo gói đã xuất.
+4. CMT, NMT: duyệt amendment rồi cho chạy test cuối; đọc và sửa bản nháp bằng lời của mình; đọc bản gốc tài liệu chính.
+5. GVHD: góp ý hướng; chọn nơi nộp. Gửi mẫu khóa luận UIT.
+6. Chuẩn bị bảo vệ.
 
 **Việc harness, chưa làm:** `docs/README.md` và `docs/product/README.md` là file mẫu của harness, nhắc tới file không có trong repo. Theo `AGENTS.md`, muốn sửa thì CMT phải yêu cầu `$improve-harness`. Không chặn việc gì.
 
