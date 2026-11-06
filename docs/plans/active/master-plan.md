@@ -496,6 +496,30 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
 
 ### Tiếp quản gán nhãn silver đợt 2, 06/11/2026
 
+- Cập nhật theo yêu cầu trực tiếp của người dùng: **Codex làm thay Claude Code**
+  cho sáu lượt chunk02–04 × AI-A/AI-B. Giữ nguyên input, hướng dẫn và taxonomy;
+  không tiếp tục chờ hạn mức Claude. Runtime mới là Codex native subagents,
+  model kế thừa phiên chính (không suy đoán revision). Hai bên dùng context mới,
+  không thấy nhãn nhau. Chạy tối đa ba worker đồng thời theo giới hạn runtime;
+  cả sáu lượt vẫn là sáu phiên riêng. Không trộn provenance với chunk01 Claude.
+- [x] Codex đã hoàn tất cả sáu lượt: 14 + 15 + 15 câu mỗi bên, 88 nhãn, 44 cặp;
+  schema/ID/binding/dẫn chứng hợp lệ, không có nhãn bị loại ở bước kiểm máy.
+  Nhãn thô ở `data/review/ai_research/2026-11-06_silver/raw/{a,b}_chunk02–04.md`.
+- [x] Khóa và đo riêng tại `data/review/ai_research/2026-11-06_silver/round2_codex/`;
+  `reproduce.py` dùng đúng công thức native, kiểm hash nguồn và input trước đo.
+  Chạy lại sau khóa không đổi nhãn. SHA256SUMS lưu hash nhãn thô, input, aggregate,
+  metric, provenance và phiếu duyệt. Hai file chunk01 Claude giữ nguyên byte.
+- Kết quả trước hòa giải: Q1/Q2 AC1 0,876, p_neg 0,714; Q3 0,913/0,727;
+  Q4 0,941/0,833. Nhãn suy ra: AC1 **0,728**, p_neg 0,857, κ 0,727 — **chưa đạt**
+  ngưỡng AC1 0,80. Có 11 câu lệch ít nhất một Q, 6 câu lệch verdict. Không đổi
+  nhãn thô để đạt ngưỡng. Chỉ áp dụng cho 44 câu silver của lượt Codex này.
+- Thiếu căn cứ: A 17/44, B 16/44 phiếu `insufficient`, không âm thầm loại khỏi
+  phép đo. Toàn bộ nhãn AI vẫn `not_verified`; đồng thuận không chứng minh đúng luật.
+- [x] Xuất `round2_codex/duyet_CMT.xlsx`: 44 câu, chưa có xác nhận người nào.
+  Chưa hòa giải hoặc duyệt thay CMT; chunk05–11 ngoài đợt này chưa chạy.
+- Các mục về hết hạn mức Claude bên dưới là lịch sử trước khi người dùng cho
+  Codex làm thay, không còn là lý do chặn đợt 2 này.
+
 - Phần trước đã commit: `eb3d8d7` (framework), `3dfc95d` (silver phần 1,
   official text và prompts v2); working tree sạch khi tiếp quản.
 - Sáu subagent Claude của phiên `aad8dda3-63f9-4858-b90a-0ae91504b00f` cho

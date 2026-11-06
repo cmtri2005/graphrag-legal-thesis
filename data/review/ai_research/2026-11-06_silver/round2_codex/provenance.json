@@ -1,0 +1,76 @@
+{
+  "scope": "silver chunk02–04 only; chunk01 Claude excluded from these metrics",
+  "runtime": "Codex native subagents",
+  "model": "inherited; exact identifier unavailable",
+  "switch_authority": "User explicitly requested Codex to do the work in place of Claude Code",
+  "created_at": "2026-11-06T15:27:43.814815+00:00",
+  "requested_sessions": 6,
+  "requested_records_per_side": 44,
+  "concurrency_limit": 3,
+  "blinding": "fresh contexts, no peer labels supplied; prompt-level read isolation, not OS-enforced",
+  "inputs": {
+    "chunk02.jsonl": "7c6efef25803a258cf5e884b3cec390ee7d73c0498a4492907dde3fad7311866",
+    "chunk03.jsonl": "97c34cedfc0cca5f5bfce340c4a2577a2b38e8c502d206f2f97dc44f5eb952bd",
+    "chunk04.jsonl": "0b851e42af039784750197dcfa4734f5ca9fe610824d537e76f9593d510945c6"
+  },
+  "raw_outputs": [
+    "a_chunk02.md",
+    "b_chunk02.md",
+    "a_chunk03.md",
+    "b_chunk03.md",
+    "a_chunk04.md",
+    "b_chunk04.md"
+  ],
+  "status": "completed",
+  "human_verification": "not_verified; CMT review pending",
+  "source_sha256": {
+    "scripts/review/ai_labels.py": "b0e36ebecd8f4c5d51aa90f4d1c8f3db7981b5f4dfa5efdd597a5598e8c7325f",
+    "scripts/review/crosscheck.py": "98d67b7b377362eff2600feab98e0e5c7cac3f7ae47769b1890481a44251e090",
+    "scripts/review/test2_labels.py": "2bf27b8997ef707eed20c5d7826a19f2912d501d70d36f76b0d7e6c2c839e637",
+    "docs/vilextime-dinh-nghia.md": "bb506aa679888907f29f6af2480c6ee66ea451296137e1d78c57cb5245ca122e",
+    "docs/vilextime-annotation.md": "b92275cdfeb8c194d9a1c8e275c7fbfa80c06d4bc6b75a1a22f69cd81e25a72a"
+  },
+  "reproduce_command": ".venv/bin/python data/review/ai_research/2026-11-06_silver/round2_codex/reproduce.py",
+  "aggregation_metadata_override": "Use native measure formulas unchanged; replace its hardcoded lo0/AI-model description with the actual silver Codex subset description.",
+  "preserved_claude_chunk01_sha256": {
+    "data/review/ai_research/2026-11-06_silver/raw/a_chunk01.md": "9a11e84e5ff5e4a523e378e4a5c10025a7f4d3200fc32e8ffcc290e76b444e64",
+    "data/review/ai_research/2026-11-06_silver/raw/b_chunk01.md": "69b3e4409a39e95ea739b3496ed7919b16714fce608b493ad1506c7b22a7a57d"
+  },
+  "completed_at": "2026-11-06T15:41:59.679727+00:00",
+  "validation": {
+    "valid_a": 44,
+    "valid_b": 44,
+    "paired": 44,
+    "rejected_a": 0,
+    "rejected_b": 0,
+    "raw_schema_and_binding": "passed",
+    "reproduction_after_lock": "passed; frozen labels unchanged",
+    "human_confirmations": 0
+  },
+  "agreement": {
+    "disputed_questions": 11,
+    "verdict_disagreements": 6,
+    "verdict_ac1": 0.7278350515463918,
+    "verdict_p_neg": 0.8571428571428571,
+    "verdict_gate": "not_met"
+  },
+  "evidence_status": {
+    "a": {
+      "sufficient": 27,
+      "insufficient": 17
+    },
+    "b": {
+      "insufficient": 16,
+      "sufficient": 28
+    }
+  },
+  "review_workbook": "duyet_CMT.xlsx",
+  "sessions": {
+    "a_chunk02.md": "/root/silver_a02",
+    "b_chunk02.md": "/root/silver_b02",
+    "a_chunk03.md": "/root/silver_a03",
+    "b_chunk03.md": "/root/silver_b03",
+    "a_chunk04.md": "/root/silver_a04",
+    "b_chunk04.md": "/root/silver_b04"
+  }
+}
