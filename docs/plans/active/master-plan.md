@@ -279,7 +279,8 @@ Bám giai đoạn của đề cương. Không qua cổng thì không làm bướ
 
 | Việc | Người |
 |---|---|
-| Gán nhãn, gold mù, kiểm mẫu, mã hóa lỗi | CMT, NMT, luật sư. AI không tham gia |
+| Gán nhãn (từ 06/11): AI-A, AI-B gán độc lập; `legal-adjudicator` đề xuất cho dòng lệch; CMT duyệt **mọi dòng**, có xem nhãn AI, đồng ý hoặc sửa | Agent gán, CMT xác nhận. Xem Decisions 06/11 |
+| Gold mù, kiểm mẫu, mã hóa lỗi | CMT, NMT, luật sư. AI không tham gia |
 | Chạy Colab | CMT hoặc NMT, theo gói đã xuất sẵn |
 | Quyết định, commit, gửi GVHD | CMT |
 | Code, xuất gói, chấm, dựng bảng, soạn nháp | Codex làm, Claude kiểm |
@@ -488,6 +489,7 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
 - 2026-11-05 (CMT): giờ GPU không phải giới hạn; gán nhãn trong cuối tuần 07–08/11; luật sư tham gia; cho commit.
 - 2026-11-05 (CMT): repo GitHub đang công khai, CMT biết và vẫn cho push lên `develop`. Claude tự commit và push `develop` sau mỗi việc đã kiểm. Quyết định E2 (giữ riêng tư đến khi kiểm quy định ẩn danh) coi như đổi; phải xem lại trước khi nộp hội nghị.
 - 2026-11-05 (CMT): cân nhắc giao agent gán toàn bộ rồi chọn **người gán**. Agent chỉ hỗ trợ ở các khâu ghi trong mục "Ai làm gì", không tính vào nhãn chính. CMT muốn có bản nháp Chủ nhật 08/11 (D0).
+- 2026-11-06 (CMT): **đổi quy trình gán nhãn.** Agent làm phần gán: AI-A, AI-B gán mù độc lập theo thẻ 4.0, đo AC1/p_neg AI–AI, `legal-adjudicator` đề xuất cho dòng lệch. CMT duyệt mọi dòng, có xem nhãn và lý do AI, rồi đồng ý hoặc sửa; nhãn CMT là nhãn cuối. Bỏ lịch hai người gán mù lô 0 và silver ngày 07–08/11. Thay quyết định 05/11 "chọn người gán" và các dòng "A và B gán độc lập", "người gán không thấy gợi ý AI" ở mục Quy tắc gán nhãn. Hệ quả phải ghi trong paper: không còn đồng thuận người–người cho bộ cuối; chỉ báo AI–AI và tỷ lệ CMT sửa nhãn AI; dòng vào test có tầng "AI gán, người xác nhận" (định nghĩa §6, sửa 06/11). Mặc định (CMT đổi được): luật sư chốt các dòng CMT ghi `[phân vân]`; gold mù giữ nguyên, phải xong trước khi CMT duyệt câu gold của mình (B6).
 - Quyết định cũ còn hiệu lực: A2, A3, B2, B6, B7, B9, C2, C3, C4, C5, E1–E5 (MASTER_RESEARCH_GUIDE §13.3 tại `51f36c7`), và reranker cắt 05/11.
 
 ## Validation

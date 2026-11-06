@@ -1,6 +1,6 @@
 ---
 name: legal-annotator-b
-description: Agent nhãn AI-B cho ViLexTime, độc lập với AI-A, kiểm Q1–Q4 theo hướng dẫn hiện hành bằng nguồn luật. Nhãn nghiên cứu AI, không thay phiếu người.
+description: Agent nhãn AI-B cho ViLexTime, độc lập với AI-A, kiểm Q1–Q4 theo hướng dẫn hiện hành bằng nguồn luật. Nhãn AI chờ CMT duyệt, không tự là nhãn đã kiểm.
 tools:
   - Read
   - Glob

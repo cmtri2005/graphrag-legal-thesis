@@ -168,6 +168,18 @@ T3 0,473 với p_neg 0,200 (n=23); T5 không có dòng hiệu chuẩn. CMT chố
    (`luat_su_kiem_q2_da_chot.xlsx`), đồng ý 54/67. Nhãn luật sư của 117 dòng này
    (`data/review/luat_su_kiem_agent.tsv`) đứng trên nhãn agent và nhãn A.
 
+**Sửa ngày 06/11/2026 (CMT), bộ test cuối.** Tám ô trên giữ nguyên. Ai đánh dấu:
+1. Hai agent `legal-annotator-a`, `legal-annotator-b` gán mù độc lập theo thẻ 4.0, nguồn tra
+   theo skill `vn-legal-research`. Nhãn thô lưu ở `data/review/ai_research/<run>/`, khóa và băm
+   trước khi xem nhau; đồng thuận AI–AI đo bằng `scripts/review/ai_labels.py`.
+2. Dòng hai agent lệch: `legal-adjudicator` đề xuất, lưu file riêng.
+3. CMT duyệt **mọi dòng**, có xem nhãn và lý do của AI, đồng ý hoặc sửa. Nhãn CMT là nhãn cuối;
+   dòng CMT ghi `[phân vân]` do luật sư chốt.
+4. Dòng vào test ghi tầng "AI gán, người xác nhận". Báo cáo nêu đồng thuận AI–AI và tỷ lệ CMT sửa
+   nhãn AI; không gọi là đồng thuận người–người, vì người duyệt thấy nhãn AI.
+5. Điều 2 của bản sửa 28/10 ("một người không đủ") không áp dụng cho dòng qua quy trình này. Phạm vi
+   T1/T6 của bản sửa 28/10 thuộc agent Codex cũ, không áp dụng cho hai agent mới.
+
 ## 7. Mã loại dòng (danh sách đóng, 19 mã)
 
 | Mã | Khi nào |

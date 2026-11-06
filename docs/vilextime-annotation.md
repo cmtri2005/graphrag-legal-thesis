@@ -205,6 +205,11 @@ hỏi không hỏi (ví dụ thẩm quyền cho loại hàng khác) thì không 
 
 ## 5. Quy trình
 
+> **Sửa ngày 06/11/2026 (CMT).** Bộ test cuối không do hai người gán mù nữa. Hai agent AI-A, AI-B
+> gán theo thẻ Q1–Q4 dưới đây; CMT duyệt mọi dòng có xem nhãn AI; dòng CMT ghi `[phân vân]` do luật
+> sư chốt. Chi tiết ở định nghĩa §6 (sửa 06/11). Thẻ Q1–Q4, mã lý do và dẫn chứng ở §1–§4 giữ nguyên.
+> Các mục 1–4 và 8 bên dưới chỉ còn áp dụng cho gold mù và các lượt người gán mù khác.
+
 1. **Công cụ.** A và B gán trên trang web. Trang lưu sau mỗi câu và ghi thời gian từng câu.
    Hai người nhận cùng một bộ dẫn chứng do máy chuẩn bị; máy không điền nhãn.
 2. **Độc lập.** A và B gán độc lập, không trao đổi trong lúc làm. Không hỏi bất kỳ AI nào về câu

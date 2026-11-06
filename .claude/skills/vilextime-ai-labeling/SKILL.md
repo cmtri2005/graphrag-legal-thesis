@@ -11,10 +11,11 @@ Hiện hành là thẻ 4.0; kiểm lại phiên bản trên đĩa mỗi lượt.
 `scripts/review/test2_labels.py`: `GOOD`, `OPTIONS`, `REASONS`, `validate_label`,
 `worksheet_sha256`. Không nhập CLI phiếu người để giả chữ ký hoặc thời gian.
 
-Quy trình chính thức hiện tại cấm người gán xem gợi ý AI cho câu đang gán và yêu
-cầu luật sư hòa giải. Skill này chỉ tạo nhãn nghiên cứu AI riêng, luôn
-`label_origin=ai`, `verification_status=not_verified`; không đủ điều kiện đưa vào
-test do người kiểm. Chỉ làm trên lô đã được giao, không tự mở nhãn đối phương.
+Từ 06/11/2026 (CMT, định nghĩa §6 sửa 06/11): bộ test cuối do AI-A, AI-B gán,
+CMT duyệt mọi dòng có xem nhãn AI. Nhãn agent luôn `label_origin=ai`,
+`verification_status=not_verified` cho tới khi CMT xác nhận; agent không tự ghi
+trạng thái đã kiểm. Gold mù và các lượt người gán mù khác vẫn cấm người xem gợi ý
+AI. Chỉ làm trên lô đã được giao, không tự mở nhãn đối phương.
 
 ## Đầu vào và nhãn
 

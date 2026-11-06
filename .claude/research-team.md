@@ -69,11 +69,11 @@ Việc xác thực không được thực hiện tự động bởi các file c�
 
 ## Nhãn, độc lập và cổng kết luận
 
-`docs/vilextime-annotation.md` §5–§6 yêu cầu **người gán mù, không xem gợi ý AI;
-luật sư chốt bất đồng**. Bộ agent này tạo lớp nghiên cứu AI riêng; không sửa quy
-trình chính thức và không thay hai người/luật sư. Muốn thay phương pháp phải có
-quyết định rõ và cập nhật authority trước khi áp dụng. Không đưa gợi ý AI cho
-hai người trên câu đang dùng để đo đồng thuận mù.
+Từ 06/11/2026 (CMT; định nghĩa §6 và hướng dẫn §5 sửa 06/11): bộ test cuối do
+AI-A, AI-B gán mù độc lập, `legal-adjudicator` đề xuất cho dòng lệch, CMT duyệt
+mọi dòng có xem nhãn AI và chốt; dòng CMT ghi `[phân vân]` do luật sư chốt. Gold mù
+vẫn do người gán, không xem gợi ý AI; câu gold của một người không đưa người đó
+duyệt trước khi họ nộp gold.
 
 Nhận nhãn qua lời đáp; chỉ lead lưu ở `data/review/ai_research/<run_id>/` gồm
 `a.jsonl`, `b.jsonl`, provenance, số đo và đề xuất hòa giải riêng. Không tạo dữ

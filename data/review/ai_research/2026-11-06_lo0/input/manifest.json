@@ -1,0 +1,93 @@
+{
+ "run_id": "2026-11-06_lo0",
+ "worksheet": "data/review/the4/lo0_worksheet.jsonl",
+ "worksheet_file_sha256": "c690e2a1712d73a91990780154b0efa21bb0d8be203b14f7c730eb51935a9347",
+ "guideline_version": "4.0",
+ "docs_sha256": {
+  "docs/vilextime-annotation.md": "00891bddc2c896c578a754744cf4ab4ed0ea4c788c129c4213ab688b396c2692",
+  "docs/vilextime-dinh-nghia.md": "9b42694932003a6a119d3d3230d3a8259906ea5e8eb4dd29a2fa35205c9f9363"
+ },
+ "chunks": {
+  "chunk1.jsonl": {
+   "sha256": "8bbf63b2dc1c3c1a0a44fa896b993bfcb723d53c690a925bc573956eb2521e55",
+   "lineage_ids": [
+    "provision:28cf0710-ead7-11f0-9d79-d7f11d9e874c#k10",
+    "provision:9a7e694a-33bc-11f1-b5a5-756c38795148",
+    "provision:5235a830-2857-11f1-837c-6bcad5a2608b",
+    "provision:5f1d898e-df3f-11f0-b459-b5232cdde20f",
+    "provision:8fdea30a-2c7e-11f1-9ef6-d9f3304caa84",
+    "provision:387a5d30-2c82-11f1-b7e4-d188e3380d77",
+    "provision:877a2f20-2c30-11f1-a2c5-0d32792ff7cb",
+    "provision:ffe954f0-2c7a-11f1-93fe-6b01d63fe9f4",
+    "provision:d4968c5a-2d47-11f1-8e62-6970eabcd7de",
+    "provision:3ec385e0-2d54-11f1-bf8d-53fc621534b7"
+   ],
+   "groups": [
+    "T2",
+    "T2",
+    "T2",
+    "T6",
+    "T3",
+    "T3",
+    "T6",
+    "T2",
+    "T3",
+    "T2"
+   ]
+  },
+  "chunk2.jsonl": {
+   "sha256": "bf70ace1f8b134e733a7b941642c28556af3c346e6a300103c5c9fd122a475d2",
+   "lineage_ids": [
+    "provision:23546a6c-e160-11f0-b701-b193f5dde669",
+    "provision:29a82d5a-1efe-11f1-91d2-5fcf6dd125c5",
+    "provision:66945030-31ba-11f1-9ec9-71d73505d2a8",
+    "provision:aac3cc10-2d53-11f1-8b3b-0994411aeb10",
+    "provision:28824090-3039-11f1-8e2a-f13deedf3d46",
+    "provision:6244ead0-2b39-11f1-b9a4-770da39d0f71",
+    "provision:9134b140-2c88-11f1-b8ed-21827e5e62dc",
+    "provision:9ed89166-df3c-11f0-8ca4-5b4632362d55",
+    "provision:762f23d0-276f-11f1-ad5b-7546d2350c98",
+    "provision:555eaec0-2d53-11f1-9a36-9978a5f04316"
+   ],
+   "groups": [
+    "T3",
+    "T3",
+    "T2",
+    "T2",
+    "T6",
+    "T6",
+    "T6",
+    "T6",
+    "T2",
+    "T6"
+   ]
+  },
+  "chunk3.jsonl": {
+   "sha256": "8aee5d70deab1162048730f5c001e106a9a82f810c5eba47322167fe25b7f81f",
+   "lineage_ids": [
+    "provision:0f265830-1eae-11f1-88ae-c11e1d414924",
+    "provision:e23e2980-3634-11f1-acf9-4396220a8c6e",
+    "provision:004c3570-2c7b-11f1-81e3-91ce487e9d29",
+    "provision:b3ab65fa-2c7b-11f1-9966-4dd1b932d89a",
+    "provision:62470db0-2b39-11f1-927a-d15371532b29",
+    "provision:78b20080-2c85-11f1-81a6-73d8fb46546b",
+    "provision:aa492966-df50-11f0-9d09-092b4cc6cf0a#k7",
+    "provision:aae9b168-eb78-11f0-9853-1fa76cfa8c7f#k2#g",
+    "provision:50b1afb0-df4e-11f0-bfd0-e722cd96bb08#k1",
+    "provision:c86c3310-2c86-11f1-8c3a-83b67d77c889"
+   ],
+   "groups": [
+    "T2",
+    "T2",
+    "T2",
+    "T6",
+    "T6",
+    "T2",
+    "T2",
+    "T2",
+    "T2",
+    "T6"
+   ]
+  }
+ }
+}

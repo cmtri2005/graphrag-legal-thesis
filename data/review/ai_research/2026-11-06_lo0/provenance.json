@@ -1,0 +1,21 @@
+{
+ "run_id": "2026-11-06_lo0",
+ "scope": "Lô 0 (G1, 30 câu từ test 2), worksheet data/review/the4/lo0_worksheet.jsonl; lô hiệu chuẩn, không phải cổng chính",
+ "coordinator": "phiên Claude Code chính (claude-opus-5-5), không chạy dưới --agent research-lead",
+ "annotators": {"a": "legal-annotator-a", "b": "legal-annotator-b"},
+ "model_reported_by_agents": "claude-opus-5-5, revision unknown (cả 6 phiên)",
+ "sessions": "6 phiên mới, mỗi bên 3 phần × 10 câu; A và B nhận lời giao giống nhau, chỉ khác labeler/phiên; không phiên nào nhận đầu ra của bên kia",
+ "prompt_change_between_chunks": "Phần 2–3 thêm cho cả hai bên: Lawgical không có trong runtime, vbpl.vn toàn văn chỉ trả khung trang (rút từ phần 1, không chứa nhãn)",
+ "tools_actual": "Read, Glob, Grep, ToolSearch, WebSearch, WebFetch. Lawgical MCP inline KHÔNG nạp được ở cả hai bên (ToolSearch không ra tool) -> 0 lượt MCP",
+ "sources": "Chủ yếu đoạn văn bản tác động có sẵn trong phiếu; tra ngoài qua nguồn phụ (luatvietnam, caselaw, hethongphapluat, vcci) và vài tệp trên datafiles.chinhphu.vn; không mở được vbpl.vn toàn văn hay Công báo",
+ "web_calls": {"a": [14, 16, 15], "b": [15, 15, 13]},
+ "blinding": "Cả 6 phiên tự báo blind. Lưu ý: bộ nhớ dự án (MEMORY.md) tự nạp vào ngữ cảnh subagent, có số tổng hợp về lô 0 cũ và người gán A; không có nhãn từng câu. Hướng dẫn §7 cũng có số tổng hợp lô 0 cũ.",
+ "raw_replies": "raw/{a,b}_chunkN.md: lời đáp nguyên văn trích bằng script từ transcript, không chép tay",
+ "known_issues": [
+  "b_chunk2: phần tóm tắt văn xuôi gọi 28824090, 6244ead0, 9ed89166 là khong_dat nhưng JSONL ghi dat; số đo dùng JSONL",
+  "a_chunk2: 16 lượt web, vượt nhẹ mức ~15",
+  "Cả hai bên báo phiếu aac3cc10 ghi effective_from 2023-12-15 trong khi Điều 3 TT 32/2022 ghi hiệu lực 15/02/2023 (nghi lỗi dựng phiếu)"
+ ],
+ "measure_cmd": ".venv/bin/python scripts/review/ai_labels.py measure --run data/review/ai_research/2026-11-06_lo0",
+ "label_status": "label_origin=ai, not_verified; không thay phiếu người, không dùng để hòa giải người"
+}

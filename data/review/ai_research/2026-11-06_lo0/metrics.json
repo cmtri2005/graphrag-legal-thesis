@@ -1,0 +1,384 @@
+{
+ "kind": "AI–AI (cùng model, sai số tương quan); không phải người–người, AI–người hay độ đúng pháp lý",
+ "guideline_version": "4.0",
+ "batch_note": "Lô 0 là lô hiệu chuẩn (§5 mục 3): số đo thử, không phải cổng chính",
+ "files_sha256": {
+  "a.jsonl": "c980e88c8caa8eb461d6892e8913c0063971f0ce2fcfb9a0ed29f9998fe08be6",
+  "b.jsonl": "6f7db3d4d8c9c856e598fcbd417583fd25243b3997aed6c806db62e872f5cfa8"
+ },
+ "coverage": {
+  "requested": 30,
+  "valid_a": 30,
+  "valid_b": 30,
+  "paired": 30,
+  "missing": {
+   "a": [],
+   "b": []
+  },
+  "rejected": {
+   "a": [],
+   "b": []
+  }
+ },
+ "evidence_status": {
+  "a": {
+   "sufficient": 18,
+   "insufficient": 12
+  },
+  "b": {
+   "sufficient": 25,
+   "insufficient": 5
+  }
+ },
+ "quote_in_provided_sources": {
+  "a": {
+   "True": 30
+  },
+  "b": {
+   "True": 29,
+   "False": 1
+  }
+ },
+ "thresholds": {
+  "ac1": 0.8,
+  "p_neg": 0.6,
+  "min_adverse": 5
+ },
+ "metrics": {
+  "q1": {
+   "n": 30,
+   "ac1": 0.9631675874769797,
+   "kappa": 0.6511627906976744,
+   "category_agreement": {
+    "dung": 0.9824561403508771,
+    "sai": 0.6666666666666666
+   },
+   "p_neg": 0.6666666666666666,
+   "confusion_a_b": {
+    "dung|dung": 28,
+    "dung|sai": 1,
+    "sai|sai": 1
+   },
+   "adverse_labels": 3,
+   "gate": "not_evaluable"
+  },
+  "q2": {
+   "n": 30,
+   "ac1": 1.0,
+   "kappa": null,
+   "category_agreement": {
+    "co": 1.0
+   },
+   "p_neg": null,
+   "confusion_a_b": {
+    "co|co": 30
+   },
+   "adverse_labels": 0,
+   "gate": "not_evaluable"
+  },
+  "q3": {
+   "n": 30,
+   "ac1": 0.9019607843137255,
+   "kappa": 0.7916666666666666,
+   "category_agreement": {
+    "co": 0.9583333333333334,
+    "khong": 0.8333333333333334
+   },
+   "p_neg": 0.8333333333333334,
+   "confusion_a_b": {
+    "co|co": 23,
+    "co|khong": 1,
+    "khong|co": 1,
+    "khong|khong": 5
+   },
+   "adverse_labels": 12,
+   "gate": "pass"
+  },
+  "q4": {
+   "n": 30,
+   "ac1": 0.9288256227758007,
+   "kappa": 0.47368421052631604,
+   "category_agreement": {
+    "co": 1.0,
+    "khong": 0.9642857142857143,
+    "khong_chac": 0.0
+   },
+   "p_neg": 0.5,
+   "confusion_a_b": {
+    "co|co": 1,
+    "khong|khong": 27,
+    "khong|khong_chac": 1,
+    "khong_chac|khong": 1
+   },
+   "adverse_labels": 4,
+   "gate": "not_evaluable"
+  },
+  "verdict": {
+   "n": 30,
+   "ac1": 0.781021897810219,
+   "kappa": 0.6590909090909092,
+   "category_agreement": {
+    "dat": 0.9090909090909091,
+    "khong_dat": 0.75
+   },
+   "p_neg": 0.75,
+   "confusion_a_b": {
+    "dat|dat": 20,
+    "dat|khong_dat": 2,
+    "khong_dat|dat": 2,
+    "khong_dat|khong_dat": 6
+   },
+   "adverse_labels": 16,
+   "gate": "not_met"
+  }
+ },
+ "by_group": {
+  "T2": {
+   "q1": {
+    "n": 15,
+    "ac1": 0.9186991869918699,
+    "kappa": 0.6341463414634146,
+    "category_agreement": {
+     "dung": 0.9629629629629629,
+     "sai": 0.6666666666666666
+    },
+    "p_neg": 0.6666666666666666,
+    "confusion_a_b": {
+     "dung|dung": 13,
+     "dung|sai": 1,
+     "sai|sai": 1
+    },
+    "adverse_labels": 3,
+    "gate": "not_evaluable"
+   },
+   "q2": {
+    "n": 15,
+    "ac1": 1.0,
+    "kappa": null,
+    "category_agreement": {
+     "co": 1.0
+    },
+    "p_neg": null,
+    "confusion_a_b": {
+     "co|co": 15
+    },
+    "adverse_labels": 0,
+    "gate": "not_evaluable"
+   },
+   "q3": {
+    "n": 15,
+    "ac1": 0.8850574712643678,
+    "kappa": 0.8421052631578948,
+    "category_agreement": {
+     "co": 0.9523809523809523,
+     "khong": 0.8888888888888888
+    },
+    "p_neg": 0.8888888888888888,
+    "confusion_a_b": {
+     "co|co": 10,
+     "khong|co": 1,
+     "khong|khong": 4
+    },
+    "adverse_labels": 9,
+    "gate": "pass"
+   },
+   "q4": {
+    "n": 15,
+    "ac1": 1.0,
+    "kappa": 1.0,
+    "category_agreement": {
+     "co": 1.0,
+     "khong": 1.0
+    },
+    "p_neg": 1.0,
+    "confusion_a_b": {
+     "co|co": 1,
+     "khong|khong": 14
+    },
+    "adverse_labels": 2,
+    "gate": "not_evaluable"
+   },
+   "verdict": {
+    "n": 15,
+    "ac1": 0.7435897435897436,
+    "kappa": 0.7222222222222223,
+    "category_agreement": {
+     "dat": 0.8888888888888888,
+     "khong_dat": 0.8333333333333334
+    },
+    "p_neg": 0.8333333333333334,
+    "confusion_a_b": {
+     "dat|dat": 8,
+     "dat|khong_dat": 1,
+     "khong_dat|dat": 1,
+     "khong_dat|khong_dat": 5
+    },
+    "adverse_labels": 12,
+    "gate": "not_met"
+   }
+  },
+  "T3": {
+   "q1": {
+    "n": 5,
+    "ac1": 1.0,
+    "kappa": null,
+    "category_agreement": {
+     "dung": 1.0
+    },
+    "p_neg": null,
+    "confusion_a_b": {
+     "dung|dung": 5
+    },
+    "adverse_labels": 0,
+    "gate": "not_evaluable"
+   },
+   "q2": {
+    "n": 5,
+    "ac1": 1.0,
+    "kappa": null,
+    "category_agreement": {
+     "co": 1.0
+    },
+    "p_neg": null,
+    "confusion_a_b": {
+     "co|co": 5
+    },
+    "adverse_labels": 0,
+    "gate": "not_evaluable"
+   },
+   "q3": {
+    "n": 5,
+    "ac1": 0.7560975609756099,
+    "kappa": 0.0,
+    "category_agreement": {
+     "co": 0.8888888888888888,
+     "khong": 0.0
+    },
+    "p_neg": 0.0,
+    "confusion_a_b": {
+     "co|co": 4,
+     "co|khong": 1
+    },
+    "adverse_labels": 1,
+    "gate": "not_evaluable"
+   },
+   "q4": {
+    "n": 5,
+    "ac1": 1.0,
+    "kappa": null,
+    "category_agreement": {
+     "khong": 1.0
+    },
+    "p_neg": null,
+    "confusion_a_b": {
+     "khong|khong": 5
+    },
+    "adverse_labels": 0,
+    "gate": "not_evaluable"
+   },
+   "verdict": {
+    "n": 5,
+    "ac1": 0.7560975609756099,
+    "kappa": 0.0,
+    "category_agreement": {
+     "dat": 0.8888888888888888,
+     "khong_dat": 0.0
+    },
+    "p_neg": 0.0,
+    "confusion_a_b": {
+     "dat|dat": 4,
+     "dat|khong_dat": 1
+    },
+    "adverse_labels": 1,
+    "gate": "not_evaluable"
+   }
+  },
+  "T6": {
+   "q1": {
+    "n": 10,
+    "ac1": 1.0,
+    "kappa": null,
+    "category_agreement": {
+     "dung": 1.0
+    },
+    "p_neg": null,
+    "confusion_a_b": {
+     "dung|dung": 10
+    },
+    "adverse_labels": 0,
+    "gate": "not_evaluable"
+   },
+   "q2": {
+    "n": 10,
+    "ac1": 1.0,
+    "kappa": null,
+    "category_agreement": {
+     "co": 1.0
+    },
+    "p_neg": null,
+    "confusion_a_b": {
+     "co|co": 10
+    },
+    "adverse_labels": 0,
+    "gate": "not_evaluable"
+   },
+   "q3": {
+    "n": 10,
+    "ac1": 1.0,
+    "kappa": 1.0,
+    "category_agreement": {
+     "co": 1.0,
+     "khong": 1.0
+    },
+    "p_neg": 1.0,
+    "confusion_a_b": {
+     "co|co": 9,
+     "khong|khong": 1
+    },
+    "adverse_labels": 2,
+    "gate": "not_evaluable"
+   },
+   "q4": {
+    "n": 10,
+    "ac1": 0.7560975609756099,
+    "kappa": -0.11111111111111056,
+    "category_agreement": {
+     "khong": 0.8888888888888888,
+     "khong_chac": 0.0
+    },
+    "p_neg": 0.0,
+    "confusion_a_b": {
+     "khong|khong": 8,
+     "khong|khong_chac": 1,
+     "khong_chac|khong": 1
+    },
+    "adverse_labels": 2,
+    "gate": "not_evaluable"
+   },
+   "verdict": {
+    "n": 10,
+    "ac1": 0.865771812080537,
+    "kappa": 0.6153846153846155,
+    "category_agreement": {
+     "dat": 0.9411764705882353,
+     "khong_dat": 0.6666666666666666
+    },
+    "p_neg": 0.6666666666666666,
+    "confusion_a_b": {
+     "dat|dat": 8,
+     "khong_dat|dat": 1,
+     "khong_dat|khong_dat": 1
+    },
+    "adverse_labels": 3,
+    "gate": "not_evaluable"
+   }
+  }
+ },
+ "disagreements": [
+  "provision:387a5d30-2c82-11f1-b7e4-d188e3380d77",
+  "provision:555eaec0-2d53-11f1-9a36-9978a5f04316",
+  "provision:004c3570-2c7b-11f1-81e3-91ce487e9d29",
+  "provision:62470db0-2b39-11f1-927a-d15371532b29",
+  "provision:50b1afb0-df4e-11f0-bfd0-e722cd96bb08#k1"
+ ]
+}
