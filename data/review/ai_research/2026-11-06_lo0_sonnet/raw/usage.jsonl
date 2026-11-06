@@ -1,0 +1,2 @@
+{"file": "a_chunk01.md", "model": "claude-sonnet-5-5", "cache_creation_input_tokens": 218139, "cache_read_input_tokens": 1019863, "output_tokens": 40814}
+{"file": "b_chunk01.md", "model": "claude-sonnet-5-5", "cache_creation_input_tokens": 210904, "cache_read_input_tokens": 1172894, "output_tokens": 32306}

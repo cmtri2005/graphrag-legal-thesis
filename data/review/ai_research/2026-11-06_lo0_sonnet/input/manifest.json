@@ -1,0 +1,52 @@
+{
+ "worksheet": "data/review/the4/lo0_worksheet.jsonl",
+ "worksheet_file_sha256": "c690e2a1712d73a91990780154b0efa21bb0d8be203b14f7c730eb51935a9347",
+ "builder": "scripts/review/official_text.py",
+ "shuffle_seed": "vilextime-ai-0611",
+ "chunks": {
+  "chunk01.jsonl": {
+   "sha256": "130a7e74fbd49a1143369557736d71d1e0274edbb71c389fdb9d0b2c72e7c537",
+   "n": 14,
+   "chars": 237558,
+   "lineage_ids": [
+    "provision:004c3570-2c7b-11f1-81e3-91ce487e9d29",
+    "provision:e23e2980-3634-11f1-acf9-4396220a8c6e",
+    "provision:9134b140-2c88-11f1-b8ed-21827e5e62dc",
+    "provision:b3ab65fa-2c7b-11f1-9966-4dd1b932d89a",
+    "provision:0f265830-1eae-11f1-88ae-c11e1d414924",
+    "provision:ffe954f0-2c7a-11f1-93fe-6b01d63fe9f4",
+    "provision:555eaec0-2d53-11f1-9a36-9978a5f04316",
+    "provision:62470db0-2b39-11f1-927a-d15371532b29",
+    "provision:762f23d0-276f-11f1-ad5b-7546d2350c98",
+    "provision:9a7e694a-33bc-11f1-b5a5-756c38795148",
+    "provision:c86c3310-2c86-11f1-8c3a-83b67d77c889",
+    "provision:66945030-31ba-11f1-9ec9-71d73505d2a8",
+    "provision:6244ead0-2b39-11f1-b9a4-770da39d0f71",
+    "provision:aae9b168-eb78-11f0-9853-1fa76cfa8c7f#k2#g"
+   ]
+  },
+  "chunk02.jsonl": {
+   "sha256": "b457153ee172d2840601909d90711b5ce158451f225ab19a1bb426bc87e18b50",
+   "n": 16,
+   "chars": 278719,
+   "lineage_ids": [
+    "provision:8fdea30a-2c7e-11f1-9ef6-d9f3304caa84",
+    "provision:78b20080-2c85-11f1-81a6-73d8fb46546b",
+    "provision:d4968c5a-2d47-11f1-8e62-6970eabcd7de",
+    "provision:aa492966-df50-11f0-9d09-092b4cc6cf0a#k7",
+    "provision:23546a6c-e160-11f0-b701-b193f5dde669",
+    "provision:877a2f20-2c30-11f1-a2c5-0d32792ff7cb",
+    "provision:29a82d5a-1efe-11f1-91d2-5fcf6dd125c5",
+    "provision:5235a830-2857-11f1-837c-6bcad5a2608b",
+    "provision:9ed89166-df3c-11f0-8ca4-5b4632362d55",
+    "provision:aac3cc10-2d53-11f1-8b3b-0994411aeb10",
+    "provision:28824090-3039-11f1-8e2a-f13deedf3d46",
+    "provision:5f1d898e-df3f-11f0-b459-b5232cdde20f",
+    "provision:3ec385e0-2d54-11f1-bf8d-53fc621534b7",
+    "provision:387a5d30-2c82-11f1-b7e4-d188e3380d77",
+    "provision:50b1afb0-df4e-11f0-bfd0-e722cd96bb08#k1",
+    "provision:28cf0710-ead7-11f0-9d79-d7f11d9e874c#k10"
+   ]
+  }
+ }
+}

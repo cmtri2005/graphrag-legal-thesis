@@ -36,3 +36,26 @@ def test_lock_then_measure(tmp_path):
     assert r["disagreements"] == ["p2"]
     assert r["metrics"]["q2"]["adverse_labels"] == 1 and r["metrics"]["q2"]["gate"] == "not_evaluable"
     assert r["metrics"]["q1"]["ac1"] == 1.0
+
+
+def test_review_roundtrip(tmp_path):
+    from openpyxl import load_workbook
+    test_lock_then_measure(tmp_path)  # p0 agreed, p1 B invalid, p2 disagree
+    ai_labels.review_export(tmp_path, tmp_path / "r.xlsx", {})
+    wb = load_workbook(tmp_path / "r.xlsx")
+    ws = wb["Duyệt"]
+    head = [c.value for c in ws[1]]
+    col = lambda n: head.index(n) + 1
+    assert ws.cell(2, col("chot_q1")).value == "dung" and not ws.cell(4, col("chot_q1")).value
+    for r in (2, 3, 4):
+        ws.cell(r, col("xac_nhan")).value = "dong_y"
+    for r in (3, 4):
+        for q, v in (("q1", "dung"), ("q2", "co"), ("q3", "co"), ("q4", "khong")):
+            ws.cell(r, col("chot_" + q)).value = v
+    wb.save(tmp_path / "r2.xlsx")
+    r = ai_labels.review_import(tmp_path, tmp_path / "r2.xlsx", "CMT", tmp_path / "r.tsv")
+    assert r == {"rows": 3, "phan_van": 0, "prefilled_confirmed": 1, "cmt_changed_ai_label": 0, "dat": 3}
+    ws.cell(2, col("chot_q2")).value = "khong"  # edited an agreed row but kept dong_y
+    wb.save(tmp_path / "r3.xlsx")
+    with pytest.raises(ValueError, match="chọn sua"):
+        ai_labels.review_import(tmp_path, tmp_path / "r3.xlsx", "CMT", tmp_path / "r.tsv")

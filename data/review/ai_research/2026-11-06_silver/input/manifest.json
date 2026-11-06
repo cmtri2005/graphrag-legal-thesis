@@ -1,0 +1,257 @@
+{
+ "worksheet": "data/review/the4/lo1_silver_worksheet.jsonl",
+ "worksheet_file_sha256": "6b3d878334a24d6c46c6694c5d0afdc78ab4619e2fad82f8bd6cd789bf7f8442",
+ "builder": "scripts/review/official_text.py",
+ "shuffle_seed": "vilextime-ai-0611",
+ "chunks": {
+  "chunk01.jsonl": {
+   "sha256": "c5635299765276162463a2deb78571555674b9b3d60b17b5f9ebcaa7f171d5c6",
+   "n": 18,
+   "chars": 228479,
+   "lineage_ids": [
+    "provision:35d63f30-2d46-11f1-b904-fb3c49d69cc5",
+    "provision:50814a68-eb70-11f0-a2e2-556e765c3bc7",
+    "provision:6b287d00-2964-11f1-adc6-dde20510376e",
+    "provision:ddfe9e80-2c85-11f1-8f15-77e114977d1d",
+    "provision:893ab108-e181-11f0-9c94-73075fabab2e",
+    "provision:58b0b660-2d47-11f1-9aad-bd005c4d14c4",
+    "provision:a8ca4f44-eb7f-11f0-b54c-8b73b0357750",
+    "provision:a3183440-21ac-11f1-aefb-d18bdd5a5126",
+    "provision:746f3910-eb72-11f0-8416-21babd42cb04#k1#a",
+    "provision:5bc520e0-303d-11f1-8ebb-d39e27fdfd9a",
+    "provision:ca83627a-eb7e-11f0-ba93-bfc75e302ec8",
+    "provision:f5c84d9e-df38-11f0-9140-65c401fa6eb1",
+    "provision:fb088b5a-df49-11f0-ade8-1187077474c5#k1#n",
+    "provision:ff523980-2c84-11f1-bd91-2d6baf038262",
+    "provision:0b3d492a-df54-11f0-8ba3-1390e4b5928e",
+    "provision:6d2c7284-ec3b-11f0-83d6-a9a902554981",
+    "provision:524e1230-2857-11f1-9c0a-17ff69ef28f6",
+    "provision:172b6180-3a36-11f1-ba11-1d0a92ab628d"
+   ]
+  },
+  "chunk02.jsonl": {
+   "sha256": "7c6efef25803a258cf5e884b3cec390ee7d73c0498a4492907dde3fad7311866",
+   "n": 14,
+   "chars": 184090,
+   "lineage_ids": [
+    "provision:8fa591aa-2c7e-11f1-b6b4-69ce8e776c50",
+    "provision:7cc65bb0-26b0-11f1-85a8-f5bbe2fb7082",
+    "provision:edc507d0-df43-11f0-955c-a3b1b5737505#k6",
+    "provision:226dbd28-df45-11f0-84f9-87051d7f496f",
+    "provision:328776e6-df58-11f0-911d-9fa24d767ab8#k2#%C4%91",
+    "provision:7aa90f78-eb7b-11f0-a974-c76ff4f7ad2f#k3",
+    "provision:e902d34e-df52-11f0-b1c8-1baca6cbd210",
+    "provision:2c9a2dd0-30bd-11f1-8b7a-bda98e87fd84",
+    "provision:cf72d8e0-1dc1-11f1-985c-c3d08e2f7ea1",
+    "provision:0540eb90-3188-11f1-aecf-fff3b527cb22",
+    "provision:3eb4b8d0-2d54-11f1-9586-c7fce1fa2bea",
+    "provision:6fb88e60-1ddd-11f1-811d-f3d006abbcce",
+    "provision:3b4128da-2d47-11f1-98ce-1bf21bf5f6be",
+    "provision:2978e004-1efe-11f1-b84c-1d06d0499749"
+   ]
+  },
+  "chunk03.jsonl": {
+   "sha256": "97c34cedfc0cca5f5bfce340c4a2577a2b38e8c502d206f2f97dc44f5eb952bd",
+   "n": 15,
+   "chars": 171737,
+   "lineage_ids": [
+    "provision:de0f8ef2-2c85-11f1-b16a-0dee4373a04b",
+    "provision:6d2c7130-ec3b-11f0-a3da-1bb00a0e4d9a",
+    "provision:46a6c1a8-e157-11f0-86e8-7f18fb7d374c#k1",
+    "provision:868ec6d0-eacb-11f0-b37b-d372ff90f04b",
+    "provision:d69ca0d0-2c79-11f1-bc4a-c34ca3920b1c",
+    "provision:3e60c494-df45-11f0-a7e1-e7eb0e609025",
+    "provision:9793de90-2c8c-11f1-ac70-fb2cf63b7a15",
+    "provision:b302ef8e-df40-11f0-9aed-ad8e3c993dfc",
+    "provision:eb4c1020-2d45-11f1-aaae-d517cf429e25",
+    "provision:f22d30de-e161-11f0-a307-df2e095a6f35",
+    "provision:a10e3370-21ac-11f1-8e12-e9250b920f36",
+    "provision:8f96714c-e166-11f0-b922-bb48fda023b6",
+    "provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+    "provision:3b5778c0-df3a-11f0-ab59-ab63c1d0e8d2",
+    "provision:743753a0-2c1e-11f1-86f2-f7a1b1e785c2"
+   ]
+  },
+  "chunk04.jsonl": {
+   "sha256": "0b851e42af039784750197dcfa4734f5ca9fe610824d537e76f9593d510945c6",
+   "n": 15,
+   "chars": 212645,
+   "lineage_ids": [
+    "provision:e653e450-2ab9-11f1-8795-75a5ce3bd467",
+    "provision:746f107a-eb72-11f0-b305-2db0ea131db1#k1",
+    "provision:51a7aa60-eadd-11f0-8be2-038674d00fb9",
+    "provision:fd70d0b0-208e-11f1-934f-4d2a85a46aa6",
+    "provision:40d5982a-df46-11f0-aaf0-8d0346752338#k2#d",
+    "provision:70b4efb0-2d47-11f1-87b4-1de16d6888b6",
+    "provision:592f6e64-e171-11f0-88ed-ff9450fdb79b#k2",
+    "provision:1387aa72-eb7e-11f0-bb39-c50a61ff1a4f#k1#c",
+    "provision:d7f48974-e161-11f0-8fb5-d504002d3cba",
+    "provision:938c3da8-eb99-11f0-b3df-b36a9bf88f4b",
+    "provision:c82f61c0-2b81-11f1-ac6e-25ba7d16d20c",
+    "provision:1c03c8ee-df43-11f0-a88a-49b808184bb1",
+    "provision:31d98de0-1f97-11f1-bcba-c5e53edd89aa",
+    "provision:80872132-eb6c-11f0-9ff0-b7f11cff9a29#k5#a",
+    "provision:96eb9928-2c7e-11f1-82dd-c36c58de53fd"
+   ]
+  },
+  "chunk05.jsonl": {
+   "sha256": "547a4e993264312ec1792d6e9f4d01d99f64a021e9dba6cc37f6b0dc630558e9",
+   "n": 13,
+   "chars": 178818,
+   "lineage_ids": [
+    "provision:1a5c769a-df4c-11f0-8555-8db048a8a391#k2",
+    "provision:eb08eabe-eb70-11f0-b9af-f97f0ab81722#k1#c",
+    "provision:a63e6616-eb7a-11f0-b9fe-8517617e9300#k2",
+    "provision:58559e00-2929-11f1-bfbd-29f48a0af73e",
+    "provision:ec4a796a-df40-11f0-b831-318b010cb040",
+    "provision:c45fc984-df43-11f0-b549-45a866e4a586#k2#a",
+    "provision:39dbbea0-2442-11f1-9843-ddc28c645642",
+    "provision:0bd16220-1fb1-11f1-9de8-b3ccb84b4cea",
+    "provision:9621b6d0-28f0-11f1-8a73-dfb3ff745c34",
+    "provision:2449b7fa-df4a-11f0-9607-69212f39380e#k1#m",
+    "provision:a8228d80-2dc5-11f1-b49f-2dfc2852bb4d",
+    "provision:2353d00c-e160-11f0-a9c8-ff234593e2d4",
+    "provision:aeaada34-df52-11f0-8784-4329192a89e3"
+   ]
+  },
+  "chunk06.jsonl": {
+   "sha256": "f2f13ae9a5937935f4b66d389af48d8ca6a661ea91f30723644856d66376c344",
+   "n": 11,
+   "chars": 147415,
+   "lineage_ids": [
+    "provision:5d48bef2-df54-11f0-abca-45ca78a631ce",
+    "provision:2353f726-e160-11f0-8c4a-d1ed3dd353c1",
+    "provision:45d71ee0-2c83-11f1-ae10-17c072eef9ad",
+    "provision:7cc39c9a-26b0-11f1-bd62-0dbf96e2186c",
+    "provision:f78365e0-1df6-11f1-a27b-2bd2862aefdb",
+    "provision:b02bdf60-df53-11f0-880e-eb42fef4cfd4#k1",
+    "provision:387cf540-2c82-11f1-8aba-550abdbfe211",
+    "provision:668e75b0-27a7-11f1-b175-29f953138aa1",
+    "provision:10ca9a90-250a-11f1-98b4-b7c32e15b876",
+    "provision:387ff5f4-eb70-11f0-b0ef-dd04b65df9a9",
+    "provision:e9b9d5f4-df42-11f0-a5f2-138bc0b82b6b"
+   ]
+  },
+  "chunk07.jsonl": {
+   "sha256": "b7b4c41965d25fe6d44f34789767f85c182de39e53ec9ab6ecfdda66042ff9bf",
+   "n": 15,
+   "chars": 179062,
+   "lineage_ids": [
+    "provision:6678a7e0-2d46-11f1-999e-19c9dd572437",
+    "provision:3ec22650-2d54-11f1-a21d-01a2a81c6434",
+    "provision:ec5af8a8-e16b-11f0-a3e5-2f9b10e1af97#k5",
+    "provision:f3c5a718-eb76-11f0-8093-2da175569ed4#k3",
+    "provision:3f9179b0-2d53-11f1-a776-1bab977dc407",
+    "provision:5400b11e-df55-11f0-b2db-db8213713dab#k2#d",
+    "provision:404ee9ec-df3c-11f0-8c2d-551982df7c63#k2",
+    "provision:f03de34e-df41-11f0-83db-457bb2c7028c",
+    "provision:77b70840-1deb-11f1-a9fd-4b88d9619783",
+    "provision:daefdc5c-e150-11f0-b445-0d3a8637038e#k3",
+    "provision:393dc8e0-eac6-11f0-bb51-7b4ee690de15#k1",
+    "provision:8fcc5362-2c7e-11f1-87df-3bcf787c6e54",
+    "provision:9edeb73c-df44-11f0-8ab4-c1404df4b3ea#k1",
+    "provision:3e3f4dba-2c83-11f1-ad06-c5edb3a213b5",
+    "provision:e2acf6a0-eae2-11f0-bd05-d766c03bb281#k4"
+   ]
+  },
+  "chunk08.jsonl": {
+   "sha256": "494b96eda768ffd24a99d68033635cc88a0ff2d5ae6a8deea52dacbcef2392d4",
+   "n": 19,
+   "chars": 165885,
+   "lineage_ids": [
+    "provision:9395fe30-eabb-11f0-b95f-553220e945dc#k3#b",
+    "provision:6279b2b0-2d37-11f1-b8f1-cbdb51d8d86d",
+    "provision:b1944b10-2d52-11f1-9e1e-7d26aac77825",
+    "provision:46a5ca1e-e157-11f0-a769-0badb1c355e3#k1",
+    "provision:66d0e400-31ba-11f1-8513-5f24d42ce133",
+    "provision:c1622450-eada-11f0-991f-bbdc27995684#k3",
+    "provision:211ddf7c-ec36-11f0-a442-7f2caee495dd#k1",
+    "provision:eb3e7b90-2d45-11f1-af32-8da99373a4ef",
+    "provision:0ba724e0-2d46-11f1-8ed8-234f646704e4",
+    "provision:429b7aca-e172-11f0-ae06-1b87111a871a#k1#d",
+    "provision:a8495740-2c84-11f1-bf78-1fdf1f87d888",
+    "provision:2353f4ec-e160-11f0-997d-7f3f9b5ed150",
+    "provision:e84fde30-2ce4-11f1-adad-450d16a8bb26",
+    "provision:6eb5cf5e-eba7-11f0-b69a-b1b97deb720f",
+    "provision:1bd29b3e-df57-11f0-90b9-2b5fe92f1dbd#k3#c",
+    "provision:7a24da84-eb88-11f0-a039-3d21fa64fd7d",
+    "provision:d9b3c4e4-2c7c-11f1-bfe8-f3ff885cbaf9",
+    "provision:e23c54c0-3634-11f1-9175-9b33751e108f",
+    "provision:4eb2a108-eb77-11f0-a29a-4fcc88144917#k4"
+   ]
+  },
+  "chunk09.jsonl": {
+   "sha256": "b2e07aa2bca6e7fb23df4cd9f04cc56a03799d6c45e00d67cfd84f4533d079ab",
+   "n": 14,
+   "chars": 171668,
+   "lineage_ids": [
+    "provision:72791358-eb7a-11f0-9b96-75a5da9f38f2",
+    "provision:4888ab40-2d3c-11f1-adef-5b2c798b0347",
+    "provision:ec121e20-29f6-11f1-86b5-0d550726534d",
+    "provision:abdc9b84-e15b-11f0-8e24-6d13b1bd9f6b",
+    "provision:34588892-df45-11f0-8d2c-edf7506af297#k2#c",
+    "provision:c5a8fde4-eb76-11f0-bd19-11fb2af4e985#k2#%C4%91",
+    "provision:23541e4a-e160-11f0-9afe-63b9eb562899",
+    "provision:850810ac-eb73-11f0-b95d-bb68bf51b524",
+    "provision:c4f282ce-28c2-11f1-83e6-3b98479708e7",
+    "provision:26f8f0b0-1dde-11f1-bb3d-7bd9a7e477b5",
+    "provision:1089c3ac-df56-11f0-8679-ff3f54843828",
+    "provision:ee5a1d20-df52-11f0-b7c8-97e0fbc29771",
+    "provision:68affa4a-2d46-11f1-9a51-1105efb3344b",
+    "provision:d8201dae-eb80-11f0-8294-3b5d9c04573c#k2"
+   ]
+  },
+  "chunk10.jsonl": {
+   "sha256": "ec6b598f518883028fd4a5dd57d9d73d843650a72391533da839a9a35bf47847",
+   "n": 16,
+   "chars": 173995,
+   "lineage_ids": [
+    "provision:ad4f6410-28e1-11f1-bd83-5b3f453fc965",
+    "provision:2f1dd510-2c86-11f1-816b-6917ac5a340f",
+    "provision:cdeb2070-3196-11f1-b366-dbea8386f201",
+    "provision:880d1c80-2c81-11f1-85bb-991f3788b048",
+    "provision:3b44ab90-2d47-11f1-98ed-33b7875cade4",
+    "provision:78ac8240-2c85-11f1-98f9-71624bf3dac7",
+    "provision:20a9cf80-2cad-11f1-abb7-61639469e75e",
+    "provision:d9ab81e0-2d52-11f1-b407-db3ec5b5569f",
+    "provision:0877aa6c-eb86-11f0-8def-170d9bd3acd0#k1",
+    "provision:64ab9fee-df3f-11f0-af32-59d1738d0234",
+    "provision:907c1530-ead5-11f0-97d2-6d01ea7f7633",
+    "provision:387a3620-2c82-11f1-8d74-79a15475fa71",
+    "provision:f714afba-2c06-11f1-9451-d978a915fbc0",
+    "provision:f3c99590-eada-11f0-9062-8d3b36c07159",
+    "provision:9fdf6804-2d53-11f1-ad2a-cf0eedd8b394",
+    "provision:73dd9ae0-2c1e-11f1-8ac9-8b5a6fd5f4ad"
+   ]
+  },
+  "chunk11.jsonl": {
+   "sha256": "d31d5fb41502647339953f40c60a069a6a110148ea617ab31c9230e651fd97bf",
+   "n": 18,
+   "chars": 245204,
+   "lineage_ids": [
+    "provision:c349619a-2b6a-11f1-b9c9-5749372a62ab",
+    "provision:96a4e360-2478-11f1-95f6-55b92facf06a",
+    "provision:e2122560-2c4d-11f1-aea9-f3a5d495ffb5",
+    "provision:95cff300-2c82-11f1-8832-ed73839b00a1",
+    "provision:d3fb9d0a-eb78-11f0-b651-0345ace237f1",
+    "provision:20548c48-e174-11f0-a493-1bb114c8b6dc#k5#b",
+    "provision:aaea5032-eb78-11f0-bce7-15d9ef15c2e3#k1",
+    "provision:58838be0-2d47-11f1-af8a-1722069b7137",
+    "provision:ada0a6f2-eb76-11f0-996b-5bdac24015e5#k4",
+    "provision:e57794e0-319a-11f1-9327-ab85fcdf23dd",
+    "provision:7439ebb0-2c1e-11f1-a8e3-1bf3957eda64",
+    "provision:f8d931e0-1df6-11f1-a901-7169bc99fc94",
+    "provision:4380b480-ead4-11f0-ba37-d541ed0d591b",
+    "provision:7d1ef8b0-1ebd-11f1-894d-a10ccda9d7c4",
+    "provision:c0af1bf0-1f67-11f1-b7e8-f7b0967b0858",
+    "provision:682fe21a-eb7e-11f0-bf86-8d936130adfd",
+    "provision:9276c6a6-df3a-11f0-b61c-d988e496868a#k3#b",
+    "provision:746ee898-eb72-11f0-a645-6bade352d545#k3"
+   ]
+  }
+ },
+ "builder_versions": {
+  "chunk01.jsonl": "official_text v1 (điều hiệu lực có thể bị cắt)",
+  "others": "official_text v2 (closing_articles)"
+ }
+}
