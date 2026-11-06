@@ -1,0 +1,6 @@
+{"file": "a_chunk02.md", "model": "claude-opus-5-5", "resumed_after_rate_limit": true, "cache_creation_input_tokens": 261092, "cache_read_input_tokens": 1776110, "output_tokens": 30103}
+{"file": "b_chunk02.md", "model": "claude-opus-5-5", "resumed_after_rate_limit": true, "cache_creation_input_tokens": 264131, "cache_read_input_tokens": 2008357, "output_tokens": 32131}
+{"file": "a_chunk03.md", "model": "claude-opus-5-5", "resumed_after_rate_limit": true, "cache_creation_input_tokens": 243566, "cache_read_input_tokens": 1434801, "output_tokens": 37271}
+{"file": "b_chunk03.md", "model": "claude-opus-5-5", "resumed_after_rate_limit": true, "cache_creation_input_tokens": 244803, "cache_read_input_tokens": 1263724, "output_tokens": 37986}
+{"file": "a_chunk04.md", "model": "claude-opus-5-5", "resumed_after_rate_limit": true, "cache_creation_input_tokens": 261632, "cache_read_input_tokens": 2366152, "output_tokens": 35316}
+{"file": "b_chunk04.md", "model": "claude-opus-5-5", "resumed_after_rate_limit": true, "cache_creation_input_tokens": 270043, "cache_read_input_tokens": 3200243, "output_tokens": 43601}

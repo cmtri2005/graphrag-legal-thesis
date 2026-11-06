@@ -1,0 +1,11 @@
+{
+ "scope": "silver chunk02–04 (44 câu), lượt Claude chạy song song với lượt Codex; không thay nhãn Codex",
+ "runtime": "Claude Code subagents legal-annotator-a / legal-annotator-b, model claude-opus-5-5 (agent tự báo; revision unknown)",
+ "prompts": "data/review/ai_research/2026-11-06_silver/prompts/chunk0{2,3,4}_ai-{a,b}.md (prompt_v2), cùng input như lượt Codex",
+ "history": "6 phiên khởi chạy 06/11, dừng giữa chừng vì hết hạn mức 5 giờ (HTTP 429), tiếp tục bằng SendMessage sau khi hạn mức mở lại ('tiếp tục đúng lời giao việc ban đầu'); không có nhãn hay gợi ý nào được gửi kèm",
+ "concurrency_with_codex": "Trong lúc chờ hạn mức, người dùng giao Codex làm cùng 6 lượt (round2_codex/, commit 27bcfa0). Hai lượt độc lập: không phiên Claude nào đọc round2_codex hay raw/{a,b}_chunk02–04 của Codex",
+ "raw_replies": "raw/*.md trích nguyên văn bằng script từ transcript; raw/usage.jsonl ghi token",
+ "lock_measure": ".venv/bin/python scripts/review/ai_labels.py lock|measure --run data/review/ai_research/2026-11-06_silver/round2_claude",
+ "cross_model": "cross_model.json: AC1/κ từng cặp Claude/Codex trên cùng 44 câu",
+ "label_status": "label_origin=ai, not_verified; chờ CMT duyệt"
+}
