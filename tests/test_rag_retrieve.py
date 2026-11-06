@@ -211,6 +211,69 @@ def test_searcher_serves_the_second_call_from_cache(indexed: Corpus, tmp_path: P
         module.lexical = real
 
 
+def test_fast_and_full_retrieval_do_not_share_cached_hits(indexed, tmp_path, monkeypatch):
+    from vilexgraph.framework import retrieve
+
+    calls = []
+
+    def lexical(*args, fast=False, **kwargs):
+        calls.append(fast)
+        return [Hit("fast" if fast else "full")]
+
+    monkeypatch.setattr(retrieve, "lexical", lexical)
+    cache = retrieve.RetrievalCache(tmp_path / "hits.sqlite")
+    try:
+        fast = searcher(indexed, REGISTRY["b2"], cache, fast=True)
+        full = searcher(indexed, REGISTRY["b2"], cache, fast=False)
+        assert fast("q", "2021-01-01") == [Hit("fast")]
+        assert full("q", "2021-01-01") == [Hit("full")], "full retrieval reused fast-mode hits"
+        assert full("q", "2021-01-01") == [Hit("full")]
+        assert calls == [True, False]
+    finally:
+        cache.close()
+
+
+@pytest.mark.parametrize("scores", [
+    [0.3, 0.8, 0.8, -0.2, 0.8, 0.1, 0.8, 0.4, 0.4],
+    [1.0] * 19,
+    [float("nan"), float("inf"), 1.0, -float("inf"), float("nan")],
+    [],
+])
+def test_dense_candidate_batches_match_exhaustive_stable_order(scores):
+    import numpy as np
+    from vilexgraph.framework.retrieve import ranked_batches
+
+    values = np.array(scores, dtype=np.float32)
+    got = [int(i) for batch in ranked_batches(values, 3) for i in batch]
+    assert got == np.argsort(-values, kind="stable").tolist()
+
+
+@pytest.mark.parametrize("pool", [1, 7, 500, 10000])
+def test_dense_growing_prefix_preserves_all_ties_and_never_repeats_rows(pool):
+    import numpy as np
+    from vilexgraph.framework.retrieve import ranked_batches
+
+    values = np.random.default_rng(17).integers(-20, 20, size=5001).astype(np.float32)
+    got = np.concatenate(list(ranked_batches(values, pool)))
+    assert np.array_equal(got, np.argsort(-values, kind="stable"))
+
+
+def test_unfiltered_seed_lookup_is_shared_across_dates(indexed, monkeypatch):
+    from vilexgraph.framework import retrieve
+
+    calls = []
+
+    def lexical(*args, **kwargs):
+        calls.append(kwargs["tier"])
+        return [Hit("seed")]
+
+    monkeypatch.setattr(retrieve, "lexical", lexical)
+    search = searcher(indexed, REGISTRY["b2"])
+    assert search.seeds("q", "2021-01-01") == [Hit("seed")]
+    assert search.seeds("q", "2024-01-01") == [Hit("seed")]
+    assert calls == ["none"]
+
+
 def fake_embeddings(corpus: Corpus, layer: str, out: Path) -> dict[str, list[float]]:
     """One one-hot vector per distinct text, laid out as embed_corpus.py writes it."""
     import hashlib
@@ -270,3 +333,25 @@ def test_searcher_runs_a_dense_system(indexed: Corpus, tmp_path: Path) -> None:
     target = next(iter(vectors))
     search = searcher(indexed, REGISTRY["b3"], dense=Dense(tmp_path / "emb", encode=lambda q: vectors[target]))
     assert search("q", "2021-01-01")[0].unit_id == target
+
+
+def test_dense_reuses_query_scores_but_applies_each_dates_filter(indexed, tmp_path):
+    from vilexgraph.framework.retrieve import Dense
+
+    vectors = fake_embeddings(indexed, "version", tmp_path / "emb")
+    encoded = []
+
+    def encode(question):
+        encoded.append(question)
+        return vectors[VERSION_UNIT]
+
+    dense = Dense(tmp_path / "emb", encode=encode)
+    dense.POOL = 1  # force candidate expansion when the best version is filtered out
+    before = dense.search(indexed, "q", "2021-01-01", layer="version", tier="propagated", k=10)
+    after = dense.search(indexed, "q", "2023-01-01", layer="version", tier="propagated", k=10)
+    assert VERSION_UNIT in [h.unit_id for h in before]
+    assert VERSION_UNIT not in [h.unit_id for h in after]
+    local = dense.search(indexed, "q", "2023-01-01", layer="version", tier="version", k=10)
+    assert VERSION_UNIT in [h.unit_id for h in local]
+    dense.search(indexed, "different", "2021-01-01", layer="version", tier="none", k=1)
+    assert encoded == ["q", "different"], "the date-only change recomputed dense scores"

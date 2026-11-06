@@ -73,11 +73,12 @@ def _repeals(path: Path) -> dict:
 
 def repeal_notes(corpus, spec: SystemSpec, question: str, as_of: str, hits: list[Hit], *,
                  temporal_db: Path | str = TEMPORAL_DB, events: Path = EVENTS,
-                 fast: bool = False, enabled: bool | None = None) -> list[RepealNote]:
+                 fast: bool = False, enabled: bool | None = None, seed_search=None) -> list[RepealNote]:
     """Link only rel_up-added, effective repeals to its original unfiltered seeds.
 
     `enabled` lets the demo display links for proposed2 without changing its prompt.
-    Reconstructing lexical seeds also works when hits came from the retrieval cache.
+    A supplied seed lookup reuses the searcher's work, including on hits-cache reads.
+    Without it, reconstruct lexical seeds for callers using only a saved ranking.
     The acting document must still pass the existing expansion predicate.
     """
     if not (spec.repeal_note if enabled is None else enabled):
@@ -93,12 +94,14 @@ def repeal_notes(corpus, spec: SystemSpec, question: str, as_of: str, hits: list
     if not commands:
         return []
     from .retrieve import lexical
-    seeds = lexical(corpus, question, as_of, layer=spec.layer, tier="none",
-                    context=spec.context, k=SEEDS, fast=fast)
+    seeds = (seed_search(question, as_of) if seed_search is not None else
+             lexical(corpus, question, as_of, layer=spec.layer, tier="none",
+                     context=spec.context, k=SEEDS, fast=fast))
     graph = Graph(corpus, temporal_db)
     try:
         commands = graph._admit(commands, spec.temporal, as_of)
 
+        @lru_cache(maxsize=None)
         def describe(pid):
             chain = graph.up(pid)
             titles = [graph.tree.execute("SELECT title FROM provisions WHERE id=?", (p,)).fetchone()
@@ -155,11 +158,20 @@ class Graph:
             (provision_id, FANOUT))]
         return out[:FANOUT + 1]
 
-    def rel(self, provision_id: str) -> list[str]:
-        """Instruction units whose resolved target is this provision."""
+    def rel(self, provision_id: str, *, tier: str = "none", as_of: str | None = None) -> list[str]:
+        """Instructions for this target, applying effectivity before the fanout cap.
+
+        Instruction units use their acting document at every temporal tier.
+        Tier none preserves the non-temporal baseline's original ordering/cap.
+        """
+        if tier != "none" and as_of is None:
+            raise ValueError("temporal relation lookup requires as_of")
+        clause, params = predicate("none" if tier == "none" else "document", as_of)
+        where = f" AND {clause}" if clause else ""
         return [r[0] for r in self.corpus.db.execute(
-            "SELECT unit_id FROM units WHERE kind='instruction' AND provision_id=?"
-            " ORDER BY unit_id LIMIT ?", (provision_id, FANOUT))]
+            "SELECT u.unit_id FROM units u LEFT JOIN documents d ON d.document_id=u.document_id"
+            " WHERE u.kind='instruction' AND u.provision_id=?"
+            f"{where} ORDER BY u.unit_id LIMIT ?", [provision_id, *params, FANOUT])]
 
     def up(self, provision_id: str) -> list[str]:
         """The provision, then its ancestors: a repeal aimed at an ancestor ends this one too."""
@@ -228,7 +240,7 @@ def expand(graph: Graph, spec: SystemSpec, hits: list[Hit], as_of: str,
             found += graph._units_of(graph.part(unit.provision_id), spec.layer)
         if spec.expand_edges in ("rel", "rel_up"):
             for target in (graph.up(unit.provision_id) if spec.expand_edges == "rel_up" else [unit.provision_id]):
-                found += graph.rel(target)
+                found += graph.rel(target, tier=spec.temporal, as_of=as_of)
         for unit_id in graph._admit(found, spec.temporal, as_of):
             if unit_id not in seen:
                 seen.add(unit_id)

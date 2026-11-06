@@ -3,6 +3,8 @@
 
     python scripts/review/test2_labels.py serve --worksheet FILE --labels-dir DIR --who A
     python scripts/review/test2_labels.py report --worksheet FILE --a DIR/test2_A.tsv --b DIR/test2_B.tsv [--adjudicated FILE]
+    python scripts/review/test2_labels.py sheet export --worksheet FILE [--worksheet FILE2] --out FILE.xlsx
+    python scripts/review/test2_labels.py sheet import --worksheet FILE --xlsx FILE.xlsx --who B --out FILE.tsv
     python scripts/review/test2_labels.py adjudicate export --worksheet FILE --a A.tsv --b B.tsv --out FILE.xlsx [--batch N]
     python scripts/review/test2_labels.py adjudicate import --xlsx FILE.xlsx --worksheet FILE --a A.tsv --b B.tsv --by "luật sư <tên>" --out FILE.tsv
 
@@ -676,6 +678,126 @@ def adjudication_workbook(records: list[dict], a: dict, b: dict, batch: int | No
     return wb
 
 
+# Independent sheet for an annotator who prefers Excel: same Q1–Q4 card, no A/B labels inside.
+IND_SHEET = "Gán nhãn"
+IND_INFO = ["lineage_id", "group", "batch", "question", "cac_moc_va_dap_an", "van_ban_goc", "van_ban_tac_dong",
+            "doan_tac_dong", "worksheet_sha256"]
+IND_EDIT = [k for q in GOOD for k in (q, q + "_reason")] + ["quote", "search_log", "note"]
+
+
+def independent_workbook(records: list[dict]):
+    from openpyxl import Workbook
+    from openpyxl.styles import Alignment, Font, PatternFill, Protection
+    from openpyxl.utils import get_column_letter
+    from openpyxl.workbook.defined_name import DefinedName
+    from openpyxl.worksheet.datavalidation import DataValidation
+
+    wb = Workbook()
+    guide = wb.active
+    guide.title = "Đọc trước"
+    for text in ["Phiếu gán nhãn độc lập theo hướng dẫn 4.0 (docs/vilextime-annotation.md). Gán một mình, không hỏi AI.",
+                 "Mỗi hàng là một câu hỏi. Đọc câu hỏi, các mốc, đáp án; mở văn bản gốc và văn bản tác động.",
+                 "Chỉ điền các cột xanh: q1…q4, lý do tương ứng, quote, search_log, note. Cột xám đã khóa.",
+                 "Q1 dung/sai · Q2 co/khong · Q3 co/khong · Q4 khong/co/khong_chac. Chọn câu bất lợi thì chọn thêm một lý do đúng.",
+                 "Câu trả lời đạt (q1 dung, q2 co, q3 co, q4 khong) để trống lý do.",
+                 "quote (bắt buộc): dán nguyên văn một câu từ văn bản tác động; xem cột doan_tac_dong.",
+                 "search_log: bắt buộc nếu nhóm T6 và q4 = khong. note: bắt buộc nếu q1_reason = other, hoặc q4_reason = relocated/relocation_unclear.",
+                 "Phân vân: vẫn chọn đáp án, ghi [phân vân] … vào note."]:
+        guide.append([text])
+    guide.column_dimensions["A"].width = 120
+    ws = wb.create_sheet(IND_SHEET)
+    cols = IND_INFO + IND_EDIT
+    ws.append(cols)
+    wide = {"question": 50, "cac_moc_va_dap_an": 70, "doan_tac_dong": 70, "quote": 50, "search_log": 30, "note": 30}
+    for i, name in enumerate(cols, 1):
+        c = ws.cell(1, i)
+        c.font = Font(bold=True, color="FFFFFF")
+        c.fill = PatternFill("solid", fgColor="44546A")
+        ws.column_dimensions[get_column_letter(i)].width = wide.get(name, 20)
+    for i, record in enumerate(records, 2):
+        clean = unlabelled_record(record)
+        sources = [record.get("sources", {})] + [r.get("source_evidence", {}) for r in record["rows"]]
+        links = lambda items: "\n".join(dict.fromkeys(str(x[k]) for x in items for k in ("source_url", "url") if x.get(k)))
+        moc = []
+        for b in clean["rows"]:
+            t = b.get("target", {})
+            moc.append("\n".join([f"Mốc: {b.get('as_of', '')}", f"Điều khoản: {t.get('citation') or t.get('provision_path') or ''}",
+                                   f"Lời dẫn: {t.get('lead_in') or ''}",
+                                   f"Đáp án đầy đủ: {b.get('answer') or '(không có đáp án)'}",
+                                   f"Đáp án ngắn: {b.get('short_answer') or '(không có đáp án)'}"]))
+        actors = [a for x in sources for a in x.get("actors", [])]
+        passages = "\n\n".join(f"[{a.get('document', '')}]\n" + "\n".join(
+            str(a[k]) for k in ("text", "passage", "transitional", "in_force") if a.get(k)) for a in actors)
+        row = dict(lineage_id=record["lineage_id"], group=record["group"], batch=record.get("batch"), question=record["question"],
+                   cac_moc_va_dap_an="\n\n".join(moc), van_ban_goc=links([x.get("base") or {} for x in sources] + clean["rows"]),
+                   van_ban_tac_dong=links(actors), doan_tac_dong=passages, worksheet_sha256=worksheet_sha256(record))
+        for j, name in enumerate(cols, 1):
+            v = row.get(name, "")
+            if isinstance(v, str) and (len(v) > 32767 or "\r" in v):
+                raise ValueError(f"{record['lineage_id']}: {name} vượt giới hạn XLSX")
+            c = ws.cell(i, j, v)
+            if isinstance(v, str):
+                c.data_type = "s"
+            c.protection = Protection(locked=name not in IND_EDIT)
+            c.alignment = Alignment(wrap_text=True, vertical="top")
+            c.fill = PatternFill("solid", fgColor="EAF3EC" if name in IND_EDIT else "F2F2F2")
+    vocab = wb.create_sheet("Mã lý do")
+    for q in GOOD:
+        for answer, reasons in REASONS[q].items():
+            vocab.append([q + "_" + answer, *reasons])
+    vocab.protection.sheet = True
+    for n, (key, *reasons) in enumerate(vocab.values, 1):
+        last = get_column_letter(1 + len(reasons))
+        wb.defined_names.add(DefinedName(key, attr_text=f"'Mã lý do'!$B${n}:${last}${n}"))
+    last_row = len(records) + 1
+    for q, options in OPTIONS.items():
+        col = get_column_letter(cols.index(q) + 1)
+        dv = DataValidation(type="list", formula1='"' + ",".join(options) + '"', allow_blank=True,
+                            showErrorMessage=True, errorStyle="stop")
+        ws.add_data_validation(dv)
+        dv.add(f"{col}2:{col}{last_row}")
+        rcol = get_column_letter(cols.index(q + "_reason") + 1)
+        for i in range(2, last_row + 1):
+            formula = '""'
+            for key, *_ in reversed(list(vocab.values)):
+                if key.startswith(q + "_"):
+                    formula = f'IF({col}{i}="{key[len(q) + 1:]}",{key},{formula})'
+            dv = DataValidation(type="list", formula1=formula, allow_blank=True, showErrorMessage=True, errorStyle="stop")
+            ws.add_data_validation(dv)
+            dv.add(f"{rcol}{i}")
+    ws.freeze_panes = "E2"
+    ws.auto_filter.ref = ws.dimensions
+    ws.protection.sheet = True
+    ws.protection.autoFilter = False
+    return wb
+
+
+def independent_import(xlsx: Path, records: list[dict], who: str, out: Path) -> tuple[int, list[str]]:
+    """Read a filled sheet into TSV; rows left empty are skipped, partly filled rows are reported."""
+    from openpyxl import load_workbook
+
+    ws = load_workbook(xlsx, data_only=False)[IND_SHEET]
+    by_id = {r["lineage_id"]: r for r in records}
+    saved, errors = 0, []
+    for values in ws.iter_rows(min_row=2, values_only=True):
+        cells = dict(zip(IND_INFO + IND_EDIT, values))
+        lid = cells["lineage_id"]
+        if lid not in by_id or cells["worksheet_sha256"] != worksheet_sha256(by_id[lid]):
+            errors.append(f"{lid}: hàng không khớp phiếu hiện tại; dùng lại tệp xuất")
+            continue
+        if not any(cells[k] for k in IND_EDIT):
+            continue
+        if any(isinstance(cells[k], str) and cells[k].startswith("=") for k in IND_EDIT):
+            errors.append(f"{lid}: không nhận công thức")
+            continue
+        result = save_label(out, records, who, lid, {k: cells[k] for k in IND_EDIT})
+        if result["errors"]:
+            errors.extend(f"{lid}: {e}" for e in result["errors"])
+        else:
+            saved += 1
+    return saved, errors
+
+
 def adjudicate_export(records: list[dict], a: dict, b: dict, out: Path, batch: int | None = None) -> int:
     if out.exists():
         raise ValueError(f"{out}: đã có; không ghi đè phiếu hòa giải")
@@ -783,6 +905,13 @@ def main() -> None:
             p.add_argument('--limit', type=int)
             p.add_argument('--adjudicated', type=Path)
             p.add_argument('--out', type=Path)
+    p = sub.add_parser('sheet')
+    p.add_argument('action', choices=('export', 'import'))
+    p.add_argument('--worksheet', type=Path, action='append', required=True)
+    p.add_argument('--out', type=Path, required=True)
+    p.add_argument('--xlsx', type=Path)
+    p.add_argument('--who', choices=('A', 'B'), default='B')
+    p.add_argument('--exclude', type=Path, action='append', default=[], help='TSV lineage_id giữ lại (gold), như lệnh web')
     p = sub.add_parser('adjudicate')
     adj = p.add_subparsers(dest='action', required=True)
     for action in ('export', 'import'):
@@ -807,6 +936,23 @@ def main() -> None:
         records = [r for f in args.worksheet for r in load_worksheet(f)]
         if len({r['lineage_id'] for r in records}) != len(records):
             raise ValueError('lineage trùng giữa các phiếu')
+        if args.command == 'sheet':
+            held = {r['lineage_id'] for f in args.exclude for r in csv.DictReader(f.open(encoding='utf-8'), delimiter='\t')}
+            records = [r for r in records if r['lineage_id'] not in held]
+            if args.action == 'export':
+                if args.out.exists():
+                    raise ValueError(f'{args.out}: đã có; không ghi đè')
+                args.out.parent.mkdir(parents=True, exist_ok=True)
+                independent_workbook(records).save(args.out)
+                print(f'{len(records)} câu -> {args.out}')
+            else:
+                saved, errors = independent_import(args.xlsx, records, args.who, args.out)
+                print(f'{saved} câu đã lưu -> {args.out}; {len(errors)} lỗi')
+                for e in errors:
+                    print(e)
+                if errors:
+                    raise SystemExit(1)
+            return
         if args.command == 'adjudicate':
             if args.out.resolve() in {args.a.resolve(), args.b.resolve(), *(f.resolve() for f in args.worksheet)}:
                 raise ValueError('out: không ghi đè nhãn thô hoặc worksheet')

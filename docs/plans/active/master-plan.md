@@ -494,6 +494,32 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
 
 ## Validation
 
+### Sửa framework theo yêu cầu CMT, 06/11/2026
+
+- Phạm vi: cách ly cache fast/full và cấu hình sinh; lọc ngày trước fanout quan hệ;
+  tái dùng điểm dense theo câu hỏi, chọn ứng viên chính xác theo lô; dùng chung
+  seed giữa mở rộng đồ thị và thông báo bãi bỏ ở runner, export Colab và demo.
+- Authority: yêu cầu sửa code của CMT ngày 06/11; ràng buộc tập căn cứ ở công thức
+  (4) của `docs/graph_justification.md`; chỉ tinh chỉnh trên dev theo ADR 0003 §7.
+  Giữ nguyên k, FANOUT, RRF và mô hình; không tự chọn siêu tham số hoặc chạy test.
+- [x] Viết test hồi quy trước bản sửa: xác nhận cache lẫn fast/full, lẫn tham số
+  sinh/model từ môi trường và bỏ sót instruction hợp lệ sau ba hàng chưa hiệu lực.
+- [x] Sửa code và nối lại các caller; 92 test tập trung pass ở lượt đầu.
+- [x] Suite đầy đủ: `PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest -q
+  -p no:cacheprovider` → 715 passed (52,50 giây). Bao gồm đối chiếu dense với
+  stable sort trên tie ở ranh giới, nhiều kích thước lô, NaN/inf, thay ngày/tier.
+- [x] `git diff --check` sạch; `scripts/paper/paper_check.py`: 0 sai lệch,
+  3/3 lỗi cấy bị bắt. Không thêm hook hoặc CI gate.
+- Đã kiểm một phép chọn top-500 trên 1,5 triệu điểm float32 tổng hợp khớp stable
+  sort; đây chỉ là kiểm thuật toán, không phải benchmark pipeline/corpus thật.
+  Chưa sinh dự đoán mới hoặc chạy lại dev/test nghiên cứu; chưa có kết luận về
+  thay đổi Accuracy/Recall hoặc tốc độ toàn pipeline.
+- Tương thích: namespace cache mới không tái dùng mục cũ; không xóa cache, log,
+  release hay kết quả nghiên cứu đã lưu. Kết quả graph mới có thể khác do sửa
+  fanout; trước thực nghiệm tiếp theo phải xuất lại prompt và ghi hash/code mới.
+- Khôi phục: hoàn tác đúng diff framework/caller/test của việc này; không đụng
+  các thay đổi nhãn đang có của người dùng. Cache cũ giữ nguyên để đối chiếu.
+
 - Plan không tự chứng minh điều gì. Mỗi cổng có tiêu chí đo được ở mục 7.
 - Lệnh nền: `.venv/bin/python -m pytest -q`, `git diff --check`, `scripts/paper/paper_check.py`.
 

@@ -94,7 +94,8 @@ def export_prompts(args) -> None:
         system, user, ids = generate.build_prompt(q.question, q.as_of, units,
                                                    with_context=spec.context,
                                                    repeal_notes=repeal_notes(
-                                                       corpus, spec, q.question, q.as_of, hits))
+                                                       corpus, spec, q.question, q.as_of, hits,
+                                                       seed_search=getattr(search, "seeds", None)))
         row = {"id": q.id, "system": system, "user": user, "ids": ids,
                "retrieved": retrieved}
         if name != "b2ctx" or getattr(args, "b2", False):

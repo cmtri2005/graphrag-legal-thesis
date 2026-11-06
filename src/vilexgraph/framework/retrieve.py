@@ -28,7 +28,9 @@ import re
 import sqlite3
 import unicodedata
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
+from typing import Callable
 
 from .systems import SystemSpec
 from .temporal import predicate
@@ -95,8 +97,10 @@ class RetrievalCache:
         self.db.commit()
 
     @staticmethod
-    def key(spec: SystemSpec, question: str, as_of: str) -> str:
-        signature = json.dumps([spec.layer, spec.temporal, spec.context, spec.k, spec.lexical,
+    def key(spec: SystemSpec, question: str, as_of: str, *, fast: bool = False) -> str:
+        # Versioned: old entries predate filter-before-fanout and fast-mode isolation.
+        signature = json.dumps(["retrieval-v2", fast, spec.layer, spec.temporal, spec.context,
+                                spec.k, spec.lexical,
                                 spec.dense, spec.rerank, spec.expand, spec.expand_edges,
                                 question, as_of if spec.temporal != "none" or spec.expand else None],
                                ensure_ascii=False)
@@ -213,6 +217,36 @@ def lexical(corpus, question: str, as_of: str, *, layer: str, tier: str,
     return [Hit(unit_id, {"lexical": -score}) for unit_id, score in rows]
 
 
+def ranked_batches(scores, pool: int):
+    """Exact stable ranking, selecting a growing prefix instead of sorting every score.
+
+    Ties at the partition boundary use the original row order, just like stable
+    argsort. If temporal filtering exhausts the prefix, double it until all rows
+    have been considered. Non-finite scores retain NumPy's full-sort semantics.
+    """
+    import numpy as np
+
+    if pool <= 0:
+        raise ValueError("dense candidate pool must be positive")
+    size, emitted = len(scores), 0
+    take = min(pool, size)
+    finite = np.isfinite(scores).all()
+    while emitted < size:
+        if take == size or not finite:
+            order = np.argsort(-scores, kind="stable")
+            take = size
+        else:
+            threshold = np.partition(scores, size - take)[size - take]
+            better = np.flatnonzero(scores > threshold)
+            tied = np.flatnonzero(scores == threshold)[:take - len(better)]
+            selected = np.concatenate((better, tied))
+            order = selected[np.lexsort((selected, -scores[selected]))]
+        for start in range(emitted, take, pool):
+            yield order[start:min(start + pool, take)]
+        emitted = take
+        take = min(size, take * 2)
+
+
 class Dense:
     """Cosine search over one layer's embeddings (W2-12, B3).
 
@@ -239,6 +273,9 @@ class Dense:
             raise RuntimeError(f"{path} has no shard-*.npy; run scripts/eval/embed_corpus.py")
         self.starts = np.cumsum([0] + [len(x) for x in self.shards])
         self.encode = encode or self._model()
+        # Only the latest question: dates/tiers reuse exact scores without an
+        # unbounded cache of million-element arrays. This instance owns its shards.
+        self._question, self._scores = None, None
 
     def _model(self):
         from sentence_transformers import SentenceTransformer
@@ -258,18 +295,19 @@ class Dense:
         import numpy as np
         if layer != self.meta["layer"]:
             raise ValueError(f"embeddings are of layer {self.meta['layer']!r}, not {layer!r}")
-        import torch     # ships with sentence-transformers
-        # fp16 -> fp32 per shard, then an exact fp32 dot: torch converts ~5x faster than
-        # numpy here (2.3 s vs 11 s over 1.48M vectors on the 4-core dev box); a pure fp16
-        # product is faster still but moves scores by ~1e-3, enough to reorder near-ties.
-        q = torch.from_numpy(np.asarray(self.encode(question), dtype=np.float32))
-        scores = torch.cat([torch.from_numpy(shard).float() @ q for shard in self.shards]).numpy()
-        order = np.argsort(-scores, kind="stable")
+        if k <= 0:
+            return []
+        if question != self._question:
+            import torch     # ships with sentence-transformers
+            # Keep the existing fp32 arithmetic; fp16 can reorder near-ties.
+            q = torch.from_numpy(np.asarray(self.encode(question), dtype=np.float32))
+            scores = torch.cat([torch.from_numpy(shard).float() @ q for shard in self.shards]).numpy()
+            self._question, self._scores = question, scores
+        scores = self._scores
         clause, params = predicate(tier, as_of)
         where = f" AND {clause}" if clause else ""
         hits: list[Hit] = []
-        for start in range(0, len(order), self.POOL):
-            batch = order[start:start + self.POOL]
+        for batch in ranked_batches(scores, self.POOL):
             shard_of = np.searchsorted(self.starts, batch, side="right") - 1
             sha_at = {}
             for shard in set(shard_of.tolist()):
@@ -298,6 +336,17 @@ class Dense:
         return hits
 
 
+@dataclass(frozen=True)
+class Search:
+    """Callable ranking plus the shared unfiltered seed lookup for repeal notes."""
+
+    run: Callable[[str, str], list[Hit]]
+    seeds: Callable[[str, str], list[Hit]]
+
+    def __call__(self, question: str, as_of: str) -> list[Hit]:
+        return self.run(question, as_of)
+
+
 def searcher(corpus, spec: SystemSpec, cache: "RetrievalCache | None" = None, *,
              fast: bool = False, dense: Dense | None = None):
     """The search callable for one system: `(question, as_of) -> [Hit, ...]`."""
@@ -318,8 +367,18 @@ def searcher(corpus, spec: SystemSpec, cache: "RetrievalCache | None" = None, *,
         from .graphx import Graph  # late: graphx imports Hit from this module
         graph = Graph(corpus)
 
+    @lru_cache(maxsize=1)
+    def seed_hits(question: str) -> tuple[Hit, ...]:
+        from .graphx import SEEDS
+        return tuple(lexical(corpus, question, "", layer=spec.layer, tier="none",
+                             context=spec.context, k=SEEDS, fast=fast))
+
+    def seeds(question: str, as_of: str) -> list[Hit]:
+        # Date-independent ranking; give callers a fresh list, never the cached tuple.
+        return list(seed_hits(question))
+
     def search(question: str, as_of: str) -> list[Hit]:
-        key = RetrievalCache.key(spec, question, as_of) if cache else None
+        key = RetrievalCache.key(spec, question, as_of, fast=fast) if cache else None
         if key is not None:
             hit = cache.get(key)
             if hit is not None:
@@ -337,14 +396,13 @@ def searcher(corpus, spec: SystemSpec, cache: "RetrievalCache | None" = None, *,
             found = lexical(corpus, question, as_of, layer=spec.layer, tier=spec.temporal,
                             context=spec.context, k=spec.k, fast=fast)
         if graph is not None:
-            from .graphx import SEEDS, expand
-            seeds = None
+            from .graphx import expand
+            initial = None
             if spec.expand_edges == "rel_up":
-                seeds = lexical(corpus, question, as_of, layer=spec.layer, tier="none",
-                                context=spec.context, k=SEEDS, fast=fast)
-            found = expand(graph, spec, found, as_of, seeds)
+                initial = seeds(question, as_of)
+            found = expand(graph, spec, found, as_of, initial)
         if key is not None:
             cache.put(key, found)
         return found
 
-    return search
+    return Search(search, seeds)

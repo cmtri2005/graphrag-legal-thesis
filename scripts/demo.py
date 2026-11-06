@@ -62,7 +62,8 @@ def handle_request(payload, *, spec, corpus, search, generator=generate.answer,
         raise ValueError('Mốc ngày cần có dạng YYYY-MM-DD.')
     hits = search(question, as_of) if search else []
     units = corpus.units([h.unit_id for h in hits]) if corpus else []
-    notes = note_builder(corpus, spec, question, as_of, hits, enabled=True)
+    notes = note_builder(corpus, spec, question, as_of, hits, enabled=True,
+                         seed_search=getattr(search, "seeds", None))
     result = {'question': question, 'as_of': as_of, 'system': spec.name, 'evidence': [],
               'repeal_notes': [n.prompt_line(next(i for i, u in enumerate(units, 1)
                                                  if u.unit_id == n.unit_id)) for n in notes],

@@ -85,6 +85,54 @@ def test_cache_round_trip(tmp_path: Path) -> None:
     assert generate.Cache(None).get(key) is None
 
 
+@pytest.mark.parametrize("changed", [{"temperature": 0.9}, {"max_tokens": 512}, {"effort": "low"}])
+def test_completion_cache_separates_generation_settings(tmp_path, monkeypatch, changed):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    calls = []
+
+    def complete(*args, **kwargs):
+        calls.append(kwargs)
+        return llm.Completion("TRẢ LỜI: x\nHIỆU LỰC: còn\nCĂN CỨ:", "groq", "m", 0.0)
+
+    monkeypatch.setattr(llm, "complete", complete)
+    cache = generate.Cache(tmp_path / "c.sqlite")
+    try:
+        base = dict(provider="groq", model="m", cache=cache)
+        generate.answer("q", "2021-01-01", [], **base)
+        got = generate.answer("q", "2021-01-01", [], **base, **changed)
+        assert not got.cached, "generation settings changed but an old completion was reused"
+        assert generate.answer("q", "2021-01-01", [], **base, **changed).cached
+        assert len(calls) == 2
+    finally:
+        cache.close()
+
+
+def test_completion_cache_resolves_environment_model_before_lookup(tmp_path, monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("LLM_PROVIDER", "groq")
+    monkeypatch.setenv("GROQ_MODEL", "first")
+    calls = []
+
+    def complete(*args, **kwargs):
+        calls.append(llm.model_for("groq", kwargs.get("model")))
+        return llm.Completion("TRẢ LỜI: x\nHIỆU LỰC: còn\nCĂN CỨ:", "groq", calls[-1], 0.0)
+
+    monkeypatch.setattr(llm, "complete", complete)
+    cache = generate.Cache(tmp_path / "c.sqlite")
+    try:
+        assert generate.answer("q", "2021-01-01", [], cache=cache).model == "first"
+        monkeypatch.setenv("GROQ_MODEL", "second")
+        got = generate.answer("q", "2021-01-01", [], cache=cache)
+        assert got.model == "second" and not got.cached
+        # Explicit and resolved defaults identify the same request; transport options do not.
+        assert generate.answer("q", "2021-01-01", [], provider="groq", model="second",
+                               temperature=0.0, max_tokens=4096, retries=1, timeout=3,
+                               cache=cache).cached
+        assert calls == ["first", "second"]
+    finally:
+        cache.close()
+
+
 def test_no_gold_field_can_reach_the_prompt(tmp_path: Path, monkeypatch) -> None:
     """The most load-bearing test here: a leak would show up as a good score.
 

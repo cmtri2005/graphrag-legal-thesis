@@ -65,6 +65,29 @@ def test_rel_adds_the_instruction_that_targets_the_unit(graph) -> None:
     assert ids(out) == [SEED, COMMAND]
 
 
+@pytest.mark.parametrize("tier", ["document", "version", "propagated"])
+def test_rel_filters_effectivity_before_fanout(graph, tier):
+    import sqlite3
+
+    g, corpus = graph
+    inactive = [f"asis:event:a{i}" for i in range(3)]
+    active = "asis:event:a3"
+    with sqlite3.connect(corpus.path) as db:
+        db.execute("INSERT INTO documents(document_id,effective_from) VALUES (?,?)",
+                   ("future", "2030-01-01"))
+        db.executemany("INSERT INTO units(unit_id,layer,kind,provision_id,document_id,text) "
+                       "VALUES (?, 'asis', 'instruction', ?, ?, '')",
+                       [(uid, CLAUSE, "future" if uid in inactive else DOC)
+                        for uid in [*inactive, active]])
+    temporal = spec(layer="asis" if tier == "document" else "version",
+                    expand_edges="rel", temporal=tier)
+    found = ids(expand(g, temporal, [Hit(SEED)], "2021-01-01"))
+    assert active in found, "eligible fourth instruction was lost before temporal filtering"
+    assert not set(inactive) & set(found)
+    # The non-temporal baseline still takes its original first three instructions.
+    assert ids(expand(g, spec(expand_edges="rel"), [Hit(SEED)], "2021-01-01")) == [SEED, *inactive]
+
+
 def test_a_neighbour_already_ranked_is_not_added_twice(graph) -> None:
     g, _ = graph
     hits = [Hit(SEED, {"lexical": 2.0}), Hit(PARENT, {"lexical": 1.0})]
@@ -117,17 +140,23 @@ def test_rel_keeps_one_hop_even_with_propagation(graph):
     ("2018-01-01", "repeal", "2019-01-01", False),  # acting document starts in 2020
 ])
 @pytest.mark.parametrize("seed_id", [SEED, PARENT])
+@pytest.mark.parametrize("reuse_seeds", [False, True])
 def test_repeal_note_links_parent_and_keeps_other_prompts_identical(
-        graph, tmp_path, monkeypatch, effective_on, operation, as_of, expected, seed_id):
+        graph, tmp_path, monkeypatch, effective_on, operation, as_of, expected, seed_id, reuse_seeds):
     from vilexgraph.framework import generate, graphx, retrieve
     g, corpus = graph
     events = tmp_path / "events.jsonl"
     write(events, [{"id": "event:e3", "operation": operation,
                     "target_provision_id": ARTICLE, "effective_on": effective_on}])
-    monkeypatch.setattr(retrieve, "lexical", lambda *a, **kw: [Hit(seed_id)])
+    def lexical(*args, **kwargs):
+        assert not reuse_seeds, "repeal notes searched again despite supplied seed lookup"
+        return [Hit(seed_id)]
+
+    monkeypatch.setattr(retrieve, "lexical", lexical)
     new = spec(layer="version", temporal="propagated", expand_edges="rel_up", repeal_note=True)
     hits = [Hit(REPEAL_UP, {"graph": 1.0})]
-    notes = graphx.repeal_notes(corpus, new, "q", as_of, hits,
+    kwargs = {"seed_search": lambda question, date: [Hit(seed_id)]} if reuse_seeds else {}
+    notes = graphx.repeal_notes(corpus, new, "q", as_of, hits, **kwargs,
                                temporal_db=g.tree.execute("PRAGMA database_list").fetchone()[2],
                                events=events)
     units = corpus.units([REPEAL_UP])

@@ -181,8 +181,10 @@ class Cache:
         self.db.commit()
 
     @staticmethod
-    def key(system: str, user: str, provider: str | None, model: str | None) -> str:
-        payload = json.dumps([system, user, provider, model], ensure_ascii=False)
+    def key(system: str, user: str, provider: str | None, model: str | None, *,
+            temperature: float = 0.0, max_tokens: int = 4096, effort: str | None = None) -> str:
+        payload = json.dumps(["completion-v2", system, user, provider, model,
+                              float(temperature), max_tokens, effort or None], ensure_ascii=False)
         return hashlib.sha256(payload.encode()).hexdigest()
 
     def get(self, key: str):
@@ -205,18 +207,25 @@ class Cache:
 
 def answer(question: str, as_of: str, units, *, with_context: bool = True,
            provider: str | None = None, model: str | None = None,
-           cache: Cache | None = None, repeal_notes=(), **kwargs) -> Answer:
+           cache: Cache | None = None, repeal_notes=(), temperature: float = 0.0,
+           max_tokens: int = 4096, effort: str | None = None, **kwargs) -> Answer:
     """One answer for one (question, t). Never receives a gold field."""
     system, user, ids = build_prompt(question, as_of, units, with_context=with_context,
                                      repeal_notes=repeal_notes)
-    key = Cache.key(system, user, provider, model)
+    if cache is not None and cache.db is not None:
+        # A missing explicit model is not a stable identity: .env may have changed.
+        provider = llm.pick(provider)
+        model = llm.model_for(provider, model)
+    key = Cache.key(system, user, provider, model, temperature=temperature,
+                    max_tokens=max_tokens, effort=effort)
     hit = cache.get(key) if cache else None
     if hit is not None:
         used_provider, used_model, raw = hit
         cached = True
         prompt_tokens = completion_tokens = None
     else:
-        completion = llm.complete(system, user, provider=provider, model=model, **kwargs)
+        completion = llm.complete(system, user, provider=provider, model=model,
+                                  temperature=temperature, max_tokens=max_tokens, effort=effort, **kwargs)
         used_provider, used_model, raw = completion.provider, completion.model, completion.text
         cached = False
         prompt_tokens, completion_tokens = completion.prompt_tokens, completion.completion_tokens

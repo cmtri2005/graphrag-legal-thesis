@@ -689,7 +689,7 @@ def test_adjudicate_t6_search_and_empty_export(tmp_path, adjudication_case):
     assert labels.adjudicate_import(empty, records, own["A"], own["B"], "luật sư X", out) == 0
 
 
-def test_gate_skips_questions_with_too_few_adverse_labels():
+def test_gate_skips_questions_with_too_few_adverse_labels(monkeypatch):
     import test2_labels as L
     recs = [{"lineage_id": f"l{i}", "group": "T2", "batch": 1, "question": "q", "rows": [{"id": f"r{i}"}],
              "sources": {}} for i in range(12)]
@@ -698,8 +698,8 @@ def test_gate_skips_questions_with_too_few_adverse_labels():
         return {**good, "q2": q2, "verdict": "dat" if q2 == "co" else "khong_dat", "lineage_id": f"l{i}"}
     a = {f"l{i}": lab(i, "A", "khong" if i < 3 else "co") for i in range(12)}
     b = {f"l{i}": lab(i, "B", "khong" if i < 3 else "co") for i in range(12)}
-    L.check_binding = lambda *x: None
-    L.validate_label = lambda r, row: (row, [])
+    monkeypatch.setattr(L, "check_binding", lambda *x: None)
+    monkeypatch.setattr(L, "validate_label", lambda r, row: (row, []))
     for d, who in ((a, "A"), (b, "B")):
         for row in d.values():
             row.update(labeler=who, guideline_version=L.GUIDELINE)
@@ -708,3 +708,19 @@ def test_gate_skips_questions_with_too_few_adverse_labels():
     assert report["metrics"]["q2"]["adverse_labels"] == 6 and report["metrics"]["q2"]["gate"] == "pass"
     assert report["agreement_gate"] == "pass"
 
+
+
+def test_excel_sheet_roundtrip_for_independent_annotator(record, valid, tmp_path):
+    from openpyxl import load_workbook
+    sheet = tmp_path / "b.xlsx"
+    wb = labels.independent_workbook([record])
+    ws = wb[labels.IND_SHEET]
+    head = [c.value for c in ws[1]]
+    assert "A_q1" not in head and not any(h.startswith("A_") for h in head)  # no peer labels inside
+    for k, v in valid.items():
+        ws.cell(2, head.index(k) + 1, v)
+    wb.save(sheet)
+    out = tmp_path / "B.tsv"
+    saved, errors = labels.independent_import(sheet, [record], "B", out)
+    assert (saved, errors) == (1, []) and labels.read_labels(out)["provision:p"]["verdict"] == "dat"
+    assert labels.independent_import(sheet, [{**record, "question": "đổi"}], "B", tmp_path / "x.tsv")[1]  # stale sheet rejected

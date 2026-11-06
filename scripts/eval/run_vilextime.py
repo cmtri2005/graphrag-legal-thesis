@@ -204,7 +204,8 @@ def main() -> None:
                         units = corpus.units([h.unit_id for h in hits]) if corpus and hits else []
                         from vilexgraph.framework.graphx import repeal_notes
                         notes = repeal_notes(corpus, spec, q.question, q.as_of, hits,
-                                             fast=args.fast_retrieval)
+                                             fast=args.fast_retrieval,
+                                             seed_search=getattr(search, "seeds", None))
                         ask = lambda evidence: generate.answer(  # noqa: E731
                             q.question, q.as_of, evidence, with_context=spec.context,
                             provider=args.provider, model=args.model, cache=cache,
