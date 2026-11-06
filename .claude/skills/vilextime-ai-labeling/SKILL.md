@@ -68,6 +68,7 @@ guideline, input hash, thời gian, công cụ khả dụng/đã dùng, lỗi tr
 - Loại lô hiệu chuẩn 0 khỏi số đo chính theo hướng dẫn. Đo **trước hòa giải**;
   hiệu chuẩn lại dùng câu mới, giữ kết quả thất bại và mọi nhãn gốc. Không lọc
   các ca lệch/thiếu nguồn để đạt ngưỡng. Không cam kết trước rằng AI sẽ đạt.
-- Báo rõ đây là đồng thuận AI–AI, cùng model có sai số tương quan; không thay
+- Báo rõ đây là đồng thuận AI–AI, ghi model từng bên (từ silver phần 5: A Claude, B
+  Codex); cùng model có sai số tương quan, khác model giảm nhưng không loại; không thay
   cho người–người, AI–người hoặc độ đúng pháp lý. Thước đo chọn sau pilot phải
   được mô tả đúng lịch sử, không gọi là preregistered.

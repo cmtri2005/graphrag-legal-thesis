@@ -16,7 +16,8 @@ cá nhân. Kiểm tra CLI tại lúc setup: Claude Code 2.1.319 (06/11/2026).
 Hai agent nhãn và agent thẩm phán cùng preload `vn-legal-research` và
 `vilextime-ai-labeling`. Executor/gate cùng preload `experiment-evidence`, nhưng
 khác quyền và ngữ cảnh. Tất cả dùng `model: inherit`; ghi model thực tế mỗi lượt,
-không suy rằng tên vai trò tạo nhiều model độc lập.
+không suy rằng tên vai trò tạo nhiều model độc lập. Từ silver phần 5 (CMT 06/11),
+AI-B chạy bằng Codex CLI để hai bên khác model; xem `research-lead.md` bước 3.
 
 ## Bắt đầu
 

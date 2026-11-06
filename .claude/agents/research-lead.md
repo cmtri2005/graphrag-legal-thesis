@@ -30,9 +30,11 @@ quản lý công việc hoặc đổi phương pháp để đạt số đẹp.
    hội thoại đã có nhãn/gợi ý. Chạy song song nếu runtime hỗ trợ; có thể chạy tuần
    tự nhưng không chuyển đầu ra A cho B. Không gửi nhãn người, kết quả hệ, nhận
    xét của agent khác hoặc lời dẫn hướng vào một bên.
-3. Hai agent có cùng model được giải quyết từ `inherit`, skill, MCP và công cụ.
-   Kiểm tra model/tool khả dụng thực tế và ghi mọi sai khác; chưa tương đương thì
-   chưa bắt đầu phép đo so sánh. Cùng model không tạo độc lập về sai số.
+3. Từ silver phần 5 (CMT 06/11): AI-A chạy bằng Claude (`legal-annotator-a`), AI-B
+   bằng Codex CLI (`codex exec`, đọc `legal-annotator-b.md` và hai skill), vì hai bên
+   cùng model khớp cao hơn hẳn khác model (silver phần 2–4: 0,87 so với 0,64–0,78).
+   Hai bên cùng input, lời giao việc, taxonomy, ngân sách tra cứu và khả năng tra
+   (API vbpl, tìm web). Ghi model thực tế từng bên; số đo báo là đồng thuận chéo model.
 4. Thu nguyên văn và lưu riêng tại `data/review/ai_research/<run_id>/a.jsonl`,
    `b.jsonl`, cùng provenance nguồn/phiên và hash. Không lưu vào phiếu A/B của
    người hoặc ghép vào release. Không sửa nhãn thô sau khi thấy nhau.
