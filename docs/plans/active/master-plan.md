@@ -494,6 +494,23 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
 
 ## Validation
 
+### Tiếp quản gán nhãn silver đợt 2, 06/11/2026
+
+- Phần trước đã commit: `eb3d8d7` (framework), `3dfc95d` (silver phần 1,
+  official text và prompts v2); working tree sạch khi tiếp quản.
+- Sáu subagent Claude của phiên `aad8dda3-63f9-4858-b90a-0ae91504b00f` cho
+  chunk02/chunk03/chunk04 × AI-A/AI-B đã kết thúc do hết hạn mức, không có
+  khối JSONL cuối. Không tính `finished=true` trong metadata là gán xong.
+- Đã kiểm lại SHA256 ba input với manifest trong
+  `data/review/ai_research/2026-11-06_silver/`: khớp; số câu 14 + 15 + 15.
+- Kiểm tra khả dụng trực tiếp bằng Claude CLI (không đọc dữ liệu): HTTP 429,
+  `usage_limit_reached`, reset **06/11/2026 18:10 UTC**. Chưa có nhãn đợt 2;
+  không chạy lại hàng loạt, không đổi model/nhà cung cấp hoặc suy nhãn thay.
+- Tiếp tục sau reset: dùng đúng prompts `chunk02_ai-{a,b}.md` đến
+  `chunk04_ai-{a,b}.md`, hai bên ngữ cảnh riêng, model `claude-opus-5-5` như
+  lượt trước; chỉ lưu raw khi có đầu ra hoàn chỉnh, không ghi đè chunk01.
+  Các file lời giao việc đã được chuẩn bị trong thư mục `prompts/` của run.
+
 ### Sửa framework theo yêu cầu CMT, 06/11/2026
 
 - Phạm vi: cách ly cache fast/full và cấu hình sinh; lọc ngày trước fanout quan hệ;
