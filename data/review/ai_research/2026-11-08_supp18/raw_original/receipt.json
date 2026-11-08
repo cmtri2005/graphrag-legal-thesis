@@ -1,0 +1,46 @@
+{
+  "method": "Restore truncated B lineage_id from the worksheet_sha256 binding. Metadata only; original kept in raw_original/.",
+  "chunks": [
+    {
+      "raw": "b_chunk01.md",
+      "original_sha256": "bc23909cfddae4c6f29e17175f1aeb19e9d062c2561847e79e3640c1a76ad44e",
+      "fixed_sha256": "f2c40a0a063c859d318468101a2d14c1f103c15e77614e6d15a1e5f99fc7756f",
+      "edits": []
+    },
+    {
+      "raw": "b_chunk02.md",
+      "original_sha256": "03bc62a105dba0b8dab772a391d932025e426c44f33c3484515ec2bade91a7ec",
+      "fixed_sha256": "cd7e9bf1ccc3576d1c5fc17771e03485cb37a510c27114bc216dc7f6d3709cda",
+      "edits": [
+        {
+          "from": "provision:",
+          "to": "provision:c4275dbc-e176-11f0-86b1-a35d2a1c3342#k2"
+        },
+        {
+          "from": "provision:",
+          "to": "provision:7debb0a6-df45-11f0-a43e-33b52192b20e"
+        },
+        {
+          "from": "provision:",
+          "to": "provision:c45fe1a8-df43-11f0-9a1c-277c000beaf7#k1#e"
+        },
+        {
+          "from": "provision:",
+          "to": "provision:6de08930-1f81-11f1-879b-6fd3887768c6"
+        },
+        {
+          "from": "provision:",
+          "to": "provision:5ba5ec70-2d45-11f1-9bd8-3d255859b151"
+        },
+        {
+          "from": "provision:",
+          "to": "provision:0b3d2a1c-df54-11f0-9582-0d0c91275f3e"
+        },
+        {
+          "from": "provision:",
+          "to": "provision:fab36588-df55-11f0-a65a-358a1cdc4fec#k1#d"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,763 @@
+{
+  "authority": ".claude/skills/vilextime-ai-labeling/SKILL.md; prior round3_mixed/normalize_a11.py locator method",
+  "limits": "Input or worker-cited document locators only; worksheet matches and document identity are not independent quote verification. Original evidence, decisions and evidence_status are preserved. Quotes outside excerpts remain explicitly unverified.",
+  "source_sha256": {
+    "a_chunk01.jsonl": "397315f01c1cb41a589e133c283e667ff73e5cc052e61df3ee5986f9ff27bc83",
+    "a_chunk02.jsonl": "2ba8639b061d1ec41366f0c68ac7a5fb9e05ee31d9f27258fd42328cec501f2b",
+    "a_chunk03.jsonl": "eb7d35b86cd138a6d02a4fe5a8147a7a0fe667b797a7939a32f9c5937373f738",
+    "a_chunk04.jsonl": "b9aa59ab13385e72d6b4645606edd67ecd9c6682ccbe4d77d6ae5a18e7a63842",
+    "a_chunk05.jsonl": "d60e4b3d942f677869a0a7e3e14429111d42006849d2ed4f2df868c1fbf2ca76",
+    "a_chunk06.jsonl": "8783c5f0f7d1294f13ab772520f39cac1e2212926485de3af74d3d4fbe6ea42f",
+    "a_chunk07.jsonl": "f040e770b2b1f0c0767b988362f1c05a072afbab228ec0b95ff4bb815fceb534",
+    "a_chunk08.jsonl": "09d298a637093d18f31953355cd577dd45627625db3a342af3f3958ea527746d",
+    "a_chunk09.jsonl": "dc2c9dfa9f64d892e148aa3815de9dfdf4c8f0016e026ec4e6c161d0e6be90ea",
+    "a_chunk10.jsonl": "5e9f257a2b33482354b5d699aeb062ca7dcb8aee5094e7d8a16becd07ec4714e",
+    "a_chunk11.jsonl": "389c9b029312b3aba052f3a46ff12fddf1a542878704c236bd731f6098df26a5",
+    "a_chunk12.jsonl": "18462d4a7b7115f1955baf721950048bb8ddb1df3d0409d50e0a7dc72dd5ab85"
+  },
+  "rows": [
+    {
+      "lineage_id": "provision:2449b764-df4a-11f0-8947-77f8a3786fca#k1#d",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:913092a4-2c88-11f1-a550-b908306d6a23",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:0297fec0-31a0-11f1-ad11-4f6eee776099",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:0ba67328-df45-11f0-8f9a-3f6911248235",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:e99406b0-df4e-11f0-a5c9-eb4d717a0f21",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:79bef342-e168-11f0-9761-c77faae6266e#k2",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:834d699a-df54-11f0-9a69-b14ee0870a7b",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:3ebca810-2d54-11f1-9390-fbe1d04cc24f",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:26e1e400-eba3-11f0-95b8-9b01d2fde032",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:86d9acf0-2c7e-11f1-a35f-87076455d281",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:28964930-eaea-11f0-91fe-15313046c917#k3#b",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:7ba9e014-eb7b-11f0-954d-af330569649d",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:3d386500-2c83-11f1-b70e-95ff854b3d3c",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:b3ab65f0-2c7b-11f1-8b12-cbbbb78c251b",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:3cf170f0-2c83-11f1-ba7f-4b4b4459862b",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:58784320-2c48-11f1-8665-17e597fbe786",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "snippet",
+          "document": "Luật Thanh tra 84/2025/QH15",
+          "location": "kết quả tìm kiếm",
+          "quote": "có hiệu lực thi hành từ ngày 1/7/2025 ... không còn phân biệt thanh tra hành chính và thanh tra chuyên ngành"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:c8806172-df57-11f0-b87d-ab9781aeeb4c",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:6b0770ea-1e76-11f1-8460-610d847f251c",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "secondary",
+          "document": "72/2022/NĐ-CP",
+          "location": "khoản 8 Điều 1 (luatvietnam, bản tiếng Anh)",
+          "quote": "Color copiers and printers with the color photocopying function must be declared before being put to use."
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:2e0e1670-2c5a-11f1-bdd2-9792dccb27b5",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:5e4f34b0-301d-11f1-a8f8-ed1a242e88f0",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:3b990912-df39-11f0-a392-ad99396558e6",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:761143c0-273c-11f1-aeb2-99c16d8e9688",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:31b40f3a-df40-11f0-8742-d53bc611c40b",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:770f0e12-df3c-11f0-acaf-e7e0ec72e9ba",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "snippet",
+          "document": "19/2016/NĐ-CP",
+          "locator": "thuvienphapluat.vn / caselaw.vn (kết quả tìm kiếm)",
+          "quote": "thương nhân sản xuất, sửa chữa chai LPG; thương nhân sản xuất chai LPG mini"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:71c5debc-eb7c-11f0-94e3-1f1d9a240bba#k1#b",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:3eccae18-2d54-11f1-b6ea-f5b20b1d231d",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:214408b0-df3d-11f0-b0cd-c715febddaca#k1#a",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:31a3e0f4-eb8b-11f0-bce1-338b604fabae#k5",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:3b990980-df39-11f0-b90b-f7591ddcb6a0",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:96a1fd30-2478-11f1-97c0-71e6d236c511",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:8cb85720-eb74-11f0-a89e-5d1d6bbf545e#k2#d",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:f01b7674-1d8a-11f1-aebe-379b00ea2e21",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:34290bd0-2c7f-11f1-9ed9-2d4296b2c097",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:285f93c0-1d69-11f1-8520-271282d4caf0",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:89e6bfa8-df55-11f0-acf0-1b240e0d7312",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "snippet",
+          "document": "Luật Trồng trọt 31/2018/QH14; CV Cục Trồng trọt",
+          "locator": "kết quả tìm kiếm (thuvienphapluat.vn, pbgdpl.gov.vn)",
+          "quote": "giống đã có trong danh mục ... được tiếp tục sản xuất kinh doanh đến hết ngày 31/12/2022"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:32e797ec-df49-11f0-843a-ed9e4d1e206f",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:ae9ea87e-df4b-11f0-b298-efb798d91fce#k3",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:83fe925c-e174-11f0-8637-b58d7e2de8ea#k1#d",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:b7dde3d0-1ecc-11f1-a3b1-d7ceb5cb0820",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:2e09f7c0-2c5a-11f1-bb00-cffa6b962218",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:8fc882a0-2c7e-11f1-af20-bd4011deeaf9",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:0ba67292-df45-11f0-b170-db6bfe935615",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "snippet",
+          "doc": "Kết quả tìm kiếm về 02/VBHN-BNNPTNT 2025",
+          "quote": "việc quản lý, sử dụng đồng phục theo quy định của pháp luật"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:0bd83f26-df3f-11f0-910e-abf723745ddc#k1#b",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:297647e0-1efe-11f1-96dd-5b299f3dc981",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:a16089ba-2d53-11f1-87d7-6598c119b283",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:c416ff10-1f67-11f1-a659-735686497e5a",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "snippet",
+          "doc": "english.luatvietnam.vn, NĐ 61/2017",
+          "quote": "stipulating on appraisal of the reserve price of nonperforming loans collateral"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:3fd3cd30-2c7f-11f1-889c-d1c9dfb759f3",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:028e61d0-31a0-11f1-9940-634648f850db",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:52a3b8c6-eb7f-11f0-b9b8-a100a82ba790",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:7f3b3fb0-2f29-11f1-96d0-93396b6f8972",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "snippet",
+          "quote": "Khoản 1 Điều 13 Nghị định 77/2008/NĐ-CP được sửa bởi khoản 1 Điều 4 Nghị định 05/2012/NĐ-CP"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:0ba672b0-df45-11f0-9032-93718036315b",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:eaad30ac-df45-11f0-a3f8-1327bb0a82ce",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:c87f45e0-2c86-11f1-949c-d1ff91018655",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:03421a60-e167-11f0-9602-fbc63c7d019b",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:dafc3b40-2d46-11f1-a24f-2977df249dcf",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:6927d670-2d53-11f1-976a-6390722995cb",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:b9d4bd80-2d40-11f1-9f5d-0d171b51ccb7",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:46a6c162-e157-11f0-b1a6-af9d1066df24#k2",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:5dc6c8a2-eb7e-11f0-89ef-4b33eadf5c5f#k3#d",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:0bd55100-eb77-11f0-a27c-1b78663305ca",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "snippet",
+          "document": "moc.gov.vn, Đại hội Đảng bộ Cục Hàng hải và Đường thủy Việt Nam lần thứ I",
+          "locator": "https://moc.gov.vn/vn/tin-tuc/1173/86005/dai-hoi-dai-bieu-dang-bo-cuc-hang-hai-va-duong-thuy-viet-nam-lan-thu-nhat--can-tang-cuong-doan-ket--doi-moi--sang-tao--tinh-gon-bo-may.aspx",
+          "quote": "Đảng bộ Cục Hàng hải và Đường thuỷ Việt Nam tổ chức Đại hội đại biểu lần thứ I nhiệm kỳ 2025-2030"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:3d2c08f0-2c83-11f1-b036-cd0aa68fc3b3",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:64b09640-285d-11f1-9976-a7d0840c1f1c",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:24019d6a-df3d-11f0-a92e-cd3d70f1b84b",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:545c6f32-df40-11f0-bd62-4dbf838c8125",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:27be0e60-9de3-11f1-af6e-a3b959fd029a",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:0b3d4204-df54-11f0-be5c-119176cfd466",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:0ba67346-df45-11f0-bada-e31b16fb5d5d",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:4a94f2f0-df48-11f0-b29b-29bf4981bb8b",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:5870ee4a-2d47-11f1-ab57-195ab7f14413",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:b7ee85a0-1ecc-11f1-8bf4-878cc9351133",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:521ee6f0-49f8-11f1-8359-f7346f212bb6",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:52444e30-2857-11f1-9b5a-a9f8437a6a5a",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:c2d57ab6-df55-11f0-9e8f-7154a4fa9af7",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:770f0ce6-df3c-11f0-9629-ebe58405a2a6",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:ae8436dc-df42-11f0-8b72-a51e4f360532",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:ea1e8fe0-2c85-11f1-90e2-cb5f8b4211e0",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:0ba6733c-df45-11f0-9ebd-f5c11cdc53ed",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:fbf6df14-df51-11f0-ba49-73403e967040",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "secondary",
+          "quote": "Cục Đường cao tốc Việt Nam và Cục Đường bộ Việt Nam là 02 đơn vị được tách ra từ Tổng cục Đường bộ Việt Nam"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:ddf875f6-e152-11f0-b025-af404701d747#k3#b",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:20b7b940-1f67-11f1-8521-fb4f27a5cb13",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:9784e330-df49-11f0-a224-a14c6720b47d",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:cc6fc560-2e04-11f1-98d4-397cdef8af5e",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:68de9870-2d53-11f1-9a98-8f8c7c0b8cfd",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:5e4f82d0-301d-11f1-9a94-5f19b90111f4",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:69cf3260-e16f-11f0-9f57-7f375c5a9290",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:58ba0530-2d47-11f1-a4ca-c16f44b0d809",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:0b79d350-2d46-11f1-b2bb-b9fc4266b2fe",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "official",
+          "quote": "Điều 22. Tổ chức hội nghị tập thể lãnh đạo mở rộng lấy ý kiến về danh sách nhân sự dự kiến đưa vào quy hoạch"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:0ba672e2-df45-11f0-b694-d13268ef2f70",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:2fcd2020-25fa-11f1-8daa-31076eb17f14",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:ec3fd310-2d52-11f1-a20e-ed57a2f7734f",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:6655078c-eb73-11f0-861a-fb21d5a562cb",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:4623c2d6-df49-11f0-81e6-9f44dd749564",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:66d2a010-2c88-11f1-a944-955bf2e07dc1",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:21ca0f0c-eb70-11f0-85ca-a10d0270e110#k1",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:4d5a0168-df4f-11f0-869a-fdd3c658b14c#k5",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:a36b4c7e-df54-11f0-bf30-0dfdeec3f610",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:b8681680-2ac1-11f1-a61e-dd5381086c63",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:c0101442-e15a-11f0-b32f-470ad20a90a5",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:31a2f5c2-eb8b-11f0-b828-d5cdb76c94cc#k35",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:77e67110-483a-11f1-b5ea-1b9929f75d90",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:250ec69e-df4a-11f0-b75d-6b3a9639c63c#k2#c",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:d69e4e80-2c79-11f1-936d-7d249b0b89b3",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:d88e3c54-e161-11f0-9d1f-f5709b6cd6ca",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:9ed890ee-df3c-11f0-9949-0d070d782e07",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:4e9500d0-2d44-11f1-b689-cd566693b484",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:801b851c-df41-11f0-b98f-f5b8efffc5a9#k2#e",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:8cf2dfb0-31a8-11f1-b48c-e34a818771d6",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:a96b6a70-2cc3-11f1-bce0-39f40187b744",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:8cba797e-eb74-11f0-a479-93fcd6d98649#k4#c",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:3376c866-df46-11f0-bc8c-c7361739c22c",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:e902d42a-df52-11f0-aecf-05d824be095a",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:2fc83e20-25fa-11f1-838d-59cd98bbee7e",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:0bd8196a-df3f-11f0-8933-5bedca54c5c8#k2",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:e1014818-eb7a-11f0-8b7c-d1553f5ec9d6#k3",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "official",
+          "document": "72/2011/NĐ-CP",
+          "quote": "Sửa đổi, bổ sung một số điều của Nghị định số 105/2007/NĐ-CP"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:2fc7a1e0-25fa-11f1-ad30-25f349c1fb75",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "official",
+          "document": "174/2016/NĐ-CP",
+          "quote": "Bản xác nhận của cơ quan có thẩm quyền nơi doanh nghiệp dịch vụ kế toán nước ngoài đóng trụ sở chính về việc không vi phạm"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:0bd83f26-df3f-11f0-910e-abf723745ddc#k1#h",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:3ec49750-2d54-11f1-9467-9f7cd639166d",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "official",
+          "document": "06/2025/NĐ-CP",
+          "quote": "Hà Nội, ngày 08 tháng 1 năm 2025"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:7060dc40-2d47-11f1-882a-8dfb656811df",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:64011ff0-2ffe-11f1-ae5b-21300cf7b5f8",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:04c4da6a-eb91-11f0-9a3e-1f2de699ff65#k2",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:d3986b10-2c85-11f1-84f3-63165385b501",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:31d966d0-1f97-11f1-abec-7dd8ee0e3f8d",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:b69cb980-2c7b-11f1-8056-01cda9906453",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:d88e3ee8-e161-11f0-b758-cd5fa763e536",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "official",
+          "document": "20/2012/QH13, Điều 67 khoản 3 (sửa bởi khoản 24 Điều 1)",
+          "quote": "Bộ trưởng Bộ Tư pháp phê duyệt sau khi thống nhất ý kiến với Bộ trưởng Bộ Nội vụ."
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:4cee6a60-eb71-11f0-ac45-154b0d915a56",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "secondary",
+          "document": "14/2023/TT-BXD, khoản 1, 2 Điều 1 (caselaw.vn)",
+          "quote": "2. Sửa đổi, bổ sung Điều 9 như sau:"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:7611e000-273c-11f1-afc5-bbd6ac92b46c",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": [
+        {
+          "source_tier": "official",
+          "document": "71/2019/NĐ-CP, khoản 2 Điều 4",
+          "quote": "Mức phạt tiền quy định tại Chương II của Nghị định này được áp dụng đối với hành vi vi phạm hành chính của cá nhân"
+        },
+        {
+          "source_tier": "official",
+          "document": "71/2019/NĐ-CP, khoản 2 Điều 4",
+          "quote": "Đối với cùng một hành vi vi phạm hành chính thì mức phạt tiền đối với tổ chức gấp 02 lần"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:5a03ca10-eaea-11f0-9469-2f0642addcfe",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:592f6e64-e171-11f0-88ed-ff9450fdb79b#k3",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    }
+  ]
+}

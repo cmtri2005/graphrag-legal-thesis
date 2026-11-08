@@ -1,0 +1,41 @@
+[
+  {
+    "item_id": "124607",
+    "available": true,
+    "document": "11/2017/TT-BNNPTNT",
+    "source_tier": "official",
+    "access_method": "local vbpl official crawl, no live request; fulltext uncapped",
+    "source_url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/124607",
+    "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/124607.txt",
+    "text_sha256": "1fcbafb3cde91b4c8d58fd296f393096720975b32d99a2f9667dbc656b7ef243",
+    "raw_path": "data/raw/124607.json",
+    "raw_sha256": "dff20e5d35809b3e69d514d05fcbaf881cbecaf9c3f0b6a92b02ee9066772432",
+    "chars": 30040
+  },
+  {
+    "item_id": "26385",
+    "available": true,
+    "document": "16/2011/TT-BNNPTNT",
+    "source_tier": "official",
+    "access_method": "local vbpl official crawl, no live request; fulltext uncapped",
+    "source_url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/26385",
+    "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/26385.txt",
+    "text_sha256": "711a328ce1743f40ad13ada0f17fe54263d773d4b627df92587f41972952a17e",
+    "raw_path": "data/raw/26385.json",
+    "raw_sha256": "c5d27cdde4351193d5eb80ceb5832f0f8a1b200a693dcc8a5d22070bdfedc59d",
+    "chars": 19146
+  },
+  {
+    "item_id": "30381",
+    "available": true,
+    "document": "52/2012/TT-BNNPTNT",
+    "source_tier": "official",
+    "access_method": "local vbpl official crawl, no live request; fulltext uncapped",
+    "source_url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/30381",
+    "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/30381.txt",
+    "text_sha256": "74f14595b9e270f6ae10c857371563f9265043ed4b41fda5eac4633c97e732f2",
+    "raw_path": "data/raw/30381.json",
+    "raw_sha256": "40fc42056e9031f7a2d8986e1d2b1020a543825d157a9e2b4e81da121d4ad085",
+    "chars": 8378
+  }
+]

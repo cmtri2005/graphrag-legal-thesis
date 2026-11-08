@@ -1,0 +1,40 @@
+{
+ "worksheet": "data/review/ai_research/2026-11-08_rewrite_final/supplemental_worksheet.jsonl",
+ "worksheet_file_sha256": "711069b66c89bc8285a194f74295bdf5605330dddb8f88b2f192714a00d4c8a2",
+ "builder": "scripts/review/official_text.py",
+ "shuffle_seed": "vilextime-ai-supp18",
+ "chunks": {
+  "chunk01.jsonl": {
+   "sha256": "164460cc81e2223b840207b60355d619f68f5492337d7c4b8781693afc7aa9d8",
+   "n": 9,
+   "chars": 194669,
+   "lineage_ids": [
+    "provision:d88e3c68-e161-11f0-b694-2f1f003aff40",
+    "provision:089b0e44-39fb-11f1-a16c-4f6a99b9f514",
+    "provision:f93793a0-eab3-11f0-960c-1f93ed7f7764#k4",
+    "provision:d78dcd10-eada-11f0-b850-07113bbbe7f2",
+    "provision:f0fd27ae-e180-11f0-b95d-855bc22154df",
+    "provision:5b2570e0-2c8c-11f1-aecd-ed1bd25619cc",
+    "provision:ab4919f8-df40-11f0-a49a-7ba1892820ef",
+    "provision:f019057e-1d8a-11f1-91fb-e7ff0fbd6b3d",
+    "provision:e782e8ce-df43-11f0-9355-af2f830ee753"
+   ]
+  },
+  "chunk02.jsonl": {
+   "sha256": "dcf8e83cea127008e08af1ee224c0648362bc7b99f2ed0a0cdb0e30dd37c59ed",
+   "n": 9,
+   "chars": 161762,
+   "lineage_ids": [
+    "provision:e9ffd3da-eb7a-11f0-9830-4feb5d5132b5",
+    "provision:c4275dbc-e176-11f0-86b1-a35d2a1c3342#k2",
+    "provision:7debb0a6-df45-11f0-a43e-33b52192b20e",
+    "provision:c45fe1a8-df43-11f0-9a1c-277c000beaf7#k1#e",
+    "provision:6de08930-1f81-11f1-879b-6fd3887768c6",
+    "provision:5ba5ec70-2d45-11f1-9bd8-3d255859b151",
+    "provision:0b3d2a1c-df54-11f0-9582-0d0c91275f3e",
+    "provision:fab36588-df55-11f0-a65a-358a1cdc4fec#k1#d",
+    "provision:f7a2d6fe-df40-11f0-b4c8-19f897fecc61"
+   ]
+  }
+ }
+}

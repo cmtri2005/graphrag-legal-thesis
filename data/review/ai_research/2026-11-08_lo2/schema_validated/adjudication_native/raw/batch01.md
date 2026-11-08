@@ -1,0 +1,375 @@
+```jsonl
+{"case_id": "lo2-001", "run_id": "lo2", "lineage_id": "provision:0ba67328-df45-11f0-8f9a-3f6911248235", "worksheet_sha256": "a24f8788737059a9329176be72dc9d1a1e675946c0b4e892e837e23333695399", "raw_a_sha256": "995587728f4082e18999945d22e436391d9f2fcfdf0b3264ad20e1698b3c7970", "raw_b_sha256": "5a2ee856c5289069413b84e33f11f965f0bebf3f199dcbcbec7cf2b5bb61c4ba", "disputed_fields": ["q4", "q4_reason"], "disposition": "prefer_b", "proposed_label": {"q1": "dung", "q1_reason": "", "q2": "co", "q2_reason": "", "q3": "co", "q3_reason": "", "q4": "khong", "q4_reason": "", "verdict": "dat", "guideline_version": "4.0", "quote": "3. Bãi bỏ các Điều 7, 8, 9 và 10 của Thông tư số 08/2017/TT-BNNPTNT ngày 28 tháng 3 năm 2017 của Bộ Nông nghiệp và Phát triển nông thôn quy định về tập huấn chuyên môn, nghiệp vụ và trang phục đối với lực lượng bảo vệ rừng chuyên trách của chủ rừng.", "search_log": "(a) Đọc toàn văn NĐ01/2019 Điều12,16,19,20 và Phụ lục I,II; (b) điểm anh em khoản6 Điều10 TT08 cùng bị bãi bỏ; (c) mở PDF gốc NĐ01/2019 Phụ lụcII toàn bộ mụcI–III, đối chiếu 02/VBHN-BNNPTNT; danh mục phụ kiện và niên hạn không có ve áo; (d) phân biệt cấp hiệu ve cổ cho Kiểm lâm ở Phụ lụcI, khác chủ thể, không phải quy phạm thay cho phụ kiện ve áo của lực lượng chuyên trách. Search bổ sung về ve áo/lực lượng bảo vệ rừng tại cổng chính thức không đưa ra quy phạm cùng đối tượng khác.", "note": "Đọc nguyên bản 2019, không suy mốc lịch sử chỉ từ bản hợp nhất 2025. Bản hợp nhất dùng đối chiếu OCR; Q1–Q4 và mọi reason khớp B. Lượt bổ sung nguồn xác nhận Điều11 TT08 từ bản official cache; không có căn cứ mới trái nhãn B.", "evidence_status": "sufficient", "evidence": [{"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=122564", "source_tier": "worksheet", "document_number": "08/2017/TT-BNNPTNT", "provision": "điểm đ khoản 6 Điều 10", "as_of": "2019-02-14, 2019-02-15", "quote": "đ) Ve áo: Hình bình hành, kích thước 55 x 32 mm, màu xanh cô ban, bên trong có cốt nhựa, giữa có phù hiệu bằng kim loại màu trắng bạc, phía mặt sau có ghim để cài trên đầu cổ áo;", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "original official text embedded in assigned packet; not independent live retrieval"}, {"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=133133", "source_tier": "worksheet", "document_number": "01/2019/NĐ-CP", "provision": "khoản 1,3 Điều 19; Điều 20", "as_of": "2019-02-14, 2019-02-15", "quote": "1. Nghị định này có hiệu lực thi hành từ ngày 15 tháng 02 năm 2019.", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "original official text embedded in assigned packet; not independent live retrieval"}, {"url": "https://vbpl.vn/FileData/TW/Lists/vbpq/Attachments/177746/tvVanBanGoc_2025_183%20%2B%20184_02-VBHN-BNNPTNT..pdf", "source_tier": "official", "document_number": "02/VBHN-BNNPTNT, hợp nhất 01/2019/NĐ-CP", "provision": "Phụ lục II I.4 a,b; II", "as_of": "2019-02-15", "quote": "Cấp hiệu gắn trên cầu vai áo.", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "web.run open; independently read"}, {"url": "https://datafiles.chinhphu.vn/cpp/files/vbpq/2019/01/01.signed_02.pdf", "source_tier": "official", "document_number": "01/2019/NĐ-CP", "provision": "Phụ lục II I.4, II, III; PDF tr.33–36", "as_of": "2019-02-15", "quote": "II. s6 LU<,JNG, NIEN H4.N sir Dl)NG", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "web.run open; original PDF OCR read at lines 972–1091; OCR corruption retained; compared with legible official consolidation"}, {"url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/122564", "source_tier": "official", "document_number": "08/2017/TT-BNNPTNT", "provision": "Điều 11", "as_of": "2019-02-14", "quote": "Thông tư này có hiệu lực thi hành từ ngày 16 tháng 5 năm 2017", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "e132eee06d100cb8f6f2b41c5c5b506fd8ee97b921761d20db8a21f1f81c4580", "raw_sha256": "b001c43fe55c895745d9b370d732259b5e95766e4d441e711ae405ce86e2ba8e"}]}, "reasoning": "Q1: Hai mốc 14/02 và 15/02/2019 khớp điểm đ khoản 6 Điều 10 bản ban hành và khoản 1,3 Điều 19 NĐ01/2019; câu dẫn là danh mục phụ kiện, đáp án ngắn đủ các thông số, không chỉ dẫn chiếu. Điều 20 chỉ bảo lưu phụ cấp, không giữ ve áo. Q2: hỏi yêu cầu kỹ thuật cụ thể, không chỉ hỏi còn/không; đáp án trước có nội dung, sau bãi bỏ điều cha. Q3: ghim rõ chủ thể lực lượng bảo vệ rừng chuyên trách của chủ rừng và phụ kiện ve áo; không nêu vị trí pháp lý hay thông số đáp án. Q4: Đã đọc lại nguyên bản Phụ lục II, đối chiếu bản hợp nhất chính thức cho OCR. I.4 và toàn bộ danh mục II chỉ có phù hiệu gắn mũ, cấp hiệu cầu vai và các phụ kiện khác, không có phụ kiện ve áo. Quy định ve cổ của Kiểm lâm thuộc Phụ lục I, khác chủ thể. Theo bảy yếu tố, dấu vết cùng đợt bãi bỏ/thay trang phục (7) và cấp hiệu lực (6) có, nhưng đối tượng phụ kiện/vị trí sử dụng và cấu trúc kỹ thuật (2–4) khác rõ ràng; không phải kế thừa nội dung được hỏi. Luận điểm A về cần kiểm Phụ lục II là đúng về phương pháp, thiếu nguồn của A đã được bổ sung; chưa có căn cứ giữ khong_chac sau khi đọc phụ lục. Luận điểm B về phụ kiện gắn mũ/cầu vai được nguồn độc lập xác nhận. Toàn bộ Q và reason khớp B, nên prefer_b.", "evidence": [{"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=122564", "source_tier": "worksheet", "document_number": "08/2017/TT-BNNPTNT", "provision": "điểm đ khoản 6 Điều 10", "as_of": "2019-02-14, 2019-02-15", "quote": "đ) Ve áo: Hình bình hành, kích thước 55 x 32 mm, màu xanh cô ban, bên trong có cốt nhựa, giữa có phù hiệu bằng kim loại màu trắng bạc, phía mặt sau có ghim để cài trên đầu cổ áo;", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "original official text embedded in assigned packet; not independent live retrieval"}, {"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=133133", "source_tier": "worksheet", "document_number": "01/2019/NĐ-CP", "provision": "khoản 1,3 Điều 19; Điều 20", "as_of": "2019-02-14, 2019-02-15", "quote": "1. Nghị định này có hiệu lực thi hành từ ngày 15 tháng 02 năm 2019.", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "original official text embedded in assigned packet; not independent live retrieval"}, {"url": "https://vbpl.vn/FileData/TW/Lists/vbpq/Attachments/177746/tvVanBanGoc_2025_183%20%2B%20184_02-VBHN-BNNPTNT..pdf", "source_tier": "official", "document_number": "02/VBHN-BNNPTNT, hợp nhất 01/2019/NĐ-CP", "provision": "Phụ lục II I.4 a,b; II", "as_of": "2019-02-15", "quote": "Cấp hiệu gắn trên cầu vai áo.", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "web.run open; independently read"}, {"url": "https://datafiles.chinhphu.vn/cpp/files/vbpq/2019/01/01.signed_02.pdf", "source_tier": "official", "document_number": "01/2019/NĐ-CP", "provision": "Phụ lục II I.4, II, III; PDF tr.33–36", "as_of": "2019-02-15", "quote": "II. s6 LU<,JNG, NIEN H4.N sir Dl)NG", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "web.run open; original PDF OCR read at lines 972–1091; OCR corruption retained; compared with legible official consolidation"}, {"url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/122564", "source_tier": "official", "document_number": "08/2017/TT-BNNPTNT", "provision": "Điều 11", "as_of": "2019-02-14", "quote": "Thông tư này có hiệu lực thi hành từ ngày 16 tháng 5 năm 2017", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "e132eee06d100cb8f6f2b41c5c5b506fd8ee97b921761d20db8a21f1f81c4580", "raw_sha256": "b001c43fe55c895745d9b370d732259b5e95766e4d441e711ae405ce86e2ba8e"}], "open_questions": [], "labeler": "ai-adjudicator", "label_origin": "ai", "verification_status": "not_verified", "human_adjudication_required": true}
+{"case_id": "lo2-002", "run_id": "lo2", "lineage_id": "provision:3ebca810-2d54-11f1-9390-fbe1d04cc24f", "worksheet_sha256": "05a9b8fecaa2c6793c808b5cdb83712e32cb3f5355b82367b2083700392c11aa", "raw_a_sha256": "508ef5dcea62e8cfacdf34d68a154e1c54310c0b4cbc0e4fac1659cc158ad00f", "raw_b_sha256": "5402a0e453f0dddfd6ccc1e150da0a981299014666268f96a48f773ccc99b3d1", "disputed_fields": ["q1", "q1_reason", "q4", "q4_reason"], "disposition": "unresolved", "proposed_label": null, "reasoning": "Q1: Cả A và B đều dựa trên câu bãi bỏ Điều 24 từ 19/12/2023; lời văn điểm c đúng bản ban hành. Nhưng trước bãi bỏ, Điều23 đã giới hạn đăng ký nuôi con nuôi thực tế đến hết 31/12/2015, phù hợp Luật52 Điều50 về hạn 5 năm từ 01/01/2011. Vì vậy A chỉ đối chiếu lời văn để nhận dung chưa giải quyết tính áp dụng tại 18/12/2023; nghi vấn của B có nguồn chính thức, nhưng chưa đủ chốt mã gold_wrong cho toàn nhãn khi cần làm rõ phạm vi quy định còn hiệu lực hình thức và khả năng thủ tục muộn/chuyển tiếp. Q2: câu hỏi yêu cầu hình thức và điều kiện giấy tờ, không chỉ có/không, nên lập luận co của hai bên có cơ sở hình thức; chưa thể xác nhận cặp tương phản pháp lý nếu thủ tục cũ đã đóng trước cả hai mốc. Q3: cả hai bên nhận câu hỏi chung là mơ hồ có cơ sở: câu không ghim nuôi con nuôi thực tế, trong khi Luật52 Điều17 và Điều31 yêu cầu văn bản tình trạng hôn nhân cho thủ tục khác. Q4: (a) NĐ92 toàn văn chỉ bãi bỏ; (b) Điều23–25 cùng bị bãi bỏ, đọc thêm Điều26–29 bản NĐ19; (c,d) đã mở Luật52 Điều17,31,50 và NĐ19 Điều21–24. Các hồ sơ khác không tự động chứng minh relocated: điều kiện và chủ thể khác, chưa đạt bảy yếu tố; cũng chưa đủ loại trừ toàn bộ văn bản sửa đổi/chuyển tiếp tới 2023. A khong/sufficient vượt nguồn đã tra; B khong_chac phản ánh đúng khoảng trống nhưng q1 sai/gold_wrong vẫn chưa khóa. Không ưu tiên nguyên nhãn nào, đề xuất null. Bổ sung nguồn lượt2: đã đọc Điều23–30 và Điều50–52 NĐ19 từ cache official không cắt, đối chiếu hạn và chuyển tiếp; không có gia hạn đăng ký trong những đoạn này. Phân biệt lời văn còn trước câu bãi bỏ với khả năng đăng ký phát sinh năm2023 vẫn cần quyết định phương pháp/nguồn tác động khác, nên giữ unresolved thay vì ép chọn A hoặc B.", "evidence": [{"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=26222", "source_tier": "worksheet", "document_number": "19/2011/NĐ-CP", "provision": "điểm c khoản 2 Điều 24", "as_of": "2023-12-18, 2023-12-19", "quote": "c) Bản sao Giấy chứng nhận kết hôn của người nhận con nuôi, nếu có;", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "original official text embedded in assigned packet; not independent live retrieval"}, {"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=164308", "source_tier": "worksheet", "document_number": "92/2023/NĐ-CP", "provision": "khoản 1 Điều 2; khoản 1 Điều 3", "as_of": "2023-12-18, 2023-12-19", "quote": "1. Nghị định này có hiệu lực thi hành kể từ ngày 19 tháng 12 năm 2023.", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "original official text embedded in assigned packet; not independent live retrieval"}, {"url": "https://vanban.chinhphu.vn/default.aspx?docid=99538&pageid=27160", "source_tier": "official", "document_number": "19/2011/NĐ-CP", "provision": "khoản 1 Điều 23", "as_of": "2023-12-18, 2023-12-19", "quote": "đến hết ngày 31 tháng 12 năm 2015", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "web.run open; independently read"}, {"url": "https://vanban.chinhphu.vn/default.aspx?docid=96052&pageid=27160", "source_tier": "official", "document_number": "52/2010/QH12", "provision": "khoản 4 Điều 17; khoản 1 Điều 50; Điều 52", "as_of": "2023-12-18, 2023-12-19", "quote": "Văn bản xác nhận tình trạng hôn nhân;", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "web.run open; independently read"}, {"url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/26222", "source_tier": "official", "document_number": "19/2011/NĐ-CP", "provision": "khoản 1 Điều23; Điều24,25,50,52", "as_of": "2023-12-18, 2023-12-19", "quote": "đến hết ngày 31 tháng 12 năm 2015", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "8d12272c34d15b5c334d85ae92452aabf918b1bd1004604a9b02e459e0d97900", "raw_sha256": "226d89df6bbde3d31800eb5eb57feef0ab5ec4a246ca223a903b15fc2484f504"}, {"url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/164308", "source_tier": "official", "document_number": "92/2023/NĐ-CP", "provision": "khoản1 Điều2; khoản1 Điều3", "as_of": "2023-12-19", "quote": "1. Nghị định này có hiệu lực thi hành kể từ ngày 19 tháng 12 năm 2023.", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "1b3da4656701cd782b9caf3947575f03833eee875b180e5cbcaf472fac37f8d6", "raw_sha256": "442202fbcc0db93e480328fd956b369ae1aabde41871115456734868e9afc73d"}], "open_questions": ["Cần làm rõ hạn đăng ký 31/12/2015 tác động Q1/Q2 tại cả hai mốc 2023 theo đúng taxonomy; có ngoại lệ/gia hạn hoặc hồ sơ tiếp nhận đúng hạn chưa giải quyết không?", "Đọc đủ các văn bản sửa đổi NĐ19 và Luật52 có hiệu lực tới 19/12/2023 để chốt Q4."], "labeler": "ai-adjudicator", "label_origin": "ai", "verification_status": "not_verified", "human_adjudication_required": true}
+{"case_id": "lo2-003", "run_id": "lo2", "lineage_id": "provision:28964930-eaea-11f0-91fe-15313046c917#k3#b", "worksheet_sha256": "d5be04b49a7b5554fd01e231a75b9a4494d6687c843a8a3d7d87e3a2bdf7faab", "raw_a_sha256": "b1af326b44a8857f8f1f5cd341711ae50375215a709c5f71ab94e4ab6df8e30d", "raw_b_sha256": "87c4cf2ff7d6a8883ec6eff12fa3e1b2e6378ef909c36718b1303f5c96a38540", "disputed_fields": ["q3", "q3_reason"], "disposition": "unresolved", "proposed_label": null, "reasoning": "Q1: Đồng ý lỗi other của cả hai: đáp án ngắn 31/05/2015 chỉ nêu bằng Giám đốc/Phó Giám đốc, thiếu chứng chỉ của cán bộ kỹ thuật, nhân viên và người lao động mà câu hỏi hỏi. Đoạn thiếu được trích nguyên từ đáp án đầy đủ trong evidence. Mốc01/06/2015 theo khoản1 Điều2 TT06 chỉ còn chứng chỉ; Điều8 hiệu lực01/06/2015 không tách phần. Q2: bỏ bằng và giữ chứng chỉ chạm giấy tờ trình độ câu hỏi hỏi, là thay đổi thực chất, nên co có căn cứ. Q3: B có cơ sở mạnh hơn A: câu không ghim danh mục hạn chế hoặc cấp mới Giấy phép; Điều10,18,19 TT28 có tài liệu nhân sự cho thủ tục khác nhau. TT18/2011 đã bãi bỏ giấy tờ ở Điều10,11 nhưng chỉ bổ sung cách nộp bản sao tại Điều18,19; bỏ phạm vi có thể cho các đáp án khác nhau ngay tại hai mốc. Q4: Khoảng thiếu NĐ26 đã được khắc phục ở lượt3. Đã đọc toàn bộ body NĐ26, nhất là khoản4,5,9 Điều1 và Điều2; Điều7(2)(a) NĐ108 được thay bằng điều kiện người phụ trách an toàn có trình độ trung cấp chuyên ngành trở lên, người trực tiếp tiếp xúc được đào tạo an toàn. Điều12 NĐ108 áp thêm các điều kiện Điều7–11 cho hóa chất hạn chế. Quy định cấp cao này khác yêu cầu bằng Giám đốc trong hồ sơ TT28 bản cũ. Tuy nhiên câu hỏi về giấy tờ hồ sơ khác việc xác định điều kiện chuyên môn kinh doanh: nguồn mới chưa nói riêng việc nộp giấy tờ Điều18 bị bãi bỏ, và TT18/2011 vẫn phân biệt hồ sơ Giấy phép với hồ sơ Giấy chứng nhận. Chưa đủ kết luận điều kiện trung cấp trực tiếp thay nội dung giấy tờ để chọn superseded_by_other_norm, cũng không còn cơ sở chốt khong như cả A/B. Đây là vấn đề phạm vi quy phạm cần người duyệt giải quyết, không còn là lỗi truy cập NĐ26. Không suy từ lỗi Q1 đã rõ ra đủ nguồn/toàn nhãn; giữ unresolved/null.", "evidence": [{"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=25452", "source_tier": "worksheet", "document_number": "28/2010/TT-BCT", "provision": "điểm b khoản 3 Điều 18", "as_of": "2015-05-31, 2015-06-01", "quote": "chứng chỉ đã tham gia lớp huấn luyện về nghiệp vụ hóa chất của cán bộ kỹ thuật, nhân viên và người lao động của cơ sở kinh doanh hóa chất;", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "original official text embedded in assigned packet; not independent live retrieval"}, {"url": "https://vbpl.moj.gov.vn/bocongthuong/Pages/vbpq-toanvan.aspx?ItemID=25452", "source_tier": "official", "document_number": "28/2010/TT-BCT", "provision": "Điều 10,18,19", "as_of": "2015-05-31, 2015-06-01", "quote": "3. Tài liệu về điều kiện đối với người kinh doanh", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "web.run open; independently read"}, {"url": "https://www.vietnamtradeportal.gov.vn/kcfinder/upload/files/06_2015_TT-BCT.pdf", "source_tier": "official", "document_number": "06/2015/TT-BCT", "provision": "khoản 1 Điều 2; Điều 8", "as_of": "2015-06-01", "quote": "Sửa đổi, bổ sung điểm b Khoản 3 Điều 18 như sau:", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "web.run open; independently read"}, {"url": "https://chinhphu.vn/default.aspx?docid=100412&pageid=27160", "source_tier": "official", "document_number": "18/2011/TT-BCT", "provision": "khoản 1,2,3 Điều 1", "as_of": "2015-05-31, 2015-06-01", "quote": "Bãi bỏ các giấy tờ sau trong thành phần hồ sơ", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "web.run open; independently read"}, {"url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/65576", "source_tier": "official", "document_number": "06/2015/TT-BCT", "provision": "khoản1 Điều2; khoản1 Điều8", "as_of": "2015-06-01", "quote": "1. Thông tư này có hiệu lực thi hành từ ngày 01 tháng 6 năm 2015.", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "999a5180ac3b3484d277171c175c8db0c8d878318deddfecc82fbfbd12fec928", "raw_sha256": "71fc0e6e66916ebcc37386470df9b54e57f77fe6b11ddf4b7f02fd72569eb4a1"}, {"url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/25452", "source_tier": "official", "document_number": "28/2010/TT-BCT", "provision": "Điều10,18,19 và Điều50", "as_of": "2015-05-31, 2015-06-01", "quote": "Điều 18. Hồ sơ đề nghị cấp mới Giấy phép đối với cơ sở kinh doanh hóa chất thuộc Danh mục hóa chất hạn chế sản xuất, kinh doanh", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "5e2c71d23c50830c82275b7a2089774ee1c27c65fc1458d1a91034d2f3faeb8e", "raw_sha256": "e155d04d72913dab0e1e3fb87ccfd7b22fc05dc6fd370e9570d8848fe004eee3"}, {"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=26405", "source_tier": "official", "document_number": "26/2011/NĐ-CP", "provision": "khoản4 Điều1 sửa khoản2 Điều7 NĐ108; Điều2", "as_of": "2015-05-31, 2015-06-01", "quote": "a) Người phụ trách về an toàn hóa chất của cơ sở kinh doanh hóa chất phải có trình độ trung cấp trở lên về chuyên ngành hóa chất;", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "015140ca05bafedc907954ca3445806f7e17f955db3c025da91c1388c58e84d1", "raw_sha256": "038486e8a22e71e5e88ce20f3d8712eadb070b2af45eb9faa738a1d304a69051"}, {"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=26405", "source_tier": "official", "document_number": "26/2011/NĐ-CP", "provision": "Điều2", "as_of": "2015-05-31, 2015-06-01", "quote": "Nghị định này có hiệu lực thi hành kể từ ngày 01 tháng 6 năm 2011.", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "015140ca05bafedc907954ca3445806f7e17f955db3c025da91c1388c58e84d1", "raw_sha256": "038486e8a22e71e5e88ce20f3d8712eadb070b2af45eb9faa738a1d304a69051"}, {"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=24604", "source_tier": "official", "document_number": "108/2008/NĐ-CP", "provision": "Điều12", "as_of": "2015-05-31, 2015-06-01", "quote": "ngoài việc đảm bảo các điều kiện đã nêu từ Điều 7 đến Điều 11 Chương này", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "0274737d571ff1547226cf339254b3b775b2ce169f220fd72e35548f23c6b6f8", "raw_sha256": "858cbdfa544c001e5b5dc7b0e96b421ed2119b989ab8df5721259e0e562417eb"}], "open_questions": ["Q4: Điều7(2)(a) NĐ108 sửa bởi NĐ26 điều chỉnh điều kiện chuyên môn người phụ trách an toàn; nó có trực tiếp loại yêu cầu nộp bản sao bằng đại học của Giám đốc trong hồ sơ Giấy phép hạn chế tại Điều18 TT28 trước01/06/2015 không? Cần quyết định có căn cứ về phạm vi áp dụng R3; không tự đồng nhất điều kiện kinh doanh và giấy tờ hồ sơ."], "labeler": "ai-adjudicator", "label_origin": "ai", "verification_status": "not_verified", "human_adjudication_required": true}
+{"case_id": "lo2-004", "run_id": "lo2", "lineage_id": "provision:3d386500-2c83-11f1-b70e-95ff854b3d3c", "worksheet_sha256": "c939d231ea317eaff5cb60e1b5bc93f7eb9132691127a968db4a4fccb30df2b9", "raw_a_sha256": "5e51d00f6c974f7e433b31abd1e1bf3d522e8a9365a5e23b1b9bf1387a10a40e", "raw_b_sha256": "567512b21d9ce620271265a35dda5d9b5491fe0f27d56c16290f09f340570bd1", "disputed_fields": ["q3", "q3_reason", "q4", "q4_reason"], "disposition": "unresolved", "proposed_label": null, "reasoning": "Q1: Đọc lại Điều28 NĐ100, khoản15 Điều2 NĐ123/2021 và Điều52 NĐ168/2024, kèm điều hiệu lực/chuyển tiếp. Các sửa đổi và bãi bỏ trong hai văn bản này không bỏ điểm r khoản4 hoặc đổi khung phạt câu dẫn khoản4; NĐ168 vẫn dẫn điểm r trong chế tài bổ sung khoản10. Như vậy cơ sở lịch sử cho lời văn phiếu ở28/02/2026 đã mạnh hơn và không còn lý do thiếu NĐ123/NĐ168; NĐ336 khoản5 Điều25 bãi bỏ đích danh từ01/03/2026. Câu dẫn đầy đủ và đáp án ngắn khớp, không chỉ dẫn chiếu. Điều27 NĐ336 không giữ luật cũ cho sự việc được hiểu phát sinh tại mốc sau. Chưa kiểm được quy phạm quản lý chuyến trùng lặp có còn áp dụng ở28/02/2026 nên chưa chốt toàn bộ hiệu lực pháp lý của câu trả lời theo nội dung. Q2: câu hỏi yêu cầu xác định hành vi, không chỉ hỏi còn/không, nên co có căn cứ. Q3: A xác định đúng mức tiền thuộc câu dẫn, nhưng dùng mức tiền làm điều kiện để hỏi hành vi không tự chứng minh đã chép sẵn đáp án; câu chưa nêu đồng thời trùng điểm đầu và điểm cuối vượt quy định. B co hợp lý hơn ở điểm này nhưng độ duy nhất vẫn phụ thuộc quy định vận tải thực chất tại từng mốc. Không tự tạo quy tắc mọi mức tiền trong câu hỏi đều question_leaks. Q4: Đã khắc phục nguồn NĐ336 bị cắt, đọc đầy đủ Điều12–28; không có quy định trùng lặp điểm đầu/điểm cuối trong toàn bộ body. Đọc hết Điều28 NĐ100, các điểm anh em và khoản10; NĐ123,168 cũng không có chuỗi trùng lặp, không chứng minh quy phạm kế thừa trực tiếp. Nhưng (c,d) chưa đọc quy phạm quản lý xe hợp đồng/du lịch và điều kiện tần suất hành trình ngoài các nghị định xử phạt được cấp; không có kết quả tìm từ trong NĐ336 chưa hoàn thành tìm kế thừa bảy yếu tố. A khong/sufficient vẫn vượt bằng chứng toàn nhãn, B thận trọng hơn về Q4 nhưng lo ngại cắt nguồn đã giải quyết và Q3 cần người duyệt. Giữ unresolved/null vì khoảng trống phạm vi nguồn cụ thể còn lại, không vì NĐ123/NĐ168 hoặc NĐ336 chưa truy cập.", "evidence": [{"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=140152", "source_tier": "worksheet", "document_number": "100/2019/NĐ-CP", "provision": "điểm r khoản 4 Điều 28", "as_of": "2026-02-28, 2026-03-01", "quote": "r) Sử dụng xe kinh doanh vận tải hành khách theo hợp đồng, xe kinh doanh vận tải khách du lịch mà xe đó có số chuyến trùng lặp điểm đầu và trùng lặp điểm cuối vượt quá quy định;", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "original official text embedded in assigned packet; not independent live retrieval"}, {"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=185666", "source_tier": "worksheet", "document_number": "336/2025/NĐ-CP", "provision": "Điều 26,27", "as_of": "2026-02-28, 2026-03-01", "quote": "Nghị định này có hiệu lực thi hành từ ngày 01 tháng 3 năm 2026.", "accessed_at": "2026-11-08T08:48:18.006643+00:00", "access_method": "original official text embedded in assigned packet; not independent live retrieval"}, {"url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/185666", "source_tier": "official", "document_number": "336/2025/NĐ-CP", "provision": "Điều12; khoản5 Điều25; Điều26,27", "as_of": "2026-03-01", "quote": "Điều 12. Xử phạt các hành vi vi phạm quy định về vận tải đường bộ, dịch vụ hỗ trợ vận tải đường bộ", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "5f2ad856944f5f971d918118427ccd0e1e09ec0f6f9a82b552daa807a8a0a318", "raw_sha256": "f0b2fa3fe788b16937d40d19686d1a2d0feb7adeb5cce35430315052a18de1a4"}, {"url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/185666", "source_tier": "official", "document_number": "336/2025/NĐ-CP", "provision": "khoản5 Điều25", "as_of": "2026-03-01", "quote": "5. Bãi bỏ điểm a, b, c, d, đ, i khoản 2; điểm b, c khoản 3; điểm b, c, d, đ, h, i, k, l, m, n, o, p, r, t khoản 4; điểm a, b, c, d, h, i, k, l, n, q khoản 6; điểm a, b, c, d, e, g, k khoản 7; điểm c, d khoản 8; điểm a, b khoản 10; điểm a, b, d, đ, e, g, h, k và điểm l khoản 11 Điều 28.", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "5f2ad856944f5f971d918118427ccd0e1e09ec0f6f9a82b552daa807a8a0a318", "raw_sha256": "f0b2fa3fe788b16937d40d19686d1a2d0feb7adeb5cce35430315052a18de1a4"}, {"url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/140152", "source_tier": "official", "document_number": "100/2019/NĐ-CP", "provision": "điểm r khoản4; điểm a khoản10 Điều28", "as_of": "2026-02-28", "quote": "điểm r, điểm s, điểm t khoản 4;", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "3a30e2073ab66845327a9c27b76e517d5bed4995372f9a609edc15fbdf2eabbb", "raw_sha256": "50fb6be2800e5d69dd6678030e68cade94e90dfc01ee40ebc28c293fcfdb386a"}, {"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=153339", "source_tier": "official", "document_number": "123/2021/NĐ-CP", "provision": "khoản15 Điều2; Điều4", "as_of": "2026-02-28, 2026-03-01", "quote": "15. Sửa đổi, bổ sung một số điểm, khoản của Điều 28 như sau:", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "3975278fb400f99b7bffc78c9e3428533123e6f61a664730b549b2ba6475e973", "raw_sha256": "f8084bb55da9a5e477e4ef567e09e1a2617723669a1a7f3939ab539dcbaa2420"}, {"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=173920", "source_tier": "official", "document_number": "168/2024/NĐ-CP", "provision": "khoản3,8 Điều52; Điều53,54", "as_of": "2026-02-28, 2026-03-01", "quote": "điểm o, điểm p, điểm r, điểm s, điểm t khoản 4;", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "89b461c4ed6aac464d8558bc90e0c6d43a7080ad3313a254b500ee9a8a3775c0", "raw_sha256": "a71c06c6eab7c75ff9ba4e46206555408f9e85e68f57ab64c8be71a9e65fc183"}, {"url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=173920", "source_tier": "official", "document_number": "168/2024/NĐ-CP", "provision": "khoản1 Điều53", "as_of": "2026-02-28, 2026-03-01", "quote": "1. Nghị định này có hiệu lực thi hành từ ngày 01 tháng 01 năm 2025, trừ quy định tại khoản 2 Điều này.", "accessed_at": "unknown", "access_method": "cached official fulltext; no live request", "text_sha256": "89b461c4ed6aac464d8558bc90e0c6d43a7080ad3313a254b500ee9a8a3775c0", "raw_sha256": "a71c06c6eab7c75ff9ba4e46206555408f9e85e68f57ab64c8be71a9e65fc183"}], "open_questions": ["Đọc quy phạm quản lý xe hợp đồng/du lịch và điều kiện tần suất/chuyến trùng lặp còn áp dụng tại28/02/2026,01/03/2026; xác định có quy phạm kế thừa hoặc cơ sở điều kiện đã thay ngoài các nghị định xử phạt được cung cấp không.", "Q3: khung tiền phạt là điều kiện hợp lệ để hỏi hành vi hay đã để lộ phần đáp án? Cần áp nhất quán quy tắc hiện hành, không bổ sung quy tắc cấm mọi mức phạt."], "labeler": "ai-adjudicator", "label_origin": "ai", "verification_status": "not_verified", "human_adjudication_required": true}
+```
+
+```json
+{
+  "runtime": "Codex native",
+  "model": "unknown",
+  "model_revision": "unknown",
+  "agent_role": "legal-adjudicator",
+  "batch": "batch01",
+  "created_at": "2026-11-08T08:54:43.458910+00:00",
+  "guideline_version": "4.0",
+  "skills_read": [
+    ".claude/skills/vn-legal-research/SKILL.md",
+    ".claude/skills/vilextime-ai-labeling/SKILL.md"
+  ],
+  "role_read": ".claude/agents/legal-adjudicator.md",
+  "input": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/input/batch01.jsonl",
+  "input_sha256": "65b4e73434d7b8365c027e5b64ebd0117eb0f84edf25e95f6a76765581a8572e",
+  "packet_read": "All four records and all official text read in bounded sections; initial truncated output subsequently re-read.",
+  "tools_used": [
+    "exec_command (read-only inspection and exclusive result creation)",
+    "web.run (open, search_query, find, click, screenshot)"
+  ],
+  "web_tool_calls": 15,
+  "lawgical_calls": 0,
+  "lawgical_status": "not available in this runtime",
+  "source_errors": [
+    "Gateway API 26222,65576,185666 inaccessible via web tool",
+    "vbpl.moj Item65576 full-text/print failed repeatedly (timeout/inaccessible); original vbpl PDF 502/403; government signed PDF cache miss; MOIT PDF timeout; successful official Vietnam Trade Portal fallback",
+    "vbpl.moj Item122564 inaccessible; original signed TT08 PDF available but zero text; packet used for wording",
+    "vbpl.moj Item185666 inaccessible; official signed NĐ336 PDF zero text; repeated screenshots returned no readable image to agent",
+    "NĐ26/2011 official PDF 107 pages zero text; historical higher-norm verification incomplete",
+    "Hai Phong transport extract timeout",
+    "Congbao NĐ01 landing page did not expose PDF links; government signed original PDF succeeded"
+  ],
+  "blindness": "Only assigned packet, named authority and external sources inspected; no system predictions, peer adjudications or other label files read. Frozen A/B visible as required for adjudication.",
+  "resolved": 1,
+  "unresolved": 3,
+  "unresolved_cases": [
+    "lo2-002",
+    "lo2-003",
+    "lo2-004"
+  ],
+  "web_call_log": [
+    "1 gateway opens and B cited official consolidation PDF",
+    "2 search four official identifiers",
+    "3 open NĐ01/NĐ336/TT06; search NĐ19/Luật52; find annex",
+    "4 open law/decree pages and annex",
+    "5 click NĐ336 PDF; open TT28,TT06,law/decree,annex",
+    "6 find TT28 and adoption provisions; search official TT06,NĐ01",
+    "7 open original NĐ01,TT06 PDF,source excerpts; NĐ336 screenshots",
+    "8 repeat screenshots; TT06 metadata; NĐ01 original annex",
+    "9 click TT06,underlying NĐ108 locator; searches",
+    "10 official full text/PDF retries; NĐ108,NĐ26 searches; annex end",
+    "11 open underlying NĐ108,NĐ26,TT18; TT06 print; forestry search",
+    "12 open relevant provisions and TT08 metadata; TT06 retry",
+    "13 click original TT08 and NĐ26 PDFs; TT06 retry; TT28 and annex excerpts",
+    "14 official alternate full-text attempts; transport/chemical/forestry searches",
+    "15 open MOIT and tradeportal TT06; Hai Phong transport extract; NĐ108 provisions"
+  ],
+  "attempt": 3,
+  "attempt_description": "Third source-augmentation attempt. NĐ26/2011,NĐ108/2008,NĐ123/2021,NĐ168/2024 actual official cached bodies supplied; source gaps reassessed without new web calls.",
+  "initial_attempt_preserved": [
+    "source_limited_attempts/batch01.jsonl",
+    "source_limited_attempts/batch01.md",
+    "source_limited_attempts/second/batch01.jsonl",
+    "source_limited_attempts/second/batch01.md"
+  ],
+  "augmentation_index": "full_sources/batch01.json",
+  "augmentation_sources": [
+    {
+      "item_id": "122564",
+      "available": true,
+      "document": "08/2017/TT-BNNPTNT",
+      "source_tier": "official",
+      "access_method": "local vbpl official crawl, no live request; fulltext uncapped",
+      "source_url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/122564",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/122564.txt",
+      "text_sha256": "e132eee06d100cb8f6f2b41c5c5b506fd8ee97b921761d20db8a21f1f81c4580",
+      "raw_path": "data/raw/122564.json",
+      "raw_sha256": "b001c43fe55c895745d9b370d732259b5e95766e4d441e711ae405ce86e2ba8e",
+      "chars": 13156
+    },
+    {
+      "item_id": "133133",
+      "available": true,
+      "document": "01/2019/NĐ-CP",
+      "source_tier": "official",
+      "access_method": "local vbpl official crawl, no live request; fulltext uncapped",
+      "source_url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/133133",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/133133.txt",
+      "text_sha256": "43dbf818d187e3b5ba331cc690119f18ee946fc8c8198e2c5185f7c85e3d7463",
+      "raw_path": "data/raw/133133.json",
+      "raw_sha256": "d8b7968188dbf8703ae8de8d74759fc2ce26ea518cfd10dc059057a531b5c0b3",
+      "chars": 26591
+    },
+    {
+      "item_id": "140152",
+      "available": true,
+      "document": "100/2019/NĐ-CP",
+      "source_tier": "official",
+      "access_method": "local vbpl official crawl, no live request; fulltext uncapped",
+      "source_url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/140152",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/140152.txt",
+      "text_sha256": "3a30e2073ab66845327a9c27b76e517d5bed4995372f9a609edc15fbdf2eabbb",
+      "raw_path": "data/raw/140152.json",
+      "raw_sha256": "50fb6be2800e5d69dd6678030e68cade94e90dfc01ee40ebc28c293fcfdb386a",
+      "chars": 320281
+    },
+    {
+      "item_id": "164308",
+      "available": true,
+      "document": "92/2023/NĐ-CP",
+      "source_tier": "official",
+      "access_method": "local vbpl official crawl, no live request; fulltext uncapped",
+      "source_url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/164308",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/164308.txt",
+      "text_sha256": "1b3da4656701cd782b9caf3947575f03833eee875b180e5cbcaf472fac37f8d6",
+      "raw_path": "data/raw/164308.json",
+      "raw_sha256": "442202fbcc0db93e480328fd956b369ae1aabde41871115456734868e9afc73d",
+      "chars": 5399
+    },
+    {
+      "item_id": "185666",
+      "available": true,
+      "document": "336/2025/NĐ-CP",
+      "source_tier": "official",
+      "access_method": "local vbpl official crawl, no live request; fulltext uncapped",
+      "source_url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/185666",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/185666.txt",
+      "text_sha256": "5f2ad856944f5f971d918118427ccd0e1e09ec0f6f9a82b552daa807a8a0a318",
+      "raw_path": "data/raw/185666.json",
+      "raw_sha256": "f0b2fa3fe788b16937d40d19686d1a2d0feb7adeb5cce35430315052a18de1a4",
+      "chars": 66566
+    },
+    {
+      "item_id": "25452",
+      "available": true,
+      "document": "28/2010/TT-BCT",
+      "source_tier": "official",
+      "access_method": "local vbpl official crawl, no live request; fulltext uncapped",
+      "source_url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/25452",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/25452.txt",
+      "text_sha256": "5e2c71d23c50830c82275b7a2089774ee1c27c65fc1458d1a91034d2f3faeb8e",
+      "raw_path": "data/raw/25452.json",
+      "raw_sha256": "e155d04d72913dab0e1e3fb87ccfd7b22fc05dc6fd370e9570d8848fe004eee3",
+      "chars": 53416
+    },
+    {
+      "item_id": "26222",
+      "available": true,
+      "document": "19/2011/NĐ-CP",
+      "source_tier": "official",
+      "access_method": "local vbpl official crawl, no live request; fulltext uncapped",
+      "source_url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/26222",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/26222.txt",
+      "text_sha256": "8d12272c34d15b5c334d85ae92452aabf918b1bd1004604a9b02e459e0d97900",
+      "raw_path": "data/raw/26222.json",
+      "raw_sha256": "226d89df6bbde3d31800eb5eb57feef0ab5ec4a246ca223a903b15fc2484f504",
+      "chars": 56740
+    },
+    {
+      "item_id": "65576",
+      "available": true,
+      "document": "06/2015/TT-BCT",
+      "source_tier": "official",
+      "access_method": "local vbpl official crawl, no live request; fulltext uncapped",
+      "source_url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/65576",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/65576.txt",
+      "text_sha256": "999a5180ac3b3484d277171c175c8db0c8d878318deddfecc82fbfbd12fec928",
+      "raw_path": "data/raw/65576.json",
+      "raw_sha256": "71fc0e6e66916ebcc37386470df9b54e57f77fe6b11ddf4b7f02fd72569eb4a1",
+      "chars": 9276
+    }
+  ],
+  "augmentation_access_method": "cached official fulltext; no live request",
+  "augmentation_crawl_time": "unknown",
+  "augmentation_independent_live_verification": false,
+  "augmentation_read_scope": [
+    "122564 Điều11–12",
+    "26222 Điều23–30,50–52",
+    "25452 Điều10–11,17–19,40–50",
+    "65576 full body in bounded sections",
+    "185666 chars30000–66566 in bounded sections plus fullbody term search",
+    "140152 Điều28 remainder after packet cutoff"
+  ],
+  "augmentation_result": "NĐ26 source gap and NĐ123/NĐ168 point-r historical gap resolved. Case003 retains substantive conditions-versus-paperwork uncertainty; case004 retains missing transport-management norms and Q3 interpretation; case002 deadline/application uncertainty unchanged. Case001 preserved.",
+  "additional_web_tool_calls_this_attempt": 0,
+  "third_augmentation_index": "full_sources/batch01_citations.json",
+  "third_augmentation_sources": [
+    {
+      "item_id": "133133",
+      "requested_document": "01/2019/NĐ-CP",
+      "document": "01/2019/NĐ-CP",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=133133",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/133133.txt",
+      "text_sha256": "43dbf818d187e3b5ba331cc690119f18ee946fc8c8198e2c5185f7c85e3d7463",
+      "raw_path": "data/raw/133133.json",
+      "raw_sha256": "d8b7968188dbf8703ae8de8d74759fc2ce26ea518cfd10dc059057a531b5c0b3",
+      "access_method": "official cached fulltext, no live request; metadata used for identifier routing only",
+      "source_tier": "official",
+      "chars": 26591
+    },
+    {
+      "item_id": "65576",
+      "requested_document": "06/2015/TT-BCT",
+      "document": "06/2015/TT-BCT",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=65576",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/65576.txt",
+      "text_sha256": "999a5180ac3b3484d277171c175c8db0c8d878318deddfecc82fbfbd12fec928",
+      "raw_path": "data/raw/65576.json",
+      "raw_sha256": "71fc0e6e66916ebcc37386470df9b54e57f77fe6b11ddf4b7f02fd72569eb4a1",
+      "access_method": "official cached fulltext, no live request; metadata used for identifier routing only",
+      "source_tier": "official",
+      "chars": 9276
+    },
+    {
+      "item_id": "122564",
+      "requested_document": "08/2017/TT-BNNPTNT",
+      "document": "08/2017/TT-BNNPTNT",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=122564",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/122564.txt",
+      "text_sha256": "e132eee06d100cb8f6f2b41c5c5b506fd8ee97b921761d20db8a21f1f81c4580",
+      "raw_path": "data/raw/122564.json",
+      "raw_sha256": "b001c43fe55c895745d9b370d732259b5e95766e4d441e711ae405ce86e2ba8e",
+      "access_method": "official cached fulltext, no live request; metadata used for identifier routing only",
+      "source_tier": "official",
+      "chars": 13156
+    },
+    {
+      "item_id": "140152",
+      "requested_document": "100/2019/NĐ-CP",
+      "document": "100/2019/NĐ-CP",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=140152",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/140152.txt",
+      "text_sha256": "3a30e2073ab66845327a9c27b76e517d5bed4995372f9a609edc15fbdf2eabbb",
+      "raw_path": "data/raw/140152.json",
+      "raw_sha256": "50fb6be2800e5d69dd6678030e68cade94e90dfc01ee40ebc28c293fcfdb386a",
+      "access_method": "official cached fulltext, no live request; metadata used for identifier routing only",
+      "source_tier": "official",
+      "chars": 320281
+    },
+    {
+      "item_id": "24604",
+      "requested_document": "108/2008/NĐ-CP",
+      "document": "108/2008/NĐ-CP",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=24604",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/24604.txt",
+      "text_sha256": "0274737d571ff1547226cf339254b3b775b2ce169f220fd72e35548f23c6b6f8",
+      "raw_path": "data/raw/24604.json",
+      "raw_sha256": "858cbdfa544c001e5b5dc7b0e96b421ed2119b989ab8df5721259e0e562417eb",
+      "access_method": "official cached fulltext, no live request; metadata used for identifier routing only",
+      "source_tier": "official",
+      "chars": 27892
+    },
+    {
+      "item_id": "15096",
+      "requested_document": "119/2006/NĐ-CP",
+      "document": "119/2006/NĐ-CP",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=15096",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/15096.txt",
+      "text_sha256": "2b3479897cc4c36b60069b582951c1947c912be239a3906ab05074515ddd1ab4",
+      "raw_path": "data/raw/15096.json",
+      "raw_sha256": "f652e32949470333751eb0fd1153eeee8cd5c6984d75c6bcad24297dc19fcf8b",
+      "access_method": "official cached fulltext, no live request; metadata used for identifier routing only",
+      "source_tier": "official",
+      "chars": 28652
+    },
+    {
+      "item_id": "153339",
+      "requested_document": "123/2021/NĐ-CP",
+      "document": "123/2021/NĐ-CP",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=153339",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/153339.txt",
+      "text_sha256": "3975278fb400f99b7bffc78c9e3428533123e6f61a664730b549b2ba6475e973",
+      "raw_path": "data/raw/153339.json",
+      "raw_sha256": "f8084bb55da9a5e477e4ef567e09e1a2617723669a1a7f3939ab539dcbaa2420",
+      "access_method": "official cached fulltext, no live request; metadata used for identifier routing only",
+      "source_tier": "official",
+      "chars": 194264
+    },
+    {
+      "item_id": "173920",
+      "requested_document": "168/2024/NĐ-CP",
+      "document": "168/2024/NĐ-CP",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=173920",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/173920.txt",
+      "text_sha256": "89b461c4ed6aac464d8558bc90e0c6d43a7080ad3313a254b500ee9a8a3775c0",
+      "raw_path": "data/raw/173920.json",
+      "raw_sha256": "a71c06c6eab7c75ff9ba4e46206555408f9e85e68f57ab64c8be71a9e65fc183",
+      "access_method": "official cached fulltext, no live request; metadata used for identifier routing only",
+      "source_tier": "official",
+      "chars": 254223
+    },
+    {
+      "item_id": "26222",
+      "requested_document": "19/2011/NĐ-CP",
+      "document": "19/2011/NĐ-CP",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=26222",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/26222.txt",
+      "text_sha256": "8d12272c34d15b5c334d85ae92452aabf918b1bd1004604a9b02e459e0d97900",
+      "raw_path": "data/raw/26222.json",
+      "raw_sha256": "226d89df6bbde3d31800eb5eb57feef0ab5ec4a246ca223a903b15fc2484f504",
+      "access_method": "official cached fulltext, no live request; metadata used for identifier routing only",
+      "source_tier": "official",
+      "chars": 56740
+    },
+    {
+      "item_id": "26405",
+      "requested_document": "26/2011/NĐ-CP",
+      "document": "26/2011/NĐ-CP",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=26405",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/26405.txt",
+      "text_sha256": "015140ca05bafedc907954ca3445806f7e17f955db3c025da91c1388c58e84d1",
+      "raw_path": "data/raw/26405.json",
+      "raw_sha256": "038486e8a22e71e5e88ce20f3d8712eadb070b2af45eb9faa738a1d304a69051",
+      "access_method": "official cached fulltext, no live request; metadata used for identifier routing only",
+      "source_tier": "official",
+      "chars": 16644
+    },
+    {
+      "item_id": "25452",
+      "requested_document": "28/2010/TT-BCT",
+      "document": "28/2010/TT-BCT",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=25452",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/25452.txt",
+      "text_sha256": "5e2c71d23c50830c82275b7a2089774ee1c27c65fc1458d1a91034d2f3faeb8e",
+      "raw_path": "data/raw/25452.json",
+      "raw_sha256": "e155d04d72913dab0e1e3fb87ccfd7b22fc05dc6fd370e9570d8848fe004eee3",
+      "access_method": "official cached fulltext, no live request; metadata used for identifier routing only",
+      "source_tier": "official",
+      "chars": 53416
+    },
+    {
+      "item_id": "185666",
+      "requested_document": "336/2025/NĐ-CP",
+      "document": "336/2025/NĐ-CP",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=185666",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/185666.txt",
+      "text_sha256": "5f2ad856944f5f971d918118427ccd0e1e09ec0f6f9a82b552daa807a8a0a318",
+      "raw_path": "data/raw/185666.json",
+      "raw_sha256": "f0b2fa3fe788b16937d40d19686d1a2d0feb7adeb5cce35430315052a18de1a4",
+      "access_method": "official cached fulltext, no live request; metadata used for identifier routing only",
+      "source_tier": "official",
+      "chars": 66566
+    },
+    {
+      "item_id": "164308",
+      "requested_document": "92/2023/NĐ-CP",
+      "document": "92/2023/NĐ-CP",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=164308",
+      "text_path": "data/review/ai_research/2026-11-08_lo2/schema_validated/adjudication_native/full_sources/164308.txt",
+      "text_sha256": "1b3da4656701cd782b9caf3947575f03833eee875b180e5cbcaf472fac37f8d6",
+      "raw_path": "data/raw/164308.json",
+      "raw_sha256": "442202fbcc0db93e480328fd956b369ae1aabde41871115456734868e9afc73d",
+      "access_method": "official cached fulltext, no live request; metadata used for identifier routing only",
+      "source_tier": "official",
+      "chars": 5399
+    }
+  ],
+  "third_augmentation_access_method": "cached official fulltext; no live request",
+  "third_augmentation_read_scope": [
+    "26405 full body read in bounded sections; Điều1(4,5,9),Điều2",
+    "24604 Điều12,22–23",
+    "153339 Điều2(15),closing Điều4–6 and fullbody term search",
+    "173920 Điều52–55 and fullbody term search",
+    "15096 narrow term search only, no new legal finding"
+  ]
+}
+```

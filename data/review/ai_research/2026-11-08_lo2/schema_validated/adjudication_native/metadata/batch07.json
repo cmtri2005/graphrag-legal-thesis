@@ -1,0 +1,83 @@
+{
+  "session_id": "6492bddc-f96e-4cd6-b004-1c3798047a24",
+  "is_error": false,
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 18,
+      "outputTokens": 45619,
+      "cacheReadInputTokens": 926131,
+      "cacheCreationInputTokens": 169260,
+      "webSearchRequests": 0,
+      "costUSD": 2.4517582000000004,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 22830,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 169260,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-haiku-5-5": {
+      "inputTokens": 779101,
+      "outputTokens": 54162,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 8,
+      "costUSD": 0.1849911,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 33682,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "claude-haiku-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "usage": {
+    "input_tokens": 18,
+    "cache_creation_input_tokens": 169260,
+    "cache_read_input_tokens": 926131,
+    "output_tokens": 45619,
+    "output_tokens_details": {
+      "thinking_tokens": 22830
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 169260,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 24104,
+        "cache_read_input_tokens": 168165,
+        "cache_creation_input_tokens": 1095,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1095
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "total_cost_usd": 2.6367493,
+  "duration_ms": 478577,
+  "permission_denials": [],
+  "batch": "batch07",
+  "started_at": "2026-11-08T13:30:45.644355+00:00",
+  "finished_at": "2026-11-08T13:39:08.637530+00:00",
+  "input_sha256": "fa26be47c4c89ed77d7630c8d8f6f9705061caff97e9bce4c08483d50f2c763f",
+  "prompt_sha256": "a2ba1d8e7f17f2b299bacca72390556903b3241496dbd22bdae269bbd9f54c39",
+  "agent_file": ".claude/agents/legal-adjudicator.md",
+  "status": "completed",
+  "returncode": 0
+}

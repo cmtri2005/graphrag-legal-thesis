@@ -1,0 +1,85 @@
+{
+  "session_id": "04b5f0e1-9a85-4c0c-939e-114545bca987",
+  "is_error": true,
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 6,
+      "outputTokens": 7713,
+      "cacheReadInputTokens": 88354,
+      "cacheCreationInputTokens": 115907,
+      "webSearchRequests": 0,
+      "costUSD": 1.0992108,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 3899,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 115907,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-haiku-5-5": {
+      "inputTokens": 52020,
+      "outputTokens": 7935,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.0091695,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 5949,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "claude-haiku-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 115907,
+    "cache_read_input_tokens": 88354,
+    "output_tokens": 7713,
+    "output_tokens_details": {
+      "thinking_tokens": 3899
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 115907,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5648,
+        "cache_read_input_tokens": 71304,
+        "cache_creation_input_tokens": 48583,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 48583
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "total_cost_usd": 1.1083803,
+  "duration_ms": 97217,
+  "permission_denials": [],
+  "batch": "batch01",
+  "started_at": "2026-11-08T13:41:58.284990+00:00",
+  "finished_at": "2026-11-08T13:43:49.207425+00:00",
+  "input_sha256": "5c8f612ebc648552fefc417e50d4c70d460c336a3e1316ea1d878e26f9f7d041",
+  "prompt_sha256": "1d04dc64312d7d6be2f117cfc4dfdf346de749bd74138e8f2dd7bae2336394d9",
+  "agent_file": ".claude/agents/legal-adjudicator.md",
+  "status": "failed",
+  "returncode": 1,
+  "error": "You've hit your 5-hour limit · resets 6:20pm (UTC)",
+  "stderr": ""
+}

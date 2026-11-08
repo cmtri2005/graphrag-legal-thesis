@@ -1,0 +1,102 @@
+{
+  "duration_api_ms": 47418,
+  "stop_reason": "end_turn",
+  "session_id": "290063ad-9e91-4e95-bc28-78cdc447fed3",
+  "total_cost_usd": 0.5299736,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 52667,
+    "cache_read_input_tokens": 28408,
+    "output_tokens": 5147,
+    "output_tokens_details": {
+      "thinking_tokens": 1951
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 52667,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4784,
+        "cache_read_input_tokens": 24829,
+        "cache_creation_input_tokens": 31417,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 31417
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 4,
+      "outputTokens": 5147,
+      "cacheReadInputTokens": 28408,
+      "cacheCreationInputTokens": 52667,
+      "webSearchRequests": 0,
+      "costUSD": 0.5299736,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 1951,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 52667,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 5,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "```jsonl\n{\"lineage_id\":\"provision:52444e30-2857-11f1-9b5a-a9f8437a6a5a\",\"worksheet_sha256\":\"2e9f9c8ccd1ce11707b426238c13b6ba86bd7ff845dfaecaf034a2cf7c653169\",\"q4\":\"khong\",\"q4_reason\":\"\",\"note_append\":\"[phân vân] Q4=khong là mức tốt nhất theo packet, chưa phải kết luận rằng không có quy phạm khác đè lên. Lời văn nguồn: khoản 2 Điều 3 NĐ 306/2025 chỉ nói về hành vi \\\"đã có quyết định xử phạt vi phạm hành chính hoặc đã được thi hành xong trước thời điểm Nghị định này có hiệu lực mà cá nhân, tổ chức còn khiếu nại, khởi kiện\\\". Suy luận: chuyển tiếp này không buộc sự việc phát sinh tại as_of theo bản cũ, nên không phải transitional_rule; đáp án hai mốc không nêu cơ quan, cấp hay địa danh, nên không vướng restructuring_2025. Chưa xác định: packet chỉ có Điều 34 NĐ 156/2020 và điều thi hành của NĐ 306/2025; lượt này không tra văn bản cấp cao hơn hoặc ban hành sau để kiểm R3.\",\"evidence_status\":\"insufficient\"}\n{\"lineage_id\":\"provision:ae8436dc-df42-11f0-8b72-a51e4f360532\",\"worksheet_sha256\":\"ac61839ab3898748118de8d1a0bc8f067a9a6cf54be41f6f418464e7f0b28395\",\"q4\":\"khong\",\"q4_reason\":\"\",\"note_append\":\"[phân vân] Q4=khong là mức tốt nhất theo packet, chưa phải kết luận rằng không có quy phạm khác đè lên. Lời văn nguồn: khoản 2 Điều 2 TT 02/2017 chỉ quy định \\\"Các Thông báo tiếp nhận hồ sơ công bố hợp chuẩn, công bố hợp quy tiếp tục có hiệu lực đến hết thời hạn của Thông báo đã cấp.\\\" Suy luận: chuyển tiếp này không đụng nội dung và lịch báo cáo của cơ quan đầu mối, nên không phải transitional_rule; hai mốc năm 2017 trước các ngày sắp xếp 2025, nên không thuộc restructuring_2025. Chưa xác định: packet chỉ có Điều 17 TT 28/2012 và điều thi hành của TT 02/2017; lượt này không tra văn bản cấp cao hơn hoặc ban hành sau để kiểm R3 về nghĩa vụ báo cáo tại hai mốc.\",\"evidence_status\":\"insufficient\"}\n```\n\n```json\n{\n  \"agent\": \"ai-a\",\n  \"label_origin\": \"ai\",\n  \"verification_status\": \"not_verified\",\n  \"task\": \"Hoàn tất Q4 bị thiếu trong chính nhãn AI-A; không hòa giải, không đổi Q đã có\",\n  \"model\": \"claude-opus-5-5\",\n  \"model_revision\": \"unknown\",\n  \"session_id\": \"unknown\",\n  \"timestamp\": \"2026-11-08 (giờ: unknown)\",\n  \"guideline_version\": \"4.0\",\n  \"skill_versions\": {\n    \"vilextime-ai-labeling\": \"unknown (không ghi số phiên bản; đã đọc file trên đĩa)\",\n    \"vn-legal-research\": \"unknown (không ghi số phiên bản; đã đọc file trên đĩa)\"\n  },\n  \"input_hashes\": {\n    \"provision:52444e30-2857-11f1-9b5a-a9f8437a6a5a\": {\n      \"worksheet_sha256\": \"2e9f9c8ccd1ce11707b426238c13b6ba86bd7ff845dfaecaf034a2cf7c653169\",\n      \"original_raw\": \"a_chunk07.md\",\n      \"original_raw_sha256\": \"eb380ceecf8af6c38802d1389dd1ffc4f9698e5b5cb9cdfb4d7f251624720cbf\"\n    },\n    \"provision:ae8436dc-df42-11f0-8b72-a51e4f360532\": {\n      \"worksheet_sha256\": \"ac61839ab3898748118de8d1a0bc8f067a9a6cf54be41f6f418464e7f0b28395\",\n      \"original_raw\": \"a_chunk07.md\",\n      \"original_raw_sha256\": \"eb380ceecf8af6c38802d1389dd1ffc4f9698e5b5cb9cdfb4d7f251624720cbf\"\n    }\n  },\n  \"blinding\": {\n    \"status\": \"not_compromised_for_other_labelers\",\n    \"ai_b_labels_seen\": false,\n    \"lawyer_or_human_labels_for_these_cases_seen\": false,\n    \"system_predictions_seen\": false,\n    \"own_original_label_seen\": true,\n    \"disclosure\": \"Đây không phải lượt mù với nhãn của chính AI-A: Q1–Q3, note và evidence gốc có trong đầu vào. Ngữ cảnh tự nạp của phiên có chỉ mục bộ nhớ dự án nêu số tổng hợp về nhãn silver (ví dụ 81/168 đạt), không có nhãn theo từng dòng của hai ca này.\"\n  },\n  \"additional_web_calls\": 0,\n  \"mcp_calls\": 0,\n  \"tools_used\": [\"Read\"],\n  \"files_read\": [\n    \"docs/vilextime-dinh-nghia.md\",\n    \"docs/vilextime-annotation.md\",\n    \".claude/skills/vilextime-ai-labeling/SKILL.md\",\n    \".claude/skills/vn-legal-research/SKILL.md\"\n  ],\n  \"case_sources_read\": [\n    {\n      \"lineage_id\": \"provision:52444e30-2857-11f1-9b5a-a9f8437a6a5a\",\n      \"sources\": [\n        \"156/2020/NĐ-CP Điều 34 (bản ban hành), official trong packet, item 146468, truncated=false\",\n        \"306/2025/NĐ-CP Điều 3 (hiệu lực, chuyển tiếp), official trong packet, item 186388, truncated=false\",\n        \"306/2025/NĐ-CP câu sửa điểm b khoản 2 Điều 34, đoạn worksheet trong packet\"\n      ]\n    },\n    {\n      \"lineage_id\": \"provision:ae8436dc-df42-11f0-8b72-a51e4f360532\",\n      \"sources\": [\n        \"28/2012/TT-BKHCN Điều 17 (bản ban hành), official trong packet, item 40402, truncated=false\",\n        \"02/2017/TT-BKHCN Điều 2 (hiệu lực, chuyển tiếp), official trong packet, item 122730, truncated=false\",\n        \"02/2017/TT-BKHCN câu sửa điểm b khoản 3 Điều 17, đoạn worksheet trong packet\"\n      ]\n    }\n  ],\n  \"urls_opened_this_turn\": [],\n  \"limitations\": [\n    \"Chỉ đọc nguồn trong packet do điều phối cấp; không tự mở URL, nên không có accessed_at riêng cho lượt này.\",\n    \"R3 chưa được kiểm độc lập ở cả hai ca: không tra văn bản cấp cao hơn hoặc ban hành sau. Không tìm thấy trong packet không đồng nghĩa với không có quy phạm đè lên.\",\n    \"Vì vậy cả hai ca hạ evidence_status từ sufficient xuống insufficient. Q4=khong là mức tốt nhất theo thẻ, có ghi [phân vân].\",\n    \"Phần chuyển tiếp và sắp xếp bộ máy có căn cứ từ điều thi hành và lời văn đáp án trong packet, nhưng đây vẫn là đánh giá của AI, không phải phán quyết của luật sư.\",\n    \"Quota MCP/web còn lại: unknown; lượt này không dùng.\"\n  ],\n  \"access_errors\": []\n}\n```",
+  "ttft_ms": 1738,
+  "type": "result",
+  "duration_ms": 47681,
+  "uuid": "efcfdd64-5194-433d-a6c4-2fa2242f7c4e",
+  "ttft_stream_ms": 1193,
+  "time_to_request_ms": 336,
+  "first_content_frame_ms": 1193,
+  "queued_turn_count": 0,
+  "result_index": 0,
+  "credential_expires_at": "2026-12-07T08:44:10.786Z"
+}

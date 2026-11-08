@@ -1,0 +1,38 @@
+{
+  "requested_new": 146,
+  "lo2": {
+    "dat": 69,
+    "unresolved": 20,
+    "khong_dat": 39
+  },
+  "supp18": {
+    "unresolved": 3,
+    "dat": 12,
+    "khong_dat": 3
+  },
+  "combined_ai_candidates": {
+    "dat": 81,
+    "unresolved": 23,
+    "khong_dat": 42
+  },
+  "adjudication_cases": 55,
+  "adjudication_resolved": 32,
+  "adjudication_unresolved": 23,
+  "accepted_silver": 81,
+  "accepted_new": 0,
+  "accepted_total": 81,
+  "G2_required": 130,
+  "G2_quantity_pass_now": false,
+  "conditional_total_if_CMT_accepts_81_new_proposed_dat": 162,
+  "agreement_gates": {
+    "lo2_verdict_ac1": 0.5033217708272091,
+    "supp18_verdict_ac1": 0.5384615384615384,
+    "state": "not_met; pre-adjudication measurements unchanged"
+  },
+  "human_acceptance": "pending on both new batches; prior bulk acceptance covers only silver",
+  "limits": "AI proposals are not legal accuracy or human acceptance. unresolved cases preserve missing sources/policy gaps; no batch released.",
+  "review_files": [
+    "data/review/ai_research/2026-11-08_lo2/duyet_CMT_after_adjudication.xlsx",
+    "data/review/ai_research/2026-11-08_supp18/duyet_CMT_after_adjudication.xlsx"
+  ]
+}

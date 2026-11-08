@@ -1,0 +1,55 @@
+{
+  "total": 6,
+  "unique_lineages": 6,
+  "resolved": 3,
+  "resolved_lineages": 3,
+  "unresolved_lineages": 3,
+  "unresolved": 3,
+  "dispositions": {
+    "both_wrong": 2,
+    "prefer_a": 1,
+    "unresolved": 3
+  },
+  "human_confirmations": 0,
+  "by_run": {
+    "supp18": {
+      "total": 6,
+      "resolved": 3,
+      "unresolved": 3,
+      "dispositions": {
+        "both_wrong": 2,
+        "prefer_a": 1,
+        "unresolved": 3
+      }
+    }
+  },
+  "unresolved_cases": [
+    {
+      "case_id": "supp18-001",
+      "open_questions": [
+        "Cần toàn văn quy định quản lý/kiểm tra luật sư hành nghề cá nhân áp dụng 01/07/2013 (NĐ 28/2007/NĐ-CP và hướng dẫn còn áp dụng), đối chiếu Điều 92a khoản 2 để xác định nghĩa vụ kiểm tra có tiếp tục theo quy phạm khác không."
+      ]
+    },
+    {
+      "case_id": "supp18-002",
+      "open_questions": [
+        "Cần đọc trọn Điều67 Luật15/2023 và quy định dinh dưỡng, cung cấp suất ăn/thuê ngoài áp dụng 24/05/2024; xác định có kế thừa cả vế hợp đồng, chế biến tại bệnh viện và giám sát hay không."
+      ]
+    },
+    {
+      "case_id": "supp18-004",
+      "open_questions": [
+        "Cần nguồn quy phạm hướng dẫn QĐ24/2014 và các văn bản cắt giảm thủ tục áp dụng18/02/2019, để xác minh còn yêu cầu thuyết minh chủ đầu tư/phương án giá/sự cần thiết/hiệu quả trong tài liệu dự án hay không."
+      ]
+    }
+  ],
+  "candidate_labels": {
+    "unresolved": 3,
+    "dat": 12,
+    "khong_dat": 3
+  },
+  "requested": 18,
+  "human_acceptance": "pending; prior silver acceptance does not cover this batch",
+  "review": "data/review/ai_research/2026-11-08_supp18/duyet_CMT_after_adjudication.xlsx",
+  "agreement": "pre-adjudication metrics unchanged; verdict gate not_met"
+}

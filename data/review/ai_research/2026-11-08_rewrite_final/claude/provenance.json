@@ -1,0 +1,19 @@
+{
+  "model": "unknown",
+  "date": "2026-11-08",
+  "task_count": 30,
+  "round": 3,
+  "limitations": [
+    "Chỉ dùng AGENTS.md, HUONG_DAN.md, tasks.jsonl và check_inputs.json trong thư mục được giao; không web, không nhãn.",
+    "Một số mục mô tả thẩm quyền chỉ dẫn chiếu vị trí, không có nội dung hành vi; câu hỏi giữ phạm vi thẩm quyền và không tự diễn giải hành vi.",
+    "Biên soạn, không gán nhãn; selfcheck chỉ phản hồi bản nháp, không thay thế đánh giá nội dung.",
+    "Các câu thẩm quyền của Công an và Tổng cục trưởng Tổng cục Hải quan chỉ có dẫn chiếu trong nguồn; không tự thêm mô tả hành vi.",
+    "Mục mũ bảo hiểm không cung cấp hành vi nền, nên chỉ hỏi cách xử lý giấy chứng nhận trong biện pháp khắc phục hậu quả đã được giao.",
+    "Còn nhiều câu vượt copy_share do giữ thuật ngữ và thông tin ghim cần thiết; không dùng từ đệm hay từ tự chế để hạ tỷ lệ, không coi đây là kết quả đạt kiểm chính thức."
+  ],
+  "validation": {
+    "coverage": "30/30 ID duy nhất, mỗi dòng đúng item và question; toàn bộ là câu hỏi",
+    "selfcheck_runs": 3,
+    "official_qcheck_run": false
+  }
+}

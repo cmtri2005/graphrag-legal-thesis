@@ -1,0 +1,17 @@
+{
+  "authority": ".claude/skills/vilextime-ai-labeling/SKILL.md evidence_status enum; partial source is insufficient, never sufficient",
+  "mapping": {
+    "partial": "insufficient"
+  },
+  "lineage_ids": [
+    "provision:0ba67292-df45-11f0-b170-db6bfe935615",
+    "provision:0bd83f26-df3f-11f0-910e-abf723745ddc#k1#b",
+    "provision:297647e0-1efe-11f1-96dd-5b299f3dc981",
+    "provision:c416ff10-1f67-11f1-a659-735686497e5a",
+    "provision:3fd3cd30-2c7f-11f1-889c-d1c9dfb759f3"
+  ],
+  "source_a_sha256": "acd891aab2ea899cd1f2b71dbe7ff19d0d8e1a031a2e6fc27ec7c292bff4ce15",
+  "canonical_a_sha256": "8dcccf9ecd4aaa6b216249d5a195094f58e99277f0d9b098da27acaa19cad1ea",
+  "metrics_identical": true,
+  "limits": "Original lock and failed Claude adjudication snapshots preserved. Only source metadata canonicalized, no legal decisions changed."
+}

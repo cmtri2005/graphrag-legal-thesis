@@ -508,10 +508,152 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
   → 2 câu thiếu nguồn bị loại → **`data/review/the4/lo2_moi_worksheet.jsonl`:
   128 lineage** (T2 54, T2 gần giống 31, T6 cấp trên 22, T6 đích danh 19, T3 2),
   258 mốc, batch 7–11.
-- [ ] AI-A (Claude Opus, `2026-11-08_lo2/run_a.py`): xong chunk01–04 (48 câu); chunk05–12 dừng vì hạn mức 5 giờ, chạy lại `run_a.py` sau khi mở (bỏ qua chunk đã có raw; xóa metadata lỗi trước). AI-B
-  (Codex) chạy khi Codex mở lại 9/11. Sau đó đo, hòa giải, CMT.
-- [ ] Lượt 3 viết lại 60 câu (29 redo36, 30 Claude, 1 backlog) để cho Codex;
-  7 câu redo36 đã đạt chưa có đáp án ngắn. T3 mới chỉ có 2 câu: kho thật sự cạn.
+- [x] AI-A (Claude Opus, `2026-11-08_lo2/run_a.py`): đủ 12/12 chunk, 128 câu,
+  sau lượt chạy ngoài sandbox 08:23–08:33 UTC. Raw và metadata giữ nguyên;
+  lỗi hạn mức trước ở `claude_logs/failed_0811/`. Còn kiểm schema đầy đủ trước
+  khi khóa cặp nhãn, đo, hòa giải, CMT.
+- [x] AI-B (Codex native): hoàn tất 12 worker mù riêng, 128/128 câu;
+  `2026-11-08_lo2/validate_b.py` kiểm native validator, đúng tập ID từng chunk,
+  binding, verdict, evidence và provenance: không thiếu/trùng/lỗi. Có 93 nhãn
+  báo đủ nguồn, 35 báo thiếu nguồn; đây không phải số câu đạt. Hash raw/input/
+  prompt và kết quả ở `b_raw_validation.json`; chưa đo đồng thuận khi A còn thiếu.
+- [x] Lượt 3 viết lại đủ 60 câu (29 redo36, 30 Claude, 1 backlog), giữ đủ hai
+  lượt trước khi chạy qcheck gốc: 12 qua qcheck, 48 bị loại terminal vì
+  copy_share, không còn lượt viết lại (`round3_validation.json`). Hai worker
+  dừng vì hạn mức sau khi lưu đủ answers/provenance; điều phối kiểm tệp rồi
+  chạy qcheck, không tính lỗi transport thành câu trả lời mới. T3 vẫn chỉ có 2.
+- Tiếp tục phiên Codex 08/11, trước giờ Claude mở lại 05:50 UTC: đã kiểm
+  hash manifest/worksheet/12 chunk và binding đủ 128 lineage, đều khớp.
+  AI-B bắt đầu bằng các worker Codex mù riêng, không đọc nhãn AI-A; không
+  cần chờ mốc dự kiến mở lại Codex vì runtime phiên này đã hoạt động.
+- Hồ sơ lượt viết cuối được sao chép có chọn lọc vào
+  `data/review/ai_research/2026-11-08_rewrite_final/`: 29 + 30 + 1 mục,
+  mỗi mục giữ đủ hai lượt trả lời trước; bản ngoài repo giữ nguyên.
+- [x] Trích 11 đáp án ngắn cho 7 câu redo36 vào
+  `2026-11-08_rewrite_final/seven_shorts/answers.jsonl`; cả 11 đoạn khớp
+  nguyên văn nguồn. Native `test2_prepare.py contrast`: 7/7 không phát hiện
+  vấn đề, `needs_review=0` (`seven_contrast.json`). Chưa bổ sung vào worksheet
+  128 câu đã đóng băng cho lượt nhãn đang chạy; chưa phải nhãn người hay G2.
+- Kiểm tra nhãn Claude chunk01–04 phát hiện lệch schema (thiếu verdict,
+  thiếu lineage_id, hoặc Q nằm trong từng mốc). `2026-11-08_lo2/normalize_a.py`
+  tạo bản dẫn xuất trong `normalized_a/`, giữ nguyên raw và evidence_status.
+  Binding xác định lineage; Q1 sai ở một mốc làm câu không đạt Q1 theo thẻ;
+  các Q còn lại theo mốc phải đồng nhất, không thì dừng. Cả 48 nhãn dẫn xuất
+  qua `ai_labels.read_labels`; hash và từng trường suy ra nằm trong receipt.
+- `locate_a_evidence.py` tạo `canonical_a/`: gắn URL khi quote khớp nguồn có
+  sẵn, gồm đối sánh các đoạn nguyên văn có dấu lược; nếu chỉ khớp worksheet
+  thì ghi tầng worksheet. 48/48 nhãn có 1–2 evidence có locator; 6 evidence
+  gốc chưa định vị được giữ trong original_evidence/receipt để rà khi hòa giải.
+  Không đổi Q, reason, note, quote hay evidence_status; không có lượt tra mới.
+- Phiếu riêng cho 7 câu bổ sung: `2026-11-08_rewrite_final/seven_worksheet.jsonl`
+  (4 T2, 3 T6, 14 mốc), đủ nguồn và URL văn bản tác động, chưa có nhãn A/B.
+- Tiếp tục 08/11 08:17 UTC (đã qua 05:50): chạy lại `run_a.py` đúng lệnh gốc,
+  bỏ qua chunk01–04, xử lý chunk05–12; chờ kết quả, chưa tuyên bố A hoàn tất.
+- Lượt 08:17 lỗi mạng/DNS `EAI_AGAIN` ở chunk05–08; dừng runner trước khi
+  thử tiếp trong sandbox, lưu lỗi tại `claude_logs/failed_network_0817/`.
+  Được cấp quyền chạy ngoài sandbox và khởi động lại đúng script lúc 08:23 UTC.
+- A chunk07 bỏ sót Q4 ở `52444e30…` và `ae8436dc…` (không suy ra được từ
+  verdict vì Q3 đã không đạt). `complete_a_schema.py` giao chính Claude hoàn
+  tất riêng các trường thiếu, chỉ đọc packet gốc/nhãn A của mình, không xem B,
+  không thêm lượt web. Patch gắn hash raw/binding, lưu riêng `schema_completion/`.
+  Trường Q đã có giữ nguyên; nếu Q mới thiếu căn cứ, Claude phải hạ trạng thái
+  nguồn và ghi phân vân. `finish_lo2.py` tái dùng lock/measure/review và runner/
+  validator legal-adjudicator gốc; chưa tự ghi xác nhận CMT.
+- [x] Claude đã hoàn tất hai Q4 riêng, không thêm web: đều Q4=khong có phân
+  vân, hạ evidence_status xuống insufficient. Patch, raw trả lời và metadata
+  được giữ; không có quyết định Q nào do Codex tự bổ sung cho AI-A.
+- [x] Khóa đủ 128/128 cặp, không thiếu/trùng/lỗi native validator. `a.jsonl`,
+  `b.jsonl`, `metrics.json` và phiếu `duyet_CMT.xlsx` là kết quả trước hòa giải.
+  AC1/p_neg: Q1 0,932/0,759; Q2 0,967/0,333; Q3 0,849/0,755;
+  Q4 0,753/0,465; verdict 0,503/0,680. **Cổng đồng thuận chưa đạt** (Q2,
+  Q4, verdict); không lọc ca thiếu nguồn hoặc thay số đo bằng nhãn hòa giải.
+- [ ] `legal-adjudicator` (Claude CLI đúng agent, đọc trực tiếp skills):
+  49 ca lệch cả Q/reason, 11 packet, chạy tối đa 3 worker từ 08:38 UTC.
+  Snapshot/hash tại `2026-11-08_lo2/adjudication/`; validator gốc
+  `2026-11-07_adjudication_all/package_review.py:load_validate` kiểm cuối.
+  Phiếu sau hòa giải dự kiến `duyet_CMT_after_adjudication.xlsx`, CMT chưa duyệt.
+- Lượt hòa giải Claude 08:38 chạm hạn mức 5 giờ, mở lại **13:20 UTC**;
+  không có đề xuất hoàn chỉnh, toàn bộ metadata lỗi được giữ ở `adjudication/`.
+  Chuyển sang worker Codex native theo tiền lệ đã chấp thuận ngày 07/11,
+  giữ nguyên spec `legal-adjudicator`, skills và packet; ghi runtime thực tế,
+  không giả Claude. Hồ sơ làm việc: `schema_validated/adjudication_native/`.
+- Validator nhãn gốc không chặn enum evidence_status của A: phát hiện 5 dòng
+  `partial`. Bản khóa đầu và snapshot hòa giải Claude vẫn nguyên. Snapshot
+  **`schema_validated/`** ánh xạ metadata partial→insufficient, giữ giá trị gốc,
+  không thay Q/reason/verdict hay loại dòng; mọi số đo toàn lô và theo nhóm
+  khớp chính xác bản đầu. A: 92 sufficient, 36 insufficient; B: 93/35.
+  Binding, 128 cặp và enum nguồn của snapshot mới đều hợp lệ. Hash và 5 ID nằm
+  trong `schema_validated/metadata_normalization.json`.
+- Kiểm cuối Codex native: `.venv/bin/python data/review/ai_research/2026-11-08_lo2/finalize_native.py`.
+  Tái dùng validator hòa giải gốc, đối chiếu raw/provenance với JSONL và xuất
+  phiếu CMT từ snapshot schema_validated; không ký hoặc chấp nhận thay CMT.
+- Đã trích thêm 20 đáp án ngắn nguyên văn cho 12 câu qua qcheck. Contrast gốc
+  loại 1 T2 (`eaad300c…`: đáp án bản mới vẫn nằm trong bản cũ); không dùng ký
+  hiệu mục để tạo tương phản giả. 11 câu còn lại + 7 câu bổ sung tạo
+  `2026-11-08_rewrite_final/supplemental_worksheet.jsonl`: **18 ứng viên**, 36
+  mốc (11 T2, 7 T6). Không thay worksheet 128 câu đang gán; chưa tính vào G2.
+
+### Tiếp quản sau Claude hết hạn mức 18:20 UTC, 08/11/2026
+
+- [x] Đối chiếu hồ sơ Claude đã tiếp tục: `2026-11-08_supp18/` đủ 18/18 cặp
+  khóa, 12 cùng verdict đạt; verdict AC1 0,538, cổng chưa đạt. Sáu ca lệch dùng
+  run_id/case_id supp18 riêng, không lẫn ID lo2. Bản nhãn/metric/snapshot giữ nguyên.
+- [x] Lô 128: Claude đã để lại gói 07–09, gói 10 còn thiếu. Codex native hoàn
+  tất gói 10 (5 ca) và hai gói supp18 (6 ca), theo spec legal-adjudicator, ghi
+  đúng runtime và nguồn cached/live. Không có worker còn chạy khi đóng phiên.
+- [x] Validator gốc `2026-11-07_adjudication_all/package_review.py:load_validate`
+  qua đủ **49/49 ca lo2** và **6/6 ca supp18**: hash nguồn/nhãn, binding,
+  schema, verdict và prefer_a/b khớp đúng Q/reason của bên được chọn.
+  Đối chiếu raw/results và provenance cũng qua. Lỗi đóng gói được sửa có giữ
+  nguyên bản tại schema_originals: reasoning object→text, gắn nguyên evidence
+  ngoài vào proposed_label; không sửa Q/reason/verdict. Hai ca lo2-032/043
+  tự báo insufficient nhưng ghi resolved được trả về unresolved, giữ tentative
+  label và câu hỏi mở; không nâng sufficient để vượt validator.
+- Kết quả lo2: **69 đề xuất đạt, 39 không đạt, 20 chưa chốt**; 49 ca hòa giải
+  gồm 11 prefer_a, 16 prefer_b, 2 both_wrong, 20 unresolved. Có runtime hỗn hợp
+  Claude/Codex; raw/provenance từng packet là nguồn ghi nhận, không gọi cả lô
+  trọng tài là một model duy nhất.
+- Kết quả supp18: **12 đề xuất đạt, 3 không đạt, 3 chưa chốt**. Sáu ca hòa giải
+  gồm 1 prefer_a, 2 both_wrong, 3 unresolved; hai both_wrong có lỗi mốc hiệu
+  lực khiến hai mốc có cùng đáp án thực tế, nên Q2=group_mismatch.
+- [x] Xuất phiếu CMT (sheet Duyệt và Hòa giải, không có xác nhận người):
+  `2026-11-08_lo2/duyet_CMT_after_adjudication.xlsx` (128 câu) và
+  `2026-11-08_supp18/duyet_CMT_after_adjudication.xlsx` (18 câu).
+  Nguồn quá dài trong một ô được ghi rõ là preview, toàn bộ giữ tại JSONL,
+  không cắt ngầm bằng giới hạn Excel. Hai script kiểm/xuất có thể chạy lại:
+  `.venv/bin/python data/review/ai_research/2026-11-08_lo2/finalize_native.py`
+  và `.venv/bin/python data/review/ai_research/2026-11-08_supp18/package_review.py`.
+- **Trước xác nhận CMT 15:35 UTC**, G2 chưa đạt số lượng: silver được CMT chấp nhận 81, mới chấp nhận 0.
+  Hai lô mới có tổng 81 đề xuất đạt, 42 không đạt, 23 chưa chốt. Nếu CMT nhận
+  cả 81 đề xuất đạt thì số lượng là 162≥130; đây là điều kiện, không phải nhãn
+  đã duyệt hay tuyên bố cổng đồng thuận đạt. AC1/p_neg trước hòa giải giữ nguyên.
+- Còn lại trước xác nhận: CMT xem hai phiếu, luật sư/CMT chốt 23 ca nguồn/quy tắc còn thiếu;
+  không tự diễn giải thêm chính sách khi authority chưa rõ. Danh sách từng ca
+  và câu hỏi mở ở `2026-11-08_lo2/open_cases_for_CMT.jsonl`; tổng hợp ở
+  `2026-11-08_lo2/combined_review_summary.json`. Không phát hành dữ liệu test.
+
+### CMT duyệt hai lô mới qua hội thoại, 08/11/2026 15:35 UTC
+
+- Hồ sơ tiếp tục ngày 09/11: [Nguyên nhân và checklist xử lý 23 ca mở, đồng
+  thuận AI–AI](../../reports/resolve-nhan-va-dong-thuan-20261108.md).
+  Đây là phân tích/đề xuất; chưa đổi thẻ, nhãn, ngưỡng hay miễn cổng.
+
+- CMT xác nhận trực tiếp: “MÌnh (CMT) đã đọc xong rồi và mình duyệt nhé”.
+  Ghi nhận việc CMT tự báo đã đọc và duyệt các kết luận hiện có, không suy ra
+  lịch sử đọc từng dòng, không ký thay CMT hoặc sửa nhãn AI thô/metric.
+- [x] Hai tệp `cmt_acceptance.json` tại `2026-11-08_lo2/` và
+  `2026-11-08_supp18/` ghi câu xác nhận, hash hai phiếu/nhãn/metric/kết quả
+  hòa giải và phạm vi. `cmt_accepted_labels.jsonl` mỗi lô giữ nhãn nguồn cùng
+  quyết định CMT riêng: 108 + 15 = **123 kết luận được duyệt**, gồm **81 đạt,
+  42 không đạt**. Không biến 23 ca unresolved thành nhãn cuối vì chưa có
+  quyết định Q/reason cuối để duyệt; chúng vẫn cần nguồn/quyết định cụ thể.
+- **Đạt ngưỡng số lượng G2: 162 câu đạt được chấp nhận**, gồm 81 silver +
+  69 lo2 + 12 supp18. Cổng đồng thuận vẫn chưa đạt, không được miễn qua lời
+  duyệt nhãn. Chưa phát hành dataset; 23 ca chưa chốt giữ ngoài nhãn cuối.
+- Tổng hợp hiện tại ở `2026-11-08_lo2/combined_review_summary.json`; bản trước
+  CMT giữ tại `combined_review_summary_before_CMT.json`. Hai summary validator
+  hòa giải vẫn là bằng chứng trước phê duyệt; đọc kèm cmt_acceptance.json,
+  không ghi đè bằng chứng kiểm hay thay nhãn thô thành nhãn người.
 
 ### Chốt 6 ca hòa giải còn mở, nhãn AI cuối silver, 08/11/2026
 

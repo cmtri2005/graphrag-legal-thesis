@@ -1,0 +1,69 @@
+{
+  "session_id": "6a2d571c-a37e-40f2-8ee5-caaaa97ec667",
+  "is_error": true,
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 4,
+      "outputTokens": 1195,
+      "cacheReadInputTokens": 17050,
+      "cacheCreationInputTokens": 64396,
+      "webSearchRequests": 0,
+      "costUSD": 0.542494,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 136,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 64396,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 64396,
+    "cache_read_input_tokens": 17050,
+    "output_tokens": 1195,
+    "output_tokens_details": {
+      "thinking_tokens": 136
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 64396,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 556,
+        "cache_read_input_tokens": 13070,
+        "cache_creation_input_tokens": 55306,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 55306
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "total_cost_usd": 0.542494,
+  "duration_ms": 12645,
+  "permission_denials": [],
+  "batch": "batch03",
+  "started_at": "2026-11-08T08:38:57.768748+00:00",
+  "finished_at": "2026-11-08T08:39:13.704282+00:00",
+  "input_sha256": "9b10d07625bde624859743244430c055e263386c7240f1dc6ee260af21635b44",
+  "prompt_sha256": "64b1d752d6db46547fe24b499567d564dd9b630ed541bd09cbd41daf470f058e",
+  "agent_file": ".claude/agents/legal-adjudicator.md",
+  "status": "failed",
+  "returncode": 1,
+  "error": "You've hit your 5-hour limit · resets 1:20pm (UTC)",
+  "stderr": ""
+}

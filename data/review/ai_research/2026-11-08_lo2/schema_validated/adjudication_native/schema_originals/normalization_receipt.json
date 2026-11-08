@@ -1,0 +1,6 @@
+{
+  "authority": "package_review.py requires reasoning string",
+  "method": "Flatten ordered reasoning fields into labeled paragraphs, preserve original_reasoning, no decision/evidence changes",
+  "original_jsonl_sha256": "2579873643bffa9d7ad9e7db3210ebca9e25fdca636d3f5fa88e21ade7f48fe1",
+  "adapted_sha256": "79444eec0bc2881575603085ce9cd989a7035de5f94afa6a2dddfef1b3b8afc0"
+}

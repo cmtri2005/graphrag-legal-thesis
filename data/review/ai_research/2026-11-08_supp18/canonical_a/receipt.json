@@ -1,0 +1,100 @@
+{
+  "authority": ".claude/skills/vilextime-ai-labeling/SKILL.md; prior round3_mixed/normalize_a11.py locator method",
+  "limits": "Input or worker-cited document locators only; worksheet matches and document identity are not independent quote verification. Original evidence, decisions and evidence_status are preserved. Quotes outside excerpts remain explicitly unverified.",
+  "source_sha256": {
+    "a_chunk01.jsonl": "25cabcd3e4fd14ace29939d762cb646a304b8450a7049adc18a5cc02aaee4834",
+    "a_chunk02.jsonl": "f5241bf270de23309fa049700ed1473aac0062d1586d87fee872d541ab8c6c3d"
+  },
+  "rows": [
+    {
+      "lineage_id": "provision:d88e3c68-e161-11f0-b694-2f1f003aff40",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:089b0e44-39fb-11f1-a16c-4f6a99b9f514",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:f93793a0-eab3-11f0-960c-1f93ed7f7764#k4",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:d78dcd10-eada-11f0-b850-07113bbbe7f2",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:f0fd27ae-e180-11f0-b95d-855bc22154df",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:5b2570e0-2c8c-11f1-aecd-ed1bd25619cc",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:ab4919f8-df40-11f0-a49a-7ba1892820ef",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:f019057e-1d8a-11f1-91fb-e7ff0fbd6b3d",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:e782e8ce-df43-11f0-9355-af2f830ee753",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:e9ffd3da-eb7a-11f0-9830-4feb5d5132b5",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:c4275dbc-e176-11f0-86b1-a35d2a1c3342#k2",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:7debb0a6-df45-11f0-a43e-33b52192b20e",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:c45fe1a8-df43-11f0-9a1c-277c000beaf7#k1#e",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:6de08930-1f81-11f1-879b-6fd3887768c6",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:5ba5ec70-2d45-11f1-9bd8-3d255859b151",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:0b3d2a1c-df54-11f0-9582-0d0c91275f3e",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:fab36588-df55-11f0-a65a-358a1cdc4fec#k1#d",
+      "structured_evidence": 1,
+      "unlocated_original_evidence": []
+    },
+    {
+      "lineage_id": "provision:f7a2d6fe-df40-11f0-b4c8-19f897fecc61",
+      "structured_evidence": 2,
+      "unlocated_original_evidence": []
+    }
+  ]
+}

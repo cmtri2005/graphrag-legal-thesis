@@ -1,0 +1,85 @@
+{
+  "session_id": "151a17a2-08e7-40a8-9da2-27689a387393",
+  "is_error": true,
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 4194,
+      "cacheReadInputTokens": 72491,
+      "cacheCreationInputTokens": 53868,
+      "webSearchRequests": 0,
+      "costUSD": 0.5293542,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 1996,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 53868,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-haiku-5-5": {
+      "inputTokens": 120635,
+      "outputTokens": 11920,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.0180235,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 8993,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "claude-haiku-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 53868,
+    "cache_read_input_tokens": 72491,
+    "output_tokens": 4194,
+    "output_tokens_details": {
+      "thinking_tokens": 1996
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 53868,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2918,
+        "cache_read_input_tokens": 55441,
+        "cache_creation_input_tokens": 2407,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2407
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "total_cost_usd": 0.5473777,
+  "duration_ms": 67728,
+  "permission_denials": [],
+  "batch": "batch02",
+  "started_at": "2026-11-08T13:41:58.285856+00:00",
+  "finished_at": "2026-11-08T13:43:18.179766+00:00",
+  "input_sha256": "64f154996450c10463d01bf9de4c4e89d5605bbbb84647dc179f30049a6ea206",
+  "prompt_sha256": "9e97ee765cf0a0eae160bae0350f24c3f52a20fa392c0a27df1481b047b2b736",
+  "agent_file": ".claude/agents/legal-adjudicator.md",
+  "status": "failed",
+  "returncode": 1,
+  "error": "You've hit your 5-hour limit · resets 6:20pm (UTC)",
+  "stderr": ""
+}

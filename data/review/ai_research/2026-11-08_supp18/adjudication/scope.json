@@ -1,0 +1,34 @@
+{
+  "runs": {
+    "supp18": {
+      "cases": 6
+    }
+  },
+  "expected_case_ids": [
+    "supp18-001",
+    "supp18-002",
+    "supp18-003",
+    "supp18-004",
+    "supp18-005",
+    "supp18-006"
+  ],
+  "frozen_files": {
+    "data/review/ai_research/2026-11-08_supp18/a.jsonl": "81b7523c1f563b244485840b248b1d211b888a411a6ce40d2ece4dacfee9526c",
+    "data/review/ai_research/2026-11-08_supp18/b.jsonl": "0d0848189ab4c26e6e0a7478ccfda97e069d7069ac13832394a7248d9be632b4",
+    "data/review/ai_research/2026-11-08_supp18/metrics.json": "1a8635d994a01393b32f30e59937fc28193aeb0d66675247bd31031114a9d77a",
+    "data/review/ai_research/2026-11-08_supp18/raw/a_chunk01.md": "ddfb8837000122ba17b01dfccd66654f56b3c09e3561ce6e15b6dd42086e11c0",
+    "data/review/ai_research/2026-11-08_supp18/raw/a_chunk02.md": "f743d7b970cd76a4b839883d49e127879d99697fe10acf6f57bc814703799cb7",
+    "data/review/ai_research/2026-11-08_supp18/raw/b_chunk01.md": "f2c40a0a063c859d318468101a2d14c1f103c15e77614e6d15a1e5f99fc7756f",
+    "data/review/ai_research/2026-11-08_supp18/raw/b_chunk02.md": "cd7e9bf1ccc3576d1c5fc17771e03485cb37a510c27114bc216dc7f6d3709cda",
+    "docs/vilextime-dinh-nghia.md": "bb506aa679888907f29f6af2480c6ee66ea451296137e1d78c57cb5245ca122e",
+    "docs/vilextime-annotation.md": "b92275cdfeb8c194d9a1c8e275c7fbfa80c06d4bc6b75a1a22f69cd81e25a72a"
+  },
+  "snapshot_sha256": {
+    "snapshots/supp18/a.jsonl": "81b7523c1f563b244485840b248b1d211b888a411a6ce40d2ece4dacfee9526c",
+    "snapshots/supp18/b.jsonl": "0d0848189ab4c26e6e0a7478ccfda97e069d7069ac13832394a7248d9be632b4",
+    "snapshots/supp18/input/chunk01.jsonl": "164460cc81e2223b840207b60355d619f68f5492337d7c4b8781693afc7aa9d8",
+    "snapshots/supp18/input/chunk02.jsonl": "dcf8e83cea127008e08af1ee224c0648362bc7b99f2ed0a0cdb0e30dd37c59ed",
+    "snapshots/supp18/metrics.json": "1a8635d994a01393b32f30e59937fc28193aeb0d66675247bd31031114a9d77a"
+  },
+  "source_limits": "All Q/reason disagreements included. Agreement with insufficient evidence remains visible in CMT review, not silently verified."
+}

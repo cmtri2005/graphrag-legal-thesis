@@ -1,0 +1,40 @@
+{
+  "session_id": "907ff930-da10-488d-a634-86c0a6b012e2",
+  "is_error": true,
+  "modelUsage": {},
+  "usage": {
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "input_tokens": 0,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 0,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "total_cost_usd": 0,
+  "duration_ms": 827,
+  "permission_denials": [],
+  "batch": "batch05",
+  "started_at": "2026-11-08T08:39:17.288611+00:00",
+  "finished_at": "2026-11-08T08:39:22.011958+00:00",
+  "input_sha256": "e2430ccf2a3589ecf6107555d29f0458e42f09d14a75403c0776f51e179ddbc3",
+  "prompt_sha256": "b650e78be21f28e41d9c324cff3d33675f5544fdb9627a4c198867cbc04e54cc",
+  "agent_file": ".claude/agents/legal-adjudicator.md",
+  "status": "failed",
+  "returncode": 1,
+  "error": "You've hit your 5-hour limit · resets 1:20pm (UTC)",
+  "stderr": ""
+}

@@ -1,0 +1,274 @@
+[
+  {
+    "missing": [
+      "q4"
+    ],
+    "own_label": {
+      "worksheet_sha256": "2e9f9c8ccd1ce11707b426238c13b6ba86bd7ff845dfaecaf034a2cf7c653169",
+      "lineage_id": "provision:52444e30-2857-11f1-9b5a-a9f8437a6a5a",
+      "labeler": "ai-a",
+      "label_origin": "ai",
+      "verification_status": "not_verified",
+      "guideline_version": "4.0",
+      "q1": "dung",
+      "q1_reason": "",
+      "q2": "co",
+      "q2_reason": "",
+      "q3": "khong",
+      "q3_reason": "question_ambiguous",
+      "quote": "b) Vi phạm quy định về hoạt động đầu tư, giao dịch chứng khoán của nhà đầu tư nước ngoài, tổ chức kinh tế có vốn đầu tư nước ngoài trên thị trường chứng khoán Việt Nam;",
+      "search_log": "",
+      "note": "Cùng khung 70–100 triệu đồng còn có điểm a về tỷ lệ sở hữu nước ngoài, nên nhóm vi phạm mang yếu tố nước ngoài không chỉ khớp điểm b. Câu hỏi chạm đúng chỗ đổi nhưng đáp án một điểm không trả lời trọn cả nhóm (như ví dụ hỏi theo khung phạt ở §4).",
+      "evidence": [
+        {
+          "source_tier": "official",
+          "document": "156/2020/NĐ-CP Điều 34 khoản 2 điểm a",
+          "quote": "Vi phạm quy định về tỷ lệ sở hữu nước ngoài;"
+        },
+        {
+          "source_tier": "official",
+          "document": "306/2025/NĐ-CP khoản 1 Điều 3",
+          "quote": "có hiệu lực thi hành từ ngày 09 tháng 01 năm 2026"
+        }
+      ],
+      "evidence_status": "sufficient"
+    },
+    "packet": {
+      "worksheet_sha256": "2e9f9c8ccd1ce11707b426238c13b6ba86bd7ff845dfaecaf034a2cf7c653169",
+      "record": {
+        "lineage_id": "provision:52444e30-2857-11f1-9b5a-a9f8437a6a5a",
+        "group": "T2",
+        "stratum": "T2",
+        "batch": 8,
+        "question": "Trong lĩnh vực xử phạt về chứng khoán, nhóm vi phạm mang yếu tố nước ngoài chịu phạt từ 70.000.000 đồng đến 100.000.000 đồng được xác định theo những loại hoạt động và chủ thể nào?",
+        "rows": [
+          {
+            "id": "vilextime:T2:provision:52444e30-2857-11f1-9b5a-a9f8437a6a5a:2026-01-08",
+            "as_of": "2026-01-08",
+            "as_of_strategy": "ranh_gioi",
+            "version_id": "version:52444e30-2857-11f1-9b5a-a9f8437a6a5a:1",
+            "answer": "b) Vi phạm quy định về hoạt động đầu tư chứng khoán của nhà đầu tư nước ngoài trên thị trường chứng khoán Việt Nam;",
+            "answerable": true,
+            "short_answer": "Vi phạm quy định về hoạt động đầu tư chứng khoán của nhà đầu tư nước ngoài trên thị trường chứng khoán Việt Nam",
+            "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=146468",
+            "target": {
+              "document_id": "document:146468",
+              "law_id": "156/2020/NĐ-CP",
+              "document_title": "Nghị định số 156/2020/NĐ-CP Quy định xử phạt vi phạm hành chính trong lĩnh vực chứng khoán và thị trường chứng khoán",
+              "article_id": "34",
+              "clause_id": "2",
+              "point_id": "b",
+              "citation": "Điểm b Khoản 2 Điều 34",
+              "provision_path": "Chương II › Mục 10 › Điều 34 › Khoản 2 › Điểm b",
+              "lead_in": "2. Phạt tiền từ 70.000.000 đồng đến 100.000.000 đồng đối với một trong các hành vi vi phạm sau:"
+            }
+          },
+          {
+            "id": "vilextime:T2:provision:52444e30-2857-11f1-9b5a-a9f8437a6a5a:2026-01-09",
+            "as_of": "2026-01-09",
+            "as_of_strategy": "ranh_gioi",
+            "version_id": "version:52444e30-2857-11f1-9b5a-a9f8437a6a5a:2",
+            "answer": "b) Vi phạm quy định về hoạt động đầu tư, giao dịch chứng khoán của nhà đầu tư nước ngoài, tổ chức kinh tế có vốn đầu tư nước ngoài trên thị trường chứng khoán Việt Nam;",
+            "answerable": true,
+            "short_answer": "Vi phạm quy định về hoạt động đầu tư, giao dịch chứng khoán của nhà đầu tư nước ngoài, tổ chức kinh tế có vốn đầu tư nước ngoài trên thị trường chứng khoán Việt Nam",
+            "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=146468",
+            "target": {
+              "document_id": "document:146468",
+              "law_id": "156/2020/NĐ-CP",
+              "document_title": "Nghị định số 156/2020/NĐ-CP Quy định xử phạt vi phạm hành chính trong lĩnh vực chứng khoán và thị trường chứng khoán",
+              "article_id": "34",
+              "clause_id": "2",
+              "point_id": "b",
+              "citation": "Điểm b Khoản 2 Điều 34",
+              "provision_path": "Chương II › Mục 10 › Điều 34 › Khoản 2 › Điểm b",
+              "lead_in": "2. Phạt tiền từ 70.000.000 đồng đến 100.000.000 đồng đối với một trong các hành vi vi phạm sau:"
+            }
+          }
+        ],
+        "sources": {
+          "base": {
+            "document": "156/2020/NĐ-CP",
+            "title": "Nghị định số 156/2020/NĐ-CP Quy định xử phạt vi phạm hành chính trong lĩnh vực chứng khoán và thị trường chứng khoán",
+            "issued": "2020-12-31",
+            "effective_from": "2021-01-01",
+            "effective_to": null,
+            "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=146468",
+            "passage": "Điều 34. Vi phạm quy định về giao dịch, nắm giữ chứng khoán của nhà đầu tư\n2. Phạt tiền từ 70.000.000 đồng đến 100.000.000 đồng đối với một trong các hành vi vi phạm sau:\na) Vi phạm quy định về tỷ lệ sở hữu nước ngoài;\nb) Vi phạm quy định về hoạt động đầu tư chứng khoán của nhà đầu tư nước ngoài trên thị trường chứng khoán Việt Nam;\nc) Vi phạm quy định về tỷ lệ sở hữu vốn cổ phần hoặc phần vốn góp của công ty chứng khoán, công ty quản lý quỹ đầu tư chứng khoán;\nd) Vi phạm quy định về mở tài khoản giao dịch chứng khoán, giao dịch ký quỹ chứng khoán, tài khoản giao dịch uỷ quyền;\nđ) Vi phạm quy định về giao dịch trong ngày giao dịch hoặc trong đợt khớp lệnh định kỳ."
+          },
+          "actors": [
+            {
+              "document": "306/2025/NĐ-CP",
+              "title": "Nghị định số 306/2025/NĐ-CP Sửa đổi, bổ sung một số điều của Nghị định số 156/2020/NĐ-CP ngày 31 tháng 12 năm 2020 của Chính phủ quy định xử phạt vi phạm hành chính trong lĩnh vực chứng khoán và thị trường chứng khoán (được sửa đổi, bổ sung một số điều theo Nghị định số 128/2021/NĐ-CP ngày 30 tháng 12 năm 2021 của Chính phủ) và Nghị định số 158/2020/NĐ-CP ngày 31 tháng 12 năm 2020 của Chính phủ về chứng khoán phái sinh và thị trường chứng khoán phái sinh",
+              "issued": "2025-11-25",
+              "effective_from": "2026-01-09",
+              "effective_to": null,
+              "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=186388",
+              "passage": "b) Sửa đổi, bổ sung điểm b khoản 2 Điều 34 như sau:\n“b) Vi phạm quy định về hoạt động đầu tư, giao dịch chứng khoán của nhà đầu tư nước ngoài, tổ chức kinh tế có vốn đầu tư nước ngoài trên thị trường chứng khoán Việt Nam;”.",
+              "transitional": "2. Điều khoản chuyển tiếp:\nĐối với các hành vi vi phạm hành chính về chứng khoán và thị trường chứng khoán đã có quyết định xử phạt vi phạm hành chính hoặc đã được thi hành xong trước thời điểm Nghị định này có hiệu lực mà cá nhân, tổ chức còn khiếu nại, khởi kiện thì được giải quyết theo quy định của pháp luật xử phạt vi phạm hành chính về chứng khoán và thị trường chứng khoán và các quy định pháp luật liên quan có hiệu lực tại thời điểm thực hiện hành vi vi phạm.",
+              "in_force": "1. Nghị định này có hiệu lực thi hành từ ngày 09 tháng 01 năm 2026."
+            }
+          ]
+        }
+      },
+      "official": [
+        {
+          "document": "156/2020/NĐ-CP",
+          "item_id": "146468",
+          "part": "Điều 34 (bản ban hành)",
+          "source_tier": "official",
+          "source": "vbpl CSDL quốc gia, bản crawl data/raw/146468.json",
+          "truncated": false,
+          "text": "Điều 34. Vi phạm quy định về giao dịch, nắm giữ chứng khoán của nhà đầu tư\n1. Đình chỉ giao dịch chứng khoán của nhà đầu tư trên các tài khoản nhà đầu tư cho người khác mượn để giao dịch chứng khoán hoặc đứng tên sở hữu chứng khoán hộ người khác dẫn đến hành vi thao túng thị trường chứng khoán trong thời hạn từ 06 tháng đến 12 tháng.\n2. Phạt tiền từ 70.000.000 đồng đến 100.000.000 đồng đối với một trong các hành vi vi phạm sau:\na) Vi phạm quy định về tỷ lệ sở hữu nước ngoài;\nb) Vi phạm quy định về hoạt động đầu tư chứng khoán của nhà đầu tư nước ngoài trên thị trường chứng khoán Việt Nam;\nc) Vi phạm quy định về tỷ lệ sở hữu vốn cổ phần hoặc phần vốn góp của công ty chứng khoán, công ty quản lý quỹ đầu tư chứng khoán;\nd) Vi phạm quy định về mở tài khoản giao dịch chứng khoán, giao dịch ký quỹ chứng khoán, tài khoản giao dịch uỷ quyền;\nđ) Vi phạm quy định về giao dịch trong ngày giao dịch hoặc trong đợt khớp lệnh định kỳ.\n3. Phạt tiền từ 100.000.000 đồng đến 150.000.000 đồng đối với nhà đầu tư chứng khoán chuyên nghiệp thực hiện hành vi chuyển nhượng chứng khoán chào bán riêng lẻ vi phạm quy định tại Điều 31 Luật Chứng khoán, quy định pháp luật về chào bán, giao dịch trái phiếu doanh nghiệp riêng lẻ tại thị trường trong nước và chào bán trái phiếu doanh nghiệp ra thị trường quốc tế.\n4. Phạt tiền từ 400.000.000 đồng đến 500.000.000 đồng đối với hành vi thực hiện một hoặc một số giao dịch nhằm che giấu thông tin về quyền sở hữu thực sự đối với một chứng khoán để trốn tránh hoặc để hỗ trợ người khác trốn tránh nghĩa vụ công bố thông tin theo quy định hoặc nghĩa vụ phải tuân thủ trong thực hiện chào mua công khai hoặc quy định phải tuân thủ về tỷ lệ sở hữu nước ngoài trên thị trường chứng khoán Việt Nam.\n5. Hình thức xử phạt bổ sung:\nTước quyền sử dụng chứng chỉ hành nghề chứng khoán trong thời hạn từ 18 tháng đến 24 tháng đối với hành vi vi phạm quy định tại khoản 4 Điều này.\n6. Biện pháp khắc phục hậu quả:\na) Buộc nộp lại số lợi bất hợp pháp có được do thực hiện hành vi vi phạm quy định tại khoản 1, điểm a khoản 2, khoản 3 và khoản 4 Điều này;\nb) Buộc bán cổ phiếu hoặc vốn cổ phần hoặc phần vốn góp trong thời hạn tối đa 60 ngày để giảm tỷ lệ nắm giữ theo đúng quy định đối với hành vi vi phạm quy định tại các điểm a và c khoản 2 Điều này."
+        },
+        {
+          "document": "306/2025/NĐ-CP",
+          "item_id": "186388",
+          "part": "điều hiệu lực, chuyển tiếp",
+          "source_tier": "official",
+          "source": "vbpl CSDL quốc gia, bản crawl data/raw/186388.json",
+          "truncated": false,
+          "text": "Điều 3. Điều khoản thi hành\n1. Nghị định này có hiệu lực thi hành từ ngày 09 tháng 01 năm 2026.\n2. Điều khoản chuyển tiếp:\nĐối với các hành vi vi phạm hành chính về chứng khoán và thị trường chứng khoán đã có quyết định xử phạt vi phạm hành chính hoặc đã được thi hành xong trước thời điểm Nghị định này có hiệu lực mà cá nhân, tổ chức còn khiếu nại, khởi kiện thì được giải quyết theo quy định của pháp luật xử phạt vi phạm hành chính về chứng khoán và thị trường chứng khoán và các quy định pháp luật liên quan có hiệu lực tại thời điểm thực hiện hành vi vi phạm.\n3. Trách nhiệm tổ chức thực hiện:\nCác Bộ trưởng, Thủ trưởng cơ quan ngang bộ, Thủ trưởng cơ quan thuộc Chính phủ, Chủ tịch Ủy ban nhân dân tỉnh, thành phố trực thuộc trung ương và các tổ chức, cá nhân liên quan chịu trách nhiệm thi hành Nghị định này.\nTM. CHÍNH PHỦ\nKT. THỦ TƯỚNG\nPHÓ THỦ TƯỚNG\n(Đã ký)\nHồ Đức Phớc"
+        }
+      ],
+      "official_missing": []
+    },
+    "original_raw": "a_chunk07.md",
+    "original_raw_sha256": "eb380ceecf8af6c38802d1389dd1ffc4f9698e5b5cb9cdfb4d7f251624720cbf"
+  },
+  {
+    "missing": [
+      "q4"
+    ],
+    "own_label": {
+      "worksheet_sha256": "ac61839ab3898748118de8d1a0bc8f067a9a6cf54be41f6f418464e7f0b28395",
+      "lineage_id": "provision:ae8436dc-df42-11f0-8b72-a51e4f360532",
+      "labeler": "ai-a",
+      "label_origin": "ai",
+      "verification_status": "not_verified",
+      "guideline_version": "4.0",
+      "q1": "sai",
+      "q1_reason": "other",
+      "q2": "co",
+      "q2_reason": "",
+      "q3": "khong",
+      "q3_reason": "question_ambiguous",
+      "quote": "b) Tổng hợp tình hình tiếp nhận hồ sơ công bố hợp quy của các cơ quan chuyên ngành và định kỳ tháng 12 hằng năm, đột xuất khi có yêu cầu, báo cáo Bộ quản lý ngành, lĩnh vực, Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương liên quan",
+      "search_log": "",
+      "note": "Đáp án ngắn thiếu ý về lịch gửi mà câu hỏi hỏi; đoạn đúng trích từ đáp án: định kỳ hằng năm, đột xuất khi có yêu cầu (mốc trước) và định kỳ tháng 12 hằng năm, đột xuất khi có yêu cầu (mốc sau). Câu hỏi cũng khớp cả điểm a khoản 3 Điều 17, nơi cơ quan đầu mối cũng định kỳ hằng năm tổng hợp báo cáo.",
+      "evidence": [
+        {
+          "source_tier": "official",
+          "document": "28/2012/TT-BKHCN Điều 17 khoản 3 điểm a",
+          "quote": "định kỳ hằng năm, tổng hợp báo cáo gửi Bộ quản lý ngành, lĩnh vực"
+        },
+        {
+          "source_tier": "worksheet",
+          "document": "02/2017/TT-BKHCN sửa điểm b khoản 3 Điều 17",
+          "quote": "định kỳ tháng 12 hằng năm, đột xuất khi có yêu cầu"
+        }
+      ],
+      "evidence_status": "sufficient"
+    },
+    "packet": {
+      "worksheet_sha256": "ac61839ab3898748118de8d1a0bc8f067a9a6cf54be41f6f418464e7f0b28395",
+      "record": {
+        "lineage_id": "provision:ae8436dc-df42-11f0-8b72-a51e4f360532",
+        "group": "T2",
+        "stratum": "T2 gần giống",
+        "batch": 9,
+        "question": "Theo quy định về công bố hợp chuẩn, công bố hợp quy và đánh giá sự phù hợp với tiêu chuẩn, quy chuẩn kỹ thuật, cơ quan đầu mối phải thống kê nội dung gì để báo cáo và tuân thủ lịch gửi thế nào?",
+        "rows": [
+          {
+            "id": "vilextime:T2:provision:ae8436dc-df42-11f0-8b72-a51e4f360532:2017-05-14",
+            "as_of": "2017-05-14",
+            "as_of_strategy": "ranh_gioi",
+            "version_id": "version:ae8436dc-df42-11f0-8b72-a51e4f360532:1",
+            "answer": "b) Tổng hợp tình hình hoạt động công bố hợp quy của các cơ quan chuyên ngành và định kỳ hằng năm, đột xuất khi có yêu cầu, báo cáo Bộ quản lý ngành, lĩnh vực, Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương liên quan.",
+            "answerable": true,
+            "short_answer": "Tổng hợp tình hình hoạt động công bố hợp quy của các cơ quan chuyên ngành và định kỳ hằng năm",
+            "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=40402",
+            "target": {
+              "document_id": "document:40402",
+              "law_id": "28/2012/TT-BKHCN",
+              "document_title": "Thông tư số 28/2012/TT-BKHCN Quy định về công bố hợp chuẩn, công bố hợp quy và phương thức đánh giá sự phù hợp với tiêu chuẩn, quy chuẩn kỹ thuật",
+              "article_id": "17",
+              "clause_id": "3",
+              "point_id": "b",
+              "citation": "Điểm b Khoản 3 Điều 17",
+              "provision_path": "Chương IV › Điều 17 › Khoản 3 › Điểm b",
+              "lead_in": "3. Trách nhiệm của cơ quan đầu mối được chỉ định theo quy định tại điểm b khoản 1 Điều này thuộc các Bộ quản lý ngành, lĩnh vực và Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương:"
+            }
+          },
+          {
+            "id": "vilextime:T2:provision:ae8436dc-df42-11f0-8b72-a51e4f360532:2017-05-15",
+            "as_of": "2017-05-15",
+            "as_of_strategy": "ranh_gioi",
+            "version_id": "version:ae8436dc-df42-11f0-8b72-a51e4f360532:2",
+            "answer": "b) Tổng hợp tình hình tiếp nhận hồ sơ công bố hợp quy của các cơ quan chuyên ngành và định kỳ tháng 12 hằng năm, đột xuất khi có yêu cầu, báo cáo Bộ quản lý ngành, lĩnh vực, Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương liên quan",
+            "answerable": true,
+            "short_answer": "Tổng hợp tình hình tiếp nhận hồ sơ công bố hợp quy của các cơ quan chuyên ngành và định kỳ tháng 12 hằng năm",
+            "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=40402",
+            "target": {
+              "document_id": "document:40402",
+              "law_id": "28/2012/TT-BKHCN",
+              "document_title": "Thông tư số 28/2012/TT-BKHCN Quy định về công bố hợp chuẩn, công bố hợp quy và phương thức đánh giá sự phù hợp với tiêu chuẩn, quy chuẩn kỹ thuật",
+              "article_id": "17",
+              "clause_id": "3",
+              "point_id": "b",
+              "citation": "Điểm b Khoản 3 Điều 17",
+              "provision_path": "Chương IV › Điều 17 › Khoản 3 › Điểm b",
+              "lead_in": "3. Trách nhiệm của cơ quan đầu mối được chỉ định theo quy định tại điểm b khoản 1 Điều này thuộc các Bộ quản lý ngành, lĩnh vực và Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương:"
+            }
+          }
+        ],
+        "sources": {
+          "base": {
+            "document": "28/2012/TT-BKHCN",
+            "title": "Thông tư số 28/2012/TT-BKHCN Quy định về công bố hợp chuẩn, công bố hợp quy và phương thức đánh giá sự phù hợp với tiêu chuẩn, quy chuẩn kỹ thuật",
+            "issued": "2012-12-12",
+            "effective_from": "2013-01-27",
+            "effective_to": null,
+            "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=40402",
+            "passage": "Điều 17. Trách nhiệm của các cơ quan quản lý\n3. Trách nhiệm của cơ quan đầu mối được chỉ định theo quy định tại điểm b khoản 1 Điều này thuộc các Bộ quản lý ngành, lĩnh vực và Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương:\na) Thực hiện việc theo dõi và quản lý hoạt động đăng ký công bố hợp quy của các cơ quan chuyên ngành; phối hợp với Tổng cục Tiêu chuẩn Đo lường Chất lượng trong công tác quản lý hoạt động công bố hợp quy; định kỳ hằng năm, tổng hợp báo cáo gửi Bộ quản lý ngành, lĩnh vực và Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương liên quan về tình hình chỉ định tổ chức đánh giá sự phù hợp, đồng thời gửi về Tổng cục Tiêu chuẩn Đo lường Chất lượng để phối hợp quản lý;\nb) Tổng hợp tình hình hoạt động công bố hợp quy của các cơ quan chuyên ngành và định kỳ hằng năm, đột xuất khi có yêu cầu, báo cáo Bộ quản lý ngành, lĩnh vực, Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương liên quan."
+          },
+          "actors": [
+            {
+              "document": "02/2017/TT-BKHCN",
+              "title": "Thông tư số 02/2017/TT-BKHCN sửa đổi, bổ sung một số điều của Thông tư số 28/2012/TT-BKHCN ngày 12 tháng 12 năm 2012 của Bộ trưởng Bộ Khoa học và Công nghệ quy định về công bố hợp chuẩn, công bố hợp quy và phương thức đánh giá sự phù hợp với tiêu chuẩn, quy chuẩn kỹ thuật",
+              "issued": "2017-03-31",
+              "effective_from": "2017-05-15",
+              "effective_to": null,
+              "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=122730",
+              "passage": "d) Sửa đổi điểm b khoản 3 Điều 17 như sau:\n“b) Tổng hợp tình hình tiếp nhận hồ sơ công bố hợp quy của các cơ quan chuyên ngành và định kỳ tháng 12 hằng năm, đột xuất khi có yêu cầu, báo cáo Bộ quản lý ngành, lĩnh vực, Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương liên quan”.",
+              "transitional": "",
+              "in_force": "1. Thông tư này có hiệu lực thi hành kể từ ngày 15 tháng 5 năm 2017."
+            }
+          ]
+        }
+      },
+      "official": [
+        {
+          "document": "28/2012/TT-BKHCN",
+          "item_id": "40402",
+          "part": "Điều 17 (bản ban hành)",
+          "source_tier": "official",
+          "source": "vbpl CSDL quốc gia, bản crawl data/raw/40402.json",
+          "truncated": false,
+          "text": "Điều 17. Trách nhiệm của các cơ quan quản lý\n1. Trách nhiệm của các Bộ quản lý ngành, lĩnh vực và Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương:\na) Chỉ đạo hoạt động công bố hợp quy theo quy định tại Thông tư này khi ban hành các quy chuẩn kỹ thuật tương ứng để quản lý;\nb) Chỉ định cơ quan đầu mối chịu trách nhiệm quản lý hoạt động công bố hợp quy trong lĩnh vực được phân công; thông báo danh sách cơ quan đầu mối cho các tổ chức, cá nhân có liên quan để thực hiện và gửi tới Bộ Khoa học và Công nghệ để phối hợp, quản lý;\nc) Giao trách nhiệm thực hiện việc tiếp nhận hồ sơ công bố hợp quy cho các cơ quan chuyên ngành;\nd) Định kỳ hằng năm, tổng hợp tình hình chỉ định tổ chức đánh giá sự phù hợp, thông báo cho Bộ Khoa học và Công nghệ để phối hợp quản lý; đột xuất, khi có yêu cầu, tổng hợp báo cáo tình hình công bố hợp quy về Bộ Khoa học và Công nghệ để tổng hợp báo cáo Thủ tướng Chính phủ.\n2. Trách nhiệm của Tổng cục Tiêu chuẩn Đo lường Chất lượng là cơ quan đầu mối được chỉ định theo quy định tại điểm b khoản 1 Điều này:\na) Giúp Bộ Khoa học và Công nghệ thống nhất quản lý và hướng dẫn hoạt động đánh giá sự phù hợp, công bố hợp chuẩn và công bố hợp quy;\nb) Phối hợp với các cơ quan đầu mối ở Trung ương thuộc các Bộ quản lý ngành, lĩnh vực, Sở Khoa học và Công nghệ các tỉnh, thành phố trực thuộc Trung ương trong việc đôn đốc, hướng dẫn thực hiện việc công bố hợp chuẩn, công bố hợp quy theo quy định tại Thông tư này;\nc) Thực hiện việc theo dõi tình hình công bố hợp chuẩn và công bố hợp quy đối với các sản phẩm, hàng hóa, dịch vụ, quá trình, môi trường thuộc trách nhiệm quản lý của Bộ Khoa học và Công nghệ trên cơ sở báo cáo của các Chi cục Tiêu chuẩn Đo lường Chất lượng; theo dõi việc chỉ định của Bộ quản lý ngành, lĩnh vực về hoạt động đánh giá sự phù hợp.\n3. Trách nhiệm của cơ quan đầu mối được chỉ định theo quy định tại điểm b khoản 1 Điều này thuộc các Bộ quản lý ngành, lĩnh vực và Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương:\na) Thực hiện việc theo dõi và quản lý hoạt động đăng ký công bố hợp quy của các cơ quan chuyên ngành; phối hợp với Tổng cục Tiêu chuẩn Đo lường Chất lượng trong công tác quản lý hoạt động công bố hợp quy; định kỳ hằng năm, tổng hợp báo cáo gửi Bộ quản lý ngành, lĩnh vực và Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương liên quan về tình hình chỉ định tổ chức đánh giá sự phù hợp, đồng thời gửi về Tổng cục Tiêu chuẩn Đo lường Chất lượng để phối hợp quản lý;\nb) Tổng hợp tình hình hoạt động công bố hợp quy của các cơ quan chuyên ngành và định kỳ hằng năm, đột xuất khi có yêu cầu, báo cáo Bộ quản lý ngành, lĩnh vực, Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương liên quan.\n4. Trách nhiệm của cơ quan chuyên ngành do các Bộ quản lý ngành, lĩnh vực, Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương chỉ định:\na) Tiếp nhận hồ sơ đăng ký và quản lý hồ sơ công bố hợp quy; hủy bỏ, đình chỉ kết quả tiếp nhận hồ sơ công bố hợp quy đối với các sản phẩm, hàng hóa, dịch vụ, quá trình, môi trường được quản lý bởi các quy chuẩn kỹ thuật quốc gia do các Bộ quản lý ngành, lĩnh vực ban hành và các quy chuẩn kỹ thuật địa phương liên quan đến các lĩnh vực được phân công quản lý;\nb) Công bố công khai trên trang thông tin điện tử của mình về tình hình công bố hợp quy với các nội dung sau:\n- Tên tổ chức, cá nhân công bố hợp quy;\n- Sản phẩm, hàng hóa công bố hợp quy;\n- Số hiệu quy chuẩn kỹ thuật;\n- Loại hình đánh giá: Bên thứ nhất (tên tổ chức, cá nhân) hay bên thứ ba (tên tổ chức chứng nhận được chỉ định).\nc) Phối hợp với Chi cục Tiêu chuẩn Đo lường Chất lượng địa phương trong việc cung cấp các thông tin về công bố hợp quy để thuận lợi cho việc kiểm tra chất lượng sản phẩm, hàng hóa;\nd) Định kỳ hằng năm, đột xuất khi có yêu cầu, tổng hợp, báo cáo cơ quan đầu mối danh mục sản phẩm, hàng hóa, dịch vụ, quá trình, môi trường đã đăng ký công bố hợp quy (theo Mẫu 4. BCTNHS quy định tại Phụ lục III Thông tư này).\n5. Trách nhiệm của Chi cục Tiêu chuẩn Đo lường Chất lượng thuộc Sở Khoa học và Công nghệ các tỉnh, thành phố trực thuộc Trung ương:\na) Tiếp nhận đăng ký và quản lý hồ sơ công bố hợp chuẩn; hủy bỏ, đình chỉ kết quả tiếp nhận hồ sơ công bố hợp chuẩn của các tổ chức, cá nhân sản xuất, kinh doanh tại địa phương và công bố công khai trên trang thông tin điện tử của Sở Khoa học và Công nghệ hoặc Chi cục Tiêu chuẩn Đo lường Chất lượng địa phương tình hình công bố hợp chuẩn;\nb) Tiếp nhận đăng ký và quản lý hồ sơ công bố hợp quy; hủy bỏ, đình chỉ kết quả tiếp nhận hồ sơ công bố hợp quy đối với các sản phẩm, hàng hóa, dịch vụ, quá trình, môi trường được quản lý bởi các quy chuẩn kỹ thuật quốc gia do Bộ Khoa học và Công nghệ ban hành và các quy chuẩn kỹ thuật địa phương liên quan đến các lĩnh vực được phân công quản lý; công bố công khai trên trang thông tin điện tử của Sở Khoa học và Công nghệ hoặc Chi cục Tiêu chuẩn Đo lường Chất lượng địa phương tình hình công bố hợp quy với các nội dung sau:\n- Tên tổ chức, cá nhân công bố hợp quy;\n- Sản phẩm, hàng hóa công bố hợp quy;\n- Số hiệu quy chuẩn kỹ thuật;\n- Loại hình đánh giá: Bên thứ nhất (tên tổ chức, cá nhân) hay bên thứ ba (tên tổ chức chứng nhận được chỉ định).\nc) Phối hợp với cơ quan chuyên ngành ở địa phương trong việc cung cấp các thông tin về công bố hợp chuẩn để thuận lợi cho việc kiểm tra chất lượng sản phẩm, hàng hóa;\nd) Định kỳ hằng năm, đột xuất khi có yêu cầu, tổng hợp, báo cáo Tổng cục Tiêu chuẩn Đo lường Chất lượng tình hình tiếp nhận hồ sơ công bố hợp chuẩn, công bố hợp quy (theo Mẫu 4. BCTNHS quy định tại Phụ lục III Thông tư này) theo quy định tại điểm a, b khoản này."
+        },
+        {
+          "document": "02/2017/TT-BKHCN",
+          "item_id": "122730",
+          "part": "điều hiệu lực, chuyển tiếp",
+          "source_tier": "official",
+          "source": "vbpl CSDL quốc gia, bản crawl data/raw/122730.json",
+          "truncated": false,
+          "text": "Điều 2. Điều khoản thi hành\n1. Thông tư này có hiệu lực thi hành kể từ ngày 15 tháng 5 năm 2017.\n2. Các Thông báo tiếp nhận hồ sơ công bố hợp chuẩn, công bố hợp quy tiếp tục có hiệu lực đến hết thời hạn của Thông báo đã cấp."
+        }
+      ],
+      "official_missing": []
+    },
+    "original_raw": "a_chunk07.md",
+    "original_raw_sha256": "eb380ceecf8af6c38802d1389dd1ffc4f9698e5b5cb9cdfb4d7f251624720cbf"
+  }
+]

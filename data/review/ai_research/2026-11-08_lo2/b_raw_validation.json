@@ -1,0 +1,147 @@
+{
+  "validator": "scripts/review/ai_labels.py:read_labels + exact manifest coverage and structured evidence checks",
+  "requested": 128,
+  "valid": 128,
+  "missing": [],
+  "duplicates": [],
+  "rejected": [],
+  "evidence_status": {
+    "sufficient": 93,
+    "insufficient": 35
+  },
+  "chunks": [
+    {
+      "raw": "b_chunk01.md",
+      "raw_sha256": "22c75df9d873c891c2fc3ef07506bf4e66a948f160fbdc65edf38c74b0d42342",
+      "input_sha256": "6e72e1498920b969b0734d8e0e11060681879d8cdbce2791bf271bb5659e9d6f",
+      "prompt_sha256": "d213781df9293a6d7bcfe00f433e3446dd3229f208dcc8853cf3b06b206b6074",
+      "valid": 14,
+      "evidence_status": {
+        "sufficient": 9,
+        "insufficient": 5
+      }
+    },
+    {
+      "raw": "b_chunk02.md",
+      "raw_sha256": "6d5a36fa1390cec2474afb79627ea7fac912d03b3bb0c728b04d5bf2a652e2b2",
+      "input_sha256": "738db72551328c18de94a851ea3be2f7c86b3f0fe69487aef1d6bb2e81da647c",
+      "prompt_sha256": "d985014ba749d8959a2b607a7a72a476d0d3c2c6ca8fdfd6db8b9eea2a9f098f",
+      "valid": 8,
+      "evidence_status": {
+        "insufficient": 6,
+        "sufficient": 2
+      }
+    },
+    {
+      "raw": "b_chunk03.md",
+      "raw_sha256": "282f0f5cbbb1d4e5f801ecda41d2b335f2671e5f75abbfb07d9db30e2277323b",
+      "input_sha256": "641fc285fcf92384012b39870ef04fda452612acae1cc4eb723f2939f0920d40",
+      "prompt_sha256": "e4c3203249e0a6d2b006f1439ebbc7b6e0d40a70c44f6555d62f3ae9b80dc268",
+      "valid": 15,
+      "evidence_status": {
+        "sufficient": 13,
+        "insufficient": 2
+      }
+    },
+    {
+      "raw": "b_chunk04.md",
+      "raw_sha256": "72bfc7b34419e633cd3c438aa19060e93d2e33bb631b00001aaed411c3207c71",
+      "input_sha256": "6ba0d25dec53e2482b15cb682a9cb8055da1437af91df1fbc068764c4279ae9f",
+      "prompt_sha256": "f6663ebe4bef03684650c0274147108fa0e53d7a1e1a33868b9606c9bf73275c",
+      "valid": 11,
+      "evidence_status": {
+        "sufficient": 9,
+        "insufficient": 2
+      }
+    },
+    {
+      "raw": "b_chunk05.md",
+      "raw_sha256": "33abe601fb9ed2cd2484d87b58fbf29deef0702cf9364de473ae05e1ac442c5f",
+      "input_sha256": "35b41dd5569c1165e2644641270e3aab6c6c721ae1500c2119a3648feb643596",
+      "prompt_sha256": "8ad2266b7277eebde290df4fbfdcfd52d0dbd69a195c803ccaefeb15d118fa10",
+      "valid": 7,
+      "evidence_status": {
+        "sufficient": 5,
+        "insufficient": 2
+      }
+    },
+    {
+      "raw": "b_chunk06.md",
+      "raw_sha256": "892179ef816f11cd55bb9b7121c3a7a1f5b2ec09161b464bf8bdadb8acba5ce0",
+      "input_sha256": "da4a7c055a195430591f8cc15e659eedd85949e5140502fa9daf5896f93707a1",
+      "prompt_sha256": "d4890013f8a9b09c2e699dc66930056188ac409b6b24bd682c3735996aa9aa2b",
+      "valid": 11,
+      "evidence_status": {
+        "sufficient": 8,
+        "insufficient": 3
+      }
+    },
+    {
+      "raw": "b_chunk07.md",
+      "raw_sha256": "72d86967b1d89938bb782109e2af308f6607fdf9da81f4009238fda923e91def",
+      "input_sha256": "fbaab43896bd82a839bb201a32d5f1b6114bdc028767923c18f65b75911e2d89",
+      "prompt_sha256": "0b86b614368e0e23e3fdce1abaf055f37481cde75922ba1091375b18d0fa625a",
+      "valid": 10,
+      "evidence_status": {
+        "insufficient": 2,
+        "sufficient": 8
+      }
+    },
+    {
+      "raw": "b_chunk08.md",
+      "raw_sha256": "6ad2c9b093d6e05843afe96de2d3e93f768896d8a81b8e3b12727060bc7284e1",
+      "input_sha256": "0c0593e2c8e5680a438a48b28dffa0cda84fdbffdb72afffb108653719c07f76",
+      "prompt_sha256": "25b7eb8800d72d1b07b300740e55c41720e9d3c0d08a2771f92cc26c1c6256a6",
+      "valid": 11,
+      "evidence_status": {
+        "insufficient": 3,
+        "sufficient": 8
+      }
+    },
+    {
+      "raw": "b_chunk09.md",
+      "raw_sha256": "84209720e43a2d38f49f94b8615217c989798f5407cb53bdc3443434641946ac",
+      "input_sha256": "112ba646e284be8670502a8774c46724c4d717604231d0c3275d25f7db11fb09",
+      "prompt_sha256": "3311a9212273f3e4fbb68bd7115c011bdcc5ed9c64939008de41bbeae27e9a2d",
+      "valid": 11,
+      "evidence_status": {
+        "sufficient": 8,
+        "insufficient": 3
+      }
+    },
+    {
+      "raw": "b_chunk10.md",
+      "raw_sha256": "661781ba502111e9afff93296350c1518f67109207913daf62ed822d80d8d1b4",
+      "input_sha256": "e15eba0e71711ff2894b067b408e68e785a6d51073c3329b8132d2214afe24d2",
+      "prompt_sha256": "83be07a54303ab0d6bab7d3980ff5d2bd87436d9acea0cc1f7d8d6dccc618307",
+      "valid": 13,
+      "evidence_status": {
+        "sufficient": 11,
+        "insufficient": 2
+      }
+    },
+    {
+      "raw": "b_chunk11.md",
+      "raw_sha256": "48b1978653fe3831bc4537284f577870af40e74f1af0895cef181c089f599268",
+      "input_sha256": "813b0df13260706e904b5986c9b32119ac6e59902e1b1a8e1c05f657e06bbfcc",
+      "prompt_sha256": "34a0fef3fa37fbe93c4c9841f1df4f180a83c806226876ebc2aa5c3b12a06232",
+      "valid": 12,
+      "evidence_status": {
+        "insufficient": 2,
+        "sufficient": 10
+      }
+    },
+    {
+      "raw": "b_chunk12.md",
+      "raw_sha256": "83e334da049f57a53281c34df0c33f6d0ff4ad9b3d99a4c46f6764dcccb505bb",
+      "input_sha256": "284b9ee5894989779f888199ad61d00c8137dbe6c55f70b4e474ba5f7c472213",
+      "prompt_sha256": "9e475f72e8fb7b04d4c72f374515910ad1bb5b68c5866ff6291a3433f0d8bfe5",
+      "valid": 5,
+      "evidence_status": {
+        "insufficient": 3,
+        "sufficient": 2
+      }
+    }
+  ],
+  "limits": "AI labels, not_verified; source sufficiency and blinding are worker reports, not legal accuracy or human acceptance. No paired lock or agreement measurement while AI-A is incomplete."
+}

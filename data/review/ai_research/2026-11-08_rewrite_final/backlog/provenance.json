@@ -1,0 +1,21 @@
+{
+  "model": "unknown",
+  "date": "2026-11-08",
+  "task": "Biên soạn lại một câu hỏi ViLexTime, lượt 3; không gán nhãn.",
+  "inputs": [
+    "AGENTS.md",
+    "HUONG_DAN.md",
+    "tasks.jsonl",
+    "check_inputs.json"
+  ],
+  "validation": {
+    "tool": "python3 selfcheck.py",
+    "reason": null,
+    "copy_share": 0.364
+  },
+  "limitations": [
+    "Không xác định được tên mô hình thực tế từ phiên làm việc.",
+    "Chỉ dùng nguồn được giao trong thư mục; không web, không đọc nhãn hoặc dữ liệu khác.",
+    "Không chạy qcheck chính thức; kết quả selfcheck chỉ là phản hồi cho bản nháp."
+  ]
+}

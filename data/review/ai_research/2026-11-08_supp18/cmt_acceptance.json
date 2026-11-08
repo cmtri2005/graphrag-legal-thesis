@@ -1,0 +1,33 @@
+{
+  "decision": "CMT duyệt các nhãn đã có kết luận trong phiếu sau hòa giải",
+  "recorded_at": "2026-11-08 15:35:22 UTC",
+  "decided_by": "CMT (người dùng, xác nhận qua hội thoại Codex)",
+  "user_statement": "MÌnh (CMT) đã đọc xong rồi và mình duyệt nhé",
+  "method": "User reports having finished reading and explicitly approves; no row-by-row edits supplied. Approval applies to existing resolved labels; unresolved cases retain no final label.",
+  "quality_tier": "ai_labeled_human_approved_via_conversation",
+  "scope": {
+    "file": "cmt_accepted_labels.jsonl",
+    "sha256": "cc0d32a4e583e5f54574d71350095dce1d925f9a2579421a15f576c4df55ec55",
+    "requested": 18,
+    "accepted_resolved": 15,
+    "dat": 12,
+    "khong_dat": 3,
+    "unresolved_not_finalized": 3,
+    "unresolved_lineage_ids": [
+      "provision:d88e3c68-e161-11f0-b694-2f1f003aff40",
+      "provision:d78dcd10-eada-11f0-b850-07113bbbe7f2",
+      "provision:f019057e-1d8a-11f1-91fb-e7ff0fbd6b3d"
+    ]
+  },
+  "reviewed_artifact_sha256": {
+    "a.jsonl": "81b7523c1f563b244485840b248b1d211b888a411a6ce40d2ece4dacfee9526c",
+    "b.jsonl": "0d0848189ab4c26e6e0a7478ccfda97e069d7069ac13832394a7248d9be632b4",
+    "metrics.json": "1a8635d994a01393b32f30e59937fc28193aeb0d66675247bd31031114a9d77a",
+    "duyet_CMT_after_adjudication.xlsx": "0aedff487200395ad6ba94095c55975623fe4691edd0bbbe802de4be94d2e655",
+    "adjudication/results/batch01.jsonl": "6775f9f68ed368b40292d496da878775a80c3e60f4ae8e7b79dcbe1ac2e29344",
+    "adjudication/results/batch02.jsonl": "bf20ff0a3f2ec7b8a2b92e6ed4b5cf3ab6f7f9ba1ed78c683608259ffd397aad"
+  },
+  "disclosure": "CMT tự báo đã đọc xong và duyệt qua hội thoại; không suy ra lịch sử đọc từng dòng hay thay đổi trong Excel. Nhãn AI thô và trạng thái not_verified gốc giữ nguyên; quyết định CMT ghi ở hồ sơ riêng. Không ký thay CMT trên phiếu. Tỷ lệ sửa nhãn từng dòng không được đo độc lập.",
+  "agreement": "Approval does not change failed pre-adjudication agreement metrics or waive that gate.",
+  "release": "Not a dataset publication or acceptance of unresolved cases."
+}

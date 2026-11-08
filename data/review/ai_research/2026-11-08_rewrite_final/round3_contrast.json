@@ -1,0 +1,20 @@
+{
+  "status": "machine_check_only_not_human_validation",
+  "questions": 12,
+  "without_detected_problem": 11,
+  "needs_review": 1,
+  "findings": [
+    {
+      "lineage_id": "provision:eaad300c-df45-11f0-8d00-219fc75b2b70",
+      "group": "T2",
+      "problems": [
+        "version:eaad300c-df45-11f0-8d00-219fc75b2b70:2: đáp án ngắn cũng nằm trong version:eaad300c-df45-11f0-8d00-219fc75b2b70:1 (định nghĩa §4 T2)"
+      ]
+    }
+  ],
+  "authority": "docs/vilextime-dinh-nghia.md §4",
+  "inputs_sha256": {
+    "data/review/ai_research/2026-11-08_rewrite_final/questions_round3_passed.jsonl": "fc2de20ad4f2f75098f4b8985896f8dd4843ebe402b5106b0921b1bf9c2b88d6",
+    "data/review/ai_research/2026-11-08_rewrite_final/round3_shorts/answers.jsonl": "09261c1ab38404041c736bc7390e02ffb6f58d57f03b7d0c06b4c220565b3cd5"
+  }
+}

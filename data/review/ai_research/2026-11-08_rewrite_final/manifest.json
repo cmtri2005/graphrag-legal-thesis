@@ -1,0 +1,57 @@
+{
+  "source_root": "/home/trica/vilextime_loc/gan5",
+  "groups": {
+    "redo36": {
+      "n": 29,
+      "tasks_source": "/home/trica/vilextime_loc/gan5/questions/viet_lai.r2redo36.jsonl",
+      "source_sha256": "2f165564161b3a13b79390e8811e9ab5bc3108355c1fa079837e656df254d614",
+      "histories": [
+        {
+          "source": "/home/trica/vilextime_loc/gan5/questions/answers_1_redo36.jsonl",
+          "sha256": "d56b1bb5db69e745da80f523f92de30e7a22ed8eeb76034a3e7416d27c8c3538",
+          "retained": 29
+        },
+        {
+          "source": "/home/trica/vilextime_loc/gan5/questions/answers_2_redo36.jsonl",
+          "sha256": "00f42beda002e64c348e5a0b43ce6b5aba892c7398cec0f46cdfe6567ac1ec8e",
+          "retained": 29
+        }
+      ]
+    },
+    "claude": {
+      "n": 30,
+      "tasks_source": "/home/trica/vilextime_loc/gan5/questions/viet_lai.r2claude.jsonl",
+      "source_sha256": "a5919f6c136c1a88649bcf1bccb4c6022331ec989e4d0e44ac2a6bb999e1591a",
+      "histories": [
+        {
+          "source": "/home/trica/vilextime_loc/gan5/questions/answers_1_claude.jsonl",
+          "sha256": "69fdd92230c33f73fd1c88b6df7c71ab5b714ea08f8e29dc03e744ec25a65f30",
+          "retained": 30
+        },
+        {
+          "source": "/home/trica/vilextime_loc/gan5/questions/answers_2_claude.jsonl",
+          "sha256": "239fdb6ef03e7b3d973a335e2a5f5a4c96715135d2888ce2abd20cc1b175d7ad",
+          "retained": 30
+        }
+      ]
+    },
+    "backlog": {
+      "n": 1,
+      "tasks_source": "/home/trica/vilextime_loc/gan5/backlog/writer/viet_lai.jsonl",
+      "source_sha256": "cf7ace36b5f78b1fb4d689f4ab6715fa4c951abc9e0746b31d57bc0c5394e8e2",
+      "histories": [
+        {
+          "source": "/home/trica/vilextime_loc/gan5/backlog/writer/answers_1.jsonl",
+          "sha256": "8b149c627b7408b932cc48511dc043921eb6d47560c8e16b49681d5a85a2de58",
+          "retained": 1
+        },
+        {
+          "source": "/home/trica/vilextime_loc/gan5/backlog/writer/answers_2.jsonl",
+          "sha256": "766a6ff49e94166d696fd053c64f0af62f1909bbdc18b505c4697dbc717291c8",
+          "retained": 1
+        }
+      ]
+    }
+  },
+  "note": "Final third attempt; prior successful/terminal questions excluded. Original files unchanged."
+}

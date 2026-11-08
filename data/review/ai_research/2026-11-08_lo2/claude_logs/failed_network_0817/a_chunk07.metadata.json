@@ -1,0 +1,41 @@
+{
+  "session_id": "580103fb-119a-43f0-89ed-a3fc9d7cc4db",
+  "is_error": true,
+  "api_error": "connection_failed",
+  "api_error_status": null,
+  "modelUsage": {},
+  "usage": {
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "input_tokens": 0,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 0,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "num_turns": 1,
+  "total_cost_usd": 0,
+  "duration_ms": 192463,
+  "permission_denials": [],
+  "file": "a_chunk07.md",
+  "status": "failed",
+  "started_at": "2026-11-08T08:17:07.189074+00:00",
+  "completed_at": "2026-11-08T08:20:42.425751+00:00",
+  "returncode": 1,
+  "prompt_sha256": "b129124e7c2b6eb02f5f5b7d4b00db4d7c9ff32ffed02406f67f60dbcec67925",
+  "error": "API Error: Can't reach the API server — check your internet or DNS (EAI_AGAIN)",
+  "stderr": ""
+}

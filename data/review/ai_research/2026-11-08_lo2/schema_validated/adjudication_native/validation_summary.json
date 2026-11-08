@@ -1,0 +1,205 @@
+{
+  "total": 49,
+  "unique_lineages": 49,
+  "resolved": 29,
+  "resolved_lineages": 29,
+  "unresolved_lineages": 20,
+  "unresolved": 20,
+  "dispositions": {
+    "both_wrong": 2,
+    "prefer_a": 11,
+    "prefer_b": 16,
+    "unresolved": 20
+  },
+  "human_confirmations": 0,
+  "by_run": {
+    "lo2": {
+      "total": 49,
+      "resolved": 29,
+      "unresolved": 20,
+      "dispositions": {
+        "both_wrong": 2,
+        "prefer_a": 11,
+        "prefer_b": 16,
+        "unresolved": 20
+      }
+    }
+  },
+  "unresolved_cases": [
+    {
+      "case_id": "lo2-002",
+      "open_questions": [
+        "Cần làm rõ hạn đăng ký 31/12/2015 tác động Q1/Q2 tại cả hai mốc 2023 theo đúng taxonomy; có ngoại lệ/gia hạn hoặc hồ sơ tiếp nhận đúng hạn chưa giải quyết không?",
+        "Đọc đủ các văn bản sửa đổi NĐ19 và Luật52 có hiệu lực tới 19/12/2023 để chốt Q4."
+      ]
+    },
+    {
+      "case_id": "lo2-003",
+      "open_questions": [
+        "Q4: Điều7(2)(a) NĐ108 sửa bởi NĐ26 điều chỉnh điều kiện chuyên môn người phụ trách an toàn; nó có trực tiếp loại yêu cầu nộp bản sao bằng đại học của Giám đốc trong hồ sơ Giấy phép hạn chế tại Điều18 TT28 trước01/06/2015 không? Cần quyết định có căn cứ về phạm vi áp dụng R3; không tự đồng nhất điều kiện kinh doanh và giấy tờ hồ sơ."
+      ]
+    },
+    {
+      "case_id": "lo2-004",
+      "open_questions": [
+        "Đọc quy phạm quản lý xe hợp đồng/du lịch và điều kiện tần suất/chuyến trùng lặp còn áp dụng tại28/02/2026,01/03/2026; xác định có quy phạm kế thừa hoặc cơ sở điều kiện đã thay ngoài các nghị định xử phạt được cung cấp không.",
+        "Q3: khung tiền phạt là điều kiện hợp lệ để hỏi hành vi hay đã để lộ phần đáp án? Cần áp nhất quán quy tắc hiện hành, không bổ sung quy tắc cấm mọi mức phạt."
+      ]
+    },
+    {
+      "case_id": "lo2-006",
+      "open_questions": [
+        "Đọc chính văn NĐ217/2025 Điều6–7,18–19 và quy định kiểm tra ngành tài chính để xác định đáp án pháp lý tại14/05/2026; có phải Q4=co/superseded_by_other_norm không?",
+        "Sau khi áp Luật84 và NĐ217, hai mốc có còn hai phương thức khác nhau đủ Q2=co, hay cùng kiểm tra chuyên ngành và Q2=khong/group_mismatch?"
+      ]
+    },
+    {
+      "case_id": "lo2-007",
+      "open_questions": [
+        "Kiểm quy định thi hành Luật84 và NĐ217 về thẻ thanh tra chuyên ngành/giấy chứng nhận kiểm tra, kể cả sử dụng thẻ ở các cuộc thanh tra chuyển tiếp: mã A06 còn là đáp án pháp lý30/12/2025 không?",
+        "Nếu có chế định kế thừa, so đủ7 yếu tố trong phạm vi mã đầu A06; nếu chỉ chấm dứt chức năng thì xác định căn cứ trực tiếp tác động quy phạm mã thẻ, không suy ra hết hiệu lực dây chuyền."
+      ]
+    },
+    {
+      "case_id": "lo2-008",
+      "open_questions": [
+        "CMT/luật sư chốt cách áp Q2 khi quy phạm cấp cao hơn đã loại yêu cầu từ01/01/2023: vì hai mốc29–30/11/2023 cùng không còn thủ tục, có phải Q2=khong/group_mismatch; hay Q2 vẫn co khi xét việc bãi bỏ văn bản đích và Q4 riêng ghi co/superseded_by_other_norm? Giữ unresolved/null cho tới khi chốt toàn bộ Q và reasons."
+      ]
+    },
+    {
+      "case_id": "lo2-009",
+      "open_questions": [
+        "Hoàn tất bước7(c)–(d): quy định nhân sự cơ sở hỏa táng ở văn bản khác có hiệu lực tại 14–15/01/2026, đối chiếu bảy yếu tố nếu tìm thấy chỗ nghi; chưa đủ chứng cứ Q4."
+      ]
+    },
+    {
+      "case_id": "lo2-016",
+      "open_questions": [
+        "Đối chiếu nhiệm vụ ban hành văn bản chung tạiĐiều77 Luật01/2016 với nhiệm vụ riêng bị bãi bỏ; rà thêm hướng dẫn cùng ngày trước khi chốt Q4."
+      ]
+    },
+    {
+      "case_id": "lo2-021",
+      "open_questions": [
+        "Tại 01/07/2024, thẩm quyền chung khoản 2, 6 Điều 14 và mục 17 Phụ lục II Luật Giá có tiếp tục điều chỉnh đúng nhiệm vụ ban hành quy định về giá trong hoạt động quy hoạch? Cần văn bản/danh mục công cụ thể hoặc xác nhận cách áp dụng bảy yếu tố cho thẩm quyền chung so với nhiệm vụ chuyên ngành đã bãi bỏ."
+      ]
+    },
+    {
+      "case_id": "lo2-022",
+      "open_questions": [
+        "Cần toàn văn chính thức QĐ 08/QĐ-BXD (hoặc văn bản tương đương) chứng minh ngày hiệu lực và kế thừa của Cục Hàng hải và Đường thủy Việt Nam trước 30/06/2025.",
+        "Cần xác nhận cách tính số đáp án T3 cho câu hỏi chỉ nêu hồ sơ/dữ liệu nhưng khoản 2 thay đổi nhiệm vụ đăng ký; không dùng toàn bộ khoản thay cho phần hỏi."
+      ]
+    },
+    {
+      "case_id": "lo2-024",
+      "open_questions": [
+        "Cần đọc Luật67/2011/QH12 và NĐ17/2012/NĐ-CP phần đăng ký hành nghề, hồ sơ và các sửa đổi có hiệu lực tại 01/07/2024; không dùng TT05/2025 làm bằng chứng cho năm2024."
+      ]
+    },
+    {
+      "case_id": "lo2-030",
+      "open_questions": [
+        "Cần lời văn NĐ 56/2022/NĐ-CP (cơ cấu tổ chức, chuyển tiếp); bản PDF trên binhdinh.gov.vn lỗi ECONNRESET.",
+        "Báo người phụ trách: R1(ii)/bước 2 chưa nói việc tách một tổng cục thành hai cục trước NQ 190/2025 có tính là rename_only hay không.",
+        "Cục Đường cao tốc có thực sự phê duyệt dự toán cứu hộ trên mọi tuyến cao tốc trước đây thuộc Tổng cục không, hay chỉ tuyến được phân cấp, ủy quyền?"
+      ]
+    },
+    {
+      "case_id": "lo2-031",
+      "open_questions": [
+        "Bước 7(c), (d): cần đọc Luật 15/2023/QH15, NĐ 96/2023/NĐ-CP, Luật BHYT và văn bản khác có hiệu lực quanh 24/05/2024 về thỏa thuận chăm sóc sức khỏe ban đầu.",
+        "Lý do bãi bỏ khoản 3 Điều 8: chưa tìm được tờ trình hoặc văn bản giải thích.",
+        "Điều 34 NĐ 146/2018 mới đọc khoản 1 ở bản ban hành; chưa kiểm khoản còn lại và lần sửa sau.",
+        "NĐ 75/2023 chỉ đọc bản dịch nguồn phụ, chưa mở lời văn chính thức."
+      ]
+    },
+    {
+      "case_id": "lo2-032",
+      "open_questions": [
+        "Báo người phụ trách: bước 4 có áp cho cụm của bản cũ chỉ nằm ở tên điều, không nằm ở thân đáp án hay không.",
+        "Q4: chưa tra Luật Hải quan và văn bản khác về căn cứ kiểm tra qua máy soi tại hai mốc.",
+        "NĐ 08/2015 chỉ đọc excerpt trong packet, không mở lại API."
+      ]
+    },
+    {
+      "case_id": "lo2-033",
+      "open_questions": [
+        "Bước 7(a): chưa đọc ký tự 30.000–100.000 của NĐ 14/2026 (packet cắt ở 30.000).",
+        "Bước 7(c), (d): cần đọc Luật 72/2020/QH14, Luật 84/2015/QH13, NĐ thi hành và quy chuẩn áp cho lò hỏa táng có hiệu lực tại 15/01/2026.",
+        "Văn bản hợp nhất 06/VBHN-BXD trên thuvienphapluat trả 403, chưa đối chiếu được Điều 23 sau sửa.",
+        "Báo người phụ trách: bước 7 chưa nói quy định song song đã có từ trước, không có dấu vết chuyển chỗ, nhưng còn trả lời một phần câu hỏi thì xếp relocation_unclear hay bước đạt."
+      ]
+    },
+    {
+      "case_id": "lo2-035",
+      "open_questions": [
+        "Cần bản Phụ lục II từ nguồn official theo skill (Công báo, vanban.chinhphu.vn hoặc datafiles.chinhphu.vn).",
+        "Người phụ trách cần xác nhận bản quét có dấu trên cổng cấp tỉnh được xếp tier nào; skill chưa nêu trường hợp này."
+      ]
+    },
+    {
+      "case_id": "lo2-036",
+      "open_questions": [
+        "Mâu thuẫn quy tắc cần người phụ trách quyết: Bước 7 khi yếu tố 6 không đạt và yếu tố 7 cũng không có dấu vết thì chọn relocation_unclear hay bước này đạt.",
+        "Thiếu quy tắc và mã cho quy phạm cùng cấp của bộ khác tồn tại song song từ trước và vẫn trả lời được câu hỏi.",
+        "Hiệu lực của QĐ 16/2008 tại 01/05/2017 mới có metadata API 24290 (còn hiệu lực, từ 17/05/2008, không có ngày hết) và kết quả tìm kiếm về TT 03/2026; chưa có căn cứ lời văn về thời điểm hết hiệu lực.",
+        "Chưa đọc các điều về tiêu chuẩn nhà giáo trong Luật Giáo dục nghề nghiệp 2014 cho bước 7(d)."
+      ]
+    },
+    {
+      "case_id": "lo2-041",
+      "open_questions": [
+        "Thiếu quy tắc, xin người phụ trách chốt: câu hỏi về trần thẩm quyền phạt tiền của một chức danh có phải nêu đối tượng bị phạt (cá nhân hay tổ chức) không, khi nghị định quy định thẩm quyền với cá nhân bằng một nửa? Quy tắc này ảnh hưởng mọi câu tương tự ở nghị định xử phạt.",
+        "Chưa mở được Điều 46 Luật 15/2012/QH13 (sửa bởi Luật 67/2020/QH14) ở nguồn chính thức theo đúng phiên bản tại hai mốc, nên Q4 chưa đủ nguồn.",
+        "Chưa kiểm khoản 2 Điều 35 có bị NĐ 127/2021 sửa hay không; lượt đọc NĐ 127 chỉ xác nhận Điều 3 không đổi quy tắc về thẩm quyền."
+      ]
+    },
+    {
+      "case_id": "lo2-043",
+      "open_questions": [
+        "Q4 chưa đủ nguồn: chưa mở Luật Xuất bản (bản áp dụng năm 2011) và chưa rà hết văn bản cùng cấp ban hành sau về giấy phép nhập khẩu máy photocopy màu.",
+        "Cụm xin nhập thiết bị ngành in có đủ để hiểu là trường hợp phải xin phép hay không là điểm phân vân, cần CMT hoặc luật sư xác nhận."
+      ]
+    },
+    {
+      "case_id": "lo2-049",
+      "open_questions": [
+        "CMT/luật sư xác định cách chấm Q2 ở T3 khi câu hỏi không ghim lĩnh vực và lineage theo vị trí khoản bị thay chủ đề: đếm chuỗi nội dung thủy sản chuyển khoản hay ba đoạn khác nội dung tại cùng vị trí? R1 không tính đánh số thuần túy, nhưng cần xác định đơn vị nội dung của chính câu hỏi này trước khi áp."
+      ]
+    }
+  ],
+  "runtime": "Mixed legal-adjudicator execution: Codex native and resumed Claude CLI; per-packet raw provenance/metadata is authoritative. Failed quota attempts retained separately.",
+  "candidate_labels": {
+    "dat": 69,
+    "unresolved": 20,
+    "khong_dat": 39
+  },
+  "by_group": {
+    "T2": {
+      "dat": 49,
+      "unresolved": 6,
+      "khong_dat": 30
+    },
+    "T6": {
+      "dat": 20,
+      "unresolved": 12,
+      "khong_dat": 9
+    },
+    "T3": {
+      "unresolved": 2
+    }
+  },
+  "human_acceptance_new_batch": "pending; silver bulk acceptance does not cover these 128",
+  "review": "data/review/ai_research/2026-11-08_lo2/duyet_CMT_after_adjudication.xlsx",
+  "G2_quantity": {
+    "required": 130,
+    "accepted_silver": 81,
+    "accepted_new": 0,
+    "accepted_total": 81,
+    "pending_ai_proposed_dat": 69,
+    "conditional_total_if_CMT_accepts_all_proposed_dat": 150,
+    "quantity_pass_now": false,
+    "note": "Quantity only; pending proposals and supplementary batch are not human-accepted labels. See supplementary summary for its completed AI adjudication. Agreement gate remains failed."
+  }
+}

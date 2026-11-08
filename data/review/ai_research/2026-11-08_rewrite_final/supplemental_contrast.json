@@ -1,0 +1,12 @@
+{
+  "status": "machine_check_only_not_human_validation",
+  "questions": 18,
+  "without_detected_problem": 18,
+  "needs_review": 0,
+  "findings": [],
+  "authority": "docs/vilextime-dinh-nghia.md §4",
+  "inputs_sha256": {
+    "data/review/ai_research/2026-11-08_rewrite_final/questions_ready.jsonl": "fc033aed65cfaf2bd0734db3c69fb72c7135a5fb9e1a73ed017842bfdbb680a1",
+    "data/review/ai_research/2026-11-08_rewrite_final/short_answers_ready.jsonl": "95f003606016b8a7be29ac2a5a07cae6cb9c059396aab51b0952a287d0100ba3"
+  }
+}

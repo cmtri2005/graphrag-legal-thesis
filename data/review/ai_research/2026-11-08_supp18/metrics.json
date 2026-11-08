@@ -1,0 +1,296 @@
+{
+  "kind": "AI–AI cross-model: A Claude, B Codex; actual model details in raw provenance/Claude metadata; not human agreement or legal accuracy",
+  "guideline_version": "4.0",
+  "batch_note": "Supplemental supp18 T2/T6, 18 lineages; pre-adjudication; excludes prior silver and calibration batch 0. No source-insufficient valid labels filtered.",
+  "files_sha256": {
+    "a.jsonl": "81b7523c1f563b244485840b248b1d211b888a411a6ce40d2ece4dacfee9526c",
+    "b.jsonl": "0d0848189ab4c26e6e0a7478ccfda97e069d7069ac13832394a7248d9be632b4"
+  },
+  "coverage": {
+    "requested": 18,
+    "valid_a": 18,
+    "valid_b": 18,
+    "paired": 18,
+    "missing": {
+      "a": [],
+      "b": []
+    },
+    "rejected": {
+      "a": [],
+      "b": []
+    }
+  },
+  "evidence_status": {
+    "a": {
+      "sufficient": 12,
+      "insufficient": 6
+    },
+    "b": {
+      "insufficient": 4,
+      "sufficient": 14
+    }
+  },
+  "quote_in_provided_sources": {
+    "a": {
+      "True": 17,
+      "False": 1
+    },
+    "b": {
+      "True": 16,
+      "False": 2
+    }
+  },
+  "thresholds": {
+    "ac1": 0.8,
+    "p_neg": 0.6,
+    "min_adverse": 5
+  },
+  "metrics": {
+    "q1": {
+      "n": 18,
+      "ac1": 0.9412724306688417,
+      "kappa": 0.0,
+      "category_agreement": {
+        "dung": 0.9714285714285714,
+        "sai": 0.0
+      },
+      "p_neg": 0.0,
+      "confusion_a_b": {
+        "dung|dung": 17,
+        "sai|dung": 1
+      },
+      "adverse_labels": 1,
+      "gate": "not_evaluable"
+    },
+    "q2": {
+      "n": 18,
+      "ac1": 1.0,
+      "kappa": null,
+      "category_agreement": {
+        "co": 1.0
+      },
+      "p_neg": null,
+      "confusion_a_b": {
+        "co|co": 18
+      },
+      "adverse_labels": 0,
+      "gate": "not_evaluable"
+    },
+    "q3": {
+      "n": 18,
+      "ac1": 0.8758620689655172,
+      "kappa": -0.058823529411764955,
+      "category_agreement": {
+        "co": 0.9411764705882353,
+        "khong": 0.0
+      },
+      "p_neg": 0.0,
+      "confusion_a_b": {
+        "co|co": 16,
+        "co|khong": 1,
+        "khong|co": 1
+      },
+      "adverse_labels": 2,
+      "gate": "not_evaluable"
+    },
+    "q4": {
+      "n": 18,
+      "ac1": 0.8032786885245902,
+      "kappa": 0.0,
+      "category_agreement": {
+        "khong": 0.9090909090909091,
+        "khong_chac": 0.0
+      },
+      "p_neg": 0.0,
+      "confusion_a_b": {
+        "khong|khong": 15,
+        "khong|khong_chac": 3
+      },
+      "adverse_labels": 3,
+      "gate": "not_evaluable"
+    },
+    "verdict": {
+      "n": 18,
+      "ac1": 0.5384615384615384,
+      "kappa": -0.17391304347826084,
+      "category_agreement": {
+        "dat": 0.8,
+        "khong_dat": 0.0
+      },
+      "p_neg": 0.0,
+      "confusion_a_b": {
+        "dat|dat": 12,
+        "dat|khong_dat": 4,
+        "khong_dat|dat": 2
+      },
+      "adverse_labels": 6,
+      "gate": "not_met"
+    }
+  },
+  "by_group": {
+    "T2": {
+      "q1": {
+        "n": 11,
+        "ac1": 0.9004524886877828,
+        "kappa": 0.0,
+        "category_agreement": {
+          "dung": 0.9523809523809523,
+          "sai": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "dung|dung": 10,
+          "sai|dung": 1
+        },
+        "adverse_labels": 1,
+        "gate": "not_evaluable"
+      },
+      "q2": {
+        "n": 11,
+        "ac1": 1.0,
+        "kappa": null,
+        "category_agreement": {
+          "co": 1.0
+        },
+        "p_neg": null,
+        "confusion_a_b": {
+          "co|co": 11
+        },
+        "adverse_labels": 0,
+        "gate": "not_evaluable"
+      },
+      "q3": {
+        "n": 11,
+        "ac1": 0.7821782178217822,
+        "kappa": -0.09999999999999966,
+        "category_agreement": {
+          "co": 0.9,
+          "khong": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "co|co": 9,
+          "co|khong": 1,
+          "khong|co": 1
+        },
+        "adverse_labels": 2,
+        "gate": "not_evaluable"
+      },
+      "q4": {
+        "n": 11,
+        "ac1": 1.0,
+        "kappa": null,
+        "category_agreement": {
+          "khong": 1.0
+        },
+        "p_neg": null,
+        "confusion_a_b": {
+          "khong|khong": 11
+        },
+        "adverse_labels": 0,
+        "gate": "not_evaluable"
+      },
+      "verdict": {
+        "n": 11,
+        "ac1": 0.6432432432432432,
+        "kappa": -0.13793103448275865,
+        "category_agreement": {
+          "dat": 0.8421052631578947,
+          "khong_dat": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "dat|dat": 8,
+          "dat|khong_dat": 1,
+          "khong_dat|dat": 2
+        },
+        "adverse_labels": 3,
+        "gate": "not_evaluable"
+      }
+    },
+    "T6": {
+      "q1": {
+        "n": 7,
+        "ac1": 1.0,
+        "kappa": null,
+        "category_agreement": {
+          "dung": 1.0
+        },
+        "p_neg": null,
+        "confusion_a_b": {
+          "dung|dung": 7
+        },
+        "adverse_labels": 0,
+        "gate": "not_evaluable"
+      },
+      "q2": {
+        "n": 7,
+        "ac1": 1.0,
+        "kappa": null,
+        "category_agreement": {
+          "co": 1.0
+        },
+        "p_neg": null,
+        "confusion_a_b": {
+          "co|co": 7
+        },
+        "adverse_labels": 0,
+        "gate": "not_evaluable"
+      },
+      "q3": {
+        "n": 7,
+        "ac1": 1.0,
+        "kappa": null,
+        "category_agreement": {
+          "co": 1.0
+        },
+        "p_neg": null,
+        "confusion_a_b": {
+          "co|co": 7
+        },
+        "adverse_labels": 0,
+        "gate": "not_evaluable"
+      },
+      "q4": {
+        "n": 7,
+        "ac1": 0.35384615384615375,
+        "kappa": 0.0,
+        "category_agreement": {
+          "khong": 0.7272727272727273,
+          "khong_chac": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "khong|khong": 4,
+          "khong|khong_chac": 3
+        },
+        "adverse_labels": 3,
+        "gate": "not_evaluable"
+      },
+      "verdict": {
+        "n": 7,
+        "ac1": 0.35384615384615375,
+        "kappa": 0.0,
+        "category_agreement": {
+          "dat": 0.7272727272727273,
+          "khong_dat": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "dat|dat": 4,
+          "dat|khong_dat": 3
+        },
+        "adverse_labels": 3,
+        "gate": "not_evaluable"
+      }
+    }
+  },
+  "disagreements": [
+    "provision:d88e3c68-e161-11f0-b694-2f1f003aff40",
+    "provision:d78dcd10-eada-11f0-b850-07113bbbe7f2",
+    "provision:ab4919f8-df40-11f0-a49a-7ba1892820ef",
+    "provision:f019057e-1d8a-11f1-91fb-e7ff0fbd6b3d",
+    "provision:7debb0a6-df45-11f0-a43e-33b52192b20e",
+    "provision:c45fe1a8-df43-11f0-9a1c-277c000beaf7#k1#e"
+  ]
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "raw": "batch01.md",
+    "original_sha256": "4ae10a083cf0da127107fbc4bd71fd4141d8af0cfe5c84e061dbf6db8f3500f1",
+    "adapted_sha256": "83ce6a890e76d03e81fd255a2ac90ba25e04a75e95b9cad55eb63ea3798c35df",
+    "case_objects_unchanged": true
+  },
+  {
+    "raw": "batch02.md",
+    "original_sha256": "8a7ad961a972d2170c8c4425b483f6179c6f829bdbd276ea97ac6b3daabb7763",
+    "adapted_sha256": "326eda75afeb59680aee67cd059bb4ec681a871392dbe6a4558b6739579143eb",
+    "case_objects_unchanged": true
+  }
+]

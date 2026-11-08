@@ -1,0 +1,13 @@
+{
+  "model": "unknown",
+  "date": "2026-11-08",
+  "task_count": 29,
+  "scope": "Chỉ biên soạn câu hỏi lượt 3; không gán nhãn.",
+  "limitations": [
+    "Chỉ sử dụng ngữ cảnh và lý do loại được cung cấp trong thư mục; không tra cứu ngoài.",
+    "Tên model chính xác không được cung cấp cho phiên tác nhân.",
+    "Selfcheck bản nháp cho thấy nhiều câu vượt trần copy_share; giữ thuật ngữ pháp lý và nghĩa thay vì thêm từ đệm hoặc thay bằng khẩu ngữ.",
+    "Mục về nợ tiền sử dụng đất chỉ cung cấp phạm vi đối tượng gắn với mốc thời gian; câu hỏi không thể nêu mốc đó theo hướng dẫn."
+  ],
+  "validation": "Đối chiếu đủ 29 ID duy nhất và schema; chạy selfcheck.py để lấy phản hồi bản nháp, không chạy qcheck chính thức."
+}

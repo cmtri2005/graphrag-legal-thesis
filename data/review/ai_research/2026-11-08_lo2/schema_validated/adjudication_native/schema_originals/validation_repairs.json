@@ -1,0 +1,30 @@
+{
+  "authority": "legal-adjudicator spec and package_review.load_validate: resolved needs full-label sufficient evidence",
+  "changes": [
+    {
+      "case_id": "lo2-014",
+      "change": "copy unchanged outer evidence into proposed_label evidence"
+    },
+    {
+      "case_id": "lo2-015",
+      "change": "copy unchanged outer evidence into proposed_label evidence"
+    },
+    {
+      "case_id": "lo2-017",
+      "change": "copy unchanged outer evidence into proposed_label evidence"
+    },
+    {
+      "case_id": "lo2-018",
+      "change": "copy unchanged outer evidence into proposed_label evidence"
+    },
+    {
+      "case_id": "lo2-032",
+      "change": "unresolved per own insufficient full-label evidence and explicit open questions; tentative label unchanged"
+    },
+    {
+      "case_id": "lo2-043",
+      "change": "unresolved per own insufficient full-label evidence and explicit open questions; tentative label unchanged"
+    }
+  ],
+  "limits": "No Q/reason/verdict/source-status altered; original raw and results retained"
+}

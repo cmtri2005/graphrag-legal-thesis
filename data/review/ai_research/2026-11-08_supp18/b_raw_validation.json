@@ -1,0 +1,37 @@
+{
+  "validator": "scripts/review/ai_labels.py:read_labels + exact manifest coverage and structured evidence checks",
+  "requested": 18,
+  "valid": 18,
+  "missing": [],
+  "duplicates": [],
+  "rejected": [],
+  "evidence_status": {
+    "insufficient": 4,
+    "sufficient": 14
+  },
+  "chunks": [
+    {
+      "raw": "b_chunk01.md",
+      "raw_sha256": "f2c40a0a063c859d318468101a2d14c1f103c15e77614e6d15a1e5f99fc7756f",
+      "input_sha256": "164460cc81e2223b840207b60355d619f68f5492337d7c4b8781693afc7aa9d8",
+      "prompt_sha256": "ec4aac99e309a3f3c815e90dd275db9dcdd8b962d3af425c8d245dc54b4decec",
+      "valid": 9,
+      "evidence_status": {
+        "insufficient": 3,
+        "sufficient": 6
+      }
+    },
+    {
+      "raw": "b_chunk02.md",
+      "raw_sha256": "cd7e9bf1ccc3576d1c5fc17771e03485cb37a510c27114bc216dc7f6d3709cda",
+      "input_sha256": "dcf8e83cea127008e08af1ee224c0648362bc7b99f2ed0a0cdb0e30dd37c59ed",
+      "prompt_sha256": "ec7d49524b585ab52f389842190a2235deb3d0b4e6091077ac4c49b644317d75",
+      "valid": 9,
+      "evidence_status": {
+        "sufficient": 8,
+        "insufficient": 1
+      }
+    }
+  ],
+  "limits": "AI labels, not_verified; source sufficiency and blinding are worker reports, not legal accuracy or human acceptance. No paired lock or agreement measurement while AI-A is incomplete."
+}

@@ -1,0 +1,65 @@
+{
+  "redo36": {
+    "requested": 29,
+    "qcheck_passed": 3,
+    "rejected_reasons": {
+      "copy_share:0.58": 1,
+      "copy_share:0.45": 1,
+      "copy_share:0.43": 3,
+      "copy_share:0.57": 1,
+      "copy_share:0.59": 1,
+      "copy_share:0.48": 2,
+      "copy_share:0.76": 1,
+      "copy_share:0.70": 1,
+      "copy_share:0.54": 1,
+      "copy_share:0.63": 2,
+      "copy_share:0.67": 1,
+      "copy_share:0.50": 1,
+      "copy_share:0.55": 1,
+      "copy_share:0.56": 3,
+      "copy_share:0.42": 1,
+      "copy_share:0.69": 1,
+      "copy_share:0.46": 1,
+      "copy_share:0.61": 1,
+      "copy_share:0.68": 1,
+      "copy_share:0.78": 1
+    },
+    "third_answers_sha256": "5b795875c75b3937461ef4933bb82047a1c3a1dc0939233f2a56b8be0e151a15"
+  },
+  "claude": {
+    "requested": 30,
+    "qcheck_passed": 8,
+    "rejected_reasons": {
+      "copy_share:0.56": 1,
+      "copy_share:0.47": 1,
+      "copy_share:0.53": 2,
+      "copy_share:0.87": 1,
+      "copy_share:0.67": 1,
+      "copy_share:0.71": 1,
+      "copy_share:0.62": 1,
+      "copy_share:0.55": 4,
+      "copy_share:0.77": 1,
+      "copy_share:0.78": 1,
+      "copy_share:0.69": 1,
+      "copy_share:0.48": 1,
+      "copy_share:0.72": 1,
+      "copy_share:0.68": 1,
+      "copy_share:0.57": 1,
+      "copy_share:0.64": 1,
+      "copy_share:0.60": 1,
+      "copy_share:0.44": 1
+    },
+    "third_answers_sha256": "cbabb23102a278892af15d8472901879eebcb8312e97b22ac5551cb8c9e80034"
+  },
+  "backlog": {
+    "requested": 1,
+    "qcheck_passed": 1,
+    "rejected_reasons": {},
+    "third_answers_sha256": "86677fb05122b020f949af3c2184310456018afa42c7070a1b20d1463475cf74"
+  },
+  "total": 60,
+  "qcheck_passed": 12,
+  "terminal_rejected": 48,
+  "worker_transport_note": "redo36 and claude workers ended with usage-limit errors after saving complete answers and provenance; native qcheck performed by parent with all three attempt files.",
+  "meaning": "Question machine checks only; not Q1–Q4 labels or human acceptance."
+}

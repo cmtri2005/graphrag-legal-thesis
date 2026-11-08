@@ -1,0 +1,84 @@
+{
+  "session_id": "18e1e76a-d828-4826-86f1-3ed5bba5a2b7",
+  "is_error": false,
+  "api_error": null,
+  "api_error_status": null,
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 12,
+      "outputTokens": 27795,
+      "cacheReadInputTokens": 381483,
+      "cacheCreationInputTokens": 151554,
+      "webSearchRequests": 0,
+      "costUSD": 1.8446766,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 16822,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 151554,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-haiku-5-5": {
+      "inputTokens": 125253,
+      "outputTokens": 11287,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 3,
+      "costUSD": 0.0481688,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 6633,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "claude-haiku-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 151554,
+    "cache_read_input_tokens": 381483,
+    "output_tokens": 27795,
+    "output_tokens_details": {
+      "thinking_tokens": 16822
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 151554,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 14243,
+        "cache_read_input_tokens": 133019,
+        "cache_creation_input_tokens": 21674,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 21674
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "num_turns": 17,
+  "total_cost_usd": 1.8928454000000001,
+  "duration_ms": 257696,
+  "permission_denials": [],
+  "file": "a_chunk02.md",
+  "status": "completed",
+  "started_at": "2026-11-08T13:31:37.176591+00:00",
+  "completed_at": "2026-11-08T13:36:09.815560+00:00",
+  "returncode": 0,
+  "prompt_sha256": "20a7c3fffa8c68b915dbc580c1269883beff093fe62b043a216ce2025f5fe23a"
+}
