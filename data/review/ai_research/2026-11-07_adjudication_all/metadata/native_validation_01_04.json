@@ -1,0 +1,29 @@
+{
+  "validated_at": "2026-11-07T16:38:48.336444+00:00",
+  "scope": "native batches01–04 only",
+  "counts": {
+    "batch01": {
+      "prefer_a": 3,
+      "prefer_b": 2
+    },
+    "batch02": {
+      "both_wrong": 1,
+      "prefer_b": 2,
+      "prefer_a": 2
+    },
+    "batch03": {
+      "prefer_b": 2,
+      "unresolved": 1,
+      "both_wrong": 2
+    },
+    "batch04": {
+      "prefer_a": 1,
+      "both_wrong": 3,
+      "unresolved": 1
+    }
+  },
+  "cases": 20,
+  "same_binding_conflicts_against_existing_results": [],
+  "schema_pass": true,
+  "source_datasets_modified": false
+}

@@ -495,7 +495,85 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
 
 ## Validation
 
+### Chốt 6 ca hòa giải còn mở, nhãn AI cuối silver, 08/11/2026
+
+- Yêu cầu người dùng: dùng `legal-adjudicator` giải nốt các ca cần CMT. Đã chạy
+  5 subagent (Claude Code, claude-opus-5-5), mỗi lineage một agent. Kết quả ở
+  `data/review/ai_research/2026-11-08_adjudication_final/`; thư mục 07/11 giữ
+  nguyên, hash khớp.
+- [x] 62/62 ca có đề xuất (21 A, 25 B, 16 cả hai sai), 0 unresolved. Validator
+  gốc chạy trên kết quả đã ghép: hợp lệ. Năm lineage đều không đạt, ở mọi cách
+  đọc câu hỏi phụ còn mở.
+- [x] `silver_ai_final.jsonl` + `duyet_CMT_final.xlsx`: một phiếu cho 168
+  lineage. Có **81 đạt** (T2 71, T3 10) và 87 không đạt. Xác nhận người: 0.
+- Còn lại cho G2: CMT duyệt phiếu cuối; luật sư chốt 5 khoảng trống quy tắc
+  (README thư mục); silver tối đa ~81 lineage, chưa đủ ngưỡng 130. Cần thêm
+  T2/T6/T3 mới mới đạt G2.
+
+### Hòa giải toàn bộ xung đột AI, 07/11/2026
+
+- Yêu cầu trực tiếp CMT: dùng `.claude/agents/legal-adjudicator.md` xử lý hết
+  xung đột. Phạm vi: cả lô thử 0, silver chunk01, hai lượt chunk02–04 và lượt
+  chéo model chunk05–11. So cả Q1–Q4 và reason; thêm ca unresolved trước đây.
+- Phạm vi cuối: 62 trường hợp theo lượt, 59 lineage riêng biệt; gồm thêm
+  bất đồng chéo model bị che bởi đồng thuận nội bộ, và phần Sonnet đã có nhãn
+  đôi (14/30 câu). Không gán tiếp 16 câu Sonnet chưa hoàn thành. 94 tệp gốc và
+  38 snapshot được đóng băng bằng hash; không gộp IAA các lượt.
+- Claude CLI chạy đúng `--agent legal-adjudicator`, nhưng hết hạn mức tuần,
+  reset 11/11 02:00 UTC. Không có nhãn hoàn chỉnh từ CLI; lưu metadata lỗi.
+  Đã thông báo CMT và chuyển runtime sang Codex native, giữ spec/skills,
+  model kế thừa; ghi rõ điều chỉnh công cụ trong provenance, không giả Claude.
+- [x] Đóng băng đầu vào/nhãn/metric/phiếu cũ; chạy Claude CLI với đúng agent
+  legal-adjudicator theo từng lô; không đưa kết quả hệ vào ngữ cảnh.
+- [x] Kiểm đủ mọi case, hash/binding/schema/taxonomy và nguồn; unresolved giữ
+  nguyên nếu chưa đủ căn cứ, không ép chọn A/B. Xuất phiếu mới, không ký thay CMT.
+- [x] Báo số giải quyết được, số còn mở, kiểm hash cũ không đổi. Kết quả tại
+  `data/review/ai_research/2026-11-07_adjudication_all/`.
+- Kết quả: 56/62 đề xuất đầy đủ (19 chọn A, 24 chọn B, 13 cả hai sai),
+  tương ứng 54/59 lineage. 6 trường hợp thuộc 5 lineage còn mở: nghĩa thay đổi
+  bán/buôn bán; mới/chưa qua sử dụng (hai lượt); lời văn thay cụm bị lặp;
+  kỳ tính thuế không nêu năm tài chính; thiếu mốc chuyển đúng thẩm quyền hàng hải.
+  Không ép đủ Q để tuyên bố đã giải quyết toàn bộ. CMT vẫn phải duyệt mọi nhãn.
+- Đã hỏi CMT về quy ước năm dương lịch của ca thuế, chưa có trả lời cụ thể;
+  "tiếp tục" không được coi là chấp nhận quy ước mới. Các ca còn lại ghi rõ
+  nguồn đã thử, điều đã chứng minh và thông tin cần CMT/luật sư chốt.
+- Xuất `reviews/all_conflicts.xlsx` (62 dòng; sheet `Cần chốt`: 6 dòng),
+  cùng 8 workbook native theo lượt, report/summary/provenance và hash nguồn.
+  Toàn bộ ô xác nhận CMT trống. Giữ các đề xuất cũ trong revisions khi sửa.
+- Native validator: 62/62 hợp lệ; đề xuất cho cùng binding nhất quán. Fixture
+  sai verdict/binding và đề xuất mâu thuẫn cùng worksheet đều bị từ chối;
+  fixture nằm trong thư mục tạm, không trộn với kết quả nghiên cứu.
+
+### Hoàn tất nhãn AI silver còn dở, 07/11/2026
+
+- [x] Đợt 3 `round3_mixed/`: khóa 106 cặp chunk05–11 (A Claude, B Codex),
+  212 nhãn hợp lệ; không thiếu, trùng hoặc bị loại. Chạy `reproduce.py` bằng
+  `.venv/bin/python`, dùng validator và công thức native; không gộp IAA với đợt cũ.
+- Chunk11 A thiếu `verdict` và URL evidence. `normalize_a11.py` suy verdict
+  theo thẻ 4.0, giữ nguyên Q1–Q4/reason/note/quote/evidence_status. Bản Claude
+  nguyên gốc ở `claude_logs/a_chunk11.original.md`; receipt
+  `schema_normalization.json` giữ mọi evidence gốc, ghi nguồn thiếu URL.
+  Evidence cấu trúc chỉ dùng quote khớp input; URL worksheet là vị trí input,
+  không phải tra cứu pháp luật độc lập. Không gọi thêm model cho phần cơ học.
+- Đồng thuận trước hòa giải: Q1/Q3 AC1 0,871, p_neg 0,706; Q2 0,933/0,667;
+  Q4 0,977/0,909. Verdict AC1 **0,682**, p_neg 0,825, κ 0,678: **chưa đạt**
+  ngưỡng 0,80. Có 25 câu lệch Q1–Q4, 17 câu lệch verdict. Không sửa nhãn để
+  tăng đồng thuận. A thiếu căn cứ 10/106, B 18/106, vẫn giữ trong phép đo.
+- [x] Xuất `round3_mixed/duyet_CMT.xlsx`: đủ 106 câu, chưa có xác nhận người.
+  Nhãn, raw, input, provenance, receipt, script và workbook có SHA256SUMS.
+- [x] Đóng gói phần tra cứu đợt 2 tại `round2_codex/duyet_CMT_bo_sung.xlsx`
+  và `adjudication_report.jsonl`: đủ 26 câu, 17 đề xuất giải quyết được,
+  9 unresolved; giữ nguyên hash nhãn, metric, provenance và workbook gốc.
+- Còn lại: hòa giải 25 bất đồng đợt 3; bổ sung căn cứ còn thiếu; CMT duyệt
+  mọi dòng. Hoàn tất lượt gán AI không đồng nghĩa hoàn tất xác nhận người hoặc G2.
+
 ### Tiếp quản gán nhãn silver đợt 2, 06/11/2026
+
+- [x] Theo yêu cầu tiếp theo của người dùng: tra cứu bổ sung và đề xuất hòa giải
+  cho đợt 2. Phạm vi là hợp 23 câu thiếu nguồn và 11 câu bất đồng: **26 câu**,
+  chia chunk02: 7, chunk03: 10, chunk04: 9. Đề xuất là nhãn AI chờ CMT duyệt,
+  không sửa a.jsonl/b.jsonl/metrics.json hoặc workbook gốc; xuất workbook mới.
+  Nguồn đã mở, hash, giới hạn và câu hỏi còn thiếu được lưu cùng đề xuất.
 
 - Cập nhật theo yêu cầu trực tiếp của người dùng: **Codex làm thay Claude Code**
   cho sáu lượt chunk02–04 × AI-A/AI-B. Giữ nguyên input, hướng dẫn và taxonomy;

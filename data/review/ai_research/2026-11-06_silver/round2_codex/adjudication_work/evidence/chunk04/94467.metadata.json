@@ -1,0 +1,19 @@
+{
+  "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/94467",
+  "accessed_at": "2026-11-06T15:50:16.095275+00:00",
+  "success": true,
+  "error": "",
+  "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk04/94467.json",
+  "sha256": "ff6431a34d9d4793298010a68503d2e4a378b69e5b81aba1e558380d56015eb2",
+  "root_keys": [
+    "success",
+    "statusCode",
+    "message",
+    "messageCode",
+    "debugMessage",
+    "data",
+    "total"
+  ],
+  "document_number": "28/2015/TT-NHNN",
+  "content_length": 44372
+}

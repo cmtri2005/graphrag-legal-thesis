@@ -1,0 +1,19 @@
+{
+  "id": "178105",
+  "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/178105",
+  "accessed_at": "2026-11-06T15:50:08.279492+00:00",
+  "returncode": 0,
+  "error": "",
+  "sha256": "705fbd2345c33e9a8054eb28e49ab3372656fe6aa65912fcd51f2d9e527940a4",
+  "root_keys": [
+    "success",
+    "statusCode",
+    "message",
+    "messageCode",
+    "debugMessage",
+    "data",
+    "total"
+  ],
+  "docNum": "112/2025/NĐ-CP",
+  "content_length": 181631
+}

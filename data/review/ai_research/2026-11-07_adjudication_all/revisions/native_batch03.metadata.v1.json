@@ -1,0 +1,32 @@
+{
+  "runtime": "native Codex inherited legal-adjudicator role",
+  "model": "unknown",
+  "agent_spec_path": ".claude/agents/legal-adjudicator.md",
+  "agent_spec_sha256": "cd01a1b534772b7be134944b4967e76445ff9e5cf8b01a73bf49cd1320c011e4",
+  "input_sha256": "ecf10e557cad160ba8f171fc31aead2eee05ab52a0c86b7b40aa429027b94365",
+  "tools_used": [
+    "functions.exec",
+    "exec_command (python3 urllib official fetch and artifact I/O)",
+    "web.run search_query/open"
+  ],
+  "access_errors": [
+    "Sandbox DNS resolution failed; retried require_escalated successfully",
+    "Lawgical MCP not exposed in native runtime"
+  ],
+  "external_urls_opened": [
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/12774",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/145894",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/15330",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/154199",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/169188",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/170812",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/179258",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/187157",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/31905",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/37534",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/c38d4c80-5819-11f1-8cfa-090ca3b5a55f"
+  ],
+  "saved_at": "2026-11-07T09:42:29.033178+00:00",
+  "adaptation": "Claude agent Bash/Write ban cannot map directly to native runtime: exec used solely for packet reading, official source retrieval, source receipts, and requested research output artifacts. No source dataset changed. No further agents/models used. Claude weekly-limit fallback instructed by parent.",
+  "validation": "Native validate_label AST-extracted unchanged with GOOD/OPTIONS/REASONS to avoid unrelated unavailable markdown_it; identity/order/hash bindings checked."
+}

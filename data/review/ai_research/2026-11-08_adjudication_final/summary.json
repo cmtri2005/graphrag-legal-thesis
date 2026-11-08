@@ -1,0 +1,17 @@
+{
+  "lineages": 168,
+  "by_source_verdict": {
+    "ai_adjudicated|dat": 5,
+    "ai_adjudicated|khong_dat": 40,
+    "ai_agree|dat": 76,
+    "ai_agree|khong_dat": 47
+  },
+  "dat": 81,
+  "dat_by_group": {
+    "T2": 71,
+    "T3": 10
+  },
+  "adjudications_total": 62,
+  "unresolved": 0,
+  "human_confirmations": 0
+}

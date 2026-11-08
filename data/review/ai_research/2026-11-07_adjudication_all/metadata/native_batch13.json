@@ -1,0 +1,29 @@
+{
+  "runtime": "Codex native root, legal-adjudicator role",
+  "model": "inherited; exact identifier unknown",
+  "agent_spec": ".claude/agents/legal-adjudicator.md",
+  "agent_spec_sha256": "cd01a1b534772b7be134944b4967e76445ff9e5cf8b01a73bf49cd1320c011e4",
+  "input_sha256": "1497e8949ad41c9e6abe320e3ab8585b07aff7767163d7d2545c658c7e3f2093",
+  "finished_at": "2026-11-07T09:42:49.100248+00:00",
+  "native_tool_adaptation": "exec for packet I/O/artifact saving, direct official API via urllib; web search/open official portals; pdftoppm/view_image signed law135 page66–67",
+  "access_errors": [
+    "sandbox DNS blocked; escalated fetching succeeded",
+    "initial recursive HTML extraction selected related-document HTML for36867 and186907; corrected to data.documentContent.content before decisions; extraction_receipt.json records hashes"
+  ],
+  "additional_sources_opened": [
+    "https://vanban.chinhphu.vn/?docid=80737&pageid=27160",
+    "https://datafiles.chinhphu.vn/cpp/files/vbpq/2026/01/luat135-2025.pdf"
+  ],
+  "api_sources": [
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/125395",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/160908",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/166772",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/173849",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/186907",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/19676",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/26828",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/28073",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/36867"
+  ],
+  "decisions": "2 prefer_b,1 both_wrong; Q4 uncertainty for urban definition retained as accepted relocation_unclear, not invented certainty"
+}

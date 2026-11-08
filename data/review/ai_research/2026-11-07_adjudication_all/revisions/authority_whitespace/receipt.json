@@ -1,0 +1,9 @@
+{
+  "path": ".claude/skills/vn-legal-research/SKILL.md",
+  "origin": "unknown; all task workers report no edits",
+  "change": "Exactly two empty lines after frontmatter; no content differences",
+  "action": "Preserved both versions, then restored byte-exact frozen baseline; no validator exception or new guidance",
+  "observed_sha256": "9d9f69e9b3f4acc47451bb879352e23711c989e81592973566bb4211f14e5cde",
+  "restored_sha256": "98913a201bcf273b7edc5cb5b20c552fb812976de9de4bd2c7b23cd5bc0ae4d6",
+  "time": "2026-11-07T09:47:04.345308+00:00"
+}

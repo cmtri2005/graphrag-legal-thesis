@@ -1,0 +1,10 @@
+[
+  {
+    "case_id": "round2_codex::provision:3e60c494-df45-11f0-a7e1-e7eb0e609025",
+    "reason": "Nguồn bổ sung làm đổi Q2: ảnh PDF ký gốc TT50 trang47–49 có sẵn Mẫu20/21 nội dung danh bạ; TT35 Điều2 khoản2 chỉ dẫn lại hai mẫu đó, không sửa mẫu, và khoản4 chỉ bãi Mẫu18. Câu hỏi hỏi người nhận/định kỳ/nội dung: người nhận vẫn UBND tỉnh+Cục ĐTNĐ, kỳ vẫn quý/năm, nội dung vẫn danh bạ theo mẫu hiện hữu. Các thay đổi cách gửi/thời hạn/chốt số liệu không được hỏi; do vậy Q2 khong/group_mismatch, không đếm explicit hóa dẫn mẫu là đáp án thực chất mới. Q1 sai/other vẫn giữ: short cũ chỉ nơi nhận/kỳ, thiếu ý “Lập danh bạ cảng, bến thủy nội địa, bến khách ngang sông thuộc thẩm quyền quản lý” ngay trong answer. Q3 rõ phạm vi; Q4 không thấy quy phạm khác cụ thể tại14–15/02/2021. A đúng lỗi short nhưng cả A/B cùng bỏ Q2 nên both_wrong. Đề xuất đầu được lưu revisions trước sửa.",
+    "archive": "revisions/batch03.v1.jsonl",
+    "before_sha256": "c79f66a591a14012c801259f633086228d3fa73ee60df761aeb0e15c92519813",
+    "after_sha256": "4644b302a2817806bf5afc783bafeaebc9984b8fb01ebf1ac87ebf44ad6a15c9",
+    "corrected_at": "2026-11-07T16:36:45.467626+00:00"
+  }
+]

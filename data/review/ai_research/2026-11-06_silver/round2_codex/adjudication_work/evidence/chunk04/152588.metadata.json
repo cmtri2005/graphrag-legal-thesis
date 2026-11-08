@@ -1,0 +1,19 @@
+{
+  "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/152588",
+  "accessed_at": "2026-11-06T15:50:15.054697+00:00",
+  "success": true,
+  "error": "",
+  "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk04/152588.json",
+  "sha256": "ff6855c64b444c461c965d64fce19967dacf3dd6ba23297869b1d93faf889406",
+  "root_keys": [
+    "success",
+    "statusCode",
+    "message",
+    "messageCode",
+    "debugMessage",
+    "data",
+    "total"
+  ],
+  "document_number": "43/2021/TT-BGTVT",
+  "content_length": 27916
+}

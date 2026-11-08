@@ -1,0 +1,10 @@
+[
+  {
+    "case_id": "round2_codex::provision:f22d30de-e161-11f0-a307-df2e095a6f35",
+    "reason": "Cả hai sai Q4 sau targeted pass mới. Thông báo chính thức Công an Long An02/03/2025 đã mở toàn trang, nêu đích danh QĐ1076/QĐ-BCA26/02 và xác nhận từ01/03/2025 không tổ chức Công an huyện, chức năng nhiệm vụ giao Công an xã/phòng nghiệp vụ tỉnh; thông báo HàTĩnh10/03 nêu QĐ1063/TT09 và xác nhận cùng việc chuyển giao. Đây là nguồn công bố của chính cơ quan thực hiện, không nói đã mở bản gốc các quyết định giải thể. NQ190 chính văn Điều3.1 tự chuyển tên cơ quan theo bên nhận; Điều4.1 tiếp tục chức năng bởi bên nhận, Điều4.4 cả trách nhiệm phối hợp cũng tiếp tục bởi bên nhận. Kết hợp đủ điều kiện thực tế áp quy phạm cấp cao, tuyến bắt buộc gửi qua Công an huyện trong đáp án30/06 không còn đúng; Q4co/superseded_by_other_norm, không kéo R4mốc01/07 vềtháng3. Không cần chỉ định tỉnh hay xã nhận cụ thể để bác mắt xích huyện đã chấm dứt. A nhận ra lỗi tổ chức nhưng dùng R4 không đúng mốc định nghĩa; B bỏ cơ chế tự kế thừa vì chưa sửa chữ trong NĐ40. Q1 lời văn NĐ40/NĐ184 khớp, Q2 hỏi đúng bước gửi/báo cáo đã thay, Q3 ghim ngân sách trung ương/tuyến trang bị rõ. PDF NĐ184 Điều24.1/28.1 xác nhận từ01/07 tuyến xã→tỉnh→Bộ; không dùng ngày metadata2015 sai. Giới hạn: chứng cứ trigger là thông báo chính thức dẫn quyết định, chưa bản QĐ1076/1063gốc; vẫn cần CMT duyệt.",
+    "archive": "revisions/batch04.v1.jsonl",
+    "before_sha256": "e3ca1f70a4041148d486c74eb4a6bd5f7fade259bc30a2556215d6b9cf39bae1",
+    "after_sha256": "5911de3030004e50e3ff2daf5ae74c726189b0b7c449318b7ee05ba4bd63fc71",
+    "corrected_at": "2026-11-07T16:38:11.597349+00:00"
+  }
+]

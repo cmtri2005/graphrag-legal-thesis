@@ -1,0 +1,19 @@
+{
+  "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/110915",
+  "accessed_at": "2026-11-06T15:50:14.324058+00:00",
+  "success": true,
+  "error": "",
+  "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk04/110915.json",
+  "sha256": "9e7908a512bba510eaf3e725f9aee72f5086349fa0705a92eea4b64e739399a6",
+  "root_keys": [
+    "success",
+    "statusCode",
+    "message",
+    "messageCode",
+    "debugMessage",
+    "data",
+    "total"
+  ],
+  "document_number": "191/2015/TT-BTC",
+  "content_length": 1332208
+}

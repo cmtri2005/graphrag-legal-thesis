@@ -1,0 +1,10 @@
+[
+  {
+    "chunk": 8,
+    "line": 10,
+    "lineage_id": "provision:429b7aca-e172-11f0-ae06-1b87111a871a#k1#d",
+    "errors": [
+      "worksheet_sha256 không khớp"
+    ]
+  }
+]

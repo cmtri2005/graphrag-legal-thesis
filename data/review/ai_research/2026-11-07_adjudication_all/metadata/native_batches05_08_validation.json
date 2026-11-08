@@ -1,0 +1,18 @@
+{
+  "checks": "Native test2_labels.validate_label and worksheet_sha256 executed from original AST without optional UI dependencies; all bindings, input order, disposition semantics, provenance and20 unique cases checked",
+  "counts": {
+    "prefer_a": 5,
+    "both_wrong": 4,
+    "prefer_b": 9,
+    "unresolved": 2
+  },
+  "cases": 20,
+  "result": "passed",
+  "source_helper_sha256": "2bf27b8997ef707eed20c5d7826a19f2912d501d70d36f76b0d7e6c2c839e637",
+  "result_sha256": {
+    "batch05": "5c0cf85e98184ecc31fb5bc6555128775f64732919d579d75bcd721f8e702362",
+    "batch06": "227d83fbd0d13c108a8ac468c4b9f50db3f1608ffcaf5f4671de263b981053ab",
+    "batch07": "152d808bcaee84658d1cfb95e76adc0f785e3c7cf19a8269bb05fb108bca8231",
+    "batch08": "bd3ff5169a040299f3fe330684a16faed9988cbd0e0cfbdb18fe4d742ae178e9"
+  }
+}

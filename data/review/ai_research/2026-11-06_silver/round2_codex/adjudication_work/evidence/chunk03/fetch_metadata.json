@@ -1,0 +1,134 @@
+[
+  {
+    "id": "111821",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/111821",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "12774",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/12774",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "132109",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/132109",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "137805",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/137805",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "144759",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/144759",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "145894",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/145894",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "148195",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/148195",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "153251",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/153251",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "15330",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/15330",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "154199",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/154199",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "158169",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/158169",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "168328",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/168328",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "168401",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/168401",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "169188",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/169188",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "170642",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/170642",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "170812",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/170812",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "179825",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/179825",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "187157",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/187157",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "31905",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/31905",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "37199",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/37199",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "37534",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/37534",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "71332",
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/71332",
+    "status": "error",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  }
+]

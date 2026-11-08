@@ -1,0 +1,19 @@
+{
+  "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/179784",
+  "accessed_at": "2026-11-06T15:50:16.137927+00:00",
+  "success": true,
+  "error": "",
+  "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk04/179784.json",
+  "sha256": "9154e7001694b099a33e41d4213485c26c85eb3ed3321d5275e73ac9ed7acb57",
+  "root_keys": [
+    "success",
+    "statusCode",
+    "message",
+    "messageCode",
+    "debugMessage",
+    "data",
+    "total"
+  ],
+  "document_number": "200/2025/NĐ-CP",
+  "content_length": 161055
+}

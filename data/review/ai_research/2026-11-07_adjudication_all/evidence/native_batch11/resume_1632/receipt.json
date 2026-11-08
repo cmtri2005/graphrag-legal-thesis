@@ -1,0 +1,24 @@
+{
+  "case_id": "round3_mixed::provision:f8d931e0-1df6-11f1-a901-7169bc99fc94",
+  "accessed_at": "2026-11-07T16:36:44.844308+00:00",
+  "official_source": "https://vimawa.gov.vn/vi/noi-dung/thu-tuc-cap-lai-giay-xac-nhan-phu-hop-ve-tuyen-dung-cung-ung-thuyen-vien-hang-hai",
+  "source_tier": "official",
+  "content_sha256": "29634ac3c29829c872a4f5bd50beb817a942063425718b5f370f23c449b8907a",
+  "opened_document_identity": "Thủ tục cấp lại Giấy xác nhận phù hợp về tuyển dụng, cung ứng thuyền viên hàng hải; official Cục Hàng hải và Đường thủy portal, Drupal node13192",
+  "quote": "Cơ quan có thẩm quyền giải quyết: Chi cục Hàng hải và Đường thủy",
+  "other_content": "01 bộ hồ sơ gồm tờ khai và bản sao đăng ký doanh nghiệp; cơ sở pháp lý29/2017,69/2022,74/2023,33/2025; không viện dẫn14/2026.",
+  "historical_limit": "Trang không hiển thị ngày công bố/chỉnh sửa hoặc hiệu lực của việc chuyển giao. Đọc raw HTML không códatePublished/dateModified/dc:created. Bản nội dung tương ứng hồ sơ cũ là dấu hiệu, không phải chứng cứ quy phạm về ngày hiệu lực.",
+  "targeted_research": [
+    "Exact204/QĐ-BXD01/03/2025 query and PDF variants acrossmoc.gov.vn,vimawa.gov.vn,vinamarine.gov.vn,viwa.gov.vn,localgovernment deployments",
+    "Official organization-page currentstructure fetched: Drupal article dated28/03/2020; not official204 text",
+    "Opened official2011/QĐ-CHHĐTVN ISO2025 PDF7pages; scope lists other central-Cục procedures; no precise recruitment/supply reissue transfer",
+    "Official2025 national-service lists692/1069 discovery show umbrella Cục authority rather than preciseChi cục; not used to infer transfer day"
+  ],
+  "other_opened_url": "https://vimawa.gov.vn/f/2011.Q%C4%90-CHH%C4%90TVN%20Ban%20h%C3%A0nh%20ISO%202025%20final.pdf",
+  "errors": [
+    "curl initial TLS verification error60 due incompleteissuerchain; same official page independentlyopened usingweb.run; publicHTML saved usingcurl--insecure and limitation recorded",
+    "web organizationpage/attachment timedout/cachemiss; curlorganizationpage succeeded"
+  ],
+  "outcome": "unresolved retained; canonical unchanged",
+  "remaining_proof": "Official204/QĐ-BXD Điều2(7) and operative Điều4, or another dated official rule establishing exact branch succession for thisprocedure before14/01/2026."
+}

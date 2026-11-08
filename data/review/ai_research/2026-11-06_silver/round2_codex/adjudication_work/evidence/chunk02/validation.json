@@ -1,0 +1,14 @@
+{
+  "validated_at": "2026-11-06T23:33:26.990371+00:00",
+  "result_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/results/chunk02.jsonl",
+  "sha256": "73be00cbf9de4f7c8ef2397ed4a92dbd11867618cb67f6636b0c8482f98809e0",
+  "records": 7,
+  "exact_input_ids": true,
+  "binding_hashes_preserved": true,
+  "schema_enums_reason_and_derived_verdict_checked": true,
+  "evidence_snapshot_hashes_checked": true,
+  "resolved_proposals": 6,
+  "unresolved": 1,
+  "original_label_files_not_written": true,
+  "note": "Validation of artifact format/provenance, not legal verification; all human_adjudication_required."
+}

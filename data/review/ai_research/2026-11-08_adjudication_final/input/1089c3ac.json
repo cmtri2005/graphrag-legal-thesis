@@ -1,0 +1,224 @@
+[
+ {
+  "worksheet_sha256": "d9c755e303a6e686d3041d1ee10f2b4a9f332f12417e4be9c31a6b4b297af684",
+  "record": {
+   "lineage_id": "provision:1089c3ac-df56-11f0-8679-ff3f54843828",
+   "group": "T2",
+   "stratum": "T2",
+   "batch": 2,
+   "question": "Một doanh nghiệp có thu nhập từ bất động sản thì những khoản thu nhập nào được xác định là thu nhập từ chuyển nhượng bất động sản khi tính thuế thu nhập doanh nghiệp?",
+   "rows": [
+    {
+     "id": "vilextime:T2:provision:1089c3ac-df56-11f0-8679-ff3f54843828:2012-02-29",
+     "as_of": "2012-02-29",
+     "as_of_strategy": "ranh_gioi",
+     "version_id": "version:1089c3ac-df56-11f0-8679-ff3f54843828:1",
+     "answer": "Điều 13. Thu nhập từ chuyển nhượng bất động sản bao gồm thu nhập từ chuyển quyền sử dụng đất, chuyển nhượng quyền thuê đất; thu nhập từ cho thuê lại đất của doanh nghiệp kinh doanh bất động sản theo quy định của pháp luật về đất đai không phân biệt có hay không có kết cấu hạ tầng, công trình kiến trúc gắn liền với đất.",
+     "answerable": true,
+     "short_answer": "thu nhập từ chuyển quyền sử dụng đất, chuyển nhượng quyền thuê đất; thu nhập từ cho thuê lại đất của doanh nghiệp kinh doanh bất động sản theo quy định của pháp luật về đất đai không phân biệt có hay không có kết cấu hạ tầng, công trình kiến trúc gắn liền với đất",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=11606",
+     "target": {
+      "document_id": "document:11606",
+      "law_id": "124/2008/NĐ-CP",
+      "document_title": "Nghị định số 124/2008/NĐ-CP Quy định chi tiết và hướng dẫn thi hành một số điều của Luật Thuế thu nhập doanh nghiệp",
+      "article_id": "13",
+      "clause_id": null,
+      "point_id": null,
+      "citation": "Điều 13",
+      "provision_path": "Chương III › Điều 13",
+      "lead_in": "Chương III"
+     }
+    },
+    {
+     "id": "vilextime:T2:provision:1089c3ac-df56-11f0-8679-ff3f54843828:2012-03-01",
+     "as_of": "2012-03-01",
+     "as_of_strategy": "ranh_gioi",
+     "version_id": "version:1089c3ac-df56-11f0-8679-ff3f54843828:2",
+     "answer": "Điều 13. Thu nhập từ chuyển nhượng bất động sản bao gồm thu nhập từ chuyển quyền sử dụng đất, chuyển nhượng quyền thuê đất; thu nhập từ cho thuê lại đất của doanh nghiệp kinh doanh bất động sản theo quy định của pháp luật về đất đai không phân biệt có hay không có kết cấu hạ tầng, công trình kiến trúc gắn liền với đất; thu nhập từ chuyển nhượng nhà, công trình xây dựng gắn liền với đất đai, kể cả các tài sản gắn liền với nhà, công trình xây dựng đó không phân biệt có hay không có chuyển nhượng quyền sử dụng đất, chuyển nhượng quyền thuê đất; thu nhập từ chuyển nhượng các tài sản khác gắn liền với đất đai.",
+     "answerable": true,
+     "short_answer": "thu nhập từ chuyển quyền sử dụng đất, chuyển nhượng quyền thuê đất; thu nhập từ cho thuê lại đất của doanh nghiệp kinh doanh bất động sản theo quy định của pháp luật về đất đai không phân biệt có hay không có kết cấu hạ tầng, công trình kiến trúc gắn liền với đất; thu nhập từ chuyển nhượng nhà, công trình xây dựng gắn liền với đất đai, kể cả các tài sản gắn liền với nhà, công trình xây dựng đó không phân biệt có hay không có chuyển nhượng quyền sử dụng đất, chuyển nhượng quyền thuê đất; thu nhập từ chuyển nhượng các tài sản khác gắn liền với đất đai",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=11606",
+     "target": {
+      "document_id": "document:11606",
+      "law_id": "124/2008/NĐ-CP",
+      "document_title": "Nghị định số 124/2008/NĐ-CP Quy định chi tiết và hướng dẫn thi hành một số điều của Luật Thuế thu nhập doanh nghiệp",
+      "article_id": "13",
+      "clause_id": null,
+      "point_id": null,
+      "citation": "Điều 13",
+      "provision_path": "Chương III › Điều 13",
+      "lead_in": "Chương III"
+     }
+    }
+   ],
+   "sources": {
+    "base": {
+     "document": "124/2008/NĐ-CP",
+     "title": "Nghị định số 124/2008/NĐ-CP Quy định chi tiết và hướng dẫn thi hành một số điều của Luật Thuế thu nhập doanh nghiệp",
+     "issued": "2008-12-11",
+     "effective_from": "2009-01-01",
+     "effective_to": "2014-02-15",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=11606",
+     "passage": "Điều 13. Thu nhập từ chuyển nhượng bất động sản bao gồm thu nhập từ chuyển quyền sử dụng đất, chuyển nhượng quyền thuê đất; thu nhập từ cho thuê lại đất của doanh nghiệp kinh doanh bất động sản theo quy định của pháp luật về đất đai không phân biệt có hay không có kết cấu hạ tầng, công trình kiến trúc gắn liền với đất."
+    },
+    "actors": [
+     {
+      "document": "122/2011/NĐ-CP",
+      "title": "Nghị định số 122/2011/NĐ-CP Sửa đổi, bổ sung một số điều của Nghị định số 124/2008/NĐ-CP ngày 11 tháng 12 năm 2008 của Chính phủ quy định chi tiết và hướng dẫn thi hành một số điều của Luật Thuế thu nhập doanh nghiệp",
+      "issued": "2011-12-27",
+      "effective_from": "2012-03-01",
+      "effective_to": "2014-02-15",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=27261",
+      "passage": "9. Sửa đổi, bổ sung Điều 13 như sau:\n“Điều 13. Thu nhập từ chuyển nhượng bất động sản bao gồm thu nhập từ chuyển quyền sử dụng đất, chuyển nhượng quyền thuê đất; thu nhập từ cho thuê lại đất của doanh nghiệp kinh doanh bất động sản theo quy định của pháp luật về đất đai không phân biệt có hay không có kết cấu hạ tầng, công trình kiến trúc gắn liền với đất; thu nhập từ chuyển nhượng nhà, công trình xây dựng gắn liền với đất đai, kể cả các tài sản gắn liền với nhà, công trình xây dựng đó không phân biệt có hay không có chuyển nhượng quyền sử dụng đất, chuyển nhượng quyền thuê đất; thu nhập từ chuyển nhượng các tài sản khác gắn liền với đất đai.”",
+      "transitional": "",
+      "in_force": "1. Nghị định này có hiệu lực thi hành từ ngày 01 tháng 3 năm 2012 và áp dụng cho kỳ tính thuế từ năm 2012 trở đi."
+     }
+    ]
+   }
+  },
+  "official": [
+   {
+    "document": "124/2008/NĐ-CP",
+    "item_id": "11606",
+    "part": "Điều 13 (bản ban hành)",
+    "source_tier": "official",
+    "source": "vbpl CSDL quốc gia, bản crawl data/raw/11606.json",
+    "truncated": false,
+    "text": "Điều 13. Thu nhập từ chuyển nhượng bất động sản bao gồm thu nhập từ chuyển quyền sử dụng đất, chuyển nhượng quyền thuê đất; thu nhập từ cho thuê lại đất của doanh nghiệp kinh doanh bất động sản theo quy định của pháp luật về đất đai không phân biệt có hay không có kết cấu hạ tầng, công trình kiến trúc gắn liền với đất."
+   },
+   {
+    "document": "122/2011/NĐ-CP",
+    "item_id": "27261",
+    "part": "điều hiệu lực, chuyển tiếp",
+    "source_tier": "official",
+    "source": "vbpl CSDL quốc gia, bản crawl data/raw/27261.json",
+    "truncated": false,
+    "text": "Điều 2. Điều khoản thi hành\n1. Nghị định này có hiệu lực thi hành từ ngày 01 tháng 3 năm 2012 và áp dụng cho kỳ tính thuế từ năm 2012 trở đi.\n2. Doanh nghiệp đang trong thời gian được hưởng ưu đãi thuế thu nhập doanh nghiệp do đáp ứng điều kiện ưu đãi về tỷ lệ xuất khẩu mà bị chấm dứt ưu đãi thuế thu nhập doanh nghiệp kể từ ngày 01 tháng 01 năm 2012 do thực hiện cam kết WTO được lựa chọn để tiếp tục hưởng ưu đãi thuế cho thời gian ưu đãi còn lại tương ứng với các điều kiện thực tế doanh nghiệp đáp ứng ưu đãi đầu tư (ngoài điều kiện ưu đãi do đáp ứng điều kiện về tỷ lệ xuất khẩu, do sử dụng nguyên liệu trong nước) theo quy định tại các văn bản quy phạm pháp luật về thuế thu nhập doanh nghiệp trong thời gian từ ngày doanh nghiệp được cấp giấy phép thành lập đến trước ngày Nghị định số 24/2007/NĐ-CP ngày 14 tháng 02 năm 2007 của Chính phủ quy định chi tiết thi hành Luật Thuế thu nhập doanh nghiệp có hiệu lực thi hành hoặc theo quy định tại các văn bản quy phạm pháp luật về thu nhập doanh nghiệp tại thời điểm bị điều chỉnh ưu đãi thuế do thực hiện cam kết WTO (hết ngày 31 tháng 12 năm 2011).\nDoanh nghiệp có trách nhiệm thông báo với cơ quan Thuế việc lựa chọn hưởng ưu đãi thuế quy định tại khoản này.\n3. Bộ Tài chính hướng dẫn thi hành Nghị định này.\n4. Các Bộ trưởng, Thủ trưởng cơ quan ngang Bộ, Thủ trưởng cơ quan thuộc Chính phủ, Chủ tịch Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương chịu trách nhiệm thi hành Nghị định này./."
+   }
+  ],
+  "official_missing": [],
+  "run_id": "round3_mixed",
+  "case_id": "round3_mixed::provision:1089c3ac-df56-11f0-8679-ff3f54843828",
+  "lineage_id": "provision:1089c3ac-df56-11f0-8679-ff3f54843828",
+  "a": {
+   "lineage_id": "provision:1089c3ac-df56-11f0-8679-ff3f54843828",
+   "labeler": "ai-a",
+   "label_origin": "ai",
+   "verification_status": "not_verified",
+   "guideline_version": "4.0",
+   "worksheet_sha256": "d9c755e303a6e686d3041d1ee10f2b4a9f332f12417e4be9c31a6b4b297af684",
+   "q1": "sai",
+   "q1_reason": "gold_wrong",
+   "q2": "co",
+   "q2_reason": "",
+   "q3": "co",
+   "q3_reason": "",
+   "q4": "khong",
+   "q4_reason": "",
+   "verdict": "khong_dat",
+   "quote": "Nghị định này có hiệu lực thi hành từ ngày 01 tháng 3 năm 2012 và áp dụng cho kỳ tính thuế từ năm 2012 trở đi.",
+   "search_log": "",
+   "note": "[phân vân] Khoản 1 Điều 2 NĐ 122/2011 cho áp dụng “cho kỳ tính thuế từ năm 2012 trở đi”. Theo sổ quyết định 26/10 mục 3, câu “áp dụng từ năm X” là hiệu lực trở về trước tính từ 01/01/X, nên mốc 29/02/2012 thuộc kỳ tính thuế 2012 và đáp án phải là bản mới chứ không phải bản cũ. Chưa chắc vì quyết định 26/10 nói về năm ngân sách, còn kỳ tính thuế có thể là năm tài chính khác năm dương lịch; xin luật sư chốt.",
+   "evidence_status": "sufficient",
+   "evidence": [
+    {
+     "url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=27261",
+     "source_tier": "official",
+     "document_number": "122/2011/NĐ-CP",
+     "provision": "khoản 1 Điều 2",
+     "as_of": "2012-02-29",
+     "quote": "Nghị định này có hiệu lực thi hành từ ngày 01 tháng 3 năm 2012 và áp dụng cho kỳ tính thuế từ năm 2012 trở đi.",
+     "accessed_at": "2026-11-06"
+    }
+   ],
+   "quote_in_provided_sources": true
+  },
+  "b": {
+   "lineage_id": "provision:1089c3ac-df56-11f0-8679-ff3f54843828",
+   "labeler": "ai-b",
+   "label_origin": "ai",
+   "verification_status": "not_verified",
+   "guideline_version": "4.0",
+   "worksheet_sha256": "d9c755e303a6e686d3041d1ee10f2b4a9f332f12417e4be9c31a6b4b297af684",
+   "q1": "sai",
+   "q1_reason": "gold_wrong",
+   "q2": "khong",
+   "q2_reason": "group_mismatch",
+   "q3": "co",
+   "q3_reason": "",
+   "q4": "khong",
+   "q4_reason": "",
+   "verdict": "khong_dat",
+   "quote": "Nghị định này có hiệu lực thi hành từ ngày 01 tháng 3 năm 2012 và áp dụng cho kỳ tính thuế từ năm 2012 trở đi.",
+   "search_log": "",
+   "note": "Điều khoản áp dụng cho kỳ tính thuế từ năm 2012 khiến mốc 29/02/2012 cũng phải dùng nội dung mới. Hai mốc được giao vì vậy không tạo hai đáp án pháp lý khác nhau.",
+   "evidence_status": "sufficient",
+   "evidence": [
+    {
+     "url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=27261",
+     "source_tier": "official",
+     "document_number": "122/2011/NĐ-CP",
+     "provision": "Khoản 1 Điều 2",
+     "as_of": "2012-02-29",
+     "quote": "Nghị định này có hiệu lực thi hành từ ngày 01 tháng 3 năm 2012 và áp dụng cho kỳ tính thuế từ năm 2012 trở đi.",
+     "accessed_at": "2026-11-06"
+    },
+    {
+     "url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=27261",
+     "source_tier": "worksheet",
+     "document_number": "122/2011/NĐ-CP",
+     "provision": "Khoản 9 Điều 1 sửa Điều 13",
+     "as_of": "2012-02-29",
+     "quote": "thu nhập từ chuyển nhượng nhà, công trình xây dựng gắn liền với đất đai, kể cả các tài sản gắn liền với nhà, công trình xây dựng đó",
+     "accessed_at": "2026-11-06"
+    }
+   ],
+   "quote_in_provided_sources": true
+  },
+  "disputed_fields": [
+   "q2",
+   "q2_reason"
+  ],
+  "raw_a_sha256": "a51d23cf1dff4079cf985878b69604287cd64e413bb61a792f137dbfc741a4d6",
+  "raw_b_sha256": "a79a5e034bf5fffba8d39b0d2cdb228bffd37ec5e03aa2e56e7c09c48622e7bb",
+  "reasoning": "A và B đều có căn cứ đọc Điều2(1) NĐ122/2011: áp dụng kỳ tính thuế2012; B suy ra hai mốc cùng bản mới, A vẫn chấm Q2 có. Đã tra riêng Điều5 NĐ124/2008: doanh nghiệp được chọn năm dương lịch hoặc năm tài chính. Vì câu không nêu lựa chọn này, chưa có căn cứ biến áp dụng kỳ2012 thành ngày01/01/2012 cho mọi doanh nghiệp. Q3 có nguy cơ question_ambiguous; Q1 và Q2 chưa thể chốt toàn bộ nhãn. Hai bên đúng về nội dung sửa Điều13; đều chưa giải quyết lịch thuế. Không dùng metadata để thay lời văn. API11606 trả500 và trang vbpl lỗi; đã mở bản chính thức Cổng Chính phủ81476 thay thế.",
+  "evidence": [
+   {
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/27261",
+    "source_tier": "official",
+    "document_number": "122/2011/NĐ-CP",
+    "provision": "Khoản9 Điều1;Khoản1 Điều2",
+    "as_of": "2012-02-29;2012-03-01",
+    "quote": "“Điều 13. Thu nhập từ chuyển nhượng bất động sản bao gồm thu nhập từ chuyển quyền sử dụng đất, chuyển nhượng quyền thuê đất; thu nhập từ cho thuê lại đất của doanh nghiệp kinh doanh bất động sản theo quy định của pháp luật về đất đai không phân biệt có hay không có kết cấu hạ tầng, công trình kiến trúc gắn liền với đất; thu nhập từ chuyển nhượng nhà, công trình xây dựng gắn liền với đất đai, kể cả các tài sản gắn liền với nhà, công trình xây dựng đó không phân biệt có hay không có chuyển nhượng quyền sử dụng đất, chuyển nhượng quyền thuê đất; thu nhập từ chuyển nhượng các tài sản khác gắn liền với đất đai.”\n10. Sửa đổi, bổ sung khoản 1 Điều 14 như sau:\n“1. Doanh thu để tính thu nhập chịu thuế được xác định theo giá thực tế chuyển nhượng bất",
+    "accessed_at": "2026-11-07T09:37:40.093893+00:00"
+   },
+   {
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/27261",
+    "source_tier": "official",
+    "document_number": "122/2011/NĐ-CP",
+    "provision": "Khoản1 Điều2",
+    "as_of": "2012-02-29;2012-03-01",
+    "quote": "Nghị định này có hiệu lực thi hành từ ngày 01 tháng 3 năm 2012 và áp dụng cho kỳ tính thuế từ năm 2012 trở đi.\n2. Doanh nghiệp đang trong thời gian được hưởng ưu đãi thuế",
+    "accessed_at": "2026-11-07T09:37:40.093893+00:00"
+   },
+   {
+    "url": "https://vanban.chinhphu.vn/?docid=81476&pageid=27160",
+    "document_number": "124/2008/NĐ-CP",
+    "provision": "Điều5",
+    "as_of": "2012-02-29;2012-03-01",
+    "quote": "Doanh nghiệp được lựa chọn kỳ tính thuế theo năm dương lịch hoặc năm tài chính nhưng phải đăng ký với cơ quan thuế trước khi thực hiện.",
+    "source_tier": "official",
+    "accessed_at": "2026-11-07T09:37:40.093893+00:00"
+   }
+  ],
+  "open_questions": [
+   "Với câu không nêu năm tài chính, kỳ tính thuế2012 được ánh xạ vào as_of29/02/2012 theo quy ước nào đã được CMT/luật sư chấp nhận? Nếu không có quy ước, cần xác nhận Q1/Q2 tương ứng khi loại vì Q3 mơ hồ."
+  ],
+  "labeler": "ai-adjudicator",
+  "label_origin": "ai",
+  "verification_status": "not_verified",
+  "human_adjudication_required": true,
+  "disposition": "unresolved",
+  "proposed_label": null
+ }
+]

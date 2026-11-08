@@ -1,0 +1,360 @@
+{
+  "method": "Deterministic schema adapter; Q1–Q4, reasons, note, quote, evidence_status unchanged",
+  "original": "claude_logs/a_chunk11.original.md",
+  "original_sha256": "91a6918048858525dd5413dfc766b186d1785f694e078c133b68e009340a2cd6",
+  "input_sha256": "d31d5fb41502647339953f40c60a069a6a110148ea617ab31c9230e651fd97bf",
+  "adapted_sha256": "a925a523882dbb53bf6cf377ccb909bf571622e0a0cf8ec38f872e51261bf6dd",
+  "source_limits": "Original evidence retained in full. Structured evidence uses exact input quote matches only. Local worksheet URLs are input locators, not external legal verification. Unresolved source URLs remain in this receipt and original_evidence.",
+  "rows": [
+    {
+      "lineage_id": "provision:c349619a-2b6a-11f1-b9c9-5749372a62ab",
+      "derived_verdict": "khong_dat",
+      "structured_evidence": [
+        {
+          "source_tier": "worksheet",
+          "source": "đáp án mốc 2025-06-30",
+          "quote": "Cục Đường thủy nội địa Việt Nam, Sở Giao thông vận tải, Cảng vụ hàng hải hoặc đại diện Cảng vụ hàng hải",
+          "url": "file:///home/trica/UIT_Thesis/graphrag-legal-thesis/data/review/ai_research/2026-11-06_silver/input/chunk11.jsonl#L1",
+          "access_method": "provided_worksheet; no new request"
+        },
+        {
+          "source_tier": "worksheet",
+          "source": "09/2025/TT-BXD, tên văn bản",
+          "quote": "liên quan đến sắp xếp tổ chức bộ máy, thực hiện chính quyền địa phương 02 cấp",
+          "url": "file:///home/trica/UIT_Thesis/graphrag-legal-thesis/data/review/ai_research/2026-11-06_silver/input/chunk11.jsonl#L1",
+          "access_method": "provided_worksheet; no new request"
+        }
+      ],
+      "unresolved_source_locators": []
+    },
+    {
+      "lineage_id": "provision:96a4e360-2478-11f1-95f6-55b92facf06a",
+      "derived_verdict": "dat",
+      "structured_evidence": [
+        {
+          "source_tier": "official",
+          "source": "129/2021/NĐ-CP Điều 7 khoản 1",
+          "quote": "Nghị định này có hiệu lực từ ngày 01 tháng 01 năm 2022.",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/155691",
+          "document_number": "129/2021/NĐ-CP",
+          "access_method": "provided_official_excerpt; no new request"
+        },
+        {
+          "source_tier": "worksheet",
+          "source": "vbpl gateway 155691, Điều 1 khoản 4",
+          "quote": "c) Tịch thu tang vật vi phạm hành chính có giá trị không vượt quá 10.000.000 đồng.",
+          "url": "file:///home/trica/UIT_Thesis/graphrag-legal-thesis/data/review/ai_research/2026-11-06_silver/input/chunk11.jsonl#L2",
+          "access_method": "provided_worksheet; no new request"
+        }
+      ],
+      "unresolved_source_locators": []
+    },
+    {
+      "lineage_id": "provision:e2122560-2c4d-11f1-aea9-f3a5d495ffb5",
+      "derived_verdict": "dat",
+      "structured_evidence": [
+        {
+          "source_tier": "worksheet",
+          "source": "13/2020/TT-BNNPTNT điều hiệu lực",
+          "quote": "Thông tư này có hiệu lực kể từ ngày 25 tháng 12 năm 2020.",
+          "url": "file:///home/trica/UIT_Thesis/graphrag-legal-thesis/data/review/ai_research/2026-11-06_silver/input/chunk11.jsonl#L3",
+          "access_method": "provided_worksheet; no new request"
+        },
+        {
+          "source_tier": "official",
+          "source": "01/2022/TT-BNNPTNT Điều 10 khoản 1",
+          "quote": "Thông tư này có hiệu lực thi hành từ ngày 04 tháng 3 năm 2022.",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/152678",
+          "document_number": "01/2022/TT-BNNPTNT",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": []
+    },
+    {
+      "lineage_id": "provision:95cff300-2c82-11f1-8832-ed73839b00a1",
+      "derived_verdict": "khong_dat",
+      "structured_evidence": [
+        {
+          "source_tier": "official",
+          "source": "12/2018/TT-NHNN Điều 3 khoản 1",
+          "quote": "Thông tư này có hiệu lực thi hành kể từ ngày 27 tháng 4 năm 2018.",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/128740",
+          "document_number": "12/2018/TT-NHNN",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": [
+        {
+          "source_tier": "worksheet",
+          "source": "short_answer mốc 2018-04-27",
+          "quote": "tàu dịch vụ hậu cần khai thác hải sản xa bờ … Nghị định số 89/2015/NĐ-CP … Nghị định số 17/2018/NĐ-CP"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:d3fb9d0a-eb78-11f0-b651-0345ace237f1",
+      "derived_verdict": "khong_dat",
+      "structured_evidence": [
+        {
+          "source_tier": "official",
+          "source": "226/2025/NĐ-CP Điều 9 khoản 1",
+          "quote": "Nghị định này có hiệu lực thi hành từ ngày 15 tháng 8 năm 2025.",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/181906",
+          "document_number": "226/2025/NĐ-CP",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": [
+        {
+          "source_tier": "snippet",
+          "source": "WebSearch NĐ 151/2025 (thuviennhadat, Phụ lục VI tỉnh)",
+          "quote": "Xử lý tài sản trên đất, giá trị tài sản còn lại của người có đất thu hồi"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:20548c48-e174-11f0-a493-1bb114c8b6dc#k5#b",
+      "derived_verdict": "dat",
+      "structured_evidence": [
+        {
+          "source_tier": "worksheet",
+          "source": "18/2026/NĐ-CP điều hiệu lực",
+          "quote": "Nghị định này có hiệu lực thi hành kể từ ngày 15 tháng 01 năm 2026.",
+          "url": "file:///home/trica/UIT_Thesis/graphrag-legal-thesis/data/review/ai_research/2026-11-06_silver/input/chunk11.jsonl#L6",
+          "access_method": "provided_worksheet; no new request"
+        },
+        {
+          "source_tier": "official",
+          "source": "18/2026/NĐ-CP Điều 16 khoản 2 điểm a",
+          "quote": "cập nhật nội dung đăng ký vào Cơ sở dữ liệu mà không ghi nội dung đăng ký trên Giấy chứng nhận",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/187582",
+          "document_number": "18/2026/NĐ-CP",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": []
+    },
+    {
+      "lineage_id": "provision:aaea5032-eb78-11f0-bce7-15d9ef15c2e3#k1",
+      "derived_verdict": "khong_dat",
+      "structured_evidence": [
+        {
+          "source_tier": "official",
+          "source": "06/2008/NĐ-CP Điều 61 khoản 1 (bản ban hành)",
+          "quote": "thực hiện theo quy định tại Điều 42 Pháp lệnh Xử lý vi phạm hành chính và Điều 13 Nghị định số 134/2003/NĐ-CP",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/11618",
+          "document_number": "06/2008/NĐ-CP",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": []
+    },
+    {
+      "lineage_id": "provision:58838be0-2d47-11f1-af8a-1722069b7137",
+      "derived_verdict": "dat",
+      "structured_evidence": [
+        {
+          "source_tier": "official",
+          "source": "04/2020/NĐ-CP Điều 4",
+          "quote": "Nghị định này có hiệu lực thi hành từ ngày 18 tháng 02 năm 2020.",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/140549",
+          "document_number": "04/2020/NĐ-CP",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": []
+    },
+    {
+      "lineage_id": "provision:ada0a6f2-eb76-11f0-996b-5bdac24015e5#k4",
+      "derived_verdict": "khong_dat",
+      "structured_evidence": [
+        {
+          "source_tier": "worksheet",
+          "source": "11/2017/TT-BNNPTNT khoản 6 Điều 1 (sửa Điều 21)",
+          "quote": "Điều 21. Cục Thú y",
+          "url": "file:///home/trica/UIT_Thesis/graphrag-legal-thesis/data/review/ai_research/2026-11-06_silver/input/chunk11.jsonl#L9",
+          "access_method": "provided_worksheet; no new request"
+        }
+      ],
+      "unresolved_source_locators": []
+    },
+    {
+      "lineage_id": "provision:e57794e0-319a-11f1-9327-ab85fcdf23dd",
+      "derived_verdict": "khong_dat",
+      "structured_evidence": [
+        {
+          "source_tier": "official",
+          "source": "98/2025/TT-BTC Điều 7 khoản 2 điểm a (bản ban hành)",
+          "quote": "theo quy định tại khoản 2 Điều 10 Nghị định số 115/2024/NĐ-CP, Điều 9 Nghị định số 23/2024/NĐ-CP",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/187357",
+          "document_number": "98/2025/TT-BTC",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": [
+        {
+          "source_tier": "snippet",
+          "source": "WebSearch: hethongphapluat.com, dauthau.asia",
+          "quote": "Nghị định 274/2026/NĐ-CP ... từ 21/08/2026"
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:7439ebb0-2c1e-11f1-a8e3-1bf3957eda64",
+      "derived_verdict": "khong_dat",
+      "structured_evidence": [
+        {
+          "source_tier": "official",
+          "source": "82/2024/NĐ-CP Điều 3 khoản 1 điểm a",
+          "quote": "Nghị định này có hiệu lực thi hành từ ngày ký ban hành;",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/168401",
+          "document_number": "82/2024/NĐ-CP",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": []
+    },
+    {
+      "lineage_id": "provision:f8d931e0-1df6-11f1-a901-7169bc99fc94",
+      "derived_verdict": "khong_dat",
+      "structured_evidence": [
+        {
+          "source_tier": "worksheet",
+          "source": "đáp án mốc 2026-01-14",
+          "quote": "đến Chi cục Hàng hải Việt Nam 01 bộ hồ sơ đề nghị cấp lại Giấy xác nhận",
+          "url": "file:///home/trica/UIT_Thesis/graphrag-legal-thesis/data/review/ai_research/2026-11-06_silver/input/chunk11.jsonl#L12",
+          "access_method": "provided_worksheet; no new request"
+        },
+        {
+          "source_tier": "official",
+          "source": "14/2026/NĐ-CP Điều 137 khoản 1",
+          "quote": "Nghị định này có hiệu lực thi hành từ ngày 15 tháng 01 năm 2026",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/186425",
+          "document_number": "14/2026/NĐ-CP",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": []
+    },
+    {
+      "lineage_id": "provision:4380b480-ead4-11f0-ba37-d541ed0d591b",
+      "derived_verdict": "khong_dat",
+      "structured_evidence": [
+        {
+          "source_tier": "official",
+          "source": "đáp án mốc 2025-06-30",
+          "quote": "cơ sở cai nghiện báo cáo Sở Lao động - Thương binh và Xã hội",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/155947",
+          "document_number": "116/2021/NĐ-CP",
+          "access_method": "provided_official_excerpt; no new request"
+        },
+        {
+          "source_tier": "official",
+          "source": "184/2025/NĐ-CP Điều 28 khoản 1",
+          "quote": "Nghị định này có hiệu lực thi hành từ ngày 01 tháng 7 năm 2025.",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/179825",
+          "document_number": "184/2025/NĐ-CP",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": []
+    },
+    {
+      "lineage_id": "provision:7d1ef8b0-1ebd-11f1-894d-a10ccda9d7c4",
+      "derived_verdict": "dat",
+      "structured_evidence": [
+        {
+          "source_tier": "official",
+          "source": "129/2021/NĐ-CP Điều 7 khoản 1",
+          "quote": "Nghị định này có hiệu lực từ ngày 01 tháng 01 năm 2022.",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/155691",
+          "document_number": "129/2021/NĐ-CP",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": [
+        {
+          "source_tier": "official",
+          "source": "vbpl gateway 155691, NĐ 129/2021 Điều 2 khoản 3 (sửa Điều 23 NĐ 46/2019)",
+          "quote": "1. Chủ tịch Ủy ban nhân dân cấp xã có quyền: ... c) Tịch thu tang vật vi phạm hành chính có giá trị không vượt quá 10.000.000 đồng."
+        }
+      ]
+    },
+    {
+      "lineage_id": "provision:c0af1bf0-1f67-11f1-b7e8-f7b0967b0858",
+      "derived_verdict": "khong_dat",
+      "structured_evidence": [
+        {
+          "source_tier": "official",
+          "source": "18/2016/NĐ-CP Điều 2 khoản 1",
+          "quote": "Nghị định này có hiệu lực thi hành kể từ ngày 23 tháng 3 năm 2016.",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/100048",
+          "document_number": "18/2016/NĐ-CP",
+          "access_method": "provided_official_excerpt; no new request"
+        },
+        {
+          "source_tier": "official",
+          "source": "34/2015/NĐ-CP Điều 2",
+          "quote": "Nghị định này có hiệu lực thi hành kể từ ngày 05 tháng 4 năm 2015.",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/58234",
+          "document_number": "34/2015/NĐ-CP",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": []
+    },
+    {
+      "lineage_id": "provision:682fe21a-eb7e-11f0-bf86-8d936130adfd",
+      "derived_verdict": "dat",
+      "structured_evidence": [
+        {
+          "source_tier": "official",
+          "source": "70/2023/NĐ-CP Điều 3 khoản 1",
+          "quote": "Nghị định này có hiệu lực thi hành từ ngày 18 tháng 9 năm 2023.",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/162330",
+          "document_number": "70/2023/NĐ-CP",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": []
+    },
+    {
+      "lineage_id": "provision:9276c6a6-df3a-11f0-b61c-d988e496868a#k3#b",
+      "derived_verdict": "dat",
+      "structured_evidence": [
+        {
+          "source_tier": "official",
+          "source": "55/2014/TT-BGTVT Điều 3 khoản 1",
+          "quote": "Thông tư này có hiệu lực thi hành kể từ ngày 15 tháng 12 năm 2014.",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/37536",
+          "document_number": "55/2014/TT-BGTVT",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": []
+    },
+    {
+      "lineage_id": "provision:746ee898-eb72-11f0-a645-6bade352d545#k3",
+      "derived_verdict": "khong_dat",
+      "structured_evidence": [
+        {
+          "source_tier": "worksheet",
+          "source": "vbpl gateway 163042, TT 22/2023/TT-BGTVT khoản 5 Điều 1",
+          "quote": "Cơ quan quản lý đường bộ là Cục Đường bộ Việt Nam, Khu Quản lý đường bộ;",
+          "url": "file:///home/trica/UIT_Thesis/graphrag-legal-thesis/data/review/ai_research/2026-11-06_silver/input/chunk11.jsonl#L18",
+          "access_method": "provided_worksheet; no new request"
+        },
+        {
+          "source_tier": "official",
+          "source": "22/2023/TT-BGTVT Điều 3 khoản 1",
+          "quote": "Thông tư này có hiệu lực thi hành kể từ ngày 15 tháng 8 năm 2023.",
+          "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/163042",
+          "document_number": "22/2023/TT-BGTVT",
+          "access_method": "provided_official_excerpt; no new request"
+        }
+      ],
+      "unresolved_source_locators": []
+    }
+  ]
+}

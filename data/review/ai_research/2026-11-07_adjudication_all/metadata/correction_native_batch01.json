@@ -1,0 +1,10 @@
+[
+  {
+    "case_id": "pilot0::provision:555eaec0-2d53-11f1-9a36-9978a5f04316",
+    "reason": "Sau targeted pass đủ nguồn, A có bộ Q phù hợp. Q1 đối chiếu TT04 điểm c khoản3 Điều35 đúng ở24/12/2017; TT20 Điều12 khoản3 bãi cả Điều35 từ25/12 (cấp cha, không suy từ trạng thái portal). Q2 câu hỏi nội dung, không chỉ có/không. Q3 khong/question_ambiguous: không nói thức ăn; Điều32 khoản3 điểm b về giống thủy sản cũng có giấy tờ tư cách/“chỉ nộp lần đầu”, chưa bị bãi cùng đợt. Q4khong: (a) đọc toàn TT20 không bổ sung nghĩa vụ nộp lại GCN; (b) Điều34 và35 bị bãi, Điều32 về loại hàng khác không cùng đối tượng; (c) NĐ39 Điều11 là đăng ký khảo nghiệm mới, khác hồ sơ đăng ký nhập khẩu Điều35; Điều13 nhập nghiên cứu/hội chợ/mẫu, không dẫn chuyển nghĩa vụ bản sao; khoản5 Điều12 chỉ yêu cầu GCN chứng thực khi đổi tên cơ sở/tên thương mại, không cùng điều kiện; Mẫu01 chỉ tên đơn vị/cơ sở, Mẫu04–06 có mã doanh nghiệp, không phải nộp bản sao GCN; (d) NĐ100 chỉ bổ sung chuyển tiếp lưu hành khoản5a Điều29, không sửa hồ sơ. So7 yếu tố: 1 nộp bản sao khác tự kê tên/mã hoặc đổi thông tin;2 nhập để khảo nghiệm khác đổi tên/đăng ký khảo nghiệm;3 chỉ lần đầu khác điều kiện đổi tên;4 thành phần hồ sơ khác;5 không có nghĩa vụ bản sao tương đương;6 cùng Chính phủ/Bộ không cứu các yếu tố không đạt;7 không thấy câu nối chuyển nghĩa vụ này trong cùng đợt. Không chứng minh xung đột trực tiếp giữa hai thủ tục khác nhau tại24/12 để gán R3. B đúng nêu nơi cần tìm nhưng sau nguồn đủ, lý do relocation_unclear không còn được củng cố bởi quy phạm đồng nhất. Kết luận ở mức tra cứu hợp lý, vẫn chờ người xác nhận.",
+    "archive": "revisions/batch01.v1.jsonl",
+    "before_sha256": "c3e5122bc8ce7f77cb47d845762a3d88e6450eabff131581273dd6210d30ba3f",
+    "after_sha256": "3dd362a8b136c52a2d1dc2e03229ba1538220b2a65095334e4b3ca7a4889dc40",
+    "corrected_at": "2026-11-07T16:36:45.474825+00:00"
+  }
+]

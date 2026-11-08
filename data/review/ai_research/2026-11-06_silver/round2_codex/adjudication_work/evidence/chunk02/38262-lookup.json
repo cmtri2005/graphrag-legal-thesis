@@ -1,0 +1,19 @@
+{
+  "id": "38262",
+  "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/38262",
+  "accessed_at": "2026-11-06T15:50:08.233808+00:00",
+  "returncode": 0,
+  "error": "",
+  "sha256": "7d2e3ed8c1ffb3676002882efcd426edd2ad173f309bcbaedf94d8adc37d5151",
+  "root_keys": [
+    "success",
+    "statusCode",
+    "message",
+    "messageCode",
+    "debugMessage",
+    "data",
+    "total"
+  ],
+  "docNum": "32/2014/TT-NHNN",
+  "content_length": 35350
+}

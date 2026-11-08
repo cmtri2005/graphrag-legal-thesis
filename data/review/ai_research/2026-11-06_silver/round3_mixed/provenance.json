@@ -1,0 +1,65 @@
+{
+  "scope": "silver chunks05–11, 106 paired questions",
+  "authority": "CMT 06/11 cross-model decision in master-plan; user asks to continue latest Claude session",
+  "a_runtime": "Claude Code",
+  "a_model": "claude-opus-5-5",
+  "b_runtime": "Codex CLI; one rejected B08 binding independently regenerated before lock",
+  "a_recovered_chunks": [
+    "05",
+    "06",
+    "07",
+    "08"
+  ],
+  "a_rerun_chunks": [
+    "09",
+    "10",
+    "11"
+  ],
+  "b_draft_chunks": [
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11"
+  ],
+  "inputs": {
+    "chunk05.jsonl": "547a4e993264312ec1792d6e9f4d01d99f64a021e9dba6cc37f6b0dc630558e9",
+    "chunk06.jsonl": "f2f13ae9a5937935f4b66d389af48d8ca6a661ea91f30723644856d66376c344",
+    "chunk07.jsonl": "b7b4c41965d25fe6d44f34789767f85c182de39e53ec9ab6ecfdda66042ff9bf",
+    "chunk08.jsonl": "494b96eda768ffd24a99d68033635cc88a0ff2d5ae6a8deea52dacbcef2392d4",
+    "chunk09.jsonl": "b2e07aa2bca6e7fb23df4cd9f04cc56a03799d6c45e00d67cfd84f4533d079ab",
+    "chunk10.jsonl": "ec6b598f518883028fd4a5dd57d9d73d843650a72391533da839a9a35bf47847",
+    "chunk11.jsonl": "d31d5fb41502647339953f40c60a069a6a110148ea617ab31c9230e651fd97bf"
+  },
+  "status": "ai_labels_locked_review_exported",
+  "created_at": "2026-11-06T23:30:50.051694+00:00",
+  "human_verification": "not_verified; zero CMT confirmations; review workbook exported",
+  "old_runs": "chunk01, round2_codex, round2_claude remain separate; no pooled IAA",
+  "source_sha256": {
+    "scripts/review/ai_labels.py": "b0e36ebecd8f4c5d51aa90f4d1c8f3db7981b5f4dfa5efdd597a5598e8c7325f",
+    "scripts/review/crosscheck.py": "98d67b7b377362eff2600feab98e0e5c7cac3f7ae47769b1890481a44251e090",
+    "scripts/review/test2_labels.py": "2bf27b8997ef707eed20c5d7826a19f2912d501d70d36f76b0d7e6c2c839e637",
+    "docs/vilextime-dinh-nghia.md": "bb506aa679888907f29f6af2480c6ee66ea451296137e1d78c57cb5245ca122e",
+    "docs/vilextime-annotation.md": "b92275cdfeb8c194d9a1c8e275c7fbfa80c06d4bc6b75a1a22f69cd81e25a72a"
+  },
+  "rejected_draft_rows": 1,
+  "regenerated_before_lock": {
+    "side": "b",
+    "chunk": "08",
+    "case": "provision:429b7aca-e172-11f0-ae06-1b87111a871a#k1#d",
+    "receipt": "binding_review/receipt.json",
+    "method": "fresh isolated Codex native generation, no AI-A or old draft label supplied"
+  },
+  "completed_at": "2026-11-07T09:17:15.029328+00:00",
+  "schema_normalization": {
+    "chunk": "11",
+    "side": "a",
+    "method": "Deterministic script; no model calls; original Q1–Q4, reasons and judgments preserved",
+    "receipt": "schema_normalization.json",
+    "original_reply": "claude_logs/a_chunk11.original.md",
+    "source_limits": "Only exact quotes matched to input are structured; worksheet-only locators and unresolved external URLs are disclosed in receipt. No new external verification."
+  },
+  "remaining": "25 Q1–Q4 disagreements require adjudication; all 106 rows await CMT review."
+}

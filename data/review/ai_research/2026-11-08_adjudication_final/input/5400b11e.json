@@ -1,0 +1,247 @@
+[
+ {
+  "worksheet_sha256": "b856a6dcc0e281831ce4069c353793ba9b59a8ec9137350fd142ceb752829e43",
+  "record": {
+   "lineage_id": "provision:5400b11e-df55-11f0-b2db-db8213713dab#k2#d",
+   "group": "T2",
+   "stratum": "T2",
+   "batch": 5,
+   "question": "Một người sử dụng đất đề nghị tách thửa, hợp thửa thì sau khi có trích lục bản đồ địa chính, Phòng Tài nguyên và Môi trường phải trình ký loại giấy chứng nhận nào cho thửa đất mới?",
+   "rows": [
+    {
+     "id": "vilextime:T2:provision:5400b11e-df55-11f0-b2db-db8213713dab#k2#d:2009-12-09",
+     "as_of": "2009-12-09",
+     "as_of_strategy": "ranh_gioi",
+     "version_id": "version:5400b11e-df55-11f0-b2db-db8213713dab#k2#d:1",
+     "answer": "d) Trong thời hạn không quá ba (03) ngày làm việc, kể từ ngày nhận được trích lục bản đồ địa chính, trích sao hồ sơ địa chính, Phòng Tài nguyên và Môi trường có trách nhiệm trình Ủy ban nhân dân cấp huyện xem xét, ký Giấy chứng nhận quyền sử dụng đất cho thửa đất mới; Sở Tài nguyên và Môi trường có trách nhiệm ký Giấy chứng nhận cho thửa đất mới trong trường hợp được ủy quyền hoặc trình Ủy ban nhân dân cấp tỉnh ký Giấy chứng nhận cho thửa đất mới trong trường hợp không được ủy quyền;",
+     "answerable": true,
+     "short_answer": "trình Ủy ban nhân dân cấp huyện xem xét, ký Giấy chứng nhận quyền sử dụng đất cho thửa đất mới",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=14188",
+     "target": {
+      "document_id": "document:14188",
+      "law_id": "84/2007/NĐ-CP",
+      "document_title": "Nghị định số 84/2007/NĐ-CP Quy định bổ sung về việc cấp Giấy chứng nhận quyền sử dụng đất, thu hồi đất, thực hiện quyền sử dụng đất, trình tự, thủ tục bồi thường, hỗ trợ, tái định cư khi Nhà nước thu hồi đất và giải quyết khiếu nại về đất đai",
+      "article_id": "19",
+      "clause_id": "2",
+      "point_id": "d",
+      "citation": "Điểm d Khoản 2 Điều 19",
+      "provision_path": "Chương II › Điều 19 › Khoản 2 › Điểm d",
+      "lead_in": "2. Việc tách thửa, hợp thửa theo nhu cầu của người sử dụng đất được thực hiện như sau:"
+     }
+    },
+    {
+     "id": "vilextime:T2:provision:5400b11e-df55-11f0-b2db-db8213713dab#k2#d:2009-12-10",
+     "as_of": "2009-12-10",
+     "as_of_strategy": "ranh_gioi",
+     "version_id": "version:5400b11e-df55-11f0-b2db-db8213713dab#k2#d:2",
+     "answer": "d) Trong thời hạn không quá ba (03) ngày làm việc, kể từ ngày nhận được trích lục bản đồ địa chính, trích sao hồ sơ địa chính, Phòng Tài nguyên và Môi trường có trách nhiệm trình Ủy ban nhân dân cấp huyện xem xét, ký Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất quyền sử dụng đất cho thửa đất mới; Sở Tài nguyên và Môi trường có trách nhiệm ký Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất cho thửa đất mới trong trường hợp được ủy quyền hoặc trình Ủy ban nhân dân cấp tỉnh ký Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất cho thửa đất mới trong trường hợp không được ủy quyền;",
+     "answerable": true,
+     "short_answer": "trình Ủy ban nhân dân cấp huyện xem xét, ký Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=14188",
+     "target": {
+      "document_id": "document:14188",
+      "law_id": "84/2007/NĐ-CP",
+      "document_title": "Nghị định số 84/2007/NĐ-CP Quy định bổ sung về việc cấp Giấy chứng nhận quyền sử dụng đất, thu hồi đất, thực hiện quyền sử dụng đất, trình tự, thủ tục bồi thường, hỗ trợ, tái định cư khi Nhà nước thu hồi đất và giải quyết khiếu nại về đất đai",
+      "article_id": "19",
+      "clause_id": "2",
+      "point_id": "d",
+      "citation": "Điểm d Khoản 2 Điều 19",
+      "provision_path": "Chương II › Điều 19 › Khoản 2 › Điểm d",
+      "lead_in": "2. Việc tách thửa, hợp thửa theo nhu cầu của người sử dụng đất được thực hiện như sau:"
+     }
+    }
+   ],
+   "sources": {
+    "base": {
+     "document": "84/2007/NĐ-CP",
+     "title": "Nghị định số 84/2007/NĐ-CP Quy định bổ sung về việc cấp Giấy chứng nhận quyền sử dụng đất, thu hồi đất, thực hiện quyền sử dụng đất, trình tự, thủ tục bồi thường, hỗ trợ, tái định cư khi Nhà nước thu hồi đất và giải quyết khiếu nại về đất đai",
+     "issued": "2007-05-25",
+     "effective_from": "2007-07-01",
+     "effective_to": "2014-07-01",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=14188",
+     "passage": "Điều 19. Cấp Giấy chứng nhận trong trường hợp thực hiện tách thửa hoặc hợp thửa đối với thửa đất\n2. Việc tách thửa, hợp thửa theo nhu cầu của người sử dụng đất được thực hiện như sau:\na) Người sử dụng đất có nhu cầu xin tách thửa hoặc hợp thửa lập một (01) bộ hồ sơ nộp tại Sở Tài nguyên và Môi trường nếu là tổ chức, cơ sở tôn giáo, người Việt Nam định cư ở nước ngoài, tổ chức nước ngoài, cá nhân nước ngoài; nộp tại Phòng Tài nguyên và Môi trường nếu là hộ gia đình, cá nhân;\nb) Ngay trong ngày nhận đủ hồ sơ hợp lệ hoặc chậm nhất là ngày làm việc tiếp theo, Sở Tài nguyên và Môi trường hoặc Phòng Tài nguyên và Môi trường (gọi chung là cơ quan Tài nguyên và Môi trường) có trách nhiệm gửi hồ sơ cho Văn phòng đăng ký quyền sử dụng đất trực thuộc để chuẩn bị hồ sơ địa chính;\nc) Đối với trường hợp hợp thửa không phải trích đo địa chính thì ngay trong ngày nhận được hồ sơ hoặc chậm nhất là ngày làm việc tiếp theo, Văn phòng đăng ký quyền sử dụng đất có trách nhiệm làm trích lục bản đồ địa chính, trích sao hồ sơ địa chính và gửi đến cơ quan Tài nguyên và Môi trường cùng cấp.\nĐối với trường hợp tách thửa hoặc trường hợp hợp thửa mà phải trích đo địa chính thì trong thời hạn không quá bảy (07) ngày làm việc, kể từ ngày nhận được hồ sơ, Văn phòng đăng ký quyền sử dụng đất có trách nhiệm làm trích đo địa chính thửa đất mới tách hoặc mới hợp thửa, làm trích lục bản đồ địa chính, trích sao hồ sơ địa chính và gửi đến cơ quan Tài nguyên và Môi trường cùng cấp;\nd) Trong thời hạn không quá ba (03) ngày làm việc, kể từ ngày nhận được trích lục bản đồ địa chính, trích sao hồ sơ địa chính, Phòng Tài nguyên và Môi trường có trách nhiệm trình Ủy ban nhân dân cấp huyện xem xét, ký Giấy chứng nhận quyền sử dụng đất cho thửa đất mới; Sở Tài nguyên và Môi trường có trách nhiệm ký Giấy chứng nhận cho thửa đất mới trong trường hợp được ủy quyền hoặc trình Ủy ban nhân dân cấp tỉnh ký Giấy chứng nhận cho thửa đất mới trong trường hợp không được ủy quyền;\nđ) Trong thời hạn không quá ba (03) ngày làm việc, kể từ ngày nhận được tờ trình, Ủy ban nhân dân cấp có thẩm quyền xem xét, ký và gửi Giấy chứng nhận cho cơ quan Tài nguyên và Môi trường trực thuộc;\ne) Ngay trong ngày nhận được Giấy chứng nhận đã ký hoặc chậm nhất là ngày làm việc tiếp theo, cơ quan Tài nguyên và Môi trường có trách nhiệm trao bản chính Giấy chứng nhận đối với thửa đất mới cho người sử dụng đất; gửi bản lưu Giấy chứng nhận đã ký, bản chính Giấy chứng nhận đã thu hồi hoặc một trong các loại giấy tờ về quyền sử dụng đất quy định tại các khoản 1, 2 và 5 Điều 50 của Luật Đất đai đã thu hồi cho Văn phòng đăng ký quyền sử dụng đất trực thuộc; gửi thông báo biến động về sử dụng đất cho Văn phòng đăng ký quyền sử dụng đất thuộc Sở Tài nguyên và Môi trường để chỉnh lý hồ sơ địa chính gốc."
+    },
+    "actors": [
+     {
+      "document": "88/2009/NĐ-CP",
+      "title": "Nghị định số 88/2009/NĐ-CP Về cấp Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất",
+      "issued": "2009-10-19",
+      "effective_from": "2009-12-10",
+      "effective_to": "2014-07-01",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=23722",
+      "passage": "Thay cụm từ “Giấy chứng nhận” bằng cụm từ “Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất” tại khoản 1 Điều 5; Điều 7, Điều 9; khoản 3 Điều 10; khoản 2 Điều 11; các Điều 13, 14, 15, 16, 17, 18; các điểm d và đ khoản 2 Điều 19; Điều 20 của Nghị định số 84/2007/NĐ-CP.\nBổ sung cụm từ “Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất” vào sau cụm từ “Giấy chứng nhận” tại Điều 3; khoản 1 Điều 11; Điều 12; điểm b khoản 1 Điều 19; các Điều 26, 31, 44, 45 và 46 của Nghị định số 84/2007/NĐ-CP.",
+      "transitional": "",
+      "in_force": "Điều 29. Hiệu lực thi hành.\n1. Nghị định này có hiệu lực thi hành từ ngày 10 tháng 12 năm 2009.\n2. Giấy chứng nhận quyền sử dụng đất, Giấy chứng nhận quyền sở hữu nhà ở và quyền sử dụng đất ở, Giấy chứng nhận quyền sở hữu nhà ở và Giấy chứng nhận quyền sở hữu công trình xây dựng đã cấp trước ngày Nghị định này có hiệu lực thi hành vẫn có giá trị pháp lý và được cấp đổi sang Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất khi có yêu cầu.\nTrường hợp hồ sơ đề nghị cấp Giấy chứng nhận quyền sử dụng đất; Giấy chứng nhận quyền sở hữu nhà ở và quyền sử dụng đất ở; Giấy chứng nhận quyền sở hữu nhà ở và Giấy chứng nhận quyền sở hữu công trình xây dựng đã nộp trước ngày Nghị định này có hiệu lực thi hành nhưng chưa được cấp Giấy chứng nhận thì cơ quan tiếp nhận, xử lý hồ sơ chuyển giao hồ sơ cho cơ quan tài nguyên và môi trường để thực hiện việc cấp Giấy chứng nhận theo quy định của Nghị định này.\n3. Bãi bỏ Điều 41; khoản 1 Điều 42; các Điều 43, 44, 56, 57, 116, 135, 136, 137, 143, 144, 148, 149, 150, 151, 152, 155, 156, 157 và Điều 158 của Nghị định số 181/2004/NĐ-CP.\nBãi bỏ quy định về nộp hồ sơ và trả kết quả đối với thủ tục cấp, cấp đổi, cấp lại Giấy chứng nhận quyền sử dụng đất và thủ tục thực hiện các quyền của người sử dụng đất quy định tại Điều 122 của Nghị định số 181/2004/NĐ-CP.\n4. Thay cụm từ “Giấy chứng nhận quyền sử dụng đất” bằng cụm từ “Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất” tại các Điều 5, 46, 47, 48, 49, 51, 51, 53, 54, 55, 63, 76, 79, 83, 84, 91, 92, 97, 99, 122, 123, 124, 128, 138, 139, 140, điểm e khoản 1 Điều 147 và Điều 159 của Nghị định số 181/2004/NĐ-CP.\n5. Bổ sung cụm từ “Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất” sau cụm từ “Giấy chứng nhận quyền sử dụng đất” tại các Điều 6, 38, 64, 65, 111, 113, khoản 1 Điều 117; các Điều 118, 129, 131, 134, 142; điểm a khoản 1, điểm a và điểm c khoản 2 Điều 147; các Điều 153, 154, 160, 161, 162 của Nghị định số 181/2004/NĐ-CP.\n6. Bãi bỏ Điều 8, các khoản 1 và 2 Điều 10, Điều 21 của Nghị định số 84/2007/NĐ-CP ngày 25 tháng 5 năm 2007 của Chính phủ quy định bổ sung về việc cấp Giấy chứng nhận quyền sử dụng đất, thu hồi đất, thực hiện quyền sử dụng đất, trình tự, thủ tục bồi thường, hỗ trợ, tái định cư khi Nhà nước thu hồi đất và giải quyết khiếu nại về đất đai (sau đây gọi là Nghị định số 84/2007/NĐ-CP).\nThay cụm từ “Giấy chứng nhận” bằng cụm từ “Giấy chứng nhận quyền sử dụng  [...cắt bớt]\n\n1. Nghị định này có hiệu lực thi hành từ ngày 10 tháng 12 năm 2009."
+     }
+    ]
+   }
+  },
+  "official": [
+   {
+    "document": "84/2007/NĐ-CP",
+    "item_id": "14188",
+    "part": "Điều 19 (bản ban hành)",
+    "source_tier": "official",
+    "source": "vbpl CSDL quốc gia, bản crawl data/raw/14188.json",
+    "truncated": false,
+    "text": "Điều 19. Cấp Giấy chứng nhận trong trường hợp thực hiện tách thửa hoặc hợp thửa đối với thửa đất\n1. Hồ sơ tách thửa hoặc hợp thửa gồm có:\na) Đơn xin tách thửa hoặc hợp thửa của người sử dụng đất đối với trường hợp tách thửa, hợp thửa theo yêu cầu của người sử dụng đất và trường hợp tách thửa, hợp thửa do nhận quyền sử dụng đất quy định tại điểm k và điểm l khoản 1 Điều 99 Nghị định số 181/2004/NĐ-CP;\nb) Giấy chứng nhận hoặc một trong các loại giấy tờ về quyền sử dụng đất quy định tại các khoản 1, 2 và 5 Điều 50 của Luật Đất đai; trường hợp tách thửa, hợp thửa do nhận quyền sử dụng đất quy định tại điểm k và điểm l khoản 1 Điều 99 Nghị định số 181/2004/NĐ-CP thì phải có thêm văn bản quy định tại điểm a khoản 1 Điều 140 Nghị định số 181/2004/NĐ-CP.\n2. Việc tách thửa, hợp thửa theo nhu cầu của người sử dụng đất được thực hiện như sau:\na) Người sử dụng đất có nhu cầu xin tách thửa hoặc hợp thửa lập một (01) bộ hồ sơ nộp tại Sở Tài nguyên và Môi trường nếu là tổ chức, cơ sở tôn giáo, người Việt Nam định cư ở nước ngoài, tổ chức nước ngoài, cá nhân nước ngoài; nộp tại Phòng Tài nguyên và Môi trường nếu là hộ gia đình, cá nhân;\nb) Ngay trong ngày nhận đủ hồ sơ hợp lệ hoặc chậm nhất là ngày làm việc tiếp theo, Sở Tài nguyên và Môi trường hoặc Phòng Tài nguyên và Môi trường (gọi chung là cơ quan Tài nguyên và Môi trường) có trách nhiệm gửi hồ sơ cho Văn phòng đăng ký quyền sử dụng đất trực thuộc để chuẩn bị hồ sơ địa chính;\nc) Đối với trường hợp hợp thửa không phải trích đo địa chính thì ngay trong ngày nhận được hồ sơ hoặc chậm nhất là ngày làm việc tiếp theo, Văn phòng đăng ký quyền sử dụng đất có trách nhiệm làm trích lục bản đồ địa chính, trích sao hồ sơ địa chính và gửi đến cơ quan Tài nguyên và Môi trường cùng cấp.\nĐối với trường hợp tách thửa hoặc trường hợp hợp thửa mà phải trích đo địa chính thì trong thời hạn không quá bảy (07) ngày làm việc, kể từ ngày nhận được hồ sơ, Văn phòng đăng ký quyền sử dụng đất có trách nhiệm làm trích đo địa chính thửa đất mới tách hoặc mới hợp thửa, làm trích lục bản đồ địa chính, trích sao hồ sơ địa chính và gửi đến cơ quan Tài nguyên và Môi trường cùng cấp;\nd) Trong thời hạn không quá ba (03) ngày làm việc, kể từ ngày nhận được trích lục bản đồ địa chính, trích sao hồ sơ địa chính, Phòng Tài nguyên và Môi trường có trách nhiệm trình Ủy ban nhân dân cấp huyện xem xét, ký Giấy chứng nhận quyền sử dụng đất cho thửa đất mới; Sở Tài nguyên và Môi trường có trách nhiệm ký Giấy chứng nhận cho thửa đất mới trong trường hợp được ủy quyền hoặc trình Ủy ban nhân dân cấp tỉnh ký Giấy chứng nhận cho thửa đất mới trong trường hợp không được ủy quyền;\nđ) Trong thời hạn không quá ba (03) ngày làm việc, kể từ ngày nhận được tờ trình, Ủy ban nhân dân cấp có thẩm quyền xem xét, ký và gửi Giấy chứng nhận cho cơ quan Tài nguyên và Môi trường trực thuộc;\ne) Ngay trong ngày nhận được Giấy chứng nhận đã ký hoặc chậm nhất là ngày làm việc tiếp theo, cơ quan Tài nguyên và Môi trường có trách nhiệm trao bản chính Giấy chứng nhận đối với thửa đất mới cho người sử dụng đất; gửi bản lưu Giấy chứng nhận đã ký, bản chính Giấy chứng nhận đã thu hồi hoặc một trong các loại giấy tờ về quyền sử dụng đất quy định tại các khoản 1, 2 và 5 Điều 50 của Luật Đất đai đã thu hồi cho Văn phòng đăng ký quyền sử dụng đất trực thuộc; gửi thông báo biến động về sử dụng đất cho Văn phòng đăng ký quyền sử dụng đất thuộc Sở Tài nguyên và Môi trường để chỉnh lý hồ sơ địa chính gốc.\n3. Trường hợp tách thửa do Nhà nước thu hồi một phần thửa đất thì căn cứ quyết định thu hồi đất, cơ quan Tài nguyên và Môi trường có trách nhiệm thực hiện việc tách thửa theo quy định tại các điểm b, c, d, đ và e khoản 2 Điều này."
+   },
+   {
+    "document": "88/2009/NĐ-CP",
+    "item_id": "23722",
+    "part": "điều hiệu lực, chuyển tiếp",
+    "source_tier": "official",
+    "source": "vbpl CSDL quốc gia, bản crawl data/raw/23722.json",
+    "truncated": false,
+    "text": "Điều 29. Hiệu lực thi hành.\n1. Nghị định này có hiệu lực thi hành từ ngày 10 tháng 12 năm 2009.\n2. Giấy chứng nhận quyền sử dụng đất, Giấy chứng nhận quyền sở hữu nhà ở và quyền sử dụng đất ở, Giấy chứng nhận quyền sở hữu nhà ở và Giấy chứng nhận quyền sở hữu công trình xây dựng đã cấp trước ngày Nghị định này có hiệu lực thi hành vẫn có giá trị pháp lý và được cấp đổi sang Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất khi có yêu cầu.\nTrường hợp hồ sơ đề nghị cấp Giấy chứng nhận quyền sử dụng đất; Giấy chứng nhận quyền sở hữu nhà ở và quyền sử dụng đất ở; Giấy chứng nhận quyền sở hữu nhà ở và Giấy chứng nhận quyền sở hữu công trình xây dựng đã nộp trước ngày Nghị định này có hiệu lực thi hành nhưng chưa được cấp Giấy chứng nhận thì cơ quan tiếp nhận, xử lý hồ sơ chuyển giao hồ sơ cho cơ quan tài nguyên và môi trường để thực hiện việc cấp Giấy chứng nhận theo quy định của Nghị định này.\n3. Bãi bỏ Điều 41; khoản 1 Điều 42; các Điều 43, 44, 56, 57, 116, 135, 136, 137, 143, 144, 148, 149, 150, 151, 152, 155, 156, 157 và Điều 158 của Nghị định số 181/2004/NĐ-CP.\nBãi bỏ quy định về nộp hồ sơ và trả kết quả đối với thủ tục cấp, cấp đổi, cấp lại Giấy chứng nhận quyền sử dụng đất và thủ tục thực hiện các quyền của người sử dụng đất quy định tại Điều 122 của Nghị định số 181/2004/NĐ-CP.\n4. Thay cụm từ “Giấy chứng nhận quyền sử dụng đất” bằng cụm từ “Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất” tại các Điều 5, 46, 47, 48, 49, 51, 51, 53, 54, 55, 63, 76, 79, 83, 84, 91, 92, 97, 99, 122, 123, 124, 128, 138, 139, 140, điểm e khoản 1 Điều 147 và Điều 159 của Nghị định số 181/2004/NĐ-CP.\n5. Bổ sung cụm từ “Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất” sau cụm từ “Giấy chứng nhận quyền sử dụng đất” tại các Điều 6, 38, 64, 65, 111, 113, khoản 1 Điều 117; các Điều 118, 129, 131, 134, 142; điểm a khoản 1, điểm a và điểm c khoản 2 Điều 147; các Điều 153, 154, 160, 161, 162 của Nghị định số 181/2004/NĐ-CP.\n6. Bãi bỏ Điều 8, các khoản 1 và 2 Điều 10, Điều 21 của Nghị định số 84/2007/NĐ-CP ngày 25 tháng 5 năm 2007 của Chính phủ quy định bổ sung về việc cấp Giấy chứng nhận quyền sử dụng đất, thu hồi đất, thực hiện quyền sử dụng đất, trình tự, thủ tục bồi thường, hỗ trợ, tái định cư khi Nhà nước thu hồi đất và giải quyết khiếu nại về đất đai (sau đây gọi là Nghị định số 84/2007/NĐ-CP).\nThay cụm từ “Giấy chứng nhận” bằng cụm từ “Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất” tại khoản 1 Điều 5; Điều 7, Điều 9; khoản 3 Điều 10; khoản 2 Điều 11; các Điều 13, 14, 15, 16, 17, 18; các điểm d và đ khoản 2 Điều 19; Điều 20 của Nghị định số 84/2007/NĐ-CP.\nBổ sung cụm từ “Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất” vào sau cụm từ “Giấy chứng nhận” tại Điều 3; khoản 1 Điều 11; Điều 12; điểm b khoản 1 Điều 19; các Điều 26, 31, 44, 45 và 46 của Nghị định số 84/2007/NĐ-CP.\n7. Bã …[cắt]"
+   }
+  ],
+  "official_missing": [],
+  "run_id": "round3_mixed",
+  "case_id": "round3_mixed::provision:5400b11e-df55-11f0-b2db-db8213713dab#k2#d",
+  "lineage_id": "provision:5400b11e-df55-11f0-b2db-db8213713dab#k2#d",
+  "a": {
+   "lineage_id": "provision:5400b11e-df55-11f0-b2db-db8213713dab#k2#d",
+   "labeler": "ai-a",
+   "label_origin": "ai",
+   "verification_status": "not_verified",
+   "guideline_version": "4.0",
+   "worksheet_sha256": "b856a6dcc0e281831ce4069c353793ba9b59a8ec9137350fd142ceb752829e43",
+   "q1": "dung",
+   "q1_reason": "",
+   "q2": "co",
+   "q2_reason": "",
+   "q3": "co",
+   "q3_reason": "",
+   "q4": "khong",
+   "q4_reason": "",
+   "verdict": "dat",
+   "quote": "Thay cụm từ “Giấy chứng nhận” bằng cụm từ “Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất” tại khoản 1 Điều 5; Điều 7, Điều 9; khoản 3 Điều 10; khoản 2 Điều 11; các Điều 13, 14, 15, 16, 17, 18; các điểm d và đ khoản 2 Điều 19; Điều 20 của Nghị định số 84/2007/NĐ-CP.",
+   "search_log": "Đã đọc Điều 29 NĐ 88/2009 trong official. 1 WebSearch tìm Luật 38/2009/QH12 (sửa luật liên quan đầu tư xây dựng cơ bản, hiệu lực 01/8/2009) xem có quy định Giấy chứng nhận mới trước mốc 09/12/2009 không: kết quả chỉ là nguồn phụ, không xác nhận được điều khoản.",
+   "note": "[phân vân] Từ 10/12/2009 đổi sang loại Giấy chứng nhận mới, và bản v2 lặp chữ ('...gắn liền với đất quyền sử dụng đất') đúng như khi áp nguyên văn câu thay cụm từ, nên Q1=dung. Còn một điểm chưa kiểm được: có thể luật cấp cao hơn (Luật 38/2009/QH12, hiệu lực 01/8/2009) đã quy định Giấy chứng nhận mới trước mốc 09/12/2009, và việc này có thể dẫn tới superseded_by_other_norm ở mốc trước. Chưa đọc được lời văn chính thức nên chọn Q4=khong.",
+   "evidence_status": "insufficient",
+   "evidence": [
+    {
+     "url": "input chunk07.jsonl official[1] (crawl data/raw/23722.json)",
+     "source_tier": "official",
+     "document_number": "88/2009/NĐ-CP",
+     "provision": "khoản 1, khoản 6 Điều 29",
+     "as_of": "2009-12-10",
+     "quote": "1. Nghị định này có hiệu lực thi hành từ ngày 10 tháng 12 năm 2009.",
+     "accessed_at": "2026-11-06 (đọc file input)"
+    },
+    {
+     "url": "https://static.luatvietnam.vn/tai-file-van-ban-hop-nhat-30-vbhn-vpqh-van-phong-quoc-hoi-151164-d5/uploaded/VIETLAWFILE/2017/9/30_VBHN-_VPQH_2013_K_PHU_HOP_190917164738.pdf",
+     "source_tier": "snippet",
+     "document_number": "38/2009/QH12",
+     "provision": "không xác định",
+     "as_of": "2009-08-01",
+     "quote": "có hiệu lực kể từ ngày 01 tháng 8 năm 2009 (tóm tắt kết quả tìm kiếm, không phải lời văn)",
+     "accessed_at": "2026-11-06"
+    }
+   ],
+   "quote_in_provided_sources": true
+  },
+  "b": {
+   "lineage_id": "provision:5400b11e-df55-11f0-b2db-db8213713dab#k2#d",
+   "labeler": "ai-b",
+   "label_origin": "ai",
+   "verification_status": "not_verified",
+   "guideline_version": "4.0",
+   "worksheet_sha256": "b856a6dcc0e281831ce4069c353793ba9b59a8ec9137350fd142ceb752829e43",
+   "q1": "sai",
+   "q1_reason": "gold_wrong",
+   "q2": "co",
+   "q2_reason": "",
+   "q3": "co",
+   "q3_reason": "",
+   "q4": "khong",
+   "q4_reason": "",
+   "verdict": "khong_dat",
+   "quote": "1. Nghị định này có hiệu lực thi hành từ ngày 10 tháng 12 năm 2009.",
+   "search_log": "Đối chiếu bản ban hành và khoản 6 Điều 29 Nghị định 88/2009/NĐ-CP trong official của input.",
+   "note": "Đáp án đầy đủ ở mốc sau ghép thừa “quyền sử dụng đất” sau tên giấy chứng nhận mới, tạo cụm “gắn liền với đất quyền sử dụng đất”. Đáp án ngắn không có lỗi này nhưng Q1 phải kiểm cả đoạn đầy đủ.",
+   "evidence_status": "sufficient",
+   "evidence": [
+    {
+     "url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=23722",
+     "source_tier": "official",
+     "document_number": "88/2009/NĐ-CP",
+     "provision": "Khoản 6 Điều 29",
+     "as_of": "2009-12-10",
+     "quote": "Thay cụm từ “Giấy chứng nhận” bằng cụm từ “Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất” tại khoản 1 Điều 5; Điều 7, Điều 9; khoản 3 Điều 10; khoản 2 Điều 11; các Điều 13, 14, 15, 16, 17, 18; các điểm d và đ khoản 2 Điều 19; Điều 20 của Nghị định số 84/2007/NĐ-CP.",
+     "accessed_at": "2026-11-06"
+    },
+    {
+     "url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=14188",
+     "source_tier": "worksheet",
+     "document_number": "84/2007/NĐ-CP",
+     "provision": "Điểm d khoản 2 Điều 19, đáp án sau sửa trong record",
+     "as_of": "2009-12-10",
+     "quote": "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất quyền sử dụng đất cho thửa đất mới",
+     "accessed_at": "2026-11-06"
+    }
+   ],
+   "quote_in_provided_sources": true
+  },
+  "disputed_fields": [
+   "q1",
+   "q1_reason"
+  ],
+  "raw_a_sha256": "243867add4272694dccaccc415df57b4f80282cbe3d83bd0c93c1522e5de0779",
+  "raw_b_sha256": "080bee21be0c3f957123feed38cda555a518d8428a3255455b3177f13d2f28b0",
+  "reasoning": "Chưa chốt đầy đủ Q1. A có cơ sở đọc literal: khoản6Điều29 NĐ88/2009 thực sự chỉ thay cụm “Giấy chứng nhận” trong điểm d khoản2Điều19, trong khi bản gốc có “Giấy chứng nhận quyền sử dụng đất”; phép thay substring tạo lặp “...gắn liền với đất quyền sử dụng đất”. B coi lặp là gold_wrong, nhưng chưa có VBHN/đính chính nguồn chính thức giải quyết chỗ sửa không đồng nhất này; không tự bình thường hóa hoặc phán đúng phép thay máy. Đã tìm theo số hiệu+VBHN/đính chính và hai cổng Chính phủ, chưa lấy được bản hợp nhất xác nhận. Riêng Q4 cả A và B khong đều bị bác: Điều4 Luật38/2009 đã sửa Điều48/52 Luật Đất đai quy định GCN thống nhất; Điều7 hiệu lực01/08/2009, trước cả hai mốc09–10/12. Vì vậy Q4=co/superseded_by_other_norm và kết luận khong_dat được chứng minh độc lập, nhưng không gán proposed_label đủ Q khi Q1 còn mở. Q2 có thay tên loại GCN trong văn bản, Q3 câu hỏi tình huống trình ký rõ; hai điểm đó không giải quyết tranh chấp lời văn Q1.",
+  "evidence": [
+   {
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/23722",
+    "source_tier": "official",
+    "document_number": "88/2009/NĐ-CP",
+    "provision": "Khoản 6 Điều 29",
+    "as_of": "2009-12-10",
+    "quote": "Thay cụm từ “Giấy chứng nhận” bằng cụm từ “Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất” tại khoản 1 Điều 5; Điều 7, Điều 9; khoản 3 Điều 10; khoản 2 Điều 11; các Điều 13, 14, 15, 16, 17, 18; các điểm d và đ khoản 2 Điều 19; Điều 20 của Nghị định số 84/2007/NĐ-CP. Bổ sung cụm từ “Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất” vào sau cụm từ “Giấy chứng nhận” tại Điều 3; khoản 1 Điều 11; Điều 12; điểm b khoản 1 Điều 19; các Điều 26, 31, 44, 45 và 46 của ",
+    "accessed_at": "2026-11-07T09:33:23.917598+00:00"
+   },
+   {
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/14188",
+    "source_tier": "official",
+    "document_number": "84/2007/NĐ-CP",
+    "provision": "Điểm d khoản 2 Điều 19 bản ban hành",
+    "as_of": "2009-12-09",
+    "quote": "d) Trong thời hạn không quá ba (03) ngày làm việc, kể từ ngày nhận được trích lục bản đồ địa chính, trích sao hồ sơ địa chính, Phòng Tài nguyên và Môi trường có trách nhiệm trình Ủy ban nhân dân cấp huyện xem xét, ký Giấy chứng nhận quyền sử dụng đất cho thửa đất mới; Sở Tài nguyên và Môi trường có trách nhiệm ký Giấy chứng nhận cho thửa đất mới trong trường hợp được ủy quyền hoặc trình Ủy ban nhân dân cấp tỉnh ký Giấy chứng nhận cho thửa đất mới trong trường hợp không được ủy quyền; đ) Trong thời hạn không quá ba (03) ngày làm việc, kể từ ngày nhận được tờ trình,",
+    "accessed_at": "2026-11-07T09:33:23.911883+00:00"
+   },
+   {
+    "url": "https://vanban.chinhphu.vn/default.aspx?docid=91035&pageid=27160",
+    "source_tier": "official",
+    "document_number": "38/2009/QH12",
+    "provision": "Điều 4 khoản 3 sửa Điều 48 Luật Đất đai; Điều 7",
+    "as_of": "2009-12-09",
+    "quote": "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất được cấp cho người có quyền sử dụng đất, quyền sở hữu nhà ở, quyền sở hữu tài sản khác gắn liền với đất theo một loại thống nhất trong cả nước do Bộ Tài nguyên và Môi trường phát hành",
+    "accessed_at": "2026-11-07T09:43:32.987937+00:00"
+   },
+   {
+    "url": "https://vanban.chinhphu.vn/default.aspx?docid=91035&pageid=27160",
+    "source_tier": "official",
+    "document_number": "38/2009/QH12",
+    "provision": "Khoản 1 Điều 7",
+    "as_of": "2009-12-09",
+    "quote": "Luật này có hiệu lực thi hành từ ngày 01 tháng 8 năm 2009.",
+    "accessed_at": "2026-11-07T09:43:32.987937+00:00"
+   }
+  ],
+  "open_questions": [
+   "Có VBHN, văn bản đính chính hoặc quyết định của CMT/luật sư về cách đọc câu thay cụm tại khoản6Điều29 NĐ88/2009 ở điểm d khoản2Điều19 NĐ84/2007 để xác định Q1 của bản ghép lặp không? Không được tự sửa lời văn nguồn."
+  ],
+  "labeler": "ai-adjudicator",
+  "label_origin": "ai",
+  "verification_status": "not_verified",
+  "human_adjudication_required": true,
+  "disposition": "unresolved",
+  "proposed_label": null,
+  "confirmed_fields": {
+   "q4": "co",
+   "q4_reason": "superseded_by_other_norm"
+  },
+  "verdict_conclusion": "khong_dat"
+ }
+]

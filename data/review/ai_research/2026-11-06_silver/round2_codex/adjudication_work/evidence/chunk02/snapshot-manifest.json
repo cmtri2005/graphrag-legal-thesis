@@ -1,0 +1,137 @@
+[
+  {
+    "item_id": "119091",
+    "document_number": "22/2017/NĐ-CP",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=119091",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/119091-snapshot.json",
+    "sha256": "6a5b0a75b989a3637f03415b760cbb9cbb3e74726040f5c6192f5f664eacdf67",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  },
+  {
+    "item_id": "178105",
+    "document_number": "112/2025/NĐ-CP",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=178105",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/178105-snapshot.json",
+    "sha256": "19a49e7ac94f474329fea03dc1c8f9559f0622184a1b181078c11ec132aab488",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  },
+  {
+    "item_id": "98960",
+    "document_number": "09/2016/TT-BQP",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=98960",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/98960-snapshot.json",
+    "sha256": "d44d3bcb1653da266e63a4fab475d8607292075e4b0de313277a1d8b6f079822",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  },
+  {
+    "item_id": "e9d13ec0-64a2-11f1-82b0-55dde5f4dece",
+    "document_number": "112/2025/TT-BQP",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=e9d13ec0-64a2-11f1-82b0-55dde5f4dece",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/e9d13ec0-64a2-11f1-82b0-55dde5f4dece-snapshot.json",
+    "sha256": "901b3a69182cd9d1dab56d561fe51988fc2565c122690ab116ffeb2513ba5f65",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  },
+  {
+    "item_id": "38261",
+    "document_number": "11/2013/TT-NHNN",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=38261",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/38261-snapshot.json",
+    "sha256": "fb1f904d1c0cfb037727964b5f135ffb6dff941f183240c2773b28b718cfaa9e",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  },
+  {
+    "item_id": "38262",
+    "document_number": "32/2014/TT-NHNN",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=38262",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/38262-snapshot.json",
+    "sha256": "147b8ec767c368b018d8ff15e0d6112a9f318b796368d6ab5925dfdbd6939803",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  },
+  {
+    "item_id": "112570",
+    "document_number": "25/2016/TT_NHNN",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=112570",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/112570-snapshot.json",
+    "sha256": "c30c4976fa408eccbda1b2122ae053c1abe312a3205b77133644bb02a88f254f",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  },
+  {
+    "item_id": "148174",
+    "document_number": "04/2021/NĐ-CP",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=148174",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/148174-snapshot.json",
+    "sha256": "951f7071b9462812ce12e60bca82e3d4af65d861ab2a05030e8fdbe89511ea16",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  },
+  {
+    "item_id": "154063",
+    "document_number": "127/2021/nđ-cp",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=154063",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/154063-snapshot.json",
+    "sha256": "175ce862b708fffcc8c770ba23c8475fb76aa969c1855fde4426d8ed1319ac05",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  },
+  {
+    "item_id": "187357",
+    "document_number": "98/2025/TT-BTC",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=187357",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/187357-snapshot.json",
+    "sha256": "e324644ae54ec6026edaf67113c1fb3f7572cb42a7f02755835a1deb8e2cbd25",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  },
+  {
+    "item_id": "0e343320-a82e-11f1-b262-51fb030e2e1b",
+    "document_number": "129/2026/TT-BTC",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=0e343320-a82e-11f1-b262-51fb030e2e1b",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/0e343320-a82e-11f1-b262-51fb030e2e1b-snapshot.json",
+    "sha256": "966a82bfd1a0fbd654eb2eb4ef5598c7815cc230b94604ab218545a45c338979",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  },
+  {
+    "item_id": "179258",
+    "document_number": "43/2025/TT-BCT",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=179258",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/179258-snapshot.json",
+    "sha256": "7dfae9eedbeb4e95564f000c76741e93667036be4caa6bc48904976670661159",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  },
+  {
+    "item_id": "c38d4c80-5819-11f1-8cfa-090ca3b5a55f",
+    "document_number": "26/2026/TT-BCT",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=c38d4c80-5819-11f1-8cfa-090ca3b5a55f",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/c38d4c80-5819-11f1-8cfa-090ca3b5a55f-snapshot.json",
+    "sha256": "056632ba75144ef84346b9a6985444eccc4a088ba0962ba099906c11dfb0aacd",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  },
+  {
+    "item_id": "172729",
+    "document_number": "103/2024/NĐ-CP",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=172729",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/172729-snapshot.json",
+    "sha256": "7e1f1c0a74b20e2b3385444619ade33db959f545d47bd9e5e0667b6c24caf9bd",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  },
+  {
+    "item_id": "187822",
+    "document_number": "291/2025/NĐ-CP",
+    "canonical_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=187822",
+    "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk02/187822-snapshot.json",
+    "sha256": "56c4e9bc4cb7340761e4be135d37daed478c33adc1b2008a361239d1b2277bb0",
+    "accessed_at": "2026-11-06T23:32:40.889958+00:00",
+    "origin": "authorized data/raw official snapshot; not gold"
+  }
+]

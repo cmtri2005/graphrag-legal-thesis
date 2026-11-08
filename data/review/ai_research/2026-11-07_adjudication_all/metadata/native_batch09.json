@@ -1,0 +1,45 @@
+{
+  "runtime": "native Codex API; Claude CLI quota fallback authorized by parent",
+  "model": "unknown",
+  "agent_spec": ".claude/agents/legal-adjudicator.md",
+  "agent_spec_sha256": "cd01a1b534772b7be134944b4967e76445ff9e5cf8b01a73bf49cd1320c011e4",
+  "input_sha256": "df30d504ac362c3f9acc1514c862d5a377bf7fda4a55b42e5564b656d59365f7",
+  "source_urls": [
+    "https://vanban.chinhphu.vn/?docid=81476&pageid=27160",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/121985",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/138844",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/151250",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/172735",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/175261",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/183971",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/187799",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/27261",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/32584",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/37505",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/63117",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/92225",
+    "https://xaydungchinhsach.chinhphu.vn/kien-nghi-dieu-chinh-tham-quyen-dieu-tra-hinh-su-cua-bo-doi-bien-phong-sau-sap-xep-to-chuc-119251015085126142.htm"
+  ],
+  "tools": [
+    "exec_command read/fetch/save adaptation (Claude Read unavailable)",
+    "curl official legal API",
+    "web.run search/open/click",
+    "scripts/review/test2_labels.py validate_label/check_binding"
+  ],
+  "started_at": "unknown",
+  "completed_at": "2026-11-07T09:37:40.093893+00:00",
+  "errors": [
+    "sandbox DNS unavailable; escalated curl succeeded",
+    "ItemID11606 HTTP500; official government text opened via web fallback"
+  ],
+  "validation": {
+    "records": 5,
+    "native_validated": 4,
+    "unresolved": 1,
+    "all_identity_fields_exact": true,
+    "verdict_native_derived": true,
+    "validated_at": "2026-11-07T09:44:20.234012+00:00"
+  },
+  "adaptation": "Inherited-model legal-adjudicator role applied natively; Bash/Write restriction adapted only for scoped reads, official-source fetching, output saving and validation. No source labels/input/dataset changes.",
+  "start_date": "2026-11-07"
+}

@@ -1,0 +1,66 @@
+{
+  "runtime": "native Codex API; Claude CLI quota fallback authorized by parent",
+  "model": "unknown",
+  "agent_spec": ".claude/agents/legal-adjudicator.md",
+  "agent_spec_sha256": "cd01a1b534772b7be134944b4967e76445ff9e5cf8b01a73bf49cd1320c011e4",
+  "input_sha256": "ed788707453048e2987b002dfc7787d527c09f363bac32651c0b7c923cb4319d",
+  "source_urls": [
+    "https://cangvuhanghaiquangninh.gov.vn/images/uploads/attach/BXD_2530-QD-BXD_31122025.pdf",
+    "https://datafiles.chinhphu.vn/cpp/files/vbpq/2026/7/274-ndcp.signed.pdf",
+    "https://dulieuphapluat.vn/van-ban/hanh-chinh-van-ban/quyet-dinh-204qd-bxd-nam-2025-quy-dinh-chuc-nang-nhiem-vu-quyen-han-va-co-cau-to-chuc-cua-chi-cuc-hang-hai-va-duong-thuy-do-bo-truong-bo-xay-dung-ban-hanh-1217407.html",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/0e343320-a82e-11f1-b262-51fb030e2e1b",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/100048",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/120772",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/124607",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/156356",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/164003",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/175261",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/186425",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/187357",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/25842",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/26514",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/30473",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/37536",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/58234",
+    "https://vimawa.gov.vn/f/2011.Q%C4%90-CHH%C4%90TVN%20Ban%20h%C3%A0nh%20ISO%202025%20final.pdf",
+    "https://vimawa.gov.vn/vi/noi-dung/thu-tuc-cap-lai-giay-xac-nhan-phu-hop-ve-tuyen-dung-cung-ung-thuyen-vien-hang-hai"
+  ],
+  "tools": [
+    "exec_command read/fetch/save adaptation (Claude Read unavailable)",
+    "curl official legal API",
+    "web.run search/open/click",
+    "scripts/review/test2_labels.py validate_label/check_binding"
+  ],
+  "started_at": "unknown",
+  "completed_at": "2026-11-07T09:43:08.091361+00:00",
+  "errors": [
+    "sandbox DNS unavailable; escalated curl succeeded",
+    "Công báo DOCX274 download HTTP502; signed official PDF from datafiles.chinhphu.vn opened and visually read pages14,81–85",
+    "QĐ204 official full text not located after targeted queries; secondary full text opened; maritime case unresolved",
+    "moc.gov.vn official reorganization article HTTP502; PDF2530 downloaded but text extraction empty"
+  ],
+  "validation": {
+    "records": 5,
+    "native_validated": 4,
+    "unresolved": 1,
+    "all_identity_fields_exact": true,
+    "verdict_native_derived": true,
+    "validated_at": "2026-11-07T09:44:20.240838+00:00"
+  },
+  "adaptation": "Inherited-model legal-adjudicator role applied natively; Bash/Write restriction adapted only for scoped reads, official-source fetching, output saving and validation. No source labels/input/dataset changes.",
+  "start_date": "2026-11-07",
+  "corrections": [
+    {
+      "at": "2026-11-07T09:46:09.456046+00:00",
+      "action": "Completed targeted visual pass on official2530 PDF; no canonical label change",
+      "receipt": "evidence/native_batch11/2530-targeted-pass.json",
+      "retained_unresolved_case": "round3_mixed::provision:f8d931e0-1df6-11f1-a901-7169bc99fc94",
+      "reason": "Different administrative procedures; no target Giấy xác nhận tuyển dụng/cung ứng thuyền viên."
+    },
+    {
+      "at": "2026-11-07T16:36:44.844308+00:00",
+      "action": "Resumed targetedofficialsource research; undatedofficialprocedure found, historicaloperativeproofstillmissing; canonical unchanged",
+      "receipt": "evidence/native_batch11/resume_1632/receipt.json"
+    }
+  ]
+}

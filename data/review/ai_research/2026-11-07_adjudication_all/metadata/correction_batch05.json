@@ -1,0 +1,16 @@
+{
+  "corrected_at": "2026-11-07T16:34:48.059169+00:00",
+  "before_sha256": "3429f8bfc432a6705a1c2529661bb164d9f3c21adc00ca568dc1749db4fc0e42",
+  "after_sha256": "5c0cf85e98184ecc31fb5bc6555128775f64732919d579d75bcd721f8e702362",
+  "archived_original": "data/review/ai_research/2026-11-07_adjudication_all/revisions/batch05.v1.jsonl",
+  "canonical": "data/review/ai_research/2026-11-07_adjudication_all/results/batch05.jsonl",
+  "reason": "Nguồn bổ sung phụ lục bản gốc TT50/2014 xác nhận Mẫu20/21 đã có; kiểm lại short_answer thiếu ý theo bước8 và đối chiếu cùng binding ở batch03.",
+  "changes": [
+    {
+      "case_id": "round2_claude::provision:3e60c494-df45-11f0-a7e1-e7eb0e609025",
+      "disposition": "both_wrong",
+      "reason": "Cả hai bộ nhãn chưa đúng. Q1=sai/other: short_answer mốc14/02/2021 chỉ nêu nơi nhận và kỳ báo cáo, bỏ ý “Lập danh bạ cảng, bến thủy nội địa, bến khách ngang sông thuộc thẩm quyền quản lý” có ngay trong đáp án đầy đủ mà vế nội dung hỏi tới. Không lấy chữ danh bạ trong câu hỏi để tự bổ sung short_answer. Q2=khong/group_mismatch: kiểm thêm bản PDF ký TT50/2014, Mẫu20/21 đã tồn tại ở phụ lục gốc; trang47–48 có13cột danh bạ cụ thể. TT35 chỉ dẫn lại các mẫu này, không sửa nội dung Mẫu20/21 (chỉ bãi Mẫu18); nơi nhận và định kỳ giữ nguyên. Các thay đổi phương thức gửi, thời hạn gửi, thời gian chốt số liệu nằm ngoài ba phần câu hỏi ai/kỳ/nội dung. Vì vậy A đúng vế lập luận nội dung được nhắc thêm nhưng không chứng minh nội dung hỏi thay đổi thực chất theoR1; B đúng Q2 nhưng bỏ lỗi short_answer ởQ1. Q3 câu hỏi ghim Sở và danh bạ, Q4 mốc2021 chưa sắp xếp2025 và không quan hệ chuyển tiếp cụ thể. Đã đối chiếu độc lập cùng bản gốc với hồ sơ trùng binding ở batch03, không lấy model/đa số làm căn cứ."
+    }
+  ],
+  "frozen_inputs_modified": false
+}

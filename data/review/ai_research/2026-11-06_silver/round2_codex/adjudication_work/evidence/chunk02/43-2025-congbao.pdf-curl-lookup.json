@@ -1,0 +1,8 @@
+{
+  "url": "https://g7.cdnchinhphu.vn/api/download/stream?Url=tm-8mq6BhNw0NbrKRhTDAQWsKg3tuqaY0aWypnY78U6M2BY68Ekp0Gvvr483flbRYmQgECB8myDQKv2HrjaQv_LKlxYdkzcmDQCVI9g38AX25TmWqMey7O_DzAvoiXDvHS_jOBkqGR0jP3sugBRoWg~~&file_name=2025_949+%2B+950_43-2025-TT-BCT.pdf",
+  "accessed_at": "2026-11-06T15:52:29.942285+00:00",
+  "status": "error",
+  "error": "curl: (60) SSL certificate problem: unable to get local issuer certificate\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above.\n",
+  "tool": "curl",
+  "returncode": 60
+}

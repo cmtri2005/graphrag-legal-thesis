@@ -1,0 +1,6 @@
+{
+  "url": "https://g7.cdnchinhphu.vn/api/download/stream?Url=tm-8mq6BhNw0NbrKRhTDAQWsKg3tuqaY0aWypnY78U6M2BY68Ekp0Gvvr483flbRYmQgECB8myDQKv2HrjaQv_LKlxYdkzcmDQCVI9g38AX25TmWqMey7O_DzAvoiXDvHS_jOBkqGR0jP3sugBRoWg~~&file_name=2025_949+%2B+950_43-2025-TT-BCT.pdf",
+  "accessed_at": "2026-11-06T15:51:33.620722+00:00",
+  "status": "error",
+  "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)>"
+}

@@ -1,0 +1,19 @@
+{
+  "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/122558",
+  "accessed_at": "2026-11-06T15:50:14.999164+00:00",
+  "success": true,
+  "error": "",
+  "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk04/122558.json",
+  "sha256": "717b5b4f4e9195b6266ad56a95fc78dd04f9171470bad5169572571a386a4cc2",
+  "root_keys": [
+    "success",
+    "statusCode",
+    "message",
+    "messageCode",
+    "debugMessage",
+    "data",
+    "total"
+  ],
+  "document_number": "58/2017/NĐ-CP",
+  "content_length": 419656
+}

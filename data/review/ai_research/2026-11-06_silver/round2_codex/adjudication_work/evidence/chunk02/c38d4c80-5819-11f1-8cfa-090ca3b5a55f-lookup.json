@@ -1,0 +1,19 @@
+{
+  "id": "c38d4c80-5819-11f1-8cfa-090ca3b5a55f",
+  "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/c38d4c80-5819-11f1-8cfa-090ca3b5a55f",
+  "accessed_at": "2026-11-06T15:50:08.302252+00:00",
+  "returncode": 0,
+  "error": "",
+  "sha256": "b21498160da2ecb235c6f20e8aa471545cc939fba569f122b35060d573aa8cb5",
+  "root_keys": [
+    "success",
+    "statusCode",
+    "message",
+    "messageCode",
+    "debugMessage",
+    "data",
+    "total"
+  ],
+  "docNum": "26/2026/TT-BCT",
+  "content_length": 105493
+}

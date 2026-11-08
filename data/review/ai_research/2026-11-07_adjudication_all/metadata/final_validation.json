@@ -1,0 +1,15 @@
+{
+  "time": "2026-11-07T16:41:33.739516+00:00",
+  "cases": 62,
+  "unique_lineages": 59,
+  "schema_bindings_original_hashes": "passed",
+  "consistent_same_worksheet_proposals": "passed",
+  "report_summary_match_results": "passed",
+  "native_workbooks": 8,
+  "native_rows": 314,
+  "native_proposal_prefill_matches_results": "passed",
+  "all_human_confirmations": 0,
+  "combined_rows": 62,
+  "unresolved_rows": 6,
+  "fixture_negative_proof": "Bad verdict, bad binding and conflicting same-worksheet proposal were rejected in temporary fixtures; no synthetic labels in results."
+}

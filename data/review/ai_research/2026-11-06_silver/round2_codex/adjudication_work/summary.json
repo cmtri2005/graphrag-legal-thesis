@@ -1,0 +1,16 @@
+{
+  "researched": 26,
+  "disposition": {
+    "confirm_both": 9,
+    "unresolved": 9,
+    "prefer_a": 2,
+    "prefer_b": 2,
+    "both_wrong": 4
+  },
+  "resolved_proposals": 17,
+  "unresolved": 9,
+  "human_confirmations": 0,
+  "original_labels_metrics_workbook_preserved": true,
+  "workbook": "duyet_CMT_bo_sung.xlsx",
+  "report": "adjudication_report.jsonl"
+}

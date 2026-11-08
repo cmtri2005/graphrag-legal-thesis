@@ -1,0 +1,69 @@
+{
+  "session_id": "dc3ae961-768e-486e-8987-f65675e50bef",
+  "is_error": true,
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 10,
+      "outputTokens": 8129,
+      "cacheReadInputTokens": 160211,
+      "cacheCreationInputTokens": 79908,
+      "webSearchRequests": 0,
+      "costUSD": 0.8339262000000001,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 5749,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 79908,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 79908,
+    "cache_read_input_tokens": 160211,
+    "output_tokens": 8129,
+    "output_tokens_details": {
+      "thinking_tokens": 5749
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 79908,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 4,
+        "output_tokens": 7187,
+        "cache_read_input_tokens": 78815,
+        "cache_creation_input_tokens": 1093,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1093
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "total_cost_usd": 0.8339262000000001,
+  "duration_ms": 84600,
+  "permission_denials": [],
+  "batch": "batch01",
+  "started_at": "2026-11-07T09:29:12.768012+00:00",
+  "finished_at": "2026-11-07T09:30:48.763470+00:00",
+  "input_sha256": "ca1df7dea50664b3a877d4d5ba83ca96281d072fdbf715d61e43a4cc026543ba",
+  "prompt_sha256": "558e4e22c1613944f50f3819789b5874ba49af65597f56cf64359033bcf52a86",
+  "agent_file": ".claude/agents/legal-adjudicator.md",
+  "status": "failed",
+  "returncode": 1,
+  "error": "You've hit your weekly limit · resets Nov 11, 2am (UTC)",
+  "stderr": ""
+}

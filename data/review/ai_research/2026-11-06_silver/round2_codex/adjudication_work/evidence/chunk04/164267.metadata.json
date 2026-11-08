@@ -1,0 +1,19 @@
+{
+  "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/164267",
+  "accessed_at": "2026-11-06T15:50:15.342583+00:00",
+  "success": true,
+  "error": "",
+  "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk04/164267.json",
+  "sha256": "84fca11ee93b17e5fc7afc35b73bed77499afb79d93c538cbe68b0c722c73b9b",
+  "root_keys": [
+    "success",
+    "statusCode",
+    "message",
+    "messageCode",
+    "debugMessage",
+    "data",
+    "total"
+  ],
+  "document_number": "16/2023/TT-NHNN",
+  "content_length": 49494
+}

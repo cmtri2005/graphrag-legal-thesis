@@ -1,0 +1,8 @@
+{
+  "url": "https://vbpl.vn/FileData/TW/Lists/vbpq/Attachments/38262/VanBanGoc_32.2014.TT-NHNN.pdf",
+  "tool": "curl",
+  "accessed_at": "2026-11-06T23:29:48.669834+00:00",
+  "returncode": 22,
+  "error": "curl: (22) The requested URL returned error: 403\n",
+  "status": "error"
+}

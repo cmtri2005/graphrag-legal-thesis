@@ -1,0 +1,36 @@
+{
+  "agent": "Codex native",
+  "labeler": "ai-b",
+  "model": "inherited model; exact identifier unknown",
+  "guideline_version": "4.0",
+  "skills": [
+    ".claude/skills/vn-legal-research/SKILL.md",
+    ".claude/skills/vilextime-ai-labeling/SKILL.md"
+  ],
+  "skill_revision": "unknown",
+  "input": "input_only.json; initially case.json via json.load(...)[input] only, before clean input notification",
+  "worksheet_sha256": "d0c4f8cc9341c571da6cbe2b9ed95eae5501bbc9ba37cb1ac851c4af92409d26",
+  "lineage_id": "provision:429b7aca-e172-11f0-ae06-1b87111a871a#k1#d",
+  "created_at": "2026-11-06T23:30:52.856750+00:00",
+  "replacement_context": "Fresh independent replacement of a draft rejected for binding mismatch; not a copy or reconstruction of the rejected label. No draft_label, AI-A label, system output, raw corpus or previous AI-B labels were viewed.",
+  "blindness": "Only input field of case.json and then clean input_only.json; no previous labels read.",
+  "tools_available_used": [
+    "exec_command: python3, curl",
+    "web.run: search_query"
+  ],
+  "web_curl_calls": 7,
+  "curl_calls": 5,
+  "web_search_calls": 2,
+  "lawgical_calls": 0,
+  "lawgical_quota": "unknown; connector not used",
+  "access_errors": [
+    "python executable unavailable; used python3; no legal-source access errors"
+  ],
+  "date_policy": "Effective dates interpreted from legal wording, not API date metadata.",
+  "evidence_status": "sufficient",
+  "additional_official_sources_opened": [
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/46751",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/15052"
+  ],
+  "validation": "One JSONL object; required Q1–Q4 and reason fields; binding copied directly from clean input; favorable answers imply dat; not_verified retained."
+}

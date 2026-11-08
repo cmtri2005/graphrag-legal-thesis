@@ -1,0 +1,348 @@
+{
+ "kind": "AI–AI cross-model: A claude-opus-5-5, B Codex (exact model identifiers in raw provenance where available); not human agreement or legal accuracy",
+ "guideline_version": "4.0",
+ "batch_note": "Silver chunk05–11, cross-model A Claude / B Codex; pre-adjudication; excludes chunk01 and round2",
+ "files_sha256": {
+  "a.jsonl": "b9b58c157ae03fb38c50adc9126620701d65872f4c404b4b0f1ee86d8198ebff",
+  "b.jsonl": "e7acdd2f8978494a0be565b1fbb5a8ee98e5717d6885f0364899ed93c46dce80"
+ },
+ "coverage": {
+  "requested": 106,
+  "valid_a": 106,
+  "valid_b": 106,
+  "paired": 106,
+  "missing": {
+   "a": [],
+   "b": []
+  },
+  "rejected": {
+   "a": [],
+   "b": []
+  }
+ },
+ "evidence_status": {
+  "a": {
+   "sufficient": 96,
+   "insufficient": 10
+  },
+  "b": {
+   "sufficient": 88,
+   "insufficient": 18
+  }
+ },
+ "quote_in_provided_sources": {
+  "a": {
+   "True": 99,
+   "False": 7
+  },
+  "b": {
+   "True": 103,
+   "False": 3
+  }
+ },
+ "thresholds": {
+  "ac1": 0.8,
+  "p_neg": 0.6,
+  "min_adverse": 5
+ },
+ "metrics": {
+  "q1": {
+   "n": 106,
+   "ac1": 0.8708891595615104,
+   "kappa": 0.6517739816031538,
+   "category_agreement": {
+    "dung": 0.9438202247191011,
+    "sai": 0.7058823529411765
+   },
+   "p_neg": 0.7058823529411765,
+   "confusion_a_b": {
+    "dung|dung": 84,
+    "dung|sai": 8,
+    "sai|dung": 2,
+    "sai|sai": 12
+   },
+   "adverse_labels": 34,
+   "gate": "pass"
+  },
+  "q2": {
+   "n": 106,
+   "ac1": 0.932982086406744,
+   "kappa": 0.6361556064073227,
+   "category_agreement": {
+    "co": 0.9690721649484536,
+    "khong": 0.6666666666666666
+   },
+   "p_neg": 0.6666666666666666,
+   "confusion_a_b": {
+    "co|co": 94,
+    "co|khong": 4,
+    "khong|co": 2,
+    "khong|khong": 6
+   },
+   "adverse_labels": 18,
+   "gate": "pass"
+  },
+  "q3": {
+   "n": 106,
+   "ac1": 0.8708891595615104,
+   "kappa": 0.6499339498018495,
+   "category_agreement": {
+    "co": 0.9438202247191011,
+    "khong": 0.7058823529411765
+   },
+   "p_neg": 0.7058823529411765,
+   "confusion_a_b": {
+    "co|co": 84,
+    "co|khong": 4,
+    "khong|co": 6,
+    "khong|khong": 12
+   },
+   "adverse_labels": 34,
+   "gate": "pass"
+  },
+  "q4": {
+   "n": 106,
+   "ac1": 0.9768204679641374,
+   "kappa": 0.8986615678776291,
+   "category_agreement": {
+    "co": 0.9090909090909091,
+    "khong": 0.9894736842105263
+   },
+   "p_neg": 0.9090909090909091,
+   "confusion_a_b": {
+    "co|co": 10,
+    "co|khong": 2,
+    "khong|khong": 94
+   },
+   "adverse_labels": 22,
+   "gate": "pass"
+  },
+  "verdict": {
+   "n": 106,
+   "ac1": 0.6815410444464081,
+   "kappa": 0.6776386404293382,
+   "category_agreement": {
+    "dat": 0.8521739130434782,
+    "khong_dat": 0.8247422680412371
+   },
+   "p_neg": 0.8247422680412371,
+   "confusion_a_b": {
+    "dat|dat": 49,
+    "dat|khong_dat": 11,
+    "khong_dat|dat": 6,
+    "khong_dat|khong_dat": 40
+   },
+   "adverse_labels": 97,
+   "gate": "not_met"
+  }
+ },
+ "by_group": {
+  "T2": {
+   "q1": {
+    "n": 86,
+    "ac1": 0.8916974003777998,
+    "kappa": 0.6745945945945945,
+    "category_agreement": {
+     "dung": 0.9523809523809523,
+     "sai": 0.72
+    },
+    "p_neg": 0.72,
+    "confusion_a_b": {
+     "dung|dung": 70,
+     "dung|sai": 6,
+     "sai|dung": 1,
+     "sai|sai": 9
+    },
+    "adverse_labels": 25,
+    "gate": "pass"
+   },
+   "q2": {
+    "n": 86,
+    "ac1": 0.9465506525792419,
+    "kappa": 0.6416666666666668,
+    "category_agreement": {
+     "co": 0.975,
+     "khong": 0.6666666666666666
+    },
+    "p_neg": 0.6666666666666666,
+    "confusion_a_b": {
+     "co|co": 78,
+     "co|khong": 2,
+     "khong|co": 2,
+     "khong|khong": 4
+    },
+    "adverse_labels": 12,
+    "gate": "pass"
+   },
+   "q3": {
+    "n": 86,
+    "ac1": 0.922641000269857,
+    "kappa": 0.7660500544069642,
+    "category_agreement": {
+     "co": 0.9659863945578231,
+     "khong": 0.8
+    },
+    "p_neg": 0.8,
+    "confusion_a_b": {
+     "co|co": 71,
+     "co|khong": 2,
+     "khong|co": 3,
+     "khong|khong": 10
+    },
+    "adverse_labels": 25,
+    "gate": "pass"
+   },
+   "q4": {
+    "n": 86,
+    "ac1": 0.9720234222511386,
+    "kappa": 0.8623999999999997,
+    "category_agreement": {
+     "co": 0.875,
+     "khong": 0.9871794871794872
+    },
+    "p_neg": 0.875,
+    "confusion_a_b": {
+     "co|co": 7,
+     "co|khong": 2,
+     "khong|khong": 77
+    },
+    "adverse_labels": 16,
+    "gate": "pass"
+   },
+   "verdict": {
+    "n": 86,
+    "ac1": 0.7262599469496022,
+    "kappa": 0.7155457552370451,
+    "category_agreement": {
+     "dat": 0.8775510204081632,
+     "khong_dat": 0.8378378378378378
+    },
+    "p_neg": 0.8378378378378378,
+    "confusion_a_b": {
+     "dat|dat": 43,
+     "dat|khong_dat": 7,
+     "khong_dat|dat": 5,
+     "khong_dat|khong_dat": 31
+    },
+    "adverse_labels": 74,
+    "gate": "not_met"
+   }
+  },
+  "T3": {
+   "q1": {
+    "n": 20,
+    "ac1": 0.7696737044145873,
+    "kappa": 0.5714285714285713,
+    "category_agreement": {
+     "dung": 0.9032258064516129,
+     "sai": 0.6666666666666666
+    },
+    "p_neg": 0.6666666666666666,
+    "confusion_a_b": {
+     "dung|dung": 14,
+     "dung|sai": 2,
+     "sai|dung": 1,
+     "sai|sai": 3
+    },
+    "adverse_labels": 9,
+    "gate": "not_met"
+   },
+   "q2": {
+    "n": 20,
+    "ac1": 0.865771812080537,
+    "kappa": 0.6153846153846155,
+    "category_agreement": {
+     "co": 0.9411764705882353,
+     "khong": 0.6666666666666666
+    },
+    "p_neg": 0.6666666666666666,
+    "confusion_a_b": {
+     "co|co": 16,
+     "co|khong": 2,
+     "khong|khong": 2
+    },
+    "adverse_labels": 6,
+    "gate": "pass"
+   },
+   "q3": {
+    "n": 20,
+    "ac1": 0.6161228406909789,
+    "kappa": 0.28571428571428564,
+    "category_agreement": {
+     "co": 0.8387096774193549,
+     "khong": 0.4444444444444444
+    },
+    "p_neg": 0.4444444444444444,
+    "confusion_a_b": {
+     "co|co": 13,
+     "co|khong": 2,
+     "khong|co": 3,
+     "khong|khong": 2
+    },
+    "adverse_labels": 9,
+    "gate": "not_met"
+   },
+   "q4": {
+    "n": 20,
+    "ac1": 1.0,
+    "kappa": 1.0,
+    "category_agreement": {
+     "co": 1.0,
+     "khong": 1.0
+    },
+    "p_neg": 1.0,
+    "confusion_a_b": {
+     "co|co": 3,
+     "khong|khong": 17
+    },
+    "adverse_labels": 6,
+    "gate": "pass"
+   },
+   "verdict": {
+    "n": 20,
+    "ac1": 0.511002444987775,
+    "kappa": 0.5,
+    "category_agreement": {
+     "dat": 0.7058823529411765,
+     "khong_dat": 0.782608695652174
+    },
+    "p_neg": 0.782608695652174,
+    "confusion_a_b": {
+     "dat|dat": 6,
+     "dat|khong_dat": 4,
+     "khong_dat|dat": 1,
+     "khong_dat|khong_dat": 9
+    },
+    "adverse_labels": 23,
+    "gate": "not_met"
+   }
+  }
+ },
+ "disagreements": [
+  "provision:a63e6616-eb7a-11f0-b9fe-8517617e9300#k2",
+  "provision:ec4a796a-df40-11f0-b831-318b010cb040",
+  "provision:39dbbea0-2442-11f1-9843-ddc28c645642",
+  "provision:387ff5f4-eb70-11f0-b0ef-dd04b65df9a9",
+  "provision:ec5af8a8-e16b-11f0-a3e5-2f9b10e1af97#k5",
+  "provision:5400b11e-df55-11f0-b2db-db8213713dab#k2#d",
+  "provision:393dc8e0-eac6-11f0-bb51-7b4ee690de15#k1",
+  "provision:8fcc5362-2c7e-11f1-87df-3bcf787c6e54",
+  "provision:b1944b10-2d52-11f1-9e1e-7d26aac77825",
+  "provision:429b7aca-e172-11f0-ae06-1b87111a871a#k1#d",
+  "provision:e84fde30-2ce4-11f1-adad-450d16a8bb26",
+  "provision:7a24da84-eb88-11f0-a039-3d21fa64fd7d",
+  "provision:c4f282ce-28c2-11f1-83e6-3b98479708e7",
+  "provision:1089c3ac-df56-11f0-8679-ff3f54843828",
+  "provision:68affa4a-2d46-11f1-9a51-1105efb3344b",
+  "provision:d8201dae-eb80-11f0-8294-3b5d9c04573c#k2",
+  "provision:ad4f6410-28e1-11f1-bd83-5b3f453fc965",
+  "provision:f714afba-2c06-11f1-9451-d978a915fbc0",
+  "provision:f3c99590-eada-11f0-9062-8d3b36c07159",
+  "provision:9fdf6804-2d53-11f1-ad2a-cf0eedd8b394",
+  "provision:e2122560-2c4d-11f1-aea9-f3a5d495ffb5",
+  "provision:e57794e0-319a-11f1-9327-ab85fcdf23dd",
+  "provision:f8d931e0-1df6-11f1-a901-7169bc99fc94",
+  "provision:c0af1bf0-1f67-11f1-b7e8-f7b0967b0858",
+  "provision:9276c6a6-df3a-11f0-b61c-d988e496868a#k3#b"
+ ]
+}

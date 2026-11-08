@@ -1,0 +1,55 @@
+{
+  "runtime": "native Codex inherited legal-adjudicator role",
+  "model": "unknown",
+  "agent_spec_path": ".claude/agents/legal-adjudicator.md",
+  "agent_spec_sha256": "cd01a1b534772b7be134944b4967e76445ff9e5cf8b01a73bf49cd1320c011e4",
+  "input_sha256": "f6e69dcfb9b88362d1ec9289eef439a92f8ac55e96f69f81491ff34f6fa41041",
+  "tools_used": [
+    "exec_command (python3 urllib official fetch and artifact I/O)",
+    "functions.exec",
+    "pdftotext (official signedPDF retrieval)",
+    "view_image (official scanned appendix pages)",
+    "web.run search_query/open"
+  ],
+  "access_errors": [
+    "Sandbox DNS resolution failed; retried require_escalated successfully",
+    "Lawgical MCP not exposed in native runtime",
+    "Original vbpl.vn attachments135450/38262 returned403; Government Gazette PDF fallback succeeded",
+    "CDN TLS issuer failure; per-request verification workaround used for publicPDFs, recorded in receipts",
+    "API179825 returned400; Government Gazette PDF substituted",
+    "WebFetch errors502/timeout for some Gazette/download links; urllib fallback succeeded"
+  ],
+  "external_urls_opened": [
+    "https://bocongan.gov.vn/bai-viet/huong-dan-thuc-hien-thu-tuc-hanh-chinh-thuoc-tham-quyen-giai-quyet-cua-bo-cong-an-tu-ngay-0132025-d2-t43728",
+    "https://congan.hatinh.gov.vn/index.php/thong-bao/thong-bao-ve-viec-thay-doi-dia-chi-tru-so-lam-viec-cua-cong-an-mot-so-don-vi-trong-cong-an-tinh-ha-tinh-1741595427.caht",
+    "https://congan.tayninh.gov.vn/vi/chi-tiet-tin-tuc?Id=215158",
+    "https://g7.cdnchinhphu.vn/api/download/stream?Url=tm-8mq6BhNw0NbrKRhTDAQWsKg3tuqaY0aWypnY78U6M2BY68Ekp0Gvvr483flbR0eFcHHqX6FoQ6wWguEwdoMrCdZ2DD54huEo1vpRQwUK2QS7hVv2uVhkm35gMrSC4&file_name=134_2016_N%c4%90-CP(15679).pdf",
+    "https://g7.cdnchinhphu.vn/api/download/stream?Url=tm-8mq6BhNw0NbrKRhTDAQWsKg3tuqaY0aWypnY78U6M2BY68Ekp0Gvvr483flbR739B17xnEqArwI3wew4vFjoDMPFJxTDXCMq5W34yu5nsol89uJqyTkAVgfnq6TGao5cHO2wRV2uC-hA7c5k0hQ~~&file_name=2025_927+%2b+928_184-2025-N%c4%90-CP.pdf",
+    "https://luatminhkhue.vn/van-ban/quyet-dinh-1218-qd-bgtvt-nam-2022.aspx",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/111821",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/129457",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/132109",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/136091",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/144759",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/148195",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/152588",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/153251",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/156175",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/163042",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/168328",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/175261",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/58638",
+    "https://vmrcc.gov.vn/data/upload/files/quyetdinh1218qdbgtvt.pdf"
+  ],
+  "saved_at": "2026-11-07T09:45:00.514134+00:00",
+  "adaptation": "Claude agent Bash/Write ban cannot map directly to native runtime: exec used solely for packet reading, official source retrieval, source receipts, and requested research output artifacts. No source dataset changed. No further agents/models used. Claude weekly-limit fallback instructed by parent.",
+  "validation": "Native validate_label AST-extracted unchanged with GOOD/OPTIONS/REASONS to avoid unrelated unavailable markdown_it; identity/order/hash bindings checked.",
+  "output_sha256": "5911de3030004e50e3ff2daf5ae74c726189b0b7c449318b7ee05ba4bd63fc71",
+  "validated_at": "2026-11-07T16:38:48.295092+00:00",
+  "validation_result": "PASS: all5 rows order/identity/copy bindings, required evidence schema, native validate_label and disposition exact match; no global packager run",
+  "counts": {
+    "prefer_a": 1,
+    "both_wrong": 3,
+    "unresolved": 1
+  }
+}

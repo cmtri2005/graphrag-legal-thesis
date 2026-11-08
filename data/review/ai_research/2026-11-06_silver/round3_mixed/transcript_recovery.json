@@ -1,0 +1,34 @@
+[
+  {
+    "output": "a_chunk05.md",
+    "source_transcript": "/home/trica/.claude/projects/-home-trica-UIT-Thesis-graphrag-legal-thesis/aad8dda3-63f9-4858-b90a-0ae91504b00f/subagents/agent-a785102c0ea7da712.jsonl",
+    "source_sha256": "450e99bd2cc56f2d1fcf8ed0a9fb41c3fc9308c25bd8e0dfc1e8fb93fdd7bc85",
+    "model": "claude-opus-5-5",
+    "valid": 13,
+    "rejected": []
+  },
+  {
+    "output": "a_chunk07.md",
+    "source_transcript": "/home/trica/.claude/projects/-home-trica-UIT-Thesis-graphrag-legal-thesis/aad8dda3-63f9-4858-b90a-0ae91504b00f/subagents/agent-a79628d57fecf9b74.jsonl",
+    "source_sha256": "4ef825bc81c7b753d0a4f9bbe9da0652769102600b3e8fec191bda7c6d842d36",
+    "model": "claude-opus-5-5",
+    "valid": 15,
+    "rejected": []
+  },
+  {
+    "output": "a_chunk06.md",
+    "source_transcript": "/home/trica/.claude/projects/-home-trica-UIT-Thesis-graphrag-legal-thesis/aad8dda3-63f9-4858-b90a-0ae91504b00f/subagents/agent-ae6eb62254a381343.jsonl",
+    "source_sha256": "eeb015d5ab190ce1daa769bdb8ce78d0462d944dd76c077e8b0a1330174ada5c",
+    "model": "claude-opus-5-5",
+    "valid": 11,
+    "rejected": []
+  },
+  {
+    "output": "a_chunk08.md",
+    "source_transcript": "/home/trica/.claude/projects/-home-trica-UIT-Thesis-graphrag-legal-thesis/aad8dda3-63f9-4858-b90a-0ae91504b00f/subagents/agent-a848331a41663b405.jsonl",
+    "source_sha256": "0ae24d352b72fe86d11b34d8fab467a45bd0fe68975e121a489d3dcf738f00c1",
+    "model": "claude-opus-5-5",
+    "valid": 19,
+    "rejected": []
+  }
+]

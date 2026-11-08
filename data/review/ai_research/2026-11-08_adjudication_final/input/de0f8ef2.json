@@ -1,0 +1,383 @@
+[
+ {
+  "worksheet_sha256": "48be91132d6fd0bf8513054f982014335ac879703e5b43c548a9d04ed9766820",
+  "record": {
+   "lineage_id": "provision:de0f8ef2-2c85-11f1-b16a-0dee4373a04b",
+   "group": "T3",
+   "stratum": "T3",
+   "batch": 3,
+   "question": "Trường hợp kinh doanh hàng hóa xâm phạm quyền sở hữu công nghiệp có giá trị nhỏ, những hành vi cụ thể nào bị phạt cảnh cáo hoặc phạt tiền từ 500.000 đồng đến 2.000.000 đồng?",
+   "rows": [
+    {
+     "id": "vilextime:T3:provision:de0f8ef2-2c85-11f1-b16a-0dee4373a04b:2021-12-31",
+     "as_of": "2021-12-31",
+     "as_of_strategy": "ranh_gioi",
+     "version_id": "version:de0f8ef2-2c85-11f1-b16a-0dee4373a04b:1",
+     "answer": "a) Bán; chào hàng; vận chuyển, kể cả quá cảnh; tàng trữ; trưng bày để bán hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp;",
+     "answerable": true,
+     "short_answer": "Bán; chào hàng; vận chuyển, kể cả quá cảnh; tàng trữ; trưng bày để bán hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=31905",
+     "target": {
+      "document_id": "document:31905",
+      "law_id": "99/2013/NĐ-CP",
+      "document_title": "Nghị định số 99/2013/NĐ-CP Quy định xử phạt vi phạm hành chính trong lĩnh vực sở hữu công nghiệp",
+      "article_id": "11",
+      "clause_id": "1",
+      "point_id": "a",
+      "citation": "Điểm a Khoản 1 Điều 11",
+      "provision_path": "Chương II › Mục 2 › Điều 11 › Khoản 1 › Điểm a",
+      "lead_in": "1. Phạt cảnh cáo hoặc phạt tiền từ 500.000 đồng đến 2.000.000 đồng đối với một trong các hành vi sau đây vì mục đích kinh doanh trong trường hợp giá trị hàng hóa, dịch vụ vi phạm đến 3.000.000 đồng:"
+     }
+    },
+    {
+     "id": "vilextime:T3:provision:de0f8ef2-2c85-11f1-b16a-0dee4373a04b:2024-06-30",
+     "as_of": "2024-06-30",
+     "as_of_strategy": "ranh_gioi",
+     "version_id": "version:de0f8ef2-2c85-11f1-b16a-0dee4373a04b:2",
+     "answer": "a) Buôn bán; chào hàng; vận chuyển, kể cả quá cảnh; tàng trữ; trưng bày để bán hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp;",
+     "answerable": true,
+     "short_answer": "Buôn bán; chào hàng; vận chuyển, kể cả quá cảnh; tàng trữ; trưng bày để bán hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=31905",
+     "target": {
+      "document_id": "document:31905",
+      "law_id": "99/2013/NĐ-CP",
+      "document_title": "Nghị định số 99/2013/NĐ-CP Quy định xử phạt vi phạm hành chính trong lĩnh vực sở hữu công nghiệp",
+      "article_id": "11",
+      "clause_id": "1",
+      "point_id": "a",
+      "citation": "Điểm a Khoản 1 Điều 11",
+      "provision_path": "Chương II › Mục 2 › Điều 11 › Khoản 1 › Điểm a",
+      "lead_in": "1. Phạt cảnh cáo hoặc phạt tiền từ 500.000 đồng đến 2.000.000 đồng đối với một trong các hành vi sau đây vì mục đích kinh doanh trong trường hợp giá trị hàng hóa, dịch vụ vi phạm đến 3.000.000 đồng:"
+     }
+    },
+    {
+     "id": "vilextime:T3:provision:de0f8ef2-2c85-11f1-b16a-0dee4373a04b:2024-07-01",
+     "as_of": "2024-07-01",
+     "as_of_strategy": "ranh_gioi",
+     "version_id": "version:de0f8ef2-2c85-11f1-b16a-0dee4373a04b:3",
+     "answer": "a) Buôn bán; chào hàng; tàng trữ để bán; trưng bày để bán; vận chuyển không bao gồm quá cảnh hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp;",
+     "answerable": true,
+     "short_answer": "Buôn bán; chào hàng; tàng trữ để bán; trưng bày để bán; vận chuyển không bao gồm quá cảnh hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=31905",
+     "target": {
+      "document_id": "document:31905",
+      "law_id": "99/2013/NĐ-CP",
+      "document_title": "Nghị định số 99/2013/NĐ-CP Quy định xử phạt vi phạm hành chính trong lĩnh vực sở hữu công nghiệp",
+      "article_id": "11",
+      "clause_id": "1",
+      "point_id": "a",
+      "citation": "Điểm a Khoản 1 Điều 11",
+      "provision_path": "Chương II › Mục 2 › Điều 11 › Khoản 1 › Điểm a",
+      "lead_in": "1. Phạt cảnh cáo hoặc phạt tiền từ 500.000 đồng đến 2.000.000 đồng đối với một trong các hành vi sau đây vì mục đích kinh doanh trong trường hợp giá trị hàng hóa, dịch vụ vi phạm đến 3.000.000 đồng:"
+     }
+    }
+   ],
+   "sources": {
+    "base": {
+     "document": "99/2013/NĐ-CP",
+     "title": "Nghị định số 99/2013/NĐ-CP Quy định xử phạt vi phạm hành chính trong lĩnh vực sở hữu công nghiệp",
+     "issued": "2013-08-29",
+     "effective_from": "2013-10-15",
+     "effective_to": null,
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=31905",
+     "passage": "Điều 11. Xâm phạm quyền đối với nhãn hiệu, chỉ dẫn địa lý, tên thương mại, kiểu dáng công nghiệp\n1. Phạt cảnh cáo hoặc phạt tiền từ 500.000 đồng đến 2.000.000 đồng đối với một trong các hành vi sau đây vì mục đích kinh doanh trong trường hợp giá trị hàng hóa, dịch vụ vi phạm đến 3.000.000 đồng:\na) Bán; chào hàng; vận chuyển, kể cả quá cảnh; tàng trữ; trưng bày để bán hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp;\nb) Đặt hàng, giao việc, thuê người khác thực hiện hành vi quy định tại Điểm a Khoản này."
+    },
+    "actors": [
+     {
+      "document": "126/2021/NĐ-CP",
+      "title": "Nghị định số 126/2021/NĐ-CP Sửa đổi, bổ sung một số điều của các nghị định quy định xử phạt vi phạm hành chính trong lĩnh vực sở hữu công nghiệp; tiêu chuẩn, đo lường và chất lượng sản phẩm, hàng hóa; hoạt động khoa học và công nghệ, chuyển giao công nghệ; năng lượng nguyên tử",
+      "issued": "2021-12-30",
+      "effective_from": "2022-01-01",
+      "effective_to": null,
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=154199",
+      "passage": "a) Sửa đổi, bổ sung điểm a khoản 1 như sau:\n“a) Buôn bán; chào hàng; vận chuyển, kể cả quá cảnh; tàng trữ; trưng bày để bán sản phẩm xâm phạm quyền đối với sáng chế, giải pháp hữu ích, thiết kế bố trí hoặc sản phẩm được sản xuất từ quy trình xâm phạm quyền đối với sáng chế, giải pháp hữu ích;”;",
+      "transitional": "2. Điều khoản chuyển tiếp:\na) Đối với hành vi vi phạm hành chính trong lĩnh vực sở hữu công nghiệp; tiêu chuẩn, đo lường và chất lượng sản phẩm, hàng hóa; hoạt động khoa học và công nghệ, chuyển giao công nghệ; năng lượng nguyên tử xảy ra trước ngày Nghị định này có hiệu lực, sau đó mới bị phát hiện hoặc đang xem xét, giải quyết mà Nghị định này không quy định trách nhiệm pháp lý hoặc quy định trách nhiệm pháp lý nhẹ hơn thì áp dụng các quy định tại Nghị định này;\nb) Đối với quyết định xử phạt vi phạm hành chính đã được ban hành hoặc đã được thi hành xong trước thời điểm Nghị định này có hiệu lực thi hành mà cá nhân, tổ chức bị xử phạt vi phạm hành chính còn khiếu nại thì áp dụng quy định của Nghị định số 99/2013/NĐ-CP ngày 29 tháng 8 năm 2013 của Chính phủ quy định xử phạt vi phạm hành chính trong lĩnh vực sở hữu công nghiệp, Nghị định số 119/2017/NĐ-CP ngày 01 tháng 11 năm 2017 của Chính phủ quy định xử phạt vi phạm hành chính trong lĩnh vực tiêu chuẩn, đo lường và chất lượng sản phẩm, hàng hóa, Nghị định số 51/2019/NĐ-CP ngày 13 tháng 6 năm 2019 của Chính phủ quy định xử phạt vi phạm hành chính trong hoạt động khoa học và công nghệ, chuyển giao công nghệ, Nghị định số 107/2013/NĐ-CP ngày 20 tháng 9 năm 2013 của Chính phủ quy định xử phạt vi phạm hành chính trong lĩnh vực năng lượng nguyên tử.\nNơi nhận:\n- Ban Bí thư Trung ương Đảng;\n- Thủ tướng, các Phó Thủ tướng Chính phủ;\n- Các bộ, cơ quan ngang bộ, cơ quan thuộc Chính phủ;\n- HĐND, UBND các tỉnh, thành phố trực thuộc trung ương;\n- Văn phòng Trung ương và các Ban của Đảng;\n- Văn phòng Tổng Bí thư;\n- Văn phòng Chủ tịch nước;\n- Hội đồng Dân tộc và các Ủy ban của Quốc hội;\n- Văn phòng Quốc hội;\n- Tòa án nhân dân tối cao;\n- Viện kiểm sát nhân dân tối cao;\n- Kiểm toán nhà nước;\n- Ủy ban Giám sát tài chính Quốc gia;\n- Ngân hàng Chính sách Xã hội;\n- Ngân hàng Phát triển Việt Nam;\n- Ủy ban trung ương Mặt trận Tổ quốc Việt Nam;\n- Cơ quan trung ương của các đoàn thể;\n- VPCP: BTCN, các PCN, Trợ lý TTg, TGĐ Cổng TTĐT,\ncác Vụ, Cục, đơn vị trực thuộc, Công báo;\n- Lưu: VT, KGVX (2b).\nTM. CHÍNH PHỦ\nKT. THỦ TƯỚNG\nPHÓ THỦ TƯỚNG\n(Đã ký)\nVũ Đức Đam",
+      "in_force": "1. Nghị định này có hiệu lực từ ngày 01 tháng 01 năm 2022."
+     },
+     {
+      "document": "46/2024/NĐ-CP",
+      "title": "Nghị định số 46/2024/NĐ-CP Sửa đổi, bổ sung một số điều của Nghị định số 99/2013/NĐ-CP ngày 29 tháng 8 năm 2013 của Chính phủ quy định xử phạt vi phạm hành chính trong lĩnh vực sở hữu công nghiệp đã được sửa đổi bổ sung một số điều theo Nghị định số 126/2021/NĐ-CP ngày 30 tháng 12 năm 2021 của Chính phủ",
+      "issued": "2024-05-04",
+      "effective_from": "2024-07-01",
+      "effective_to": null,
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=170812",
+      "passage": "a) Sửa đổi, bổ sung điểm a khoản 1 như sau:\n“a) Buôn bán; chào hàng; tàng trữ để bán; trưng bày để bán; vận chuyển không bao gồm quá cảnh sản phẩm xâm phạm quyền đối với sáng chế, giải pháp hữu ích, thiết kế bố trí hoặc sản phẩm được sản xuất từ quy trình xâm phạm quyền đối với sáng chế, giải pháp hữu ích;”.",
+      "transitional": "2. Điều khoản chuyển tiếp:\nĐối với hành vi vi phạm hành chính trong lĩnh vực sở hữu công nghiệp xảy ra trước ngày Nghị định này có hiệu lực thi hành mà sau đó mới bị phát hiện hoặc đang xem xét, giải quyết thì áp dụng Nghị định của Chính phủ về xử phạt vi phạm hành chính có hiệu lực tại thời điểm thực hiện hành vi vi phạm để xử lý, trừ trường hợp Nghị định này không quy định trách nhiệm pháp lý hoặc quy định trách nhiệm pháp lý nhẹ hơn đối với hành vi đã xảy ra thì áp dụng các quy định của Nghị định này để xử lý.\nĐối với quyết định xử phạt vi phạm hành chính đã được ban hành hoặc đã được thi hành xong trước thời điểm Nghị định này có hiệu lực thi hành mà tổ chức, cá nhân bị xử phạt vi phạm hành chính còn khiếu nại thì áp dụng quy định của Nghị định số 99/2013/NĐ-CP ngày 29 tháng 8 năm 2013 của Chính phủ quy định xử phạt vi phạm hành chính trong lĩnh vực sở hữu công nghiệp đã được sửa đổi, bổ sung một số điều theo Nghị định số 126/2021/NĐ-CP ngày 30 tháng 12 năm 2021 của Chính phủ để xem xét, giải quyết./.\nNơi nhận:\n- Ban Bí thư Trung ương Đảng;\n- Thủ tướng, các Phó Thủ tướng Chính phủ;\n- Các bộ, cơ quan ngang bộ, cơ quan thuộc Chính phủ;\n- HĐND, UBND các tỉnh, thành phố trực thuộc trung ương;\n- Văn phòng Trung ương và các Ban của Đảng;\n- Văn phòng Tổng Bí thư;\n- Văn phòng Chủ tịch nước;\n- Hội đồng Dân tộc và các Ủy ban của Quốc hội;\n- Văn phòng Quốc hội;\n- Tòa án nhân dân tối cao;\n- Viện kiểm sát nhân dân tối cao;\n- Kiểm toán nhà nước;\n- Ủy ban Giám sát tài chính Quốc gia;\n- Ngân hàng Chính sách xã hội;\n- Ngân hàng Phát triển Việt Nam;\n- Ủy ban trung ương Mặt trận Tổ quốc Việt Nam;\n- Cơ quan trung ương của các đoàn thể;\n- VPCP: BTCN, các PCN, Trợ lý TTg, TGĐ Cổng TTĐT,các Vụ, Cục, đơn vị trực thuộc, Công báo;\n- Lưu: VT, KGVX (2).\nTM. CHÍNH PHỦ\nKT. THỦ TƯỚNG\nPHÓ THỦ TƯỚNG\n(Đã ký)\nTrần Lưu Quang",
+      "in_force": "1. Nghị định này có hiệu lực thi hành từ ngày 01 tháng 7 năm 2024."
+     }
+    ]
+   }
+  },
+  "official": [
+   {
+    "document": "99/2013/NĐ-CP",
+    "item_id": "31905",
+    "part": "Điều 11 (bản ban hành)",
+    "source_tier": "official",
+    "source": "vbpl CSDL quốc gia, bản crawl data/raw/31905.json",
+    "truncated": false,
+    "text": "Điều 11. Xâm phạm quyền đối với nhãn hiệu, chỉ dẫn địa lý, tên thương mại, kiểu dáng công nghiệp\n1. Phạt cảnh cáo hoặc phạt tiền từ 500.000 đồng đến 2.000.000 đồng đối với một trong các hành vi sau đây vì mục đích kinh doanh trong trường hợp giá trị hàng hóa, dịch vụ vi phạm đến 3.000.000 đồng:\na) Bán; chào hàng; vận chuyển, kể cả quá cảnh; tàng trữ; trưng bày để bán hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp;\nb) Đặt hàng, giao việc, thuê người khác thực hiện hành vi quy định tại Điểm a Khoản này.\n2. Phạt tiền từ 2.000.000 đồng đến 4.000.000 đồng đối với một trong các hành vi vi phạm quy định tại Khoản 1 Điều này trong trường hợp giá trị hàng hóa, dịch vụ vi phạm từ trên 3.000.000 đồng đến 5.000.000 đồng.\n3. Phạt tiền từ 4.000.000 đồng đến 8.000.000 đồng đối với một trong các hành vi vi phạm quy định tại Khoản 1 Điều này trong trường hợp giá trị hàng hóa, dịch vụ vi phạm từ trên 5.000.000 đồng đến 10.000.000 đồng.\n4. Phạt tiền từ 8.000.000 đồng đến 15.000.000 đồng đối với một trong các hành vi vi phạm quy định tại Khoản 1 Điều này trong trường hợp giá trị hàng hóa, dịch vụ vi phạm từ trên 10.000.000 đồng đến 20.000.000 đồng.\n5. Phạt tiền từ 15.000.000 đồng đến 25.000.000 đồng đối với một trong các hành vi vi phạm quy định tại Khoản 1 Điều này trong trường hợp giá trị hàng hóa, dịch vụ vi phạm từ trên 20.000.000 đồng đến 40.000.000 đồng.\n6. Phạt tiền từ 25.000.000 đồng đến 40.000.000 đồng đối với một trong các hành vi vi phạm quy định tại Khoản 1 Điều này trong trường hợp giá trị hàng hóa, dịch vụ vi phạm từ trên 40.000.000 đồng đến 70.000.000 đồng.\n7. Phạt tiền từ 40.000.000 đồng đến 60.000.000 đồng đối với một trong các hành vi vi phạm quy định tại Khoản 1 Điều này trong trường hợp giá trị hàng hóa, dịch vụ vi phạm từ trên 70.000.000 đồng đến 100.000.000 đồng.\n8. Phạt tiền từ 60.000.000 đồng đến 80.000.000 đồng đối với một trong các hành vi vi phạm quy định tại Khoản 1 Điều này trong trường hợp giá trị hàng hóa, dịch vụ vi phạm từ trên 100.000.000 đồng đến 200.000.000 đồng.\n9. Phạt tiền từ 80.000.000 đồng đến 110.000.000 đồng đối với một trong các hành vi vi phạm quy định tại Khoản 1 Điều này trong trường hợp giá trị hàng hóa, dịch vụ vi phạm từ trên 200.000.000 đồng đến 300.000.000 đồng.\n10. Phạt tiền từ 110.000.000 đồng đến 150.000.000 đồng đối với một trong các hành vi vi phạm quy định tại Khoản 1 Điều này trong trường hợp giá trị hàng hóa, dịch vụ vi phạm từ trên 300.000.000 đồng đến 400.000.000 đồng.\n11. Phạt tiền từ 150.000.000 đồng đến 200.000.000 đồng đối với một trong các hành vi vi phạm quy định tại Khoản 1 Điều này trong trường hợp giá trị hàng hóa, dịch vụ vi phạm từ trên 400.000.000 đồng đến 500.000.000 đồng.\n12. Phạt tiền từ 200.000.000 đồng đến 250.000.000 đồng đối với một trong các hành vi vi phạm quy định tại Khoản 1 Điều này trong trường hợp giá trị hàng hóa vi phạm trên 500.000.000 đồng.\n13. Phạt tiền bằng 1,2 lần mức tiền phạt quy định từ Khoản 1 đến Khoản 12 Điều này nhưng không vượt quá 250.000.000 đồng đối với một trong các hành vi sau đây:\na) Thiết kế, chế tạo, gia công, lắp ráp, chế biến, đóng gói hàng hóa mang dấu hiệu xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp;\nb) In, dán, đính, đúc, dập khuôn hoặc bằng hình thức khác tem, nhãn, vật phẩm khác mang dấu hiệu xâm phạm quyền đối với nhãn hiệu, chỉ dẫn địa lý, kiểu dáng công nghiệp, tên thương mại lên hàng hóa;\nc) Nhập khẩu hàng hóa mang dấu hiệu xâm phạm quyền đối với nhãn hiệu, chỉ dẫn địa lý, tên thương mại, kiểu dáng công nghiệp;\nd) Đặt hàng, giao việc, thuê người khác thực hiện hành vi quy định tại các Điểm a, b và c Khoản này.\n14. Phạt tiền từ 10.000.000 đồng đến 30.000.000 đồng đối với hành vi xâm phạm quyền đối với nhãn hiệu, chỉ dẫn địa lý, tên thương mại, kiểu dáng công nghiệp quy định tại Khoản 1 và Khoản 13 Điều này trong trường hợp không có căn cứ xác định giá trị hàng hóa, dịch vụ vi phạm.\n15. Phạt tiền từ 10.000.000 đồng đến 20.000.000 đồng đối với hành vi sử dụng dấu hiệu xâm phạm quyền đối với nhãn hiệu, chỉ dẫn địa lý, tên thương mại trên biển hiệu, giấy tờ giao dịch kinh doanh, phương tiện kinh doanh, phương tiện dịch vụ, bao bì hàng hóa.\n16. Hình thức xử phạt bổ sung:\nĐình chỉ hoạt động kinh doanh hàng hóa, dịch vụ vi phạm từ 01 tháng đến 03 tháng đối với hành vi vi phạm quy định từ Khoản 1 đến Khoản 15 Điều này.\n17. Biện pháp khắc phục hậu quả:\na) Buộc loại bỏ yếu tố vi phạm và tiêu hủy yếu tố vi phạm đối với hành vi vi phạm quy định từ Khoản 1 đến Khoản 15 Điều này;\nb) Buộc tiêu hủy tang vật, phương tiện vi phạm nếu không loại bỏ được yếu tố vi phạm; tem, nhãn, bao bì, vật phẩm vi phạm đối với hành vi vi phạm quy định từ Khoản 1 đến Khoản 15 Điều này;\nc) Buộc đưa ra khỏi lãnh thổ Việt Nam hàng hóa quá cảnh xâm phạm quyền sở hữu công nghiệp đối với hành vi vi phạm quy định từ Khoản 1 đến Khoản 12 Điều này;\nd) Buộc thay đổi tên doanh nghiệp, loại bỏ yếu tố vi phạm trong tên doanh nghiệp đối với hành vi vi phạm quy định từ Khoản 1 đến Khoản 15 Điều này;\nđ) Buộc nộp lại số lợi bất hợp pháp có được do thực hiện hành vi vi phạm quy định từ Khoản 1 đến Khoản 15 Điều này."
+   },
+   {
+    "document": "126/2021/NĐ-CP",
+    "item_id": "154199",
+    "part": "điều hiệu lực, chuyển tiếp",
+    "source_tier": "official",
+    "source": "vbpl CSDL quốc gia, bản crawl data/raw/154199.json",
+    "truncated": false,
+    "text": "Điều 7. Điều khoản thi hành\n1. Nghị định này có hiệu lực từ ngày 01 tháng 01 năm 2022.\n2. Điều khoản chuyển tiếp:\na) Đối với hành vi vi phạm hành chính trong lĩnh vực sở hữu công nghiệp; tiêu chuẩn, đo lường và chất lượng sản phẩm, hàng hóa; hoạt động khoa học và công nghệ, chuyển giao công nghệ; năng lượng nguyên tử xảy ra trước ngày Nghị định này có hiệu lực, sau đó mới bị phát hiện hoặc đang xem xét, giải quyết mà Nghị định này không quy định trách nhiệm pháp lý hoặc quy định trách nhiệm pháp lý nhẹ hơn thì áp dụng các quy định tại Nghị định này;\nb) Đối với quyết định xử phạt vi phạm hành chính đã được ban hành hoặc đã được thi hành xong trước thời điểm Nghị định này có hiệu lực thi hành mà cá nhân, tổ chức bị xử phạt vi phạm hành chính còn khiếu nại thì áp dụng quy định của Nghị định số 99/2013/NĐ-CP ngày 29 tháng 8 năm 2013 của Chính phủ quy định xử phạt vi phạm hành chính trong lĩnh vực sở hữu công nghiệp, Nghị định số 119/2017/NĐ-CP ngày 01 tháng 11 năm 2017 của Chính phủ quy định xử phạt vi phạm hành chính trong lĩnh vực tiêu chuẩn, đo lường và chất lượng sản phẩm, hàng hóa, Nghị định số 51/2019/NĐ-CP ngày 13 tháng 6 năm 2019 của Chính phủ quy định xử phạt vi phạm hành chính trong hoạt động khoa học và công nghệ, chuyển giao công nghệ, Nghị định số 107/2013/NĐ-CP ngày 20 tháng 9 năm 2013 của Chính phủ quy định xử phạt vi phạm hành chính trong lĩnh vực năng lượng nguyên tử.\nNơi nhận:\n- Ban Bí thư Trung ương Đảng;\n- Thủ tướng, các Phó Thủ tướng Chính phủ;\n- Các bộ, cơ quan ngang bộ, cơ quan thuộc Chính phủ;\n- HĐND, UBND các tỉnh, thành phố trực thuộc trung ương;\n- Văn phòng Trung ương và các Ban của Đảng;\n- Văn phòng Tổng Bí thư;\n- Văn phòng Chủ tịch nước;\n- Hội đồng Dân tộc và các Ủy ban của Quốc hội;\n- Văn phòng Quốc hội;\n- Tòa án nhân dân tối cao;\n- Viện kiểm sát nhân dân tối cao;\n- Kiểm toán nhà nước;\n- Ủy ban Giám sát tài chính Quốc gia;\n- Ngân hàng Chính sách Xã hội;\n- Ngân hàng Phát triển Việt Nam;\n- Ủy ban trung ương Mặt trận Tổ quốc Việt Nam;\n- Cơ quan trung ương của các đoàn thể;\n- VPCP: BTCN, các PCN, Trợ lý TTg, TGĐ Cổng TTĐT,\ncác Vụ, Cục, đơn vị trực thuộc, Công báo;\n- Lưu: VT, KGVX (2b).\nTM. CHÍNH PHỦ\nKT. THỦ TƯỚNG\nPHÓ THỦ TƯỚNG\n(Đã ký)\nVũ Đức Đam"
+   },
+   {
+    "document": "46/2024/NĐ-CP",
+    "item_id": "170812",
+    "part": "điều hiệu lực, chuyển tiếp",
+    "source_tier": "official",
+    "source": "vbpl CSDL quốc gia, bản crawl data/raw/170812.json",
+    "truncated": false,
+    "text": "Điều 4. Điều khoản thi hành\n1. Nghị định này có hiệu lực thi hành từ ngày 01 tháng 7 năm 2024.\n2. Điều khoản chuyển tiếp:\nĐối với hành vi vi phạm hành chính trong lĩnh vực sở hữu công nghiệp xảy ra trước ngày Nghị định này có hiệu lực thi hành mà sau đó mới bị phát hiện hoặc đang xem xét, giải quyết thì áp dụng Nghị định của Chính phủ về xử phạt vi phạm hành chính có hiệu lực tại thời điểm thực hiện hành vi vi phạm để xử lý, trừ trường hợp Nghị định này không quy định trách nhiệm pháp lý hoặc quy định trách nhiệm pháp lý nhẹ hơn đối với hành vi đã xảy ra thì áp dụng các quy định của Nghị định này để xử lý.\nĐối với quyết định xử phạt vi phạm hành chính đã được ban hành hoặc đã được thi hành xong trước thời điểm Nghị định này có hiệu lực thi hành mà tổ chức, cá nhân bị xử phạt vi phạm hành chính còn khiếu nại thì áp dụng quy định của Nghị định số 99/2013/NĐ-CP ngày 29 tháng 8 năm 2013 của Chính phủ quy định xử phạt vi phạm hành chính trong lĩnh vực sở hữu công nghiệp đã được sửa đổi, bổ sung một số điều theo Nghị định số 126/2021/NĐ-CP ngày 30 tháng 12 năm 2021 của Chính phủ để xem xét, giải quyết./.\nNơi nhận:\n- Ban Bí thư Trung ương Đảng;\n- Thủ tướng, các Phó Thủ tướng Chính phủ;\n- Các bộ, cơ quan ngang bộ, cơ quan thuộc Chính phủ;\n- HĐND, UBND các tỉnh, thành phố trực thuộc trung ương;\n- Văn phòng Trung ương và các Ban của Đảng;\n- Văn phòng Tổng Bí thư;\n- Văn phòng Chủ tịch nước;\n- Hội đồng Dân tộc và các Ủy ban của Quốc hội;\n- Văn phòng Quốc hội;\n- Tòa án nhân dân tối cao;\n- Viện kiểm sát nhân dân tối cao;\n- Kiểm toán nhà nước;\n- Ủy ban Giám sát tài chính Quốc gia;\n- Ngân hàng Chính sách xã hội;\n- Ngân hàng Phát triển Việt Nam;\n- Ủy ban trung ương Mặt trận Tổ quốc Việt Nam;\n- Cơ quan trung ương của các đoàn thể;\n- VPCP: BTCN, các PCN, Trợ lý TTg, TGĐ Cổng TTĐT,các Vụ, Cục, đơn vị trực thuộc, Công báo;\n- Lưu: VT, KGVX (2).\nTM. CHÍNH PHỦ\nKT. THỦ TƯỚNG\nPHÓ THỦ TƯỚNG\n(Đã ký)\nTrần Lưu Quang"
+   }
+  ],
+  "official_missing": [],
+  "run_id": "round2_codex",
+  "case_id": "round2_codex::provision:de0f8ef2-2c85-11f1-b16a-0dee4373a04b",
+  "lineage_id": "provision:de0f8ef2-2c85-11f1-b16a-0dee4373a04b",
+  "a": {
+   "lineage_id": "provision:de0f8ef2-2c85-11f1-b16a-0dee4373a04b",
+   "labeler": "ai-a",
+   "label_origin": "ai",
+   "verification_status": "not_verified",
+   "guideline_version": "4.0",
+   "worksheet_sha256": "48be91132d6fd0bf8513054f982014335ac879703e5b43c548a9d04ed9766820",
+   "q1": "dung",
+   "q1_reason": "",
+   "q2": "khong",
+   "q2_reason": "group_mismatch",
+   "q3": "khong",
+   "q3_reason": "question_ambiguous",
+   "q4": "khong",
+   "q4_reason": "",
+   "quote": "a) Buôn bán; chào hàng; tàng trữ để bán; trưng bày để bán; vận chuyển không bao gồm quá cảnh hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp;",
+   "search_log": "Đọc official và sources trong input được giao; đối chiếu đoạn sửa đổi qua API CSDL quốc gia khi truy cập được. Không phải ca T6.",
+   "note": "[phân vân] Câu hỏi bao quát các hành vi xâm phạm sở hữu công nghiệp trong cả khoản, nhưng đáp án chỉ có điểm a, bỏ việc đặt hàng, giao việc, thuê người khác ở điểm b. Chọn Q2 Không vì chưa chứng minh lần đổi “Bán” thành “Buôn bán” tạo một đáp án pháp lý mới độc lập; cần luật sư xác nhận điều kiện đủ ba trạng thái của T3.",
+   "evidence_status": "insufficient",
+   "verdict": "khong_dat",
+   "evidence": [
+    {
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/170812",
+     "source_tier": "official",
+     "document_number": "46/2024/NĐ-CP",
+     "provision": "Điểm a Khoản 1 Điều 11 được sửa đổi; điều hiệu lực",
+     "as_of": "2021-12-31,2024-06-30,2024-07-01",
+     "quote": "a) Buôn bán; chào hàng; tàng trữ để bán; trưng bày để bán; vận chuyển không bao gồm quá cảnh hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp;",
+     "accessed_at": "2026-11-06T15:35:24.765603+00:00"
+    },
+    {
+     "url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=31905",
+     "source_tier": "official",
+     "document_number": "99/2013/NĐ-CP",
+     "provision": "Điểm b Khoản 1 Điều 11 (official đóng gói)",
+     "as_of": "2021-12-31",
+     "quote": "b) Đặt hàng, giao việc, thuê người khác thực hiện hành vi quy định tại Điểm a Khoản này.",
+     "accessed_at": "2026-11-06T15:35:24.765603+00:00"
+    }
+   ],
+   "quote_in_provided_sources": false
+  },
+  "b": {
+   "lineage_id": "provision:de0f8ef2-2c85-11f1-b16a-0dee4373a04b",
+   "labeler": "ai-b",
+   "label_origin": "ai",
+   "verification_status": "not_verified",
+   "guideline_version": "4.0",
+   "worksheet_sha256": "48be91132d6fd0bf8513054f982014335ac879703e5b43c548a9d04ed9766820",
+   "q1": "dung",
+   "q1_reason": "",
+   "q2": "co",
+   "q2_reason": "",
+   "q3": "khong",
+   "q3_reason": "question_ambiguous",
+   "q4": "khong",
+   "q4_reason": "",
+   "verdict": "khong_dat",
+   "quote": "a) Buôn bán; chào hàng; vận chuyển, kể cả quá cảnh; tàng trữ; trưng bày để bán hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp;",
+   "search_log": "",
+   "note": "Câu hỏi hỏi chung các hành vi cùng mức phạt nhưng điểm b khoản 1 cũng trả lời được, không ghim riêng điểm a. [phân vân] Chưa mở được đúng đoạn sửa Điều 11 của Nghị định 46/2024 để kiểm trọn chuỗi và chưa xác định chắc mức thay đổi thực chất giữa bán và buôn bán.",
+   "evidence_status": "insufficient",
+   "evidence": [
+    {
+     "url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=170812",
+     "source_tier": "official",
+     "document_number": "46/2024/NĐ-CP",
+     "provision": "điều hiệu lực, chuyển tiếp",
+     "as_of": "2024-07-01",
+     "quote": "Nghị định này có hiệu lực thi hành từ ngày 01 tháng 7 năm 2024.",
+     "accessed_at": "2026-11-06T15:35:05.375391+00:00"
+    },
+    {
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/154199",
+     "source_tier": "official",
+     "document_number": "126/2021/NĐ-CP",
+     "provision": "điểm a khoản 10 Điều 1",
+     "as_of": "2024-06-30",
+     "quote": "a) Buôn bán; chào hàng; vận chuyển, kể cả quá cảnh; tàng trữ; trưng bày để bán hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp;",
+     "accessed_at": "2026-11-06T15:35:05.375391+00:00"
+    }
+   ],
+   "quote_in_provided_sources": false
+  },
+  "disputed_fields": [
+   "q2",
+   "q2_reason"
+  ],
+  "raw_a_sha256": "dd5f18895d7ebf636d4b42c559952dfd8cafec917e8a1cce29095e595cefa1be",
+  "raw_b_sha256": "9cc3983c86394babc124b273d76eef129e72efbf72de045e8bfdd9689618efeb",
+  "prior_proposal": {
+   "lineage_id": "provision:de0f8ef2-2c85-11f1-b16a-0dee4373a04b",
+   "worksheet_sha256": "48be91132d6fd0bf8513054f982014335ac879703e5b43c548a9d04ed9766820",
+   "raw_a_sha256": "4b79b34be755ba55021dd76d753099abbcbec744526276eb50b88953a9807719",
+   "raw_b_sha256": "c1e219a99de7189314ad792fac50676dfcd8bbd8e59212fa83fe47d22575f554",
+   "disputed_fields": [
+    "q2"
+   ],
+   "proposed_label": null,
+   "disposition": "unresolved",
+   "reasoning": "A và B cùng phát hiện đúng lỗi độc lập Q3: câu hỏi bao quát những hành vi cùng mức phạt nhưng đáp án chỉ điểm a; điểm b khoản 1 Điều 11 còn đặt hàng, giao việc, thuê người khác. Đã mở đầy đủ bản ban hành, khoản 10 Điều 1 NĐ126/2021 và khoản 10 Điều 1 NĐ46/2024: lời văn và ngày chuyển 01/01/2022, 01/07/2024 được xác nhận, trích tác động trong worksheet lấy nhầm Điều10 nhưng chuỗi Điều11 có tồn tại trong toàn văn. A thận trọng ở Q2, B khẳng định ba trạng thái; chưa có định nghĩa hoặc căn cứ giải thích chứng minh đổi Bán thành Buôn bán là thay đổi thực chất R1. Vì vậy xác nhận khong_dat do Q3 độc lập, chưa chốt đủ thẻ Q2; proposed_label để null, không chuyển thiếu nguồn thành khẳng định không thay đổi.",
+   "evidence": [
+    {
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/31905",
+     "document_number": "99/2013/NĐ-CP",
+     "provision": "Điểm a,b khoản 1 Điều 11",
+     "as_of": "2021-12-31,2024-06-30,2024-07-01",
+     "quote": "Điều 11. Xâm phạm quyền đối với nhãn hiệu, chỉ dẫn địa lý, tên thương mại, kiểu dáng công nghiệp 1. Phạt cảnh cáo hoặc phạt tiền từ 500.000 đồng đến 2.000.000 đồng đối với một trong các hành vi sau đây vì mục đích kinh doanh trong trường hợp giá trị hàng hóa, dịch vụ vi phạm đến 3.000.000 đồng: a) Bán; chào hàng; vận chuyển, kể cả quá cảnh; tàng trữ; trưng bày để bán hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp; b) Đặt hàng, giao việc, thuê người khác thực hiện hành vi quy định tại Điểm a Khoản này. 2. Phạt tiền từ 2.000.000 đồng đến 4.000.000 đồng đối với một trong các hành vi vi phạm quy định tại Khoản 1 Điều này trong trường hợp giá trị hàng hóa, dịch vụ vi phạm từ trên 3.000.000 đồng đến 5.000.000 đồng. 3. Phạt tiền từ 4.000.000 đồng đến 8.000.000 đồng đối với một trong các hành vi vi phạm quy định tại Khoản 1 Điều này trong trường hợp giá trị hàng hóa, dịch vụ vi phạm từ trên 5.000.000 đồng đến 10.000.000 đồng. 4. Phạt t",
+     "source_tier": "official",
+     "accessed_at": "2026-11-06T15:49:31.651466+00:00",
+     "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk03/31905.live.json",
+     "snapshot_sha256": "17ad123a13353fb185c7f9afb915f13d3d0a8022facae611fa498644f93ecf58",
+     "source_mode": "live_api_unwrapped_data.documentContent.content"
+    },
+    {
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/154199",
+     "document_number": "126/2021/NĐ-CP",
+     "provision": "Khoản 10 Điều 1",
+     "as_of": "2021-12-31,2024-06-30,2024-07-01",
+     "quote": "10. Sửa đổi, bổ sung một số điểm, khoản Điều 11 như sau: a) Sửa đổi, bổ sung điểm a khoản 1 như sau: “a) Buôn bán; chào hàng; vận chuyển, kể cả quá cảnh; tàng trữ; trưng bày để bán hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp;”; b) Sửa đổi, bổ sung điểm a khoản 13 như sau: “a) Sản xuất bao gồm: Thiết kế, chế tạo, gia công, lắp ráp, chế biến, đóng gói hàng hóa mang dấu hiệu xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa l",
+     "source_tier": "official",
+     "accessed_at": "2026-11-06T15:49:30.708963+00:00",
+     "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk03/154199.live.json",
+     "snapshot_sha256": "8d463ff58e7fc0a02fd42eeed2123fca94ee03be2f11bec5463cc61202a6fb03",
+     "source_mode": "live_api_unwrapped_data.documentContent.content"
+    },
+    {
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/170812",
+     "document_number": "46/2024/NĐ-CP",
+     "provision": "Khoản 10 Điều 1",
+     "as_of": "2021-12-31,2024-06-30,2024-07-01",
+     "quote": "10. Sửa đổi, bổ sung một số điểm, khoản Điều 11 như sau: a) Sửa đổi, bổ sung điểm a khoản 1 như sau: “a) Buôn bán; chào hàng; tàng trữ để bán; trưng bày để bán; vận chuyển không bao gồm quá cảnh hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp;”. b) Bổ sung khoản 14a vào sau khoản 14 như sau: “14a. Phạt tiền từ 20.000.000 đồng đến 30.000.000 đồng đối với hành vi sử dụng kiểu dáng công nghiệp mà không trả tiền đền bù theo quy định về quyền tạm thời quy định tại Điều 131 Luật Sở hữu trí tuệ.”. c) Sửa",
+     "source_tier": "official",
+     "accessed_at": "2026-11-06T15:49:31.089789+00:00",
+     "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk03/170812.live.json",
+     "snapshot_sha256": "5ace8c87e573fd398b12a8e077fa9aa4fbad01f0419610a2c8b100236a1700ab",
+     "source_mode": "live_api_unwrapped_data.documentContent.content"
+    }
+   ],
+   "lookups": [
+    {
+     "tool": "Lawgical MCP",
+     "status": "unavailable",
+     "query": null,
+     "detail": "Không có Lawgical MCP trong phiên; không có quota được gọi. Cùng một fallback API/full snapshot cho A và B."
+    },
+    {
+     "tool": "urllib.request sandbox",
+     "status": "error",
+     "query": "all packet document IDs",
+     "detail": "DNS temporary failure; đã rerun một lần với require_escalated được cấp phép; fetch_metadata.json ghi lỗi gốc."
+    },
+    {
+     "tool": "urllib.request official API",
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/31905",
+     "status": "success",
+     "error": null,
+     "query": "99/2013/NĐ-CP"
+    },
+    {
+     "tool": "urllib.request official API",
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/154199",
+     "status": "success",
+     "error": null,
+     "query": "126/2021/NĐ-CP"
+    },
+    {
+     "tool": "urllib.request official API",
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/170812",
+     "status": "success",
+     "error": null,
+     "query": "46/2024/NĐ-CP"
+    },
+    {
+     "tool": "web.run search_query",
+     "status": "success",
+     "queries": [
+      "\"Bán\" \"Buôn bán\" \"126/2021\" \"định nghĩa\""
+     ],
+     "detail": "Search chỉ để phát hiện nguồn; không dùng snippet làm bằng chứng quyết định bất lợi. Công báo gốc ngày đăng NĐ04/2008 chưa tìm được; từ ngữ R1 chưa được giải thích bằng nguồn."
+    }
+   ],
+   "open_questions": [
+    "Cần luật sư/căn cứ giải thích Bán so với Buôn bán có tạo đáp án pháp lý thứ ba theo R1 hay không."
+   ],
+   "labeler": "ai-adjudicator",
+   "label_origin": "ai",
+   "verification_status": "not_verified",
+   "human_adjudication_required": true,
+   "confirmed_issues": {
+    "q3": "khong",
+    "q3_reason": "question_ambiguous",
+    "derived_verdict_on_confirmed_issue": "khong_dat",
+    "unresolved_fields": [
+     "q2"
+    ]
+   }
+  },
+  "labeler": "ai-adjudicator",
+  "label_origin": "ai",
+  "verification_status": "not_verified",
+  "human_adjudication_required": true,
+  "reasoning": "A và B đều được nguồn chính thức ủng hộ về Q3: Điều11 khoản1 điểm b cũng có hành vi đặt hàng/giao việc/thuê người khác cùng khung phạt, câu hỏi không ghim riêng điểm a. Đã đọc NĐ126 Điều1 khoản10 điểm a sửa Bán→Buôn bán từ01/01/2022 và NĐ46 Điều1 khoản10 bỏ quá cảnh/hạn tàng trữ để bán từ01/07/2024; Q1 khớp lời văn và mốc. B mới đếm ba lời văn, chưa chứng minh ba đáp án thực chất; A nghi group_mismatch là có cơ sở nhưng bản nguồn không định nghĩa buôn bán để chứng minh chắc mua để bán đã được mở rộng so với bán. Không biến khiếm khuyết Q3 đã rõ thành đủ nguồn chốt Q2. Q4 không thấy xung đột cụ thể trong chuỗi, nhưng toàn nhãn để null vì còn bất định R1.",
+  "evidence": [
+   {
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/31905",
+    "source_tier": "official",
+    "document_number": "99/2013/NĐ-CP",
+    "provision": "Điều11 khoản1 điểm a,b",
+    "as_of": "2021-12-31",
+    "quote": "Điều 11. Xâm phạm quyền đối với nhãn hiệu, chỉ dẫn địa lý, tên thương mại, kiểu dáng công nghiệp \n 1. Phạt cảnh cáo hoặc phạt tiền từ 500.000 đồng đến 2.000.000 đồng đối với một trong các hành vi sau đây vì mục đích kinh doanh trong trường hợp giá trị hàng hóa, dịch vụ vi phạm đến 3.000.000 đồng: \n a) Bán; chào hàng; vận chuyển, kể cả quá cảnh; tàng trữ; trưng bày để bán hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp; \n b) Đặt hàng, giao việc, thuê người khác thực hiện hành vi quy định tại Điểm a Khoản này. \n 2. Phạt tiền từ 2.000.000 đồng đến 4.000.000 đồng đối với một tron",
+    "accessed_at": "2026-11-07T09:33:29.730068+00:00"
+   },
+   {
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/154199",
+    "source_tier": "official",
+    "document_number": "126/2021/NĐ-CP",
+    "provision": "Điều1 khoản10 điểm a",
+    "as_of": "2024-06-30",
+    "quote": "10. Sửa đổi, bổ sung một số điểm, khoản Điều 11 như sau: \n a) Sửa đổi, bổ sung điểm a khoản 1 như sau: \n “a) Buôn bán; chào hàng; vận chuyển, kể cả quá cảnh; tàng trữ; trưng bày để bán hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp;”; \n b) Sửa đổi, bổ sung điểm a khoản 13 như sau: \n “a) Sản xuất bao gồm: Thiết kế, chế tạo, gia công, lắp ráp, chế biến, đóng gói hàng hóa mang dấu hiệu xâm phạm quyền đối với nhãn hiệu, tên thương",
+    "accessed_at": "2026-11-07T09:33:30.175782+00:00"
+   },
+   {
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/170812",
+    "source_tier": "official",
+    "document_number": "46/2024/NĐ-CP",
+    "provision": "Điều1 khoản10 điểm a",
+    "as_of": "2024-07-01",
+    "quote": "10. Sửa đổi, bổ sung một số điểm, khoản Điều 11 như sau: \n a) Sửa đổi, bổ sung điểm a khoản 1 như sau: \n “a) Buôn bán; chào hàng; tàng trữ để bán; trưng bày để bán; vận chuyển không bao gồm quá cảnh hàng hóa, dịch vụ xâm phạm quyền đối với nhãn hiệu, tên thương mại, chỉ dẫn địa lý, kiểu dáng công nghiệp;”. \n b) Bổ sung khoản 14a vào sau khoản 14 như sau: \n “14a. Phạt tiền từ 20.000.000 đồng đến 30.000.000 đồng đối với hành vi sử dụng kiểu dáng công nghiệp mà không trả tiền đền bù theo quy định về quyền tạm thời quy định tại Điều 131 Luật Sở hữu trí tuệ.”. \n c) Sửa đổi, bổ sung điểm d",
+    "accessed_at": "2026-11-07T09:33:29.061877+00:00"
+   }
+  ],
+  "open_questions": [
+   "Bán→buôn bán trong riêng Điều11 NĐ99 (sửa2021) có mở rộng hành vi độc lập hay chỉ đổi cách diễn đạt? CMT/luật sư cần xác nhận Q2 R1 bằng căn cứ diễn giải áp dụng."
+  ],
+  "disposition": "unresolved",
+  "proposed_label": null,
+  "evidence_status": "insufficient"
+ }
+]

@@ -1,0 +1,118 @@
+{
+  "lineage_id": "provision:429b7aca-e172-11f0-ae06-1b87111a871a#k1#d",
+  "rejected_original_label": {
+    "lineage_id": "provision:429b7aca-e172-11f0-ae06-1b87111a871a#k1#d",
+    "labeler": "ai-b",
+    "label_origin": "ai",
+    "verification_status": "not_verified",
+    "guideline_version": "4.0",
+    "worksheet_sha256": "a306c492b76685e2c67381d4792b5584c0ff3b78cc6a0928927a882b24f6442d",
+    "q1": "dung",
+    "q1_reason": "",
+    "q2": "co",
+    "q2_reason": "",
+    "q3": "khong",
+    "q3_reason": "unanswerable_as_asked",
+    "q4": "khong",
+    "q4_reason": "",
+    "verdict": "khong_dat",
+    "quote": "Đã thực hiện việc mua lại cổ phiếu trong vòng 06 tháng tính từ ngày báo cáo kết quả giao dịch cổ phiếu quỹ, trừ các trường hợp quy định tại Khoản 2 Điều 37 Nghị định này; hoặc vừa kết thúc đợt chào bán, phát hành cổ phiếu để tăng vốn không quá 06 tháng, tính từ ngày kết thúc đợt chào bán, phát hành.",
+    "search_log": "",
+    "note": "Câu hỏi yêu cầu nêu các ngoại lệ, nhưng đáp án mốc sau chỉ dẫn tới khoản 2 Điều 37; cần thêm điều khoản này mới trả lời đủ. Toàn văn đã mở xác nhận khoản 2 Điều 37 chứa danh sách ngoại lệ riêng.",
+    "evidence_status": "sufficient",
+    "evidence": [
+      {
+        "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/68065",
+        "source_tier": "official",
+        "document_number": "60/2015/NĐ-CP",
+        "provision": "Khoản 11 và khoản 12 Điều 1",
+        "as_of": "2015-09-01",
+        "quote": "Việc mua lại cổ phiếu được miễn trừ quy định tại Khoản 1 Điều này trong các trường hợp sau:",
+        "accessed_at": "2026-11-06"
+      }
+    ]
+  },
+  "accepted_replacement_label": {
+    "lineage_id": "provision:429b7aca-e172-11f0-ae06-1b87111a871a#k1#d",
+    "labeler": "ai-b",
+    "label_origin": "ai",
+    "verification_status": "not_verified",
+    "guideline_version": "4.0",
+    "worksheet_sha256": "d0c4f8cc9341c571da6cbe2b9ed95eae5501bbc9ba37cb1ac851c4af92409d26",
+    "q1": "dung",
+    "q1_reason": "",
+    "q2": "co",
+    "q2_reason": "",
+    "q3": "co",
+    "q3_reason": "",
+    "q4": "khong",
+    "q4_reason": "",
+    "verdict": "dat",
+    "quote": "d) Đã thực hiện việc mua lại cổ phiếu trong vòng 06 tháng tính từ ngày báo cáo kết quả giao dịch cổ phiếu quỹ, trừ các trường hợp quy định tại Khoản 2 Điều 37 Nghị định này; hoặc vừa kết thúc đợt chào bán, phát hành cổ phiếu để tăng vốn không quá 06 tháng, tính từ ngày kết thúc đợt chào bán, phát hành. 1. Nghị định này có hiệu lực thi hành kể từ ngày 01 tháng 9 năm 2015.",
+    "search_log": "Đã mở API CSDL quốc gia ItemID 27682: Điều 37–39; ItemID 68065: khoản 11, 12 Điều 1 và toàn Điều 2–3. Tìm web quy định mua lại cổ phiếu tại Luật Chứng khoán 70/2006/QH11 và Luật Doanh nghiệp 68/2014/QH13; mở API ItemID 15052 Điều 30 và ItemID 46751 Điều 129–132, 212. Điều 30 Luật Chứng khoán giao hướng dẫn giao dịch mua lại; các điều Luật Doanh nghiệp đã đọc không quy định khác về khoảng cách 06 tháng giữa hai lần mua lại. TT 162/2015/TT-BTC xuất hiện trong tìm kiếm nhưng có hiệu lực sau hai mốc; không dùng snippet làm bằng chứng. Không tìm thấy quy định cấp cao hơn hoặc cùng cơ quan ban hành sau đè lên giới hạn đang hỏi tại 31/08/2015 và 01/09/2015. Tổng cộng 7 lượt web/curl: 5 curl, 2 web search.",
+    "note": "Q1: cả hai đoạn đầy đủ và ngắn khớp lời văn chính thức khi đọc cùng câu dẫn cấm mua lại; khoản 12 Điều 1 NĐ 60/2015 sửa đúng điểm d, hiệu lực chung 01/09/2015, Điều 2 không có ngoại lệ riêng cho sửa đổi này. Đã đọc khoản 2 Điều 37 được khoản 11 cùng Nghị định sửa: ngoại lệ gồm mua theo yêu cầu cổ đông; mua cổ phiếu của cán bộ công nhân viên theo quy chế; cổ phần lẻ khi trả cổ tức/phát hành từ vốn chủ sở hữu; công ty chứng khoán sửa lỗi giao dịch. Bản sau có nội dung pháp lý về 06 tháng và mốc tính, không phải đáp án chỉ dẫn chiếu. Q2: câu hỏi chạm việc bổ sung mốc tính từ ngày báo cáo kết quả giao dịch và thay đổi phạm vi ngoại lệ; hai mốc có đáp án khác nhau. Q3: hỏi nội dung khoảng cách giữa các lần mua lại làm cổ phiếu quỹ và ngoại lệ, không nêu vị trí/ngày/số hiệu hay chép sẵn giới hạn. Q4: tại hai mốc năm 2015, các luật đã kiểm không đặt giới hạn khác về cùng khoảng cách này; không có quan hệ chuyển tiếp cụ thể do câu hỏi tự nêu. Dẫn chiếu Điều 90 của luật cũ ở bản trước được giữ nguyên theo lời văn gốc; quyền yêu cầu mua lại tương ứng được quy định tại Điều 129 Luật Doanh nghiệp 2014, không làm hai phiên bản giới hạn thời gian thành một.",
+    "evidence_status": "sufficient",
+    "evidence": [
+      {
+        "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/27682",
+        "source_tier": "official",
+        "document_number": "58/2012/NĐ-CP",
+        "provision": "Điểm d khoản 1 Điều 38; câu dẫn khoản 1; khoản 2 Điều 37",
+        "as_of": "2015-08-31",
+        "quote": "1. Công ty không được thực hiện việc mua lại cổ phiếu để làm cổ phiếu quỹ trong các trường hợp sau: d) Đã thực hiện việc mua lại cổ phiếu trong vòng 06 tháng trừ các trường hợp sau: Mua lại cổ phiếu theo Điều 90 Luật Doanh nghiệp, mua lại cổ phần lẻ theo phương án phát hành cổ phiếu để trả cổ tức, phát hành cổ phiếu từ nguồn vốn chủ sở hữu được thực hiện theo Nghị định này và công ty chứng khoán mua lại cổ phần của chính mình để sửa lỗi giao dịch theo các quy định của Ủy ban Chứng khoán Nhà nước;",
+        "accessed_at": "2026-11-06T23:30:52.856750+00:00"
+      },
+      {
+        "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/68065",
+        "source_tier": "official",
+        "document_number": "60/2015/NĐ-CP",
+        "provision": "Khoản 11, 12 Điều 1; khoản 1 Điều 2",
+        "as_of": "2015-09-01",
+        "quote": "12. Sửa đổi Điểm d Khoản 1, Khoản 2 Điều 38 như sau: d) Đã thực hiện việc mua lại cổ phiếu trong vòng 06 tháng tính từ ngày báo cáo kết quả giao dịch cổ phiếu quỹ, trừ các trường hợp quy định tại Khoản 2 Điều 37 Nghị định này; hoặc vừa kết thúc đợt chào bán, phát hành cổ phiếu để tăng vốn không quá 06 tháng, tính từ ngày kết thúc đợt chào bán, phát hành. 1. Nghị định này có hiệu lực thi hành kể từ ngày 01 tháng 9 năm 2015.",
+        "accessed_at": "2026-11-06T23:30:52.856750+00:00"
+      }
+    ]
+  },
+  "changed_label_fields": [
+    "q3",
+    "q3_reason",
+    "verdict"
+  ],
+  "original_preserved": "data/review/ai_research/2026-11-06_silver/round3_mixed/codex_logs/b_chunk08.md",
+  "replacement_provenance": {
+    "agent": "Codex native",
+    "labeler": "ai-b",
+    "model": "inherited model; exact identifier unknown",
+    "guideline_version": "4.0",
+    "skills": [
+      ".claude/skills/vn-legal-research/SKILL.md",
+      ".claude/skills/vilextime-ai-labeling/SKILL.md"
+    ],
+    "skill_revision": "unknown",
+    "input": "input_only.json; initially case.json via json.load(...)[input] only, before clean input notification",
+    "worksheet_sha256": "d0c4f8cc9341c571da6cbe2b9ed95eae5501bbc9ba37cb1ac851c4af92409d26",
+    "lineage_id": "provision:429b7aca-e172-11f0-ae06-1b87111a871a#k1#d",
+    "created_at": "2026-11-06T23:30:52.856750+00:00",
+    "replacement_context": "Fresh independent replacement of a draft rejected for binding mismatch; not a copy or reconstruction of the rejected label. No draft_label, AI-A label, system output, raw corpus or previous AI-B labels were viewed.",
+    "blindness": "Only input field of case.json and then clean input_only.json; no previous labels read.",
+    "tools_available_used": [
+      "exec_command: python3, curl",
+      "web.run: search_query"
+    ],
+    "web_curl_calls": 7,
+    "curl_calls": 5,
+    "web_search_calls": 2,
+    "lawgical_calls": 0,
+    "lawgical_quota": "unknown; connector not used",
+    "access_errors": [
+      "python executable unavailable; used python3; no legal-source access errors"
+    ],
+    "date_policy": "Effective dates interpreted from legal wording, not API date metadata.",
+    "evidence_status": "sufficient",
+    "additional_official_sources_opened": [
+      "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/46751",
+      "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/15052"
+    ],
+    "validation": "One JSONL object; required Q1–Q4 and reason fields; binding copied directly from clean input; favorable answers imply dat; not_verified retained."
+  }
+}

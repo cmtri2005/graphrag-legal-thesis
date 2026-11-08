@@ -1,0 +1,6 @@
+{
+  "url": "https://g7.cdnchinhphu.vn/api/download/stream?Url=tm-8mq6BhNw0NbrKRhTDAQWsKg3tuqaY0aWypnY78U6M2BY68Ekp0Gvvr483flbR7a2JAH4BYu4_8KAYJKco8JegOpSIQvfBQI3sYs07mgbxBoxJb0GAWwx4hrysaouNbPMtsaRWF74C8NKfMipChg~~&file_name=2014_1031%2B1032-32_2014_TT-NHNN.pdf",
+  "accessed_at": "2026-11-06T15:51:33.364321+00:00",
+  "status": "error",
+  "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)>"
+}

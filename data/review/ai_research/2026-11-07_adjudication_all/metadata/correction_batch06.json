@@ -1,0 +1,21 @@
+{
+  "corrected_at": "2026-11-07T16:34:48.059169+00:00",
+  "before_sha256": "6ca8e019430472734a448b8ff07eef90c6240912e3d9e079fb003d5b496a9339",
+  "after_sha256": "227d83fbd0d13c108a8ac468c4b9f50db3f1608ffcaf5f4671de263b981053ab",
+  "archived_original": "data/review/ai_research/2026-11-07_adjudication_all/revisions/batch06.v1.jsonl",
+  "canonical": "data/review/ai_research/2026-11-07_adjudication_all/results/batch06.jsonl",
+  "reason": "Đọc đầy đủ khoản6Điều11 NĐ92/2006 phân biệt báo cáo kết quả với báo cáo tình hình, sửa Q3; rút suy đoán từ mới/chưaqua sửdụng và question_leaks khi không có định nghĩa chính thức, giữ ca7d01 unresolved.",
+  "changes": [
+    {
+      "case_id": "round2_claude::provision:9793de90-2c8c-11f1-ac70-fb2cf63b7a15",
+      "disposition": "both_wrong",
+      "reason": "A đúng nhãn sau khi kiểm thêm: bảng hệ thống hóa chính thức do Bộ KHĐT công bố tại QĐ681/QĐ-BKHĐT, Công báo457+458 ngày29/5/2019 trang26 STT20 ghi NĐ04/2008 có hiệu lực05/02/2008. Điều2 chính văn chỉ ghi sau15ngày kể từ đăng Công báo; không lấy effFrom của API làm căn cứ. Nguồn phụ A/B mở lại ghi04/02/2008 nhưng mâu thuẫn với bảng hệ thống hóa của cơ quan quản lý; đủ căn cứ ưu tiên ngày05/02 chính thức, bác Q1=sai của B. Hai mốc04/02 bản cũ,05/02 bản mới đúng; Q2 đổi nơi nhận từ Bộ KHĐT tổng hợp thành báo cáo Thủ tướng và gửi Bộ, Q3=khong/unanswerable_as_asked: khoản6Điều11 bản cũ tách vế “gửi báo cáo kết quả lập, thẩm định, phê duyệt...” không nêu người nhận, sau dấu chấm phẩy mới là báo cáo hằng năm về “tình hình thực hiện” gửi Bộ KHĐT. Câu hỏi chỉ hỏi kết quả, không thể đồng nhất hai loại báo cáo để suy ra người nhận ở mốc cũ, Q4 không có chuyển tiếp hay quy phạm khác nêu trong các nguồn đã kiểm. Do đó cả A và B sai bộ đầy đủ: A đúng Q1 về ngày, cả hai bỏ Q3; không coi chứng minh được ngày là chứng minh đủ mọi Q."
+    },
+    {
+      "case_id": "round2_claude::provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+      "disposition": "unresolved",
+      "reason": "Chưa đủ nguồn chốt Q2: ba chính văn cho chuỗi có sản xuất/lắp ráp→bỏ→đưa lại; bản cuối thêm “mới” trước “chưa qua sử dụng” và đổi “biển đăng ký” thành “biển số”. Không tìm được định nghĩa/hướng dẫn của cơ quan ban hành xác nhận các điều kiện này hoàn toàn tương đương hay khác phạm vi. Đã kiểm Điều3 giải thích từ ngữ TT89/TT23 và tìm nguồn chính thức theo số hiệu, mới/chưa qua sử dụng; chưa thấy căn cứ phân biệt. Nếu chỉ chuẩn hóa thì Q2khong/group_mismatch; nếu “mới” hạn chế phạm vi thực chất thì Q2co. A/B cùng nghiêng group_mismatch ở run này nhưng đồng ý nhau không thay cho chứng cứ. Q1 các bản/ngày khớp nguồn. Rút nhận định question_leaks trước đây: doanh nghiệp sản xuất/lắp ráp là bối cảnh của người hỏi, không khẳng định hoạt động đó thuộc phạm vi điều chỉnh, nên Q3co là lựa chọn được hỗ trợ. Không có quy phạm khác cụ thể được nêu ởQ4 sau kiểm nguồn gốc/tác động. Vì Q2 chưa đủ căn cứ, proposed_label=null, cần CMT/luật sư về phạm vi từ “mới”."
+    }
+  ],
+  "frozen_inputs_modified": false
+}

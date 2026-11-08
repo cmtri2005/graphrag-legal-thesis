@@ -1,0 +1,19 @@
+{
+  "id": "154063",
+  "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/154063",
+  "accessed_at": "2026-11-06T15:50:08.246450+00:00",
+  "returncode": 0,
+  "error": "",
+  "sha256": "2cb409b666859eb936fa9ed5b9163e46eaf7954eb172f17a7e7e151696d9514e",
+  "root_keys": [
+    "success",
+    "statusCode",
+    "message",
+    "messageCode",
+    "debugMessage",
+    "data",
+    "total"
+  ],
+  "docNum": "127/2021/nđ-cp",
+  "content_length": 40639
+}

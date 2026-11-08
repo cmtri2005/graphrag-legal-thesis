@@ -1,0 +1,132 @@
+{
+  "total": 62,
+  "unique_lineages": 59,
+  "resolved": 56,
+  "resolved_lineages": 54,
+  "unresolved_lineages": 5,
+  "unresolved": 6,
+  "dispositions": {
+    "both_wrong": 13,
+    "prefer_a": 19,
+    "prefer_b": 24,
+    "unresolved": 6
+  },
+  "human_confirmations": 0,
+  "by_run": {
+    "pilot0": {
+      "total": 6,
+      "resolved": 6,
+      "unresolved": 0,
+      "dispositions": {
+        "both_wrong": 1,
+        "prefer_a": 3,
+        "prefer_b": 2
+      }
+    },
+    "silver01": {
+      "total": 2,
+      "resolved": 2,
+      "unresolved": 0,
+      "dispositions": {
+        "prefer_b": 2
+      }
+    },
+    "round2_codex": {
+      "total": 15,
+      "resolved": 13,
+      "unresolved": 2,
+      "dispositions": {
+        "both_wrong": 6,
+        "prefer_a": 4,
+        "prefer_b": 3,
+        "unresolved": 2
+      }
+    },
+    "round2_claude": {
+      "total": 6,
+      "resolved": 5,
+      "unresolved": 1,
+      "dispositions": {
+        "both_wrong": 2,
+        "prefer_a": 1,
+        "prefer_b": 2,
+        "unresolved": 1
+      }
+    },
+    "round3_mixed": {
+      "total": 26,
+      "resolved": 23,
+      "unresolved": 3,
+      "dispositions": {
+        "both_wrong": 2,
+        "prefer_a": 10,
+        "prefer_b": 11,
+        "unresolved": 3
+      }
+    },
+    "round2_cross_model": {
+      "total": 3,
+      "resolved": 3,
+      "unresolved": 0,
+      "dispositions": {
+        "both_wrong": 1,
+        "prefer_b": 2
+      }
+    },
+    "pilot_sonnet_partial": {
+      "total": 3,
+      "resolved": 3,
+      "unresolved": 0,
+      "dispositions": {
+        "both_wrong": 1,
+        "prefer_b": 2
+      }
+    },
+    "pilot_cross_model": {
+      "total": 1,
+      "resolved": 1,
+      "unresolved": 0,
+      "dispositions": {
+        "prefer_a": 1
+      }
+    }
+  },
+  "unresolved_cases": [
+    {
+      "case_id": "round2_codex::provision:de0f8ef2-2c85-11f1-b16a-0dee4373a04b",
+      "open_questions": [
+        "Bán→buôn bán trong riêng Điều11 NĐ99 (sửa2021) có mở rộng hành vi độc lập hay chỉ đổi cách diễn đạt? CMT/luật sư cần xác nhận Q2 R1 bằng căn cứ diễn giải áp dụng."
+      ]
+    },
+    {
+      "case_id": "round2_codex::provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+      "open_questions": [
+        "Xác nhận có khác phạm vi pháp lý giữa xe/linh kiện chưa qua sử dụng2015 và mới chưa qua sử dụng2020 không; nếu không thì chỉ02 đáp án và Q2 group_mismatch, nếu có thì Q2 co."
+      ]
+    },
+    {
+      "case_id": "round2_claude::provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+      "open_questions": [
+        "Có định nghĩa/hướng dẫn chính thức xác nhận “linh kiện/xe chưa qua sử dụng” và “linh kiện/xe mới chưa qua sử dụng” tại hai phiên bản TT89/2015 có cùng phạm vi pháp lý hay tạo trạng thái thực chất thứ ba không?"
+      ]
+    },
+    {
+      "case_id": "round3_mixed::provision:5400b11e-df55-11f0-b2db-db8213713dab#k2#d",
+      "open_questions": [
+        "Có VBHN, văn bản đính chính hoặc quyết định của CMT/luật sư về cách đọc câu thay cụm tại khoản6Điều29 NĐ88/2009 ở điểm d khoản2Điều19 NĐ84/2007 để xác định Q1 của bản ghép lặp không? Không được tự sửa lời văn nguồn."
+      ]
+    },
+    {
+      "case_id": "round3_mixed::provision:1089c3ac-df56-11f0-8679-ff3f54843828",
+      "open_questions": [
+        "Với câu không nêu năm tài chính, kỳ tính thuế2012 được ánh xạ vào as_of29/02/2012 theo quy ước nào đã được CMT/luật sư chấp nhận? Nếu không có quy ước, cần xác nhận Q1/Q2 tương ứng khi loại vì Q3 mơ hồ."
+      ]
+    },
+    {
+      "case_id": "round3_mixed::provision:f8d931e0-1df6-11f1-a901-7169bc99fc94",
+      "open_questions": [
+        "Nguồn chính thức nào xác nhận QĐ204/QĐ-BXD Điều2(7), Điều4 và việc Chi cục Hàng hải và Đường thủy tiếp nhận thủ tục cấp lại giấy xác nhận trước14/01/2026?"
+      ]
+    }
+  ]
+}

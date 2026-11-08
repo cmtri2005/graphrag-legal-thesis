@@ -1,0 +1,170 @@
+{
+  "runtime": "native Codex subagent fallback; Claude CLI unavailable due weekly limit (reported by coordinator)",
+  "model": "unknown; inherited",
+  "agent_spec": ".claude/agents/legal-adjudicator.md",
+  "agent_spec_sha256": "cd01a1b534772b7be134944b4967e76445ff9e5cf8b01a73bf49cd1320c011e4",
+  "input_sha256": "a182b7e1984e1d4d34d50ceb3b3a6ff23f8dc6c14fe76d4b1deca395a4973bb9",
+  "guideline_version": "4.0",
+  "tools_used": [
+    "exec_command read-only local inspection, urllib.request/curl official source retrieval; pdftotext/pdftoppm where relevant",
+    "web.run search/open/find/screenshot",
+    "view_image where relevant"
+  ],
+  "tool_adaptation": "Native runtime has no Claude Read/Write adapters. exec file I/O is used only for packets, authority, own evidence/results/metadata. No model switch or downstream agents.",
+  "lawgical": "not available; no calls, quota unknown",
+  "started_at": "2026-11-07T09:29:00+00:00 (approximate; first exact source receipt separately recorded)",
+  "completed_at": "2026-11-07T09:43:32.987937+00:00",
+  "access_errors": [
+    "Sandbox DNS Errno -3; escalated requests succeeded for API",
+    "vbpl.moj.gov.vn attachment DNS Errno -2; vbpl.vn attachment HTTP403",
+    "g7.cdnchinhphu.vn Python/curl certificate chain verification failed; no TLS bypass",
+    "Some web fetches cache miss / screenshot timeout; official API and old official CDN used as fallback"
+  ],
+  "sources": [
+    {
+      "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/178549",
+      "document": "38/2025/TT-BCT",
+      "accessed_at": "2026-11-07T09:33:23.608340+00:00",
+      "status": true,
+      "sha256": "d4ab5da33a1338209a9f535bac0c16e215fcf4e603efc84ca5f12fda16826d70",
+      "chars": 69265,
+      "content_field": "data.documentContent.content"
+    },
+    {
+      "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/23722",
+      "document": "88/2009/NĐ-CP",
+      "accessed_at": "2026-11-07T09:33:23.917598+00:00",
+      "status": true,
+      "sha256": "b64381da2a14daa375b692b58c002eb82af4fedb68c106fbfd74593e49338ef6",
+      "chars": 53789,
+      "content_field": "data.documentContent.content"
+    },
+    {
+      "url": "https://datafiles.chinhphu.vn/cpp/files/vbpq/2025/01/7123-btp.pdf",
+      "accessed_at": "2026-11-07T09:37:19.491186+00:00",
+      "sha256": "5ba80ce76e2f2fdc0b26e20c948e5a21ce8aee5305d304ed72f9c25bc43515c2",
+      "content_type": "application/pdf"
+    },
+    {
+      "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/168381",
+      "document": "71/2024/NĐ-CP",
+      "accessed_at": "2026-11-07T09:33:23.830526+00:00",
+      "status": true,
+      "sha256": "a4204102fd044da126b6af42f35352ff059da041ad2b23580c17476a97a2bafd",
+      "chars": 164835,
+      "content_field": "data.documentContent.content"
+    },
+    {
+      "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/152520",
+      "document": "119/2021/TT-BTC",
+      "accessed_at": "2026-11-07T09:33:23.859006+00:00",
+      "status": true,
+      "sha256": "87b006fcb8ea00f9c7e27ead1299321fce8f98f7f136fddf05cd5cc0ca0ff377",
+      "chars": 22624,
+      "content_field": "data.documentContent.content"
+    },
+    {
+      "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/171352",
+      "document": "146/2024/NĐ-CP",
+      "accessed_at": "2026-11-07T09:33:23.880409+00:00",
+      "status": true,
+      "sha256": "b98a0d3794587722593b6f4025860adfa0249ccf55919204d0c818a0a3070ed1",
+      "chars": 13893,
+      "content_field": "data.documentContent.content"
+    },
+    {
+      "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/c38d4c80-5819-11f1-8cfa-090ca3b5a55f",
+      "document": "26/2026/TT-BCT",
+      "accessed_at": "2026-11-07T09:33:23.547459+00:00",
+      "status": true,
+      "sha256": "b21498160da2ecb235c6f20e8aa471545cc939fba569f122b35060d573aa8cb5",
+      "chars": 45400,
+      "content_field": "data.documentContent.content"
+    },
+    {
+      "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/181906",
+      "document": "226/2025/NĐ-CP",
+      "accessed_at": "2026-11-07T09:33:23.731860+00:00",
+      "status": true,
+      "sha256": "5de44b0cd121341c36643c36a3d089061c7b8bac77c24f7ee8f9dc24d72d601b",
+      "chars": 143434,
+      "content_field": "data.documentContent.content"
+    },
+    {
+      "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/171830",
+      "document": "24/2024/TT-BCT",
+      "accessed_at": "2026-11-07T09:33:23.520020+00:00",
+      "status": true,
+      "sha256": "1e6aca5979f0d275049970d319f95dcca42c5bb45a2149671c96398b60d70230",
+      "chars": 17250,
+      "content_field": "data.documentContent.content"
+    },
+    {
+      "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/14188",
+      "document": "84/2007/NĐ-CP",
+      "accessed_at": "2026-11-07T09:33:23.911883+00:00",
+      "status": true,
+      "sha256": "178d0c4732b682cb04270050e8758a8ffa4b889983fc4d76b6586577872425e5",
+      "chars": 104966,
+      "content_field": "data.documentContent.content"
+    },
+    {
+      "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/135990",
+      "document": "83/2018/TT-BTC",
+      "accessed_at": "2026-11-07T09:33:23.621134+00:00",
+      "status": true,
+      "sha256": "776a025bc576a176dd77862ba9baec32a60971fca9d18e0bc3ce6c8ff20ff8bf",
+      "chars": 42514,
+      "content_field": "data.documentContent.content"
+    },
+    {
+      "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/46098",
+      "document": "27/2014/TT-BCT",
+      "accessed_at": "2026-11-07T09:33:23.561814+00:00",
+      "status": true,
+      "sha256": "c7f58df9349323b43de1d1dc0c877d41a7953514d8cffe974ac6da75de2f5c65",
+      "chars": 14703,
+      "content_field": "data.documentContent.content"
+    },
+    {
+      "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/157663",
+      "document": "102/2022/NĐ-CP",
+      "accessed_at": "2026-11-07T09:33:23.856298+00:00",
+      "status": true,
+      "sha256": "fcba359cfed4e707289bd4ccf3b790bf6f490d03e6fc3e03622adb7ba6a0fb6c",
+      "chars": 16510,
+      "content_field": "data.documentContent.content"
+    },
+    {
+      "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/175261",
+      "document": "190/2025/QH15",
+      "accessed_at": "2026-11-07T09:35:05.240966+00:00",
+      "sha256": "3852d2e501985bde19acd186414706c3dfc7c474df8e50d3f882fd9b5d425bfa",
+      "chars": 20275
+    },
+    {
+      "url": "https://congbao.chinhphu.vn/tai-ve-van-ban-so-83-2018-tt-btc-27302-23813?format=pdf",
+      "accessed_at": "2026-11-07T09:37:19.685794+00:00",
+      "sha256": "5971f1f21389c288bdc5d9cb292ed498aff7dc6fa6762638062cd50e8ff838e8",
+      "content_type": "text/html; charset=utf-8"
+    }
+  ],
+  "urls": [
+    "https://datafiles.chinhphu.vn/cpp/files/vbpq/2025/01/7123-btp.pdf",
+    "https://vanban.chinhphu.vn/default.aspx?docid=91035&pageid=27160",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/135990",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/14188",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/152520",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/157663",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/168381",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/171352",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/171830",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/178340",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/178549",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/181906",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/23722",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/c38d4c80-5819-11f1-8cfa-090ca3b5a55f"
+  ],
+  "blindness": "Adjudicator saw locked A and B as intended; no systems output or datasets/source labels edited",
+  "human_adjudication_required": true
+}

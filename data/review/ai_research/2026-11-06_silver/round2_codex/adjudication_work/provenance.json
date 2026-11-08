@@ -1,0 +1,34 @@
+{
+  "scope": "Supplementary research and AI adjudication proposals, round2 Codex only",
+  "requested_at": "2026-11-06T15:50:56.443237+00:00",
+  "authority": "User request: tra cứu bổ sung và tạo đề xuất hòa giải cho đợt 2",
+  "cases": 26,
+  "disagreements": 11,
+  "insufficient_cases": 23,
+  "overlap": 8,
+  "runtime": "Codex native subagents; inherited model, exact identifier unavailable",
+  "workers": [
+    "adjudicate02",
+    "adjudicate03",
+    "adjudicate04"
+  ],
+  "frozen_original_sha256": {
+    "a.jsonl": "4b79b34be755ba55021dd76d753099abbcbec744526276eb50b88953a9807719",
+    "b.jsonl": "c1e219a99de7189314ad792fac50676dfcd8bbd8e59212fa83fe47d22575f554",
+    "metrics.json": "73d5dadacc51bb9381384325180eb321396af1d4e25778a24803bcc5783843af",
+    "provenance.json": "a4ccbdae448e44ef49b2ed534f54369c1203022e074e8fe35be56507d7ae57e0",
+    "duyet_CMT.xlsx": "a1d0ea88f580dcb33f4b5bb749747bac78343d781a7ecb3576c6dbc06c3a9d80",
+    "SHA256SUMS": "4ae975b377d32e3d3444d3381106176e53d9338f867eeaa65264d12ac83eef7f"
+  },
+  "input_sha256": {
+    "chunk02.jsonl": "9f71c6f03cf2158e6093517e8f20833ef19cb42a160a02564d3304a707290eae",
+    "chunk03.jsonl": "3ad54a737963709d8aa91a8ddb34e4c71ef4244a73dc5a708d1995005467088d",
+    "chunk04.jsonl": "0d96fff8c64da8b2794f14de95c27e7a2fcf827b8097eccdefc0a530c214a8a3"
+  },
+  "status": "proposals_packaged_pending_cmt",
+  "human_verification": "not_verified; CMT review pending",
+  "mcp": "No legal MCP tools available; official API/web sources used",
+  "completed_at": "2026-11-07T09:17:15.029733+00:00",
+  "result_summary": "26 researched; 17 resolved AI proposals; 9 unresolved; zero human confirmations",
+  "summary": "summary.json"
+}

@@ -1,0 +1,55 @@
+{
+  "runtime": "native Codex inherited legal-adjudicator role",
+  "model": "unknown",
+  "agent_spec_path": ".claude/agents/legal-adjudicator.md",
+  "agent_spec_sha256": "cd01a1b534772b7be134944b4967e76445ff9e5cf8b01a73bf49cd1320c011e4",
+  "input_sha256": "ba7c4c62916dcca718b54de76de567cd96037029505009dfad0450640fba042f",
+  "tools_used": [
+    "exec_command (python3 urllib official fetch and artifact I/O)",
+    "functions.exec",
+    "pdftotext (official signedPDF retrieval)",
+    "view_image (official scanned appendix pages)",
+    "web.run search_query/open"
+  ],
+  "access_errors": [
+    "Sandbox DNS resolution failed; retried require_escalated successfully",
+    "Lawgical MCP not exposed in native runtime",
+    "Original vbpl.vn attachments135450/38262 returned403; Government Gazette PDF fallback succeeded",
+    "CDN TLS issuer failure; per-request verification workaround used for publicPDFs, recorded in receipts",
+    "API179825 returned400; Government Gazette PDF substituted",
+    "WebFetch errors502/timeout for some Gazette/download links; urllib fallback succeeded"
+  ],
+  "external_urls_opened": [
+    "https://g7.cdnchinhphu.vn/api/download/stream?Url=tm-8mq6BhNw0NbrKRhTDAQWsKg3tuqaY0aWypnY78U6M2BY68Ekp0Gvvr483flbR7a2JAH4BYu4_8KAYJKco8JegOpSIQvfBQI3sYs07mgbxBoxJb0GAWwx4hrysaouNbPMtsaRWF74C8NKfMipChg~~&file_name=2014_1031%2b1032-32_2014_TT-NHNN.pdf",
+    "https://g7.cdnchinhphu.vn/api/download/stream?Url=tm-8mq6BhNw0NbrKRhTDAQWsKg3tuqaY0aWypnY78U6M2BY68Ekp0Gvvr483flbRoVTpLVUB0crN07-QClzEzn3NnpVyc_MfEUoShddSez5jDjd-MXkYtNxlncNSJrsEshC89McPKEnGuBSdi4SmAg~~&file_name=2019_385+%2b+386_13-2019-TT-BGTVT.pdf",
+    "https://g7.cdnchinhphu.vn/api/download/stream?Url=tm-8mq6BhNw0NbrKRhTDAQWsKg3tuqaY0aWypnY78U6M2BY68Ekp0Gvvr483flbRoVTpLVUB0crN07-QClzEzta46JGSFBoDpf3xJiKbq8j0dMBjxUV7NeAm9rqestwZmzYW2UuKTgI4zNxggiZW1A~~&file_name=2019_387+%2b+388_13-2019-TT-BGTVT.pdf",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/10870",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/112570",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/135450",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/146541",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/146881",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/148174",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/154063",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/158169",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/22681",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/27621",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/38261",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/38262",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/71332",
+    "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/8895"
+  ],
+  "saved_at": "2026-11-07T09:40:28.523879+00:00",
+  "adaptation": "Claude agent Bash/Write ban cannot map directly to native runtime: exec used solely for packet reading, official source retrieval, source receipts, and requested research output artifacts. No source dataset changed. No further agents/models used. Claude weekly-limit fallback instructed by parent.",
+  "validation": "Native validate_label AST-extracted unchanged with GOOD/OPTIONS/REASONS to avoid unrelated unavailable markdown_it; identity/order/hash bindings checked.",
+  "output_sha256": "77517f4e713a8cf2cabeabe64a669a304ad2c1744100cf863868856af6ceae21",
+  "validated_at": "2026-11-07T16:38:48.245093+00:00",
+  "validation_result": "PASS: all5 rows order/identity/copy bindings, required evidence schema, native validate_label and disposition exact match; no global packager run",
+  "counts": {
+    "both_wrong": 1,
+    "prefer_b": 2,
+    "prefer_a": 2
+  },
+  "excluded_receipts": {
+    "10870.json": "Lookup from external link was wrong document02/BXD-CĐXDVN; never used in adjudication. Correct original Luật15/2012 was fetched atItemID27621."
+  }
+}

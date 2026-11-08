@@ -1,0 +1,56 @@
+{
+  "case_id": "round3_mixed::provision:f8d931e0-1df6-11f1-a901-7169bc99fc94",
+  "url": "https://cangvuhanghaiquangninh.gov.vn/images/uploads/attach/BXD_2530-QD-BXD_31122025.pdf",
+  "source_tier": "official",
+  "document_number": "2530/QĐ-BXD",
+  "document_date_from_signed_text": "2025-12-31",
+  "title": "Về việc công bố thủ tục hành chính được sửa đổi, bổ sung trong lĩnh vực hàng hải thuộc phạm vi chức năng quản lý của Bộ Xây dựng",
+  "file_sha256": "a9759f146c1d573e8ee71f8959c53b8f383f044d69b8330be4b2c83eac957784",
+  "accessed_at": "2026-11-07T09:46:09.456046+00:00",
+  "tools": [
+    "pdfinfo",
+    "pdftoppm",
+    "view_image"
+  ],
+  "pages_visually_opened": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "operative_text": [
+    {
+      "page": 1,
+      "provision": "Điều2",
+      "quote": "Quyết định này có hiệu lực thi hành kể từ ngày ký, thay thế TTHC có mã số 1.002788 được công bố tại Quyết định số 215/QĐ-BGTVT ngày 06/3/2024"
+    },
+    {
+      "page": 2,
+      "provision": "Phụ lục A.I",
+      "quote": "Đăng ký và cấp Sổ thuyền viên"
+    },
+    {
+      "page": 2,
+      "provision": "Phụ lục A.II",
+      "quote": "Thủ tục cấp thẻ Sỹ quan kiểm tra tàu biển"
+    },
+    {
+      "page": 2,
+      "provision": "Phụ lục A.II",
+      "quote": "Thủ tục đổi, cấp lại thẻ Sỹ quan kiểm tra tàu biển"
+    }
+  ],
+  "finding": "Văn bản đúng số hiệu và ngày ký nhưng phạm vi ba thủ tục khác. Trang3–11 chỉ đăng ký/cấp Sổ thuyền viên; trang12–14 cấp/đổi/cấp lại thẻ Sỹ quan kiểm tra tàu biển. Không có thủ tục cấp lại Giấy xác nhận phù hợp về tuyển dụng và cung ứng thuyền viên; không dùng để suy ngày tiếp nhận nhiệm vụ mục tiêu.",
+  "outcome": "unresolved retained; canonical batch11 unchanged",
+  "canonical_result_sha256": "f9027874e084447fabdde64f7e6a01eb78f46fbb3b3e71880e9e0a4a92a9c876"
+}

@@ -1,0 +1,68 @@
+{
+  "method": "data.documentContent.content only; related-document text excluded",
+  "repairs": [
+    {
+      "item": "125395",
+      "document": "91/2017/TT-BTC",
+      "changed": false,
+      "old_extraction_sha256": "b5ded1d80a2f42047aaa8fc6cd09c30b9d2919b407ec6c2d6d08f5ecc1ab3788",
+      "new_extraction_sha256": "b5ded1d80a2f42047aaa8fc6cd09c30b9d2919b407ec6c2d6d08f5ecc1ab3788"
+    },
+    {
+      "item": "160908",
+      "document": "35/2023/NĐ-CP",
+      "changed": false,
+      "old_extraction_sha256": "781a52582f1ee1a61fc68ffcdc2d49ac20cd60a4cbb5816d248910dc51b55b61",
+      "new_extraction_sha256": "781a52582f1ee1a61fc68ffcdc2d49ac20cd60a4cbb5816d248910dc51b55b61"
+    },
+    {
+      "item": "166772",
+      "document": "22/2024/TT-BTC",
+      "changed": false,
+      "old_extraction_sha256": "bfffee6a4d72669cd583386619af6020a64f8ed976ecdf9f5e7eb73f8019c707",
+      "new_extraction_sha256": "bfffee6a4d72669cd583386619af6020a64f8ed976ecdf9f5e7eb73f8019c707"
+    },
+    {
+      "item": "173849",
+      "document": "175/2024/NĐ-CP",
+      "changed": false,
+      "old_extraction_sha256": "9dc9b1411f96cd95b8bfe558f42471ecefc837c979a2a3b8cbf5df8bd851b4f7",
+      "new_extraction_sha256": "9dc9b1411f96cd95b8bfe558f42471ecefc837c979a2a3b8cbf5df8bd851b4f7"
+    },
+    {
+      "item": "186907",
+      "document": "35/2026/NĐ-CP",
+      "changed": true,
+      "old_extraction_sha256": "18461561445f512e90162958b93dad60c8244a143abd9321aa3fc3350e4618ff",
+      "new_extraction_sha256": "cac98eeca4372109e0779b5bf21ee01258988cee6f311a4f376e51fa1184fe64"
+    },
+    {
+      "item": "19676",
+      "document": "135/2004/NĐ-CP",
+      "changed": false,
+      "old_extraction_sha256": "e9853a907b722c8e87fcfdce2fb4269606c4857ade404d391efa95a3653bb586",
+      "new_extraction_sha256": "e9853a907b722c8e87fcfdce2fb4269606c4857ade404d391efa95a3653bb586"
+    },
+    {
+      "item": "26828",
+      "document": "61/2011/NĐ-CP",
+      "changed": false,
+      "old_extraction_sha256": "106438c5e9198cd4d18a66267d2bae095741d24e6d48adb9eaafebcf8085767e",
+      "new_extraction_sha256": "106438c5e9198cd4d18a66267d2bae095741d24e6d48adb9eaafebcf8085767e"
+    },
+    {
+      "item": "28073",
+      "document": "11/2013/NĐ-CP",
+      "changed": false,
+      "old_extraction_sha256": "ac95f0cd2c1aca3b561a5a7403aa4451de6da73a52d9c4e24424431923056e2e",
+      "new_extraction_sha256": "ac95f0cd2c1aca3b561a5a7403aa4451de6da73a52d9c4e24424431923056e2e"
+    },
+    {
+      "item": "36867",
+      "document": "50/2014/QH13",
+      "changed": true,
+      "old_extraction_sha256": "9dc9b1411f96cd95b8bfe558f42471ecefc837c979a2a3b8cbf5df8bd851b4f7",
+      "new_extraction_sha256": "95c8f7909a706a54473b302db9ab0317e2c9002b117fd4846b3e4e46d2b41297"
+    }
+  ]
+}

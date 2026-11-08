@@ -1,0 +1,640 @@
+[
+ {
+  "worksheet_sha256": "acea74befbf7fc3e67389ecfbbb9cf37c565775d92ed7c7f03465b72eddef47c",
+  "record": {
+   "lineage_id": "provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+   "group": "T3",
+   "stratum": "T3",
+   "batch": 1,
+   "question": "Một doanh nghiệp sản xuất, lắp ráp xe máy chuyên dùng muốn xác định phạm vi kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường đối với xe máy chuyên dùng thì quy định bao gồm những đối tượng và hoạt động nào?",
+   "rows": [
+    {
+     "id": "vilextime:T3:provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1:2018-10-14",
+     "as_of": "2018-10-14",
+     "as_of_strategy": "ranh_gioi",
+     "version_id": "version:7d01ec54-eba3-11f0-9856-f75286fb8467#k1:1",
+     "answer": "1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện chưa qua sử dụng hoặc từ xe cơ sở chưa qua sử dụng và chưa có biển đăng ký; cải tạo và khai thác sử dụng.",
+     "answerable": true,
+     "short_answer": "nhập khẩu; sản xuất, lắp ráp từ các linh kiện chưa qua sử dụng hoặc từ xe cơ sở chưa qua sử dụng và chưa có biển đăng ký; cải tạo và khai thác sử dụng",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=111821",
+     "target": {
+      "document_id": "document:111821",
+      "law_id": "89/2015/TT-BGTVT",
+      "document_title": "Thông tư số 89/2015/TT-BGTVT Quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường xe máy chuyên dùng",
+      "article_id": "1",
+      "clause_id": "1",
+      "point_id": null,
+      "citation": "Khoản 1 Điều 1",
+      "provision_path": "Chương I › Điều 1 › Khoản 1",
+      "lead_in": "Điều 1. Phạm vi điều chỉnh"
+     }
+    },
+    {
+     "id": "vilextime:T3:provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1:2020-11-14",
+     "as_of": "2020-11-14",
+     "as_of_strategy": "ranh_gioi",
+     "version_id": "version:7d01ec54-eba3-11f0-9856-f75286fb8467#k1:2",
+     "answer": "1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; cải tạo và khai thác sử dụng",
+     "answerable": true,
+     "short_answer": "đối với các loại xe máy chuyên dùng nhập khẩu; cải tạo và khai thác sử dụng",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=111821",
+     "target": {
+      "document_id": "document:111821",
+      "law_id": "89/2015/TT-BGTVT",
+      "document_title": "Thông tư số 89/2015/TT-BGTVT Quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường xe máy chuyên dùng",
+      "article_id": "1",
+      "clause_id": "1",
+      "point_id": null,
+      "citation": "Khoản 1 Điều 1",
+      "provision_path": "Chương I › Điều 1 › Khoản 1",
+      "lead_in": "Điều 1. Phạm vi điều chỉnh"
+     }
+    },
+    {
+     "id": "vilextime:T3:provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1:2020-11-15",
+     "as_of": "2020-11-15",
+     "as_of_strategy": "ranh_gioi",
+     "version_id": "version:7d01ec54-eba3-11f0-9856-f75286fb8467#k1:3",
+     "answer": "1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe mới chưa qua sử dụng và chưa có biển số (gọi là xe cơ sở); cải tạo và khai thác sử dụng.",
+     "answerable": true,
+     "short_answer": "nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe mới chưa qua sử dụng và chưa có biển số (gọi là xe cơ sở); cải tạo và khai thác sử dụng",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=111821",
+     "target": {
+      "document_id": "document:111821",
+      "law_id": "89/2015/TT-BGTVT",
+      "document_title": "Thông tư số 89/2015/TT-BGTVT Quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường xe máy chuyên dùng",
+      "article_id": "1",
+      "clause_id": "1",
+      "point_id": null,
+      "citation": "Khoản 1 Điều 1",
+      "provision_path": "Chương I › Điều 1 › Khoản 1",
+      "lead_in": "Điều 1. Phạm vi điều chỉnh"
+     }
+    }
+   ],
+   "sources": {
+    "base": {
+     "document": "89/2015/TT-BGTVT",
+     "title": "Thông tư số 89/2015/TT-BGTVT Quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường xe máy chuyên dùng",
+     "issued": "2015-12-31",
+     "effective_from": "2016-07-01",
+     "effective_to": "2025-01-01",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=111821",
+     "passage": "Điều 1. Phạm vi điều chỉnh\n1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện chưa qua sử dụng hoặc từ xe cơ sở chưa qua sử dụng và chưa có biển đăng ký; cải tạo và khai thác sử dụng."
+    },
+    "actors": [
+     {
+      "document": "42/2018/TT-BGTVT",
+      "title": "Thông tư số 42/2018/TT-BGTVT Sửa đổi, bổ sung một số điều của các thông tư trong lĩnh vực đăng kiểm",
+      "issued": "2018-07-30",
+      "effective_from": "2018-10-15",
+      "effective_to": null,
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=132109",
+      "passage": "1. Sửa đổi khoản 1 Điều 1 như sau:\n\"1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; cải tạo và khai thác sử dụng\".",
+      "transitional": "",
+      "in_force": "Điều 10. Hiệu lực thi hành\n1. Thông tư này có hiệu lực kể từ ngày 15 tháng 10 năm 2018.\n2. Chánh Văn phòng Bộ, Chánh Thanh tra Bộ, các Vụ trưởng, Cục trưởng Cục Đăng kiểm Việt Nam, Thủ trưởng các cơ quan, tổ chức và cá nhân có liên quan chịu trách nhiệm thi hành Thông tư này./.\nKT. BỘ TRƯỞNG\nTHỨ TRƯỞNG\n(Đã ký)\nLê Đình Thọ\n\n1. Thông tư này có hiệu lực kể từ ngày 15 tháng 10 năm 2018."
+     },
+     {
+      "document": "23/2020/TT-BGTVT",
+      "title": "Thông tư số 23/2020/TT-BGTVT Sửa đổi, bổ sung một số điều của Thông tư số 89/2015/TT-BGTVT ngày 31/12/2015 của Bộ trưởng Bộ Giao thông vận tải quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường xe máy chuyên dùng và Thông tư số 42/2018/TT-BGTVT ngày 30/7/2018 của Bộ trưởng Bộ Giao thông vận tải quy định sửa đổi, bổ sung một số điều của các Thông tư trong lĩnh vực Đăng kiểm",
+      "issued": "2020-10-01",
+      "effective_from": "2020-11-15",
+      "effective_to": "2025-01-01",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=144759",
+      "passage": "1. Sửa đổi khoản 1 Điều 1 như sau:\n“1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe mới chưa qua sử dụng và chưa có biển số (gọi là xe cơ sở); cải tạo và khai thác sử dụng.”.",
+      "transitional": "",
+      "in_force": "Điều 15. Đánh giá kiểu loại sản phẩm đã được cấp Giấy chứng nhận kiểu loại; đình chỉ hiệu lực và thu hồi Giấy chứng nhận kiểu loại\n1. Cục Đăng kiểm Việt Nam tiến hành đánh giá kiểu loại sản phẩm đã được cấp Giấy chứng nhận kiểu loại trong các trường hợp sau:\na) Đánh giá định kỳ 24 tháng;\nb) Đánh giá khi có sự thay đổi của sản phẩm so với sản phẩm đã được cấp Giấy chứng nhận kiểu loại;\nc) Đánh giá khi có sự thay đổi các tiêu chuẩn, quy chuẩn kỹ thuật và quy định quy liên quan.\n2. Căn cứ để đánh giá kiểu loại sản phẩm đã được cấp Giấy chứng nhận kiểu loại bao gồm:\na) Kết quả đánh giá COP tại Cơ sở sản xuất theo quy định tại khoản 2 Điều 12 của Thông tư này;\nb) Sự phù hợp của sản phẩm đã được cấp Giấy chứng nhận kiểu loại so với quy định, tiêu chuẩn và quy chuẩn kỹ thuật quốc gia tương ứng.\n3. Khi các quy định, tiêu chuẩn và quy chuẩn kỹ thuật quốc gia liên quan đến kiểu loại sản phẩm đã được chứng nhận thay đổi hoặc khi sản phẩm có các thay đổi ảnh hưởng tới sự phù hợp của kiểu loại sản phẩm đó so với quy định, tiêu chuẩn và quy chuẩn kỹ thuật quốc gia tương ứng thì cơ sở sản xuất phải tiến hành kiểm tra, thử nghiệm lại kiểu loại sản phẩm theo các quy định, tiêu chuẩn và quy chuẩn kỹ thuật quốc gia mới. Trong trường hợp này, Cơ sở sản xuất phải nộp bổ sung cho Cục Đăng kiểm Việt Nam các tài liệu sau:\na) Tài liệu liên quan tới sự thay đổi của sản phẩm;\nb) Báo cáo kết quả kiểm tra kiểu loại sản phẩm theo các quy định, tiêu chuẩn và quy chuẩn kỹ thuật quốc gia mới hoặc báo cáo kết quả kiểm tra bổ sung các hạng mục thay đổi của kiểu loại sản phẩm theo các quy định, tiêu chuẩn và quy chuẩn kỹ thuật quốc gia.\nCục Đăng kiểm Việt Nam sẽ tiếp nhận, kiểm tra các tài liệu bổ sung để xem xét, đánh giá và cấp Giấy chứng nhận. Thủ tục cấp Giấy chứng nhận được thực hiện theo quy định tại Điều 13 của Thông tư này.\n4. Đình chỉ hiệu lực của Giấy chứng nhận kiểu loại\nCục Đăng kiểm Việt Nam sẽ đình chỉ hiệu lực của Giấy chứng nhận kiểu loại đã cấp trong thời gian 06 tháng và thông báo bằng văn bản cho Cơ sở sản xuất trong các trường hợp sau đây:\na) Cơ sở sản xuất có vi phạm các quy định liên quan đến việc kiểm tra chất lượng sản phẩm hoặc sử dụng phiếu kiểm tra chất lượng xuất xưởng;\nb) Sản phẩm xuất xưởng không phù hợp với hồ sơ kiểu loại và sản phẩm mẫu đã được cấp Giấy chứng nhận kiểu loại và Cơ sở sản xuất không thực hiện khắc phục các sản phẩm đã xuất xưởng không phù hợp.\nTrong thời gian Giấy chứng nhận kiểu loại bị đình chỉ hiệu lực, Cơ sở sản xuất phải thực hiện khắc phụ [...cắt bớt]\n\nĐiều 3. Hiệu lực thi hành\n1. Thông tư này có hiệu lực thi hành từ ngày 15 tháng 11 năm 2020.\n2. Chánh Văn phòng Bộ, Chánh Thanh tra Bộ, các Vụ trưởng, Cục trưởng Cục Đăng kiểm Việt Nam, Thủ trưởng các cơ quan, tổ chức và cá nhân có liên quan chịu trách nhiệm thi hành Thông tư này./.\nNơi nhận :\n- Văn phòng Chính phủ;\n- Các Bộ, Cơ quan ngang Bộ;\n- Cơ quan thuộc Chính phủ;\n- Bộ trưởng (để b/c);\n- UBND các tỉnh, TP trực thuộc TW;\n- Cục Kiểm tra văn bản (Bộ Tư pháp);\n- Công báo;\n- Cổng TTĐT Chính phủ;\n- Cổng TTĐT Bộ GTVT;\n- Báo Giao thông, Tạp chí GTVT;\n- Lưu: VT, KHCN.\nKT.BỘ TRƯỞNG\nTHỨ TRƯỞNG\n(Đã ký)\nLê Đình Thọ\n\n1. Thông tư này có hiệu lực thi hành từ ngày 15 tháng 11 năm 2020."
+     }
+    ]
+   }
+  },
+  "official": [
+   {
+    "document": "89/2015/TT-BGTVT",
+    "item_id": "111821",
+    "part": "Điều 1 (bản ban hành)",
+    "source_tier": "official",
+    "source": "vbpl CSDL quốc gia, bản crawl data/raw/111821.json",
+    "truncated": false,
+    "text": "Điều 1. Phạm vi điều chỉnh\n1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện chưa qua sử dụng hoặc từ xe cơ sở chưa qua sử dụng và chưa có biển đăng ký; cải tạo và khai thác sử dụng.\n2. Thông tư này không áp dụng đối với xe máy chuyên dùng được sản xuất, lắp ráp, nhập khẩu sử dụng trực tiếp vào mục đích quốc phòng, an ninh của Bộ Quốc phòng, Bộ Công an."
+   },
+   {
+    "document": "42/2018/TT-BGTVT",
+    "item_id": "132109",
+    "part": "điều hiệu lực, chuyển tiếp",
+    "source_tier": "official",
+    "source": "vbpl CSDL quốc gia, bản crawl data/raw/132109.json",
+    "truncated": false,
+    "text": "Điều 10. Hiệu lực thi hành\n1. Thông tư này có hiệu lực kể từ ngày 15 tháng 10 năm 2018.\n2. Chánh Văn phòng Bộ, Chánh Thanh tra Bộ, các Vụ trưởng, Cục trưởng Cục Đăng kiểm Việt Nam, Thủ trưởng các cơ quan, tổ chức và cá nhân có liên quan chịu trách nhiệm thi hành Thông tư này./.\nKT. BỘ TRƯỞNG\nTHỨ TRƯỞNG\n(Đã ký)\nLê Đình Thọ\nPHỤ LỤC I\n(Ban hành kèm theo Thông tư số 42/2018/TT-BGTVT ngày 30 tháng 07 năm 2018 của Bộ trưởng Bộ Giao thông vận tải)\nA. MẪU GIẤY ĐĂNG KÝ KIỂM TRA CHẤT LƯỢNG AN TOÀN KỸ THUẬT VÀ BẢO VỆ MÔI TRƯỜNG XE MÁY CHUYÊN DÙNG NHẬP KHẨU\nCỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM\nĐộc lập - Tự do - Hạnh phúc\n---------------\nSOCIALIST REPUBLIC OF VIETNAM\nIndependence - Freedom - Happiness\n---------------\nBẢN ĐĂNG KÝ KIỂM TRA CHẤT LƯỢNG AN TOÀN KỸ THUẬT VÀ BẢO VỆ MÔI TRƯỜNG XE MÁY CHUYÊN DÙNG NHẬP KHẨU\n(Application form for technical safety quality and environmental protection inspection for imported transport construction machinery-TCM)\nKính gửi (To): Cục Đăng kiểm Việt Nam\nNgười nhập khẩu (Importer):\nĐịa chỉ (Address):\nMã số thuế (Tax code):\nThư điện tử (Email):\nNgười đại diện (Representative):\nSố điện thoại (Telephone N0)\nĐăng ký kiểm tra Nhà nước về chất lượng an toàn kỹ thuật và bảo vệ môi trường xe máy chuyên dùng nhập khẩu với các nội dung sau (Request for technical safety quality and environmental protection inspection for imported TCM with the following contents):\nHồ sơ kèm theo (Attached document):\n+ Số lượng Bản thông tin xe máy chuyên dùng (Quantity of information sheets):\n+ Số lượng xe (Quantity of TCMs):\n+ Các giấy tờ khác (Other related documents):\nThời gian và Địa điểm kiểm tra dự kiến (Anticipated inspection site and date):\nNgười liên hệ (Contact-person):\nSố điện thoại (Telephone N0):\nThư điện tử (Email):\nChúng tôi xin cam đoan và chịu trách nhiệm về tính hợp pháp của các nội dung đã khai báo trong Hồ sơ đăng ký kiểm tra đồng thời cam kết chất lượng hàng hóa nhập khẩu phù hợp với quy định hiện hành. (We undertake and bear full responsibility for the legality of the contents declared in the Application Form for Inspection, as well as commit to the quality of the imported goods in accordance with the current regulations).\nXác nhận của Cơ quan kiểm tra\nSố đăng ký kiểm tra:\n(Registered N0 for inspection)\n(Date), ngày tháng năm\nĐại diện Cơ quan kiểm tra\n(Inspection Body)\n(Date), ngày tháng năm\nNgười nhập khẩu\n(Importer)\nB. MẪU BẢN KÊ CHI TIẾT XE MÁY CHUYÊN DÙNG NHẬP KHẨU\nBẢN KÊ CHI TIẾT XE MÁY CHUYÊN DÙNG NHẬP KHẨU\n(List of imported transport construction machinery)\n(Kèm theo Bản đăng ký kiểm tra số (Attached to Application form with Registered N0 for inspection) :\nSố TT\n(N0)\nLoại xe máy chuyên dùng\n(TCM’s type)\nNhãn hiệu/Tên thương mại\n(Trade mark/ Commercial name)\nSố khung (hoặc số PIN hoặc số sê ri)\n(Chassis or PIN or serial N0)\nSố động cơ\n(Engine N0)\nNăm sản xuất\n(production year)\nMàu sơn\n(Color)\nGiá nhập khẩu\n(Unit Price)\nLoại tiền tệ\n(Currency)\nTình trạng máy chuyên dùng\n(TCM's status)\n1.\n/\n2.\n/\n3.\n/\n4.\n/\n5.\n/\n6.\n/\nChúng tôi cam kế …[cắt]"
+   },
+   {
+    "document": "23/2020/TT-BGTVT",
+    "item_id": "144759",
+    "part": "điều hiệu lực, chuyển tiếp",
+    "source_tier": "official",
+    "source": "vbpl CSDL quốc gia, bản crawl data/raw/144759.json",
+    "truncated": false,
+    "text": "Điều 3. Hiệu lực thi hành\n1. Thông tư này có hiệu lực thi hành từ ngày 15 tháng 11 năm 2020.\n2. Chánh Văn phòng Bộ, Chánh Thanh tra Bộ, các Vụ trưởng, Cục trưởng Cục Đăng kiểm Việt Nam, Thủ trưởng các cơ quan, tổ chức và cá nhân có liên quan chịu trách nhiệm thi hành Thông tư này./.\nNơi nhận:\n- Văn phòng Chính phủ;\n- Các Bộ, Cơ quan ngang Bộ;\n- Cơ quan thuộc Chính phủ;\n- Bộ trưởng (để b/c);\n- UBND các tỉnh, TP trực thuộc TW;\n- Cục Kiểm tra văn bản (Bộ Tư pháp);\n- Công báo;\n- Cổng TTĐT Chính phủ;\n- Cổng TTĐT Bộ GTVT;\n- Báo Giao thông, Tạp chí GTVT;\n- Lưu: VT, KHCN.\nKT.BỘ TRƯỞNG\nTHỨ TRƯỞNG\n(Đã ký)\nLê Đình Thọ\nPhụ lục\n(Ban hành kèm theo Thông tư số /2020/TT-BGTVT,\nngày tháng năm 2020 của Bộ trưởng Bộ Giao thông vận tải)\nMấu số 01\nPhụ lục VIII. Nội dung hồ sơ thiết kế\nMấu số 02\nPhụ lục IX. Giấy chứng nhận thẩm định thiết kế\nMấu số 03\nPhụ lục X. Hạng mục và đối tượng phải kiểm tra, thử nghiệm và chứng nhận về chất lượng an toàn kỹ thuật và bảo vệ môi trường xe sản xuất, lắp ráp\nMấu số 04\nPhụ lục XI. Bản thông tin xe máy chuyên dùng sản xuất, lắp ráp\nMấu số 05\nPhụ lục XII. Bản thống kê các tổng thành, hệ thống sản xuất trong nước và nhập khẩu\nMấu số 06\nPhụ lục XIII. Giấy chứng nhận xe máy chuyên dùng sản xuất, lắp ráp\nMấu số 07\nPhụ lục XIV. Phiếu kiểm tra chất lượng xuất xưởng\nMấu số 08\nPhụ lục XIVa. Đơn đề nghị cấp giấy chứng nhận chất lượng kiểu loại/ Thẩm định thiết kế xe máy chuyên dùng\nMẫu số 01\nPhụ lục VIII\nNỘI DUNG HỒ SƠ THIẾT KẾ\nA. Thuyết minh thiết kế kỹ thuật xe\nThuyết minh thiết kế kỹ thuật xe phải thể hiện được các nội dung cơ bản sau đây:\n1) Lời nói đầu: trong phần này cần giới thiệu được mục đích của việc thiết kế sản phẩm và các yêu cầu mà thiết kế cần phải đáp ứng.\n2) Bố trí chung của xe thiết kế, tính toán về khối lượng và phân bố khối lượng, tính toán lựa các tổng thành hệ thống lắp trên xe, thuyết minh về đặc tính kỹ thuật cơ bản của xe thiết kế.\n3) Tính toán các đặc tính động học, động lực học và kiểm nghiệm bền các chi tiết, tổng thành, hệ thống theo các nội dung như sau:\nSttNội dung tính toánLắp trên xe cơ sởLắp từ linh kiện rời1Tính toán cơ cấu di chuyển---x2Tính toán cơ cấu quay---x3Tính toán hệ thống công tácxx4Tính toán hệ thống thủy lựcxx5Tính toán cơ cấu phanh, dẫn động phanh di chuyển---x6Tính toán liên kết của hệ thống công tác với khung, dầm chínhxx7Tính toán ổn định của xe khi di chuyển lên dốc, xuống dốcxx8Tính toán ổn định của xe khi xe hoạt động ở chế độ tải lớn nhấtxx9Các tính toán khác (nếu có): chỉ áp dụng đối với những nội dung tính toán kiểm nghiệm bền cho các chi tiết, tổng thành khác tùy thuộc vào đặc điểm kết cấu cụ thể của từng loại xe được thiết kế và loại hình sản xuất, lắp ráp thực tếxx\nTrường hợp có cơ sở để kết luận sự thỏa mãn về độ bền của các chi tiết, tổng thành, hệ thống thuộc các hạng mục bắt buộc phải tính toán kiểm nghiệm bền nêu trên thì trong thuyết minh phải nêu rõ lý do của việc không tính toán kiểm nghiệm bền đối với các hạng mục này.\n4) Kết luận chung của bản thuyết minh;\n5) Mục lục và các  …[cắt]"
+   }
+  ],
+  "official_missing": [],
+  "run_id": "round2_codex",
+  "case_id": "round2_codex::provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+  "lineage_id": "provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+  "a": {
+   "lineage_id": "provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+   "labeler": "ai-a",
+   "label_origin": "ai",
+   "verification_status": "not_verified",
+   "guideline_version": "4.0",
+   "worksheet_sha256": "acea74befbf7fc3e67389ecfbbb9cf37c565775d92ed7c7f03465b72eddef47c",
+   "q1": "dung",
+   "q1_reason": "",
+   "q2": "khong",
+   "q2_reason": "group_mismatch",
+   "q3": "co",
+   "q3_reason": "",
+   "q4": "khong",
+   "q4_reason": "",
+   "quote": "1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe mới chưa qua sử dụng và chưa có biển số (gọi là xe cơ sở); cải tạo và khai thác sử dụng.",
+   "search_log": "Đọc official và sources trong input được giao; đối chiếu đoạn sửa đổi qua API CSDL quốc gia khi truy cập được. Không phải ca T6.",
+   "note": "[phân vân] Có chuỗi đưa sản xuất, lắp ráp ra khỏi phạm vi rồi đưa trở lại, nhưng chưa chứng minh bản đầu và bản cuối tạo hai nội dung pháp lý khác nhau: “chưa qua sử dụng” so với “mới chưa qua sử dụng”, “biển đăng ký” so với “biển số”. Chọn Q2 Không vì chưa đủ ba đáp án thực chất của T3; cần xác nhận các cách diễn đạt đó có thay đổi phạm vi hay chỉ làm rõ.",
+   "evidence_status": "insufficient",
+   "verdict": "khong_dat",
+   "evidence": [
+    {
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/144759",
+     "source_tier": "official",
+     "document_number": "23/2020/TT-BGTVT",
+     "provision": "Khoản 1 Điều 1 được sửa đổi; điều hiệu lực",
+     "as_of": "2018-10-14,2020-11-14,2020-11-15",
+     "quote": "1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe mới chưa qua sử dụng và chưa có biển số (gọi là xe cơ sở); cải tạo và khai thác sử dụng.",
+     "accessed_at": "2026-11-06T15:35:24.765603+00:00"
+    }
+   ],
+   "quote_in_provided_sources": true
+  },
+  "b": {
+   "lineage_id": "provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+   "labeler": "ai-b",
+   "label_origin": "ai",
+   "verification_status": "not_verified",
+   "guideline_version": "4.0",
+   "worksheet_sha256": "acea74befbf7fc3e67389ecfbbb9cf37c565775d92ed7c7f03465b72eddef47c",
+   "q1": "dung",
+   "q1_reason": "",
+   "q2": "co",
+   "q2_reason": "",
+   "q3": "co",
+   "q3_reason": "",
+   "q4": "khong",
+   "q4_reason": "",
+   "verdict": "dat",
+   "quote": "Thông tư này có hiệu lực thi hành từ ngày 15 tháng 11 năm 2020.",
+   "search_log": "",
+   "note": "Phạm vi sản xuất, lắp ráp bị bỏ rồi đưa trở lại với mô tả xe cơ sở mới; ba đáp án về phạm vi khác nhau ở các mốc đã giao.",
+   "evidence_status": "sufficient",
+   "evidence": [
+    {
+     "url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=144759",
+     "source_tier": "official",
+     "document_number": "23/2020/TT-BGTVT",
+     "provision": "điều hiệu lực, chuyển tiếp",
+     "as_of": "2020-11-15",
+     "quote": "Thông tư này có hiệu lực thi hành từ ngày 15 tháng 11 năm 2020.",
+     "accessed_at": "2026-11-06T15:35:05.375391+00:00"
+    },
+    {
+     "url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=144759",
+     "source_tier": "worksheet",
+     "document_number": "23/2020/TT-BGTVT",
+     "provision": "Khoản 1 Điều 1 được sửa",
+     "as_of": "2020-11-15",
+     "quote": "1. Sửa đổi khoản 1 Điều 1 như sau:\n“1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe mới chưa qua sử dụng và chưa có biển số (gọi là xe cơ sở); cải tạo và khai thác sử dụng.”.",
+     "accessed_at": "2026-11-06T15:35:05.375391+00:00"
+    }
+   ],
+   "quote_in_provided_sources": true
+  },
+  "disputed_fields": [
+   "q2",
+   "q2_reason"
+  ],
+  "raw_a_sha256": "26698f2b77b2b8694c6814d652aea61444d49df209e71c75357229aacc3192b6",
+  "raw_b_sha256": "c1beee5834172a7996a3c5293a3cb93cea15086864000d6f69ba59dd4e2ec094",
+  "prior_proposal": {
+   "lineage_id": "provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+   "worksheet_sha256": "acea74befbf7fc3e67389ecfbbb9cf37c565775d92ed7c7f03465b72eddef47c",
+   "raw_a_sha256": "4b79b34be755ba55021dd76d753099abbcbec744526276eb50b88953a9807719",
+   "raw_b_sha256": "c1e219a99de7189314ad792fac50676dfcd8bbd8e59212fa83fe47d22575f554",
+   "disputed_fields": [
+    "q2",
+    "verdict"
+   ],
+   "proposed_label": null,
+   "disposition": "unresolved",
+   "reasoning": "Toàn văn cả ba thông tư xác nhận chuỗi lời văn: bản2015 gồm sản xuất/lắp ráp từ linh kiện chưa qua sử dụng hoặc xe cơ sở chưa qua sử dụng/chưa có biển đăng ký; năm2018 bỏ sản xuất/lắp ráp; năm2020 đưa lại với linh kiện mới chưa qua sử dụng, xe mới chưa qua sử dụng/chưa có biển số và định nghĩa xe cơ sở tại đây. B chứng minh có ba cách viết nhưng chưa chứng minh ba nội dung pháp lý thực chất. A nghi chỉ hai trạng thái có cơ sở theo R1, tuy vậy chưa có định nghĩa/giải thích chính thức chứng minh mới chưa qua sử dụng khác hoặc đồng nghĩa chưa qua sử dụng, và xe cơ sở cũ có phạm vi nào. Không chốt A chỉ bằng suy luận từ vựng, không chốt B chỉ bằng số bản sửa. Ngày hiệu lực15/10/2018 và15/11/2020 đối chiếu điều hiệu lực trong toàn văn; câu hỏi nêu doanh nghiệp sản xuất nhưng hỏi phạm vi chung, cần luật sư xác nhận Q3 nếu chỉ muốn hỏi phạm vi với chính doanh nghiệp đó.",
+   "evidence": [
+    {
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/111821",
+     "document_number": "89/2015/TT-BGTVT",
+     "provision": "Khoản 1 Điều 1",
+     "as_of": "2018-10-14,2020-11-14,2020-11-15",
+     "quote": "Điều 1. Phạm vi điều chỉnh 1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện chưa qua sử dụng hoặc từ xe cơ sở chưa qua sử dụng và chưa có biển đăng ký; cải tạo và khai thác sử dụng. 2. Thông tư này không áp dụng đối với xe máy chuyên dùng được sản xuất, lắp ráp, nhập khẩu sử dụng trực tiếp vào mục đích quốc phòng, an ninh của Bộ Quốc phòng, Bộ Công an. Điều 2. Đối tượng áp dụng Thông tư này áp dụng đối với các cơ quan, tổ chức, cá nhân có liên",
+     "source_tier": "official",
+     "accessed_at": "2026-11-06T15:49:36.782405+00:00",
+     "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk03/111821.live.json",
+     "snapshot_sha256": "7c84b6de0bc3eea8da6f0ff42b48fe5fd211dfc5e3576c23d880cf7933194c24",
+     "source_mode": "live_api_unwrapped_data.documentContent.content"
+    },
+    {
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/132109",
+     "document_number": "42/2018/TT-BGTVT",
+     "provision": "Khoản 1 Điều 1",
+     "as_of": "2018-10-14,2020-11-14,2020-11-15",
+     "quote": "1. Sửa đổi khoản 1 Điều 1 như sau: \"1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; cải tạo và khai thác sử dụng\". 2. Sửa đổi Điều 2 như sau: \"Thông tư này áp dụng đối với các cơ quan, tổ chức, cá nhân có liên quan đến quản lý, kiểm tra nhập khẩu; cải tạo và khai thác sử dụng xe máy chuyên dùng.\" 3. Sửa đổi Điều 3 như sau: \"Điều 3. Giải thích từ ngữ Một số từ ngữ và các tiêu chu",
+     "source_tier": "official",
+     "accessed_at": "2026-11-06T15:49:30.286846+00:00",
+     "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk03/132109.live.json",
+     "snapshot_sha256": "08ca14de749768dffc462b668a7595779c8d1eea52362b308d3afd8af6108232",
+     "source_mode": "live_api_unwrapped_data.documentContent.content"
+    },
+    {
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/144759",
+     "document_number": "23/2020/TT-BGTVT",
+     "provision": "Khoản 1 Điều 1",
+     "as_of": "2018-10-14,2020-11-14,2020-11-15",
+     "quote": "1. Sửa đổi khoản 1 Điều 1 như sau: “1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe mới chưa qua sử dụng và chưa có biển số (gọi là xe cơ sở); cải tạo và khai thác sử dụng.”. 2. Sửa đổi Điều 2 như sau: “Thông tư này áp dụng đối với các cơ quan, tổ chức, cá nhân có liên quan đến quản lý, kiểm tra, nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe cơ sở; cải tạo và khai thác sử dụng xe",
+     "source_tier": "official",
+     "accessed_at": "2026-11-06T15:49:30.246076+00:00",
+     "snapshot_path": "data/review/ai_research/2026-11-06_silver/round2_codex/adjudication_work/evidence/chunk03/144759.live.json",
+     "snapshot_sha256": "3bbf670e38d07e6ca55a5c32b5dd480ab0851aaf2a9a03d688dbae485d96d207",
+     "source_mode": "live_api_unwrapped_data.documentContent.content"
+    }
+   ],
+   "lookups": [
+    {
+     "tool": "Lawgical MCP",
+     "status": "unavailable",
+     "query": null,
+     "detail": "Không có Lawgical MCP trong phiên; không có quota được gọi. Cùng một fallback API/full snapshot cho A và B."
+    },
+    {
+     "tool": "urllib.request sandbox",
+     "status": "error",
+     "query": "all packet document IDs",
+     "detail": "DNS temporary failure; đã rerun một lần với require_escalated được cấp phép; fetch_metadata.json ghi lỗi gốc."
+    },
+    {
+     "tool": "urllib.request official API",
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/111821",
+     "status": "success",
+     "error": null,
+     "query": "89/2015/TT-BGTVT"
+    },
+    {
+     "tool": "urllib.request official API",
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/132109",
+     "status": "success",
+     "error": null,
+     "query": "42/2018/TT-BGTVT"
+    },
+    {
+     "tool": "urllib.request official API",
+     "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/144759",
+     "status": "success",
+     "error": null,
+     "query": "23/2020/TT-BGTVT"
+    },
+    {
+     "tool": "web.run search_query",
+     "status": "success",
+     "queries": [
+      "\"89/2015/TT-BGTVT\" \"mới chưa qua sử dụng\" \"xe cơ sở\""
+     ],
+     "detail": "Search chỉ để phát hiện nguồn; không dùng snippet làm bằng chứng quyết định bất lợi. Công báo gốc ngày đăng NĐ04/2008 chưa tìm được; từ ngữ R1 chưa được giải thích bằng nguồn."
+    }
+   ],
+   "open_questions": [
+    "Căn cứ giải thích phạm vi xe cơ sở/chưa qua sử dụng trong bản2015 so với xe mới chưa qua sử dụng trong bản2020 để áp R1 và ngưỡng ít nhất ba đáp án T3."
+   ],
+   "labeler": "ai-adjudicator",
+   "label_origin": "ai",
+   "verification_status": "not_verified",
+   "human_adjudication_required": true
+  },
+  "labeler": "ai-adjudicator",
+  "label_origin": "ai",
+  "verification_status": "not_verified",
+  "human_adjudication_required": true,
+  "reasoning": "Đã đối chiếu ba chính văn: TT89 sản xuất lắp ráp từ linh kiện/chassis chưa qua sử dụng; TT42 bỏ phạm vi này từ15/10/2018; TT23 đưa lại từ15/11/2020 với “mới chưa qua sử dụng”, “chưa có biển số”. Q1 khớp mốc/lời văn; Q3 câu hỏi nội dung phạm vi rõ; Q4 chưa có quy phạm khác cụ thể. A đúng khi yêu cầu ≥3 đáp án thực chất R1; B chưa chứng minh từ “mới” làm bản2020 khác nghĩa pháp lý bản2015. Nguồn đã mở không giải thích mới/chưa qua sử dụng và biển đăng ký/biển số tạo khác biệt về điều kiện hay chỉ chuẩn hóa. Chưa đủ chọn Q2 khong hoặc co chắc chắn nên null.",
+  "evidence": [
+   {
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/111821",
+    "source_tier": "official",
+    "document_number": "89/2015/TT-BGTVT",
+    "provision": "Điều1 khoản1",
+    "as_of": "2018-10-14",
+    "quote": "Điều 1. Phạm vi điều chỉnh \n 1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện chưa qua sử dụng hoặc từ xe cơ sở chưa qua sử dụng và chưa có biển đăng ký; cải tạo và khai thác sử dụng. \n 2. Thông tư này không áp dụng đối với xe máy chuyên dùng được sản xuất, lắp ráp, nhập khẩu sử dụng trực tiếp vào mục đích quốc phòng, an ninh của Bộ Quốc phòng, Bộ Công an. \n Điều 2. Đối tượng áp dụng \n Thông tư",
+    "accessed_at": "2026-11-07T09:33:29.904700+00:00"
+   },
+   {
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/132109",
+    "source_tier": "official",
+    "document_number": "42/2018/TT-BGTVT",
+    "provision": "Điều sửa khoản1 Điều1 TT89",
+    "as_of": "2020-11-14",
+    "quote": "khoản 1 Điều 1 như sau: \n \"1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; cải tạo và khai thác sử dụng\". \n 2. Sửa đổi Điều 2 như sau: \n \"Thông tư này áp dụng đối với các cơ quan, tổ chức, cá nhân có l",
+    "accessed_at": "2026-11-07T09:33:29.987471+00:00"
+   },
+   {
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/144759",
+    "source_tier": "official",
+    "document_number": "23/2020/TT-BGTVT",
+    "provision": "Điều1 khoản1; điều hiệu lực",
+    "as_of": "2020-11-15",
+    "quote": "khoản 1 Điều 1 như sau: \n “1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe mới chưa qua sử dụng và chưa có biển số (gọi là xe cơ sở); cải tạo và khai thác sử dụng.”. \n 2. Sửa đổi Điều 2 như sau: \n “Thông tư này áp dụng đối với các cơ quan, tổ chức, cá nhân có liên quan đến quản lý, kiểm tra, nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc",
+    "accessed_at": "2026-11-07T09:33:29.949909+00:00"
+   }
+  ],
+  "open_questions": [
+   "Xác nhận có khác phạm vi pháp lý giữa xe/linh kiện chưa qua sử dụng2015 và mới chưa qua sử dụng2020 không; nếu không thì chỉ02 đáp án và Q2 group_mismatch, nếu có thì Q2 co."
+  ],
+  "disposition": "unresolved",
+  "proposed_label": null,
+  "evidence_status": "insufficient"
+ },
+ {
+  "worksheet_sha256": "acea74befbf7fc3e67389ecfbbb9cf37c565775d92ed7c7f03465b72eddef47c",
+  "record": {
+   "lineage_id": "provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+   "group": "T3",
+   "stratum": "T3",
+   "batch": 1,
+   "question": "Một doanh nghiệp sản xuất, lắp ráp xe máy chuyên dùng muốn xác định phạm vi kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường đối với xe máy chuyên dùng thì quy định bao gồm những đối tượng và hoạt động nào?",
+   "rows": [
+    {
+     "id": "vilextime:T3:provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1:2018-10-14",
+     "as_of": "2018-10-14",
+     "as_of_strategy": "ranh_gioi",
+     "version_id": "version:7d01ec54-eba3-11f0-9856-f75286fb8467#k1:1",
+     "answer": "1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện chưa qua sử dụng hoặc từ xe cơ sở chưa qua sử dụng và chưa có biển đăng ký; cải tạo và khai thác sử dụng.",
+     "answerable": true,
+     "short_answer": "nhập khẩu; sản xuất, lắp ráp từ các linh kiện chưa qua sử dụng hoặc từ xe cơ sở chưa qua sử dụng và chưa có biển đăng ký; cải tạo và khai thác sử dụng",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=111821",
+     "target": {
+      "document_id": "document:111821",
+      "law_id": "89/2015/TT-BGTVT",
+      "document_title": "Thông tư số 89/2015/TT-BGTVT Quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường xe máy chuyên dùng",
+      "article_id": "1",
+      "clause_id": "1",
+      "point_id": null,
+      "citation": "Khoản 1 Điều 1",
+      "provision_path": "Chương I › Điều 1 › Khoản 1",
+      "lead_in": "Điều 1. Phạm vi điều chỉnh"
+     }
+    },
+    {
+     "id": "vilextime:T3:provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1:2020-11-14",
+     "as_of": "2020-11-14",
+     "as_of_strategy": "ranh_gioi",
+     "version_id": "version:7d01ec54-eba3-11f0-9856-f75286fb8467#k1:2",
+     "answer": "1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; cải tạo và khai thác sử dụng",
+     "answerable": true,
+     "short_answer": "đối với các loại xe máy chuyên dùng nhập khẩu; cải tạo và khai thác sử dụng",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=111821",
+     "target": {
+      "document_id": "document:111821",
+      "law_id": "89/2015/TT-BGTVT",
+      "document_title": "Thông tư số 89/2015/TT-BGTVT Quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường xe máy chuyên dùng",
+      "article_id": "1",
+      "clause_id": "1",
+      "point_id": null,
+      "citation": "Khoản 1 Điều 1",
+      "provision_path": "Chương I › Điều 1 › Khoản 1",
+      "lead_in": "Điều 1. Phạm vi điều chỉnh"
+     }
+    },
+    {
+     "id": "vilextime:T3:provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1:2020-11-15",
+     "as_of": "2020-11-15",
+     "as_of_strategy": "ranh_gioi",
+     "version_id": "version:7d01ec54-eba3-11f0-9856-f75286fb8467#k1:3",
+     "answer": "1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe mới chưa qua sử dụng và chưa có biển số (gọi là xe cơ sở); cải tạo và khai thác sử dụng.",
+     "answerable": true,
+     "short_answer": "nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe mới chưa qua sử dụng và chưa có biển số (gọi là xe cơ sở); cải tạo và khai thác sử dụng",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=111821",
+     "target": {
+      "document_id": "document:111821",
+      "law_id": "89/2015/TT-BGTVT",
+      "document_title": "Thông tư số 89/2015/TT-BGTVT Quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường xe máy chuyên dùng",
+      "article_id": "1",
+      "clause_id": "1",
+      "point_id": null,
+      "citation": "Khoản 1 Điều 1",
+      "provision_path": "Chương I › Điều 1 › Khoản 1",
+      "lead_in": "Điều 1. Phạm vi điều chỉnh"
+     }
+    }
+   ],
+   "sources": {
+    "base": {
+     "document": "89/2015/TT-BGTVT",
+     "title": "Thông tư số 89/2015/TT-BGTVT Quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường xe máy chuyên dùng",
+     "issued": "2015-12-31",
+     "effective_from": "2016-07-01",
+     "effective_to": "2025-01-01",
+     "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=111821",
+     "passage": "Điều 1. Phạm vi điều chỉnh\n1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện chưa qua sử dụng hoặc từ xe cơ sở chưa qua sử dụng và chưa có biển đăng ký; cải tạo và khai thác sử dụng."
+    },
+    "actors": [
+     {
+      "document": "42/2018/TT-BGTVT",
+      "title": "Thông tư số 42/2018/TT-BGTVT Sửa đổi, bổ sung một số điều của các thông tư trong lĩnh vực đăng kiểm",
+      "issued": "2018-07-30",
+      "effective_from": "2018-10-15",
+      "effective_to": null,
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=132109",
+      "passage": "1. Sửa đổi khoản 1 Điều 1 như sau:\n\"1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; cải tạo và khai thác sử dụng\".",
+      "transitional": "",
+      "in_force": "Điều 10. Hiệu lực thi hành\n1. Thông tư này có hiệu lực kể từ ngày 15 tháng 10 năm 2018.\n2. Chánh Văn phòng Bộ, Chánh Thanh tra Bộ, các Vụ trưởng, Cục trưởng Cục Đăng kiểm Việt Nam, Thủ trưởng các cơ quan, tổ chức và cá nhân có liên quan chịu trách nhiệm thi hành Thông tư này./.\nKT. BỘ TRƯỞNG\nTHỨ TRƯỞNG\n(Đã ký)\nLê Đình Thọ\n\n1. Thông tư này có hiệu lực kể từ ngày 15 tháng 10 năm 2018."
+     },
+     {
+      "document": "23/2020/TT-BGTVT",
+      "title": "Thông tư số 23/2020/TT-BGTVT Sửa đổi, bổ sung một số điều của Thông tư số 89/2015/TT-BGTVT ngày 31/12/2015 của Bộ trưởng Bộ Giao thông vận tải quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường xe máy chuyên dùng và Thông tư số 42/2018/TT-BGTVT ngày 30/7/2018 của Bộ trưởng Bộ Giao thông vận tải quy định sửa đổi, bổ sung một số điều của các Thông tư trong lĩnh vực Đăng kiểm",
+      "issued": "2020-10-01",
+      "effective_from": "2020-11-15",
+      "effective_to": "2025-01-01",
+      "source_url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=144759",
+      "passage": "1. Sửa đổi khoản 1 Điều 1 như sau:\n“1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe mới chưa qua sử dụng và chưa có biển số (gọi là xe cơ sở); cải tạo và khai thác sử dụng.”.",
+      "transitional": "",
+      "in_force": "Điều 15. Đánh giá kiểu loại sản phẩm đã được cấp Giấy chứng nhận kiểu loại; đình chỉ hiệu lực và thu hồi Giấy chứng nhận kiểu loại\n1. Cục Đăng kiểm Việt Nam tiến hành đánh giá kiểu loại sản phẩm đã được cấp Giấy chứng nhận kiểu loại trong các trường hợp sau:\na) Đánh giá định kỳ 24 tháng;\nb) Đánh giá khi có sự thay đổi của sản phẩm so với sản phẩm đã được cấp Giấy chứng nhận kiểu loại;\nc) Đánh giá khi có sự thay đổi các tiêu chuẩn, quy chuẩn kỹ thuật và quy định quy liên quan.\n2. Căn cứ để đánh giá kiểu loại sản phẩm đã được cấp Giấy chứng nhận kiểu loại bao gồm:\na) Kết quả đánh giá COP tại Cơ sở sản xuất theo quy định tại khoản 2 Điều 12 của Thông tư này;\nb) Sự phù hợp của sản phẩm đã được cấp Giấy chứng nhận kiểu loại so với quy định, tiêu chuẩn và quy chuẩn kỹ thuật quốc gia tương ứng.\n3. Khi các quy định, tiêu chuẩn và quy chuẩn kỹ thuật quốc gia liên quan đến kiểu loại sản phẩm đã được chứng nhận thay đổi hoặc khi sản phẩm có các thay đổi ảnh hưởng tới sự phù hợp của kiểu loại sản phẩm đó so với quy định, tiêu chuẩn và quy chuẩn kỹ thuật quốc gia tương ứng thì cơ sở sản xuất phải tiến hành kiểm tra, thử nghiệm lại kiểu loại sản phẩm theo các quy định, tiêu chuẩn và quy chuẩn kỹ thuật quốc gia mới. Trong trường hợp này, Cơ sở sản xuất phải nộp bổ sung cho Cục Đăng kiểm Việt Nam các tài liệu sau:\na) Tài liệu liên quan tới sự thay đổi của sản phẩm;\nb) Báo cáo kết quả kiểm tra kiểu loại sản phẩm theo các quy định, tiêu chuẩn và quy chuẩn kỹ thuật quốc gia mới hoặc báo cáo kết quả kiểm tra bổ sung các hạng mục thay đổi của kiểu loại sản phẩm theo các quy định, tiêu chuẩn và quy chuẩn kỹ thuật quốc gia.\nCục Đăng kiểm Việt Nam sẽ tiếp nhận, kiểm tra các tài liệu bổ sung để xem xét, đánh giá và cấp Giấy chứng nhận. Thủ tục cấp Giấy chứng nhận được thực hiện theo quy định tại Điều 13 của Thông tư này.\n4. Đình chỉ hiệu lực của Giấy chứng nhận kiểu loại\nCục Đăng kiểm Việt Nam sẽ đình chỉ hiệu lực của Giấy chứng nhận kiểu loại đã cấp trong thời gian 06 tháng và thông báo bằng văn bản cho Cơ sở sản xuất trong các trường hợp sau đây:\na) Cơ sở sản xuất có vi phạm các quy định liên quan đến việc kiểm tra chất lượng sản phẩm hoặc sử dụng phiếu kiểm tra chất lượng xuất xưởng;\nb) Sản phẩm xuất xưởng không phù hợp với hồ sơ kiểu loại và sản phẩm mẫu đã được cấp Giấy chứng nhận kiểu loại và Cơ sở sản xuất không thực hiện khắc phục các sản phẩm đã xuất xưởng không phù hợp.\nTrong thời gian Giấy chứng nhận kiểu loại bị đình chỉ hiệu lực, Cơ sở sản xuất phải thực hiện khắc phụ [...cắt bớt]\n\nĐiều 3. Hiệu lực thi hành\n1. Thông tư này có hiệu lực thi hành từ ngày 15 tháng 11 năm 2020.\n2. Chánh Văn phòng Bộ, Chánh Thanh tra Bộ, các Vụ trưởng, Cục trưởng Cục Đăng kiểm Việt Nam, Thủ trưởng các cơ quan, tổ chức và cá nhân có liên quan chịu trách nhiệm thi hành Thông tư này./.\nNơi nhận :\n- Văn phòng Chính phủ;\n- Các Bộ, Cơ quan ngang Bộ;\n- Cơ quan thuộc Chính phủ;\n- Bộ trưởng (để b/c);\n- UBND các tỉnh, TP trực thuộc TW;\n- Cục Kiểm tra văn bản (Bộ Tư pháp);\n- Công báo;\n- Cổng TTĐT Chính phủ;\n- Cổng TTĐT Bộ GTVT;\n- Báo Giao thông, Tạp chí GTVT;\n- Lưu: VT, KHCN.\nKT.BỘ TRƯỞNG\nTHỨ TRƯỞNG\n(Đã ký)\nLê Đình Thọ\n\n1. Thông tư này có hiệu lực thi hành từ ngày 15 tháng 11 năm 2020."
+     }
+    ]
+   }
+  },
+  "official": [
+   {
+    "document": "89/2015/TT-BGTVT",
+    "item_id": "111821",
+    "part": "Điều 1 (bản ban hành)",
+    "source_tier": "official",
+    "source": "vbpl CSDL quốc gia, bản crawl data/raw/111821.json",
+    "truncated": false,
+    "text": "Điều 1. Phạm vi điều chỉnh\n1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện chưa qua sử dụng hoặc từ xe cơ sở chưa qua sử dụng và chưa có biển đăng ký; cải tạo và khai thác sử dụng.\n2. Thông tư này không áp dụng đối với xe máy chuyên dùng được sản xuất, lắp ráp, nhập khẩu sử dụng trực tiếp vào mục đích quốc phòng, an ninh của Bộ Quốc phòng, Bộ Công an."
+   },
+   {
+    "document": "42/2018/TT-BGTVT",
+    "item_id": "132109",
+    "part": "điều hiệu lực, chuyển tiếp",
+    "source_tier": "official",
+    "source": "vbpl CSDL quốc gia, bản crawl data/raw/132109.json",
+    "truncated": false,
+    "text": "Điều 10. Hiệu lực thi hành\n1. Thông tư này có hiệu lực kể từ ngày 15 tháng 10 năm 2018.\n2. Chánh Văn phòng Bộ, Chánh Thanh tra Bộ, các Vụ trưởng, Cục trưởng Cục Đăng kiểm Việt Nam, Thủ trưởng các cơ quan, tổ chức và cá nhân có liên quan chịu trách nhiệm thi hành Thông tư này./.\nKT. BỘ TRƯỞNG\nTHỨ TRƯỞNG\n(Đã ký)\nLê Đình Thọ\nPHỤ LỤC I\n(Ban hành kèm theo Thông tư số 42/2018/TT-BGTVT ngày 30 tháng 07 năm 2018 của Bộ trưởng Bộ Giao thông vận tải)\nA. MẪU GIẤY ĐĂNG KÝ KIỂM TRA CHẤT LƯỢNG AN TOÀN KỸ THUẬT VÀ BẢO VỆ MÔI TRƯỜNG XE MÁY CHUYÊN DÙNG NHẬP KHẨU\nCỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM\nĐộc lập - Tự do - Hạnh phúc\n---------------\nSOCIALIST REPUBLIC OF VIETNAM\nIndependence - Freedom - Happiness\n---------------\nBẢN ĐĂNG KÝ KIỂM TRA CHẤT LƯỢNG AN TOÀN KỸ THUẬT VÀ BẢO VỆ MÔI TRƯỜNG XE MÁY CHUYÊN DÙNG NHẬP KHẨU\n(Application form for technical safety quality and environmental protection inspection for imported transport construction machinery-TCM)\nKính gửi (To): Cục Đăng kiểm Việt Nam\nNgười nhập khẩu (Importer):\nĐịa chỉ (Address):\nMã số thuế (Tax code):\nThư điện tử (Email):\nNgười đại diện (Representative):\nSố điện thoại (Telephone N0)\nĐăng ký kiểm tra Nhà nước về chất lượng an toàn kỹ thuật và bảo vệ môi trường xe máy chuyên dùng nhập khẩu với các nội dung sau (Request for technical safety quality and environmental protection inspection for imported TCM with the following contents):\nHồ sơ kèm theo (Attached document):\n+ Số lượng Bản thông tin xe máy chuyên dùng (Quantity of information sheets):\n+ Số lượng xe (Quantity of TCMs):\n+ Các giấy tờ khác (Other related documents):\nThời gian và Địa điểm kiểm tra dự kiến (Anticipated inspection site and date):\nNgười liên hệ (Contact-person):\nSố điện thoại (Telephone N0):\nThư điện tử (Email):\nChúng tôi xin cam đoan và chịu trách nhiệm về tính hợp pháp của các nội dung đã khai báo trong Hồ sơ đăng ký kiểm tra đồng thời cam kết chất lượng hàng hóa nhập khẩu phù hợp với quy định hiện hành. (We undertake and bear full responsibility for the legality of the contents declared in the Application Form for Inspection, as well as commit to the quality of the imported goods in accordance with the current regulations).\nXác nhận của Cơ quan kiểm tra\nSố đăng ký kiểm tra:\n(Registered N0 for inspection)\n(Date), ngày tháng năm\nĐại diện Cơ quan kiểm tra\n(Inspection Body)\n(Date), ngày tháng năm\nNgười nhập khẩu\n(Importer)\nB. MẪU BẢN KÊ CHI TIẾT XE MÁY CHUYÊN DÙNG NHẬP KHẨU\nBẢN KÊ CHI TIẾT XE MÁY CHUYÊN DÙNG NHẬP KHẨU\n(List of imported transport construction machinery)\n(Kèm theo Bản đăng ký kiểm tra số (Attached to Application form with Registered N0 for inspection) :\nSố TT\n(N0)\nLoại xe máy chuyên dùng\n(TCM’s type)\nNhãn hiệu/Tên thương mại\n(Trade mark/ Commercial name)\nSố khung (hoặc số PIN hoặc số sê ri)\n(Chassis or PIN or serial N0)\nSố động cơ\n(Engine N0)\nNăm sản xuất\n(production year)\nMàu sơn\n(Color)\nGiá nhập khẩu\n(Unit Price)\nLoại tiền tệ\n(Currency)\nTình trạng máy chuyên dùng\n(TCM's status)\n1.\n/\n2.\n/\n3.\n/\n4.\n/\n5.\n/\n6.\n/\nChúng tôi cam kế …[cắt]"
+   },
+   {
+    "document": "23/2020/TT-BGTVT",
+    "item_id": "144759",
+    "part": "điều hiệu lực, chuyển tiếp",
+    "source_tier": "official",
+    "source": "vbpl CSDL quốc gia, bản crawl data/raw/144759.json",
+    "truncated": false,
+    "text": "Điều 3. Hiệu lực thi hành\n1. Thông tư này có hiệu lực thi hành từ ngày 15 tháng 11 năm 2020.\n2. Chánh Văn phòng Bộ, Chánh Thanh tra Bộ, các Vụ trưởng, Cục trưởng Cục Đăng kiểm Việt Nam, Thủ trưởng các cơ quan, tổ chức và cá nhân có liên quan chịu trách nhiệm thi hành Thông tư này./.\nNơi nhận:\n- Văn phòng Chính phủ;\n- Các Bộ, Cơ quan ngang Bộ;\n- Cơ quan thuộc Chính phủ;\n- Bộ trưởng (để b/c);\n- UBND các tỉnh, TP trực thuộc TW;\n- Cục Kiểm tra văn bản (Bộ Tư pháp);\n- Công báo;\n- Cổng TTĐT Chính phủ;\n- Cổng TTĐT Bộ GTVT;\n- Báo Giao thông, Tạp chí GTVT;\n- Lưu: VT, KHCN.\nKT.BỘ TRƯỞNG\nTHỨ TRƯỞNG\n(Đã ký)\nLê Đình Thọ\nPhụ lục\n(Ban hành kèm theo Thông tư số /2020/TT-BGTVT,\nngày tháng năm 2020 của Bộ trưởng Bộ Giao thông vận tải)\nMấu số 01\nPhụ lục VIII. Nội dung hồ sơ thiết kế\nMấu số 02\nPhụ lục IX. Giấy chứng nhận thẩm định thiết kế\nMấu số 03\nPhụ lục X. Hạng mục và đối tượng phải kiểm tra, thử nghiệm và chứng nhận về chất lượng an toàn kỹ thuật và bảo vệ môi trường xe sản xuất, lắp ráp\nMấu số 04\nPhụ lục XI. Bản thông tin xe máy chuyên dùng sản xuất, lắp ráp\nMấu số 05\nPhụ lục XII. Bản thống kê các tổng thành, hệ thống sản xuất trong nước và nhập khẩu\nMấu số 06\nPhụ lục XIII. Giấy chứng nhận xe máy chuyên dùng sản xuất, lắp ráp\nMấu số 07\nPhụ lục XIV. Phiếu kiểm tra chất lượng xuất xưởng\nMấu số 08\nPhụ lục XIVa. Đơn đề nghị cấp giấy chứng nhận chất lượng kiểu loại/ Thẩm định thiết kế xe máy chuyên dùng\nMẫu số 01\nPhụ lục VIII\nNỘI DUNG HỒ SƠ THIẾT KẾ\nA. Thuyết minh thiết kế kỹ thuật xe\nThuyết minh thiết kế kỹ thuật xe phải thể hiện được các nội dung cơ bản sau đây:\n1) Lời nói đầu: trong phần này cần giới thiệu được mục đích của việc thiết kế sản phẩm và các yêu cầu mà thiết kế cần phải đáp ứng.\n2) Bố trí chung của xe thiết kế, tính toán về khối lượng và phân bố khối lượng, tính toán lựa các tổng thành hệ thống lắp trên xe, thuyết minh về đặc tính kỹ thuật cơ bản của xe thiết kế.\n3) Tính toán các đặc tính động học, động lực học và kiểm nghiệm bền các chi tiết, tổng thành, hệ thống theo các nội dung như sau:\nSttNội dung tính toánLắp trên xe cơ sởLắp từ linh kiện rời1Tính toán cơ cấu di chuyển---x2Tính toán cơ cấu quay---x3Tính toán hệ thống công tácxx4Tính toán hệ thống thủy lựcxx5Tính toán cơ cấu phanh, dẫn động phanh di chuyển---x6Tính toán liên kết của hệ thống công tác với khung, dầm chínhxx7Tính toán ổn định của xe khi di chuyển lên dốc, xuống dốcxx8Tính toán ổn định của xe khi xe hoạt động ở chế độ tải lớn nhấtxx9Các tính toán khác (nếu có): chỉ áp dụng đối với những nội dung tính toán kiểm nghiệm bền cho các chi tiết, tổng thành khác tùy thuộc vào đặc điểm kết cấu cụ thể của từng loại xe được thiết kế và loại hình sản xuất, lắp ráp thực tếxx\nTrường hợp có cơ sở để kết luận sự thỏa mãn về độ bền của các chi tiết, tổng thành, hệ thống thuộc các hạng mục bắt buộc phải tính toán kiểm nghiệm bền nêu trên thì trong thuyết minh phải nêu rõ lý do của việc không tính toán kiểm nghiệm bền đối với các hạng mục này.\n4) Kết luận chung của bản thuyết minh;\n5) Mục lục và các  …[cắt]"
+   }
+  ],
+  "official_missing": [],
+  "run_id": "round2_claude",
+  "case_id": "round2_claude::provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+  "lineage_id": "provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+  "a": {
+   "lineage_id": "provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+   "labeler": "ai-a",
+   "label_origin": "ai",
+   "verification_status": "not_verified",
+   "guideline_version": "4.0",
+   "worksheet_sha256": "acea74befbf7fc3e67389ecfbbb9cf37c565775d92ed7c7f03465b72eddef47c",
+   "q1": "dung",
+   "q1_reason": "",
+   "q2": "khong",
+   "q2_reason": "group_mismatch",
+   "q3": "khong",
+   "q3_reason": "question_leaks",
+   "q4": "khong",
+   "q4_reason": "",
+   "verdict": "khong_dat",
+   "quote": "1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe mới chưa qua sử dụng và chưa có biển số (gọi là xe cơ sở); cải tạo và khai thác sử dụng.",
+   "search_log": "worksheet official: Điều 1 TT 89/2015, Điều 10 TT 42/2018, Điều 3 TT 23/2020",
+   "note": "Bản 1 và bản 3 về thực chất như nhau (chỉ thêm chữ “mới”, đổi “biển đăng ký” thành “biển số”), nên chuỗi chỉ có hai đáp án khác nhau: có hoặc không có sản xuất, lắp ráp. Câu hỏi tự nêu “doanh nghiệp sản xuất, lắp ráp”, tức chính cụm bị bỏ rồi được thêm lại, nên lộ phần đáp án.",
+   "evidence_status": "sufficient",
+   "evidence": [
+    {
+     "url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=132109",
+     "source_tier": "official",
+     "document_number": "42/2018/TT-BGTVT",
+     "provision": "Điều 10 khoản 1",
+     "as_of": "2020-11-14",
+     "quote": "1. Thông tư này có hiệu lực kể từ ngày 15 tháng 10 năm 2018.",
+     "accessed_at": "prefetch trong worksheet, thời điểm unknown"
+    },
+    {
+     "url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=111821",
+     "source_tier": "official",
+     "document_number": "89/2015/TT-BGTVT",
+     "provision": "Khoản 1 Điều 1 (bản ban hành)",
+     "as_of": "2018-10-14",
+     "quote": "sản xuất, lắp ráp từ các linh kiện chưa qua sử dụng hoặc từ xe cơ sở chưa qua sử dụng và chưa có biển đăng ký",
+     "accessed_at": "prefetch trong worksheet, thời điểm unknown"
+    }
+   ],
+   "quote_in_provided_sources": true
+  },
+  "b": {
+   "lineage_id": "provision:7d01ec54-eba3-11f0-9856-f75286fb8467#k1",
+   "labeler": "ai-b",
+   "label_origin": "ai",
+   "verification_status": "not_verified",
+   "guideline_version": "4.0",
+   "worksheet_sha256": "acea74befbf7fc3e67389ecfbbb9cf37c565775d92ed7c7f03465b72eddef47c",
+   "q1": "dung",
+   "q1_reason": "",
+   "q2": "khong",
+   "q2_reason": "group_mismatch",
+   "q3": "co",
+   "q3_reason": "",
+   "q4": "khong",
+   "q4_reason": "",
+   "verdict": "khong_dat",
+   "quote": "“1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe mới chưa qua sử dụng và chưa có biển số (gọi là xe cơ sở); cải tạo và khai thác sử dụng.”.",
+   "search_log": "",
+   "note": "[phân vân] Chuỗi là A (có sản xuất, lắp ráp) → B (bỏ sản xuất, lắp ráp) → A' (có lại). A' khác A ở cụm 'mới chưa qua sử dụng' và 'biển số (gọi là xe cơ sở)', tôi coi như cùng nội dung, nên chỉ có 2 đáp án khác nhau, không đạt T3. Nếu luật sư coi A' khác A thì Q2 là co.",
+   "evidence_status": "sufficient",
+   "evidence": [
+    {
+     "url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=132109",
+     "source_tier": "official",
+     "document_number": "42/2018/TT-BGTVT",
+     "provision": "Khoản 1 (sửa khoản 1 Điều 1 TT 89/2015); khoản 1 Điều 10",
+     "as_of": "2018-10-15",
+     "quote": "đối với các loại xe máy chuyên dùng nhập khẩu; cải tạo và khai thác sử dụng",
+     "accessed_at": "2026-11-06 (đoạn official trong input)"
+    },
+    {
+     "url": "https://vbpl.vn/TW/Pages/vbpq-toanvan.aspx?ItemID=144759",
+     "source_tier": "official",
+     "document_number": "23/2020/TT-BGTVT",
+     "provision": "Khoản 1 (sửa khoản 1 Điều 1 TT 89/2015); khoản 1 Điều 3",
+     "as_of": "2020-11-15",
+     "quote": "1. Thông tư này có hiệu lực thi hành từ ngày 15 tháng 11 năm 2020.",
+     "accessed_at": "2026-11-06 (đoạn official trong input)"
+    }
+   ],
+   "quote_in_provided_sources": true
+  },
+  "disputed_fields": [
+   "q3",
+   "q3_reason"
+  ],
+  "raw_a_sha256": "5879a2815f48ba3925f10f1d18b55da01001fa568957b37564cbf927db81365d",
+  "raw_b_sha256": "fee7f6e5d73ab751d4151e02bc6941ad9509e08b88a92e06ae24ac46c210e6dd",
+  "reasoning": "Chưa đủ nguồn chốt Q2: ba chính văn cho chuỗi có sản xuất/lắp ráp→bỏ→đưa lại; bản cuối thêm “mới” trước “chưa qua sử dụng” và đổi “biển đăng ký” thành “biển số”. Không tìm được định nghĩa/hướng dẫn của cơ quan ban hành xác nhận các điều kiện này hoàn toàn tương đương hay khác phạm vi. Đã kiểm Điều3 giải thích từ ngữ TT89/TT23 và tìm nguồn chính thức theo số hiệu, mới/chưa qua sử dụng; chưa thấy căn cứ phân biệt. Nếu chỉ chuẩn hóa thì Q2khong/group_mismatch; nếu “mới” hạn chế phạm vi thực chất thì Q2co. A/B cùng nghiêng group_mismatch ở run này nhưng đồng ý nhau không thay cho chứng cứ. Q1 các bản/ngày khớp nguồn. Rút nhận định question_leaks trước đây: doanh nghiệp sản xuất/lắp ráp là bối cảnh của người hỏi, không khẳng định hoạt động đó thuộc phạm vi điều chỉnh, nên Q3co là lựa chọn được hỗ trợ. Không có quy phạm khác cụ thể được nêu ởQ4 sau kiểm nguồn gốc/tác động. Vì Q2 chưa đủ căn cứ, proposed_label=null, cần CMT/luật sư về phạm vi từ “mới”.",
+  "evidence": [
+   {
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/111821",
+    "source_tier": "official",
+    "document_number": "89/2015/TT-BGTVT",
+    "provision": "Khoản 1 Điều 1",
+    "as_of": "2018-10-14",
+    "quote": "Điều 1. Phạm vi điều chỉnh 1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện chưa qua sử dụng hoặc từ xe cơ sở chưa qua sử dụng và chưa có biển đăng ký; cải tạo và khai thác sử dụng. 2. Thông tư này không áp dụng đối với xe máy chuyên dùng được sản xuất, lắp ráp, nhập khẩu sử dụng trực tiếp vào mục đích quốc phòng, an ninh của Bộ Quốc phòng, Bộ Công an. Điều 2. Đối tượng áp d",
+    "accessed_at": "2026-11-07T09:33:22.757412+00:00"
+   },
+   {
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/132109",
+    "source_tier": "official",
+    "document_number": "42/2018/TT-BGTVT",
+    "provision": "Khoản 1 Điều 1",
+    "as_of": "2020-11-14",
+    "quote": "1. Sửa đổi khoản 1 Điều 1 như sau: \"1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; cải tạo và khai thác sử dụng\". 2. Sửa đổi Điều 2 như sau: \"Thông tư này áp dụng đối với các cơ quan, tổ chức, cá nhân có liên quan đến quản lý, kiểm tra nhập khẩu; cải tạo và khai thác sử dụng xe máy chuyên dùng.\" 3. Sửa đổi Điều 3 như sau: \"Điều ",
+    "accessed_at": "2026-11-07T09:33:22.732952+00:00"
+   },
+   {
+    "url": "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/144759",
+    "source_tier": "official",
+    "document_number": "23/2020/TT-BGTVT",
+    "provision": "Khoản 1 Điều 1; Điều 5 hiệu lực",
+    "as_of": "2020-11-15",
+    "quote": "1. Sửa đổi khoản 1 Điều 1 như sau: “1. Thông tư này quy định về kiểm tra chất lượng an toàn kỹ thuật và bảo vệ môi trường (sau đây viết tắt là ATKT & BVMT) đối với các loại xe máy chuyên dùng nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ xe mới chưa qua sử dụng và chưa có biển số (gọi là xe cơ sở); cải tạo và khai thác sử dụng.”. 2. Sửa đổi Điều 2 như sau: “Thông tư này áp dụng đối với các cơ quan, tổ chức, cá nhân có liên quan đến quản lý, kiểm tra, nhập khẩu; sản xuất, lắp ráp từ các linh kiện mới chưa qua sử dụng hoặc từ x",
+    "accessed_at": "2026-11-07T09:33:21.504006+00:00"
+   }
+  ],
+  "open_questions": [
+   "Có định nghĩa/hướng dẫn chính thức xác nhận “linh kiện/xe chưa qua sử dụng” và “linh kiện/xe mới chưa qua sử dụng” tại hai phiên bản TT89/2015 có cùng phạm vi pháp lý hay tạo trạng thái thực chất thứ ba không?"
+  ],
+  "labeler": "ai-adjudicator",
+  "label_origin": "ai",
+  "verification_status": "not_verified",
+  "human_adjudication_required": true,
+  "disposition": "unresolved",
+  "proposed_label": null,
+  "evidence_status": "insufficient"
+ }
+]
