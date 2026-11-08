@@ -1,0 +1,41 @@
+{
+  "session_id": "36e02401-44bb-445b-adbb-6562a3408471",
+  "is_error": true,
+  "api_error": "usage_limit_reached",
+  "api_error_status": 429,
+  "modelUsage": {},
+  "usage": {
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "input_tokens": 0,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 0,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "num_turns": 1,
+  "total_cost_usd": 0,
+  "duration_ms": 1146,
+  "permission_denials": [],
+  "file": "a_chunk09.md",
+  "status": "failed",
+  "started_at": "2026-11-08T01:36:37.503441+00:00",
+  "completed_at": "2026-11-08T01:36:41.116722+00:00",
+  "returncode": 1,
+  "prompt_sha256": "c5e1831f2202a2134e342a47a57b2204509c5c4bf771e23a228bd73f3516d6f9",
+  "error": "You've hit your 5-hour limit · resets 5:50am (UTC)",
+  "stderr": ""
+}

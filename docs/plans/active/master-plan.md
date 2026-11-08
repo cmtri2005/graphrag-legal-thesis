@@ -508,7 +508,7 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
   → 2 câu thiếu nguồn bị loại → **`data/review/the4/lo2_moi_worksheet.jsonl`:
   128 lineage** (T2 54, T2 gần giống 31, T6 cấp trên 22, T6 đích danh 19, T3 2),
   258 mốc, batch 7–11.
-- [ ] AI-A (Claude Opus, `2026-11-08_lo2/run_a.py`) đang chạy 12 chunk. AI-B
+- [ ] AI-A (Claude Opus, `2026-11-08_lo2/run_a.py`): xong chunk01–04 (48 câu); chunk05–12 dừng vì hạn mức 5 giờ, chạy lại `run_a.py` sau khi mở (bỏ qua chunk đã có raw; xóa metadata lỗi trước). AI-B
   (Codex) chạy khi Codex mở lại 9/11. Sau đó đo, hòa giải, CMT.
 - [ ] Lượt 3 viết lại 60 câu (29 redo36, 30 Claude, 1 backlog) để cho Codex;
   7 câu redo36 đã đạt chưa có đáp án ngắn. T3 mới chỉ có 2 câu: kho thật sự cạn.
