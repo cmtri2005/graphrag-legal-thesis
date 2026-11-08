@@ -495,6 +495,24 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
 
 ## Validation
 
+### A4 lô mới T2/T6/T3, 08/11/2026
+
+- Codex hết hạn mức đến 9/11, nên phần viết câu hỏi còn dở chạy bằng Claude
+  subagent Sonnet, effort thấp; đáp án ngắn dùng Haiku. Hồ sơ biên soạn ở
+  `~/vilextime_loc/gan5/` (ngoài repo): `chot_r*_claude.jsonl`, `chot_r2_redo36.jsonl`,
+  `backlog/conflict_choices_0811.json`, `excluded_*_0811.json`.
+- Một lượt viết lại bị loại trước qcheck, không tính lượt: agent ghi
+  KHONG_DU_NGU_CANH vì khó qua cổng, và chèn cụm đệm để lách copy_share.
+  Lượt chạy lại có công cụ tự chấm dùng đúng hàm qcheck.
+- [x] 181 câu qua qcheck → contrast loại 51 T2 (đáp án bản cũ nằm trong bản mới)
+  → 2 câu thiếu nguồn bị loại → **`data/review/the4/lo2_moi_worksheet.jsonl`:
+  128 lineage** (T2 54, T2 gần giống 31, T6 cấp trên 22, T6 đích danh 19, T3 2),
+  258 mốc, batch 7–11.
+- [ ] AI-A (Claude Opus, `2026-11-08_lo2/run_a.py`) đang chạy 12 chunk. AI-B
+  (Codex) chạy khi Codex mở lại 9/11. Sau đó đo, hòa giải, CMT.
+- [ ] Lượt 3 viết lại 60 câu (29 redo36, 30 Claude, 1 backlog) để cho Codex;
+  7 câu redo36 đã đạt chưa có đáp án ngắn. T3 mới chỉ có 2 câu: kho thật sự cạn.
+
 ### Chốt 6 ca hòa giải còn mở, nhãn AI cuối silver, 08/11/2026
 
 - Yêu cầu người dùng: dùng `legal-adjudicator` giải nốt các ca cần CMT. Đã chạy
@@ -506,7 +524,10 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
   đọc câu hỏi phụ còn mở.
 - [x] `silver_ai_final.jsonl` + `duyet_CMT_final.xlsx`: một phiếu cho 168
   lineage. Có **81 đạt** (T2 71, T3 10) và 87 không đạt. Xác nhận người: 0.
-- Còn lại cho G2: CMT duyệt phiếu cuối; luật sư chốt 5 khoảng trống quy tắc
+- 08/11 (CMT): **chấp nhận hàng loạt cả 168 nhãn AI silver**, không duyệt từng dòng
+  (`cmt_acceptance.json`). Tầng chất lượng: AI gán, người chấp nhận hàng loạt;
+  paper phải khai, không gọi là người kiểm từng dòng.
+- Còn lại cho G2: luật sư chốt 5 khoảng trống quy tắc
   (README thư mục); silver tối đa ~81 lineage, chưa đủ ngưỡng 130. Cần thêm
   T2/T6/T3 mới mới đạt G2.
 

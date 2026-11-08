@@ -1,0 +1,15 @@
+{
+  "decision": "CMT chấp nhận toàn bộ nhãn AI cuối của silver",
+  "date": "2026-11-08",
+  "decided_by": "CMT (người dùng phiên Claude Code, chọn 'CMT chấp nhận tất cả')",
+  "scope": {
+    "file": "silver_ai_final.jsonl",
+    "sha256": "e15269112843fa14c3f2307bad7d65e1910129e8333d24462c9ab0fb2612166b",
+    "lineages": 168,
+    "dat": 81
+  },
+  "method": "chấp nhận hàng loạt qua hội thoại; không duyệt từng dòng; duyet_CMT_final.xlsx để trống",
+  "quality_tier": "ai_labeled_human_bulk_accepted",
+  "disclosure": "Paper và datasheet phải ghi: nhãn do AI-A/AI-B gán và AI hòa giải; CMT chấp nhận hàng loạt, không xác nhận từng dòng. Không gọi là 'người kiểm' hay 'người xác nhận từng dòng'; tỷ lệ CMT sửa nhãn AI = không đo được (không duyệt từng dòng).",
+  "supersedes": "quy trình 06/11 'CMT duyệt mọi dòng' cho riêng 168 lineage silver này"
+}

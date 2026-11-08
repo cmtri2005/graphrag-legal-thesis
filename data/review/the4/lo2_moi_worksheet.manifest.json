@@ -1,0 +1,19 @@
+{
+  "status": "unlabelled_candidates",
+  "guideline_version": "4.0",
+  "questions": 128,
+  "boundary_rows": 258,
+  "batches": {
+    "7": 30,
+    "8": 30,
+    "9": 30,
+    "10": 30,
+    "11": 8
+  },
+  "source": "/home/trica/vilextime_loc/gan5/compiled_worksheet.sourced.jsonl",
+  "pending": [
+    "independent A/B labels",
+    "lawyer adjudication"
+  ],
+  "output_sha256": "5843505dde30fca84f5975aa5fc9231ab1c77493a36c6c2c53e3629b3f7c7e2a"
+}
