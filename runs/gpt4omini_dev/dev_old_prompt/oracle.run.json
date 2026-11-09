@@ -1,0 +1,32 @@
+{
+  "system": "oracle",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "e092986c6658a51fc20ada532c1ad4a7783bc26ba7776510e7beadac154d01df",
+  "raw_file_sha256": "228e002afbd65931e29dd9ac42ce7e2b29d1be81bf1179cb439683432041b12a",
+  "model": "gpt-4o-mini-2024-07-18",
+  "revision": "gpt-4o-mini-2024-07-18",
+  "gpu": [
+    "api"
+  ],
+  "rows": 151,
+  "format_ok": 151,
+  "truncated": 0,
+  "prompt_tokens_mean": 610.5364238410596,
+  "completion_tokens_mean": 93.99337748344371,
+  "generation_seconds": 351.88762029298687,
+  "export": {
+    "system": "oracle",
+    "spec": null,
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": false,
+    "embed": null,
+    "embed_sha256": null,
+    "rows": 151,
+    "release_sha256": "7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366",
+    "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+    "prompt_file_sha256": "e092986c6658a51fc20ada532c1ad4a7783bc26ba7776510e7beadac154d01df"
+  }
+}
