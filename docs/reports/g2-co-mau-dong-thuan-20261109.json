@@ -1,0 +1,1135 @@
+{
+  "counts": {
+    "main": {
+      "rows": 769,
+      "lineages": 246
+    },
+    "silver": {
+      "rows": 859,
+      "lineages": 178
+    }
+  },
+  "round_metrics": {
+    "pilot0": {
+      "q1": {
+        "n": 30,
+        "ac1": 0.9631675874769797,
+        "kappa": 0.6511627906976744,
+        "category_agreement": {
+          "dung": 0.9824561403508771,
+          "sai": 0.6666666666666666
+        },
+        "p_neg": 0.6666666666666666,
+        "confusion_a_b": {
+          "dung|dung": 28,
+          "dung|sai": 1,
+          "sai|sai": 1
+        },
+        "adverse_labels": 3,
+        "gate": "not_evaluable"
+      },
+      "q2": {
+        "n": 30,
+        "ac1": 1.0,
+        "kappa": null,
+        "category_agreement": {
+          "co": 1.0
+        },
+        "p_neg": null,
+        "confusion_a_b": {
+          "co|co": 30
+        },
+        "adverse_labels": 0,
+        "gate": "not_evaluable"
+      },
+      "q3": {
+        "n": 30,
+        "ac1": 0.9019607843137255,
+        "kappa": 0.7916666666666666,
+        "category_agreement": {
+          "co": 0.9583333333333334,
+          "khong": 0.8333333333333334
+        },
+        "p_neg": 0.8333333333333334,
+        "confusion_a_b": {
+          "co|co": 23,
+          "co|khong": 1,
+          "khong|co": 1,
+          "khong|khong": 5
+        },
+        "adverse_labels": 12,
+        "gate": "pass"
+      },
+      "q4": {
+        "n": 30,
+        "ac1": 0.9288256227758007,
+        "kappa": 0.47368421052631604,
+        "category_agreement": {
+          "co": 1.0,
+          "khong": 0.9642857142857143,
+          "khong_chac": 0.0
+        },
+        "p_neg": 0.5,
+        "confusion_a_b": {
+          "co|co": 1,
+          "khong|khong": 27,
+          "khong|khong_chac": 1,
+          "khong_chac|khong": 1
+        },
+        "adverse_labels": 4,
+        "gate": "not_evaluable"
+      },
+      "verdict": {
+        "n": 30,
+        "ac1": 0.781021897810219,
+        "kappa": 0.6590909090909092,
+        "category_agreement": {
+          "dat": 0.9090909090909091,
+          "khong_dat": 0.75
+        },
+        "p_neg": 0.75,
+        "confusion_a_b": {
+          "dat|dat": 20,
+          "dat|khong_dat": 2,
+          "khong_dat|dat": 2,
+          "khong_dat|khong_dat": 6
+        },
+        "adverse_labels": 16,
+        "gate": "not_met"
+      }
+    },
+    "pilot_cross_model": {
+      "q1": {
+        "n": 14,
+        "ac1": 1.0,
+        "kappa": null,
+        "category_agreement": {
+          "dung": 1.0
+        },
+        "p_neg": null,
+        "confusion_a_b": {
+          "dung|dung": 14
+        },
+        "adverse_labels": 0,
+        "gate": "not_evaluable"
+      },
+      "q2": {
+        "n": 14,
+        "ac1": 1.0,
+        "kappa": null,
+        "category_agreement": {
+          "co": 1.0
+        },
+        "p_neg": null,
+        "confusion_a_b": {
+          "co|co": 14
+        },
+        "adverse_labels": 0,
+        "gate": "not_evaluable"
+      },
+      "q3": {
+        "n": 14,
+        "ac1": 0.7350157728706626,
+        "kappa": 0.0,
+        "category_agreement": {
+          "co": 0.88,
+          "khong": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "co|co": 11,
+          "khong|co": 3
+        },
+        "adverse_labels": 3,
+        "gate": "not_evaluable"
+      },
+      "q4": {
+        "n": 14,
+        "ac1": 0.6537867078825348,
+        "kappa": 0.22222222222222218,
+        "category_agreement": {
+          "co": 0.0,
+          "khong": 0.8181818181818182,
+          "khong_chac": 0.4
+        },
+        "p_neg": 0.3333333333333333,
+        "confusion_a_b": {
+          "co|khong": 1,
+          "khong|khong": 9,
+          "khong|khong_chac": 3,
+          "khong_chac|khong_chac": 1
+        },
+        "adverse_labels": 6,
+        "gate": "not_met"
+      },
+      "verdict": {
+        "n": 14,
+        "ac1": 0.3665158371040725,
+        "kappa": 0.18604651162790717,
+        "category_agreement": {
+          "dat": 0.7368421052631579,
+          "khong_dat": 0.4444444444444444
+        },
+        "p_neg": 0.4444444444444444,
+        "confusion_a_b": {
+          "dat|dat": 7,
+          "dat|khong_dat": 2,
+          "khong_dat|dat": 3,
+          "khong_dat|khong_dat": 2
+        },
+        "adverse_labels": 9,
+        "gate": "not_met"
+      }
+    },
+    "pilot_sonnet_partial": {
+      "q1": {
+        "n": 14,
+        "ac1": 0.9232876712328767,
+        "kappa": 0.0,
+        "category_agreement": {
+          "dung": 0.9629629629629629,
+          "sai": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "dung|dung": 13,
+          "sai|dung": 1
+        },
+        "adverse_labels": 1,
+        "gate": "not_evaluable"
+      },
+      "q2": {
+        "n": 14,
+        "ac1": 1.0,
+        "kappa": null,
+        "category_agreement": {
+          "co": 1.0
+        },
+        "p_neg": null,
+        "confusion_a_b": {
+          "co|co": 14
+        },
+        "adverse_labels": 0,
+        "gate": "not_evaluable"
+      },
+      "q3": {
+        "n": 14,
+        "ac1": 0.7350157728706626,
+        "kappa": 0.0,
+        "category_agreement": {
+          "co": 0.88,
+          "khong": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "co|co": 11,
+          "khong|co": 3
+        },
+        "adverse_labels": 3,
+        "gate": "not_evaluable"
+      },
+      "q4": {
+        "n": 14,
+        "ac1": 0.8857142857142858,
+        "kappa": 0.8108108108108109,
+        "category_agreement": {
+          "khong": 0.9523809523809523,
+          "khong_chac": 0.8571428571428571
+        },
+        "p_neg": 0.8571428571428571,
+        "confusion_a_b": {
+          "khong|khong": 10,
+          "khong|khong_chac": 1,
+          "khong_chac|khong_chac": 3
+        },
+        "adverse_labels": 7,
+        "gate": "pass"
+      },
+      "verdict": {
+        "n": 14,
+        "ac1": 0.8733031674208146,
+        "kappa": 0.8372093023255814,
+        "category_agreement": {
+          "dat": 0.9473684210526315,
+          "khong_dat": 0.8888888888888888
+        },
+        "p_neg": 0.8888888888888888,
+        "confusion_a_b": {
+          "dat|dat": 9,
+          "khong_dat|dat": 1,
+          "khong_dat|khong_dat": 4
+        },
+        "adverse_labels": 9,
+        "gate": "pass"
+      }
+    },
+    "round2_claude": {
+      "q1": {
+        "n": 44,
+        "ac1": 0.973373676248109,
+        "kappa": 0.8450704225352114,
+        "category_agreement": {
+          "dung": 0.9876543209876543,
+          "sai": 0.8571428571428571
+        },
+        "p_neg": 0.8571428571428571,
+        "confusion_a_b": {
+          "dung|dung": 40,
+          "dung|sai": 1,
+          "sai|sai": 3
+        },
+        "adverse_labels": 7,
+        "gate": "pass"
+      },
+      "q2": {
+        "n": 44,
+        "ac1": 0.9299363057324841,
+        "kappa": 0.870967741935484,
+        "category_agreement": {
+          "co": 0.9705882352941176,
+          "khong": 0.9
+        },
+        "p_neg": 0.9,
+        "confusion_a_b": {
+          "co|co": 33,
+          "co|khong": 2,
+          "khong|khong": 9
+        },
+        "adverse_labels": 20,
+        "gate": "pass"
+      },
+      "q3": {
+        "n": 44,
+        "ac1": 0.9455445544554456,
+        "kappa": 0.7250000000000002,
+        "category_agreement": {
+          "co": 0.975,
+          "khong": 0.75
+        },
+        "p_neg": 0.75,
+        "confusion_a_b": {
+          "co|co": 39,
+          "co|khong": 1,
+          "khong|co": 1,
+          "khong|khong": 3
+        },
+        "adverse_labels": 8,
+        "gate": "pass"
+      },
+      "q4": {
+        "n": 44,
+        "ac1": 0.9709090909090909,
+        "kappa": 0.8962264150943398,
+        "category_agreement": {
+          "co": 0.9090909090909091,
+          "khong": 0.987012987012987
+        },
+        "p_neg": 0.9090909090909091,
+        "confusion_a_b": {
+          "co|co": 5,
+          "khong|co": 1,
+          "khong|khong": 38
+        },
+        "adverse_labels": 11,
+        "gate": "pass"
+      },
+      "verdict": {
+        "n": 44,
+        "ac1": 0.8670025188916876,
+        "kappa": 0.860759493670886,
+        "category_agreement": {
+          "dat": 0.9411764705882353,
+          "khong_dat": 0.918918918918919
+        },
+        "p_neg": 0.918918918918919,
+        "confusion_a_b": {
+          "dat|dat": 24,
+          "dat|khong_dat": 3,
+          "khong_dat|khong_dat": 17
+        },
+        "adverse_labels": 37,
+        "gate": "pass"
+      }
+    },
+    "round2_codex": {
+      "q1": {
+        "n": 44,
+        "ac1": 0.8758815232722144,
+        "kappa": 0.6615384615384614,
+        "category_agreement": {
+          "dung": 0.9459459459459459,
+          "sai": 0.7142857142857143
+        },
+        "p_neg": 0.7142857142857143,
+        "confusion_a_b": {
+          "dung|dung": 35,
+          "dung|sai": 3,
+          "sai|dung": 1,
+          "sai|sai": 5
+        },
+        "adverse_labels": 14,
+        "gate": "pass"
+      },
+      "q2": {
+        "n": 44,
+        "ac1": 0.8758815232722144,
+        "kappa": 0.6615384615384614,
+        "category_agreement": {
+          "co": 0.9459459459459459,
+          "khong": 0.7142857142857143
+        },
+        "p_neg": 0.7142857142857143,
+        "confusion_a_b": {
+          "co|co": 35,
+          "co|khong": 1,
+          "khong|co": 3,
+          "khong|khong": 5
+        },
+        "adverse_labels": 14,
+        "gate": "pass"
+      },
+      "q3": {
+        "n": 44,
+        "ac1": 0.9127272727272726,
+        "kappa": 0.6886792452830187,
+        "category_agreement": {
+          "co": 0.961038961038961,
+          "khong": 0.7272727272727273
+        },
+        "p_neg": 0.7272727272727273,
+        "confusion_a_b": {
+          "co|co": 37,
+          "co|khong": 2,
+          "khong|co": 1,
+          "khong|khong": 4
+        },
+        "adverse_labels": 11,
+        "gate": "pass"
+      },
+      "q4": {
+        "n": 44,
+        "ac1": 0.9405405405405406,
+        "kappa": 0.8078602620087337,
+        "category_agreement": {
+          "co": 0.8333333333333334,
+          "khong": 0.9736842105263158
+        },
+        "p_neg": 0.8333333333333334,
+        "confusion_a_b": {
+          "co|co": 5,
+          "co|khong": 2,
+          "khong|khong": 37
+        },
+        "adverse_labels": 12,
+        "gate": "pass"
+      },
+      "verdict": {
+        "n": 44,
+        "ac1": 0.7278350515463918,
+        "kappa": 0.7272727272727273,
+        "category_agreement": {
+          "dat": 0.8695652173913043,
+          "khong_dat": 0.8571428571428571
+        },
+        "p_neg": 0.8571428571428571,
+        "confusion_a_b": {
+          "dat|dat": 20,
+          "dat|khong_dat": 2,
+          "khong_dat|dat": 4,
+          "khong_dat|khong_dat": 18
+        },
+        "adverse_labels": 42,
+        "gate": "not_met"
+      }
+    },
+    "round2_cross_model": {
+      "q1": {
+        "n": 44,
+        "ac1": 0.8545454545454545,
+        "kappa": 0.49541284403669716,
+        "category_agreement": {
+          "dung": 0.935064935064935,
+          "sai": 0.5454545454545454
+        },
+        "p_neg": 0.5454545454545454,
+        "confusion_a_b": {
+          "dung|dung": 36,
+          "dung|sai": 5,
+          "sai|sai": 3
+        },
+        "adverse_labels": 11,
+        "gate": "not_met"
+      },
+      "q2": {
+        "n": 44,
+        "ac1": 0.8415556355779619,
+        "kappa": 0.6014492753623188,
+        "category_agreement": {
+          "co": 0.9315068493150684,
+          "khong": 0.6666666666666666
+        },
+        "p_neg": 0.6666666666666666,
+        "confusion_a_b": {
+          "co|co": 34,
+          "co|khong": 1,
+          "khong|co": 4,
+          "khong|khong": 5
+        },
+        "adverse_labels": 15,
+        "gate": "pass"
+      },
+      "q3": {
+        "n": 44,
+        "ac1": 0.8292367399741268,
+        "kappa": 0.326530612244898,
+        "category_agreement": {
+          "co": 0.9230769230769231,
+          "khong": 0.4
+        },
+        "p_neg": 0.4,
+        "confusion_a_b": {
+          "co|co": 36,
+          "co|khong": 4,
+          "khong|co": 2,
+          "khong|khong": 2
+        },
+        "adverse_labels": 10,
+        "gate": "not_met"
+      },
+      "q4": {
+        "n": 44,
+        "ac1": 0.8861578266494178,
+        "kappa": 0.5487179487179487,
+        "category_agreement": {
+          "co": 0.6,
+          "khong": 0.9487179487179487
+        },
+        "p_neg": 0.6,
+        "confusion_a_b": {
+          "co|co": 3,
+          "co|khong": 2,
+          "khong|co": 2,
+          "khong|khong": 37
+        },
+        "adverse_labels": 10,
+        "gate": "pass"
+      },
+      "verdict": {
+        "n": 44,
+        "ac1": 0.6896725440806046,
+        "kappa": 0.6751054852320676,
+        "category_agreement": {
+          "dat": 0.8627450980392157,
+          "khong_dat": 0.8108108108108109
+        },
+        "p_neg": 0.8108108108108109,
+        "confusion_a_b": {
+          "dat|dat": 22,
+          "dat|khong_dat": 5,
+          "khong_dat|dat": 2,
+          "khong_dat|khong_dat": 15
+        },
+        "adverse_labels": 37,
+        "gate": "not_met"
+      }
+    },
+    "round3_mixed": {
+      "q1": {
+        "n": 106,
+        "ac1": 0.8708891595615104,
+        "kappa": 0.6517739816031538,
+        "category_agreement": {
+          "dung": 0.9438202247191011,
+          "sai": 0.7058823529411765
+        },
+        "p_neg": 0.7058823529411765,
+        "confusion_a_b": {
+          "dung|dung": 84,
+          "dung|sai": 8,
+          "sai|dung": 2,
+          "sai|sai": 12
+        },
+        "adverse_labels": 34,
+        "gate": "pass"
+      },
+      "q2": {
+        "n": 106,
+        "ac1": 0.932982086406744,
+        "kappa": 0.6361556064073227,
+        "category_agreement": {
+          "co": 0.9690721649484536,
+          "khong": 0.6666666666666666
+        },
+        "p_neg": 0.6666666666666666,
+        "confusion_a_b": {
+          "co|co": 94,
+          "co|khong": 4,
+          "khong|co": 2,
+          "khong|khong": 6
+        },
+        "adverse_labels": 18,
+        "gate": "pass"
+      },
+      "q3": {
+        "n": 106,
+        "ac1": 0.8708891595615104,
+        "kappa": 0.6499339498018495,
+        "category_agreement": {
+          "co": 0.9438202247191011,
+          "khong": 0.7058823529411765
+        },
+        "p_neg": 0.7058823529411765,
+        "confusion_a_b": {
+          "co|co": 84,
+          "co|khong": 4,
+          "khong|co": 6,
+          "khong|khong": 12
+        },
+        "adverse_labels": 34,
+        "gate": "pass"
+      },
+      "q4": {
+        "n": 106,
+        "ac1": 0.9768204679641374,
+        "kappa": 0.8986615678776291,
+        "category_agreement": {
+          "co": 0.9090909090909091,
+          "khong": 0.9894736842105263
+        },
+        "p_neg": 0.9090909090909091,
+        "confusion_a_b": {
+          "co|co": 10,
+          "co|khong": 2,
+          "khong|khong": 94
+        },
+        "adverse_labels": 22,
+        "gate": "pass"
+      },
+      "verdict": {
+        "n": 106,
+        "ac1": 0.6815410444464081,
+        "kappa": 0.6776386404293382,
+        "category_agreement": {
+          "dat": 0.8521739130434782,
+          "khong_dat": 0.8247422680412371
+        },
+        "p_neg": 0.8247422680412371,
+        "confusion_a_b": {
+          "dat|dat": 49,
+          "dat|khong_dat": 11,
+          "khong_dat|dat": 6,
+          "khong_dat|khong_dat": 40
+        },
+        "adverse_labels": 97,
+        "gate": "not_met"
+      }
+    },
+    "silver01": {
+      "q1": {
+        "n": 18,
+        "ac1": 0.9111111111111111,
+        "kappa": 0.8524590163934426,
+        "category_agreement": {
+          "dung": 0.9629629629629629,
+          "sai": 0.8888888888888888
+        },
+        "p_neg": 0.8888888888888888,
+        "confusion_a_b": {
+          "dung|dung": 13,
+          "sai|dung": 1,
+          "sai|sai": 4
+        },
+        "adverse_labels": 9,
+        "gate": "pass"
+      },
+      "q2": {
+        "n": 18,
+        "ac1": 1.0,
+        "kappa": 1.0,
+        "category_agreement": {
+          "co": 1.0,
+          "khong": 1.0
+        },
+        "p_neg": 1.0,
+        "confusion_a_b": {
+          "co|co": 15,
+          "khong|khong": 3
+        },
+        "adverse_labels": 6,
+        "gate": "pass"
+      },
+      "q3": {
+        "n": 18,
+        "ac1": 0.9111111111111111,
+        "kappa": 0.8524590163934426,
+        "category_agreement": {
+          "co": 0.9629629629629629,
+          "khong": 0.8888888888888888
+        },
+        "p_neg": 0.8888888888888888,
+        "confusion_a_b": {
+          "co|co": 13,
+          "co|khong": 1,
+          "khong|khong": 4
+        },
+        "adverse_labels": 9,
+        "gate": "pass"
+      },
+      "q4": {
+        "n": 18,
+        "ac1": 1.0,
+        "kappa": null,
+        "category_agreement": {
+          "khong": 1.0
+        },
+        "p_neg": null,
+        "confusion_a_b": {
+          "khong|khong": 18
+        },
+        "adverse_labels": 0,
+        "gate": "not_evaluable"
+      },
+      "verdict": {
+        "n": 18,
+        "ac1": 0.8892307692307692,
+        "kappa": 0.8888888888888888,
+        "category_agreement": {
+          "dat": 0.9411764705882353,
+          "khong_dat": 0.9473684210526315
+        },
+        "p_neg": 0.9473684210526315,
+        "confusion_a_b": {
+          "dat|dat": 8,
+          "khong_dat|dat": 1,
+          "khong_dat|khong_dat": 9
+        },
+        "adverse_labels": 19,
+        "gate": "pass"
+      }
+    },
+    "lo2": {
+      "q1": {
+        "n": 128,
+        "ac1": 0.9315638724460569,
+        "kappa": 0.729794933655006,
+        "category_agreement": {
+          "dung": 0.9691629955947136,
+          "sai": 0.7586206896551724
+        },
+        "p_neg": 0.7586206896551724,
+        "confusion_a_b": {
+          "dung|dung": 110,
+          "dung|sai": 7,
+          "sai|sai": 11
+        },
+        "adverse_labels": 29,
+        "gate": "pass"
+      },
+      "q2": {
+        "n": 128,
+        "ac1": 0.9672508635026225,
+        "kappa": 0.3245382585751979,
+        "category_agreement": {
+          "co": 0.984,
+          "khong": 0.3333333333333333
+        },
+        "p_neg": 0.3333333333333333,
+        "confusion_a_b": {
+          "co|co": 123,
+          "khong|co": 4,
+          "khong|khong": 1
+        },
+        "adverse_labels": 6,
+        "gate": "not_met"
+      },
+      "q3": {
+        "n": 128,
+        "ac1": 0.8487891317188423,
+        "kappa": 0.6909361069836553,
+        "category_agreement": {
+          "co": 0.9359605911330049,
+          "khong": 0.7547169811320755
+        },
+        "p_neg": 0.7547169811320755,
+        "confusion_a_b": {
+          "co|co": 95,
+          "co|khong": 8,
+          "khong|co": 5,
+          "khong|khong": 20
+        },
+        "adverse_labels": 53,
+        "gate": "pass"
+      },
+      "q4": {
+        "n": 128,
+        "ac1": 0.7528206411929838,
+        "kappa": 0.3025227043390515,
+        "category_agreement": {
+          "co": 0.5555555555555556,
+          "khong": 0.892018779342723,
+          "khong_chac": 0.08
+        },
+        "p_neg": 0.46511627906976744,
+        "confusion_a_b": {
+          "co|co": 5,
+          "co|khong_chac": 2,
+          "khong|co": 4,
+          "khong|khong": 95,
+          "khong|khong_chac": 17,
+          "khong_chac|co": 2,
+          "khong_chac|khong": 2,
+          "khong_chac|khong_chac": 1
+        },
+        "adverse_labels": 43,
+        "gate": "not_met"
+      },
+      "verdict": {
+        "n": 128,
+        "ac1": 0.5033217708272091,
+        "kappa": 0.481335952848723,
+        "category_agreement": {
+          "dat": 0.7843137254901961,
+          "khong_dat": 0.6796116504854369
+        },
+        "p_neg": 0.6796116504854369,
+        "confusion_a_b": {
+          "dat|dat": 60,
+          "dat|khong_dat": 28,
+          "khong_dat|dat": 5,
+          "khong_dat|khong_dat": 35
+        },
+        "adverse_labels": 103,
+        "gate": "not_met"
+      }
+    },
+    "supp18": {
+      "q1": {
+        "n": 18,
+        "ac1": 0.9412724306688417,
+        "kappa": 0.0,
+        "category_agreement": {
+          "dung": 0.9714285714285714,
+          "sai": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "dung|dung": 17,
+          "sai|dung": 1
+        },
+        "adverse_labels": 1,
+        "gate": "not_evaluable"
+      },
+      "q2": {
+        "n": 18,
+        "ac1": 1.0,
+        "kappa": null,
+        "category_agreement": {
+          "co": 1.0
+        },
+        "p_neg": null,
+        "confusion_a_b": {
+          "co|co": 18
+        },
+        "adverse_labels": 0,
+        "gate": "not_evaluable"
+      },
+      "q3": {
+        "n": 18,
+        "ac1": 0.8758620689655172,
+        "kappa": -0.058823529411764955,
+        "category_agreement": {
+          "co": 0.9411764705882353,
+          "khong": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "co|co": 16,
+          "co|khong": 1,
+          "khong|co": 1
+        },
+        "adverse_labels": 2,
+        "gate": "not_evaluable"
+      },
+      "q4": {
+        "n": 18,
+        "ac1": 0.8032786885245902,
+        "kappa": 0.0,
+        "category_agreement": {
+          "khong": 0.9090909090909091,
+          "khong_chac": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "khong|khong": 15,
+          "khong|khong_chac": 3
+        },
+        "adverse_labels": 3,
+        "gate": "not_evaluable"
+      },
+      "verdict": {
+        "n": 18,
+        "ac1": 0.5384615384615384,
+        "kappa": -0.17391304347826084,
+        "category_agreement": {
+          "dat": 0.8,
+          "khong_dat": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "dat|dat": 12,
+          "dat|khong_dat": 4,
+          "khong_dat|dat": 2
+        },
+        "adverse_labels": 6,
+        "gate": "not_met"
+      }
+    }
+  },
+  "production_lineages": 314,
+  "production_metrics": {
+    "q1": {
+      "n": 314,
+      "ac1": 0.9037868442964196,
+      "kappa": 0.694216275721907,
+      "category_agreement": {
+        "dung": 0.9574861367837338,
+        "sai": 0.735632183908046
+      },
+      "p_neg": 0.735632183908046,
+      "confusion_a_b": {
+        "dung|dung": 259,
+        "dung|sai": 18,
+        "sai|dung": 5,
+        "sai|sai": 32
+      },
+      "adverse_labels": 87,
+      "gate": "pass"
+    },
+    "q2": {
+      "n": 314,
+      "ac1": 0.9487334981573914,
+      "kappa": 0.6580584940883636,
+      "category_agreement": {
+        "co": 0.976027397260274,
+        "khong": 0.6818181818181818
+      },
+      "p_neg": 0.6818181818181818,
+      "confusion_a_b": {
+        "co|co": 285,
+        "co|khong": 5,
+        "khong|co": 9,
+        "khong|khong": 15
+      },
+      "adverse_labels": 44,
+      "gate": "pass"
+    },
+    "q3": {
+      "n": 314,
+      "ac1": 0.8704887605691897,
+      "kappa": 0.6781194768469424,
+      "category_agreement": {
+        "co": 0.9441233140655106,
+        "khong": 0.7339449541284404
+      },
+      "p_neg": 0.7339449541284404,
+      "confusion_a_b": {
+        "co|co": 245,
+        "co|khong": 16,
+        "khong|co": 13,
+        "khong|khong": 40
+      },
+      "adverse_labels": 109,
+      "gate": "pass"
+    },
+    "q4": {
+      "n": 314,
+      "ac1": 0.877669813915116,
+      "kappa": 0.5319596668128014,
+      "category_agreement": {
+        "co": 0.7692307692307693,
+        "khong": 0.9452554744525548,
+        "khong_chac": 0.07142857142857142
+      },
+      "p_neg": 0.625,
+      "confusion_a_b": {
+        "co|co": 20,
+        "co|khong": 4,
+        "co|khong_chac": 2,
+        "khong|co": 4,
+        "khong|khong": 259,
+        "khong|khong_chac": 20,
+        "khong_chac|co": 2,
+        "khong_chac|khong": 2,
+        "khong_chac|khong_chac": 1
+      },
+      "adverse_labels": 80,
+      "gate": "pass"
+    },
+    "verdict": {
+      "n": 314,
+      "ac1": 0.6075194682803433,
+      "kappa": 0.5926108983071792,
+      "category_agreement": {
+        "dat": 0.8254847645429363,
+        "khong_dat": 0.7640449438202247
+      },
+      "p_neg": 0.7640449438202247,
+      "confusion_a_b": {
+        "dat|dat": 149,
+        "dat|khong_dat": 45,
+        "khong_dat|dat": 18,
+        "khong_dat|khong_dat": 102
+      },
+      "adverse_labels": 267,
+      "gate": "not_met"
+    }
+  },
+  "approvals": {
+    "silver": {
+      "resolved_approved": 168,
+      "dat": 81,
+      "quality_tier": "ai_labeled_human_bulk_accepted",
+      "method": "chấp nhận hàng loạt qua hội thoại; không duyệt từng dòng; duyet_CMT_final.xlsx để trống"
+    },
+    "lo2": {
+      "resolved_approved": 108,
+      "dat": 69,
+      "quality_tier": "ai_labeled_human_approved_via_conversation",
+      "method": "User reports having finished reading and explicitly approves; no row-by-row edits supplied. Approval applies to existing resolved labels; unresolved cases retain no final label."
+    },
+    "supp18": {
+      "resolved_approved": 15,
+      "dat": 12,
+      "quality_tier": "ai_labeled_human_approved_via_conversation",
+      "method": "User reports having finished reading and explicitly approves; no row-by-row edits supplied. Approval applies to existing resolved labels; unresolved cases retain no final label."
+    }
+  },
+  "accepted_dat_lineages": 162,
+  "power_sensitivity": [
+    {
+      "n": 81,
+      "historical_lineages": 101,
+      "historical_rows": 211,
+      "delta": 0.02843601895734597,
+      "historical_se": 0.022161706839713885,
+      "projected_se": 0.02474693303231874,
+      "power_alpha_05": 0.20965247380612562,
+      "power_alpha_05_div_6": 0.06829549046491701,
+      "mde80_alpha_05": 0.0693306417769757
+    },
+    {
+      "n": 130,
+      "historical_lineages": 101,
+      "historical_rows": 211,
+      "delta": 0.02843601895734597,
+      "historical_se": 0.022161706839713885,
+      "projected_se": 0.01953404646232425,
+      "power_alpha_05": 0.307361587127317,
+      "power_alpha_05_div_6": 0.1185166505964732,
+      "mde80_alpha_05": 0.05472629581877954
+    },
+    {
+      "n": 162,
+      "historical_lineages": 101,
+      "historical_rows": 211,
+      "delta": 0.02843601895734597,
+      "historical_se": 0.022161706839713885,
+      "projected_se": 0.01749872416072195,
+      "power_alpha_05": 0.3690074323719128,
+      "power_alpha_05_div_6": 0.15548679736749582,
+      "mde80_alpha_05": 0.04902416694451486
+    },
+    {
+      "n": 314,
+      "historical_lineages": 101,
+      "historical_rows": 211,
+      "delta": 0.02843601895734597,
+      "historical_se": 0.022161706839713885,
+      "projected_se": 0.01256895202283,
+      "power_alpha_05": 0.6188529001211962,
+      "power_alpha_05_div_6": 0.35351262840507136,
+      "mde80_alpha_05": 0.03521299019433161
+    }
+  ],
+  "input_sha256": {
+    "data/vilextime_dataset/manifest.json": "51cfb03ae6ac49678869babe3665b9d4658bd31db5836e36782fc366a1d7f5e4",
+    "data/vilextime_dataset/vilextime.jsonl": "7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366",
+    "data/vilextime_dataset/vilextime_silver.jsonl": "c864a545a52279883303c703c17ec2eba98797cad42b544c8d6c5199e8030c4b",
+    "data/vilextime_dataset/vilextime_meta.jsonl": "b43dc0cc6ff01bbcbf0bd3b054f8a0cfc9dd01ecb799e95b76cf69acd039f8a7",
+    "data/vilextime_dataset/vilextime.csv": "7bbe91e2157ec829de47f02eb22e8f1f2734ccee524641f4c6c2cedab3e18c7a",
+    "data/vilextime_dataset/vilextime_silver.csv": "1e355f45048d0ad0c5931b6b5ab1e2ffa30c8b9828bcdf073c9483eb5a10d50e",
+    "data/review/ai_research/2026-11-06_lo0/input/chunk1.jsonl": "8bbf63b2dc1c3c1a0a44fa896b993bfcb723d53c690a925bc573956eb2521e55",
+    "data/review/ai_research/2026-11-06_lo0/input/chunk2.jsonl": "bf70ace1f8b134e733a7b941642c28556af3c346e6a300103c5c9fd122a475d2",
+    "data/review/ai_research/2026-11-06_lo0/input/chunk3.jsonl": "8aee5d70deab1162048730f5c001e106a9a82f810c5eba47322167fe25b7f81f",
+    "data/review/ai_research/2026-11-06_lo0/a.jsonl": "c980e88c8caa8eb461d6892e8913c0063971f0ce2fcfb9a0ed29f9998fe08be6",
+    "data/review/ai_research/2026-11-06_lo0/b.jsonl": "6f7db3d4d8c9c856e598fcbd417583fd25243b3997aed6c806db62e872f5cfa8",
+    "data/review/ai_research/2026-11-07_adjudication_all/snapshots/pilot_cross_model/input/chunk01.jsonl": "130a7e74fbd49a1143369557736d71d1e0274edbb71c389fdb9d0b2c72e7c537",
+    "data/review/ai_research/2026-11-07_adjudication_all/snapshots/pilot_cross_model/a.jsonl": "7fd9f98da26dcb75a422bf4d12eba0a649e8e52af5ba271e48c3f64a559d9afd",
+    "data/review/ai_research/2026-11-07_adjudication_all/snapshots/pilot_cross_model/b.jsonl": "6705970e6577a297e4aa761bbde8cfd60db81882ed5dc0843e794b8bee728e41",
+    "data/review/ai_research/2026-11-07_adjudication_all/snapshots/pilot_sonnet_partial/input/chunk01.jsonl": "130a7e74fbd49a1143369557736d71d1e0274edbb71c389fdb9d0b2c72e7c537",
+    "data/review/ai_research/2026-11-07_adjudication_all/snapshots/pilot_sonnet_partial/a.jsonl": "88d8627494aa982a9829b91e1a77ab67be7efe70baf0fb0b863eee89649293fb",
+    "data/review/ai_research/2026-11-07_adjudication_all/snapshots/pilot_sonnet_partial/b.jsonl": "6705970e6577a297e4aa761bbde8cfd60db81882ed5dc0843e794b8bee728e41",
+    "data/review/ai_research/2026-11-06_silver/round2_claude/input/chunk02.jsonl": "7c6efef25803a258cf5e884b3cec390ee7d73c0498a4492907dde3fad7311866",
+    "data/review/ai_research/2026-11-06_silver/round2_claude/input/chunk03.jsonl": "97c34cedfc0cca5f5bfce340c4a2577a2b38e8c502d206f2f97dc44f5eb952bd",
+    "data/review/ai_research/2026-11-06_silver/round2_claude/input/chunk04.jsonl": "0b851e42af039784750197dcfa4734f5ca9fe610824d537e76f9593d510945c6",
+    "data/review/ai_research/2026-11-06_silver/round2_claude/a.jsonl": "a9f815698d477bcdb18d5e3ebbbddcf4c0a23e11af954058f15d7ed380c81279",
+    "data/review/ai_research/2026-11-06_silver/round2_claude/b.jsonl": "d140c27c2ceb7a3be46625a15fd9abe1196eeb51fda450f2f0e1eee9f0d598e6",
+    "data/review/ai_research/2026-11-06_silver/round2_codex/input/chunk02.jsonl": "7c6efef25803a258cf5e884b3cec390ee7d73c0498a4492907dde3fad7311866",
+    "data/review/ai_research/2026-11-06_silver/round2_codex/input/chunk03.jsonl": "97c34cedfc0cca5f5bfce340c4a2577a2b38e8c502d206f2f97dc44f5eb952bd",
+    "data/review/ai_research/2026-11-06_silver/round2_codex/input/chunk04.jsonl": "0b851e42af039784750197dcfa4734f5ca9fe610824d537e76f9593d510945c6",
+    "data/review/ai_research/2026-11-06_silver/round2_codex/a.jsonl": "4b79b34be755ba55021dd76d753099abbcbec744526276eb50b88953a9807719",
+    "data/review/ai_research/2026-11-06_silver/round2_codex/b.jsonl": "c1e219a99de7189314ad792fac50676dfcd8bbd8e59212fa83fe47d22575f554",
+    "data/review/ai_research/2026-11-07_adjudication_all/snapshots/round2_cross_model/input/chunk02.jsonl": "7c6efef25803a258cf5e884b3cec390ee7d73c0498a4492907dde3fad7311866",
+    "data/review/ai_research/2026-11-07_adjudication_all/snapshots/round2_cross_model/input/chunk03.jsonl": "97c34cedfc0cca5f5bfce340c4a2577a2b38e8c502d206f2f97dc44f5eb952bd",
+    "data/review/ai_research/2026-11-07_adjudication_all/snapshots/round2_cross_model/input/chunk04.jsonl": "0b851e42af039784750197dcfa4734f5ca9fe610824d537e76f9593d510945c6",
+    "data/review/ai_research/2026-11-07_adjudication_all/snapshots/round2_cross_model/a.jsonl": "a9f815698d477bcdb18d5e3ebbbddcf4c0a23e11af954058f15d7ed380c81279",
+    "data/review/ai_research/2026-11-07_adjudication_all/snapshots/round2_cross_model/b.jsonl": "c1e219a99de7189314ad792fac50676dfcd8bbd8e59212fa83fe47d22575f554",
+    "data/review/ai_research/2026-11-06_silver/round3_mixed/input/chunk05.jsonl": "547a4e993264312ec1792d6e9f4d01d99f64a021e9dba6cc37f6b0dc630558e9",
+    "data/review/ai_research/2026-11-06_silver/round3_mixed/input/chunk06.jsonl": "f2f13ae9a5937935f4b66d389af48d8ca6a661ea91f30723644856d66376c344",
+    "data/review/ai_research/2026-11-06_silver/round3_mixed/input/chunk07.jsonl": "b7b4c41965d25fe6d44f34789767f85c182de39e53ec9ab6ecfdda66042ff9bf",
+    "data/review/ai_research/2026-11-06_silver/round3_mixed/input/chunk08.jsonl": "494b96eda768ffd24a99d68033635cc88a0ff2d5ae6a8deea52dacbcef2392d4",
+    "data/review/ai_research/2026-11-06_silver/round3_mixed/input/chunk09.jsonl": "b2e07aa2bca6e7fb23df4cd9f04cc56a03799d6c45e00d67cfd84f4533d079ab",
+    "data/review/ai_research/2026-11-06_silver/round3_mixed/input/chunk10.jsonl": "ec6b598f518883028fd4a5dd57d9d73d843650a72391533da839a9a35bf47847",
+    "data/review/ai_research/2026-11-06_silver/round3_mixed/input/chunk11.jsonl": "d31d5fb41502647339953f40c60a069a6a110148ea617ab31c9230e651fd97bf",
+    "data/review/ai_research/2026-11-06_silver/round3_mixed/a.jsonl": "b9b58c157ae03fb38c50adc9126620701d65872f4c404b4b0f1ee86d8198ebff",
+    "data/review/ai_research/2026-11-06_silver/round3_mixed/b.jsonl": "e7acdd2f8978494a0be565b1fbb5a8ee98e5717d6885f0364899ed93c46dce80",
+    "data/review/ai_research/2026-11-07_adjudication_all/snapshots/silver01/input/chunk01.jsonl": "c5635299765276162463a2deb78571555674b9b3d60b17b5f9ebcaa7f171d5c6",
+    "data/review/ai_research/2026-11-07_adjudication_all/snapshots/silver01/a.jsonl": "c33ba82b25240a9bc5d001d5e79b1976762b0d3bdec803639f4c68a0747e4664",
+    "data/review/ai_research/2026-11-07_adjudication_all/snapshots/silver01/b.jsonl": "d27850be0a70bcdbeceeabb195ba5809f576612b03b9ca38512e2d5252974765",
+    "data/review/ai_research/2026-11-08_lo2/schema_validated/input/chunk01.jsonl": "6e72e1498920b969b0734d8e0e11060681879d8cdbce2791bf271bb5659e9d6f",
+    "data/review/ai_research/2026-11-08_lo2/schema_validated/input/chunk02.jsonl": "738db72551328c18de94a851ea3be2f7c86b3f0fe69487aef1d6bb2e81da647c",
+    "data/review/ai_research/2026-11-08_lo2/schema_validated/input/chunk03.jsonl": "641fc285fcf92384012b39870ef04fda452612acae1cc4eb723f2939f0920d40",
+    "data/review/ai_research/2026-11-08_lo2/schema_validated/input/chunk04.jsonl": "6ba0d25dec53e2482b15cb682a9cb8055da1437af91df1fbc068764c4279ae9f",
+    "data/review/ai_research/2026-11-08_lo2/schema_validated/input/chunk05.jsonl": "35b41dd5569c1165e2644641270e3aab6c6c721ae1500c2119a3648feb643596",
+    "data/review/ai_research/2026-11-08_lo2/schema_validated/input/chunk06.jsonl": "da4a7c055a195430591f8cc15e659eedd85949e5140502fa9daf5896f93707a1",
+    "data/review/ai_research/2026-11-08_lo2/schema_validated/input/chunk07.jsonl": "fbaab43896bd82a839bb201a32d5f1b6114bdc028767923c18f65b75911e2d89",
+    "data/review/ai_research/2026-11-08_lo2/schema_validated/input/chunk08.jsonl": "0c0593e2c8e5680a438a48b28dffa0cda84fdbffdb72afffb108653719c07f76",
+    "data/review/ai_research/2026-11-08_lo2/schema_validated/input/chunk09.jsonl": "112ba646e284be8670502a8774c46724c4d717604231d0c3275d25f7db11fb09",
+    "data/review/ai_research/2026-11-08_lo2/schema_validated/input/chunk10.jsonl": "e15eba0e71711ff2894b067b408e68e785a6d51073c3329b8132d2214afe24d2",
+    "data/review/ai_research/2026-11-08_lo2/schema_validated/input/chunk11.jsonl": "813b0df13260706e904b5986c9b32119ac6e59902e1b1a8e1c05f657e06bbfcc",
+    "data/review/ai_research/2026-11-08_lo2/schema_validated/input/chunk12.jsonl": "284b9ee5894989779f888199ad61d00c8137dbe6c55f70b4e474ba5f7c472213",
+    "data/review/ai_research/2026-11-08_lo2/schema_validated/a.jsonl": "8dcccf9ecd4aaa6b216249d5a195094f58e99277f0d9b098da27acaa19cad1ea",
+    "data/review/ai_research/2026-11-08_lo2/schema_validated/b.jsonl": "4c119f06c30ca52e5061a848374d25795770ef6558cc02aa0ae1ed49c39d7978",
+    "data/review/ai_research/2026-11-08_supp18/input/chunk01.jsonl": "164460cc81e2223b840207b60355d619f68f5492337d7c4b8781693afc7aa9d8",
+    "data/review/ai_research/2026-11-08_supp18/input/chunk02.jsonl": "dcf8e83cea127008e08af1ee224c0648362bc7b99f2ed0a0cdb0e30dd37c59ed",
+    "data/review/ai_research/2026-11-08_supp18/a.jsonl": "81b7523c1f563b244485840b248b1d211b888a411a6ce40d2ece4dacfee9526c",
+    "data/review/ai_research/2026-11-08_supp18/b.jsonl": "0d0848189ab4c26e6e0a7478ccfda97e069d7069ac13832394a7248d9be632b4",
+    "data/review/ai_research/2026-11-08_adjudication_final/cmt_acceptance.json": "9a96d179bb468365aa0d92a47aa75a6779f3186d93b205bd614ec57f6bd73792",
+    "data/review/ai_research/2026-11-08_adjudication_final/silver_ai_final.jsonl": "e15269112843fa14c3f2307bad7d65e1910129e8333d24462c9ab0fb2612166b",
+    "data/review/ai_research/2026-11-08_lo2/cmt_acceptance.json": "d1e39d4f850c080197a6e9479c4241654357a392e1d3494e18b1c2991109dc74",
+    "data/review/ai_research/2026-11-08_lo2/cmt_accepted_labels.jsonl": "5b28543d5b7ab052b62bd0df2ce90825666e4cc0c7501a512241e05b7741286f",
+    "data/review/ai_research/2026-11-08_supp18/cmt_acceptance.json": "9bc8c0257197bcf40ad9f346068b2451664afa083d50e427cb681176cbc4a686",
+    "data/review/ai_research/2026-11-08_supp18/cmt_accepted_labels.jsonl": "cc0d32a4e583e5f54574d71350095dce1d925f9a2579421a15f576c4df55ec55",
+    "data/vilextime/test2_release_v2.jsonl": "b299408327e3bb5c0e520d4457b27225d866afe3c7976e1c3b0aff2b8093855c",
+    "runs/E1_test2/test/b7.jsonl": "33c3628aef9210e49a9bd1e10c6b909a66871bdca3728ec6e9cae183cce7ba7b",
+    "runs/E1_test2/test/b7pp.jsonl": "e052f8b677cbbae13d41be67505e2eaf7dae772108187d927decd85073efa238",
+    "data/review/crosscheck_A.tsv": "d95f15601e9c0882f11f09236ede3110bb319a8dc79810c868b20ace8b5b40ca",
+    "data/review/crosscheck_B.tsv": "204b428ffc402834f49d1d9dbfea3a6c4d8b399b89b6594f295169dd8ef61336",
+    "data/review/kiem_A.tsv": "32c3169768f2217baa12a5a159481832fa1e57e1b202000ec3c3ee88bab3b40c",
+    "data/review/kiem_B.tsv": "8c95638b2f801cc0f3efae3a54ae21c36fc5ecd2169f90815fcce70858503804",
+    "data/review/pilot_T6_A.tsv": "8f7afae5ab3b3f25d8458478f8b0db2a0b480c8bedbca404810c5bd8777df3d3",
+    "data/review/pilot_T6_B.tsv": "6e7883f6a821d5d36ba811e0808922e86a9963bfbd72f191894e79d4968826cd",
+    "data/review/test2_llm/test2_LLM_A.tsv": "a5797d069b91926029212155b0df2f2c2ab15beb5de0c43f373257a6f13b601d",
+    "data/review/test2_llm/test2_LLM_B.tsv": "290cbad052f5876c7484fcc46949c23de1d6643f7f7b9b4ec7094e159f4473c1"
+  }
+}

@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import csv
 import json
 import random
 from pathlib import Path
@@ -49,12 +50,71 @@ ENDING = {"repeal", "replace", "amend", "correct", "suspend"}
 STATUS_OP = {"HHL1P1": "repeal", "HHL1P2": "correct", "HHL1P3": "amend", "HHL1P4": "replace"}
 
 
+def recall_diagnostics(events, gold):
+    """Separate extracted coverage from coverage eligible for application.
+
+    Document-scope mentions have no affected nodes. Report them for review;
+    never promote them to applicable provision events from metadata alone.
+    """
+    covered, applicable = set(), set()
+    by_doc = collections.defaultdict(list)
+    for event in events:
+        by_doc[event.get("target_document_id")].append(event)
+        if event["operation"] not in ENDING:
+            continue
+        pairs = {(event["target_document_id"], pid)
+                 for pid in event.get("affected_provision_ids", [])}
+        covered.update(pairs)
+        if event.get("status") in {"verified", "auto_accepted"}:
+            applicable.update(pairs)
+    missing = gold - covered
+    reasons = collections.Counter()
+    for doc, _ in missing:
+        target = by_doc[doc]
+        if not target:
+            reasons["no_target_event"] += 1
+        elif any(e["operation"] in ENDING and e.get("locator") is None for e in target):
+            reasons["document_scope_mention_only_for_pair"] += 1
+        else:
+            reasons["target_events_do_not_cover_pair"] += 1
+    return {"gold_pairs": len(gold), "extracted_covered": len(gold & covered),
+            "applicable_covered": len(gold & applicable),
+            "extracted_recall": len(gold & covered) / len(gold) if gold else None,
+            "applicable_recall": len(gold & applicable) / len(gold) if gold else None,
+            "missing_pairs": len(missing), "missing_reasons": dict(sorted(reasons.items()))}
+
+
+def gold_readiness(review):
+    """Count completed human gold cells; this is not a snapshot accuracy score."""
+    sheets = {}
+    for path in sorted(review.rglob("gold_[AB].tsv")):
+        with path.open(encoding="utf-8", newline="") as stream:
+            records = list(csv.DictReader(stream, delimiter="\t"))
+        filled = sum(r.get("hieu_luc", "").strip() in {"còn", "không", "không rõ"}
+                     and (r["hieu_luc"].strip() != "còn" or bool(r.get("noi_dung", "").strip()))
+                     for r in records)
+        sheets[str(path)] = {"requested": len(records), "filled": filled}
+    return sheets
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--data", type=Path, default=Path("data"))
     parser.add_argument("--sample", type=int, default=60)
+    parser.add_argument("--no-samples", action="store_true",
+                        help="measure without overwriting hand-review worksheets")
+    parser.add_argument("--report", type=Path, help="write recall diagnostics as JSON")
+    parser.add_argument("--m2-readiness", action="store_true",
+                        help="inspect human gold completion only; does not run M2")
     args = parser.parse_args()
     data = args.data
+
+    if args.m2_readiness:
+        sheets = gold_readiness(data / "review")
+        print(json.dumps({"gold_sheets": sheets,
+                          "note": "Readiness only; repeated gold rows are not independent M2 cases."},
+                         ensure_ascii=False, indent=2))
+        return
 
     events = [json.loads(l) for l in (data / "derived/provision_events.jsonl").read_text(encoding="utf-8").splitlines()]
     raw_ids = {p.stem for p in (data / "raw").glob("*.json")}
@@ -73,6 +133,12 @@ def main() -> None:
                 pair = (make_document_id(row["doc_id"]), make_provision_id(pid))
                 gold.add(pair)
                 gold_status[pair].add(row.get("status"))
+
+    diagnostic = recall_diagnostics(events, gold)
+    print("== Extracted vs applicable recall ==")
+    print(json.dumps(diagnostic, ensure_ascii=False, sort_keys=True))
+    if args.report:
+        args.report.write_text(json.dumps(diagnostic, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     covering: dict[tuple[str, str], set[str]] = collections.defaultdict(set)
     covering_ops: dict[tuple[str, str], set[str]] = collections.defaultdict(set)
@@ -169,6 +235,9 @@ def main() -> None:
     print(f"  provision-ending events on documents with a portal list: {len(agree_docs):,}, "
           f"matching that list {hit:,} ({hit / max(1, len(agree_docs)):.1%}) — a lower bound on precision, "
           "the portal list is often incomplete")
+
+    if args.no_samples:
+        return
 
     index = TemporalIndex(data / "temporal.sqlite")
     titles: dict[str, dict[str, str]] = {}

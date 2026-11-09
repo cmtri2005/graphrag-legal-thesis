@@ -22,3 +22,18 @@ Dấu bãi bỏ: rà riêng toàn bộ đơn vị căn được của nguồn đ
 Giới hạn: Wilson chỉ mô tả tỷ lệ xác nhận trong 2 cặp đã so, không phải ước lượng độ đúng toàn benchmark; nguồn chọn thuận tiện, có phụ thuộc lineage/VBHN. Không suy rộng ngoài phần có VBHN, không thay gold mù do người làm.
 Chỗ dừng: đã hết PDF có thể tải trong metadata; 54 cặp cần người xem hoặc không căn được, cùng các nguồn thiếu PDF/lớp chữ/ngày, còn chưa phân xử. Không OCR, không thử né nguồn, không sửa nhãn.
 Chi tiết và hàng cần xem chỉ ở `data/vbhn_files/doi_chieu_chi_tiet.jsonl`; bằng chứng ngày/nguồn ở `c7_sources.json`, dấu bãi bỏ ở `c7_repeal.json`, số tổng ở `c7_summary.json`, hash ở `c7.sha256` trong cùng thư mục gitignore. 47/48 hash thăm dò cũ còn khớp; metadata cũ nguyên vẹn 299 dòng đầu, chỉ nối thêm 10 dòng và đã có hash mới.
+
+## Chạy lại G2, 09/11/2026
+
+Lệnh: `PYTHONPATH=src .venv/bin/python scripts/check/compare_benchmark_vbhn.py`.
+Kết quả: exit 0; 71 nguồn, 96 cặp. Khớp 1; khác nhỏ 0; chọn sai phiên bản
+đã chứng minh 0; cần người xem 9; không căn được 45; PDF thiếu chữ 24;
+không PDF 17. Hai cặp so được có 1 khớp và 1 chưa phân xử.
+Có 2 tín hiệu lệch trạng thái bãi bỏ. **Không suy ra tổng số lỗi pháp lý**
+từ các ca chưa phân xử. Số lỗi chọn sai được máy chứng minh: **0/2 cặp so chữ**.
+Đây không phải bằng chứng toàn kho không lỗi. Các số không đổi so với 05/11.
+
+Kiểm: `PYTHONPATH=src .venv/bin/python -m pytest -q tests/test_compare_benchmark_vbhn.py`;
+`sha256sum -c data/vbhn_files/c7.sha256`. Kết quả: 8 passed (0,28 giây); toàn bộ hash OK.
+Không tải mạng hoặc thay nhãn. Dừng phân xử 9 ca và 2 tín hiệu bãi bỏ
+cho người có thẩm quyền; không dùng VBHN thay gold mù.

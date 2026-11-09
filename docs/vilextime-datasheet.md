@@ -1,12 +1,10 @@
 # ViLexTime — Datasheet
 
-Theo khung *Datasheets for Datasets* (Gebru và cộng sự, 2021). Tài liệu này mô tả bản
-phát hành `data/derived/vilextime/release.jsonl` (schema 1.4.0). Mã băm của bản phát
-hành và của mọi đầu vào đã commit nằm ở `data/vilextime/manifest.json`, file này do
-`scripts/check/check_release.py --manifest` ghi.
-
-Trạng thái: **v1.0 chưa đóng băng.** Trước khi dùng số liệu cho khóa luận, xem mục 7
-"Chưa xong".
+Theo khung *Datasheets for Datasets* (Gebru và cộng sự, 2021). Tài liệu mô tả
+bản `data/vilextime_dataset/`, schema **2.0.0**, `final: true`, `draft: false`.
+Nguồn số và hash: `data/vilextime_dataset/manifest.json`. Đối chiếu lại 09/11/2026.
+Có **769 dòng chính, 859 dòng silver**. Trạng thái final của bản này không
+chứng minh bộ test cuối G2 đã hoàn tất. Xem mục 7 và báo cáo G2.
 
 ## 1. Động cơ
 
@@ -156,7 +154,7 @@ Bản UIT đã nộp không sửa được, nên khóa luận phải công bố 
 
 | Đề cương | Bộ dữ liệu | Căn cứ |
 |---|---|---|
-| "1.150 câu hỏi" | 1.225 **dòng** (câu hỏi, mốc) ở chế độ ranh giới, trong khung 1.100–1.300; số câu hỏi khác nhau bằng số lineage (653, mục 8). Còn chờ khoa xác nhận "câu" là dòng | ADR 0003 Follow-Up 24/09; plan GĐ4 07/10 |
+| "1.150 câu hỏi" | 362 **dòng chính** ranh giới, 246 lineage; 389 dòng silver ranh giới, 178 lineage. Chưa đạt khung 1.100–1.300; không cộng silver thành nhãn đã kiểm | ADR 0003 Follow-Up 24/09; plan GĐ4 07/10 |
 | "LLM chỉ hỗ trợ diễn đạt câu hỏi" | model viết câu hỏi, đáp án ngắn, nhãn đầu, đề xuất loại (mục 3) | plan GĐ4, 24/09 và 28/09 |
 | T5 "có lợi cho đối tượng áp dụng", 50 câu | T5 theo Điều 152, bỏ vế "có lợi"; số câu là số ca luật sư xác nhận, phần thiếu chuyển sang T6 | quyết định Q3, 20/09 |
 | κ ≥ 0,6 trên "toàn bộ T3, T4, T5, T6" | 300 dòng: T2 50 + lát gần giống 50, T3 50, toàn bộ T5, T6 phần còn lại tới 150 chia theo tỷ lệ H3/trực tiếp. Thước đo chính là AC1 ≥ 0,80 và p_neg ≥ 0,60 (AC1 chọn sau pilot 07/10/2026, không đăng ký trước); κ báo kèm | quyết định Q2 20/09, dựng lại 11/10 |
@@ -171,8 +169,9 @@ Bản UIT đã nộp không sửa được, nên khóa luận phải công bố 
   (`data/vilextime/LICENSE`). Lời văn pháp luật lấy từ vbpl.vn, kể cả văn bản hợp nhất, không
   thuộc đối tượng bảo hộ theo Điều 15 Luật SHTT; phát hành phần nhóm viết theo CC BY 4.0 và thu
   thập tự động từ vbpl.vn không vướng quy định nào (luật sư xác nhận 12/10/2026).
-- **Tái lập:** `release.jsonl` là file dẫn xuất (gitignore). Chuỗi dựng ghi ở plan GĐ4 (J3).
-  Mã băm của mọi thứ dùng để dựng nằm ở `data/vilextime/manifest.json`.
+- **Tái lập:** bản chính là `data/vilextime_dataset/vilextime.jsonl`; silver là
+  `vilextime_silver.jsonl`. Hash phát hành nằm ở manifest cùng thư mục.
+  `data/derived/vilextime/release.jsonl` và manifest cũ chỉ mô tả bản lịch sử.
 - **Phiên bản:** theo ADR 0003 §8. Đổi gold hay chuyển dòng giữa các split là MAJOR; thêm
   trường hay thêm mã là MINOR.
 - **Trạng thái kiểm định (29/10/2026).** Bản phát hành `data/vilextime_dataset/` (schema 2.0.0, `final: true`):
@@ -192,115 +191,63 @@ Bản UIT đã nộp không sửa được, nên khóa luận phải công bố 
   - **Chưa xong:** tập gold độc lập (0/75); kiểm 30 dòng ngày ký của
     `truoc_hieu_luc`; T5 chưa có dòng nào được kiểm; tag `vilextime-v1.0`.
 
-## 8. Số liệu
+## 8. Số liệu bản schema 2.0.0
 
-Số liệu tính trên bản phát hành dựng lại ngày 11/10 (schema 1.4.0, ngày chụp corpus 17/09/2026),
-trừ mục "Bộ dò hiệu lực" là kết quả đợt 29/09. `data/vilextime/manifest.json` ghi mã băm
-của bản này.
+Nguồn: `data/vilextime_dataset/manifest.json`. Bảng sau chép đủ
+`counts_main` và `counts_silver`. Dòng không được liệt kê có số lượng 0.
+T4 là lát của T2, không cộng lần hai. Không dùng bảng 2.730 dòng schema
+1.4.0 ngày 11/10 làm mô tả bản hiện tại.
 
-### Kích thước và split
+| Nhóm | Chế độ | Main dev | Main test | Silver test |
+|---|---|---:|---:|---:|
+| T1 | giua_khoang | 18 | 123 | 0 |
+| T1 | ranh_gioi | 18 | 123 | 0 |
+| T2 | giua_khoang | 72 | 46 | 274 |
+| T2 | ranh_gioi | 72 | 46 | 274 |
+| T2 | truoc_hieu_luc | 26 | 19 | 81 |
+| T3 | giua_khoang | 19 | 12 | 95 |
+| T3 | ranh_gioi | 19 | 12 | 95 |
+| T5 | giua_khoang | 0 | 0 | 20 |
+| T5 | ranh_gioi | 0 | 0 | 20 |
+| T6 | giua_khoang | 42 | 30 | 0 |
+| T6 | ranh_gioi | 42 | 30 | 0 |
+| **Tổng mọi chế độ** | | **328** | **441** | **859** |
 
-Bản phát hành dựng ngày 11/10 có 2.730 dòng, 653 lineage (tức 653 câu hỏi khác nhau) và 503 văn bản đích. Chia theo lineage:
-dev 119, test 534.
+Main: **769 dòng, 246 lineage** (dev 81, test 165). Silver: **859 dòng,
+178 lineage**, đều mang split test trong bản đã lưu; chưa đưa vào bảng chính.
+Ranh giới main: 151 dev + 211 test = **362**; silver **389**.
+Giữa khoảng có cùng các số đếm đó. Trước hiệu lực main: 26 dev + 19 test
+= **45**; silver **81**. Không có dòng sau hết hiệu lực trong bản này.
 
-Số dòng theo nhóm, chế độ `as_of` và split (dev / test). T4 đã gộp vào T2 từ 07/10; từ 11/10 lát `near_identical` (T4 cũ) có suất riêng 150 dòng trong 450 dòng T2:
+### Tầng nhãn và kiểm định
 
-| Nhóm | Lineage | `ranh_gioi` | `giua_khoang` | `truoc_hieu_luc` | `sau_het_hieu_luc` |
-|---|---:|---:|---:|---:|---:|
-| T1 | 150 | 20 / 130 | 20 / 130 | – | 5 / 44 |
-| T2 | 225 | 96 / 354 | 96 / 354 | 34 / 119 | 10 / 46 |
-| T3 | 65 | 39 / 160 | 39 / 160 | – | 1 / 14 |
-| T5 | 19 | 0 / 38 | 0 / 38 | – | 0 / 7 |
-| T6 | 194 | 76 / 312 | 76 / 312 | – | – |
-| **Tổng** | **653** | **1.225** | **1.225** | **153** | **127** |
+Manifest ghi trạng thái lineage: `dat` **246**, `khong_dat` **185**,
+`not_verified` **178**. Đây là phễu kiểm nhãn, không phải 609 lineage
+được phát hành. Các trường audit ranh giới: checked **731**, not_verified
+**389**, unsettled **0**; review_counts: human_checked **523**,
+agent_checked **208**, a_agent_disagreement **5**. Chúng khác đơn vị với
+số lineage và số dòng main; không gộp mẫu số.
 
-**Quota.** Chế độ `ranh_gioi` có 1.225 dòng (07/10, trong khung 1.100–1.300 của đề cương):
-- T1 150, T3 199;
-- T2 450 = 300 dòng thường + 150 dòng gần giống (75 cặp, `near_identical`, T4 150 của Bảng 1). Gộp T4 ngày 07/10 không chừa suất, nên lát này đứng cuối bảng xếp hạng và bản 11/10 đầu tiên không có dòng nào;
-- T5 có 38 dòng, T6 nhận phần thiếu (quyết định Q3): T6 388 = 300 dòng H3 (bãi bỏ qua nút cha) + 88 dòng bãi bỏ trực tiếp.
+Đồng thuận người–người trong manifest (hướng dẫn 3.0): **246 dòng**;
+AC1 **0,377277**, p_neg **0,394558**, κ **0,235491**. Theo lineage:
+**138**; AC1 **0,389639**, p_neg **0,483516**. Chưa đạt ngưỡng AC1
+0,80 và p_neg 0,60. Không dùng đồng thuận AI–AI thay số này.
 
-**Dòng không có đáp án:** 388 dòng `provision_repealed` (T6) và 127 dòng `document_repealed`. Có 66 lineage không có dòng `sau_het_hieu_luc` vì không tìm được câu chấm dứt trong corpus.
+Các lô AI và phê duyệt CMT tháng 11 nằm ở `data/review/ai_research/`,
+chưa tích hợp vào manifest bản này. Báo cáo cỡ mẫu G2 tính riêng;
+silver được chấp nhận hàng loạt không được gọi là người kiểm từng dòng.
 
-**Tỷ lệ dev trên dòng ranh giới:** T1 13,3% · T2 21,3% · T3 19,6% · T5 0% (luôn vào test) · T6 19,6%.
+### Hash phát hành
 
-### Ai viết gì (dòng ranh giới)
+| File | SHA256 |
+|---|---|
+| `vilextime.jsonl` | `7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366` |
+| `vilextime_silver.jsonl` | `c864a545a52279883303c703c17ec2eba98797cad42b544c8d6c5199e8030c4b` |
+| `vilextime_meta.jsonl` | `b43dc0cc6ff01bbcbf0bd3b054f8a0cfc9dd01ecb799e95b76cf69acd039f8a7` |
+| `vilextime.csv` | `7bbe91e2157ec829de47f02eb22e8f1f2734ccee524641f4c6c2cedab3e18c7a` |
+| `vilextime_silver.csv` | `1e355f45048d0ad0c5931b6b5ab1e2ffa30c8b9828bcdf073c9483eb5a10d50e` |
 
-- **Câu hỏi** (theo lineage, 653):
-  - `claude-opus-5-5` viết 389 câu, tự viết lại 35 câu;
-  - `deepseek-flash` viết 225 câu (450 dòng ranh giới);
-  - người sửa 3 câu;
-  - `gpt-oss-120b` viết 1 câu.
-- **Đáp án ngắn:** 1.031 phiên bản dùng trong bản phát hành, đều do `claude-opus-5-5` viết.
-- **Nhãn trên dòng ranh giới ngoài bộ kiểm chéo:** 662 nhãn model, 98 nhãn người (bản
-  Excel). 375 nhãn bắt buộc audit, 0 đã audit. T6 có 276 dòng chưa có nhãn nào.
-- **Lineage bị loại:** 32 lineage, đều do model đề xuất (other 11, group_mismatch 9,
-  gold_wrong 6, question_ambiguous 4, question_leaks 1, unanswerable_as_asked 1).
-
-### Bộ dò hiệu lực (J2) và sửa gốc (J3)
-
-**Event được áp.** Số event được áp tăng từ 18.840 lên 19.182. Mẫu 30 event mới được áp có 29/30 đúng nội dung (Wilson 95% [83,3; 99,4]).
-
-**Văn bản hết hiệu lực mà cổng chưa ghi.** 9 văn bản được sửa bằng quyết định `effective_to` có trích câu nguồn:
-- 176/2013/NĐ-CP, 147/2014/TT-BTC, 47/2020/NĐ-CP;
-- 09/2017/TT-BLĐTBXH, 28/2018/TT-BNNPTNT, 135/2004/NĐ-CP;
-- 62/2014/QH13, 81/CP (1995), 50/2016/TT-BGTVT.
-
-**Cờ `missed_event` ngoài bộ κ.** 32 cờ, trong đó 13 cờ đúng (10 lineage):
-- dòng anh em sai: dời về trước ngày của event bị bỏ sót;
-- dòng ranh giới sai: loại lineage.
-
-**Loại thêm trong đợt 29/09:**
-- 5 lineage là điều khoản hiệu lực thi hành;
-- 3 cặp hỏi sau ngày chụp corpus.
-
-**Còn chờ D4:** 18 cờ `missed_event` và 8 cờ `document_ended` thuộc lineage κ. Tỷ lệ lỗi báo ở đây là cận dưới (mục 5).
-
-### Hiện tượng
-
-- Transition của dòng ranh giới: 906 transition, đều là `amend`. Việc bãi bỏ được thể hiện bằng dòng không có đáp án.
-- H3 (mất hiệu lực theo nút cha): 150 lineage (300 dòng); bãi bỏ trực tiếp: 44 lineage (88 dòng).
-- T5: 19 lineage, đến từ 3 văn bản tác động là 65/2025/TT-BQP, 12/2015/NĐ-CP và 119/2026/NĐ-CP. Câu hiệu lực của 12/2015/NĐ-CP không nêu ngày hồi tố.
-- Có 8 dòng ranh giới mà đáp án ngắn nằm ở câu dẫn, không nằm trong đơn vị gold: T1 7, T2 1.
-
-### Miền (theo lineage)
-
-**Nguồn nhãn:**
-- `portal_field`: 228 lineage;
-- `seed`: 199 lineage;
-- `portal_major`: 132 lineage;
-- `khong_ro`: 94 lineage.
-
-**Nhãn** (một lineage có thể mang nhiều nhãn):
-- ngoài bốn miền của đề cương: 425;
-- giao thông: 92;
-- doanh nghiệp – đầu tư: 72;
-- thuế: 56;
-- đất đai: 16.
-
-### Corpus
-
-- Có 78 cặp văn bản cùng số hiệu và cùng ngày ký, tức cổng lưu một văn bản hai lần.
-- 15/653 trích dẫn chữ của chính điều khoản đích không phân giải được: `citation` không có Điều, hoặc số hiệu cũ trùng mà không có năm.
-
-### Probe theo nhóm (G3; split test)
-
-Mỗi probe biết sẵn điều khoản gold và chỉ chọn phiên bản. Chỉ số là TV-Recall@1; riêng dòng `hedge` là Accuracy tương phản.
-
-Bảng `giua_khoang` (bảng chính). Cột "T2" là cả nhóm; "gần giống" là lát `near_identical` của T2 (T4 cũ):
-
-| Probe | T1 | T2 | gần giống | T3 | T5 | T6 | TCS |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| mới nhất | 1,000 | 0,500 | 0,500 | 0,325 | 0,500 | 0,500 | 0,000 |
-| đầu tiên | 1,000 | 0,500 | 0,500 | 0,325 | 0,447 | 0,500 | 0,000 |
-| ngày gần nhất | 1,000 | 0,788 | 0,772 | 0,713 | 0,789 | 0,500 | 0,576 |
-| rào đón, Accuracy tương phản | 1,000 | 0,065 | 0,061 | 0,000 | 0,026 | 0,500 | 0,000 |
-| rào đón, Accuracy lỏng | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 | 0,500 | 0,000 |
-
-Bảng `ranh_gioi`: probe "ngày gần nhất" đạt T3 0,325 và T2 0,500, bằng các probe khác.
-
-Bảng `truoc_hieu_luc` (chỉ T2): "mới nhất" và "ngày gần nhất" đạt TV-Recall@1 0,000, vì
-phiên bản sắp có hiệu lực là bản mới nhất và cũng gần ngày hỏi nhất; "đầu tiên" đạt 1,000,
-vì mọi cặp T2 chỉ có hai phiên bản. Chế độ này vì vậy bắt được heuristic "lấy bản mới",
-không bắt được heuristic "lấy bản đầu".
-
-Oracle đạt trần ở mọi chỉ số và mọi chế độ. Riêng EM/F1 thì không: oracle đạt F1 0,586 vì câu trả lời là cả điều khoản.
+Kiểm tái lập: chạy `PYTHONPATH=src .venv/bin/python scripts/check/audit_g2_statistics.py`
+để kiểm hash, số dòng theo manifest, và tái tạo báo cáo cỡ mẫu.
+Các số lịch sử về probe, miền và người viết của schema 1.4.0 không
+được suy sang bản 2.0.0 nếu chưa đếm lại trên đúng bản.

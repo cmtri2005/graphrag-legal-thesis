@@ -809,3 +809,31 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
 ## Result
 
 Chưa hoàn tất.
+
+### Kiểm G2 theo yêu cầu CMT, 09/11/2026
+
+Phạm vi: VBHN → chẩn đoán recall/M2 → datasheet → cỡ mẫu và đồng thuận.
+Không thay split, ADR 0005, manifest, đề cương, nhãn người hoặc ngưỡng; không commit.
+Dùng các báo cáo G2 trong `docs/reports/` và lệnh tái lập trong `scripts/check/`.
+VBHN đã chạy lại: 96 cặp; 0 ca chọn sai được chứng minh, 1/2 khớp;
+9 ca cần phân xử, 2 tín hiệu bãi bỏ cần người xem. 8 test VBHN qua; hash OK.
+- Recall chạy lại hiện tại: 5.200/8.046 (64,6284%), không phải số lịch sử
+  5.007. Sửa phép đo để báo thêm applicable 3.238/8.046 (40,2436%),
+  thêm chế độ không ghi đè phiếu mẫu và kiểm độ sẵn sàng M2. Không sửa
+  extractor theo suy đoán. M2 vẫn không chấm được: gold người hoàn tất 0.
+  [Bằng chứng và phần dừng](../../reports/g2-recall-m2-20261109.md).
+- Datasheet schema 2.0.0 đã khớp manifest: 769 main/246 lineage,
+  859 silver/178 lineage (168 T2/T3 + 10 T5). Không sửa manifest.
+- [Cỡ mẫu, power, toàn bộ đồng thuận](../../reports/g2-co-mau-dong-thuan-20261109.md):
+  314 lineage AI sản xuất (168 + 128 + 18); verdict AC1 0,607519,
+  p_neg 0,764045. 162 đạt được chấp nhận gồm 81 silver nhận hàng loạt
+  và 81 mới có lời CMT tự báo đọc/duyệt. Không gọi 162 là người kiểm từng
+  dòng; nếu áp yêu cầu 130 người xác nhận sau đọc thì mới chứng minh 81,
+  thiếu 49. Giữ cả hai cách đếm, chờ CMT xử lý chênh lệch authority.
+- Power có điều kiện với hiệu/phương sai test2: N=162 là 0,369007
+  tại α=0,05; N=81 là 0,209652. Không phải power thực nghiệm bộ cuối.
+- Kiểm: suite 721 passed (34,71 giây); paper_check 0 sai lệch, 3/3 đối
+  chứng lỗi bị bắt; diff check sạch; thống kê chạy hai lần giống nhau.
+  Sáu file bảo vệ và 79 đầu vào thống kê nguyên hash. Không commit.
+- Còn dừng: gold mù/M2 cần người, ca VBHN và các ca nhãn mở cần
+  người có thẩm quyền; chưa tuyên bố hoàn tất G2 hoặc tăng recall extractor.
