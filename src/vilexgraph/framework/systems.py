@@ -138,6 +138,14 @@ REGISTRY: dict[str, SystemSpec] = {s.name: s for s in (
 #: Verifier), reported on its own line.
 LADDER = ("b2ctx", "b7", "b7v", "b7plus", "b7pp")
 
+#: ADR 0006 §2: what the final test set generates answers with, besides the one proposed
+#: system P (`proposed2` or `proposed3`, chosen on dev). This is the list; documents point
+#: here. The two oracles are built from gold by `colab_b1`, so they are not in REGISTRY.
+ORACLES = ("oracle", "oracle_now")
+FINAL_GENERATION = ("b1", "b2ctx", "b3", "b4", "b5", "b6", "b7", "b7plus", "b7pp", *ORACLES)
+#: Dev only: the two candidates for P, and the two descriptive component drops.
+DEV_ONLY = ("proposed2", "proposed3", "p2a2", "p2a3")
+
 
 def get(name: str) -> SystemSpec:
     try:
@@ -145,3 +153,26 @@ def get(name: str) -> SystemSpec:
     except KeyError:
         raise SystemError_(
             f"unknown system {name!r}; known: {', '.join(sorted(REGISTRY))}") from None
+
+
+def table() -> str:
+    """The final configuration as markdown, as run: hybrid, so no reranker (cut 05/11)."""
+    lines = ["| Hệ | Lớp | Từ vựng | Dense | Lọc thời gian | Mở rộng | Verifier | Thông báo bãi bỏ | Chạy ở |",
+             "|---|---|---|---|---|---|---|---|---|"]
+    for name, where in ((n, "dev, test") for n in FINAL_GENERATION if n not in ORACLES):
+        lines.append(_row(REGISTRY[name], where))
+    lines += [_row(REGISTRY[n], "dev; hệ được chọn làm P chạy test" if n.startswith("proposed") else "dev")
+              for n in DEV_ONLY]
+    lines += [f"| `{n}` | căn cứ gold | — | — | — | — | — | — | dev, test |" for n in ORACLES]
+    return "\n".join(lines)
+
+
+def _row(s: SystemSpec, where: str) -> str:
+    yes = {True: "có", False: "không"}
+    expand = f"{s.expand_edges}, {s.expand} bước" if s.expand else "không"
+    return (f"| `{s.name}` | {s.layer or 'không truy xuất'} | {yes[s.lexical]} | {yes[s.dense]} | {s.temporal} "
+            f"| {expand} | {s.verify} | {yes[s.repeal_note]} | {where} |")
+
+
+if __name__ == "__main__":
+    print(table())

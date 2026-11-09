@@ -72,3 +72,15 @@ def test_final_prediction_gate_rejects_incomplete_duplicate_and_foreign_ids(tmp_
         path.write_text(''.join(json.dumps({'id': i}) + '\n' for i in ids))
         with pytest.raises(SystemExit, match='duplicate, incomplete or foreign-split'):
             final_run.validate_predictions(tmp_path, ['b7'], [r], 'dev')
+
+
+def test_final_system_list_is_known_and_exports_without_reranker():
+    from pathlib import Path
+
+    from vilexgraph.framework import systems
+
+    named = [n for n in (*systems.FINAL_GENERATION, *systems.DEV_ONLY) if n not in systems.ORACLES]
+    assert all(n in systems.REGISTRY for n in named)
+    assert all(f'`{n}`' in systems.table() for n in (*named, *systems.ORACLES))
+    # b7, b7plus and b7pp carry rerank=True in the registry; the reranker was cut 05/11.
+    assert 'hybrid=True' in Path(final_run.__file__).read_text(encoding='utf-8')

@@ -47,7 +47,9 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
 - **Generator:** `gpt-4o-mini-2024-07-18` (OpenAI), nhiệt độ 0, `max_tokens` 1024, `seed` 20261109, theo amendment 09/11 của ADR 0004 (Proposed). Qwen3-4B rev `cdbee75` chỉ ở bảng phụ RQ1 và các vòng thử lịch sử, không đặt số cạnh cột chính.
 - **Embedding:** `dangvantuan/vietnamese-embedding`, trừ khi X6 trên dev cho R@10 tăng với KTC ghép cặp > 0: `[ĐIỀN Ở G3]`.
 - **Thang truy xuất** (F4–F6): `b2ctx → b7 → b7v → b7plus → b7pp`, từ vựng, `k = 20`, như ADR 0005, để so được với v1.0 và test 2.
-- **Hệ có sinh câu trả lời:** `b1`, `b2ctx`, `b4`, `b5`, `b6`, `b7`, `b7plus`, `b7pp`, `oracle`, `oracle_now` và **P**. Mọi hệ có truy xuất dense chạy ở chế độ lai ghép (`--hybrid`).
+- **Hệ có sinh câu trả lời:** `b1`, `b2ctx`, `b3`, `b4`, `b5`, `b6`, `b7`, `b7plus`, `b7pp`, `oracle`, `oracle_now` và **P**. Danh sách gốc là `FINAL_GENERATION` trong `src/vilexgraph/framework/systems.py`; bảng cấu hình in bằng `python -m vilexgraph.framework.systems`. Mọi hệ có truy xuất dense chạy ở chế độ lai ghép (`--hybrid`), không reranker.
+- **Chỉ chạy trên dev:** `proposed2`, `proposed3` để chọn P; `p2a2`, `p2a3` để mô tả thành phần.
+- **Trình bày:** mọi hệ đều chạy. Paper giữ 7 hệ lõi cộng `b1` ở bảng chính và `oracle`, `oracle_now` ở bảng chẩn đoán; khóa luận báo đầy đủ.
 - **P** là đúng một hệ, chọn trên dev theo quy tắc khai trước:
   - P là `proposed3` nếu trên dev, `proposed3` − `proposed2` ở `t6_unanswerable` có KTC ghép cặp > 0, **và** trên các dòng có đáp án, cận dưới KTC của hiệu Accuracy ≥ −0,02.
   - Ngược lại, P là `proposed2`.
@@ -58,7 +60,7 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
 | Mã | Câu hỏi | So sánh | Đại lượng | Lát | Dự đoán |
 |---|---|---|---|---|---|
 | F1 | RQ2, so với RAG phẳng lai ghép | P − `b4` | Accuracy | all | > 0 |
-| F2 | RQ2, so với GraphRAG phi thời gian | P − `b5` | Accuracy | all | > 0 |
+| F2 | RQ2, so với mở rộng đồ thị phi thời gian (`b5` không phải GraphRAG thật; LightRAG báo riêng) | P − `b5` | Accuracy | all | > 0 |
 | F3 | RQ2, lỗi sai phiên bản | P − `b4` | `wrong_version` | all | < 0 |
 | F4 | RQ3, lọc ngày văn bản | `b7` − `b2ctx` | TV-Recall@1 | all_answerable | > 0 |
 | F5 | RQ3, lọc khoảng phiên bản | `b7plus` − `b7` | TV-Recall@1 | all_answerable | > 0 |

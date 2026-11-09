@@ -185,7 +185,7 @@ def pipeline(args):
                 else:
                     colab_b1.export_prompts(SimpleNamespace(system=system, split=args.split,
                         as_of_strategy='giua_khoang', release=args.release, index=args.index,
-                        limit=0, out=dest, b2=True, no_dense=False, hybrid=False,
+                        limit=0, out=dest, b2=True, no_dense=False, hybrid=True,
                         hits_cache=out / 'retrieval.sqlite'))
         elif step == 'import':
             for system in args.systems:
@@ -231,7 +231,7 @@ def main():
     ap.add_argument('--source-prompts', type=Path, help='replay existing exports byte for byte')
     ap.add_argument('--raw', type=Path, required=True)
     ap.add_argument('--retrieval', type=Path, required=True)
-    ap.add_argument('--systems', nargs='+', default=['b4', 'b5', 'b2ctx', 'b7', 'b7plus', 'b7pp', 'proposed2'])
+    ap.add_argument('--systems', nargs='+', default=[*colab_b1.systems.FINAL_GENERATION, 'proposed2'])
     ap.add_argument('--proposed', default='proposed2')
     ap.add_argument('--draws', type=int, default=10000)
     ap.add_argument('--out', type=Path, required=True)
