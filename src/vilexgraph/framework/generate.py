@@ -37,29 +37,50 @@ Quy tắc:
 1. Chỉ dùng các đoạn căn cứ được cung cấp. Không dùng kiến thức ngoài.
 2. Trả lời bằng cách trích đúng lời văn của quy định tại mốc thời gian được hỏi. \
 Không diễn giải lại, không rút gọn, không thêm bình luận.
-3. HIỆU LỰC là một khẳng định, không phải chỗ để tránh trả lời:
-   - ghi "còn" nếu quy định có hiệu lực tại mốc đó;
-   - ghi "không" CHỈ KHI các căn cứ cho thấy quy định đã hết hiệu lực hoặc chưa có hiệu \
-lực tại mốc đó — đây là một khẳng định về pháp lý;
-   - ghi "không rõ" nếu bạn không xác định được. Đừng ghi "không" khi ý bạn là "không biết".
-4. Căn cứ phải dẫn theo nhãn [n] của đoạn bạn đã dùng, ở mức Điều/Khoản/Điểm.
-5. Nhiều phiên bản của cùng một điều khoản có thể xuất hiện. Chỉ dùng phiên bản \
+3. Nhiều phiên bản của cùng một điều khoản có thể xuất hiện. Chỉ dùng phiên bản \
 có hiệu lực tại mốc được hỏi; không liệt kê mọi phiên bản.
+4. Nếu nội dung được hỏi đã chuyển sang điều khoản hoặc văn bản khác, và căn cứ có quy định \
+đang điều chỉnh đúng nội dung đó tại mốc được hỏi, thì trả lời theo quy định đó.
+5. HIỆU LỰC là một khẳng định, không phải chỗ để tránh trả lời:
+   - ghi "còn" nếu quy định dùng để trả lời có hiệu lực tại mốc đó;
+   - ghi "không" CHỈ KHI các căn cứ cho thấy quy định được hỏi đã hết hiệu lực hoặc chưa có \
+hiệu lực tại mốc đó — đây là một khẳng định về pháp lý. Lệnh bãi bỏ một Điều, Khoản, Mục, \
+Chương hoặc cả văn bản cũng làm mọi phần nằm trong đó hết hiệu lực, kể từ ngày lệnh có hiệu \
+lực. Khi đó để trống TRẢ LỜI và dẫn nhãn của lệnh bãi bỏ ở CĂN CỨ;
+   - ghi "không rõ" nếu bạn không xác định được. Thiếu căn cứ không phải là bằng chứng bãi \
+bỏ. Đừng ghi "không" khi ý bạn là "không biết".
+   Lệnh sửa đổi, bổ sung, hoặc lệnh bãi bỏ một phần khác không làm quy định được hỏi hết \
+hiệu lực.
+6. Mục THÔNG BÁO BÃI BỎ TỪ ĐỒ THỊ, nếu có, là căn cứ về việc bãi bỏ. Áp dụng quy tắc 5 khi \
+đích bị bãi bỏ là quy định được hỏi hoặc phần chứa quy định đó, và ngày hiệu lực không sau \
+mốc được hỏi.
+7. Căn cứ phải dẫn theo nhãn [n] của đoạn bạn đã dùng, ở mức Điều/Khoản/Điểm.
 
 Định dạng bắt buộc, đúng ba dòng:
 TRẢ LỜI: <lời văn quy định, hoặc để trống nếu không trả lời được>
 HIỆU LỰC: còn|không|không rõ
 CĂN CỨ: [n], [m]"""
 
-# B1 has no evidence at all, and the rules above then push a model toward
-# "HIỆU LỰC: không" for want of anything to read — which would score B1's
-# abstentions as a property of B1 rather than of this prompt. Say so explicitly.
-NO_EVIDENCE = """Không có đoạn căn cứ nào được cung cấp.
+# B1 has no evidence at all, and the rules above would then push a model toward
+# "HIỆU LỰC: không" for want of anything to read, which would score B1's abstentions
+# as a property of B1 rather than of this prompt. It gets its own system message: an
+# override placed in the user turn loses to the system rule on models that rank them.
+SYSTEM_NO_EVIDENCE = """Bạn là trợ lý pháp luật Việt Nam. Bạn trả lời câu hỏi về nội dung \
+quy định tại MỘT MỐC THỜI GIAN cụ thể. Không có đoạn căn cứ nào được cung cấp, nên hãy trả \
+lời hết sức mình dựa trên hiểu biết của bạn về pháp luật Việt Nam tại mốc đó.
 
-Ghi đè quy tắc 1 và 3: hãy trả lời dựa trên hiểu biết của bạn về pháp luật Việt Nam tại \
-mốc thời gian được hỏi. Chỉ ghi HIỆU LỰC: không khi bạn thực sự biết quy định đó đã hết \
-hiệu lực hoặc chưa có hiệu lực tại mốc đó; nếu chỉ là không biết nội dung thì ghi \
-HIỆU LỰC: không rõ và vẫn trả lời hết sức mình. Để CĂN CỨ trống vì không có nhãn nào để dẫn."""
+HIỆU LỰC là một khẳng định, không phải chỗ để tránh trả lời:
+- ghi "còn" nếu quy định có hiệu lực tại mốc đó;
+- ghi "không" CHỈ KHI bạn thực sự biết quy định đã hết hiệu lực hoặc chưa có hiệu lực tại mốc đó;
+- ghi "không rõ" nếu bạn không biết, và vẫn trả lời hết sức mình.
+
+Định dạng bắt buộc, đúng ba dòng:
+TRẢ LỜI: <nội dung quy định>
+HIỆU LỰC: còn|không|không rõ
+CĂN CỨ:"""
+
+USER = "MỐC THỜI GIAN: {as_of}\nCÂU HỎI: {question}\n\nCÁC ĐOẠN CĂN CỨ:\n{body}"
+REPEAL_NOTES = "\n\nTHÔNG BÁO BÃI BỎ TỪ ĐỒ THỊ:\n"
 
 # The answer runs until the next label, counting a mistyped one ("HIỆU LỰNG:"),
 # so a typo cannot be swallowed into the answer text.
@@ -96,15 +117,13 @@ def build_prompt(question: str, as_of: str, units, *, with_context: bool,
     for n, unit in enumerate(units, 1):
         ids.append(unit.unit_id)
         blocks.append(f"[{n}] {unit.retrieval_text(with_context)}".strip())
-    body = "\n\n".join(blocks) if blocks else NO_EVIDENCE
-    user = (f"MỐC THỜI GIAN: {as_of}\n"
-            f"CÂU HỎI: {question}\n\n"
-            f"CÁC ĐOẠN CĂN CỨ:\n{body}")
+    body = "\n\n".join(blocks) if blocks else "(không có)"
+    user = USER.format(as_of=as_of, question=question, body=body)
     lines = [note.prompt_line(ids.index(note.unit_id) + 1) for note in repeal_notes
              if note.unit_id in ids]
     if lines:
-        user += "\n\nTHÔNG BÁO BÃI BỎ TỪ ĐỒ THỊ:\n" + "\n".join(lines)
-    return SYSTEM, user, ids
+        user += REPEAL_NOTES + "\n".join(lines)
+    return (SYSTEM if blocks else SYSTEM_NO_EVIDENCE), user, ids
 
 
 def parse(raw: str, ids: list[str]) -> tuple[str, bool, tuple[str, ...]]:

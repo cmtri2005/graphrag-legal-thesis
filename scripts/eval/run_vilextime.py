@@ -102,7 +102,8 @@ def provenance(args, spec: systems.SystemSpec, corpus: Corpus | None) -> dict:
         "release_sha256": sha(args.release.read_bytes()),
         "corpus_manifest_sha256": sha(manifest.read_bytes()) if manifest.exists() else None,
         "index_counts": corpus.counts() if corpus else None,
-        "prompt_sha256": sha((generate.SYSTEM + generate.NO_EVIDENCE).encode()),
+        "prompt_sha256": sha((generate.SYSTEM + generate.SYSTEM_NO_EVIDENCE + generate.USER
+                               + generate.REPEAL_NOTES).encode()),
         "python": sys.version.split()[0],
     }
 

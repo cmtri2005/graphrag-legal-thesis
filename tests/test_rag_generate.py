@@ -36,11 +36,14 @@ def test_context_is_opt_in() -> None:
     assert "Điều 2. Giải thích" not in without
 
 
-def test_no_evidence_overrides_the_abstention_rule() -> None:
-    """B1 must not abstain merely because it was handed nothing to read."""
-    _, user, ids = generate.build_prompt("q", "2024-05-01", [], with_context=True)
+def test_no_evidence_gets_its_own_system_message() -> None:
+    """B1 must not abstain merely because it was handed nothing to read, and the
+    permission to use its own knowledge must not fight a system rule forbidding it."""
+    system, _, ids = generate.build_prompt("q", "2024-05-01", [], with_context=True)
     assert ids == []
-    assert "không rõ" in user
+    assert system == generate.SYSTEM_NO_EVIDENCE
+    assert "Không dùng kiến thức ngoài" not in system
+    assert generate.build_prompt("q", "2024-05-01", [unit(1)], with_context=True)[0] == generate.SYSTEM
 
 
 @pytest.mark.parametrize("raw, answerable, text, cites", [
