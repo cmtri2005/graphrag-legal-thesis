@@ -84,3 +84,15 @@ def test_final_system_list_is_known_and_exports_without_reranker():
     assert all(f'`{n}`' in systems.table() for n in (*named, *systems.ORACLES))
     # b7, b7plus and b7pp carry rerank=True in the registry; the reranker was cut 05/11.
     assert 'hybrid=True' in Path(final_run.__file__).read_text(encoding='utf-8')
+
+
+def test_each_dense_system_reads_embeddings_of_its_own_layer():
+    from run_vilextime import embed_dir
+    from vilexgraph.framework import systems
+    for name in (*systems.FINAL_GENERATION, *systems.DEV_ONLY):
+        if name in systems.ORACLES:
+            continue
+        spec = systems.get(name)
+        if spec.dense:
+            assert (embed_dir(spec.layer) / 'texts.sqlite').exists(), name
+            assert spec.layer in embed_dir(spec.layer).name, name

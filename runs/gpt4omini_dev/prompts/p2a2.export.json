@@ -1,0 +1,28 @@
+{
+  "system": "p2a2",
+  "spec": {
+    "name": "p2a2",
+    "layer": "version",
+    "lexical": true,
+    "dense": true,
+    "rerank": false,
+    "temporal": "propagated",
+    "context": true,
+    "expand": 0,
+    "expand_edges": "none",
+    "verify": "reject",
+    "k": 20,
+    "note": "L4–L5: 𝒰ₜ by formula (3), hybrid ranking, citation-constrained answer, Verifier",
+    "repeal_note": false
+  },
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "no_dense": false,
+  "hybrid": true,
+  "embed": "data/derived/embed/version-vietnamese-embedding",
+  "embed_sha256": null,
+  "rows": 151,
+  "release_sha256": "7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366",
+  "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+  "prompt_file_sha256": "1a552d17fa2be646140117c9b290aecb8ed9e1411bad50ad7b4e86a1a2812bae"
+}

@@ -1,0 +1,46 @@
+{
+  "system": "b1",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "ab5e6fb4ec0853b268824088136c944d7bf69c7a1c9bd60daba393b49a19d08b",
+  "raw_file_sha256": "0c70f0db19e55ad01fdea0be2eb2bfedf73c0c0c50686a5d758f1a6a32d1e7cc",
+  "model": "gpt-4o-mini-2024-07-18",
+  "revision": "gpt-4o-mini-2024-07-18",
+  "gpu": [
+    "api"
+  ],
+  "rows": 151,
+  "format_ok": 151,
+  "truncated": 0,
+  "prompt_tokens_mean": 301.17218543046357,
+  "completion_tokens_mean": 98.49006622516556,
+  "generation_seconds": 299.56297955199625,
+  "export": {
+    "system": "b1",
+    "spec": {
+      "name": "b1",
+      "layer": null,
+      "lexical": false,
+      "dense": false,
+      "rerank": false,
+      "temporal": "none",
+      "context": false,
+      "expand": 0,
+      "expand_edges": "none",
+      "verify": "off",
+      "k": 20,
+      "note": "B1 — the generator alone, no retrieval",
+      "repeal_note": false
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": null,
+    "embed_sha256": null,
+    "rows": 151,
+    "release_sha256": "7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366",
+    "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+    "prompt_file_sha256": "ab5e6fb4ec0853b268824088136c944d7bf69c7a1c9bd60daba393b49a19d08b"
+  }
+}

@@ -47,7 +47,9 @@ RELEASE = Path("data/derived/vilextime/release.jsonl")
 INDEX = Path("data/derived/corpus/index.sqlite")
 CACHE = Path("data/derived/rag/completions.sqlite")
 HITS = Path("data/derived/rag/retrieval.sqlite")
-EMBED = Path("data/derived/embed/asis-vietnamese-embedding")   # docs/plans/active/embed-phobert-cpu.md
+def embed_dir(layer: str) -> Path:
+    """The embeddings of one layer: a system must read the layer it retrieves from."""
+    return Path(f"data/derived/embed/{layer}-vietnamese-embedding")
 
 
 @dataclass(frozen=True, slots=True)
@@ -149,8 +151,8 @@ def main() -> None:
     ap.add_argument("--hybrid", action="store_true",
                     help="run a reranker-declaring system on BM25 + dense (RRF) without the reranker, "
                          "which is not built: the retrieval the proposal's L4 commits to")
-    ap.add_argument("--embed", type=Path, default=EMBED,
-                    help="embeddings written by scripts/eval/embed_corpus.py (dense systems)")
+    ap.add_argument("--embed", type=Path,
+                    help="embeddings written by scripts/eval/embed_corpus.py (default: the system's layer)")
     ap.add_argument("--cache", type=Path, default=CACHE)
     ap.add_argument("--hits-cache", type=Path, default=HITS,
                     help="cache of ranked retrieval results, keyed by configuration")
@@ -183,7 +185,7 @@ def main() -> None:
 
     corpus = Corpus(args.index) if spec.retrieves else None
     search = retriever(spec, corpus, None if args.no_cache else args.hits_cache,
-                       fast=args.fast_retrieval, embed=args.embed)
+                       fast=args.fast_retrieval, embed=args.embed or (embed_dir(spec.layer) if spec.dense else None))
     cache = generate.Cache(None if args.no_cache else args.cache)
     args.out.parent.mkdir(parents=True, exist_ok=True)
 

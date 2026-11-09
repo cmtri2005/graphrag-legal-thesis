@@ -17,7 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from vilexgraph.framework import generate, systems, verify  # noqa: E402
 from vilexgraph.framework.corpus import Corpus  # noqa: E402
 from vilexgraph.framework.graphx import repeal_notes  # noqa: E402
-from run_vilextime import EMBED, INDEX, RELEASE, queries, retriever  # noqa: E402
+from run_vilextime import INDEX, embed_dir, RELEASE, queries, retriever  # noqa: E402
 
 
 ORACLE = "oracle"
@@ -74,7 +74,7 @@ def export_prompts(args) -> None:
         spec = spec.variant(f"{spec.name}-lex", dense=False, rerank=False)
     if getattr(args, "hybrid", False) and spec.rerank:
         spec = spec.variant(f"{spec.name}-hyb", rerank=False)
-    embed = getattr(args, "embed", EMBED) if spec.dense and not oracle else None
+    embed = (getattr(args, "embed", None) or embed_dir(spec.layer)) if spec.dense and not oracle else None
     corpus = Corpus(args.index) if spec.retrieves else None
     search = None if oracle else retriever(spec, corpus, args.hits_cache, embed=embed)
     gold = {r["id"]: [r["version_id"]] if r["version_id"] else r["accepted_evidence"]
@@ -232,7 +232,7 @@ def main() -> None:
     ex.add_argument("--system", choices=sorted(systems.REGISTRY) + [ORACLE, ORACLE_NOW], default="b2ctx")
     ex.add_argument("--no-dense", action="store_true")
     ex.add_argument("--hybrid", action="store_true", help="BM25 + dense (RRF), no reranker: the proposal's L4")
-    ex.add_argument("--embed", type=Path, default=EMBED, help="embeddings for dense systems (b3, b4)")
+    ex.add_argument("--embed", type=Path, help="embeddings for dense systems (default: the system's layer)")
     ex.add_argument("--b2", action="store_true", help="include B2 metadata for b2ctx prompts")
     ex.add_argument("--out", required=True, type=Path)
     im = sub.add_parser("import")

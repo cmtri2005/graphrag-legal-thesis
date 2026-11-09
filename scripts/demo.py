@@ -17,7 +17,7 @@ from vilexgraph.framework import generate, systems, verify
 from vilexgraph.framework.corpus import Corpus
 from vilexgraph.framework.graphx import repeal_notes
 from vilexgraph.framework.temporal import windows_for
-from run_vilextime import EMBED, INDEX, retriever
+from run_vilextime import INDEX, embed_dir, retriever
 
 
 PAGE = '''<!doctype html><html lang="vi"><meta charset="utf-8">
@@ -142,8 +142,7 @@ def main():
     # Same explicit hybrid variant as the Colab export when a row requests the unbuilt reranker.
     if spec.rerank:
         spec = spec.variant(spec.name + '-hyb', rerank=False)
-    embed = args.embed or (Path('data/derived/embed/version-vietnamese-embedding')
-                           if spec.layer == 'version' else EMBED)
+    embed = args.embed or (embed_dir(spec.layer) if spec.dense else None)
     search = retriever(spec, corpus, None, embed=embed)
     server = HTTPServer(('127.0.0.1', args.port), handler_for(spec, corpus, search))
     print(f'http://127.0.0.1:{server.server_port} · {spec.name}', flush=True)

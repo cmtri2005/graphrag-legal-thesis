@@ -1,0 +1,46 @@
+{
+  "system": "b7pp",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "a93e17f32c676a59c4792b1ee8706cac3daf21b485eaa193938081f17bca60e0",
+  "raw_file_sha256": "cc7c0d4416b3e26f55d4ba2dd233cead10598ecc1a1c980083c5d5554401533a",
+  "model": "gpt-4o-mini-2024-07-18",
+  "revision": "gpt-4o-mini-2024-07-18",
+  "gpu": [
+    "api"
+  ],
+  "rows": 151,
+  "format_ok": 150,
+  "truncated": 0,
+  "prompt_tokens_mean": 4889.3708609271525,
+  "completion_tokens_mean": 118.37748344370861,
+  "generation_seconds": 495.78357805601627,
+  "export": {
+    "system": "b7pp",
+    "spec": {
+      "name": "b7pp-hyb",
+      "layer": "version",
+      "lexical": true,
+      "dense": true,
+      "rerank": false,
+      "temporal": "propagated",
+      "context": true,
+      "expand": 0,
+      "expand_edges": "none",
+      "verify": "off",
+      "k": 20,
+      "note": "B7+ with propagated windows: the ladder's top rung, no online graph (K-07)",
+      "repeal_note": false
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": "data/derived/embed/version-vietnamese-embedding",
+    "embed_sha256": null,
+    "rows": 151,
+    "release_sha256": "7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366",
+    "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+    "prompt_file_sha256": "a93e17f32c676a59c4792b1ee8706cac3daf21b485eaa193938081f17bca60e0"
+  }
+}
