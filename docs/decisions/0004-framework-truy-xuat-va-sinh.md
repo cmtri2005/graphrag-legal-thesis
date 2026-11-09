@@ -216,3 +216,28 @@ tức khoảng 45 phút mỗi hệ (`b2` khoảng 90 phút); 17 hệ khoảng 13
 **Model độ bền:** không có ở lần chạy test này. Nhóm quyết ngày 29/10 bỏ C6 (độ bền) và C11 (bảng
 nhiều LLM) vì thời gian; `microsoft/Phi-3.5-mini-instruct` chưa chạy cổng B1, để cho phase 2. ADR 0005
 §7 ghi giới hạn này.
+
+## Amendment 2026-11-09 (§3, generator bộ test cuối) — Proposed, chờ CMT và NMT duyệt trước G3
+
+**Thay đổi:** với bộ test cuối, generator cột chính là `gpt-4o-mini-2024-07-18` (OpenAI), thay cho
+Qwen3-4B. Không thuộc họ Claude hay DeepSeek (§3). Qwen3-4B giữ ở bảng phụ RQ1 và ở các vòng thử lịch sử
+(v1.0, test 2). Số của hai model không đặt cạnh nhau.
+
+**Đã thấy gì lúc quyết định:** CMT chọn ngày 09/11 sau khi đã thấy kết quả Qwen3-4B trên dev, v1.0 và
+test 2, trong đó dòng bãi bỏ đúng 0/15 ở cả sáu hệ trên v1.0 và oracle đúng 3–6/21 trên dev. Lúc quyết
+định chưa có câu trả lời nào của GPT-4o mini. Quy tắc X3 cũ (chỉ đổi cột chính nếu Accuracy ngữ cảnh đúng
+tăng ≥ 0,05) không được áp dụng; đây là quyết định của nhóm, không phải kết quả đo.
+
+**Cấu hình khóa:** nhiệt độ 0, `max_tokens` 1024, `seed` 20261109. Không dùng chế độ suy luận.
+
+**Đường chạy:** `colab_b1.py export` → `scripts/eval/api_generate.py` → `colab_b1.py import`, chung kiểm hash
+với đường Colab. Mỗi dòng lưu prompt hash, đầu ra thô, số token, `finish_reason`, model nhà cung cấp trả
+về và `system_fingerprint`. Trên `test`, script từ chối chạy khi thiếu commit amendment G3.
+
+**Prompt:** phiên bản ở commit `503fb82`, dùng chung cho mọi hệ có căn cứ; `b1` có system riêng. Quy tắc mới
+lấy từ T6b và R2 của `docs/vilextime-dinh-nghia.md`, được thêm sau khi đã thấy các kết quả bãi bỏ ở trên.
+Prompt chỉ được chỉnh trên dev và đóng băng trước G3.
+
+**Giới hạn phải nêu trong khóa luận:** model đóng, có thể bị gỡ; API không bảo đảm giống hệt giữa các lần
+gọi kể cả khi nhiệt độ 0 và có `seed`. Bù bằng cách công bố đầu ra thô. Trước khi chạy phải kiểm giá và
+tình trạng model trên trang chính thức của OpenAI.

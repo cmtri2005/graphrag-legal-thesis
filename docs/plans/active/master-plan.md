@@ -228,7 +228,7 @@ Mỗi việc có điều kiện dừng. Không đạt thì bỏ, ghi lại, khô
 |---|---|---|---|
 | X1 | Sinh câu trả lời `b7pp --hybrid`, `proposed2`, `p2a2`, `p2a3`. Prompt trùng thì dùng lại, không chạy GPU lại | Colab ≤ 3 giờ | Luôn chạy, đây là cam kết L4–L5 |
 | X2 | Đưa thông báo bãi bỏ có cấu trúc vào prompt, từ đồ thị | ít code, ≤ 1 giờ GPU | T6 không đáp án tăng rõ, KTC ghép cặp > 0, nhóm khác không giảm |
-| X3 | So một generator mạnh hơn (không thuộc họ Claude, DeepSeek), trên ngữ cảnh đúng | vài USD | Làm cột kiểm độ bền (B7). Chỉ đổi cột chính nếu Accuracy tăng ≥ 0,05, KTC > 0 |
+| X3 | **Đổi 09/11 (CMT):** cột chính dùng GPT-4o mini qua API, không qua cổng Accuracy cũ; Qwen3-4B ở bảng phụ RQ1. Xem amendment 09/11 của ADR 0004 (chờ duyệt) | khoảng $4 | Kiểm định dạng, cắt cụt và ba trạng thái hiệu lực trên dev trước khi chạy hết |
 | X4 | Đo Verifier khi không có bộ lọc (`b4`, `b7`) | thấp | Báo đúng vai trò của Verifier |
 | X5 | Lưu sổ chạy dev hôm 05/11. Dùng số chấm lại R@30 0,808 (không dùng 0,801 ghi nhầm trong plan cũ) | rất thấp | Luôn làm |
 | X6 | Embedding tốt hơn (`AITeamVN`, đúng quyết định C1) trên GPU. Khâu tìm là nút thắt lớn nhất (top 20 của test 2 chỉ 0,529) | Colab ~1 phiên | Chạy. Chỉ giữ cho hệ khi R@10 dev tăng, KTC > 0 |

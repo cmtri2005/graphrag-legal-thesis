@@ -44,7 +44,7 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
 
 ### 2. Hệ và cấu hình bị khóa
 
-- **Generator:** `Qwen/Qwen3-4B-Instruct-2507` rev `cdbee75`, NF4, greedy, 512 token, `transformers==5.20.2`, backend `t4_sdpa_repeat_kv`. Nếu X3 trên dev cho thấy generator khác tăng Accuracy ngữ cảnh đúng ≥ 0,05 với KTC > 0, thì generator đó là cột kiểm độ bền, không thay cột chính: `[ĐIỀN Ở G3]`.
+- **Generator:** `gpt-4o-mini-2024-07-18` (OpenAI), nhiệt độ 0, `max_tokens` 1024, `seed` 20261109, theo amendment 09/11 của ADR 0004 (Proposed). Qwen3-4B rev `cdbee75` chỉ ở bảng phụ RQ1 và các vòng thử lịch sử, không đặt số cạnh cột chính.
 - **Embedding:** `dangvantuan/vietnamese-embedding`, trừ khi X6 trên dev cho R@10 tăng với KTC ghép cặp > 0: `[ĐIỀN Ở G3]`.
 - **Thang truy xuất** (F4–F6): `b2ctx → b7 → b7v → b7plus → b7pp`, từ vựng, `k = 20`, như ADR 0005, để so được với v1.0 và test 2.
 - **Hệ có sinh câu trả lời:** `b1`, `b2ctx`, `b4`, `b5`, `b6`, `b7`, `b7plus`, `b7pp`, `oracle`, `oracle_now` và **P**. Mọi hệ có truy xuất dense chạy ở chế độ lai ghép (`--hybrid`).

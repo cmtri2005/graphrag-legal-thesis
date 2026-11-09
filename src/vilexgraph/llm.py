@@ -94,9 +94,10 @@ class Truncated(LLMError):
     carried along: nothing the model writes is trusted, and nothing is thrown away.
     """
 
-    def __init__(self, message: str, text: str = ""):
+    def __init__(self, message: str, text: str = "", completion: "Completion | None" = None):
         super().__init__(message)
         self.text = text
+        self.completion = completion
 
 @dataclass(frozen=True, slots=True)
 class Completion:
@@ -108,6 +109,9 @@ class Completion:
     temperature: float
     prompt_tokens: int | None = None
     completion_tokens: int | None = None
+    finish_reason: str | None = None
+    served_model: str | None = None     # what the provider says answered; an alias can move
+    system_fingerprint: str | None = None
 
 
 def configured() -> list[str]:
@@ -158,7 +162,7 @@ def list_models(provider: str | None = None) -> list[str]:
 def complete(system: str, user: str, *, provider: str | None = None, model: str | None = None,
              temperature: float = 0.0, max_tokens: int = 4096, timeout: int = 90,
              retries: int = 5, session: requests.Session | None = None,
-             effort: str | None = None) -> Completion:
+             effort: str | None = None, seed: int | None = None) -> Completion:
     """One completion, retrying only what is worth retrying.
 
     Temperature defaults to 0: a benchmark whose questions cannot be
@@ -177,6 +181,8 @@ def complete(system: str, user: str, *, provider: str | None = None, model: str 
                             {"role": "user", "content": user}]}
     if effort:
         payload["effort"] = effort
+    if seed is not None:
+        payload["seed"] = seed
 
     for attempt in range(retries):
         response = post(f"{base}/chat/completions", json=payload, timeout=timeout,
@@ -194,13 +200,16 @@ def complete(system: str, user: str, *, provider: str | None = None, model: str 
         choices = payload_out.get("choices") or []
         if not choices:
             raise LLMError(f"{provider} returned no choice: {response.text[:400]}")
+        usage = payload_out.get("usage") or {}
+        finish = choices[0].get("finish_reason")
+        done = Completion((choices[0]["message"].get("content") or "").strip(), provider, model, temperature,
+                          usage.get("prompt_tokens"), usage.get("completion_tokens"), finish,
+                          payload_out.get("model"), payload_out.get("system_fingerprint"))
         # Reasoning models (gpt-oss, qwen3) spend max_tokens on hidden thinking
         # first, so a cut-off answer looks like a bad one. Never pass it on.
-        if choices[0].get("finish_reason") == "length":
+        if finish == "length":
             raise Truncated(f"{provider} {model}: hit max_tokens={max_tokens}; the answer is truncated"
                             + ("" if effort else " (a reasoning model? try effort='low')"),
-                            (choices[0]["message"].get("content") or "").strip())
-        usage = payload_out.get("usage") or {}
-        return Completion((choices[0]["message"]["content"] or "").strip(), provider, model, temperature,
-                          usage.get("prompt_tokens"), usage.get("completion_tokens"))
+                            done.text, done)
+        return done
     raise LLMError(f"{provider} still failing after {retries} attempts")
