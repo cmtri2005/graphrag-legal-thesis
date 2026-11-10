@@ -301,3 +301,18 @@ Người viết lời dặn v2 đã thấy các số này. Phiên gán v2 chạy
    trong 39 câu người gán tốt, nhãn cuối loại nhầm 12. Chưa gán câu nào của test 2 bằng v2, không sửa lời dặn, không đổi ngưỡng, không chạy lại. Mục 5–7 không thực hiện; **không có phân tích độ nhạy**.
    Bảng chính test 2 giữ nguyên, nhãn LLM. Kết quả này đo lời dặn v2, không đo trực tiếp nhãn test 2 đang dùng (lời dặn v1 chưa từng được hiệu chuẩn). Hồ sơ: `data/review/test2_llm_v2/`.
    Hai ghi chú quy trình: trước khi chạy có một lượt thử định dạng trên một câu của mẫu (nhãn thử bị bỏ, phiên riêng); `test2_relabel.py` có sửa cách đọc tham số dòng lệnh sau commit, không đổi logic. Sonnet và Opus theo log là `claude-sonnet-5-5`, `claude-opus-5-5`; Codex dùng model trong cấu hình máy (`gpt-6.1-sol`), log không xác nhận.
+
+## Dự thảo Amendment G3: bộ test cuối theo ADR 0006 (CHƯA có hiệu lực)
+
+Soạn: 10/11/2026 (agent, theo yêu cầu của CMT). Người duyệt: **chưa**. Tiêu đề cố ý không bắt đầu bằng `Amendment`, vì `final_run.guard_test` mở cổng test khi một commit thêm dòng `## Amendment` vào file này. Sau khi CMT và NMT duyệt, đổi tiêu đề thành `## Amendment <ngày>: ...` trong một commit riêng, rồi truyền commit đó vào `final_run.py --amendment`.
+
+**Lúc soạn đã thấy kết quả test nào:** E1 và E3 của v1.0; E1, E3 của test 2 gồm lần chấm sai và lần chấm lại. Trên dev đã thấy mọi kết quả, gồm 15 hệ chạy với GPT-4o mini ngày 09/11 (`runs/gpt4omini_dev/`). **Chưa thấy:** mọi dự đoán trên bộ test cuối; kết quả Colab đợt 2 vẫn niêm phong theo ADR 0006 §9.
+
+1. **Phạm vi.** Bộ test cuối phân tích theo ADR 0006. Amendment này không đổi kết luận đã báo: v1.0 có 6/6 kiểm định ủng hộ; test 2 có XN2, XN3, XN8, XN9 ủng hộ, XN1 và XN4 không đủ bằng chứng. Hai bộ này là vòng thử, báo cạnh bộ cuối, không gộp.
+2. **Hệ khóa.** P = `proposed2`, chọn trên dev theo quy tắc khai trước ở ADR 0006 §2 (`runs/gpt4omini_dev/select_p.json`). Generator, danh sách hệ và chế độ truy xuất theo ADR 0006 §2 và `FINAL_GENERATION` trong `systems.py`. Mỗi cấu hình chạy bộ test cuối một lần.
+3. **Họ xác nhận, Holm α = 0,05.** F1 P − `b4` Accuracy; F2 P − `b5` Accuracy; F3 P − `b4` `wrong_version`; F4 `b7` − `b2ctx`, F5 `b7plus` − `b7`, F6 `b7pp` − `b7` TV-Recall@1; F7 P − `b7pp` Accuracy trên `t6_unanswerable`, chỉ vào họ khi đủ 20 lineage. Định nghĩa đầy đủ ở ADR 0006 §3. H0 chỉ quyết bằng F6.
+4. **Điều kiện trước khi đổi tiêu đề:**
+   - ADR 0006 và amendment 09/11 của ADR 0004 được CMT và NMT duyệt, chuyển Accepted;
+   - các chỗ `[ĐIỀN Ở G2]` của ADR 0006 đã có số thật: danh sách lineage, sha256 release và manifest, cỡ mẫu, power;
+   - gold mù có kết quả theo ADR 0006 §7; nếu phải sửa đồ thị thì đã chạy lại mọi hệ trên dev và áp lại quy tắc chọn P;
+   - X6 đã kết luận và dòng embedding ở ADR 0006 §2 đã điền.

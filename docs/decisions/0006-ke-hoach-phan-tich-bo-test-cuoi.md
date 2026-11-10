@@ -53,7 +53,7 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
 - **P** là đúng một hệ, chọn trên dev theo quy tắc khai trước:
   - P là `proposed3` nếu trên dev, `proposed3` − `proposed2` ở `t6_unanswerable` có KTC ghép cặp > 0, **và** trên các dòng có đáp án, cận dưới KTC của hiệu Accuracy ≥ −0,02.
   - Ngược lại, P là `proposed2`.
-  - Kết quả áp quy tắc trên dev: `[ĐIỀN Ở G3]`.
+  - Kết quả áp quy tắc trên dev (09/11, `runs/gpt4omini_dev/select_p.json`): **P = `proposed2`**. Ở `t6_unanswerable` (21 dòng), `proposed3` − `proposed2` = +2/21, KTC ghép cặp [0; 0,238], cận dưới không > 0 nên điều kiện đầu không đạt. Dòng có đáp án (112 dòng): +1/112, KTC [0; 0,028]. Nếu quy tắc chạy lại vì đồ thị đổi (mục 7), ghi kết quả mới ở đây.
 
 ### 3. Họ kiểm định xác nhận (Holm, α = 0,05)
 
@@ -111,7 +111,7 @@ Như ADR 0005 §5: bootstrap theo cụm lineage, B = 10.000, khoảng phân vị
 
 - **Đã thấy:**
   - kết quả test của v1.0 (E1, E3) và test 2 (E1, E3, lần chấm sai và lần chấm lại);
-  - mọi kết quả dev (B2, lai ghép, `proposed2`, `proposed3` chưa sinh, X4, tập dượt);
+  - mọi kết quả dev (B2, lai ghép, X4, tập dượt, và từ 09/11 cả 15 hệ sinh bằng GPT-4o mini, gồm `proposed2`, `proposed3`);
   - phân rã lỗi E7 do máy; hiệu chuẩn lời dặn v2; phản biện 05/11; đối chiếu VBHN.
 - **Chưa thấy:** mọi dự đoán trên bộ test cuối; kết quả Colab đợt 2 (niêm phong, xem mục 9).
 
@@ -150,7 +150,7 @@ Tradeoffs:
 
 - Bộ cuối nhỏ (dự báo khoảng 150 lineage), nên power cho hiệu cỡ +0,03 thấp. Kết quả "không đủ bằng chứng" là khả năng thật.
 - F7 có thể không vào họ vì T6 thiếu. Nấc lan truyền có thể chỉ có bằng chứng thăm dò.
-- Kết luận về bãi bỏ chỉ đúng với Qwen3-4B và với đồ thị hiện tại.
+- Kết luận về bãi bỏ chỉ đúng với generator đã khóa (GPT-4o mini) và với đồ thị hiện tại.
 
 ## Follow-Up
 

@@ -469,7 +469,7 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
 - [ ] Phiếu silver T2, T3 cho cuối tuần.
 - [x] 05/11 X1, X7: gói Colab đã kiểm (dev 4 file × 151 dòng, không có đáp án, `p2a2` ≡ `b7pp`, `p2a3` ≡ `proposed2`; đợt 2 13/13 file khớp hash). Ở `colab_upload/` (gitignore).
 - [ ] CMT chạy Colab: dev rồi đợt 2. Claude nhập và chấm.
-- [ ] X2: thiết kế thông báo bãi bỏ trong prompt, sau khi có X1.
+- [x] 09/11 X2: `proposed3` chạy trên dev với GPT-4o mini; không đạt quy tắc chọn P (+2/21, cận dưới KTC bằng 0), P = `proposed2` (`runs/gpt4omini_dev/select_p.json`).
 - [x] 05/11 A1: hướng dẫn 4.0 gộp xong; trang gán https://claude.ai/artifact/MMptLRDAjna7AeZakF2cxC (lô thử và 108 câu silver); file Word cho luật sư.
 - [x] 05/11 A6 đợt 1: gold mù 60 câu T2, T3, phiếu Excel, 0 dòng người được giao đã thấy. Đợt 2 (T6, T1) chờ A4, A5.
 - [x] 05/11 A2: đối chiếu VBHN xong, độ phủ rất thấp.
