@@ -66,6 +66,9 @@ def main() -> None:
     ap.add_argument("--limit", type=int, help="stop after this many units (a timing run)")
     ap.add_argument("--model", choices=(MODEL, PHOBERT), default=MODEL)
     ap.add_argument("--rescan", action="store_true", help="read every unit again after the corpus is rebuilt")
+    ap.add_argument("--export-pending", type=Path, help="scan without the model; write texts still lacking a "
+                    "vector as JSONL {sha, input} (model input, already prepared) for a GPU run elsewhere")
+    ap.add_argument("--import-vectors", type=Path, help=".npy from that GPU run, rows in --export-pending order")
     args = ap.parse_args()
     if args.model == PHOBERT and args.max_seq_length > 256:
         raise SystemExit(f"{PHOBERT} has 258 positions: --max-seq-length must be <= 256")
@@ -84,17 +87,33 @@ def main() -> None:
         raise SystemExit(f"{out} was built with {have}; this run asks for {want}. Use another --out.")
     db.executemany("INSERT OR REPLACE INTO meta VALUES (?,?)", want.items())
     db.commit()
+    import numpy as np
+    shard = db.execute("SELECT COALESCE(MAX(shard) + 1, 0) FROM text").fetchone()[0]
+    if args.import_vectors:     # vectors computed elsewhere for the texts an --export-pending run listed
+        shas = [json.loads(line)["sha"] for line in args.export_pending.open(encoding="utf-8")]
+        vectors = np.load(args.import_vectors)
+        if len(vectors) != len(shas):
+            raise SystemExit(f"{len(vectors)} vectors for {len(shas)} texts")
+        known = {sha for (sha,) in db.execute("SELECT sha FROM text")}
+        for start in range(0, len(shas), args.shard):
+            np.save(out / f"shard-{shard:05d}.npy", vectors[start:start + args.shard].astype(np.float16))
+            db.executemany("INSERT INTO text VALUES (?,?,?)", [(sha, shard, i) for i, sha in enumerate(
+                shas[start:start + args.shard]) if sha not in known])
+            shard += 1
+        db.commit()
+        print(json.dumps({"imported": len(shas), "shards": shard}))
+        return
     if args.rescan:   # units the rebuilt corpus dropped must not keep a vector; the scan re-adds the rest
         db.execute("DELETE FROM unit")
         db.commit()
     last = 0 if args.rescan else int((db.execute("SELECT value FROM meta WHERE key='last_rowid'").fetchone() or ["0"])[0])
-    shard = db.execute("SELECT COALESCE(MAX(shard) + 1, 0) FROM text").fetchone()[0]
-
-    import numpy as np
-    from sentence_transformers import SentenceTransformer
-    model = SentenceTransformer(args.model)     # CUDA when present, else CPU
-    model.max_seq_length = args.max_seq_length
-    print(f"device {model.device}", flush=True)
+    export = args.export_pending.open("w", encoding="utf-8") if args.export_pending else None
+    if export is None:
+        from sentence_transformers import SentenceTransformer
+        model = SentenceTransformer(args.model)     # CUDA when present, else CPU
+        model.max_seq_length = args.max_seq_length
+        print(f"device {model.device}", flush=True)
+    exported: set[str] = set()
 
     corpus = Corpus(args.index)
     select = Corpus._SELECT.replace("SELECT ", "SELECT u.rowid AS rid, ", 1) + \
@@ -107,7 +126,14 @@ def main() -> None:
     def flush(upto: int) -> None:
         nonlocal shard, pending, owners, embedded
         order = sorted(pending, key=lambda sha: len(pending[sha]))    # less padding per batch
-        if order:
+        if export is not None:
+            for sha in order:
+                if sha not in exported:
+                    exported.add(sha)
+                    export.write(json.dumps({"sha": sha, "input": prepare(args.model, pending[sha])},
+                                            ensure_ascii=False) + "\n")
+            embedded += len(order)
+        elif order:
             vectors = model.encode([prepare(args.model, pending[sha]) for sha in order], batch_size=args.batch,
                                    normalize_embeddings=True, convert_to_numpy=True)
             np.save(out / f"shard-{shard:05d}.npy", vectors.astype(np.float16))
@@ -139,6 +165,8 @@ def main() -> None:
             flush(last)
     if pending or owners:
         flush(last)
+    if export is not None:
+        export.close()
     distinct = db.execute("SELECT COUNT(*) FROM text").fetchone()[0]
     print(json.dumps({"units": units, "distinct_texts": distinct, "shards": shard,
                       "seconds": round(time.monotonic() - started)}))
