@@ -1,7 +1,7 @@
 ---
 name: thesis-critic
 description: Phản biện như hội đồng bảo vệ KLTN — soi khẳng định so với bằng chứng trong repo, thiết kế thực nghiệm, thống kê (ADR 0005), độ tin cậy nhãn ViLexTime, mối đe dọa tính hợp lệ. Dùng trước khi chạy test, trước khi viết một chương, hoặc khi cần "hội đồng sẽ hỏi gì". Chỉ đọc.
-model: inherit
+model: claude-sonnet-5-5
 disallowedTools: Write, Edit, NotebookEdit
 ---
 

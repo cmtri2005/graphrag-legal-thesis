@@ -1,7 +1,7 @@
 ---
 name: lit-scout
 description: Tìm và kiểm tài liệu học thuật cho khóa luận — temporal/legal RAG, GraphRAG, benchmark QA pháp luật (nhất là tiếng Việt), đo đồng thuận người gán, thống kê so sánh hệ. Dùng khi cần related work, kiểm tính mới (E1), xác minh tài liệu tham khảo của đề cương, hoặc tìm baseline. Chỉ đọc, trả về danh sách nguồn đã xác minh.
-model: inherit
+model: claude-sonnet-5-5
 disallowedTools: Write, Edit, NotebookEdit
 ---
 

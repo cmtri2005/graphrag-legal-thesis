@@ -55,6 +55,7 @@ import re
 from pathlib import Path
 
 SEED = 20261011
+FRESH = False
 REVIEW: Path | None = None   # --review: a later sample keeps its own sheets beside the first
 
 
@@ -242,7 +243,7 @@ def build(data: Path, only: Path | None = None, strata: tuple[str, ...] = STRATA
     lineage_of = {r["id"]: r["lineage_id"] for r in rows}
     if only:
         ids = {json.loads(line)["id"] for line in only.open(encoding="utf-8")}
-        seen = {w: seen_lineages(data / "review", lineage_of, w) for w in "AB"}
+        seen = {w: set() if FRESH else seen_lineages(data / "review", lineage_of, w) for w in "AB"}
         items = draw_blind([r for r in rows if r["id"] in ids], seen, strata, prefix)
     else:
         items = draw(rows, seen_lineages(review, lineage_of))
@@ -397,9 +398,14 @@ def main() -> None:
     ap.add_argument("--only", type=Path, help="build: draw only from these rows (a release JSONL), blind per annotator")
     ap.add_argument("--strata", help="build with --only: comma-separated strata")
     ap.add_argument("--prefix", default="G", help="build: prefix of the row keys")
+    ap.add_argument("--per-stratum", type=int, help="build with --only: lineages per stratum (default 20; 5 shared)")
+    ap.add_argument("--fresh", action="store_true", help="build with --only: annotators are new (e.g. blind AI sessions); nothing counts as seen")
     args = ap.parse_args()
     global REVIEW
     REVIEW = args.review
+    global PER_STRATUM, FRESH
+    PER_STRATUM = args.per_stratum or PER_STRATUM
+    FRESH = args.fresh
     if args.command != "build" and not args.annotator:
         ap.error(f"{args.command} needs A or B")
     if args.command == "build":

@@ -12,10 +12,18 @@ cá nhân. Kiểm tra CLI tại lúc setup: Claude Code 2.1.319 (06/11/2026).
 | `legal-adjudicator` | Tra lại nguồn, đề xuất hòa giải sau đo đồng thuận thô | Không có Bash/Write/Edit |
 | `experiment-executor` | Code, môi trường, scripts eval, chạy được phép | Có |
 | `evidence-gate` | Truy nguồn từng số, chấm lại offline, rà leak/câu chữ | Không có Write/Edit; Bash theo phạm vi audit |
+| `vn-law-verifier` | Tra hiệu lực/nội dung luật, dòng lệch gold, ca VBHN | Chỉ đọc |
+| `thesis-critic`, `lit-scout` | Phản biện như hội đồng; tìm và kiểm tài liệu | Chỉ đọc |
+| `data-clerk` | Việc cơ học: dựng phiếu, import/reveal, audit, đếm | Có; cấm điền nhãn/gold/`dong_y` |
+
+Model (cập nhật 10/11/2026, đặt ở frontmatter): lead, `legal-adjudicator`, `evidence-gate`
+= `claude-opus-5-5`; annotator A, verifier, executor, critic, scout = `claude-sonnet-5-5`;
+`data-clerk` = `claude-haiku-5-5`; AI-B vẫn chạy Codex CLI. Cặp làm–kiểm khác model
+(executor sonnet → gate opus). Lead đổi model từng lượt bằng tham số `model`.
 
 Hai agent nhãn và agent thẩm phán cùng preload `vn-legal-research` và
 `vilextime-ai-labeling`. Executor/gate cùng preload `experiment-evidence`, nhưng
-khác quyền và ngữ cảnh. Tất cả dùng `model: inherit`; ghi model thực tế mỗi lượt,
+khác quyền và ngữ cảnh. Ghi model thực tế mỗi lượt,
 không suy rằng tên vai trò tạo nhiều model độc lập. Từ silver phần 5 (CMT 06/11),
 AI-B chạy bằng Codex CLI để hai bên khác model; xem `research-lead.md` bước 3.
 

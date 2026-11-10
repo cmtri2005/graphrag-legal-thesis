@@ -13,7 +13,7 @@ disallowedTools:
   - Edit
   - NotebookEdit
   - Agent
-model: inherit
+model: claude-opus-5-5
 permissionMode: default
 skills:
   - experiment-evidence

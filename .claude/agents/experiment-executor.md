@@ -10,7 +10,7 @@ tools:
   - Edit
   - WebSearch
   - WebFetch
-model: inherit
+model: claude-sonnet-5-5
 permissionMode: default
 skills:
   - experiment-evidence

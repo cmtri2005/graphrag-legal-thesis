@@ -19,7 +19,7 @@ disallowedTools:
   - Edit
   - NotebookEdit
   - Agent
-model: inherit
+model: claude-sonnet-5-5
 permissionMode: default
 skills:
   - vn-legal-research

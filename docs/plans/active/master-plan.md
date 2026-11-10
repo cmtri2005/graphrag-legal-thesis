@@ -458,6 +458,26 @@ Hoàn tác việc dọn: giải nén bản sao lưu; file đã track lấy từ 
 | Q7 | Thêm T6, T1, T3 mới, tức nới quyết định B1? | Có; B1 đã bị test 2 vượt qua. Làm theo đề xuất, trừ khi CMT phản đối | G2 |
 | Q8 | GVHD đồng ý nơi nộp và lịch này? | CMT gửi | G6 |
 
+## Hàng việc đóng G2 (10/11/2026)
+
+Điều phối bởi `research-lead` (opus), vai và model theo bảng ở `.claude/agents/research-lead.md`.
+Làm tuần tự theo cột Phụ thuộc; ghi kết quả vào mục Progress.
+
+| # | Việc | Vai làm | Người chốt | Phụ thuộc | Trạng thái |
+|---|---|---|---|---|---|
+| H1 | Push `develop`, phiếu VBHN cho luật sư (`data/review/vbhn_phan_xu/`) | lead | | | Xong (`67a80b5`, `9bba732`) |
+| H2 | Luật sư phân xử 9 ca + 2 tín hiệu bãi bỏ; `vn-law-verifier` tra trước để luật sư có căn cứ | verifier → luật sư | Luật sư | H1 | Chờ |
+| H3 | Gold mù đợt 2 (≥30 dòng T1/T6): cần người gán mới, độc lập với đồ thị và nhãn AI. Thêm `--per-stratum` cho `independent_gold.py`, dựng phiếu | `data-clerk` | CMT chọn người | Quyết định ai gán | Chặn |
+| H4 | Xác nhận quy ước `dong_y` và G108 (gold đợt 1, 119/120) | verifier đã tra | CMT | | Chờ CMT |
+| H5 | Danh sách lỗi đồ thị gom từ gold mù, VBHN, G108 (đóng cả khoản khi bãi bỏ một phần), `document:31760` lệch trạng thái | `experiment-executor` điều tra, chưa sửa | CMT chốt sửa một lần | H2, H3 | Chờ |
+| H6 | Dựng lại release, chạy lại mọi hệ trên dev, đối soát | executor → `evidence-gate` | CMT | H5 | Chờ |
+| H7 | Người độc lập xem 24 dòng silver chưa quyết hoặc `[phân vân]` | verifier chuẩn bị, người xem | CMT/NMT | | Chờ |
+| H8 | ADR 0005 amendment G3 → Accepted; `thesis-critic` rà trước | critic → CMT | CMT | H6 | Chờ |
+| H9 | `final_run` P = `proposed2`; gate kiểm số; viết paper | executor → gate | CMT | H8 | Chờ |
+
+Ràng buộc: gold mù và nhãn người không giao cho AI; `dong_y` AI điền phải khai trong
+paper; Lawgical dưới 20 lượt/ngày, thiếu thì dùng API vbpl và ghi nguồn thật.
+
 ## Progress
 
 - [x] 05/11 Đo lại hiện trạng, viết plan này. Sao lưu trước khi dọn.
