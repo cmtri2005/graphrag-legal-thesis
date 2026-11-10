@@ -118,3 +118,11 @@ các vai tái sử dụng bằng lệnh offline sau: **64 passed**.
 agent/preload skill, chưa xác thực hoặc gọi MCP, chưa có lượt nhãn AI mới và
 chưa chạy gate trên báo cáo thực tế. Chỉ sau preflight và một lượt pilot được
 giao mới có bằng chứng về công cụ khả dụng và đồng thuận thực đo.
+
+## Chẩn đoán Lawgical, 10/11/2026
+
+- `claude mcp list` chỉ thấy Claude Docs, Google Drive, chrome-devtools. **Lawgical không có trong danh sách**.
+- `~/.claude/mcp-needs-auth-cache.json` có khóa `lawgical` (ghi 06/11/2026 14:09 UTC): connector bị đánh dấu cần xác thực lại. Đây là nguyên nhân khả dĩ nhất; hết phiên đăng nhập sau lần dùng 06/11.
+- Cách sửa (chỉ người dùng làm được): gõ `/mcp` trong Claude Code rồi xác thực Lawgical, hoặc claude.ai > Settings > Connectors > Lawgical > Reconnect. Sau đó khởi động lại phiên.
+- Plugin `regai` (`mcp__plugin_regai_regai__*`) **chưa được cài** (không có trong `enabledPlugins` hay marketplace). Các tham chiếu tới nó trong `vn-law-verifier.md` hiện không dùng được.
+- Đường dự phòng đã chạy tốt: `curl` API vbpl `vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/<ItemID>` lấy toàn văn. Subagent không có Bash chỉ dùng được WebFetch (tóm tắt, trích tối đa ~125 ký tự) nên đọc sót điều khoản bãi bỏ (H019). Việc tra điều khoản bãi bỏ nên để phiên có Bash hoặc `data-clerk` tải sẵn toàn văn.
