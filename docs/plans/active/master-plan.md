@@ -466,7 +466,7 @@ Làm tuần tự theo cột Phụ thuộc; ghi kết quả vào mục Progress.
 | # | Việc | Vai làm | Người chốt | Phụ thuộc | Trạng thái |
 |---|---|---|---|---|---|
 | H1 | Push `develop`, phiếu VBHN cho luật sư (`data/review/vbhn_phan_xu/`) | lead | | | Xong (`67a80b5`, `9bba732`) |
-| H2 | Luật sư phân xử 9 ca + 2 tín hiệu bãi bỏ; `vn-law-verifier` tra trước để luật sư có căn cứ | verifier → luật sư | Luật sư | H1 | Chờ |
+| H2 | Luật sư phân xử 9 ca + 2 tín hiệu bãi bỏ; `vn-law-verifier` tra trước để luật sư có căn cứ | verifier → luật sư | Luật sư | H1 | Verifier xong 10/11 (`data/review/vbhn_phan_xu/de_xuat_AI_20261110.md`); chờ luật sư |
 | H3 | Gold mù đợt 2 (≥30 dòng T1/T6): cần người gán mới, độc lập với đồ thị và nhãn AI. Thêm `--per-stratum` cho `independent_gold.py`, dựng phiếu | `data-clerk` | CMT chọn người | Quyết định ai gán | Chặn |
 | H4 | Xác nhận quy ước `dong_y` và G108 (gold đợt 1, 119/120) | verifier đã tra | CMT | | Chờ CMT |
 | H5 | Danh sách lỗi đồ thị gom từ gold mù, VBHN, G108 (đóng cả khoản khi bãi bỏ một phần), `document:31760` lệch trạng thái | `experiment-executor` điều tra, chưa sửa | CMT chốt sửa một lần | H2, H3 | Chờ |
@@ -500,6 +500,7 @@ paper; Lawgical dưới 20 lượt/ngày, thiếu thì dùng API vbpl và ghi ng
 - [x] 05/11 A10: tập dượt trên dev, 151/151 hash khớp mỗi hệ, 17/17 hệ trùng điểm và KTC (`runs/final_rehearsal_dev/`).
 - [x] 05/11 A18: phản biện xong (`docs/reports/phan-bien-ban-nhap-20261105.md`); bản nháp đã sửa theo, 0 số thiếu nguồn, mẫu 30 số khớp 30.
 - [ ] CMT gửi file Word cho luật sư, mời NMT vào trang, chạy Colab (dev_x1, dev_x2, dev_x8, round2).
+- [x] 10/11 H2 tra trước (AI-đề xuất): 9 ca VBHN đồ thị chọn đúng phiên bản ở mọi ngày hỏi; 2 tín hiệu bãi bỏ là giả (căn sang điểm bên cạnh); 1 câu thiếu ở NĐ 209/2013 Đ3 k11 v1 vào H5. H021 (gold đợt 2): đề xuất loại khỏi T1 theo R3. Lawgical 7/20 lượt; còn lại qua API vbpl. Chờ luật sư.
 - [ ] D0: bản nháp 7 chương và paper. Đã có nháp đủ, 0/437 số thiếu nguồn, chờ phản biện và Colab.
 
 ## Decisions
