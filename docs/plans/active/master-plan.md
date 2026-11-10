@@ -466,10 +466,10 @@ Làm tuần tự theo cột Phụ thuộc; ghi kết quả vào mục Progress.
 | # | Việc | Vai làm | Người chốt | Phụ thuộc | Trạng thái |
 |---|---|---|---|---|---|
 | H1 | Push `develop`, phiếu VBHN cho luật sư (`data/review/vbhn_phan_xu/`) | lead | | | Xong (`67a80b5`, `9bba732`) |
-| H2 | Luật sư phân xử 9 ca + 2 tín hiệu bãi bỏ; `vn-law-verifier` tra trước để luật sư có căn cứ | verifier → luật sư | Luật sư | H1 | Verifier xong 10/11 (`data/review/vbhn_phan_xu/de_xuat_AI_20261110.md`); chờ luật sư |
+| H2 | Luật sư phân xử 9 ca + 2 tín hiệu bãi bỏ; `vn-law-verifier` tra trước để luật sư có căn cứ | verifier → luật sư | Luật sư | H1 | Xong 10/11: CMT xác nhận đề xuất AI, chưa qua luật sư |
 | H3 | Gold mù đợt 2 (≥30 dòng T1/T6): cần người gán mới, độc lập với đồ thị và nhãn AI. Thêm `--per-stratum` cho `independent_gold.py`, dựng phiếu | `data-clerk` | CMT chọn người | Quyết định ai gán | Chặn |
-| H4 | Xác nhận quy ước `dong_y` và G108 (gold đợt 1, 119/120) | verifier đã tra | CMT | | Chờ CMT |
-| H5 | Danh sách lỗi đồ thị gom từ gold mù, VBHN, G108 (đóng cả khoản khi bãi bỏ một phần), `document:31760` lệch trạng thái | `experiment-executor` điều tra, chưa sửa | CMT chốt sửa một lần | H2, H3 | Chờ |
+| H4 | Xác nhận quy ước `dong_y` và G108 (gold đợt 1, 119/120) | verifier đã tra | CMT | | Xong 10/11 (CMT xác nhận) |
+| H5 | Danh sách lỗi đồ thị gom từ gold mù, VBHN, G108 (đóng cả khoản khi bãi bỏ một phần), `document:31760` lệch trạng thái | `experiment-executor` điều tra, chưa sửa | CMT chốt sửa một lần | H2, H3 | Đang lập danh sách 10/11 |
 | H6 | Dựng lại release, chạy lại mọi hệ trên dev, đối soát | executor → `evidence-gate` | CMT | H5 | Chờ |
 | H7 | Người độc lập xem 24 dòng silver chưa quyết hoặc `[phân vân]` | verifier chuẩn bị, người xem | CMT/NMT | | Chờ |
 | H8 | ADR 0005 amendment G3 → Accepted; `thesis-critic` rà trước | critic → CMT | CMT | H6 | Chờ |
@@ -512,6 +512,7 @@ paper; Lawgical dưới 20 lượt/ngày, thiếu thì dùng API vbpl và ghi ng
 - 2026-11-05 (CMT): cân nhắc giao agent gán toàn bộ rồi chọn **người gán**. Agent chỉ hỗ trợ ở các khâu ghi trong mục "Ai làm gì", không tính vào nhãn chính. CMT muốn có bản nháp Chủ nhật 08/11 (D0).
 - 2026-11-06 (CMT): **đổi quy trình gán nhãn.** Agent làm phần gán: AI-A, AI-B gán mù độc lập theo thẻ 4.0, đo AC1/p_neg AI–AI, `legal-adjudicator` đề xuất cho dòng lệch. CMT duyệt mọi dòng, có xem nhãn và lý do AI, rồi đồng ý hoặc sửa; nhãn CMT là nhãn cuối. Bỏ lịch hai người gán mù lô 0 và silver ngày 07–08/11. Thay quyết định 05/11 "chọn người gán" và các dòng "A và B gán độc lập", "người gán không thấy gợi ý AI" ở mục Quy tắc gán nhãn. Hệ quả phải ghi trong paper: không còn đồng thuận người–người cho bộ cuối; chỉ báo AI–AI và tỷ lệ CMT sửa nhãn AI; dòng vào test có tầng "AI gán, người xác nhận" (định nghĩa §6, sửa 06/11). Mặc định (CMT đổi được): luật sư chốt các dòng CMT ghi `[phân vân]`; gold mù giữ nguyên, phải xong trước khi CMT duyệt câu gold của mình (B6).
 - 2026-11-06 (CMT): **từ silver phần 5, AI-A chạy bằng Claude, AI-B bằng Codex.** Lý do: trên cùng 44 câu silver phần 2–4, hai bên cùng model khớp cao hơn hẳn khác model (verdict AC1: Claude–Claude 0,867, Codex–Codex 0,728, chéo model 0,64–0,78; `round2_claude/cross_model.json`). Hai bên cùng input, lời giao việc, taxonomy, ngân sách và khả năng tra (API vbpl, tìm web). Số đo báo là đồng thuận chéo model. Phần 1 (Claude–Claude) và phần 2–4 (hai lượt cùng model) báo riêng, không gộp.
+- 2026-11-10 (CMT): **chốt theo đề xuất AI, không chờ luật sư** cho H2 (9 ca VBHN, 2 tín hiệu bãi bỏ: đồ thị đúng), H021 (loại khỏi đối chứng T1, R3 `superseded_by_other_norm`) và H4 (G108 `kg_wrong_repeal`, quy ước `dong_y`). Ghi "AI-đề xuất, CMT xác nhận, chưa qua luật sư"; phải khai trong paper. Ca 1 VBHN (NĐ 122/2011 "kỳ tính thuế từ năm 2012") chốt theo ngày hiệu lực; hai dòng silver 2012-01-31, 2012-02-29 có thể thuộc `question_ambiguous` theo phán quyết luật sư 10/11 mục 4, để mở.
 - Quyết định cũ còn hiệu lực: A2, A3, B2, B6, B7, B9, C2, C3, C4, C5, E1–E5 (MASTER_RESEARCH_GUIDE §13.3 tại `51f36c7`), và reranker cắt 05/11.
 
 ## Validation
