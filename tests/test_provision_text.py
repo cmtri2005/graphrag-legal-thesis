@@ -163,3 +163,36 @@ def test_visible_text_ignores_shells_and_entities():
     assert not has_visible_text("")
     assert not has_visible_text("<html><head><title>x</title><style>p{}</style></head><body>&nbsp; </body></html>")
     assert has_visible_text("<body>Điều 1. Có chữ ngoài thẻ khối</body>")
+
+
+def _tree_of(*nodes):
+    return [{"id": i, "title": t, "level": lv} for i, t, lv in nodes]
+
+
+def test_marker_keeps_unnumbered_paragraphs_after_a_clause():
+    # NĐ 209/2013 Đ3 k11: "Bộ Tài chính chủ trì…" is its own <div> with no number (H5 L4).
+    nodes = _tree_of(("a", "Điều 3", "Article"), ("k10", "Khoản 10", "Clause"),
+                     ("k11", "Khoản 11", "Clause"), ("k12", "Khoản 12", "Clause"))
+    html = ("<body><div>Điều 3. Giải thích</div><div>10. Mười.</div><div>11. Câu đầu của khoản 11.</div>"
+            "<div>Bộ Tài chính chủ trì, phối hợp hướng dẫn.</div><div>12. Mười hai.</div><div>Điều 4. Khác</div></body>")
+    texts = align_by_marker(nodes, parse_paragraphs(html))
+    assert texts["k11"] == "11. Câu đầu của khoản 11. Bộ Tài chính chủ trì, phối hợp hướng dẫn."
+    assert texts["k10"] == "10. Mười."
+
+
+def test_marker_run_stops_at_numbers_written_without_a_space_or_with_dots():
+    # QĐ 737/2001 Đ46 k1 ("2.Thường trực" is khoản 2) and TTLT 01/2001 mục 4.2 ("4.3." opens the next mục).
+    nodes = _tree_of(("k1", "Khoản 1", "Clause"), ("k2", "Khoản 2", "Clause"))
+    html = "<body><div>1. Một.</div><div>2.Thường trực do bộ cử.</div><div>3. Ba.</div></body>"
+    assert align_by_marker(nodes, parse_paragraphs(html))["k1"] == "1. Một."
+    nodes = _tree_of(("k4", "Khoản 4", "Clause"),)
+    html = "<body><div>4. Bốn.</div><div>4.3. Tiểu mục.</div><div>5. Năm.</div></body>"
+    assert align_by_marker(nodes, parse_paragraphs(html))["k4"] == "4. Bốn."
+
+
+def test_marker_run_is_dropped_at_the_end_of_the_body_and_before_capitals():
+    nodes = _tree_of(("k1", "Khoản 1", "Clause"), ("k2", "Khoản 2", "Clause"))
+    tail = parse_paragraphs("<body><div>1. Một.</div><div>2. Hai.</div><div>Nguyễn Văn A</div></body>")
+    assert align_by_marker(nodes, tail)["k2"] == "2. Hai."          # signature block is not khoản 2
+    caps = parse_paragraphs("<body><div>1. Một.</div><div>TM. CHÍNH PHỦ</div><div>2. Hai.</div></body>")
+    assert align_by_marker(nodes, caps)["k1"] == "1. Một."

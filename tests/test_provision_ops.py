@@ -390,3 +390,85 @@ def test_an_omnibus_act_names_the_amended_document_in_each_chapter_title():
          "part_context"),
         (Op.AMEND, "5/2021/nd/cp", [(("Article", "51"), ("Clause", "6"))], "part_context"),
     ]
+
+
+def _loc(*parts):
+    return [[level, label] for level, label in parts]
+
+
+G108 = ("Các nội dung liên quan đến chi phí lập đề án phân loại đô thị, lập chương trình phát triển đô thị tại Điều 1, "
+        "Điều 2, Điều 3, khoản 2 Điều 4, khoản 3 Điều 5, khoản 5 Điều 5, khoản 2 Điều 6, khoản 3 Điều 6 "
+        "Thông tư số 12/2017/TT-BXD ngày 30 tháng 11 năm 2017 của Bộ Xây dựng.")
+
+
+def test_partial_branch_reads_a_list_sentence_locator_by_locator():
+    """H5 L1: the verb is lost from a list item, and one sentence names whole and partial branches."""
+    from extract_provision_events import _status, partial_branch
+
+    # the 8 events of TT 16/2026/TT-BXD -> TT 12/2017/TT-BXD (G108)
+    for loc in (_loc(("Article", "1")), _loc(("Article", "3")), _loc(("Article", "4"), ("Clause", "2")),
+                _loc(("Article", "5"), ("Clause", "3")), _loc(("Article", "6"), ("Clause", "3"))):
+        assert partial_branch(G108, loc)
+    wrong = [
+        ("Quyết định 24/2000", "nội dung tại các gạch đầu dòng thứ nhất, thứ ba, thứ tư và thứ năm khoản 2 Điều 1 Quyết định số 24/2000/QĐ-BVHTT",
+         _loc(("Article", "1"), ("Clause", "2"))),
+        ("NĐ 135/2018 Đ20", "gạch đầu dòng thứ hai và thứ ba điểm d khoản 3 Điều 20",
+         _loc(("Article", "20"), ("Clause", "3"), ("Point", "d"))),
+        ("NĐ 135/2018 Đ21", "gạch đầu dòng thứ hai điểm b khoản 3 Điều 21",
+         _loc(("Article", "21"), ("Clause", "3"), ("Point", "b"))),
+        ("NĐ 72/2017", '"Thành viên Hội đồng quản lý được hưởng chế độ thù lao do Thủ tướng quy định” tại khoản 9 Điều 4 Nghị định số 01/2016/NĐ-CP',
+         _loc(("Article", "4"), ("Clause", "9"))),
+        ("NĐ 118/2015 k3", 'Khoản 4 Điều 19 và quy định "Danh mục địa bàn được hưởng ưu đãi" tại Khoản 3 Điều 19 Nghị định số 46/2014/NĐ-CP',
+         _loc(("Article", "19"), ("Clause", "3"))),
+    ]
+    for name, evidence, loc in wrong:
+        assert partial_branch(evidence, loc), name
+    # the four events that really end their node
+    assert not partial_branch('Khoản 4 Điều 19 và quy định "Danh mục địa bàn được hưởng ưu đãi" tại Khoản 3 Điều 19 Nghị định số 46/2014/NĐ-CP',
+                              _loc(("Article", "19"), ("Clause", "4")))
+    nd155 = '52. Điểm a, c, d và đoạn “Bộ trưởng Bộ Y tế quy định cụ thể danh mục dược liệu.” tại khoản 1 Điều 93.'
+    for letter in "acd":
+        assert not partial_branch(nd155, _loc(("Article", "93"), ("Clause", "1"), ("Point", letter)))
+    # a dash named next to whole nodes trims only its own locator
+    sentence = "Bãi bỏ điểm c khoản 5 Điều 9, gạch đầu dòng thứ tư điểm a, điểm b khoản 1 Điều 56."
+    assert not partial_branch(sentence, _loc(("Article", "9"), ("Clause", "5"), ("Point", "c")))
+    assert partial_branch(sentence, _loc(("Article", "56"), ("Clause", "1"), ("Point", "a")))
+    # the status gate: partial -> needs_review/partial_repeal, whole stays auto_accepted
+    row = {"operation": "repeal", "code": "resolved_exact", "locator": _loc(("Article", "20"), ("Clause", "3"), ("Point", "d")),
+           "effective_on": "2018-11-20", "evidence": "gạch đầu dòng thứ hai và thứ ba điểm d khoản 3 Điều 20",
+           "target_document_id": "document:1", "affected_provision_ids": ["provision:x"], "text_updates": []}
+    assert _status(row, False, set()) == ("needs_review", "partial_repeal")
+    assert _status(row, False, {("document:1", "provision:x")}) == ("needs_review", "partial_repeal")  # portal-listed too
+    whole = dict(row, evidence="Khoản 4 Điều 19", locator=_loc(("Article", "19"), ("Clause", "4")))
+    assert _status(whole, False, set()) == ("auto_accepted", None)
+
+
+def test_document_scope_is_applied_only_when_the_lead_in_says_the_whole_text_goes():
+    """H5 L2: TT 12/2023/TT-BNV repeals TT 15/2012/TT-BNV; vbpl has no effTo."""
+    from datetime import date
+    from extract_provision_events import document_scope_verdict, effective_clause_dates
+
+    item = "Thông tư số 15/2012/TT-BNV ngày 25 tháng 12 năm 2012 của Bộ trưởng Bộ Nội vụ hướng dẫn về chức danh"
+    body = ["Điều 1. Bãi bỏ toàn bộ các Thông tư sau đây:", "1. Thông tư số 01/2010/TT-BNV ngày 1 tháng 1 năm 2010 về x;",
+            f"7. {item};", "Điều 2. Hiệu lực thi hành", "Thông tư này có hiệu lực thi hành từ ngày 01 tháng 10 năm 2023."]
+
+    def verdict(paragraphs, evidence=item, on="2023-10-01", target_end=None, n=1):
+        return document_scope_verdict(paragraphs, evidence, on, target_end, n, effective_clause_dates(paragraphs))
+
+    assert effective_clause_dates(body) == {"2023-10-01"}
+    assert verdict(body) == ("auto_accepted", None)
+    assert verdict(body, on="2023-11-01") is None                       # the act's own clause says otherwise
+    assert verdict(body, target_end=date(2023, 10, 1)) is None          # the portal already dates it
+    assert verdict(body, n=2) is None                                   # two candidates
+    # Q2 #29: "các quy định tại các văn bản sau đây" -> not called whole
+    partial_list = ["2. Bãi bỏ các quy định tại các văn bản sau đây:", f"d) {item}."]
+    assert verdict(partial_list) is None
+    # Q2 #24: topic-limited repeal -> partial_repeal, never applied
+    topic = [f"3. Bãi bỏ các quy định vế thuế xuất khẩu, thuế nhập khẩu tại Thông tư số 98/2002/TT-BTC ngày 1/1/2002; {item}."]
+    assert verdict(topic) == ("needs_review", "partial_repeal")
+    # counted from the Công báo, or a clause dated otherwise: a person decides
+    assert verdict(body + ["Thông tư này có hiệu lực sau 15 ngày kể từ ngày đăng Công báo."]) is None
+    assert verdict(body + ["Điều 3. Điều khoản chuyển tiếp có hiệu lực từ ngày 01 tháng 01 năm 2024."]) is None
+    # the act ends itself
+    ends = [f"2. {item} hết hiệu lực thi hành kể từ ngày Thông tư này có hiệu lực thi hành."]
+    assert verdict(ends, evidence=item + " hết hiệu lực thi hành kể từ ngày Thông tư này có hiệu lực thi hành") == ("auto_accepted", None)

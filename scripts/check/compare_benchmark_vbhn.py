@@ -38,7 +38,9 @@ PORTAL = "https://vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/"
 HEADERS = {"Referer": "https://vbpl.vn/", "User-Agent": "Mozilla/5.0 (compatible; legal-crawler/0.1)"}
 ARTICLE = re.compile(r"^Điều\s+(\d+[a-zđ]?)\s*[.:]\s*", re.I)
 CLAUSE = re.compile(r"^(\d+[a-zđ]?)\s*[.)]\s+")
-POINT = re.compile(r"^([a-zđ])\s*[.)]\s+", re.I)
+# A footnote number may sit right after the bracket ("đ)19 (được bãi bỏ)."): it still opens the point
+# of that letter, or the marker lands in the point before it (H5 L6, 10/11/2026).
+POINT = re.compile(r"^([a-zđ])\s*[.)](?:\s+|(?=\d{1,3}\s))", re.I)
 SECTION = re.compile(r"^(?:Chương|Mục|Phần|Tiểu mục)\s+(?:[IVXLC]+|\d+)\b", re.I)
 NOTE = re.compile(r"^\d+\s+(?:Điều|Khoản|Điểm|Cụm|Nội dung|Mục|Chương|Phụ lục|Thông tư|Nghị định|Luật|Bộ luật|Từ|Tên)\b", re.I)
 DATE = re.compile(r"ngày\s+(\d{1,2})\s+tháng\s+(\d{1,2})\s+năm\s+(\d{4})", re.I)

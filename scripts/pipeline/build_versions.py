@@ -365,6 +365,14 @@ def _build_document_versions(
                 envelope, "source_document_not_indexed"
             )
             continue
+        if row.get("locator") is None and not row.get("target_provision_id"):
+            # the whole document ends (H5 L2): `apply_document_scope.py` put the date in
+            # `documents.effective_to`, which the effective intervals below read
+            outcomes[envelope.line_number] = {
+                **_base_log(envelope), "outcome": "applied", "reason": "document_scope",
+                "already_applied": False, "created_provision_ids": [], "created_version_ids": [], "closed_version_ids": [],
+            }
+            continue
         state.add_document(actor[1])
         try:
             row = rebase_phrase_edit(row, text_by_provision, lambda pid: _open_text(state, pid))

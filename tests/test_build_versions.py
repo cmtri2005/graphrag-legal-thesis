@@ -235,3 +235,31 @@ def test_a_phrase_edit_keeps_an_earlier_amendment_of_the_same_node():
     full = {k: v for k, v in row.items() if k != "phrase_edits"}                # not a phrase edit
     assert rebase_phrase_edit(full, initial, lambda _: amended) == full
     assert rebase_phrase_edit(row, initial, lambda _: "Cơ quan hải quan tiếp nhận hồ sơ.") == row  # phrase gone
+
+
+def test_apply_document_scope_ends_only_documents_the_portal_left_open(tmp_path):
+    """H5 L2: `documents.effective_to` is where every later step reads a document's end."""
+    import json
+    import sqlite3
+    from apply_document_scope import apply
+
+    db = sqlite3.connect(tmp_path / "t.sqlite")
+    db.execute("CREATE TABLE documents (id TEXT PRIMARY KEY, effective_to TEXT)")
+    db.executemany("INSERT INTO documents VALUES (?, ?)",
+                   [("document:1", None), ("document:2", "2020-01-01"), ("document:3", None), ("document:4", None)])
+    db.commit()
+    db.close()
+
+    def event(target, on, status="auto_accepted", locator=None, op="repeal"):
+        return {"id": f"event:{target}:{on}", "actor_id": "document:9", "actor_number": "9/2020", "target_document_id": target,
+                "effective_on": on, "status": status, "operation": op, "locator": locator}
+
+    rows = [event("document:1", "2023-10-01"), event("document:1", "2024-01-01", op="replace"),
+            event("document:2", "2019-01-01"), event("document:3", "2022-01-01", status="needs_review"),
+            event("document:4", "2022-01-01", locator=[["Article", "1"]])]
+    events = tmp_path / "e.jsonl"
+    events.write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
+    assert apply(events, tmp_path / "t.sqlite", tmp_path / "out.jsonl") == 1
+    got = dict(sqlite3.connect(tmp_path / "t.sqlite").execute("SELECT id, effective_to FROM documents"))
+    assert got == {"document:1": "2023-10-01", "document:2": "2020-01-01", "document:3": None, "document:4": None}
+    assert apply(events, tmp_path / "t.sqlite", tmp_path / "out.jsonl") == 0   # idempotent

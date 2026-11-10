@@ -137,3 +137,17 @@ def test_loader_restores_accepted_repeal_without_replaying_it(tmp_path, monkeypa
     snapshot = SnapshotService(state).snapshot(provision.id, date(2021, 1, 1))
     assert snapshot.validity.reason.value == "provision_repealed"
     assert state.event("event:repeal").resolved_target_ids == (provision.id,)
+
+
+def test_a_footnote_number_after_the_point_letter_still_opens_that_point():
+    # TT 23/2018 Điều 5 khoản 1: "đ)19 (được bãi bỏ)." was read as part of point d, so the repeal
+    # signal landed on a point that was not repealed (H5 L6).
+    text = """Điều 5. Điều kiện
+1. Hạng III:
+d) Có giấy chứng nhận bồi dưỡng;
+đ)19 (được bãi bỏ).
+2. Hạng II:
+"""
+    units, _, _ = pdf_units(text)
+    assert units[("5", "1", "d")] == ["d) Có giấy chứng nhận bồi dưỡng;"]
+    assert units[("5", "1", "đ")] == ["đ)19 (được bãi bỏ)."]

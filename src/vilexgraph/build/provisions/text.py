@@ -213,8 +213,37 @@ def align_by_marker(
     paragraphs: list[Paragraph],
     anchors: dict[str, int] | None = None,
 ) -> dict[str, str]:
-    """Sequential match for id-less HTML; see `marker_matches`."""
-    return {nid: paragraphs[i].text for nid, i in marker_matches(nodes, paragraphs, anchors).items()}
+    """Sequential match for id-less HTML; see `marker_matches`.
+
+    A matched paragraph keeps the unnumbered paragraphs that follow it ("Bộ Tài
+    chính chủ trì, phối hợp…" under a khoản), as `align_by_id` does with its
+    untagged continuations (H5 L4, 10/11/2026). The run ends at a paragraph that
+    carries a marker, is a heading or capitals, or belongs to another node. A run
+    that reaches the end of the body is dropped: that tail is a signature block
+    or an annex, not the node's words.
+    """
+    matches = marker_matches(nodes, paragraphs, anchors)
+    taken = set(matches.values()) | set((anchors or {}).values())
+    out: dict[str, str] = {}
+    for nid, i in matches.items():
+        j = i + 1
+        while j < len(paragraphs) and j not in taken and _continues(paragraphs[j]):
+            j += 1
+        out[nid] = " ".join(p.text for p in paragraphs[i:j]) if j < len(paragraphs) else paragraphs[i].text
+    return out
+
+
+# What opens a node of its own: "2.Thường trực", "4.3. Nội dung", "a)", "1)", "I.", or a heading.
+_OWN_MARKER = re.compile(
+    r"^(?:\d{1,3}(?:\.\d{1,3})*\s*\.\s*\S|\d{1,3}\s*\)|[a-zđ]\s*\)|[IVX]{1,5}\s*[.)]"
+    r"|(?:Phần|Chương|Mục|Tiểu\s*mục|Điều|Phụ\s*lục)\b)",
+    re.IGNORECASE,
+)
+
+
+def _continues(para: Paragraph) -> bool:
+    text = para.text
+    return bool(text) and para.node_id is None and not _OWN_MARKER.match(text) and not text.isupper()
 
 
 def marker_matches(

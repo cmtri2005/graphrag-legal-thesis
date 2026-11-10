@@ -108,6 +108,44 @@ def final_labels(review: Path, scope: dict[str, tuple[str, str]] | None = None) 
     return out
 
 
+PARTIAL_REPEAL = "partial_repeal"
+ROW_REASONS = {"superseded_by_other_norm", PARTIAL_REPEAL}
+
+
+def row_exclusions(data: Path, rows: list[dict]) -> dict[str, dict]:
+    """row id -> {code, note}: rows kept out of scoring one by one, not by lineage (H5, 10/11/2026).
+
+    * `data/vilextime/dropped_rows.jsonl` — a row the review found superseded by another norm
+      (`superseded_by_other_norm`, H021) while its lineage's other rows stand. Its twins go with it.
+    * `partial_repeal` (Q1) — the row is asked on or after the date an event trimmed part of the node
+      (or of a node under it): the graph keeps the old wording open, so the gold is unknown. The
+      node is not split into the words that remain.
+    """
+    out: dict[str, dict] = {}
+    path = data / "vilextime/dropped_rows.jsonl"
+    if path.exists():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            d = json.loads(line)
+            if d["reason"] not in ROW_REASONS:
+                raise ValueError(f"dropped_rows.jsonl: unknown reason {d['reason']!r}")
+            out[d["row_id"]] = {"code": d["reason"], "note": d.get("note", "")}
+    events = data / "derived/provision_events.jsonl"
+    first: dict[str, str] = {}
+    if events.exists():
+        for line in events.read_text(encoding="utf-8").splitlines():
+            e = json.loads(line)
+            if e["status"] == "needs_review" and e["status_reason"] == PARTIAL_REPEAL and e["effective_on"]:
+                for pid in e["affected_provision_ids"]:
+                    first[pid] = min(first.get(pid, "9999"), e["effective_on"])
+    for r in rows:
+        if r["id"] not in out and r["lineage_id"] in first and r["as_of"] >= first[r["lineage_id"]]:
+            out[r["id"]] = {"code": PARTIAL_REPEAL, "note": f"nút bị bãi bỏ một phần từ {first[r['lineage_id']]}"}
+    for r in rows:
+        if r.get("twin_of") in out and r["id"] not in out:
+            out[r["id"]] = {**out[r["twin_of"]], "twin_of": r["twin_of"]}
+    return out
+
+
 def lineage_status(rows: list[dict], labels: dict[str, dict]) -> dict[str, str]:
     """lineage -> dat / khong_dat / not_verified, from its boundary rows."""
     by = collections.defaultdict(list)
@@ -152,11 +190,16 @@ def export(data: Path, out: Path, final: bool = False, draft: bool = False) -> d
     main, silver, metas = [], [], []
     dropped = collections.Counter()
     dropped_rows = collections.Counter()
+    excluded = row_exclusions(data, rows)
+    excluded_codes = collections.Counter()
     for r in rows:
         own = labels.get(r["id"]) if r["as_of_strategy"] == "ranh_gioi" else labels.get(r["twin_of"])
         st = status[r["lineage_id"]]
         if st == "khong_dat":
             dropped_rows[r["group"]] += 1
+            continue
+        if r["id"] in excluded:
+            excluded_codes[excluded[r["id"]]["code"]] += 1
             continue
         review = dict(own or {"status": "not_verified", "why": "chưa gán"})
         if r["as_of_strategy"] != "ranh_gioi":
@@ -179,6 +222,9 @@ def export(data: Path, out: Path, final: bool = False, draft: bool = False) -> d
         raise SystemExit(f"--final: còn {pending} dòng ranh giới chưa có nhãn cuối ({unsettled} dòng A/B lệch chưa "
                          f"hòa giải) ngoài các dòng ngoài phạm vi agent — KHÔNG ghi gì")
     out.mkdir(parents=True, exist_ok=True)
+    with (out / "excluded_rows.jsonl").open("w", encoding="utf-8") as f:     # rows of lineages that stand, kept out of scoring
+        for i, x in sorted(excluded.items()):
+            f.write(json.dumps({"row_id": i, **x}, ensure_ascii=False) + "\n")
     files = {"vilextime.jsonl": main, "vilextime_silver.jsonl": silver, "vilextime_meta.jsonl": metas}
     for name, items in files.items():
         with (out / name).open("w", encoding="utf-8") as f:
@@ -200,6 +246,7 @@ def export(data: Path, out: Path, final: bool = False, draft: bool = False) -> d
         "lineages": dict(collections.Counter(status.values())),
         "dropped_lineages_by_reason": dict(dropped.most_common()),
         "dropped_rows_by_group": dict(sorted(dropped_rows.items())),
+        "excluded_rows_by_code": dict(sorted(excluded_codes.items())),
         "boundary_rows": {"checked": len(labels) - unchecked, "not_verified": unchecked, "unsettled": unsettled},
         "review_counts": {
             "human_checked": sum(x.get("source") == "human" for x in labels.values()),

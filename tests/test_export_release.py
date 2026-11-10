@@ -162,3 +162,45 @@ def test_agent_counts_only_for_t1_t6_and_one_human_is_not_enough_on_test(tmp_pat
     _sheet(review / "kiem_B.tsv", KIEM_COLUMNS, [("t1_none:2024-01-01", "dat", "", g)])
     m = export_release.export(tmp_path, tmp_path / "final", final=True)         # out-of-scope rows may stay in silver
     assert m["rows"]["silver"] == 2 and m["rows"]["main"] == 3
+
+
+def test_rows_are_kept_out_of_scoring_one_by_one(tmp_path):
+    """H5 L7 + Q1: H021 drops one row, not its lineage; a partial repeal drops the rows asked after it."""
+    rel = tmp_path / "derived/vilextime"
+    rel.mkdir(parents=True)
+    rows = [_row("h021", "2004-09-11", group="T1"), _row("h021", "2016-09-25", "giua_khoang", "h021:2004-09-11", group="T1"),
+            _row("part", "2026-01-01", group="T1"), _row("part", "2026-06-01", "giua_khoang", "part:2026-01-01", group="T1"),
+            _row("other", "2026-06-01", group="T1")]
+    rel.joinpath("release.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
+    (tmp_path / "vilextime").mkdir()
+    (tmp_path / "vilextime/dropped_rows.jsonl").write_text(json.dumps(
+        {"row_id": "h021:2016-09-25", "reason": "superseded_by_other_norm", "note": "H021", "by": "CMT", "at": "2026-11-10"}) + "\n",
+        encoding="utf-8")
+    event = {"status": "needs_review", "status_reason": "partial_repeal", "effective_on": "2026-04-29",
+             "affected_provision_ids": ["part", "part:child"]}
+    (tmp_path / "derived/provision_events.jsonl").write_text(
+        json.dumps(event) + "\n" + json.dumps({**event, "status": "auto_accepted", "affected_provision_ids": ["other"]}) + "\n",
+        encoding="utf-8")
+    (tmp_path / "review").mkdir()
+    g = GUIDELINE
+    _sheet(tmp_path / "review/kiem_A.tsv", KIEM_A_COLUMNS, [(r["id"], "dat", "", g) for r in rows if r["as_of_strategy"] == "ranh_gioi"])
+    _sheet(tmp_path / "review/kiem_B.tsv", KIEM_COLUMNS, [])
+    m = export_release.export(tmp_path, tmp_path / "out", draft=True)
+    ids = [json.loads(x)["id"] for x in (tmp_path / "out/vilextime.jsonl").open(encoding="utf-8")]
+    assert ids == ["h021:2004-09-11", "part:2026-01-01", "other:2026-06-01"]    # the boundary row before the event stays
+    assert m["excluded_rows_by_code"] == {"partial_repeal": 1, "superseded_by_other_norm": 1}
+    listed = {json.loads(x)["row_id"]: json.loads(x)["code"] for x in (tmp_path / "out/excluded_rows.jsonl").open(encoding="utf-8")}
+    assert listed == {"h021:2016-09-25": "superseded_by_other_norm", "part:2026-06-01": "partial_repeal"}
+
+
+def test_check_release_accepts_the_row_level_drop_file(tmp_path):
+    from check_release import dropped_row_problems
+
+    path = tmp_path / "dropped_rows.jsonl"
+    line = {"row_id": "a:1", "reason": "superseded_by_other_norm", "note": "H021"}
+    path.write_text(json.dumps(line) + "\n", encoding="utf-8")
+    assert dropped_row_problems(path, [{"id": "a:1"}]) == []
+    assert dropped_row_problems(path, [{"id": "b:1"}])                         # the row is not in the release
+    path.write_text(json.dumps({**line, "reason": "gold_wrong"}) + "\n", encoding="utf-8")
+    assert dropped_row_problems(path, [{"id": "a:1"}])                         # a lineage-level code
+    assert dropped_row_problems(tmp_path / "missing.jsonl", []) == []

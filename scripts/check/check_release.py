@@ -107,11 +107,29 @@ def problems(release: list[dict], selected: dict[str, dict], layer_a: set[str], 
     return out
 
 
+ROW_REASONS = {"superseded_by_other_norm"}   # data/vilextime/dropped_rows.jsonl (H5 L7); partial_repeal is derived
+
+
+def dropped_row_problems(path: Path, release: list[dict]) -> list[str]:
+    """Every line of `dropped_rows.jsonl` names a row of the release and a code the definition knows."""
+    if not path.exists():
+        return []
+    ids = {r["id"] for r in release}
+    out = []
+    for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        d = json.loads(line)
+        if d.get("row_id") not in ids:
+            out.append(f"dropped_rows.jsonl:{n}: dòng {d.get('row_id')!r} không có trong release")
+        if d.get("reason") not in ROW_REASONS or not d.get("note"):
+            out.append(f"dropped_rows.jsonl:{n}: mã {d.get('reason')!r} ngoài {sorted(ROW_REASONS)} hoặc thiếu ghi chú")
+    return out
+
+
 SUBGROUPS = {"T1", "T2", "T3", "T4", "T5a", "T5b", "T6a", "T6b"}   # docs/vilextime-dinh-nghia.md §4
 
 
 MANIFESTED = ("derived/vilextime/release.jsonl", "derived/corpus/manifest.json", "vilextime/questions.jsonl",
-              "vilextime/short_answers.jsonl", "vilextime/sample.jsonl", "vilextime/dropped.jsonl",
+              "vilextime/short_answers.jsonl", "vilextime/sample.jsonl", "vilextime/dropped.jsonl", "vilextime/dropped_rows.jsonl",
               "review/labels.tsv", "review/crosscheck_A.tsv", "review/crosscheck_B.tsv",
               "review/crosscheck_result.json", "review/validity_queue.tsv", "review/temporal_candidates.jsonl",
               "review/t5_documents.tsv", "review/t5_items.tsv")
@@ -148,7 +166,7 @@ def main() -> None:
                if (m := UNIT.search(line)) and m.group(1) in need_a}
     layer_b = {m.group(1) for line in (corpus / "versions.jsonl").open(encoding="utf-8")
                if (m := UNIT.search(line)) and m.group(1) in need_b}
-    found = problems(release, selected, layer_a, layer_b)
+    found = problems(release, selected, layer_a, layer_b) + dropped_row_problems(args.data / "vilextime/dropped_rows.jsonl", release)
     if found:
         raise SystemExit(f"{len(found)} vi phạm:\n" + "\n".join(found[:20]))
     modes = collections.Counter(r["as_of_strategy"] for r in release)
