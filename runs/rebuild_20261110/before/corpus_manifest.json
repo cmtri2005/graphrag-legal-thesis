@@ -1,0 +1,22 @@
+{
+ "snapshot": "v2 (2026-09-17)",
+ "commit": "c873cf4",
+ "counts": {
+  "documents": 17333,
+  "asis_provisions": 1455372,
+  "asis_instructions": 53991,
+  "asis_skipped_inserted_by_amendment": 0,
+  "versions": 1477089
+ },
+ "outputs": {
+  "asis.jsonl": "a5f4d62b9996dc7e9c88716f6cde49ffeddaf966a1cc63aa2318674c2f859c2a",
+  "documents.jsonl": "c7301fc6f1c16bef08aaf5a6ab0c6ec8e417aab6e9c01c66dc971acc9b0a3666",
+  "versions.jsonl": "92f01efda761615254d92b845bd0b3a71a1aacbf5575477949b6dab2fc0f690e"
+ },
+ "inputs": {
+  "derived/versions.jsonl": "9007104e739b84157b71317e3b47b21aa70049190280ecd670051d2b1727db86",
+  "derived/provision_events.jsonl": "d893878ea11681b75def93dc3c0c71efd6c2b8235ecb014daade3accfb77957c",
+  "derived/eligibility.jsonl": "f98aa4e7c446e004fe6fa08a758824e73acd1cd4c0c3774e937821a857dc0845",
+  "temporal.sqlite": "a6548654e7718a03299b2f82cce0b2d94f752b4d25265fc4d2633f6893c547b8"
+ }
+}
