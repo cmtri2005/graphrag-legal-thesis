@@ -46,7 +46,7 @@ OPTIONS = {"q1": ("dung", "sai"), "q2": ("co", "khong"), "q3": ("co", "khong"),
            "q4": ("khong", "co", "khong_chac")}
 REASONS = {
     "q1": {"sai": ("gold_wrong", "reference_only", "other")},
-    "q2": {"khong": ("group_mismatch", "cosmetic_only", "rename_only", "auto_reference_update")},
+    "q2": {"khong": ("group_mismatch", "cosmetic_only", "rename_only", "auto_reference_update", "single_change")},
     "q3": {"khong": ("question_ambiguous", "unanswerable_as_asked", "question_leaks")},
     "q4": {"co": ("superseded_by_other_norm", "restructuring_2025", "transitional_rule", "relocated"),
            "khong_chac": ("relocation_unclear",)},

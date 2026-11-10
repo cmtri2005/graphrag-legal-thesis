@@ -290,6 +290,19 @@ tăng phiên bản hướng dẫn.
   3. Câu hiệu lực "áp dụng từ năm ngân sách X" là hiệu lực trở về trước, tính từ 01/01/X (Luật
      17/2008/QH12 Điều 79, khoản 1 Điều 83; năm ngân sách theo Luật 01/2002/QH11 Điều 14). Mốc trong năm X
      trước ngày hiệu lực lấy đáp án bản mới, như T5a (bước 1).
+- **10/11/2026, luật sư, 5 khoảng trống của silver** (báo ở `data/review/ai_research/2026-11-08_adjudication_final/README.md`).
+  Chỉ làm rõ cách áp quy tắc đã có; mã mới `single_change` đã thêm vào công cụ.
+  1. Thay từ gần nghĩa ("Bán" → "Buôn bán"): không tính là đáp án mới nếu nội dung pháp lý không đổi; thiếu
+     định nghĩa chưa đủ chứng minh hai từ tương đương. Chỉ tính khi có căn cứ phạm vi hành vi khác nhau.
+     Nhóm không đủ đáp án → `q2=khong/group_mismatch`.
+  2. Chữ lặp do phép thay: áp đúng câu lệnh, đúng phạm vi và nội dung pháp lý vẫn xác định thì `q1=dung`
+     (vẫn phải kiểm nội dung). Máy áp sai thì `q1=sai/gold_wrong`.
+  3. Lộ đáp án trong bối cảnh: bối cảnh cung cấp sẵn phần đáp án hoặc phiên bản (câu dẫn nêu "sản xuất,
+     lắp ráp" đúng phần bị bỏ) vẫn là `q3=khong/question_leaks`. Chỉ nêu chủ thể, ngành nghề thì chưa đủ.
+  4. Thiếu hoàn cảnh người hỏi: thiếu dữ kiện quyết định mà có nhiều hoàn cảnh hợp lệ cho đáp án khác nhau
+     (hai doanh nghiệp thuộc hai kỳ tính thuế) → `q3=khong/question_ambiguous`; không tự thêm giả định.
+  5. `q2=khong/single_change`: dùng khi chuỗi không đủ T3 và cũng không đạt T2 (ba lời văn, một đáp án
+     pháp lý). Nếu đủ T2 thì phiếu T3 dùng `group_mismatch`.
 - **D4, biên bản D5 §2.** Ba bài học: luôn làm bước 7 ở T6; dùng một phiên bản hướng dẫn cho mọi
   nhãn (§5 mục 5); so câu hỏi với chỗ đổi (bước 2).
 

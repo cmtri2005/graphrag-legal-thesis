@@ -14,12 +14,12 @@ Phần sản xuất không trùng lineage: **314 lineage** = silver 168 + lo2 12
 
 | Nguồn duyệt CMT | Kết luận được nhận | Đạt | Tầng |
 |---|---:|---:|---|
-| silver | 168 | 81 | ai_labeled_human_bulk_accepted |
-| lo2 | 108 | 69 | ai_labeled_human_approved_via_conversation |
+| silver | 168 | 80 | ai_labeled_human_confirmed_10_11 |
+| lo2 | 128 | 73 | ai_labeled_human_confirmed_10_11 |
 | supp18 | 15 | 12 | ai_labeled_human_approved_via_conversation |
 
-**162 lineage đạt được chấp nhận**, vượt 130 là 32. Trong đó **81 silver chỉ được chấp nhận hàng loạt**; receipt ghi rõ không kiểm từng dòng. **81 lineage mới đạt** (lo2 69 + supp18 12) có lời CMT tự báo đã đọc xong và duyệt. Nếu yêu cầu 130 lineage người xác nhận sau đọc, chỉ chứng minh được 81, còn thiếu **49**. Không có bằng chứng hai người độc lập kiểm bộ cuối. Không gọi 162 là 162 lineage người kiểm từng dòng. Không suy lịch sử đọc từng ô từ lời duyệt qua hội thoại.
-Có 23 ca mới unresolved, giữ ngoài nhãn cuối. Không đưa 314 cặp AI vào cỡ mẫu đã đạt và không coi 162 là dataset test đã phát hành.
+**165 lineage đạt** (silver 80 + lo2 73 + supp18 12), vượt 130 là 35. Silver và lo2 theo phiếu xlsx CMT điền và xác nhận 10/11 (`2026-11-10_cmt_confirmed`); xác nhận qua hội thoại, không đo thời gian từng dòng. Supp18 (12) vẫn là lời duyệt qua hội thoại. Không có bằng chứng hai người độc lập kiểm bộ cuối. Chưa tính A/B gold mù.
+Không đưa 314 cặp AI vào cỡ mẫu đã đạt và không coi 165 là dataset test đã phát hành.
 
 ## AC1 và p_neg trước hòa giải
 
@@ -78,7 +78,7 @@ Nguồn lịch sử: 211 dòng/101 lineage; delta=0.028436019, SE=0.022161707.
 |---|---|---:|---:|---:|
 | 81 | mới đạt, CMT tự báo đọc | 0.209652 | 0.068295 | 0.069331 |
 | 130 | ngưỡng G2 | 0.307362 | 0.118517 | 0.054726 |
-| 162 | gồm silver nhận hàng loạt | 0.369007 | 0.155487 | 0.049024 |
+| 165 | gồm silver nhận hàng loạt | 0.374661 | 0.159089 | 0.048576 |
 | 314 | toàn bộ AI sản xuất, chưa lọc chất lượng | 0.618853 | 0.353513 | 0.035213 |
 
 α/6 là ngưỡng đầu Holm bảo thủ cho sáu phép lịch sử ADR 0005. Không phải power sau Holm duy nhất và không khóa họ cho bộ cuối. N=314 chỉ minh họa hậu quả đếm nhầm mọi nhãn AI thành mẫu đạt. Không phải cỡ mẫu hợp lệ để kết luận. Công thức MDE dùng xấp xỉ z; cần giả định phân bố/số dòng mỗi lineage tương tự test2. Không suy power cho Accuracy hoặc TVER từ phương sai TV-Recall.
@@ -87,4 +87,4 @@ Nguồn lịch sử: 211 dòng/101 lineage; delta=0.028436019, SE=0.022161707.
 
 Rà 11/11 dạng sai suy luận theo skill: Simpson và base rate được xử lý bằng bảng từng lô và số nhãn âm; sinh thái, chọn mẫu và survivorship bằng tách lineage/lượt, giữ nhãn thiếu nguồn; không có mô hình điều chỉnh collider. Không suy cải thiện trước/sau từ các lô khác nhau (regression to mean). Báo mọi Q và mọi lô, giữ ngưỡng/họ (look-elsewhere, forking paths). Không kết luận nhân quả hoặc chiều nhân quả từ IAA. Phân tích power có điều kiện và sau quan sát, không phải đăng ký trước.
 
-Cần CMT xác nhận cách công bố ngưỡng 130: 162 được chấp nhận theo master plan, nhưng chỉ 81 mới có lời tự báo đã đọc; silver receipt cấm gọi là người kiểm từng dòng. Báo cả hai, không tự miễn cổng. M2/gold mù và phân xử các ca mở vẫn cần người có thẩm quyền. Không sửa nhãn người.
+CMT đã xác nhận (10/11) phiếu silver và lo2; 165 đạt vượt 130. Khai rõ đây là xác nhận qua hội thoại, không đo thời gian. M2/gold mù và phân xử các ca mở vẫn cần người có thẩm quyền. Không sửa nhãn người.

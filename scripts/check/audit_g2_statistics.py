@@ -20,6 +20,7 @@ from crosscheck import gwet_ac1, specific_agreement
 BASE = Path('data/review/ai_research')
 OUT = Path('docs/reports/g2-co-mau-dong-thuan-20261109.md')
 INPUTS = {}
+CONFIRMED = json.loads((BASE / '2026-11-10_cmt_confirmed/cmt_confirmed.json').read_text())
 
 
 def sha(p):
@@ -124,11 +125,15 @@ def main():
         rr = rows(label_path)
         good = {r['lineage_id'] for r in rr if r.get('label', r)['verdict'] == 'dat'}
         assert len(good) == scope['dat']
+        if name in ('silver', 'lo2'):  # CMT's own sheets of 10/11 replace the 08/11 bulk acceptance
+            good = set(CONFIRMED[name + '_dat']); scope = dict(scope, dat=len(good)); rr = [None] * (168 if name == 'silver' else 128)
+            approval = dict(approval, quality_tier='ai_labeled_human_confirmed_10_11',
+                            method='CMT xác nhận phiếu xlsx đã đọc (qua hội thoại 10/11); không đo thời gian từng dòng')
         assert not accepted & good
         accepted.update(good)
         approvals[name] = {'resolved_approved': len(rr), 'dat': len(good),
                            'quality_tier': approval['quality_tier'], 'method': approval['method']}
-    assert len(accepted) == 162
+    assert len(accepted) == 165
     pw = [power(n) for n in (81, 130, len(accepted), len(prod_ids))]
     lines = ['# G2: cỡ mẫu và đồng thuận, 09/11/2026', '',
              'Trạng thái: tái lập phép tính; chưa xác nhận cổng G2 đạt.', '',
@@ -146,14 +151,12 @@ def main():
              '|---|---:|---:|---|']
     for name, a in approvals.items():
         lines.append(f"| {name} | {a['resolved_approved']} | {a['dat']} | {a['quality_tier']} |")
-    lines += ['', '**162 lineage đạt được chấp nhận**, vượt 130 là 32. Trong đó **81 silver chỉ được '
-              'chấp nhận hàng loạt**; receipt ghi rõ không kiểm từng dòng. **81 lineage mới đạt** '
-              '(lo2 69 + supp18 12) có lời CMT tự báo đã đọc xong và duyệt. Nếu yêu cầu '
-              '130 lineage người xác nhận sau đọc, chỉ chứng minh được 81, còn thiếu **49**. '
-              'Không có bằng chứng hai người độc lập kiểm bộ cuối. Không gọi 162 là 162 '
-              'lineage người kiểm từng dòng. Không suy lịch sử đọc từng ô từ lời duyệt qua hội thoại.',
-              'Có 23 ca mới unresolved, giữ ngoài nhãn cuối. Không đưa 314 cặp AI vào cỡ mẫu '
-              'đã đạt và không coi 162 là dataset test đã phát hành.', '',
+    lines += ['', '**165 lineage đạt** (silver 80 + lo2 73 + supp18 12), vượt 130 là 35. Silver và lo2 '
+              'theo phiếu xlsx CMT điền và xác nhận 10/11 (`2026-11-10_cmt_confirmed`); xác nhận qua '
+              'hội thoại, không đo thời gian từng dòng. Supp18 (12) vẫn là lời duyệt qua hội thoại. '
+              'Không có bằng chứng hai người độc lập kiểm bộ cuối. Chưa tính A/B gold mù.',
+              'Không đưa 314 cặp AI vào cỡ mẫu '
+              'đã đạt và không coi 165 là dataset test đã phát hành.', '',
               '## AC1 và p_neg trước hòa giải', '',
               'Dùng hàm native `ai_labels.metric`, giữ mọi nhãn hợp lệ kể cả thiếu nguồn. '
               'Mỗi ô là AC1 / p_neg. Nhãn âm: Q1≠dung, Q2/Q3≠co, Q4≠khong; '
@@ -235,9 +238,8 @@ def main():
               'Báo mọi Q và mọi lô, giữ ngưỡng/họ (look-elsewhere, forking paths). '
               'Không kết luận nhân quả hoặc chiều nhân quả từ IAA. Phân tích power '
               'có điều kiện và sau quan sát, không phải đăng ký trước.', '',
-              'Cần CMT xác nhận cách công bố ngưỡng 130: 162 được chấp nhận theo master '
-              'plan, nhưng chỉ 81 mới có lời tự báo đã đọc; silver receipt cấm gọi là '
-              'người kiểm từng dòng. Báo cả hai, không tự miễn cổng. M2/gold mù và '
+              'CMT đã xác nhận (10/11) phiếu silver và lo2; 165 đạt vượt 130. Khai rõ '
+              'đây là xác nhận qua hội thoại, không đo thời gian. M2/gold mù và '
               'phân xử các ca mở vẫn cần người có thẩm quyền. Không sửa nhãn người.', '']
     OUT.write_text('\n'.join(lines), encoding='utf-8')
     detail = {'counts': counts, 'round_metrics': {k: v[3] for k,v in results.items()},

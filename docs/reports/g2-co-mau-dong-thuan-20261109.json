@@ -987,15 +987,15 @@
   "approvals": {
     "silver": {
       "resolved_approved": 168,
-      "dat": 81,
-      "quality_tier": "ai_labeled_human_bulk_accepted",
-      "method": "chấp nhận hàng loạt qua hội thoại; không duyệt từng dòng; duyet_CMT_final.xlsx để trống"
+      "dat": 80,
+      "quality_tier": "ai_labeled_human_confirmed_10_11",
+      "method": "CMT xác nhận phiếu xlsx đã đọc (qua hội thoại 10/11); không đo thời gian từng dòng"
     },
     "lo2": {
-      "resolved_approved": 108,
-      "dat": 69,
-      "quality_tier": "ai_labeled_human_approved_via_conversation",
-      "method": "User reports having finished reading and explicitly approves; no row-by-row edits supplied. Approval applies to existing resolved labels; unresolved cases retain no final label."
+      "resolved_approved": 128,
+      "dat": 73,
+      "quality_tier": "ai_labeled_human_confirmed_10_11",
+      "method": "CMT xác nhận phiếu xlsx đã đọc (qua hội thoại 10/11); không đo thời gian từng dòng"
     },
     "supp18": {
       "resolved_approved": 15,
@@ -1004,7 +1004,7 @@
       "method": "User reports having finished reading and explicitly approves; no row-by-row edits supplied. Approval applies to existing resolved labels; unresolved cases retain no final label."
     }
   },
-  "accepted_dat_lineages": 162,
+  "accepted_dat_lineages": 165,
   "power_sensitivity": [
     {
       "n": 81,
@@ -1029,15 +1029,15 @@
       "mde80_alpha_05": 0.05472629581877954
     },
     {
-      "n": 162,
+      "n": 165,
       "historical_lineages": 101,
       "historical_rows": 211,
       "delta": 0.02843601895734597,
       "historical_se": 0.022161706839713885,
-      "projected_se": 0.01749872416072195,
-      "power_alpha_05": 0.3690074323719128,
-      "power_alpha_05_div_6": 0.15548679736749582,
-      "mde80_alpha_05": 0.04902416694451486
+      "projected_se": 0.017338915113206448,
+      "power_alpha_05": 0.3746612720611969,
+      "power_alpha_05_div_6": 0.15908949819509743,
+      "mde80_alpha_05": 0.04857644827927472
     },
     {
       "n": 314,
