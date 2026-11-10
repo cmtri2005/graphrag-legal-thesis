@@ -33,8 +33,9 @@ def apply(events: Path, index: Path, out: Path) -> int:
     changed = []
     with sqlite3.connect(index) as db:
         for doc_id, row in sorted(first.items()):
-            cur = db.execute("UPDATE documents SET effective_to = ? WHERE id = ? AND effective_to IS NULL",
-                             (row["effective_on"], doc_id))
+            cur = db.execute("UPDATE documents SET effective_to = ? WHERE id = ? AND effective_to IS NULL "
+                             "AND effective_from IS NOT NULL AND effective_from < ?",
+                             (row["effective_on"], doc_id, row["effective_on"]))
             if cur.rowcount:
                 changed.append({"document_id": doc_id, "effective_to": row["effective_on"], "event_id": row["id"],
                                 "actor_id": row["actor_id"], "actor_number": row["actor_number"]})

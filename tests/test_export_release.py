@@ -204,3 +204,14 @@ def test_check_release_accepts_the_row_level_drop_file(tmp_path):
     path.write_text(json.dumps({**line, "reason": "gold_wrong"}) + "\n", encoding="utf-8")
     assert dropped_row_problems(path, [{"id": "a:1"}])                         # a lineage-level code
     assert dropped_row_problems(tmp_path / "missing.jsonl", []) == []
+
+
+def test_a_label_on_a_row_the_rebuilt_release_dropped_is_ignored(tmp_path):
+    review = tmp_path / "review"
+    review.mkdir()
+    g = GUIDELINE
+    _sheet(review / "kiem_A.tsv", KIEM_A_COLUMNS, [("gone:2024-01-01", "dat", "", g), ("kept:2024-01-01", "dat", "", g)])
+    _sheet(review / "kiem_B.tsv", KIEM_COLUMNS, [])
+    _sheet(review / "kiem_agent.tsv", KIEM_COLUMNS, [("gone:2024-01-01", "dat", "", g)])
+    labels = export_release.final_labels(review, {"kept:2024-01-01": ("T1", "dev")})
+    assert set(labels) == {"kept:2024-01-01"}

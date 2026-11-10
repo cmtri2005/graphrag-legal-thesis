@@ -67,7 +67,8 @@ def final_labels(review: Path, scope: dict[str, tuple[str, str]] | None = None) 
     agent_path = review / "kiem_agent.tsv"
     agent = {r["id"]: r for r in read(agent_path)} if agent_path.exists() else {}
     out = {}
-    for i in a.keys() | b.keys() | adj.keys() | agent.keys():
+    # a label on a row the release no longer ships (rebuilt away, H6 10/11/2026) has nothing to publish
+    for i in (a.keys() | b.keys() | adj.keys() | agent.keys()) if scope is None else (a.keys() | b.keys() | adj.keys() | agent.keys()) & scope.keys():
         labelled = {w: r for w, r in (("A", a.get(i)), ("B", b.get(i))) if r and r["verdict"]}
         # a label carried from D4 (1.2/2.0) has none of 3.0's evidence fields nor its codes (definition §8)
         current = {w: r for w, r in labelled.items() if r.get("guideline_version") == GUIDELINE}

@@ -244,9 +244,10 @@ def test_apply_document_scope_ends_only_documents_the_portal_left_open(tmp_path)
     from apply_document_scope import apply
 
     db = sqlite3.connect(tmp_path / "t.sqlite")
-    db.execute("CREATE TABLE documents (id TEXT PRIMARY KEY, effective_to TEXT)")
-    db.executemany("INSERT INTO documents VALUES (?, ?)",
-                   [("document:1", None), ("document:2", "2020-01-01"), ("document:3", None), ("document:4", None)])
+    db.execute("CREATE TABLE documents (id TEXT PRIMARY KEY, effective_from TEXT, effective_to TEXT)")
+    db.executemany("INSERT INTO documents VALUES (?, ?, ?)",
+                   [("document:1", "2012-01-01", None), ("document:2", "2010-01-01", "2020-01-01"), ("document:3", "2010-01-01", None),
+                    ("document:4", "2010-01-01", None), ("document:5", None, None), ("document:6", "2022-01-01", None)])
     db.commit()
     db.close()
 
@@ -256,10 +257,12 @@ def test_apply_document_scope_ends_only_documents_the_portal_left_open(tmp_path)
 
     rows = [event("document:1", "2023-10-01"), event("document:1", "2024-01-01", op="replace"),
             event("document:2", "2019-01-01"), event("document:3", "2022-01-01", status="needs_review"),
-            event("document:4", "2022-01-01", locator=[["Article", "1"]])]
+            event("document:4", "2022-01-01", locator=[["Article", "1"]]),
+            event("document:5", "2022-01-01"), event("document:6", "2022-01-01")]
     events = tmp_path / "e.jsonl"
     events.write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
     assert apply(events, tmp_path / "t.sqlite", tmp_path / "out.jsonl") == 1
     got = dict(sqlite3.connect(tmp_path / "t.sqlite").execute("SELECT id, effective_to FROM documents"))
-    assert got == {"document:1": "2023-10-01", "document:2": "2020-01-01", "document:3": None, "document:4": None}
+    assert got == {"document:1": "2023-10-01", "document:2": "2020-01-01", "document:3": None, "document:4": None,
+                   "document:5": None, "document:6": None}      # no start date; starts the day it would end
     assert apply(events, tmp_path / "t.sqlite", tmp_path / "out.jsonl") == 0   # idempotent
