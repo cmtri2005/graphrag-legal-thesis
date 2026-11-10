@@ -1,0 +1,452 @@
+[
+ {
+  "id": "event:142301:601fb13a0647f4f002910719",
+  "actor": "38/2020/TT-BTC",
+  "actor_id": "document:142301",
+  "op": "repeal",
+  "tgt": "document:19947",
+  "tnum": "42/2004/QĐ-BTC",
+  "tdoc": "42/2004/QĐ-BTC",
+  "eff": "2020-06-26",
+  "stt": "CHL",
+  "ev": "Quyết định số 42/2004/QĐ-BTC ngày 22/4/2004 của Bộ Tài chính về việc ban hành quy định về chi ngân sách trung ương bằng hình thức lệnh chi tiền.",
+  "cands": [
+   "document:19947"
+  ]
+ },
+ {
+  "id": "event:177707:1e5df73a3ae340a0cf8c8778",
+  "actor": "110/2022/NĐ-CP",
+  "actor_id": "document:177707",
+  "op": "repeal",
+  "tgt": "document:33664",
+  "tnum": "19/2014/NĐ-CP",
+  "tdoc": "19/2014/NĐ-CP",
+  "eff": "2022-12-30",
+  "stt": "CHL",
+  "ev": "Nghị định số 19/2014/NĐ-CP ngày 14 tháng 3 năm 2014 của Chính phủ ban hành Điều lệ mẫu của Công ty trách nhiệm hữu hạn một thành viên do nhà nước làm chủ sở hữu.",
+  "cands": [
+   "document:33664"
+  ]
+ },
+ {
+  "id": "event:137800:7aae07729a23cb5f86b2c4c8",
+  "actor": "67/2019/NĐ-CP",
+  "actor_id": "document:137800",
+  "op": "repeal",
+  "tgt": "document:32650",
+  "tnum": "203/2013/NĐ-CP",
+  "tdoc": "203/2013/NĐ-CP",
+  "eff": "2019-09-15",
+  "stt": "CHL",
+  "ev": "Nghị định số 203/2013/NĐ-CP ngày 28 tháng 11 năm 2013 của Chính phủ quy định phương pháp tính, mức thu tiền cấp quyền khai thác khoáng sản sẽ hết hiệu lực kể từ ngày Nghị định này có hiệu lực.",
+  "cands": [
+   "document:32650"
+  ]
+ },
+ {
+  "id": "event:15755:f8d29173a651338fb1b5b208",
+  "actor": "164/2006/QĐ-TTg",
+  "actor_id": "document:15755",
+  "op": "replace",
+  "tgt": "document:vbpqta_709",
+  "tnum": "1232/QD-TTg",
+  "tdoc": "1232/QĐ-TTg",
+  "eff": "2006-08-13",
+  "stt": "CHL",
+  "ev": "Quyết định số 1232/QĐ-TTg ngày 24 tháng 12 năm 1999",
+  "cands": [
+   "document:vbpqta_709"
+  ]
+ },
+ {
+  "id": "event:4be348c0-9607-11f1-8d51-af7dccec1993:c1a2f4c2a086b89c755d4fe2",
+  "actor": "41/2026/QĐ-TTg",
+  "actor_id": "document:4be348c0-9607-11f1-8d51-af7dccec1993",
+  "op": "repeal",
+  "tgt": "document:17049",
+  "tnum": "313/2005/QĐ-TTg",
+  "tdoc": "313/2005/QĐ-TTg",
+  "eff": "2026-10-01",
+  "stt": "CHL",
+  "ev": "Quyết định số 313/2005/QĐ-TTg ngày 02 tháng 12 năm 2005 của Thủ tướng Chính phủ về một số chế độ đối với người nhiễm HIV/AIDS và những người trực tiếp quản lý, điều trị, chăm sóc người nhiễm HIV/AIDS trong các cơ sở bảo trợ xã hội của Nhà nước.",
+  "cands": [
+   "document:17049"
+  ]
+ },
+ {
+  "id": "event:183411:157aeddff65ef0417010396e",
+  "actor": "268/2025/NĐ-CP",
+  "actor_id": "document:183411",
+  "op": "repeal",
+  "tgt": "document:134061",
+  "tnum": "13/2019/NĐ-CP",
+  "tdoc": "13/2019/NĐ-CP",
+  "eff": "2025-10-14",
+  "stt": "CHL",
+  "ev": "Nghị định số 13/2019/NĐ-CP ngày 01 tháng 02 năm 2019 của Chính phủ về doanh nghiệp khoa học và công nghệ hết hiệu lực kể từ ngày Nghị định này có hiệu lực.",
+  "cands": [
+   "document:134061"
+  ]
+ },
+ {
+  "id": "event:185675:9e1fadb2fca2d7ffbec0ae16",
+  "actor": "31/2025/TT-BXD",
+  "actor_id": "document:185675",
+  "op": "repeal",
+  "tgt": "document:114683",
+  "tnum": "27/2016/TT-BGTVT",
+  "tdoc": "27/2016/TT-BGTVT",
+  "eff": "2025-12-30",
+  "stt": "HHL1P",
+  "ev": "Thông tư số 27/2016/TT-BGTVT ngày 12 tháng 10 năm 2016 của Bộ trưởng Bộ Giao thông vận tải quy định về đào tạo, cấp, thu hồi Giấy chứng nhận khả năng chuyên môn hoa tiêu hàng hải và Giấy chứng nhận vùng hoạt động hoa tiêu hàng hải",
+  "cands": [
+   "document:114683"
+  ]
+ },
+ {
+  "id": "event:146140:f6ebc13b82f8bcb91386a841",
+  "actor": "100/2020/TT-BTC",
+  "actor_id": "document:146140",
+  "op": "repeal",
+  "tgt": "document:16628",
+  "tnum": "119/2005/TT-BTC",
+  "tdoc": "119/2005/TT-BTC",
+  "eff": "2021-01-02",
+  "stt": "CHL",
+  "ev": "Thông tư số 119/2005/TT-BTC ngày 22/12/2005 của Bộ Tài chính hướng dẫn chế độ tài chính áp dụng tại Khu kinh tế Dung Quất",
+  "cands": [
+   "document:16628"
+  ]
+ },
+ {
+  "id": "event:185676:4ed63f66c9ae1224cec6fcca",
+  "actor": "33/2025/TT-BXD",
+  "actor_id": "document:185676",
+  "op": "repeal",
+  "tgt": "document:128854",
+  "tnum": "22/2018/TT-BGTVT",
+  "tdoc": "22/2018/TT-BGTVT",
+  "eff": "2026-01-01",
+  "stt": "CHL",
+  "ev": "Thông tư số 22/2018/TT-BGTVT ngày 02 tháng 5 năm 2018 của Bộ trưởng Bộ Giao thông vận tải ban hành quy định về việc vận tải hàng hóa trên đường sắt quốc gia và đường sắt chuyên dùng có nối ray với đường sắt quốc gia hết hiệu lực từ ngày Thông tư này có hiệu lực thi hành",
+  "cands": [
+   "document:128854"
+  ]
+ },
+ {
+  "id": "event:177707:f8f54768453d51d8cf3aaa3c",
+  "actor": "110/2022/NĐ-CP",
+  "actor_id": "document:177707",
+  "op": "repeal",
+  "tgt": "document:19681",
+  "tnum": "08/2004/NQ-CP",
+  "tdoc": "08/2004/NQ-CP",
+  "eff": "2022-12-30",
+  "stt": "CHL",
+  "ev": "Nghị quyết số 08/2004/NQ-CP ngày 30 tháng 6 năm 2004 của Chính phủ về tiếp tục đẩy mạnh phân cấp quản lý nhà nước giữa Chính phủ và chính quyền tỉnh, thành phố trực thuộc trung ương.",
+  "cands": [
+   "document:19681"
+  ]
+ },
+ {
+  "id": "event:146139:244e8bdb749238819315695a",
+  "actor": "103/2020/TT-BTC",
+  "actor_id": "document:146139",
+  "op": "repeal",
+  "tgt": "document:21388",
+  "tnum": "41/2003/TT-BTC",
+  "tdoc": "41/2003/TT-BTC",
+  "eff": "2021-01-10",
+  "stt": "CHL",
+  "ev": "Thông tư số 41/2003/TT-BTC ngày 06/05/2003 của Bộ Tài chính về việc giải quyết đất sản xuất và đất ở cho đồng bào dân tộc thiểu số tại Tây Nguyên",
+  "cands": [
+   "document:21388"
+  ]
+ },
+ {
+  "id": "event:142695:47453de63cb52291282c559c",
+  "actor": "07/2020/TT-BTC",
+  "actor_id": "document:142695",
+  "op": "repeal",
+  "tgt": "document:44672",
+  "tnum": "146/2013/TT-BTC",
+  "tdoc": "146/2013/TT-BTC",
+  "eff": "2020-03-20",
+  "stt": "HHL1P",
+  "ev": "Thông tư số 146/2013/TT-BTC ngày 22 tháng 10 năm 2013 của Bộ Tài chính quy định chế độ quản lý tài chính, tài sản đối với các Cơ quan Việt Nam ở nước ngoài",
+  "cands": [
+   "document:44672"
+  ]
+ },
+ {
+  "id": "event:138207:13f334de3a3fe2afd9383099",
+  "actor": "11/2019/TT-BNV",
+  "actor_id": "document:138207",
+  "op": "repeal",
+  "tgt": "document:27663",
+  "tnum": "03/2012/TT-BNV",
+  "tdoc": "03/2012/TT-BNV",
+  "eff": "2019-11-15",
+  "stt": "CHL",
+  "ev": "Thông tư số 03/2012/TT-BNV ngày 26 tháng 6 năm 2012 của Bộ trưởng Bộ Nội vụ hướng dẫn thực hiện Nghị định số 66/2011/NĐ-CP ngày 01 tháng 8 năm 2011 của Chính phủ quy định việc áp dụng Luật Cán bộ, công chức đối với các chức danh lãnh đạo, quản lý công ty trách nhiệm hữu hạn một thành viên do Nhà nước làm chủ sở hữu và người được cử làm đại diện chủ sở hữu phần vốn của Nhà nước tại doanh nghiệp có ",
+  "cands": [
+   "document:27663"
+  ]
+ },
+ {
+  "id": "event:156007:f96fbca68ee4eb58beafc74b",
+  "actor": "06/2021/QĐ-TTg",
+  "actor_id": "document:156007",
+  "op": "repeal",
+  "tgt": "document:37098",
+  "tnum": "52/2014/QĐ-TTg",
+  "tdoc": "52/2014/QĐ-TTg",
+  "eff": "2021-04-10",
+  "stt": "CHL",
+  "ev": "Quyết định số 52/2014/QĐ-TTg ngày 16 tháng 9 năm 2014 của Thủ tướng Chính phủ về danh mục bí mật nhà nước độ Tuyệt mật và Tối mật của ngành Lao động - Thương binh và Xã hội.",
+  "cands": [
+   "document:37098"
+  ]
+ },
+ {
+  "id": "event:142709:21e08a947638b74e964f4db8",
+  "actor": "17/2020/TT-BTC",
+  "actor_id": "document:142709",
+  "op": "repeal",
+  "tgt": "document:33442",
+  "tnum": "105/2013/TTLT-BTC-BGDĐT",
+  "tdoc": "105/2013/TTLT-BTC-BGDĐT",
+  "eff": "2020-05-15",
+  "stt": "CHL",
+  "ev": "Thông tư liên tịch số 105/2013/TTLT-BTC-BGDĐT ngày 06/08/2013 của Bộ Tài chính, Bộ Giáo dục và Đào tạo hướng dẫn chế độ quản lý tài chính đổi với kỳ thi Olympic Hóa học Quốc tế lần thứ 46 năm 2014 tại Việt Nam.",
+  "cands": [
+   "document:33442"
+  ]
+ },
+ {
+  "id": "event:140409:7eda5f9f52209c6872afb0d2",
+  "actor": "52/2019/TT-BGTVT",
+  "actor_id": "document:140409",
+  "op": "repeal",
+  "tgt": "document:26501",
+  "tnum": "28/2011/TT-BGTVT",
+  "tdoc": "28/2011/TT-BGTVT",
+  "eff": "2020-02-15",
+  "stt": "HHL",
+  "ev": "Thông tư số 28/2011/TT-BGTVT ngày 14 tháng 4 năm 2011 của Bộ trưởng Bộ Giao thông vận tải sửa đổi, bổ sung một số điều của \"quy định về việc cấp giấy phép xây dựng, thực hiện hoạt động trong phạm vi cho đường sắt\" ban hành kèm theo Quyết định số 60/2005/QĐ-BGTVT ngày 30 tháng 11 năm 2005, \"điều lệ đường ngang\" ban hành kèm theo Quyết định số 15/2006/QĐ-BGTVT ngày 30 tháng 3 năm 2006, \"quy định về ",
+  "cands": [
+   "document:26501"
+  ]
+ },
+ {
+  "id": "event:4be348c0-9607-11f1-8d51-af7dccec1993:675d7ff02b81349157954940",
+  "actor": "41/2026/QĐ-TTg",
+  "actor_id": "document:4be348c0-9607-11f1-8d51-af7dccec1993",
+  "op": "repeal",
+  "tgt": "document:156261",
+  "tnum": "19/2022/QĐ-TTg",
+  "tdoc": "19/2022/QĐ-TTg",
+  "eff": "2026-10-01",
+  "stt": "CHL",
+  "ev": "Quyết định số 19/2022/QĐ-TTg ngày 22 tháng 9 năm 2022 của Thủ tướng Chính phủ về chi phí quản lý bảo hiểm xã hội, bảo hiểm thất nghiệp, bảo hiểm y tế giai đoạn 2022 - 2024.",
+  "cands": [
+   "document:156261"
+  ]
+ },
+ {
+  "id": "event:156007:20c63fb64684dec186c6debe",
+  "actor": "06/2021/QĐ-TTg",
+  "actor_id": "document:156007",
+  "op": "repeal",
+  "tgt": "document:20623",
+  "tnum": "18/2004/QĐ-TTg",
+  "tdoc": "18/2004/QĐ-TTg",
+  "eff": "2021-04-10",
+  "stt": "CHL",
+  "ev": "Quyết định số 18/2004/QĐ-TTg ngày 12 tháng 02 năm 2004 của Thủ tướng Chính phủ về danh mục bí mật nhà nước độ Tối Mật thuộc lĩnh vực quản lý nhà nước của Bộ Tư pháp.",
+  "cands": [
+   "document:20623"
+  ]
+ },
+ {
+  "id": "event:156007:6f5fef4da2ada66375222560",
+  "actor": "06/2021/QĐ-TTg",
+  "actor_id": "document:156007",
+  "op": "repeal",
+  "tgt": "document:33953",
+  "tnum": "21/2013/QĐ-TTg",
+  "tdoc": "21/2013/QĐ-TTg",
+  "eff": "2021-04-10",
+  "stt": "CHL",
+  "ev": "Quyết định số 21/2013/QĐ-TTg ngày 24 tháng 4 năm 2013 của Thủ tướng Chính phủ về danh mục bí mật nhà nước độ Tối mật trong lĩnh vực Tài nguyên và Môi trường.",
+  "cands": [
+   "document:33953"
+  ]
+ },
+ {
+  "id": "event:146139:ed1735456bfe30b0353b2389",
+  "actor": "103/2020/TT-BTC",
+  "actor_id": "document:146139",
+  "op": "repeal",
+  "tgt": "document:22941",
+  "tnum": "86/2001/TT-BTC",
+  "tdoc": "86/2001/TT-BTC",
+  "eff": "2021-01-10",
+  "stt": "CHL",
+  "ev": "Thông tư số 86/2001/TT-BTC ngày 29/10/2001 của Bộ Tài chính hướng dẫn hoàn thuế tiêu thụ đặc biệt đã nộp đối với thuốc lá điếu xuất khẩu",
+  "cands": [
+   "document:22941"
+  ]
+ },
+ {
+  "id": "event:156007:21b74ad1321e5b31b63889c9",
+  "actor": "06/2021/QĐ-TTg",
+  "actor_id": "document:156007",
+  "op": "repeal",
+  "tgt": "document:19620",
+  "tnum": "123/2004/QĐ-TTg",
+  "tdoc": "123/2004/QĐ-TTg",
+  "eff": "2021-04-10",
+  "stt": "CHL",
+  "ev": "Quyết định số 123/2004/QĐ-TTg ngày 07 tháng 7 năm 2004 của Thủ tướng Chính phủ về danh mục bí mật nhà nước độ Tuyệt mật, Tối mật của Chính phủ, Văn phòng Chính phủ.",
+  "cands": [
+   "document:19620"
+  ]
+ },
+ {
+  "id": "event:135834:d335bac3ff4876c23d267556",
+  "actor": "05/2019/TT-NHNN",
+  "actor_id": "document:135834",
+  "op": "repeal",
+  "tgt": "document:23140",
+  "tnum": "1078/2001/QĐ-NHNN",
+  "tdoc": "1078/2001/QĐ-NHNN",
+  "eff": "2019-08-09",
+  "stt": "CHL",
+  "ev": "Quyết định số 1078/2001/QĐ-NHNN ngày 27/8/2001 công bố lãi suất cơ bản làm cơ sở cho tổ chức tín dụng ấn định lãi suất cho vay bằng Đồng Việt Nam đối với khách hàng.",
+  "cands": [
+   "document:23140"
+  ]
+ },
+ {
+  "id": "event:142709:eff6ac057ea3f36efde57523",
+  "actor": "17/2020/TT-BTC",
+  "actor_id": "document:142709",
+  "op": "repeal",
+  "tgt": "document:26570",
+  "tnum": "71/2011/TT-BTC",
+  "tdoc": "71/2011/TT-BTC",
+  "eff": "2020-05-15",
+  "stt": "CHL",
+  "ev": "Thông tư số 71/2011/TT-BTC ngày 24/05/2011 của Bộ Tài chính hướng dân việc trích lập, quản lý và sử dụng Quỹ thi đua, khen thưởng theo Nghị định số 42/2010/NĐ-CP ngày 15/04/2010 của Chỉnh phủ quy định chi tiết thi hành một số điều của Luật Thi đua, Khen thưởng.",
+  "cands": [
+   "document:26570"
+  ]
+ },
+ {
+  "id": "event:179969:8d0342f957572f071d7edcef",
+  "actor": "07/2025/UBTVQH15",
+  "actor_id": "document:179969",
+  "op": "repeal",
+  "tgt": "document:12661",
+  "tnum": "08/2008/PL-UBTVQH12",
+  "tdoc": "08/2008/PL-UBTVQH12",
+  "eff": "2025-06-03",
+  "stt": "HHL1P",
+  "ev": "Pháp lệnh số 08/2008/PL-UBTVQH12 sửa đổi Điều 10 của Pháp lệnh Dân số hết hiệu lực thi hành từ ngày Pháp lệnh này có hiệu lực thi hành./.",
+  "cands": [
+   "document:12661"
+  ]
+ },
+ {
+  "id": "event:16955:5f74162bc30507383c7e512b",
+  "actor": "113/2005/TT-BTC",
+  "actor_id": "document:16955",
+  "op": "repeal",
+  "tgt": "document:5960",
+  "tnum": "86/2000/TT-BTC",
+  "tdoc": "86/2000/TT-BTC",
+  "eff": "2006-01-01",
+  "stt": "CHL",
+  "ev": "Thông tư số 86/2000/TT-BTC ngày 16/08/2000 của Bộ Tài chính hướng dẫn thực hiện chính sách hỗ trợ về tài chính và thuế để phát triển các sản phẩm công nghiệp trọng điểm theo quy định của Quyết định số 37/2000/QĐ-TTg ngày 24/03/2000 của Thủ tướng Chính phủ",
+  "cands": [
+   "document:5960"
+  ]
+ },
+ {
+  "id": "event:146140:960c691cf94da2efc25fae43",
+  "actor": "100/2020/TT-BTC",
+  "actor_id": "document:146140",
+  "op": "repeal",
+  "tgt": "document:6753",
+  "tnum": "78/1999/TT-BTC",
+  "tdoc": "78/1999/TT-BTC",
+  "eff": "2021-01-02",
+  "stt": "CHL",
+  "ev": "Thông tư số 78/1999/TT-BTC ngày 22/06/1999 của Bộ Tài chính hướng dẫn chế độ thu phí, lệ phí theo Quyết định 53/1999/QĐ-TTg ngày 26/03/1999 của Thủ tướng Chính phủ về một số biện pháp khuyến khích đầu tư trực tiếp nước ngoài",
+  "cands": [
+   "document:6753"
+  ]
+ },
+ {
+  "id": "event:185710:37b1ca683fc9afd20dd023d2",
+  "actor": "65/2025/TT-BXD",
+  "actor_id": "document:185710",
+  "op": "repeal",
+  "tgt": "document:155020",
+  "tnum": "18/2022/TT-BGTVT",
+  "tdoc": "18/2022/TT-BGTVT",
+  "eff": "2026-03-01",
+  "stt": "CHL",
+  "ev": "Thông tư số 18/2022/TT-BGTVT ngày 20 tháng 7 năm 2022 của Bộ trưởng Bộ Giao thông vận tải về hướng dẫn về việc tiếp nhận, xử lý phản ánh, kiến nghị của cá nhân, tổ chức về quy định hành chính thuộc phạm vi quản lý của Bộ Giao thông vận tải.",
+  "cands": [
+   "document:155020"
+  ]
+ },
+ {
+  "id": "event:146139:d5a5bfcf6feb049d6c5d5817",
+  "actor": "103/2020/TT-BTC",
+  "actor_id": "document:146139",
+  "op": "repeal",
+  "tgt": "document:15163",
+  "tnum": "82/2006/TT-BTC",
+  "tdoc": "82/2006/TT-BTC",
+  "eff": "2021-01-10",
+  "stt": "CHL",
+  "ev": "Thông tư số 82/2006/TT-BTC ngày 13/09/2006 của Bộ Tài chính hướng dẫn thực hiện ưu đãi về thuế thu nhập doanh nghiệp đối với Quỹ bảo lãnh tín dụng cho doanh nghiệp nhỏ và vừa",
+  "cands": [
+   "document:15163"
+  ]
+ },
+ {
+  "id": "event:4be348c0-9607-11f1-8d51-af7dccec1993:7d2e7b7f0eb398a1fc22a1f6",
+  "actor": "41/2026/QĐ-TTg",
+  "actor_id": "document:4be348c0-9607-11f1-8d51-af7dccec1993",
+  "op": "repeal",
+  "tgt": "document:14777",
+  "tnum": "287/2006/QĐ-TTg",
+  "tdoc": "287/2006/QĐ-TTg",
+  "eff": "2026-10-01",
+  "stt": "CHL",
+  "ev": "Quyết định số 287/2006/QĐ-TTg ngày 27 tháng 12 năm 2006 của Thủ tướng Chính phủ về việc giải quyết phụ cấp thâm niên đối với công chức, viên chức ngành Hải quan nghỉ hưu.",
+  "cands": [
+   "document:14777"
+  ]
+ },
+ {
+  "id": "event:139887:a57354e9663d01604e3f58da",
+  "actor": "94/2019/NĐ-CP",
+  "actor_id": "document:139887",
+  "op": "repeal",
+  "tgt": "document:42790",
+  "tnum": "18/2012/TT-BNNPTNT",
+  "tdoc": "18/2012/TT-BNNPTNT",
+  "eff": "2020-02-01",
+  "stt": "CHL",
+  "ev": "Thông tư số 18/2012/TT-BNNPTNT ngày 26 tháng 4 năm 2012 của Bộ trưởng Bộ Nông nghiệp và Phát triển nông thôn quy định về quản lý sản xuất, kinh doanh giống cây công nghiệp và cây ăn quả lâu năm.",
+  "cands": [
+   "document:42790"
+  ]
+ }
+]
