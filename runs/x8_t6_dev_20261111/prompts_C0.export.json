@@ -1,0 +1,29 @@
+{
+  "system": "proposed2",
+  "spec": {
+    "name": "proposed2",
+    "layer": "version",
+    "lexical": true,
+    "dense": true,
+    "rerank": false,
+    "temporal": "propagated",
+    "context": true,
+    "expand": 1,
+    "expand_edges": "rel_up",
+    "verify": "reject",
+    "k": 20,
+    "note": "L4–L5: 𝒰ₜ by formula (3), hybrid ranking, citation-constrained answer, Verifier",
+    "repeal_note": false
+  },
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "no_dense": false,
+  "hybrid": true,
+  "embed": "data/derived/embed/version-vietnamese-embedding",
+  "embed_sha256": null,
+  "rows": 21,
+  "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+  "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+  "prompt_file_sha256": "480b9779e00adeec3efec6e9c9bee11d437b0bda617bac07f0285b2942630a97",
+  "note": "X8 mở rộng C0: 21 dòng T6 không đáp án dev, chẩn đoán dùng gold"
+}

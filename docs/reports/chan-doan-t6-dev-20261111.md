@@ -79,3 +79,89 @@ Khuyến nghị: làm Hướng 1 ngay (không rủi ro), xin duyệt Hướng 2 
 - SHA256 (16 ký tự đầu): `all.score.json` b10526d682706ac0; dev/b7 bba8d06290c4f974; b7plus 486d61729ccdcb6f; b7pp cf87c69d05c1f04f; proposed2 35b20daee0c1a83a; proposed3 220fd74fd843a095; prompts/proposed2 3275bb291c34e472; prompts/proposed3 8124ad253cf5dc0e; `data/vilextime_dataset_h6/vilextime.jsonl` 7aada39a82f5ec66; `vilextime_meta.jsonl` e0d4c2693bfd85c7.
 - Mô hình sinh: `gpt-4o-mini-2024-07-18` (API, không checkpoint); các lượt đã chạy sẵn, không sinh mới.
 - Giới hạn: n = 21 lineage mỗi vế, dev; không kết luận cho test. Nhãn (c) và (d) dựa trên quy tắc cơ học và đọc tay các câu trả lời; chưa có luật sư xem.
+
+## 8. Bảng T6 tách (Việc 1, nháp chưa đối soát)
+
+Dev, `giua_khoang`, 21 dòng có đáp án + 21 dòng không đáp án, release `data/vilextime_dataset_h6/vilextime.jsonl`. Điểm gọi thẳng `score_vilextime.score` trên từng vế; có assert Accuracy và R@10 T6 gộp khớp `all.score.json` cho cả 15 hệ. "Lệnh bãi bỏ trong prompt" = `accepted_evidence` của dòng có trong `retrieved` của file prompt; "hạng" = vị trí 1-based trong đó. R@10 dòng không đáp án theo định nghĩa của scorer (xem mục 2), nên không so được với R@10 dòng có đáp án. Phân tích khám phá, không đổi điểm nào.
+
+| Hệ | T6 có đáp án: n | Accuracy | R@10 | T6 không đáp án: n | Accuracy (nói không) | R@10 | lệnh bãi bỏ trong prompt | hạng |
+|---|---|---|---|---|---|---|---|---|
+| b1 | 21 | 0.000 (0/21) | 0.000 | 21 | 0.000 (0/21) | 0.000 | 0/21 | - |
+| b2ctx | 21 | 0.762 (16/21) | 0.619 | 21 | 0.048 (1/21) | 0.667 | 2/21 | 7,9 |
+| b3 | 21 | 0.571 (12/21) | 0.571 | 21 | 0.143 (3/21) | 0.571 | 0/21 | - |
+| b4 | 21 | 0.714 (15/21) | 0.667 | 21 | 0.000 (0/21) | 0.667 | 2/21 | 13,17 |
+| b5 | 21 | 0.714 (15/21) | 0.667 | 21 | 0.000 (0/21) | 0.667 | 7/21 | 13,17,21 |
+| b6 | 21 | 0.762 (16/21) | 0.667 | 21 | 0.000 (0/21) | 0.667 | 2/21 | 13,17 |
+| b7 | 21 | 0.857 (18/21) | 0.762 | 21 | 0.000 (0/21) | 0.762 | 2/21 | 6,10 |
+| b7plus | 21 | 0.857 (18/21) | 0.762 | 21 | 0.095 (2/21) | 0.524 | 0/21 | - |
+| b7pp | 21 | 0.857 (18/21) | 0.762 | 21 | 0.190 (4/21) | 0.000 | 0/21 | - |
+| oracle | 21 | 1.000 (21/21) | 1.000 | 21 | 0.905 (19/21) | 1.000 | 21/21 | 1 |
+| oracle_now | 21 | 1.000 (21/21) | 1.000 | 21 | 0.048 (1/21) | 1.000 | 0/21 | - |
+| p2a2 | 21 | 0.857 (18/21) | 0.762 | 21 | 0.143 (3/21) | 0.000 | 0/21 | - |
+| p2a3 | 21 | 0.857 (18/21) | 0.762 | 21 | 0.190 (4/21) | 0.000 | 15/21 | 21 |
+| proposed2 | 21 | 0.857 (18/21) | 0.762 | 21 | 0.190 (4/21) | 0.000 | 15/21 | 21 |
+| proposed3 | 21 | 0.857 (18/21) | 0.762 | 21 | 0.238 (5/21) | 0.000 | 15/21 | 21 |
+
+Đọc nhanh: ở mọi hệ có lọc phiên bản (b7pp, p2a2, p2a3, proposed2, proposed3), R@10 vế có đáp án là 0,762 (16/21) và vế không đáp án là 0,000; R@10 gộp 0,381 là trung bình hai vế. Hệ b2ctx–b6 có R@10 vế không đáp án 0,667 vì không lọc ngày (lấy lại điều khoản đã bị bãi bỏ) nhưng Accuracy vế đó gần 0. `oracle_now` có R@10 1,0 ở vế không đáp án vì được đưa phiên bản cuối của điều khoản bị bãi bỏ, và nói "không" 1/21. Hạng "21" của `proposed2` trùng mục 5 (đoạn thứ 21 hoặc 22 của prompt).
+
+Lệnh: `.venv/bin/python scripts/eval/t6_breakdown.py` (cwd repo, exit 0, ~30 giây, đọc versions.jsonl theo luồng). Test: `tests/test_t6_breakdown.py`.
+
+## 9. X8 mở rộng (Việc 2): đặt lệnh bãi bỏ gold lên vị trí 1 (nháp chưa đối soát)
+
+**Đây là chẩn đoán dùng gold (lệnh bãi bỏ đúng được đưa vào prompt), không phải một hệ, không dùng để chọn P hay đổi prompt hệ.** Chỉ dev, đúng 21 dòng T6 không đáp án `giua_khoang`. Không chạm test.
+
+Thiết kế: C0 = prompt `proposed2` giữ nguyên từng byte (script dựng lại từ `ids` và assert trùng `user`/`system` cũ ở 21/21 dòng), gọi API lại. C1 = như C0 nhưng đoạn lệnh bãi bỏ gold ở vị trí [1], đánh số lại, phần còn lại giữ thứ tự cũ, system không đổi (chuyển 15 dòng từ hạng 21, chèn 6 dòng chưa có trong prompt; `c1_changes.json`). Model `gpt-4o-mini-2024-07-18`, nhiệt độ 0, `max_tokens` 1024, seed 20261109; cùng `system_fingerprint` `fp_3a3c79652c` cho cả 42 lượt. Đúng = `score_vilextime.correct` (nói "HIỆU LỰC: không"). Định dạng 21/21 ở cả hai, cắt cụt 0.
+
+```
+| dòng | thao tác C1 | cũ | C0 | C1 |
+|---|---|---|---|---|
+| 41522558…2026-05-18 | chuyển (hạng 21) | sai | sai | sai |
+| 8ac0e590…2026-08-08 | chèn | sai | sai | sai |
+| 6cab03a0…2021-10-21 | chuyển (hạng 21) | sai | sai | sai |
+| 6e3d884a…2025-09-06 | chuyển (hạng 21) | sai | sai | sai |
+| 6e30cd9c…2026-06-18 | chèn | sai | sai | sai |
+| 2cb2c1fa…2020-11-11 | chuyển (hạng 21) | sai | sai | sai |
+| ecff2318…2018-06-10 | chuyển (hạng 21) | sai | sai | sai |
+| 7dd23e64…2026-08-06 | chèn | sai | sai | sai |
+| c203f3d0…2019-11-05 | chuyển (hạng 21) | sai | sai | sai |
+| fe9e225a…2025-11-08 | chuyển (hạng 21) | sai | sai | sai |
+| fe9e707a…2022-02-03 | chuyển (hạng 21) | đúng | đúng | đúng |
+| 7dc9e82a…2025-05-18 | chèn | sai | sai | sai |
+| 92d51460…2026-03-05 | chuyển (hạng 21) | sai | sai | sai |
+| 20ee7b9c…2025-12-04 | chuyển (hạng 21) | sai | sai | sai |
+| 1a267400…2017-06-07 | chuyển (hạng 21) | đúng | sai | đúng |
+| 6caa8e70…2021-09-03 | chuyển (hạng 21) | sai | sai | sai |
+| 982d3ea0…2026-03-18 | chèn | đúng | sai | sai |
+| 890e6428…2021-05-28 | chèn | sai | sai | sai |
+| 939488a2…2025-05-26 | chuyển (hạng 21) | đúng | đúng | đúng |
+| 1634ac90…2025-01-31 | chuyển (hạng 21) | sai | sai | sai |
+| f1fc5a86…2026-08-17 | chuyển (hạng 21) | sai | sai | đúng |
+tổng đúng: {'cu': '4/21', 'C0': '2/21', 'C1': '4/21'}
+C0 khác cũ (đúng/sai): 2 | câu trả lời khác chữ: 6
+C1 - C0: +2 -0, hiệu +0.095 [+0.000; +0.238], McNemar chính xác p=0.500
+C0 - cu: +0 -2, hiệu -0.095 [-0.238; +0.000], McNemar chính xác p=0.500
+C1 - cu: +1 -1, hiệu +0.000 [-0.143; +0.143], McNemar chính xác p=1.000
+chuyen 15 {'cu': 3, 'C0': 2, 'C1': 4}
+chen 6 {'cu': 1, 'C0': 0, 'C1': 0}
+```
+
+Tóm tắt: cũ 4/21, C0 2/21, C1 4/21. Nhiễu API (C0 so với cũ): 2 dòng đổi đúng/sai (cả hai đúng sang sai), 6/21 dòng đổi câu trả lời. C1 − C0 = +2/21 (+0,095, KTC bootstrap 95% [0,000; 0,238], 2.000 lần, seed 20261111; McNemar chính xác p = 0,50). C1 − cũ = +1 −1. Ở C1, mô hình trích lệnh bãi bỏ ở 4/21 dòng (C0: 1/21) và vẫn nói "còn" ở 17/21. Nhóm chuyển (15): cũ 3, C0 2, C1 4; nhóm chèn (6): cũ 1, C0 0, C1 0.
+
+Diễn giải thận trọng (n = 21, một lượt mỗi điều kiện, không phải thử nghiệm xác nhận):
+- Đưa lệnh bãi bỏ lên đầu không làm đúng nhiều lên: C1 4/21, ngang lượt cũ, cách xa oracle 19/21. Cải thiện so với C0 (+2) nằm trong cỡ nhiễu của chính API (C0 so với cũ lệch 2 dòng ngược chiều), KTC chạm 0. Dữ liệu này không ủng hộ giả thuyết lỗi (c) chủ yếu do vị trí cuối prompt.
+- Khớp hơn với giả thuyết nhiễu nội dung: 19–20 đoạn cùng chủ đề (văn bản thay thế) vẫn có trong prompt, và quy tắc 4 (trả theo quy phạm đang điều chỉnh) cho phép mô hình trả lời từ chúng. Thí nghiệm này không tách được hai yếu tố đó; chưa có điều kiện bớt đoạn nhiễu.
+- 6 dòng chèn: 0/6 đúng ở C1 dù lệnh bãi bỏ đứng đầu; trong đó có thể có dòng gold nghi (nhóm (d), mục 4). Không kết luận về gold.
+- Không dùng kết quả này để chọn P hay đổi hệ. Quy tắc chọn P không đổi.
+
+Chi phí: 217.470 token vào + 5.175 ra, ước tính khoảng 0,04 USD theo giá công bố (ngân sách 0,5 USD).
+
+Tái lập (cwd repo, dev, cần `.env` nạp khóa, không in):
+```
+.venv/bin/python scripts/eval/x8_t6_variant.py
+set -a; . ./.env; set +a
+for c in C0 C1; do .venv/bin/python scripts/eval/api_generate.py --prompts runs/x8_t6_dev_20261111/prompts_$c.jsonl --provider openai --model gpt-4o-mini-2024-07-18 --out-dir runs/x8_t6_dev_20261111/raw; done
+# import: colab_b1.py import --prompts prompts_$c.jsonl --raw raw/proposed2__gpt-4o-mini-2024-07-18__<sha12>.jsonl --out dev_$c.jsonl
+.venv/bin/python scripts/eval/x8_t6_report.py
+```
+SHA256 (16 ký tự đầu): prompts_C0 480b9779e00adeec; prompts_C1 9d63ed11a4e87c7f; raw C0 0cf03d97dfacde88; raw C1 0348bd4087d59fb0; dev_C0 c98e9c46048bc292; dev_C1 83a61b6ebb17c3e8; nguồn `prompts/proposed2.jsonl` 3275bb291c34e472, `dev/proposed2.jsonl` 35b20daee0c1a83a, release 7aada39a82f5ec66. Code khi gọi API: HEAD 0b0cce8 (3 script mới chưa commit lúc chạy, nội dung nằm trong commit của lượt này). Log API (`api_C*.log`) bị gitignore, chỉ có ở máy chạy. Import dùng kiểm hash prompt của `colab_b1.py`; `.export.json` của C0/C1 là bản sao record proposed2 với `rows`/hash file đã cập nhật.
+Giới hạn: một lượt mỗi điều kiện, nhiễu API đo được chỉ từ một cặp (cũ, C0); n = 21; dùng gold; chưa đối soát độc lập; không kết luận cho test.

@@ -1,0 +1,170 @@
+[
+ {
+  "id": "vilextime:T6:provision:41522558-2d42-11f1-be12-85fe9520288d:2026-05-18",
+  "event": "asis:event:186303:95b7713cb45ee417d9edfdc4",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 22,
+  "n_ids_c1": 22
+ },
+ {
+  "id": "vilextime:T6:provision:8ac0e590-eb6f-11f0-9260-cfdb9d2b3946:2026-08-08",
+  "event": "asis:event:58e44110-838c-11f1-a8a6-350e41594052:bfb4f3c1fcc8f94da267238a",
+  "action": "chen",
+  "old_rank": null,
+  "n_ids_old": 20,
+  "n_ids_c1": 21
+ },
+ {
+  "id": "vilextime:T6:provision:6cab03a0-eac1-11f0-bdcc-017d0628e025:2021-10-21",
+  "event": "asis:event:132170:a4d3a888b6f0998efd056434",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 21,
+  "n_ids_c1": 21
+ },
+ {
+  "id": "vilextime:T6:provision:6e3d884a-eb76-11f0-a7b2-1dc1265897ba#k1#h:2025-09-06",
+  "event": "asis:event:173086:5604878744e14b700d15ef4f",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 21,
+  "n_ids_c1": 21
+ },
+ {
+  "id": "vilextime:T6:provision:6e30cd9c-c6aa-493d-ba24-02271ab09290:2026-06-18",
+  "event": "asis:event:178340:fbe46f8ea31603165f89d626",
+  "action": "chen",
+  "old_rank": null,
+  "n_ids_old": 20,
+  "n_ids_c1": 21
+ },
+ {
+  "id": "vilextime:T6:provision:2cb2c1fa-eb7c-11f0-afa9-05bad552a7a0:2020-11-11",
+  "event": "asis:event:124218:32c0c1dbfe7e0491a48269cf",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 21,
+  "n_ids_c1": 21
+ },
+ {
+  "id": "vilextime:T6:provision:ecff2318-33ca-11f1-b2e8-cba23ea80846:2018-06-10",
+  "event": "asis:event:32784:801d954334eee83c010d68dc",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 21,
+  "n_ids_c1": 21
+ },
+ {
+  "id": "vilextime:T6:provision:7dd23e64-e157-11f0-82bf-4fb1080abc7d:2026-08-06",
+  "event": "asis:event:d36ee5e0-5d60-11f1-a077-230154264f8d:98ee94eae49be36d4c02bd4c",
+  "action": "chen",
+  "old_rank": null,
+  "n_ids_old": 21,
+  "n_ids_c1": 22
+ },
+ {
+  "id": "vilextime:T6:provision:c203f3d0-304d-11f1-bad2-35de013506a0:2019-11-05",
+  "event": "asis:event:128189:5aa25cfdedd3592f0778f781",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 21,
+  "n_ids_c1": 21
+ },
+ {
+  "id": "vilextime:T6:provision:fe9e225a-eb76-11f0-bf1a-5960624b6493#k5:2025-11-08",
+  "event": "asis:event:151086:41086bba90dfdfa8b783442f",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 21,
+  "n_ids_c1": 21
+ },
+ {
+  "id": "vilextime:T6:provision:fe9e707a-eb76-11f0-9089-810b3620234d#k2#c:2022-02-03",
+  "event": "asis:event:151086:e0e13d3f3a871caa2fe7e070",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 21,
+  "n_ids_c1": 21
+ },
+ {
+  "id": "vilextime:T6:provision:7dc9e82a-22c2-11f1-b41f-6b8c93c8a257:2025-05-18",
+  "event": "asis:event:165034:9563446e396dff96fdfc75ab",
+  "action": "chen",
+  "old_rank": null,
+  "n_ids_old": 21,
+  "n_ids_c1": 22
+ },
+ {
+  "id": "vilextime:T6:provision:92d51460-2d44-11f1-9f02-bdadc5058392:2026-03-05",
+  "event": "asis:event:186579:c727b3bd6cc2017b69452e2a",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 22,
+  "n_ids_c1": 22
+ },
+ {
+  "id": "vilextime:T6:provision:20ee7b9c-9b40-4957-b7df-f75f71189486:2025-12-04",
+  "event": "asis:event:178340:0572ec612f47c29f2d4a54e7",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 21,
+  "n_ids_c1": 21
+ },
+ {
+  "id": "vilextime:T6:provision:1a267400-2c8b-11f1-bae3-519acfdd7a39:2017-06-07",
+  "event": "asis:event:113590:466fbbbe5f284f1a756ceb41",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 22,
+  "n_ids_c1": 22
+ },
+ {
+  "id": "vilextime:T6:provision:6caa8e70-eac1-11f0-9d41-ebeb0e2a77c6:2021-09-03",
+  "event": "asis:event:132170:a4d3a888b6f0998efd056434",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 21,
+  "n_ids_c1": 21
+ },
+ {
+  "id": "vilextime:T6:provision:982d3ea0-1f76-11f1-9287-ff68b0094d18:2026-03-18",
+  "event": "asis:event:186002:eedf13a38492b09ed5c9fab4",
+  "action": "chen",
+  "old_rank": null,
+  "n_ids_old": 20,
+  "n_ids_c1": 21
+ },
+ {
+  "id": "vilextime:T6:provision:890e6428-e180-11f0-8607-cb747fdf01fa:2021-05-28",
+  "event": "asis:event:132174:150bbf32dd90a9f05282363d",
+  "action": "chen",
+  "old_rank": null,
+  "n_ids_old": 20,
+  "n_ids_c1": 21
+ },
+ {
+  "id": "vilextime:T6:provision:939488a2-df53-11f0-9ec1-335e1d405951:2025-05-26",
+  "event": "asis:event:164265:5cebc3d4bf17547443e2ca78",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 24,
+  "n_ids_c1": 24
+ },
+ {
+  "id": "vilextime:T6:provision:1634ac90-55ad-11f1-b4ac-edc16f8d4525:2025-01-31",
+  "event": "asis:event:167415:b3bba9fd40a296149b456d8b",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 24,
+  "n_ids_c1": 24
+ },
+ {
+  "id": "vilextime:T6:provision:f1fc5a86-eb7a-11f0-9b8e-95baaec42323:2026-08-17",
+  "event": "asis:event:186002:f66af6fcb2c561a0413c7241",
+  "action": "chuyen",
+  "old_rank": 21,
+  "n_ids_old": 24,
+  "n_ids_c1": 24
+ }
+]
