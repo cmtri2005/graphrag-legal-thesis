@@ -473,7 +473,7 @@ Làm tuần tự theo cột Phụ thuộc; ghi kết quả vào mục Progress.
 | H6 | Dựng lại release, chạy lại mọi hệ trên dev, đối soát | executor → `evidence-gate` | CMT | H5 | Dựng lại xong; gate code không lỗi chặn; dev 15 hệ xong 11/11 (`16213bb`), P = `proposed2`; chờ gate số dev |
 | H7 | Xem 24 dòng silver CMT ghi sửa + dòng `[phân vân]` (hợp 47 lineage) | `legal-adjudicator` (CMT 11/11 thay người) | CMT | | Đang làm 11/11 |
 | H8 | ADR 0005 amendment G3 → Accepted; `thesis-critic` rà trước | critic → CMT | CMT | H6 | Chờ |
-| H10 | T6: `legal-adjudicator` chốt 17 dòng dev + gói ca khó; rà R2 mọi dòng T6 bộ test cuối; chấm lại T6 dev | adjudicator → `data-clerk` | CMT | | Đang làm 11/11 |
+| H10 | T6: `legal-adjudicator` chốt 17 dòng dev + gói ca khó; rà R2 mọi dòng T6 bộ test cuối; chấm lại T6 dev | adjudicator → `data-clerk` | CMT | | Dev 17 dòng xong; R2 test cuối xong 11/11 (24 giữ, 3 `relocation_unclear`); còn 4 dòng dev và chấm lại T6 dev |
 | H9 | `final_run` P = `proposed2`; gate kiểm số; viết paper | executor → gate | CMT | H8 | Chờ |
 
 Ràng buộc: gold mù và nhãn người không giao cho AI; `dong_y` AI điền phải khai trong
@@ -504,6 +504,7 @@ paper; Lawgical dưới 20 lượt/ngày, thiếu thì dùng API vbpl và ghi ng
 - [x] 10/11 H2 tra trước (AI-đề xuất): 9 ca VBHN đồ thị chọn đúng phiên bản ở mọi ngày hỏi; 2 tín hiệu bãi bỏ là giả (căn sang điểm bên cạnh); 1 câu thiếu ở NĐ 209/2013 Đ3 k11 v1 vào H5. H021 (gold đợt 2): đề xuất loại khỏi T1 theo R3. Lawgical 7/20 lượt; còn lại qua API vbpl. Chờ luật sư.
 - [x] 11/11 H6: dựng lại một lần (L1, L2, L4, L6, L7/Q1), vector phần thiếu trên Colab; 15 hệ dev chạy lại với GPT-4o mini, P vẫn `proposed2` (`runs/README.md`). Báo cáo GVHD: `docs/reports/bao-cao-tien-do-gvhd-20261111.html`.
 - [x] 11/11 H7 xong: `legal-adjudicator` (opus, 2 phiên) chốt 47 lineage (`data/review/ai_research/2026-11-11_h7/`, kiểm `scripts/review/check_ai_verdicts.py`): silver đạt 80 → 75 (5 dòng dat → khong_dat). H10 phần 1: 17 dòng T6 dev → 8 giữ, 9 loại (`2026-11-11_t6_package/adjudication.md`); VBHN, H021 giữ; hai dòng thuế 2012 `question_ambiguous`. 13 quy tắc mở gom ở `docs/reports/quy-tac-mo-20261111.md`, chờ CMT. H8: phản biện `docs/reports/phan-bien-adr-0006-20261111.md` (7 điểm chặn). Đang rà R2 cho 27 lineage T6 bộ test cuối + 4 dòng dev còn lại.
+- [x] 11/11 H10 phần 2: `legal-adjudicator` (opus, 2 phiên) rà R2 cho 27 lineage T6 bộ test cuối (`data/review/ai_research/2026-11-11_t6_r2/`): 24 `giu`, 3 `relocation_unclear` (0ba67328, 0ba67346: Phụ lục II NĐ 01/2019 chỉ đọc được qua nguồn phụ; d88e3c54: Luật sư 2012, chuyển tiếp hai năm), 0 ca Q1. Hai quy tắc mở mới N1, N2 ghi ở `docs/reports/quy-tac-mo-20261111.md`. Kiểm máy: đủ 27/27, mã hợp lệ. Chưa áp loại vào bộ test cuối.
 - [ ] D0: bản nháp 7 chương và paper. Đã có nháp đủ, 0/437 số thiếu nguồn, chờ phản biện và Colab.
 
 ## Decisions
