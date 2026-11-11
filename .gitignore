@@ -86,3 +86,4 @@ scripts/bin/harness.exe
 /colab_upload/
 /vilextime_*/
 /raw_*.jsonl
+runs/rebuild_20261110/before/

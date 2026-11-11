@@ -1,0 +1,42 @@
+{
+ "t6_unanswerable": {
+  "rows": 21,
+  "lineages": 21,
+  "proposed2": 4,
+  "proposed3": 5,
+  "diff": 0.047619047619047616,
+  "ci95": [
+   -0.09523809523809523,
+   0.19047619047619047
+  ],
+  "p3_only": 2,
+  "p2_only": 1
+ },
+ "all_answerable": {
+  "rows": 112,
+  "lineages": 63,
+  "proposed2": 91,
+  "proposed3": 92,
+  "diff": 0.008928571428571428,
+  "ci95": [
+   0.0,
+   0.027777777777777773
+  ],
+  "p3_only": 1,
+  "p2_only": 0
+ },
+ "sensitivity_answerable_with_T1": {
+  "rows": 130,
+  "lineages": 81,
+  "proposed2": 105,
+  "proposed3": 106,
+  "diff": 0.007692307692307693,
+  "ci95": [
+   0.0,
+   0.023622047244094488
+  ],
+  "p3_only": 1,
+  "p2_only": 0
+ },
+ "P": "proposed2"
+}

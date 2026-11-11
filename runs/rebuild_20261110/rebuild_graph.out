@@ -1,0 +1,11 @@
+=== 01_attach_provision_text 2026-11-10T17:12:10Z
+    exit=0 2026-11-10T17:16:59Z
+=== 02_build_store 2026-11-10T17:16:59Z
+    exit=0 2026-11-10T17:19:50Z
+=== 03_resolve_expiry_targets 2026-11-10T17:19:50Z
+    exit=0 2026-11-10T17:21:19Z
+=== 04_extract_provision_events 2026-11-10T17:21:19Z
+    exit=0 2026-11-10T17:29:32Z
+=== 05_apply_document_scope 2026-11-10T17:29:32Z
+    exit=0 2026-11-10T17:29:33Z
+=== 06_build_versions 2026-11-10T17:29:33Z

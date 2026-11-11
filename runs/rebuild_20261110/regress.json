@@ -1,0 +1,210 @@
+{
+ "L1_g108_8": {
+  "fa28c71b": [
+   "needs_review",
+   "partial_repeal"
+  ],
+  "aea49191": [
+   "needs_review",
+   "partial_repeal"
+  ],
+  "68d7187b": [
+   "needs_review",
+   "partial_repeal"
+  ],
+  "b6983441": [
+   "needs_review",
+   "partial_repeal"
+  ],
+  "2ebc4846": [
+   "needs_review",
+   "partial_repeal"
+  ],
+  "4692c3a4": [
+   "needs_review",
+   "partial_repeal"
+  ],
+  "b2876675": [
+   "needs_review",
+   "partial_repeal"
+  ],
+  "d91f1126": [
+   "needs_review",
+   "partial_repeal"
+  ]
+ },
+ "L1_tableA_10_wrong": {
+  "c55a1c5bbffc66ecdd9819ca": [
+   [
+    "needs_review",
+    "partial_repeal"
+   ]
+  ],
+  "ac3635a1c938aeced07b4d48": [
+   [
+    "needs_review",
+    "partial_repeal"
+   ]
+  ],
+  "a06cec87147e46da14c23765": [
+   [
+    "needs_review",
+    "partial_repeal"
+   ]
+  ],
+  "1b558f6621353f56d711c557": [
+   [
+    "needs_review",
+    "partial_repeal"
+   ]
+  ],
+  "5fe19fa279959c4784aee27e": [
+   [
+    "needs_review",
+    "partial_repeal"
+   ]
+  ],
+  "2393948ffe64058d09e27a86": [
+   [
+    "needs_review",
+    "partial_repeal"
+   ]
+  ],
+  "5886cd07ca13d21218cdfcc8": [
+   [
+    "needs_review",
+    "partial_repeal"
+   ]
+  ],
+  "33508b74d8235979792f1cae": [
+   [
+    "needs_review",
+    "partial_repeal"
+   ]
+  ],
+  "2895e0f823ba7a105100f596": [
+   [
+    "needs_review",
+    "partial_repeal"
+   ]
+  ],
+  "c1894c695d47db0a87a281d0": [
+   [
+    "needs_review",
+    "partial_repeal"
+   ]
+  ]
+ },
+ "L1_tableA_4_right": {
+  "9afaf51289952078b330129d": [
+   [
+    "auto_accepted",
+    null
+   ]
+  ],
+  "0fe6f6d966d8f2988f97d5b8": [
+   [
+    "auto_accepted",
+    null
+   ]
+  ],
+  "3a25da91c8871a628fb13624": [
+   [
+    "auto_accepted",
+    null
+   ]
+  ],
+  "2960d18b566d003a673fd3f9": [
+   [
+    "auto_accepted",
+    null
+   ]
+  ]
+ },
+ "L1_pass": true,
+ "L2_Q2_24": {
+  "event:16955:5f74162bc30507383c7e512b": [
+   "needs_review",
+   "partial_repeal"
+  ]
+ },
+ "L2_Q2_29": [
+  "needs_review",
+  "document_scope"
+ ],
+ "L2_31760_effective_to": [
+  "15/2012/TT-BNV",
+  "2023-10-01"
+ ],
+ "L2_31760_events": {
+  "event:161957:213e41e4d8ac79d219c8eb7f": [
+   [
+    "auto_accepted",
+    null
+   ],
+   "2023-10-01"
+  ]
+ },
+ "L2_161_2004_events": {
+  "event:140550:c4dae227935f866cf131f55b": [
+   [
+    "auto_accepted",
+    null
+   ],
+   "2020-01-03",
+   "05/2020/NĐ-CP"
+  ]
+ },
+ "L2_161_2004_effective_to": [
+  [
+   "161/2004/NĐ-CP",
+   "2020-01-03",
+   "CHL"
+  ],
+  [
+   "161/2004/QĐ-TTg",
+   "2007-06-10",
+   "HHL"
+  ]
+ ],
+ "L2_applied_count": 278,
+ "L2_still_review_document_scope": 5777,
+ "L2_to_partial_repeal": 10,
+ "L4": {
+  "NĐ209/2013 Đ3 k11": {
+   "has_phrase_before": false,
+   "has_phrase_after": true,
+   "unchanged": false,
+   "len_before": 93,
+   "len_after": 277
+  },
+  "BLTTHS Đ212 k1": {
+   "has_phrase_before": false,
+   "has_phrase_after": true,
+   "unchanged": false,
+   "len_before": 89,
+   "len_after": 362
+  },
+  "NĐ218/2013 Đ4 k2a": {
+   "has_phrase_before": false,
+   "has_phrase_after": true,
+   "unchanged": false,
+   "len_before": 151,
+   "len_after": 297
+  },
+  "QĐ737/2001 Đ46 k1 (không đổi)": {
+   "has_phrase_before": false,
+   "has_phrase_after": false,
+   "unchanged": true,
+   "len_before": 54,
+   "len_after": 54
+  },
+  "TTLT01/2001 mục 4.2 (không đổi)": {
+   "has_phrase_before": false,
+   "has_phrase_after": false,
+   "unchanged": true,
+   "len_before": 529,
+   "len_after": 529
+  }
+ }
+}

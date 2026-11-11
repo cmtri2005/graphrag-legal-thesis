@@ -1,0 +1,392 @@
+{
+ "graph": {
+  "versions": {
+   "old": 1598648,
+   "new": 1598662,
+   "only_old": 1,
+   "only_new": 15,
+   "text_changed": 50293,
+   "window_changed": 16224
+  },
+  "events": {
+   "old": 56624,
+   "new": 56624,
+   "only_old": 0,
+   "only_new": 0,
+   "status_moves": {
+    "needs_review/document_scope -> auto_accepted/None": 278,
+    "auto_accepted/None -> needs_review/partial_repeal": 23,
+    "needs_review/phrase_not_found -> auto_accepted/None": 14,
+    "needs_review/document_scope -> needs_review/partial_repeal": 10,
+    "same status, text_updates changed": 7,
+    "verified/None -> needs_review/partial_repeal": 3,
+    "needs_review/phrase_not_found -> verified/None": 2,
+    "verified/None -> needs_review/phrase_not_found": 1
+   }
+  },
+  "moved_samples": {
+   "needs_review/document_scope -> auto_accepted/None": [
+    "event:185710:37b1ca683fc9afd20dd023d2",
+    "event:133132:66c9fe74056f683111aa8a4e",
+    "event:142972:f4bfddaf4c5e629e04cdc164",
+    "event:141878:8410a0fde3ee8803965079fd",
+    "event:146140:a92d72e0e9c1b0181ceb50db",
+    "event:153459:60eea60ab33dd9f97b633b72",
+    "event:146140:47fbd7a295540016ae85c31b",
+    "event:e431e3e0-6fb3-11f1-89af-89e13a3d7ffe:21592f5c1793ed0a2e914a03",
+    "event:150873:23b8ee2b6b30d8fdbab8cea4",
+    "event:138207:d94f17d32a44b849b3e20d9d",
+    "event:142709:81d9be5e9199d923e1a1ab6c",
+    "event:128023:e0e1668b9d3a394c02d1d529"
+   ],
+   "auto_accepted/None -> needs_review/partial_repeal": [
+    "event:5f662d30-8e47-11f1-8158-c1fa247e8bd5:822c9af55abb3b6c2ebc4846",
+    "event:b6f03540-6003-11f1-85cf-f311a9784f2d:28191da87f2efcc55e855654",
+    "event:133934:33508b74d8235979792f1cae",
+    "event:5f662d30-8e47-11f1-8158-c1fa247e8bd5:38d763be836df701aea49191",
+    "event:133934:5fe19fa279959c4784aee27e",
+    "event:133934:5886cd07ca13d21218cdfcc8",
+    "event:122586:c55a1c5bbffc66ecdd9819ca",
+    "event:133934:1b558f6621353f56d711c557",
+    "event:5f662d30-8e47-11f1-8158-c1fa247e8bd5:ee5e69ebe4074930b6983441",
+    "event:b6f03540-6003-11f1-85cf-f311a9784f2d:e067597426a5c9025cb929c0",
+    "event:5f662d30-8e47-11f1-8158-c1fa247e8bd5:4865550399f072bf4692c3a4",
+    "event:5f662d30-8e47-11f1-8158-c1fa247e8bd5:0383175c70610277b2876675"
+   ],
+   "needs_review/document_scope -> needs_review/partial_repeal": [
+    "event:128307:6a1bd9febcab55a6c7e6dfe7",
+    "event:16955:1ce2199b155e7b565a66f8b9",
+    "event:128307:99128d235bffc14f3ac2d005",
+    "event:182511:a91f534e4a589064bae60317",
+    "event:16955:c6e6d870f07115842d71a37b",
+    "event:182511:5abf08960befcee913db0a2a",
+    "event:128307:7aa89bf336abf2c119403e6e",
+    "event:182511:5c88f5e93552831c7dd55770",
+    "event:113416:a9190f08fde429ebb84651d7",
+    "event:16955:5f74162bc30507383c7e512b"
+   ],
+   "needs_review/phrase_not_found -> auto_accepted/None": [
+    "event:159026:8130ae622339f4c3d9258cb5",
+    "event:169185:e3661cc501041133f0afa3ea",
+    "event:168754:f347059ca6c15322ce56ee7e",
+    "event:124607:0b59b4af70637ff781611a61",
+    "event:132279:88f5569518d8c23fd814c225",
+    "event:166174:ffc9d528501b323eef8ce96d",
+    "event:124607:4c7f0caddb4d201ae844f75f",
+    "event:23722:1d17df8a0e3b3acc4a80a846",
+    "event:175145:b103408056c0b6086d863c4c",
+    "event:132279:9c830a7fe8e7b3c73bab08ae",
+    "event:124607:d9746ec553b5fca9689c10a4",
+    "event:132279:d0af6948381784d4dc288afe"
+   ],
+   "needs_review/phrase_not_found -> verified/None": [
+    "event:125900:1b21dbc26f1c01ecc6da9cc2",
+    "event:16518:c7b0c77df53b3fb34bae08e4"
+   ],
+   "verified/None -> needs_review/partial_repeal": [
+    "event:131575:e13a1470e5b1cc7365010a1a",
+    "event:131594:ac3635a1c938aeced07b4d48",
+    "event:131575:0a73562eeff8c20aa878d2f3"
+   ],
+   "verified/None -> needs_review/phrase_not_found": [
+    "event:72686:e90465fd350cfb6936f9da18"
+   ]
+  }
+ },
+ "rebuilt_sets": {
+  "dev": {
+   "old_rows": 328,
+   "new_rows": 328,
+   "modes_old": {
+    "ranh_gioi": 151,
+    "giua_khoang": 151,
+    "truoc_hieu_luc": 26
+   },
+   "counts": {
+    "lead_in_only_changed": 11,
+    "missing_from_new": 1,
+    "new_only": 1,
+    "same": 312,
+    "version_text_changed": 4
+   },
+   "counts_giua_khoang": {
+    "lead_in_only_changed": 5,
+    "missing_from_new": 1,
+    "new_only": 0,
+    "same": 143,
+    "version_text_changed": 2
+   },
+   "ids": {
+    "version_text_changed": [
+     "vilextime:T1:provision:5003ac4e-eb7e-11f0-a0a3-c9aae40c2eb7:2004-07-13",
+     "vilextime:T1:provision:5003ac4e-eb7e-11f0-a0a3-c9aae40c2eb7:2010-08-12",
+     "vilextime:T3:provision:d427a720-2d53-11f1-a1cc-67f2013d5aa0:2016-06-30",
+     "vilextime:T3:provision:d427a720-2d53-11f1-a1cc-67f2013d5aa0:2014-07-12"
+    ],
+    "lead_in_only_changed": [
+     "vilextime:T1:provision:376b89bc-ec3d-11f0-9575-3f5b1452526c#k3:2016-09-03",
+     "vilextime:T1:provision:376b89bc-ec3d-11f0-9575-3f5b1452526c#k3:2018-05-18",
+     "vilextime:T2:provision:1a9e95e0-eb7f-11f0-9f77-311425e86753#k9:2020-01-02",
+     "vilextime:T2:provision:1a9e95e0-eb7f-11f0-9f77-311425e86753#k9:2018-03-04",
+     "vilextime:T2:provision:1a9e95e0-eb7f-11f0-9f77-311425e86753#k9:2019-12-04",
+     "vilextime:T2:provision:1a9e95e0-eb7f-11f0-9f77-311425e86753#k9:2020-01-03",
+     "vilextime:T2:provision:1a9e95e0-eb7f-11f0-9f77-311425e86753#k9:2021-03-23",
+     "vilextime:T3:provision:d427a720-2d53-11f1-a1cc-67f2013d5aa0:2018-01-31",
+     "vilextime:T3:provision:d427a720-2d53-11f1-a1cc-67f2013d5aa0:2016-11-12",
+     "vilextime:T3:provision:d427a720-2d53-11f1-a1cc-67f2013d5aa0:2018-02-01",
+     "vilextime:T3:provision:d427a720-2d53-11f1-a1cc-67f2013d5aa0:2021-08-01"
+    ],
+    "missing_from_new": [
+     "vilextime:T2:provision:f69ce10e-eb76-11f0-a3ad-7b197f745334:2018-10-02"
+    ],
+    "new_only": [
+     "vilextime:T2:provision:f69ce10e-eb76-11f0-a3ad-7b197f745334:2018-08-09"
+    ]
+   }
+  },
+  "v1.0_test": {
+   "old_rows": 441,
+   "new_rows": 439,
+   "modes_old": {
+    "ranh_gioi": 211,
+    "giua_khoang": 211,
+    "truoc_hieu_luc": 19
+   },
+   "counts": {
+    "excluded:partial_repeal": 1,
+    "excluded:superseded_by_other_norm": 1,
+    "lead_in_only_changed": 10,
+    "missing_from_new": 1,
+    "new_only": 1,
+    "same": 428
+   },
+   "counts_giua_khoang": {
+    "excluded:partial_repeal": 1,
+    "excluded:superseded_by_other_norm": 1,
+    "lead_in_only_changed": 5,
+    "missing_from_new": 1,
+    "new_only": 0,
+    "same": 203
+   },
+   "ids": {
+    "lead_in_only_changed": [
+     "vilextime:T1:provision:8b621ba6-df47-11f0-8be7-01dbfc483b14#k4:2015-12-31",
+     "vilextime:T1:provision:8b621ba6-df47-11f0-8be7-01dbfc483b14#k4:2019-01-28",
+     "vilextime:T1:provision:ac625f20-eadf-11f0-bd15-e99c4454aa60#k15:2010-01-11",
+     "vilextime:T1:provision:ac625f20-eadf-11f0-bd15-e99c4454aa60#k15:2013-09-26",
+     "vilextime:T1:provision:4a1d663e-eb7f-11f0-a965-3115c99302b6#k2:2005-04-15",
+     "vilextime:T1:provision:4a1d663e-eb7f-11f0-a965-3115c99302b6#k2:2007-05-09",
+     "vilextime:T1:provision:a121dfe8-eb78-11f0-8c65-5772da80db81#k8:2018-07-10",
+     "vilextime:T1:provision:a121dfe8-eb78-11f0-8c65-5772da80db81#k8:2018-12-08",
+     "vilextime:T1:provision:21c3f428-eb70-11f0-802c-c99b808dc615#k1:2016-05-20",
+     "vilextime:T1:provision:21c3f428-eb70-11f0-802c-c99b808dc615#k1:2019-04-28"
+    ],
+    "excluded:partial_repeal": [
+     "vilextime:T1:provision:2d5cbd7a-2c7e-11f1-ae97-7fa00807b7eb:2024-09-17"
+    ],
+    "missing_from_new": [
+     "vilextime:T1:provision:0874e970-3425-11f1-9e65-619eaa3c24f9:2021-07-29"
+    ],
+    "excluded:superseded_by_other_norm": [
+     "vilextime:T1:provision:7955ccf0-335c-11f1-85de-b1296396b4f2:2016-09-25"
+    ],
+    "new_only": [
+     "vilextime:T1:provision:0874e970-3425-11f1-9e65-619eaa3c24f9:2005-12-13"
+    ]
+   }
+  },
+  "silver_old859": {
+   "old_rows": 859,
+   "new_rows": 879,
+   "modes_old": {
+    "ranh_gioi": 389,
+    "giua_khoang": 389,
+    "truoc_hieu_luc": 81
+   },
+   "counts": {
+    "lead_in_only_changed": 20,
+    "new_only": 20,
+    "same": 837,
+    "version_text_changed": 2
+   },
+   "counts_giua_khoang": {
+    "lead_in_only_changed": 10,
+    "new_only": 0,
+    "same": 378,
+    "version_text_changed": 1
+   },
+   "ids": {
+    "lead_in_only_changed": [
+     "vilextime:T2:provision:46a5ca1e-e157-11f0-a769-0badb1c355e3#k1:2024-05-31",
+     "vilextime:T2:provision:46a5ca1e-e157-11f0-a769-0badb1c355e3#k1:2022-07-31",
+     "vilextime:T2:provision:46a5ca1e-e157-11f0-a769-0badb1c355e3#k1:2024-06-01",
+     "vilextime:T2:provision:46a5ca1e-e157-11f0-a769-0badb1c355e3#k1:2024-12-08",
+     "vilextime:T2:provision:f3c5a718-eb76-11f0-8093-2da175569ed4#k3:1998-10-10",
+     "vilextime:T2:provision:f3c5a718-eb76-11f0-8093-2da175569ed4#k3:1997-10-17",
+     "vilextime:T2:provision:f3c5a718-eb76-11f0-8093-2da175569ed4#k3:1998-10-11",
+     "vilextime:T2:provision:f3c5a718-eb76-11f0-8093-2da175569ed4#k3:2000-05-10",
+     "vilextime:T3:provision:746ee898-eb72-11f0-a645-6bade352d545#k3:2022-02-28",
+     "vilextime:T3:provision:746ee898-eb72-11f0-a645-6bade352d545#k3:2019-06-29",
+     "vilextime:T3:provision:746ee898-eb72-11f0-a645-6bade352d545#k3:2023-08-14",
+     "vilextime:T3:provision:746ee898-eb72-11f0-a645-6bade352d545#k3:2023-01-03",
+     "vilextime:T3:provision:746ee898-eb72-11f0-a645-6bade352d545#k3:2023-08-15",
+     "vilextime:T3:provision:746ee898-eb72-11f0-a645-6bade352d545#k3:2024-07-03",
+     "vilextime:T3:provision:d8201dae-eb80-11f0-8294-3b5d9c04573c#k2:2015-06-19",
+     "vilextime:T3:provision:d8201dae-eb80-11f0-8294-3b5d9c04573c#k2:2015-01-17",
+     "vilextime:T3:provision:d8201dae-eb80-11f0-8294-3b5d9c04573c#k2:2017-05-19",
+     "vilextime:T3:provision:d8201dae-eb80-11f0-8294-3b5d9c04573c#k2:2015-09-08",
+     "vilextime:T3:provision:d8201dae-eb80-11f0-8294-3b5d9c04573c#k2:2017-05-20",
+     "vilextime:T3:provision:d8201dae-eb80-11f0-8294-3b5d9c04573c#k2:2018-10-29"
+    ],
+    "version_text_changed": [
+     "vilextime:T5:provision:ce3f81c0-2d53-11f1-8e98-9d68213c7640:2014-12-31",
+     "vilextime:T5:provision:ce3f81c0-2d53-11f1-8e98-9d68213c7640:2014-04-06"
+    ],
+    "new_only": [
+     "vilextime:T6:provision:c0278ef0-eb7e-11f0-aa7c-afff45f27258#c:2017-08-14",
+     "vilextime:T6:provision:c0278ef0-eb7e-11f0-aa7c-afff45f27258#c:2017-07-02",
+     "vilextime:T6:provision:c0278ef0-eb7e-11f0-aa7c-afff45f27258#c:2017-08-15",
+     "vilextime:T6:provision:c0278ef0-eb7e-11f0-aa7c-afff45f27258#c:2022-02-12",
+     "vilextime:T6:provision:73af3498-df43-11f0-93d1-efee67e71a78:2024-07-14",
+     "vilextime:T6:provision:73af3498-df43-11f0-93d1-efee67e71a78:2023-07-20",
+     "vilextime:T6:provision:73af3498-df43-11f0-93d1-efee67e71a78:2024-07-15",
+     "vilextime:T6:provision:73af3498-df43-11f0-93d1-efee67e71a78:2026-05-19",
+     "vilextime:T6:provision:0e1b55e4-df52-11f0-9f99-f11f1623b558#a:2022-01-31",
+     "vilextime:T6:provision:0e1b55e4-df52-11f0-9f99-f11f1623b558#a:2020-12-11",
+     "vilextime:T6:provision:0e1b55e4-df52-11f0-9f99-f11f1623b558#a:2022-02-01",
+     "vilextime:T6:provision:0e1b55e4-df52-11f0-9f99-f11f1623b558#a:2026-05-31",
+     "vilextime:T6:provision:9d9b2380-22ae-11f1-a05d-9567cb4928e4#d:2026-01-14",
+     "vilextime:T6:provision:9d9b2380-22ae-11f1-a05d-9567cb4928e4#d:2025-05-16",
+     "vilextime:T6:provision:9d9b2380-22ae-11f1-a05d-9567cb4928e4#d:2026-01-15",
+     "vilextime:T6:provision:9d9b2380-22ae-11f1-a05d-9567cb4928e4#d:2026-05-20",
+     "vilextime:T6:provision:5ba661a0-2d45-11f1-98cf-b51d3d215747:2025-11-27",
+     "vilextime:T6:provision:5ba661a0-2d45-11f1-98cf-b51d3d215747:2023-03-18",
+     "vilextime:T6:provision:5ba661a0-2d45-11f1-98cf-b51d3d215747:2025-11-28",
+     "vilextime:T6:provision:5ba661a0-2d45-11f1-98cf-b51d3d215747:2026-01-31"
+    ]
+   }
+  }
+ },
+ "recomputed_sets": {
+  "lo1_silver": {
+   "rows": 369,
+   "counts": {
+    "same": 369
+   },
+   "ids": {}
+  },
+  "lo2": {
+   "rows": 258,
+   "counts": {
+    "same": 258
+   },
+   "ids": {}
+  },
+  "lo0": {
+   "rows": 65,
+   "counts": {
+    "same": 65
+   },
+   "ids": {}
+  },
+  "test2": {
+   "rows": 492,
+   "counts": {
+    "same": 492
+   },
+   "ids": {}
+  }
+ },
+ "derived_release": {
+  "rows_old": 2383,
+  "rows_new": 2383,
+  "counts": {
+   "dev/giua_khoang/changed": 2,
+   "dev/giua_khoang/only_new": 1,
+   "dev/giua_khoang/only_old": 1,
+   "dev/giua_khoang/same": 183,
+   "dev/ranh_gioi/changed": 2,
+   "dev/ranh_gioi/same": 184,
+   "dev/truoc_hieu_luc/same": 27,
+   "test/giua_khoang/changed": 1,
+   "test/giua_khoang/only_new": 12,
+   "test/giua_khoang/only_old": 12,
+   "test/giua_khoang/same": 921,
+   "test/ranh_gioi/changed": 1,
+   "test/ranh_gioi/only_new": 10,
+   "test/ranh_gioi/only_old": 10,
+   "test/ranh_gioi/same": 923,
+   "test/truoc_hieu_luc/same": 116
+  },
+  "lineages_only_old": {
+   "only_old/test/T1": [
+    "provision:0874e970-3425-11f1-9e65-619eaa3c24f9"
+   ],
+   "only_old/dev/T2": [
+    "provision:f69ce10e-eb76-11f0-a3ad-7b197f745334"
+   ],
+   "only_old/test/T2": [
+    "provision:10e8ac3c-df56-11f0-8111-bfe2d804ad0d"
+   ],
+   "only_old/test/T6": [
+    "provision:057e7020-1e08-11f1-ae1f-bdbba0ffb49b",
+    "provision:10e8ac8c-df56-11f0-90e9-5df4d1133b31",
+    "provision:10e8acaa-df56-11f0-b2d9-9799969d3639",
+    "provision:75e9b4f6-eb8a-11f0-93ee-ed6a8e367972",
+    "provision:75e9b5b4-eb8a-11f0-b9cb-87a912b02e9a"
+   ]
+  },
+  "lineages_only_new": {
+   "only_new/test/T1": [
+    "provision:0874e970-3425-11f1-9e65-619eaa3c24f9"
+   ],
+   "only_new/dev/T2": [
+    "provision:f69ce10e-eb76-11f0-a3ad-7b197f745334"
+   ],
+   "only_new/test/T2": [
+    "provision:10e8ac3c-df56-11f0-8111-bfe2d804ad0d"
+   ],
+   "only_new/test/T6": [
+    "provision:0e1b55e4-df52-11f0-9f99-f11f1623b558#a",
+    "provision:5ba661a0-2d45-11f1-98cf-b51d3d215747",
+    "provision:73af3498-df43-11f0-93d1-efee67e71a78",
+    "provision:9d9b2380-22ae-11f1-a05d-9567cb4928e4#d",
+    "provision:c0278ef0-eb7e-11f0-aa7c-afff45f27258#c"
+   ]
+  }
+ },
+ "gold": {
+  "rows": 150,
+  "counts": {
+   "excluded:superseded_by_other_norm": 1,
+   "lead_in_only_changed": 4,
+   "same": 145
+  },
+  "ids": {
+   "lead_in_only_changed": [
+    [
+     "G057",
+     "vilextime:T3:provision:746ee898-eb72-11f0-a645-6bade352d545#k3:2023-01-03"
+    ],
+    [
+     "G065",
+     "vilextime:T2:provision:f3c5a718-eb76-11f0-8093-2da175569ed4#k3:1997-10-17"
+    ],
+    [
+     "G067",
+     "vilextime:T3:provision:d8201dae-eb80-11f0-8294-3b5d9c04573c#k2:2018-10-29"
+    ],
+    [
+     "H010",
+     "vilextime:T1:provision:4a1d663e-eb7f-11f0-a965-3115c99302b6#k2:2007-05-09"
+    ]
+   ],
+   "excluded:superseded_by_other_norm": [
+    [
+     "H021",
+     "vilextime:T1:provision:7955ccf0-335c-11f1-85de-b1296396b4f2:2016-09-25"
+    ]
+   ]
+  }
+ }
+}

@@ -1,0 +1,125 @@
+# H6 L2: mẫu 20 sự kiện được tự áp (NHÁP, chưa kiểm)
+
+Nhóm: 278 sự kiện cấp văn bản chuyển needs_review/document_scope -> auto_accepted. Seed 20261111. Chỉ in câu dẫn, không kết luận pháp lý.
+Mọi chuyển trạng thái cấp văn bản: {('needs_review', 'auto_accepted', None): 278, ('needs_review', 'needs_review', 'partial_repeal'): 10}
+
+## 1. 01/2025/TT-BDTTG -> 04/2008/QĐ-UBDT, hiệu lực 2025-08-05
+- id: `event:178961:25558b89b916ab63f6ce29af`
+- evidence: Quyết định số 04/2008/QĐ-UBDT ngày 08 tháng 8 năm 2008 của Bộ trưởng, Chủ nhiệm Ủy ban Dân tộc về việc ban hành Quy định về chế độ và biểu mẫu báo cáo Chương trình phát triển kinh tế - xã hội các xã đặc biệt khó khăn vùng đồng bào dân tộc và miền núi giai đoạn
+- câu dẫn đọc được (đoạn dẫn phía trên): Bãi bỏ toàn bộ các quyết định quy phạm pháp luật sau đây:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2025-08-05']
+
+## 2. 17/2020/TT-BTC -> 71/2011/TT-BTC, hiệu lực 2020-05-15
+- id: `event:142709:eff6ac057ea3f36efde57523`
+- evidence: Thông tư số 71/2011/TT-BTC ngày 24/05/2011 của Bộ Tài chính hướng dân việc trích lập, quản lý và sử dụng Quỹ thi đua, khen thưởng theo Nghị định số 42/2010/NĐ-CP ngày 15/04/2010 của Chỉnh phủ quy định chi tiết thi hành một số điều của Luật Thi đua, Khen thưởng
+- câu dẫn đọc được (đoạn dẫn phía trên): Điều 4. Bãi bỏ toàn bộ 08 văn bản quy phạm pháp luật do Bộ trưởng Bộ Tài chính ban hành và liên tịch ban hành trong lĩnh vực quản lý tài chính hành chính sự nghiệp sau đây:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2020-05-15']
+
+## 3. 15/2021/TT-BLĐTBXH -> 46/2016/TT-BLĐTBXH, hiệu lực 2021-12-15
+- id: `event:150873:23b8ee2b6b30d8fdbab8cea4`
+- evidence: Thông tư số 46/2016/TT-BLĐTBXH ngày 28 tháng 12 năm 2016 của Bộ trưởng Bộ Lao động - Thương binh và Xã hội quy định về Điều lệ trường cao đẳng hết hiệu lực kể từ ngày Thông tư này có hiệu lực thi hành.
+- câu dẫn đọc được (cùng đoạn): hết hiệu lực
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2021-12-15']
+
+## 4. 05/2020/NĐ-CP -> 28/2003/NĐ-CP, hiệu lực 2020-01-03
+- id: `event:140550:2e2da9aa8b7c01d217619791`
+- evidence: Nghị định số 28/2003/NĐ-CP ngày 31 tháng 3 năm 2003 của Chính phủ quy định việc phát hành công trái xây dựng Tổ quốc năm 2003 - Công trái giáo dục.
+- câu dẫn đọc được (đoạn dẫn phía trên): Bãi bỏ toàn bộ các văn bản quy phạm pháp luật sau đây:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2020-01-03']
+
+## 5. 49/2025/TT-BCT -> 04/2024/TT-BCT, hiệu lực 2026-05-01
+- id: `event:181859:34dd14e1ccbf19d3eb87f904`
+- evidence: Thông tư số 04/2024/TT-BCT ngày 27 tháng 3 năm 2024 sửa đổi, bổ sung một số điều của Thông tư số 20/2014/TT-BCT ngày 25 tháng 6 năm 2014 của Bộ trưởng Bộ Công Thương quy định thực hiện Quy tắc xuất xứ trong Hiệp định khu vực thương mại tự do ASEAN - Hàn Quốc./
+- câu dẫn đọc được (đoạn dẫn phía trên): Thông tư này thay thế các Thông tư sau đây:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2026-05-01']
+
+## 6. 100/2020/TT-BTC -> 162/2007/TT-BTC, hiệu lực 2021-01-02
+- id: `event:146140:96c7244475afc133403cbf10`
+- evidence: Thông tư số 162/2007/TT-BTC ngày 31/12/2007 của Bộ Tài chính hướng dẫn chế độ tài chính và thủ tục hải quan áp dụng đối với Khu kinh tế cửa khẩu tỉnh An Giang
+- câu dẫn đọc được (đoạn dẫn phía trên): Điều 4. Bãi bỏ toàn bộ 18 Thông tư hướng dẫn chế độ tài chính, thủ tục hải quan áp dụng tại các khu kỉnh tế, khu thương mại và công nghiệp thuộc Khu kinh tế cửa khẩu, cụ thể:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2021-01-02']
+
+## 7. 66/2019/NĐ-CP -> 109/2003/NĐ-CP, hiệu lực 2019-09-15
+- id: `event:136645:c4ff56fefe8e2bd5bcf5a8c0`
+- evidence: Nghị định số 109/2003/NĐ-CP ngày 23 tháng 9 năm 2003 của Chính phủ về Bảo tồn và phát triển bền vững các vùng đất ngập nước hết hiệu lực thi hành kể từ ngày Nghị định này có hiệu lực thi hành.
+- câu dẫn đọc được (cùng đoạn): hết hiệu lực
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2019-09-15']
+
+## 8. 05/2020/NĐ-CP -> 62/2011/NĐ-CP, hiệu lực 2020-01-03
+- id: `event:140550:a5a7250de3e54616eac5a873`
+- evidence: Nghị định số 62/2011/NĐ-CP ngày 26 tháng 7 năm 2011 của Chính phủ về thành lập thành phố thuộc tỉnh, thị xã, quận, phường, thị trấn.
+- câu dẫn đọc được (đoạn dẫn phía trên): Bãi bỏ toàn bộ các văn bản quy phạm pháp luật sau đây:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2020-01-03']
+
+## 9. 05/2019/TT-NHNN -> 500/2000/QĐ-NHNN1, hiệu lực 2019-08-09
+- id: `event:135834:5722a86066db962efb5c6c9b`
+- evidence: Quyết định số 500/2000/QĐ-NHNN1 ngày 05/12/2000 công bố lãi suất cơ bản làm cơ sở cho tổ chức tín dụng ấn định lãi suất cho vay bằng Đồng Việt Nam đối với khách hàng.
+- câu dẫn đọc được (đoạn dẫn phía trên): Bãi bỏ toàn bộ các văn bản quy phạm pháp luật do Thống đốc Ngân hàng Nhà nước ban hành, liên tịch ban hành sau đây:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2019-08-09']
+
+## 10. 13/2019/NĐ-CP -> 80/2007/NĐ-CP, hiệu lực 2019-03-20
+- id: `event:134061:618c3c0ea6c65f75ca355fb4`
+- evidence: Nghị định số 80/2007/NĐ-CP ngày 19 tháng 5 năm 2007 của Chính phủ về doanh nghiệp khoa học và công nghệ
+- câu dẫn đọc được (cùng đoạn): hết hiệu lực
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2019-03-20']
+
+## 11. 33/2025/TT-BXD -> 22/2018/TT-BGTVT, hiệu lực 2026-01-01
+- id: `event:185676:4ed63f66c9ae1224cec6fcca`
+- evidence: Thông tư số 22/2018/TT-BGTVT ngày 02 tháng 5 năm 2018 của Bộ trưởng Bộ Giao thông vận tải ban hành quy định về việc vận tải hàng hóa trên đường sắt quốc gia và đường sắt chuyên dùng có nối ray với đường sắt quốc gia hết hiệu lực từ ngày Thông tư này có hiệu lự
+- câu dẫn đọc được (cùng đoạn): hết hiệu lực
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2026-01-01']
+
+## 12. 65/2025/TT-BXD -> 24/2020/TT-BGTVT, hiệu lực 2026-03-01
+- id: `event:185710:4146f875e2646cc6b0ac0954`
+- evidence: Thông tư số 24/2020/TT-BGTVT ngày 13 tháng 10 năm 2020 của Bộ trưởng Bộ Giao thông vận tải về sửa đổi, bổ sung một số điều của các Thông tư quy định về chế độ báo cáo định kỳ trong lĩnh vực đường sắt.
+- câu dẫn đọc được (đoạn dẫn phía trên): Bãi bỏ toàn bộ các thông tư sau đây:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2026-03-01']
+
+## 13. 17/2020/TT-BTC -> 198/2014/TT-BTC, hiệu lực 2020-05-15
+- id: `event:142709:735bf830bcb403cd128afe4d`
+- evidence: Thông tư số 198/2014/TT-BTC ngày 18/12/2014 của Bộ Tài chính hướng dẫn phương pháp tính giá thành cá tra nguyên liệu.
+- câu dẫn đọc được (đoạn dẫn phía trên): Điều 2. Bãi bỏ toàn bộ 03 văn bản quy phạm pháp luật do Bộ trưỏng Bộ Tài chính ban hành trong lĩnh vực quản lý giá sau đây:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2020-05-15']
+
+## 14. 11/2019/TT-BNV -> 07/2006/QĐ-BNV, hiệu lực 2019-11-15
+- id: `event:138207:b2ef4c22e931833ed4a9b961`
+- evidence: Quyết định số 07/2006/QĐ-BNV ngày 05 tháng 4 năm 2006 của Bộ trưởng Bộ Nội vụ về việc ban hành Chương trình khung bồi dưỡng ngạch cán sự.
+- câu dẫn đọc được (đoạn dẫn phía trên): Bãi bỏ toàn bộ các văn bản quy phạm pháp luật do Bộ trưởng Bộ Nội vụ ban hành sau đây:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2019-11-15']
+
+## 15. 100/2020/TT-BTC -> 11/2004/TT-BTC, hiệu lực 2021-01-02
+- id: `event:146140:3b44c290bb7a681becc54179`
+- evidence: Thông tư số 11/2004/TT-BTC ngày 25/02/2004 của Bộ Tài chính về việc hướng dẫn chế độ tài chính áp dụng tại Khu kinh tế mở Chu Lai
+- câu dẫn đọc được (đoạn dẫn phía trên): Điều 4. Bãi bỏ toàn bộ 18 Thông tư hướng dẫn chế độ tài chính, thủ tục hải quan áp dụng tại các khu kỉnh tế, khu thương mại và công nghiệp thuộc Khu kinh tế cửa khẩu, cụ thể:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2021-01-02']
+
+## 16. 05/2022/TT-NHNN -> 27/2014/TT-NHNN, hiệu lực 2022-08-15
+- id: `event:154460:46855c8bfbac59454bbe50de`
+- evidence: Thông tư số 27/2014/TT-NHNN ngày 18 tháng 9 năm 2014 của Thống đốc Ngân hàng Nhà nước về việc sửa đổi, bổ sung một số điều của Thông tư 16/2010/TT-NHNN ngày 25/6/2010 về hướng dẫn thi hành Nghị định số 10/2010/NĐ-CP ngày 12/02/2010 của Chính phủ về hoạt động t
+- câu dẫn đọc được (đoạn dẫn phía trên): Bãi bỏ toàn bộ các văn bản quy phạm pháp luật do Thống đốc Ngân hàng Nhà nước ban hành sau đây:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2022-08-15']
+
+## 17. 12/2019/TT-BCT -> 21/2014/TT-BCT, hiệu lực 2019-09-12
+- id: `event:136967:dc404f4d2efaa01eec84bd4e`
+- evidence: Thông tư số 21/2014/TT-BCT ngày 25 tháng 6 năm 2014 của Bộ Công Thương sửa đổi, bổ sung Quy tắc cụ thể mặt hàng ban hành kèm theo Thông tư số 36/2010/TT-BCT ngày 15 tháng 11 năm 2010 của Bộ Công Thương thực hiện Quy tắc Thủ tục cấp và kiểm tra xuất xứ sửa đổi 
+- câu dẫn đọc được (đoạn dẫn phía trên): Thông tư này thay thế các văn bản quy phạm pháp luật sau đây:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2019-09-12']
+
+## 18. 60/2020/TT-BTC -> 198/2011/TT-BTC, hiệu lực 2020-08-03
+- id: `event:142972:4327247606ade0f7f64976ef`
+- evidence: Thông tư số 198/2011/TT-BTC ngày 30/12/2011 của Bộ Tài chính hướng dẫn việc thu, quản lý, sử dụng, nộp ngân sách nhà nước phí hoa tiêu hàng hải và cơ chế đặt hàng cung ứng dịch vụ hoa tiêu hàng hải.
+- câu dẫn đọc được (đoạn dẫn phía trên): Bãi bỏ toàn bộ các văn bản quy phạm pháp luật do Bộ trưởng Bộ Tài chính ban hành trong lĩnh vực tài chính doanh nghiệp sau đây:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2020-08-03']
+
+## 19. 05/2020/NĐ-CP -> 206/2004/NĐ-CP, hiệu lực 2020-01-03
+- id: `event:140550:e16ff3e0945708668de1b029`
+- evidence: Nghị định số 206/2004/NĐ-CP ngày 14 tháng 12 năm 2004 của Chính phủ quy định quản lý lao động, tiền lương và thu nhập trong các công ty nhà nước.
+- câu dẫn đọc được (đoạn dẫn phía trên): Bãi bỏ toàn bộ các văn bản quy phạm pháp luật sau đây:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2020-01-03']
+
+## 20. 05/2019/TT-NHNN -> 31/2011/TT-NHNN, hiệu lực 2019-08-09
+- id: `event:135834:6bd51b5418f1f6517e51edb7`
+- evidence: Thông tư số 31/2011/TT-NHNN ngày 30/9/2011 quy định về kiểm tra và xử lý văn bản quy phạm pháp luật của Ngân hàng Nhà nước Việt Nam.
+- câu dẫn đọc được (đoạn dẫn phía trên): Bãi bỏ toàn bộ các văn bản quy phạm pháp luật do Thống đốc Ngân hàng Nhà nước ban hành, liên tịch ban hành sau đây:
+- ngày nêu trong điều khoản hiệu lực của văn bản tác động: ['2019-08-09']
+
