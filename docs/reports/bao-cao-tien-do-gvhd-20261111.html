@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Báo cáo tiến độ khóa luận, 11/11/2026</title>
+<style>
+  body { font-family: "Times New Roman", Georgia, serif; max-width: 820px; margin: 40px auto; padding: 0 24px;
+         line-height: 1.55; color: #111; font-size: 16px; }
+  h1 { font-size: 24px; text-align: center; margin-bottom: 4px; }
+  .sub { text-align: center; color: #444; margin: 0 0 24px; }
+  h2 { font-size: 19px; margin-top: 32px; border-bottom: 1px solid #999; padding-bottom: 3px; }
+  h3 { font-size: 16.5px; margin-top: 20px; }
+  .abstract { border: 1px solid #bbb; background: #f7f7f4; padding: 12px 18px; margin: 20px 0; }
+  .abstract b:first-child { display: block; margin-bottom: 4px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0 6px; font-size: 14.5px; }
+  th, td { border: 1px solid #aaa; padding: 5px 8px; text-align: left; vertical-align: top; }
+  th { background: #ecece6; }
+  td.n { text-align: right; white-space: nowrap; }
+  .cap { font-size: 13.5px; color: #444; margin: 0 0 14px; }
+  .ok { color: #1b6b2b; font-weight: bold; } .wait { color: #9a6a00; font-weight: bold; } .bad { color: #a11; font-weight: bold; }
+  .box { border-left: 4px solid #888; padding: 6px 14px; background: #fafafa; margin: 12px 0; }
+  .note { font-size: 13.5px; color: #555; }
+  @media print { body { margin: 0; max-width: none; } h2 { page-break-after: avoid; } table { page-break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<h1>Hệ hỏi đáp pháp luật có nhận biết thời gian dựa trên đồ thị tri thức theo phiên bản</h1>
+<p class="sub">Báo cáo tiến độ khóa luận tốt nghiệp · ngày 11/11/2026<br>
+Số liệu lấy từ kho mã nguồn của đề tài; mỗi con số đều có tệp kết quả đi kèm.</p>
+
+<div class="abstract">
+<b>Tóm tắt</b>
+Đề tài xây một hệ trả lời câu hỏi pháp luật Việt Nam <i>tại một thời điểm cụ thể</i> (“ngày 15/3/2019 thì quy định là gì?”),
+cùng một bộ dữ liệu đánh giá tên <b>ViLexTime</b>. Đến nay đã có: kho văn bản và đồ thị phiên bản khoảng 1,5 triệu đơn vị điều khoản;
+15 cấu hình hệ (từ hỏi thẳng mô hình ngôn ngữ đến hệ đề xuất dùng đồ thị); bộ đánh giá đã chạy hai vòng thử.
+Hai tuần qua chúng em tập trung vào <b>độ tin cậy của thước đo</b>: kiểm đáp án chuẩn bằng nguồn độc lập với đồ thị,
+tìm ra và sửa 4 nhóm lỗi trong đồ thị, dựng lại một lần, và đang chạy lại toàn bộ hệ trên tập phát triển.
+Phần còn thiếu chủ yếu là <b>xác nhận của con người</b>: nhãn bộ test cuối do AI gán và sinh viên duyệt, chưa có hai người gán độc lập;
+một số ca pháp lý chưa qua luật sư. Dự kiến khóa dữ liệu và hệ trong tuần 16–20/11, chạy test cuối cuối tháng 11,
+hoàn thiện khóa luận trước 26/12/2026.
+</div>
+
+<h2>1. Đề tài giải quyết vấn đề gì</h2>
+<p>Luật thay đổi liên tục: một khoản có thể bị sửa, bị bãi bỏ, hoặc bị văn bản mới thay thế. Một câu hỏi pháp luật chỉ có đáp án đúng
+khi gắn với <b>ngày</b> người hỏi quan tâm. Các hệ hỏi đáp phổ biến (hỏi thẳng ChatGPT, hoặc tìm văn bản rồi cho mô hình đọc) thường
+trả về <b>phiên bản hiện hành hoặc phiên bản sai thời điểm</b> mà không báo.</p>
+<p>Đề tài làm hai việc:</p>
+<ul>
+  <li><b>Một hệ đề xuất</b>: lưu mỗi điều khoản thành chuỗi các phiên bản có ngày hiệu lực (đồ thị phiên bản), khi trả lời thì chọn đúng phiên bản tại ngày được hỏi,
+      và nhận ra trường hợp quy định đã hết hiệu lực.</li>
+  <li><b>Một bộ đánh giá (ViLexTime)</b>: câu hỏi kèm ngày hỏi và đáp án đúng tại ngày đó, chia theo sáu loại tình huống thời gian (T1–T6),
+      để đo xem mỗi hệ sai phiên bản bao nhiêu.</li>
+</ul>
+<table>
+<tr><th>Nhóm</th><th>Tình huống</th><th>Ví dụ</th></tr>
+<tr><td>T1</td><td>Quy định không đổi (nhóm đối chứng)</td><td>Hỏi ngày nào cũng một đáp án</td></tr>
+<tr><td>T2</td><td>Quy định bị sửa: đáp án khác nhau trước và sau ngày sửa</td><td>Mức phạt tăng từ 01/01/2022</td></tr>
+<tr><td>T3</td><td>Bị sửa nhiều lần (từ ba phiên bản)</td><td>Một khoản thuế đổi ba lần</td></tr>
+<tr><td>T6</td><td>Quy định đã bị bãi bỏ: hệ phải biết là “không còn”</td><td>Hỏi khoản đã bị bãi bỏ năm 2023</td></tr>
+</table>
+<p class="cap">Bảng 1. Các nhóm chính của ViLexTime (T4 là lát “sửa rất ít chữ” của T2; T5 rất hiếm).</p>
+
+<h2>2. Những gì đã làm được</h2>
+
+<h3>2.1. Kho văn bản và đồ thị phiên bản</h3>
+<ul>
+  <li>Kho văn bản từ cổng vbpl.vn của Bộ Tư pháp, tách thành khoảng <b>1,5 triệu đơn vị</b> (điều, khoản, điểm),
+      <b>khoảng 1,6 triệu phiên bản</b> có ngày hiệu lực, và khoảng 56 nghìn sự kiện sửa đổi/bãi bỏ trích tự động từ văn bản.</li>
+  <li>Tìm kiếm theo từ khóa và theo ngữ nghĩa (vector) trên toàn kho; đồ thị đọc từ SQLite khi truy xuất.</li>
+</ul>
+
+<h3>2.2. Hệ thống và các đối chứng</h3>
+<p>15 cấu hình chạy trên cùng một đường ống, mỗi cấu hình chỉ đổi một yếu tố so với cấu hình trước, để biết yếu tố nào tạo ra khác biệt:</p>
+<table>
+<tr><th>Cấu hình</th><th>Ý nghĩa dễ hiểu</th></tr>
+<tr><td>b1</td><td>Hỏi thẳng mô hình ngôn ngữ, không cho đọc tài liệu</td></tr>
+<tr><td>b2ctx, b3, b4</td><td>RAG thông thường: tìm đoạn văn bản (từ khóa, ngữ nghĩa, lai ghép) rồi cho mô hình đọc</td></tr>
+<tr><td>b5, b6</td><td>Có thêm đồ thị nhưng không quan tâm thời gian (giống GraphRAG)</td></tr>
+<tr><td>b7, b7plus, b7pp</td><td>Lọc theo ngày: lọc văn bản, rồi lọc đến từng phiên bản điều khoản</td></tr>
+<tr><td>proposed2</td><td><b>Hệ đề xuất</b>: lọc phiên bản + đi theo đồ thị lên điều khoản cha để bắt trường hợp bãi bỏ</td></tr>
+<tr><td>p2a2, p2a3</td><td>Bỏ bớt từng thành phần của hệ đề xuất để xem thành phần nào có ích</td></tr>
+<tr><td>oracle</td><td>Cho sẵn đúng đoạn văn bản: cận trên, đo riêng khả năng “đọc” của mô hình</td></tr>
+</table>
+<p class="cap">Bảng 2. Các cấu hình chính. Mô hình sinh câu trả lời: GPT-4o mini (nhiệt độ 0); Qwen3-4B dùng ở vòng thử trước.</p>
+
+<h3>2.3. Kết quả trên tập phát triển (dev, 151 câu), ngày 09/11</h3>
+<table>
+<tr><th>Cấu hình</th><th>Độ chính xác</th></tr>
+<tr><td>b7 (lọc văn bản theo ngày)</td><td class="n">0,563</td></tr>
+<tr><td>b7plus / b7pp (lọc đến phiên bản)</td><td class="n">0,689 / 0,689</td></tr>
+<tr><td><b>proposed2 (hệ đề xuất)</b></td><td class="n"><b>0,715</b></td></tr>
+<tr><td>proposed3 (biến thể)</td><td class="n">0,735</td></tr>
+<tr><td>oracle (cho sẵn đúng căn cứ)</td><td class="n">0,967</td></tr>
+</table>
+<p class="cap">Bảng 3. Dev 09/11 với GPT-4o mini (tệp <code>runs/gpt4omini_dev/all.score.json</code>). Dev chỉ dùng để phát triển, không dùng để kết luận.
+Theo quy tắc chọn đã khai báo trước, hệ đề xuất là <b>proposed2</b>: proposed3 hơn 2/21 câu bãi bỏ nhưng khoảng tin cậy chạm 0.
+Các số này tính trên đồ thị <i>trước</i> khi sửa lỗi (mục 3) và đang được chạy lại.</p>
+<div class="box">Đọc bảng: khoảng cách giữa hệ tốt nhất (≈0,72) và oracle (0,97) cho thấy phần lớn lỗi còn lại nằm ở <b>khâu tìm</b> đúng đoạn văn bản,
+không phải ở khâu mô hình đọc hiểu.</div>
+
+<h3>2.4. Hai vòng thử trên tập test (đã có, được khai là vòng thử)</h3>
+<ul>
+  <li><b>v1.0</b> (211 câu, sinh bằng Qwen3-4B): độ chính xác tăng dần từ 0 (hỏi thẳng) → 0,474 (RAG thường) → 0,640 (lọc theo ngày) → 0,654 (hệ đề xuất);
+      tỷ lệ trả về sai phiên bản giảm từ 0,133 (b7) xuống 0 (b7pp). Sáu so sánh khai báo trước đều có ý nghĩa sau hiệu chỉnh Holm.
+      Điểm yếu lớn: các câu hỏi về quy định đã bãi bỏ đúng <b>0/15</b> ở cả sáu hệ.</li>
+  <li><b>test 2</b> (211 câu có đáp án): chỉ dùng được các chỉ số truy xuất; độ chính xác của lần chấm đầu không hợp lệ do thiếu đáp án ngắn và đã chấm lại.</li>
+</ul>
+<p>Hai vòng này có nhãn do mô hình ngôn ngữ gán, nên chúng em coi là <b>vòng thử</b>. Kết luận chính sẽ dựa trên <b>bộ test cuối</b> (mục 4).</p>
+
+<h2>3. Việc hai ngày qua: kiểm và sửa thước đo</h2>
+<p>Đáp án chuẩn của ViLexTime sinh từ chính đồ thị. Nếu đồ thị sai thì đáp án sai, và hệ đúng luật vẫn bị chấm sai.
+Vì vậy chúng em kiểm đồ thị bằng ba nguồn <b>độc lập</b>:</p>
+<table>
+<tr><th>Cách kiểm</th><th>Kết quả</th></tr>
+<tr><td>Gold mù đợt 1: người gán đọc văn bản gốc, không thấy đồ thị (120 câu)</td><td class="n">119/120 khớp (ngưỡng đặt trước ≥ 114)</td></tr>
+<tr><td>Gold mù đợt 2: AI gán mù 30 câu T1/T6 (người đối chiếu sau)</td><td class="n">28/30 khớp; 2 ca lệch đều do người gán AI sai hoặc ca tranh chấp pháp lý</td></tr>
+<tr><td>So với văn bản hợp nhất (VBHN) của cơ quan ban hành</td><td>9 ca cần xem: cả 9 đồ thị chọn đúng phiên bản; độ phủ VBHN rất thấp (96 cặp, 2 so được chữ)</td></tr>
+</table>
+<p class="cap">Bảng 4. Đối chiếu đáp án đồ thị với nguồn độc lập. Các ca pháp lý được tra lại trên Lawgical và cổng vbpl, có số hiệu, điều khoản, ngày hiệu lực và lời văn trích.</p>
+
+<p>Từ các ca lệch, chúng em lần ra <b>4 nhóm lỗi hệ thống</b> trong cách dựng đồ thị:</p>
+<table>
+<tr><th>Lỗi</th><th>Nói dễ hiểu</th><th>Xử lý</th></tr>
+<tr><td>Bãi bỏ một phần</td><td>Văn bản chỉ bỏ một gạch đầu dòng, đồ thị lại coi cả khoản đã hết hiệu lực (18/22 ca nghi là lỗi thật)</td><td>Đánh dấu và loại khỏi chấm</td></tr>
+<tr><td>Bãi bỏ cả văn bản bị bỏ qua</td><td>Văn bản đã bị bãi bỏ toàn bộ nhưng đồ thị vẫn coi còn hiệu lực (kiểm mẫu 30: 28 áp đúng)</td><td>Áp tự động theo luật kiểm được bằng máy</td></tr>
+<tr><td>Thiếu câu</td><td>Khi tách điều khoản, máy làm rơi đoạn văn nối tiếp</td><td>Sửa bộ tách</td></tr>
+<tr><td>Dòng cần loại</td><td>Câu hỏi có hai đáp án vì luật cấp cao hơn điều chỉnh cùng vấn đề</td><td>Loại theo từng dòng</td></tr>
+</table>
+<p class="cap">Bảng 5. Lỗi đồ thị đã sửa. Quy tắc: chỉ sửa và dựng lại <b>một lần</b>, trước khi khóa hệ; lỗi phát hiện sau đó được loại dòng hoặc khai là giới hạn.</p>
+<p>Kết quả dựng lại: khoảng 50 nghìn phiên bản được bổ sung câu bị thiếu, 278 văn bản được đóng hiệu lực đúng.
+Tác động lên đáp án nhỏ: dev đổi 4 dòng, test v1.0 loại 2 dòng. Nhưng nội dung hệ tìm được thay đổi ở <b>61–92%</b> câu hỏi,
+nên phải chạy lại toàn bộ hệ trên dev (<span class="wait">đang chạy, xong trong hôm nay</span>).
+Mọi bước đều có kiểm tra độc lập (một phiên AI riêng tính lại số liệu); lần kiểm gần nhất không thấy lỗi buộc dựng lại,
+còn 2 ca áp sai nhỏ được ghi là giới hạn.</p>
+
+<h2>4. Bộ test cuối và cách gán nhãn</h2>
+<ul>
+  <li>Bộ test cuối chỉ gồm câu hỏi <b>chưa hệ nào từng chạy</b>, để tránh tinh chỉnh theo test.</li>
+  <li>Từ 06/11, quy trình gán nhãn là: <b>hai AI gán độc lập</b> (Claude và Codex, khác mô hình) → AI thứ ba đề xuất cho dòng lệch → <b>sinh viên duyệt mọi dòng</b> → ca phân vân chuyển luật sư.</li>
+  <li>Hiện có <b>165 chuỗi câu hỏi đạt</b> (silver 80, lô mới 73, bổ sung 12), vượt mức tối thiểu 130 đặt ra trước.</li>
+  <li>Đồng thuận giữa hai AI trước hòa giải (chỉ số AC1 cho kết luận đạt/không đạt): 0,50–0,89 tùy lô; trên lô mới 128 câu là 0,50.</li>
+</ul>
+
+<h2>5. Còn thiếu gì và đang gặp khó ở đâu</h2>
+<table>
+<tr><th>Vấn đề</th><th>Mức</th><th>Vì sao quan trọng</th><th>Hướng xử lý</th></tr>
+<tr><td>Không có hai <b>người</b> gán độc lập cho bộ test cuối</td><td class="bad">Lớn</td>
+    <td>Chuẩn công bố bộ dữ liệu thường yêu cầu đồng thuận người–người; hiện chỉ có AI–AI và tỷ lệ sinh viên sửa nhãn AI</td>
+    <td>Khai rõ tầng “AI gán, người xác nhận”; xin ý kiến thầy cô có cần một người thứ hai kiểm mẫu</td></tr>
+<tr><td>Một số kết luận pháp lý chưa qua luật sư</td><td class="wait">Vừa</td>
+    <td>9 ca VBHN, 2 tín hiệu bãi bỏ, 1 ca gold, quy ước một ca gold đợt 1 đang ở mức “AI đề xuất, sinh viên xác nhận”</td>
+    <td>Gửi luật sư phiếu đã có sẵn căn cứ; nếu không kịp thì khai là giới hạn</td></tr>
+<tr><td>24 dòng silver còn mở hoặc phân vân</td><td class="wait">Vừa</td><td>Cần một người độc lập xem</td><td>Chọn người xem; AI chuẩn bị phiếu</td></tr>
+<tr><td>Cỡ mẫu nhỏ so với hiệu ứng cần phát hiện</td><td class="wait">Vừa</td>
+    <td>Với 162 chuỗi, xác suất phát hiện hiệu ứng cỡ test 2 chỉ khoảng 0,37</td><td>Báo đúng như vậy; không hạ tiêu chuẩn nhãn để tăng cỡ mẫu</td></tr>
+<tr><td>Phần trích sự kiện sửa đổi còn bỏ sót</td><td class="wait">Vừa</td>
+    <td>Bắt được 64,6% sự kiện so với danh mục của cổng; còn ~2.700 sự kiện dạng danh sách chưa đo</td><td>Khai là giới hạn; không sửa đồ thị thêm sau lần dựng lại</td></tr>
+<tr><td>Hệ vẫn yếu ở câu hỏi về quy định đã bãi bỏ</td><td class="wait">Vừa</td><td>Đúng 0/15 ở vòng thử v1.0</td><td>Đo lại trên dev mới; cải tiến proposed2 đã nhắm vào đúng chỗ này</td></tr>
+<tr><td>Hai quyết định thiết kế chưa được duyệt chính thức</td><td class="wait">Vừa</td>
+    <td>Dùng GPT-4o mini làm mô hình sinh chính; danh sách hệ cuối</td><td>Cần thầy cô và đồng tác giả duyệt trước khi chạy test</td></tr>
+<tr><td>Chưa có: chương 1 và 7, giao diện demo, hiệu chuẩn chấm bằng LLM</td><td class="ok">Nhỏ</td><td>Phụ thuộc kết quả test</td><td>Làm sau khi chạy test</td></tr>
+</table>
+<p class="cap">Bảng 6. Khoảng trống hiện tại, xếp theo mức ảnh hưởng tới kết luận.</p>
+
+<h2>6. Kế hoạch và ước tính thời gian</h2>
+<table>
+<tr><th>Cổng</th><th>Nội dung</th><th>Hạn kế hoạch</th><th>Ước tính thực tế</th><th>Trạng thái</th></tr>
+<tr><td>G0</td><td>Dọn mã nguồn, một kế hoạch duy nhất</td><td>07/11</td><td>—</td><td class="ok">Xong</td></tr>
+<tr><td>G1</td><td>Thước đo gán nhãn (lô thử hai người)</td><td>07/11</td><td>—</td><td class="wait">Thay bằng quy trình AI gán + sinh viên duyệt (06/11); đo AI–AI thay cho người–người</td></tr>
+<tr><td>G2</td><td>Khóa dữ liệu: bộ test cuối, kiểm đáp án độc lập</td><td>12/11</td><td>13–15/11</td><td class="wait">Đủ số lượng; chờ quyết định về tầng nhãn và luật sư</td></tr>
+<tr><td>G3</td><td>Khóa hệ: chạy lại dev, chốt hệ đề xuất, khai báo trước kế hoạch phân tích</td><td>20/11</td><td>18–20/11</td><td class="wait">Đang chạy lại dev</td></tr>
+<tr><td>G4</td><td>Chạy test cuối đúng một lần, báo mọi kết quả kể cả xấu</td><td>30/11 (muộn nhất 14/12)</td><td>25–30/11</td><td>Chưa</td></tr>
+<tr><td>G5</td><td>Nộp khóa luận đủ chương, có demo</td><td>26/12</td><td>20–26/12</td><td>Nháp 7 chương đã có</td></tr>
+<tr><td>G6</td><td>Paper (dự kiến ICAIL 2027, hạn khoảng 28/01/2027)</td><td>01/2027</td><td>01/2027</td><td>Nháp đã có</td></tr>
+</table>
+<p class="cap">Bảng 7. Lộ trình theo cổng. Không qua cổng trước thì không làm cổng sau. Mục tiêu là <b>đo đúng</b>, không yêu cầu hệ đề xuất phải thắng.</p>
+
+<h2>7. Xin ý kiến thầy cô</h2>
+<ol>
+  <li>Với bộ test cuối, mức “AI gán độc lập + sinh viên duyệt từng dòng + luật sư chốt ca khó” có đủ không, hay cần thêm một người gán độc lập trên một mẫu (ví dụ 50 chuỗi)?</li>
+  <li>Đồng ý dùng GPT-4o mini làm mô hình sinh chính, Qwen3-4B ở bảng phụ?</li>
+  <li>Đồng ý ghi các phần chưa đo được (sự kiện bỏ sót, ca chưa qua luật sư) là giới hạn thay vì kéo dài thời gian?</li>
+  <li>Nơi nộp paper: ICAIL 2027 (phương án phụ SIGIR 2027) có phù hợp?</li>
+</ol>
+
+<p class="note">Ghi chú minh bạch: các bước kiểm số liệu và tra cứu pháp lý trong báo cáo có dùng trợ lý AI (Claude, Codex) và được kiểm lại bằng một phiên AI độc lập;
+những chỗ ghi “AI đề xuất” chưa phải kết luận của luật sư. Số dev trong Bảng 3 tính trên đồ thị trước khi sửa và sẽ được cập nhật.</p>
+
+</body>
+</html>
