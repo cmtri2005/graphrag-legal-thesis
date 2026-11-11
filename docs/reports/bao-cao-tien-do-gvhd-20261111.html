@@ -84,20 +84,22 @@ trả về <b>phiên bản hiện hành hoặc phiên bản sai thời điểm</
 </table>
 <p class="cap">Bảng 2. Các cấu hình chính. Mô hình sinh câu trả lời: GPT-4o mini (nhiệt độ 0); Qwen3-4B dùng ở vòng thử trước.</p>
 
-<h3>2.3. Kết quả trên tập phát triển (dev, 151 câu), ngày 09/11</h3>
+<h3>2.3. Kết quả trên tập phát triển (dev, 151 câu), trước và sau khi sửa đồ thị</h3>
 <table>
-<tr><th>Cấu hình</th><th>Độ chính xác</th></tr>
-<tr><td>b7 (lọc văn bản theo ngày)</td><td class="n">0,563</td></tr>
-<tr><td>b7plus / b7pp (lọc đến phiên bản)</td><td class="n">0,689 / 0,689</td></tr>
-<tr><td><b>proposed2 (hệ đề xuất)</b></td><td class="n"><b>0,715</b></td></tr>
-<tr><td>proposed3 (biến thể)</td><td class="n">0,735</td></tr>
-<tr><td>oracle (cho sẵn đúng căn cứ)</td><td class="n">0,967</td></tr>
+<tr><th>Cấu hình</th><th>Độ chính xác 09/11<br>(đồ thị cũ)</th><th>Độ chính xác 11/11<br>(đồ thị đã sửa)</th><th>Khoảng tin cậy 95% (11/11)</th></tr>
+<tr><td>b2ctx (RAG thường)</td><td class="n">0,411</td><td class="n">0,424</td><td class="n">0,365–0,481</td></tr>
+<tr><td>b4 (RAG lai ghép)</td><td class="n">0,417</td><td class="n">0,358</td><td class="n">0,292–0,418</td></tr>
+<tr><td>b7 (lọc văn bản theo ngày)</td><td class="n">0,563</td><td class="n">0,563</td><td class="n">0,497–0,631</td></tr>
+<tr><td>b7plus / b7pp (lọc đến phiên bản)</td><td class="n">0,689 / 0,689</td><td class="n">0,695 / 0,709</td><td class="n">0,612–0,777 / 0,624–0,792</td></tr>
+<tr><td><b>proposed2 (hệ đề xuất)</b></td><td class="n"><b>0,715</b></td><td class="n"><b>0,722</b></td><td class="n">0,645–0,797</td></tr>
+<tr><td>proposed3 (biến thể)</td><td class="n">0,735</td><td class="n">0,735</td><td class="n">0,660–0,811</td></tr>
+<tr><td>oracle (cho sẵn đúng căn cứ)</td><td class="n">0,967</td><td class="n">0,947</td><td class="n">0,913–0,980</td></tr>
 </table>
-<p class="cap">Bảng 3. Dev 09/11 với GPT-4o mini (tệp <code>runs/gpt4omini_dev/all.score.json</code>). Dev chỉ dùng để phát triển, không dùng để kết luận.
-Theo quy tắc chọn đã khai báo trước, hệ đề xuất là <b>proposed2</b>: proposed3 hơn 2/21 câu bãi bỏ nhưng khoảng tin cậy chạm 0.
-Các số này tính trên đồ thị <i>trước</i> khi sửa lỗi (mục 3) và đang được chạy lại.</p>
-<div class="box">Đọc bảng: khoảng cách giữa hệ tốt nhất (≈0,72) và oracle (0,97) cho thấy phần lớn lỗi còn lại nằm ở <b>khâu tìm</b> đúng đoạn văn bản,
-không phải ở khâu mô hình đọc hiểu.</div>
+<p class="cap">Bảng 3. Dev với GPT-4o mini (tệp <code>runs/gpt4omini_dev/all.score.json</code> và <code>runs/rebuild_20261110_dev/all.score.json</code>).
+Dev chỉ dùng để phát triển, không dùng để kết luận. Theo quy tắc chọn đã khai báo trước, hệ đề xuất vẫn là <b>proposed2</b>:
+proposed3 chỉ hơn 1/21 câu bãi bỏ, khoảng tin cậy chứa 0. Thứ tự các hệ giữ nguyên sau khi sửa đồ thị.</p>
+<div class="box">Đọc bảng: (1) lọc theo ngày tạo bước nhảy lớn nhất (+0,19 từ b6 lên b7, +0,13 lên b7plus); (2) khoảng cách giữa hệ tốt nhất (≈0,72) và oracle (≈0,95)
+cho thấy phần lớn lỗi còn lại nằm ở <b>khâu tìm</b> đúng đoạn văn bản; (3) tỷ lệ trả về sai phiên bản giảm từ 0,53 (b4) xuống 0,03 (proposed2).</div>
 
 <h3>2.4. Hai vòng thử trên tập test (đã có, được khai là vòng thử)</h3>
 <ul>
@@ -130,7 +132,7 @@ Vì vậy chúng em kiểm đồ thị bằng ba nguồn <b>độc lập</b>:</p
 <p class="cap">Bảng 5. Lỗi đồ thị đã sửa. Quy tắc: chỉ sửa và dựng lại <b>một lần</b>, trước khi khóa hệ; lỗi phát hiện sau đó được loại dòng hoặc khai là giới hạn.</p>
 <p>Kết quả dựng lại: khoảng 50 nghìn phiên bản được bổ sung câu bị thiếu, 278 văn bản được đóng hiệu lực đúng.
 Tác động lên đáp án nhỏ: dev đổi 4 dòng, test v1.0 loại 2 dòng. Nhưng nội dung hệ tìm được thay đổi ở <b>61–92%</b> câu hỏi,
-nên phải chạy lại toàn bộ hệ trên dev (<span class="wait">đang chạy, xong trong hôm nay</span>).
+nên đã chạy lại toàn bộ 15 hệ trên dev (<span class="ok">xong 11/11</span>, Bảng 3).
 Mọi bước đều có kiểm tra độc lập (một phiên AI riêng tính lại số liệu); lần kiểm gần nhất không thấy lỗi buộc dựng lại,
 còn 2 ca áp sai nhỏ được ghi là giới hạn.</p>
 
@@ -169,7 +171,7 @@ còn 2 ca áp sai nhỏ được ghi là giới hạn.</p>
 <tr><td>G0</td><td>Dọn mã nguồn, một kế hoạch duy nhất</td><td>07/11</td><td>—</td><td class="ok">Xong</td></tr>
 <tr><td>G1</td><td>Thước đo gán nhãn (lô thử hai người)</td><td>07/11</td><td>—</td><td class="wait">Thay bằng quy trình AI gán + sinh viên duyệt (06/11); đo AI–AI thay cho người–người</td></tr>
 <tr><td>G2</td><td>Khóa dữ liệu: bộ test cuối, kiểm đáp án độc lập</td><td>12/11</td><td>13–15/11</td><td class="wait">Đủ số lượng; chờ quyết định về tầng nhãn và luật sư</td></tr>
-<tr><td>G3</td><td>Khóa hệ: chạy lại dev, chốt hệ đề xuất, khai báo trước kế hoạch phân tích</td><td>20/11</td><td>18–20/11</td><td class="wait">Đang chạy lại dev</td></tr>
+<tr><td>G3</td><td>Khóa hệ: chạy lại dev, chốt hệ đề xuất, khai báo trước kế hoạch phân tích</td><td>20/11</td><td>18–20/11</td><td class="wait">Đã chạy lại dev; chờ duyệt kế hoạch phân tích</td></tr>
 <tr><td>G4</td><td>Chạy test cuối đúng một lần, báo mọi kết quả kể cả xấu</td><td>30/11 (muộn nhất 14/12)</td><td>25–30/11</td><td>Chưa</td></tr>
 <tr><td>G5</td><td>Nộp khóa luận đủ chương, có demo</td><td>26/12</td><td>20–26/12</td><td>Nháp 7 chương đã có</td></tr>
 <tr><td>G6</td><td>Paper (dự kiến ICAIL 2027, hạn khoảng 28/01/2027)</td><td>01/2027</td><td>01/2027</td><td>Nháp đã có</td></tr>
@@ -185,7 +187,7 @@ còn 2 ca áp sai nhỏ được ghi là giới hạn.</p>
 </ol>
 
 <p class="note">Ghi chú minh bạch: các bước kiểm số liệu và tra cứu pháp lý trong báo cáo có dùng trợ lý AI (Claude, Codex) và được kiểm lại bằng một phiên AI độc lập;
-những chỗ ghi “AI đề xuất” chưa phải kết luận của luật sư. Số dev trong Bảng 3 tính trên đồ thị trước khi sửa và sẽ được cập nhật.</p>
+những chỗ ghi “AI đề xuất” chưa phải kết luận của luật sư. Số dev mới trong Bảng 3 chưa qua kiểm tra độc lập của phiên AI riêng.</p>
 
 </body>
 </html>

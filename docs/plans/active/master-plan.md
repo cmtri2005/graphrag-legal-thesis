@@ -469,8 +469,8 @@ Làm tuần tự theo cột Phụ thuộc; ghi kết quả vào mục Progress.
 | H2 | Luật sư phân xử 9 ca + 2 tín hiệu bãi bỏ; `vn-law-verifier` tra trước để luật sư có căn cứ | verifier → luật sư | Luật sư | H1 | Xong 10/11: CMT xác nhận đề xuất AI, chưa qua luật sư |
 | H3 | Gold mù đợt 2 (≥30 dòng T1/T6): cần người gán mới, độc lập với đồ thị và nhãn AI. Thêm `--per-stratum` cho `independent_gold.py`, dựng phiếu | `data-clerk` | CMT chọn người | Quyết định ai gán | Chặn |
 | H4 | Xác nhận quy ước `dong_y` và G108 (gold đợt 1, 119/120) | verifier đã tra | CMT | | Xong 10/11 (CMT xác nhận) |
-| H5 | Danh sách lỗi đồ thị gom từ gold mù, VBHN, G108 (đóng cả khoản khi bãi bỏ một phần), `document:31760` lệch trạng thái | `experiment-executor` điều tra, chưa sửa | CMT chốt sửa một lần | H2, H3 | Đang lập danh sách 10/11 |
-| H6 | Dựng lại release, chạy lại mọi hệ trên dev, đối soát | executor → `evidence-gate` | CMT | H5 | Chờ |
+| H5 | Danh sách lỗi đồ thị gom từ gold mù, VBHN, G108 (đóng cả khoản khi bãi bỏ một phần), `document:31760` lệch trạng thái | `experiment-executor` điều tra, chưa sửa | CMT chốt sửa một lần | H2, H3 | Xong 10/11 (gate 2 lần FAIL câu chữ, đã sửa) |
+| H6 | Dựng lại release, chạy lại mọi hệ trên dev, đối soát | executor → `evidence-gate` | CMT | H5 | Dựng lại xong; gate code không lỗi chặn; dev 15 hệ xong 11/11 (`16213bb`), P = `proposed2`; chờ gate số dev |
 | H7 | Người độc lập xem 24 dòng silver chưa quyết hoặc `[phân vân]` | verifier chuẩn bị, người xem | CMT/NMT | | Chờ |
 | H8 | ADR 0005 amendment G3 → Accepted; `thesis-critic` rà trước | critic → CMT | CMT | H6 | Chờ |
 | H9 | `final_run` P = `proposed2`; gate kiểm số; viết paper | executor → gate | CMT | H8 | Chờ |
@@ -501,6 +501,7 @@ paper; Lawgical dưới 20 lượt/ngày, thiếu thì dùng API vbpl và ghi ng
 - [x] 05/11 A18: phản biện xong (`docs/reports/phan-bien-ban-nhap-20261105.md`); bản nháp đã sửa theo, 0 số thiếu nguồn, mẫu 30 số khớp 30.
 - [ ] CMT gửi file Word cho luật sư, mời NMT vào trang, chạy Colab (dev_x1, dev_x2, dev_x8, round2).
 - [x] 10/11 H2 tra trước (AI-đề xuất): 9 ca VBHN đồ thị chọn đúng phiên bản ở mọi ngày hỏi; 2 tín hiệu bãi bỏ là giả (căn sang điểm bên cạnh); 1 câu thiếu ở NĐ 209/2013 Đ3 k11 v1 vào H5. H021 (gold đợt 2): đề xuất loại khỏi T1 theo R3. Lawgical 7/20 lượt; còn lại qua API vbpl. Chờ luật sư.
+- [x] 11/11 H6: dựng lại một lần (L1, L2, L4, L6, L7/Q1), vector phần thiếu trên Colab; 15 hệ dev chạy lại với GPT-4o mini, P vẫn `proposed2` (`runs/README.md`). Báo cáo GVHD: `docs/reports/bao-cao-tien-do-gvhd-20261111.html`.
 - [ ] D0: bản nháp 7 chương và paper. Đã có nháp đủ, 0/437 số thiếu nguồn, chờ phản biện và Colab.
 
 ## Decisions
