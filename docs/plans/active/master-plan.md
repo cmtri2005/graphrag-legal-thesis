@@ -507,6 +507,7 @@ paper; Lawgical dưới 20 lượt/ngày, thiếu thì dùng API vbpl và ghi ng
 - [x] 11/11 H10 phần 2: `legal-adjudicator` (opus, 2 phiên) rà R2 cho 27 lineage T6 bộ test cuối (`data/review/ai_research/2026-11-11_t6_r2/`): 24 `giu`, 3 `relocation_unclear` (0ba67328, 0ba67346: Phụ lục II NĐ 01/2019 chỉ đọc được qua nguồn phụ; d88e3c54: Luật sư 2012, chuyển tiếp hai năm), 0 ca Q1. Hai quy tắc mở mới N1, N2 ghi ở `docs/reports/quy-tac-mo-20261111.md`. Kiểm máy: đủ 27/27, mã hợp lệ. Chưa áp loại vào bộ test cuối.
 - [x] 11/11 Đếm lại bộ test cuối (`data/review/ai_research/2026-11-11_final_count/count_final.py`): **157 lineage** (silver 75 sau H7, lo2 70, bổ sung 12) = T2 127, T6 24 (sau N2: 156, T6 23), T3 6, T1 0; đã trừ 3 lineage R2. Hai dòng lo2 dafc3b40 không nằm trong tập đạt nên không đổi số. Còn mở: N2 (có thể −1), N3 (có thể +2). Đạt ngưỡng G2 ≥ 130. Chưa dựng file phát hành.
 - [x] 11/11 H10 xong: chấm lại dev sau khi loại 12 lineage T6 (9 R2 + 3 Q1; 151 → 127 dòng), không gọi API mới (`runs/t6_dev_r2_20261111/rescore.py`). T6 không đáp án còn 9: `proposed2` 3/9, `proposed3` 3/9, `b7pp` 2/9, `oracle` 9/9. Quy tắc chọn P chạy lại: hiệu 0 [−0,33; 0,33], **P vẫn `proposed2`**. Accuracy dev `proposed2` 0,722 → 0,764.
+- [x] 11/11 T1 đối chứng: AI-A (Claude Sonnet) + AI-B (Codex, bản gán lại `2026-11-11_t1_ai_b_redo/`, chốt trước khi đo) trên 60 lineage: verdict AC1 0,919, κ 0,870, p_neg 0,903 (gate pass); 6 dòng lệch Q (3 lệch verdict). AI-B chunk02 lượt đầu hỏng 3 lần (transport, định dạng, rỗng), lưu `failed_attempts/`. Giới hạn: phiên gán lại đã thấy nhãn AI-B lượt trước, không thấy AI-A. Phiếu `duyet_CMT.xlsx` chờ CMT.
 - [ ] D0: bản nháp 7 chương và paper. Đã có nháp đủ, 0/437 số thiếu nguồn, chờ phản biện và Colab.
 
 ## Decisions
@@ -844,6 +845,46 @@ paper; Lawgical dưới 20 lượt/ngày, thiếu thì dùng API vbpl và ghi ng
 ## Result
 
 Chưa hoàn tất.
+
+### AI-B cho 60 T1 mới, 11/11/2026
+
+- Theo yêu cầu CMT: chỉ thực hiện AI-B bằng Codex, không thay bằng Claude khi
+  hết hạn mức. Chưa đọc nhãn AI-A để đưa vào các phiên AI-B.
+- Đầu vào và lời giao việc: `data/review/ai_research/2026-11-11_t1_labels/`,
+  hai chunk × 30 chuỗi. Đã kiểm SHA256 hai chunk, định nghĩa và thẻ 4.0 khớp
+  prompt AI-B. Q2 theo mục T1 đối chứng đã được CMT chấp thuận.
+- Đã chạy `run_b.sh` (Codex `gpt-6-luna`, hai phiên ephemeral, read-only).
+  Lượt trong sandbox lỗi khởi tạo do hệ thống tệp chỉ đọc; lượt được cấp quyền
+  đã xuất hai gói. Gói 02 có 30/30 nhãn qua `ai_labels.read_labels`, không
+  nhãn bị loại; worker báo thiếu căn cứ do API nguồn luật không truy cập được.
+  Gói 01 lần đầu bị cắt giữa dòng, thiếu khối provenance; điều phối đã lưu
+  lần lỗi ở `failed_attempts/` và hoàn tất lượt chạy lại, không chạy trùng.
+- Hoàn tất phần AI-B: `.venv/bin/python .../validate_b.py` qua, **60/60 hợp
+  lệ**, 0 thiếu/trùng/bị loại; kiểm hash input và binding. Bằng chứng:
+  `data/review/ai_research/2026-11-11_t1_labels/b_raw_validation.json`;
+  nhãn ở `raw/b_chunk01.md`, `raw/b_chunk02.md`, bản gốc và receipt chuẩn hóa
+  ở `raw_original/`, log ở `codex_logs/`. `git diff --check` qua.
+- Hạn chế: **60/60 evidence_status=insufficient**, tất cả `not_verified`.
+  Validator chứng minh cấu trúc/độ phủ, không chứng minh đúng pháp lý hoặc
+  người chấp nhận. Chưa có xác nhận người; phần AI-B không đo AC1 hoặc dựng
+  phiếu duyệt thay cho tiến trình điều phối đang chạy.
+
+### Gán lại AI-B T1 theo yêu cầu CMT, 11/11/2026
+
+- Đầu ra riêng: `data/review/ai_research/2026-11-11_t1_ai_b_redo/b.jsonl`;
+  giữ nguyên kết quả lượt trước. Tải đủ 58 toàn văn API nguồn chính thức sau
+  khi được cấp quyền mạng; 20 lượt tra web và toàn văn 1317/QĐ-BTC đã lưu.
+- Đối chiếu lại đủ 60 câu Q1–Q4: 44 `dat`, 16 `khong_dat`; 49 `sufficient`,
+  11 `insufficient` do chưa xác minh ngày đăng Công báo bằng nguồn gốc.
+  Danh sách mở ở `pending_evidence.tsv`; không đổi nhãn thành đã kiểm.
+- `.venv/bin/python .../export_labels.py` qua: 60/60 hợp lệ, 0 thiếu/trùng/
+  bị loại; hash/binding và mọi quote đối chiếu được với nguồn đã tải.
+  `validation.json`, `source_receipts.json`, `temporal_checks.jsonl` và
+  `provenance.json` là bằng chứng/hạn chế của lượt này.
+- Gán lại trực tiếp bằng Codex trong cùng phiên, không đọc AI-A, nhưng đã
+  thấy một phần B cũ trong lịch sử; không gọi là lượt mù mới. Khả năng truy
+  cập nguồn khác lượt đầu, phải khai khi so sánh. Chưa đo lại AC1 hoặc dựng
+  phiếu CMT từ B mới. Chưa commit hoặc push.
 
 ### Kiểm G2 theo yêu cầu CMT, 09/11/2026
 

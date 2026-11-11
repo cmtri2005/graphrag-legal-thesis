@@ -1,0 +1,25 @@
+{
+  "requested": 60,
+  "valid": 60,
+  "missing": [],
+  "duplicates": [],
+  "rejected": [],
+  "verdict": {
+    "dat": 44,
+    "khong_dat": 16
+  },
+  "evidence_status": {
+    "insufficient": 11,
+    "sufficient": 49
+  },
+  "all_target_and_evidence_quotes_match_downloaded_official_text": true,
+  "files_sha256": {
+    "b.jsonl": "32921c5270e9a8f026f3f27105ff8b26e4cb097a346148c129d9dac90d3a4360",
+    "decisions.json": "efc8e14ee56e057d4f79ec7f5cbe6fcf34b38c13f8ba5b76975f04616545c550",
+    "temporal_checks.jsonl": "4160ceb7c1ba1e57b7459de92c9239c9f07ede98878077b586331246efaed941",
+    "source_receipts.json": "fe9ecc706f6872110291788eb2aaadd633e9dbeb1f6e437d18481b37a1b97c41",
+    "web_receipts.json": "fbd1057ae0fb6445ed533b03f73e10e4c56a1bf6ee1f789d8f0b1f9c85c290a4"
+  },
+  "validator": "ai_labels.read_labels + exact input hashes and coverage + downloaded-source quote checks",
+  "limits": "AI reannotation, all not_verified; source sufficiency is annotator judgment, not legal accuracy or human confirmation. Prior B exposure; no AI-A labels read. No paired agreement measured."
+}

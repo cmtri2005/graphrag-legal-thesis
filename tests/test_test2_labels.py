@@ -201,6 +201,15 @@ def test_worksheet_rejects_duplicates_and_missing_question(tmp_path, record):
         labels.load_worksheet(f)
 
 
+def test_worksheet_accepts_t1_and_rejects_other_groups(tmp_path, record):
+    f = tmp_path / "worksheet.jsonl"
+    f.write_text(json.dumps({**record, "group": "T1"}), encoding="utf-8")
+    assert labels.load_worksheet(f)[0]["group"] == "T1"
+    f.write_text(json.dumps({**record, "group": "T4"}), encoding="utf-8")
+    with pytest.raises(ValueError, match="thiếu"):
+        labels.load_worksheet(f)
+
+
 def test_changed_question_rejects_stale_labels_on_read_save_and_report(tmp_path, record, valid):
     path = tmp_path / "test2_A.tsv"
     assert not labels.save_label(path, [record], "A", record["lineage_id"], valid)["errors"]

@@ -1,0 +1,38 @@
+{
+  "run": "2026-11-11_t1_ai_b_redo",
+  "labeler": "ai-b",
+  "model": "Codex current session; exact model revision unknown",
+  "created_at": "2026-11-11T15:41:15.128957+00:00",
+  "guideline_version": "4.0",
+  "skills": [
+    ".claude/skills/vn-legal-research/SKILL.md",
+    ".claude/skills/vilextime-ai-labeling/SKILL.md"
+  ],
+  "method": "Direct manual reannotation in the current session. Explicit Q1/Q2/Q3/Q4 decisions are in decisions.json; export_labels.py only serializes and validates them.",
+  "input_sha256": {
+    "chunk01.jsonl": "ed7fbed4b313d0cf90df48e1dfa4803832937bf3746d3ba94f1774a15173bbcb",
+    "chunk02.jsonl": "7776fa959ce0acf49edc9e3ba28307a5c1f6832c3025f2876d44c65c7526998f"
+  },
+  "authority_sha256": {
+    "docs/vilextime-dinh-nghia.md": "bb506aa679888907f29f6af2480c6ee66ea451296137e1d78c57cb5245ca122e",
+    "docs/vilextime-annotation.md": "e18ee6c7dd9f8a7ec2a9556310f9250dd8b83cb6931b5322e208b5c3f03866cf"
+  },
+  "web_calls": 20,
+  "primary_api_documents_downloaded": 58,
+  "additional_full_text": [
+    "https://vanban.chinhphu.vn/default.aspx?docid=162006&pageid=27160"
+  ],
+  "access_errors": [
+    "Initial sandbox curl failed DNS; explicit escalation then succeeded for all 58 source API documents.",
+    "A batch web open of ten vbpl.moj.gov.vn attribute pages returned Internal Error; no claim those pages were read."
+  ],
+  "quota": "No Codex quota error in this reannotation; no Claude substitution.",
+  "blind": "blinding_compromised",
+  "blinding_reason": "Current session saw some prior AI-B labels during the previous turn; this is a reannotation with prior-B exposure, not a fresh blind run. No AI-A labels, agreement metrics or adjudication suggestions were read.",
+  "source_access_difference": "Full official texts fetched via approved network shell; prior workers could not use their WebFetch transport successfully. This access difference must accompany any comparison.",
+  "temporal_scope": "Each as_of is within 30 days of the worksheet start. Independently read original operative clauses; bounded searches for amendments/repeals; no exhaustive independent provision-history registry. Later expiry alone does not fail Q2.",
+  "publication_pending_count": 11,
+  "verification_status": "not_verified",
+  "agreement_measurement": "not performed; previous metrics and CMT workbook are not measurements of this new B file.",
+  "draft_history": "draft_attempts/serialization_v1 retains the first export. Its auxiliary date parser accidentally matched dates of cited old documents for relative-effect clauses. Fixed before delivery; Q1-Q4 unchanged. One note also corrected an unverified article number."
+}

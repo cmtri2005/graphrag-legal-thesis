@@ -65,7 +65,7 @@ def load_worksheet(path: Path) -> list[dict]:
         if lid in seen:
             raise ValueError(f"{lid}: câu hỏi trùng trong phiếu test2")
         seen.add(lid)
-        if r.get("group") not in ("T2", "T3", "T6") or not str(r.get("question") or "").strip() or not r.get("rows"):
+        if r.get("group") not in ("T1", "T2", "T3", "T6") or not str(r.get("question") or "").strip() or not r.get("rows"):
             raise ValueError(f"{lid}: phiếu test2 thiếu nhóm, câu hỏi hoặc các mốc")
     return records
 

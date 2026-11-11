@@ -1,0 +1,266 @@
+{
+  "kind": "AI–AI cross-model: A Claude, B Codex; actual model details in raw provenance/Claude metadata; not human agreement or legal accuracy",
+  "guideline_version": "4.0",
+  "batch_note": "T1 đối chứng, 60 lineages (guideline 4.0 §3 T1); pre-adjudication. No source-insufficient valid labels filtered.",
+  "files_sha256": {
+    "a.jsonl": "e0f8892999ddebce0d746d73b62316dd8f29501c8e258ca8d77356017dd7c5a4",
+    "b.jsonl": "7cf338ee8df61cbf2232c25aec46820abe8a42c53d20233bbaf24f7b1eaec38f"
+  },
+  "coverage": {
+    "requested": 60,
+    "valid_a": 60,
+    "valid_b": 60,
+    "paired": 60,
+    "missing": {
+      "a": [],
+      "b": []
+    },
+    "rejected": {
+      "a": [],
+      "b": []
+    }
+  },
+  "evidence_status": {
+    "a": {
+      "sufficient": 59,
+      "insufficient": 1
+    },
+    "b": {
+      "insufficient": 60
+    }
+  },
+  "quote_in_provided_sources": {
+    "a": {
+      "None": 60
+    },
+    "b": {
+      "None": 60
+    }
+  },
+  "thresholds": {
+    "ac1": 0.8,
+    "p_neg": 0.6,
+    "min_adverse": 5
+  },
+  "metrics": {
+    "q1": {
+      "n": 60,
+      "ac1": 0.7800366605565738,
+      "kappa": -0.10000000000000034,
+      "category_agreement": {
+        "dung": 0.8990825688073395,
+        "sai": 0.0
+      },
+      "p_neg": 0.0,
+      "confusion_a_b": {
+        "dung|dung": 49,
+        "dung|sai": 6,
+        "sai|dung": 5
+      },
+      "adverse_labels": 11,
+      "gate": "not_met"
+    },
+    "q2": {
+      "n": 60,
+      "ac1": 0.2,
+      "kappa": 0.0,
+      "category_agreement": {
+        "co": 0.6666666666666666,
+        "khong": 0.0
+      },
+      "p_neg": 0.0,
+      "confusion_a_b": {
+        "co|co": 30,
+        "co|khong": 30
+      },
+      "adverse_labels": 30,
+      "gate": "not_met"
+    },
+    "q3": {
+      "n": 60,
+      "ac1": 0.7727663969702186,
+      "kappa": 0.10326086956521725,
+      "category_agreement": {
+        "co": 0.897196261682243,
+        "khong": 0.15384615384615385
+      },
+      "p_neg": 0.15384615384615385,
+      "confusion_a_b": {
+        "co|co": 48,
+        "co|khong": 1,
+        "khong|co": 10,
+        "khong|khong": 1
+      },
+      "adverse_labels": 13,
+      "gate": "not_met"
+    },
+    "q4": {
+      "n": 60,
+      "ac1": 0.2,
+      "kappa": 0.0,
+      "category_agreement": {
+        "khong": 0.6666666666666666,
+        "khong_chac": 0.0
+      },
+      "p_neg": 0.0,
+      "confusion_a_b": {
+        "khong|khong": 30,
+        "khong|khong_chac": 30
+      },
+      "adverse_labels": 30,
+      "gate": "not_met"
+    },
+    "verdict": {
+      "n": 60,
+      "ac1": -0.08522882981638802,
+      "kappa": 0.029411764705882346,
+      "category_agreement": {
+        "dat": 0.5074626865671642,
+        "khong_dat": 0.37735849056603776
+      },
+      "p_neg": 0.37735849056603776,
+      "confusion_a_b": {
+        "dat|dat": 17,
+        "dat|khong_dat": 28,
+        "khong_dat|dat": 5,
+        "khong_dat|khong_dat": 10
+      },
+      "adverse_labels": 53,
+      "gate": "not_met"
+    }
+  },
+  "by_group": {
+    "T1": {
+      "q1": {
+        "n": 60,
+        "ac1": 0.7800366605565738,
+        "kappa": -0.10000000000000034,
+        "category_agreement": {
+          "dung": 0.8990825688073395,
+          "sai": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "dung|dung": 49,
+          "dung|sai": 6,
+          "sai|dung": 5
+        },
+        "adverse_labels": 11,
+        "gate": "not_met"
+      },
+      "q2": {
+        "n": 60,
+        "ac1": 0.2,
+        "kappa": 0.0,
+        "category_agreement": {
+          "co": 0.6666666666666666,
+          "khong": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "co|co": 30,
+          "co|khong": 30
+        },
+        "adverse_labels": 30,
+        "gate": "not_met"
+      },
+      "q3": {
+        "n": 60,
+        "ac1": 0.7727663969702186,
+        "kappa": 0.10326086956521725,
+        "category_agreement": {
+          "co": 0.897196261682243,
+          "khong": 0.15384615384615385
+        },
+        "p_neg": 0.15384615384615385,
+        "confusion_a_b": {
+          "co|co": 48,
+          "co|khong": 1,
+          "khong|co": 10,
+          "khong|khong": 1
+        },
+        "adverse_labels": 13,
+        "gate": "not_met"
+      },
+      "q4": {
+        "n": 60,
+        "ac1": 0.2,
+        "kappa": 0.0,
+        "category_agreement": {
+          "khong": 0.6666666666666666,
+          "khong_chac": 0.0
+        },
+        "p_neg": 0.0,
+        "confusion_a_b": {
+          "khong|khong": 30,
+          "khong|khong_chac": 30
+        },
+        "adverse_labels": 30,
+        "gate": "not_met"
+      },
+      "verdict": {
+        "n": 60,
+        "ac1": -0.08522882981638802,
+        "kappa": 0.029411764705882346,
+        "category_agreement": {
+          "dat": 0.5074626865671642,
+          "khong_dat": 0.37735849056603776
+        },
+        "p_neg": 0.37735849056603776,
+        "confusion_a_b": {
+          "dat|dat": 17,
+          "dat|khong_dat": 28,
+          "khong_dat|dat": 5,
+          "khong_dat|khong_dat": 10
+        },
+        "adverse_labels": 53,
+        "gate": "not_met"
+      }
+    }
+  },
+  "disagreements": [
+    "provision:db6f290a-eb9e-11f0-af04-55534f034d8f#k2#c",
+    "provision:fc015abc-e16c-11f0-98be-3d8e82125241#k1",
+    "provision:9e4d7bc2-df54-11f0-b021-c12694647832#k1#a",
+    "provision:c8ad3b3a-eb81-11f0-b2fa-255229d59ea5#k3#c",
+    "provision:1de0b4fc-eb72-11f0-9786-039e7d82af88#k3#d",
+    "provision:288902c0-eaea-11f0-bf6c-8ba736185ff8#k1#b",
+    "provision:077bfdc0-ead7-11f0-b71f-bd4a6bbb39c9#k1#a",
+    "provision:5766c966-e15c-11f0-ad7d-cb843e1f40b1#k8",
+    "provision:28abeca2-df57-11f0-b4a1-ef62507d82e9#k1",
+    "provision:e5f23c38-df45-11f0-82eb-87212638ce67#k1#c",
+    "provision:c48b9402-e17c-11f0-b684-6f540d853c18#k1#c",
+    "provision:07369050-ead7-11f0-8819-7d7d55a2eca4#k1#d",
+    "provision:429b8308-e172-11f0-8013-df6c1d1352ee#k1#a",
+    "provision:09380144-df48-11f0-a7bd-4bcb1805356b#k21",
+    "provision:106c9252-eb7f-11f0-914f-af2bb564bca0#k3#c",
+    "provision:371bdfd0-eab1-11f0-bbc3-4b18097f1858#k1#b",
+    "provision:28d334e4-eb7b-11f0-9ff2-43f8e9ee4ccc#k9",
+    "provision:db147952-df59-11f0-a8c7-d37402eddffb#k2",
+    "provision:3bd9564e-e14f-11f0-b538-5b8c9a61c03a#k8",
+    "provision:171dae7a-df3f-11f0-83ad-0d09cca16753#k1",
+    "provision:b465dcf0-e167-11f0-83e7-3d57f2b97777#k2",
+    "provision:a1260d6a-df44-11f0-82fe-770516202b09#k6#%C4%91",
+    "provision:d669ae16-e16d-11f0-8662-4d64858e0d0a#k2",
+    "provision:a14848ae-df48-11f0-b478-9f5030c0c1d9#k1",
+    "provision:192e665a-eaca-11f0-9505-3518e15a0b29#k8#b",
+    "provision:2abf6f40-e174-11f0-b922-3f24b9c2c622#k3",
+    "provision:b5e29910-eb76-11f0-8346-ffa71ce9c5fe#k1#%C4%91",
+    "provision:3caad25a-e177-11f0-bfcb-8777254785b9#k6",
+    "provision:b5491c00-eb7a-11f0-a780-1bcac2fe7873#k2#a",
+    "provision:00e219c0-eac5-11f0-841f-d12448fc0bfb#k1",
+    "provision:57215fee-df53-11f0-ab23-7fa0138aad5e#b",
+    "provision:fbe12b82-e14b-11f0-88f6-bbb37770ebfa#k1",
+    "provision:b82eb770-eacd-11f0-987b-17affd5ae846#k1#%C4%91",
+    "provision:59e7d310-eae9-11f0-91c9-a3a1f199a871#k7",
+    "provision:cc9bdcc4-eb90-11f0-98ff-3bb62e358163#k7#e",
+    "provision:c22796fe-ec3d-11f0-b7f4-fba5589e1f59#k1#b",
+    "provision:668e2d30-df40-11f0-ae93-abd48759a5e2#k2#a",
+    "provision:eb504004-eb79-11f0-ab31-1dd366006d60#k4#a",
+    "provision:54310990-eb7b-11f0-b94e-6f3cc9db7370#k1#b",
+    "provision:488598e8-df39-11f0-a89f-1be912c8b68f#k2#a",
+    "provision:c1704f5e-df3f-11f0-84eb-f3b4e47c1e1c#k2#g",
+    "provision:45feb198-df4f-11f0-b278-b5dc5d1cfc2a#k3#a",
+    "provision:e74e9512-df41-11f0-ba6e-ef6e1694b260#k1#d"
+  ]
+}

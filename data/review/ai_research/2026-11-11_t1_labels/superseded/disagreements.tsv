@@ -1,0 +1,44 @@
+chunk	lineage_id	qs_differ(A|B)
+1	provision:db6f290a-eb9e-11f0-af04-55534f034d8f#k2#c	q1:dung|sai
+1	provision:fc015abc-e16c-11f0-98be-3d8e82125241#k1	q1:dung|sai
+1	provision:9e4d7bc2-df54-11f0-b021-c12694647832#k1#a	q1:sai|dung
+1	provision:c8ad3b3a-eb81-11f0-b2fa-255229d59ea5#k3#c	q3:khong|co
+1	provision:1de0b4fc-eb72-11f0-9786-039e7d82af88#k3#d	q3:khong|co
+1	provision:288902c0-eaea-11f0-bf6c-8ba736185ff8#k1#b	q3:khong|co
+1	provision:077bfdc0-ead7-11f0-b71f-bd4a6bbb39c9#k1#a	q1:dung|sai
+1	provision:5766c966-e15c-11f0-ad7d-cb843e1f40b1#k8	q1:sai|dung q3:co|khong
+1	provision:28abeca2-df57-11f0-b4a1-ef62507d82e9#k1	q1:sai|dung
+1	provision:e5f23c38-df45-11f0-82eb-87212638ce67#k1#c	q1:dung|sai
+1	provision:c48b9402-e17c-11f0-b684-6f540d853c18#k1#c	q1:dung|sai
+1	provision:07369050-ead7-11f0-8819-7d7d55a2eca4#k1#d	q1:dung|sai
+1	provision:429b8308-e172-11f0-8013-df6c1d1352ee#k1#a	q3:khong|co
+2	provision:09380144-df48-11f0-a7bd-4bcb1805356b#k21	q2:co|khong q4:khong|khong_chac
+2	provision:106c9252-eb7f-11f0-914f-af2bb564bca0#k3#c	q2:co|khong q4:khong|khong_chac
+2	provision:371bdfd0-eab1-11f0-bbc3-4b18097f1858#k1#b	q2:co|khong q4:khong|khong_chac
+2	provision:28d334e4-eb7b-11f0-9ff2-43f8e9ee4ccc#k9	q2:co|khong q4:khong|khong_chac
+2	provision:db147952-df59-11f0-a8c7-d37402eddffb#k2	q2:co|khong q4:khong|khong_chac
+2	provision:3bd9564e-e14f-11f0-b538-5b8c9a61c03a#k8	q2:co|khong q4:khong|khong_chac
+2	provision:171dae7a-df3f-11f0-83ad-0d09cca16753#k1	q2:co|khong q3:khong|co q4:khong|khong_chac
+2	provision:b465dcf0-e167-11f0-83e7-3d57f2b97777#k2	q2:co|khong q4:khong|khong_chac
+2	provision:a1260d6a-df44-11f0-82fe-770516202b09#k6#%C4%91	q2:co|khong q4:khong|khong_chac
+2	provision:d669ae16-e16d-11f0-8662-4d64858e0d0a#k2	q2:co|khong q4:khong|khong_chac
+2	provision:a14848ae-df48-11f0-b478-9f5030c0c1d9#k1	q2:co|khong q4:khong|khong_chac
+2	provision:192e665a-eaca-11f0-9505-3518e15a0b29#k8#b	q2:co|khong q4:khong|khong_chac
+2	provision:2abf6f40-e174-11f0-b922-3f24b9c2c622#k3	q2:co|khong q4:khong|khong_chac
+2	provision:b5e29910-eb76-11f0-8346-ffa71ce9c5fe#k1#%C4%91	q2:co|khong q3:khong|co q4:khong|khong_chac
+2	provision:3caad25a-e177-11f0-bfcb-8777254785b9#k6	q1:sai|dung q2:co|khong q4:khong|khong_chac
+2	provision:b5491c00-eb7a-11f0-a780-1bcac2fe7873#k2#a	q2:co|khong q3:khong|co q4:khong|khong_chac
+2	provision:00e219c0-eac5-11f0-841f-d12448fc0bfb#k1	q2:co|khong q4:khong|khong_chac
+2	provision:57215fee-df53-11f0-ab23-7fa0138aad5e#b	q2:co|khong q3:khong|co q4:khong|khong_chac
+2	provision:fbe12b82-e14b-11f0-88f6-bbb37770ebfa#k1	q2:co|khong q4:khong|khong_chac
+2	provision:b82eb770-eacd-11f0-987b-17affd5ae846#k1#%C4%91	q2:co|khong q4:khong|khong_chac
+2	provision:59e7d310-eae9-11f0-91c9-a3a1f199a871#k7	q1:sai|dung q2:co|khong q4:khong|khong_chac
+2	provision:cc9bdcc4-eb90-11f0-98ff-3bb62e358163#k7#e	q2:co|khong q4:khong|khong_chac
+2	provision:c22796fe-ec3d-11f0-b7f4-fba5589e1f59#k1#b	q2:co|khong q4:khong|khong_chac
+2	provision:668e2d30-df40-11f0-ae93-abd48759a5e2#k2#a	q2:co|khong q4:khong|khong_chac
+2	provision:eb504004-eb79-11f0-ab31-1dd366006d60#k4#a	q2:co|khong q3:khong|co q4:khong|khong_chac
+2	provision:54310990-eb7b-11f0-b94e-6f3cc9db7370#k1#b	q2:co|khong q4:khong|khong_chac
+2	provision:488598e8-df39-11f0-a89f-1be912c8b68f#k2#a	q2:co|khong q4:khong|khong_chac
+2	provision:c1704f5e-df3f-11f0-84eb-f3b4e47c1e1c#k2#g	q2:co|khong q3:khong|co q4:khong|khong_chac
+2	provision:45feb198-df4f-11f0-b278-b5dc5d1cfc2a#k3#a	q2:co|khong q4:khong|khong_chac
+2	provision:e74e9512-df41-11f0-ba6e-ef6e1694b260#k1#d	q2:co|khong q4:khong|khong_chac

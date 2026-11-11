@@ -1,0 +1,17 @@
+{
+  "method": "Restore truncated B lineage_id from the worksheet_sha256 binding. Metadata only; original kept in raw_original/.",
+  "chunks": [
+    {
+      "raw": "b_chunk01.md",
+      "original_sha256": "4fab0226549ee3aeee443e24a3063a7a6207b62bd07047278b60ffa9aca60255",
+      "fixed_sha256": "33bb8251f376a9b206d9c69653e8f31328ddc15b14a667c8f6e5fdc85ca7611c",
+      "edits": []
+    },
+    {
+      "raw": "b_chunk02.md",
+      "original_sha256": "e12acb0b03dad26841e0fef7ed9ef07467eb990af6d9735ee1f8d3f2e6965683",
+      "fixed_sha256": "8c32c8ba41fe1b48236f480afd6873335d1ef39bd0e6ad493ef21f1466415b5e",
+      "edits": []
+    }
+  ]
+}
