@@ -370,8 +370,11 @@ def judge_question(question: str, context: str, versions: list[str]) -> str | No
 
 def lineage_rows(data: Path, ids: set[str]) -> dict[str, list[dict]]:
     rows: dict[str, list[dict]] = collections.defaultdict(list)
-    for g in GROUPS:
-        for line in (data / f"derived/vilextime/{g}.jsonl").open(encoding="utf-8"):
+    for g in (*GROUPS, "T1"):   # T1: chỉ phiếu đối chứng "không làm hại" (11/11); build vẫn chỉ rút GROUPS
+        path = data / f"derived/vilextime/{g}.jsonl"
+        if g == "T1" and not path.exists():
+            continue
+        for line in path.open(encoding="utf-8"):
             r = json.loads(line)
             if r["lineage_id"] in ids:
                 rows[r["lineage_id"]].append(r)
@@ -433,6 +436,8 @@ def qpack(out: Path, results: list[Path], data: Path, key_path: Path | None, lim
     write_packs(out, records)
     prompts = ROOT / "prompts/vilextime"
     parts = ["base.md", "T2.md", "T4.md", "T3.md", "T6.md", "test2_cau_hoi.md"]
+    if {key[i]["nhom"] for i in kept} == {"T1"}:   # lô T1 chỉ đọc quy tắc chung + NHÓM T1
+        parts = ["base.md", "T1.md", "test2_cau_hoi.md"]
     (out.parent / "HUONG_DAN.md").write_text("\n\n---\n\n".join((prompts / p).read_text(encoding="utf-8").strip() for p in parts) + "\n",
                                              encoding="utf-8")
     brief = ("# Viết câu hỏi ViLexTime bộ test 2\n\nĐọc `HUONG_DAN.md` rồi làm đúng theo đó cho mọi gói trong `packs/`.\n"

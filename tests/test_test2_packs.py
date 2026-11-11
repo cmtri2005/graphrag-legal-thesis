@@ -232,3 +232,22 @@ def test_hint_term_cache_preserves_counts_and_absent_terms():
     assert dict(planned.execute(sql, first)) == dict(db.execute(sql, first))
     assert dict(planned.execute(sql, second)) == dict(db.execute(sql, second))
     assert planned.frequencies == {'alpha': 2, 'beta': 1, 'gamma': 1, 'absent': None}
+
+
+def test_t1_pack_uses_only_base_t1_and_pack_rules_and_lineage_rows_reads_t1(tmp_path, monkeypatch):
+    from test2_packs import lineage_rows
+    g = tmp_path / "data/derived/vilextime"
+    g.mkdir(parents=True)
+    for name in ("T1", "T2", "T3", "T6"):
+        (g / f"{name}.jsonl").write_text(json.dumps({"lineage_id": "a" if name == "T1" else "b", "as_of": "2020-01-01"}) + "\n")
+    assert set(lineage_rows(tmp_path / "data", {"a", "b"})) == {"a", "b"}
+    published_fixture(tmp_path / "data")
+    rows = {"a": [{"lineage_id": "a", "group": "T1", "answer": "Phí 30 nghìn đồng.",
+                   "target": {"document_id": "doc-new", "document_title": "Phí", "lead_in": ""}}]}
+    monkeypatch.setattr("test2_packs.lineage_rows", lambda data, ids: rows)
+    key = tmp_path / "key.tsv"; key.write_text("item\tnhom\tvai_tro\na\tT1\tung_vien\n")
+    result = tmp_path / "result.tsv"; result.write_text("item\tquyet_dinh\tma\tcan_cu\tghi_chu\na\tgiu\t\t\t\n")
+    out = tmp_path / "q/packs"
+    qpack(out, [result], tmp_path / "data", key, None)
+    guide = (out.parent / "HUONG_DAN.md").read_text()
+    assert "# NHÓM T1" in guide and "# NHÓM T2" not in guide and "# NHÓM T6" not in guide

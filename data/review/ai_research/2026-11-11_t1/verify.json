@@ -1,0 +1,35 @@
+{
+ "lineages": 60,
+ "unique": 60,
+ "batches": {
+  "12": 30,
+  "13": 30
+ },
+ "overlap_v1.0": 0,
+ "overlap_dev_document": 0,
+ "overlap_dev_by_hash": 0,
+ "overlap_tokens(review/runs/data)": 0,
+ "overlap_lo2": 0,
+ "overlap_lo1_silver": 0,
+ "overlap_lo0": 0,
+ "overlap_silver": 0,
+ "overlap_test2_release_v2": 0,
+ "overlap_questions_test2": 0,
+ "overlap_ai_research_jsonl(supp18...)": 0,
+ "max_lineages_per_document": 2,
+ "documents": 58,
+ "questions_failing_current_qcheck": 0,
+ "question_models": {
+  "claude-code/claude-haiku-5-5": 60
+ },
+ "question_has_citation_or_date": 0,
+ "schema_top_equal_lo2": true,
+ "schema_row_equal_lo2": true,
+ "row_target_keys_missing_vs_lo2": [],
+ "short_answer_null": 0,
+ "base_passage_and_url": true,
+ "has_actors": 0,
+ "label_leak_keys": [],
+ "load_worksheet_t1": "REJECTED (UI chỉ nhận T2/T3/T6, chưa sửa): provision:339c8854-df4f-11f0-b489-9966855d989e#k3#a: phiếu test2 thiếu nhóm, câu",
+ "with_giua_khoang_twin": 60
+}

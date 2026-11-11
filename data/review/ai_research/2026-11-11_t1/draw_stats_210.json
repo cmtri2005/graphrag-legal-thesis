@@ -1,0 +1,41 @@
+{
+  "seed": "vilextime-t1-1111",
+  "n_t1": 2497,
+  "excluded_by_reason(overlapping)": {
+    "flags": 534,
+    "token_review_runs_data": 1799,
+    "dev_document_by_hash": 484,
+    "v1.0": 141,
+    "dev_document": 45,
+    "r6_blocked": 3
+  },
+  "eligible_pool": 462,
+  "picked": 210,
+  "documents": 191,
+  "max_per_document": 2,
+  "doc_type": {
+    "Nghị định": 87,
+    "Quyết định": 11,
+    "Thông tư liên tịch": 7,
+    "Thông tư": 80,
+    "Luật": 17,
+    "Pháp lệnh": 7,
+    "Nghị quyết": 1
+  },
+  "level": {
+    "Point": 112,
+    "Clause": 98
+  },
+  "domain": {
+    "doanh_nghiep_dau_tu": 22,
+    "khac": 133,
+    "dat_dai": 9,
+    "thue": 16,
+    "giao_thong": 33
+  },
+  "exclusion_tokens": 1276078,
+  "v1_lineages": 246,
+  "dev_docs": 73,
+  "dev_docs_by_hash": 376,
+  "draw_sha256": "ca78b257ec70d98192609600901154c0983b9e82954fdf08f6356e0506c5b359"
+}

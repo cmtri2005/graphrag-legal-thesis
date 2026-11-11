@@ -1,0 +1,18 @@
+{
+  "status": "unlabelled_candidates",
+  "guideline_version": "4.0",
+  "questions": 60,
+  "boundary_rows": 60,
+  "batches": {
+    "12": 30,
+    "13": 30
+  },
+  "source": "/home/trica/vilextime_loc/gan_t1/compiled_worksheet.jsonl",
+  "selection": "60 lineage đầu theo thứ tự rút seed vilextime-t1-1111",
+  "group": "T1 (đối chứng không làm hại)",
+  "pending": [
+    "independent A/B labels",
+    "lawyer adjudication"
+  ],
+  "output_sha256": "083b7ee86637fb6b90bf86cd8400709e7aaaf48e1c1f64b4748f5c78e84d2d22"
+}

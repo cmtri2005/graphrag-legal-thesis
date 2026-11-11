@@ -138,7 +138,7 @@ def contrast_problems(group: str, rows: list[dict], shorts: dict[tuple[str, str]
             errors.append(f"{vid}: thiếu đáp án ngắn trích đúng lời văn")
         else:
             answers[vid] = short
-    required = {"T2": 2, "T3": 3, "T6": 1}[group]
+    required = {"T1": 1, "T2": 2, "T3": 3, "T6": 1}[group]   # T1: một phiên bản, đáp án giống nhau ở mọi mốc là đúng
     distinct = len({norm(s) for s in answers.values()})
     if group == "T2" and distinct != 2:
         errors.append("T2: cần đúng 2 đáp án ngắn khác nhau (định nghĩa §4)")

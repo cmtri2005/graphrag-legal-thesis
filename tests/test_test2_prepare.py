@@ -154,3 +154,10 @@ def test_silver_assembly_audits_missing_fields_without_filtering_or_repair(tmp_p
     assert any('actor_url:unknown' in r.get('missing', []) for r in missing)
     assert not any('question_source' in r for r in result[0]['rows'])
     assert not (tmp_path / 'worksheet.jsonl').exists()
+
+
+def test_t1_single_version_needs_one_extractive_short_answer_and_no_contrast():
+    rows = [{"lineage_id": "p", "version_id": "v1", "answerable": True, "answer": "Phạt tiền từ 7.000.000 đồng.",
+             "target": {"lead_in": ""}}] * 2   # hai mốc, cùng một phiên bản
+    assert contrast_problems("T1", rows, {("p", "v1"): {"short_answer": "7.000.000 đồng"}}) == []
+    assert any("thiếu đáp án ngắn" in p for p in contrast_problems("T1", rows, {("p", "v1"): {"short_answer": None}}))

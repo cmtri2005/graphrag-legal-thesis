@@ -85,6 +85,14 @@ Mã `transitional_rule` ở Bước 1 được ghi ở Q4 theo §2.
 Nhãn `dat` / `khong_dat` do máy suy ra theo §2.
 Các bước có nhắc T1, T4, T5 là quy tắc giữ từ bản 3.0; bộ đang gán chỉ có T2, T3, T6.
 
+**T1 đối chứng (thêm 11/11/2026, CMT duyệt; theo định nghĩa §4 dòng T1).** Q1, Q3 kiểm như T2.
+- **Q2 với T1** đổi nghĩa thành "câu hỏi có đúng là không phụ thuộc thời gian không": điều khoản chỉ có
+  một phiên bản từ ngày hiệu lực đến mốc; không có văn bản nào sửa, thay thế hay bãi bỏ nó hoặc điều
+  khoản cấp trên trước mốc; văn bản còn hiệu lực tại mốc. Có lần sửa hay bãi bỏ mà phiếu không ghi →
+  Q2 = Không, `group_mismatch`, ghi văn bản tác động ở `note`.
+- **Q4 với T1** kiểm như T2 (quy phạm khác đè lên, sắp xếp bộ máy 2025, chuyển tiếp).
+- `dat` khi Q1 đúng, Q2 có, Q3 có, Q4 không, như các nhóm khác.
+
 ### Q1. Đáp án ở mỗi mốc có đúng văn bản không?
 
 **Bước 1. Đáp án đúng phiên bản có hiệu lực tại `as_of`.** Đối chiếu cả lời văn và câu dẫn với văn

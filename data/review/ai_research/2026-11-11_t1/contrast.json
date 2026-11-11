@@ -1,0 +1,21 @@
+{
+  "status": "machine_check_only_not_human_validation",
+  "questions": 78,
+  "without_detected_problem": 77,
+  "needs_review": 1,
+  "findings": [
+    {
+      "lineage_id": "provision:9d94fc76-df3d-11f0-9d0b-87cde5108406#k1#a",
+      "group": "T1",
+      "problems": [
+        "version:9d94fc76-df3d-11f0-9d0b-87cde5108406#k1#a:1: thiếu đáp án ngắn trích đúng lời văn",
+        "T1: cần ít nhất 1 đáp án ngắn khác nhau (định nghĩa §4)"
+      ]
+    }
+  ],
+  "authority": "docs/vilextime-dinh-nghia.md §4",
+  "inputs_sha256": {
+    "/home/trica/vilextime_loc/gan_t1/questions_final.jsonl": "d7a2e9060ece5590529c4ffeced79e589a8767ec228acad0a7d9f1b6f77577c6",
+    "/home/trica/vilextime_loc/gan_t1/short_answers.jsonl": "92b0c74f5f068bb63370127fd039cbb9e71611665cf8f8d8d3bb160ff00ad083"
+  }
+}
