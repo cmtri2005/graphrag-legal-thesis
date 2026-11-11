@@ -473,7 +473,7 @@ Làm tuần tự theo cột Phụ thuộc; ghi kết quả vào mục Progress.
 | H6 | Dựng lại release, chạy lại mọi hệ trên dev, đối soát | executor → `evidence-gate` | CMT | H5 | Dựng lại xong; gate code không lỗi chặn; dev 15 hệ xong 11/11 (`16213bb`), P = `proposed2`; chờ gate số dev |
 | H7 | Xem 24 dòng silver CMT ghi sửa + dòng `[phân vân]` (hợp 47 lineage) | `legal-adjudicator` (CMT 11/11 thay người) | CMT | | Đang làm 11/11 |
 | H8 | ADR 0005 amendment G3 → Accepted; `thesis-critic` rà trước | critic → CMT | CMT | H6 | Chờ |
-| H10 | T6: `legal-adjudicator` chốt 17 dòng dev + gói ca khó; rà R2 mọi dòng T6 bộ test cuối; chấm lại T6 dev | adjudicator → `data-clerk` | CMT | | Dev 17 dòng xong; R2 test cuối xong 11/11 (24 giữ, 3 `relocation_unclear`); còn 4 dòng dev và chấm lại T6 dev |
+| H10 | T6: `legal-adjudicator` chốt 17 dòng dev + gói ca khó; rà R2 mọi dòng T6 bộ test cuối; chấm lại T6 dev | adjudicator → `data-clerk` | CMT | | Dev 21/21 dòng đã rà (4 dòng cuối: 4 giữ, 1 ca Q1); R2 test cuối xong (24 giữ, 3 loại); còn chấm lại T6 dev |
 | H9 | `final_run` P = `proposed2`; gate kiểm số; viết paper | executor → gate | CMT | H8 | Chờ |
 
 Ràng buộc: gold mù và nhãn người không giao cho AI; `dong_y` AI điền phải khai trong
