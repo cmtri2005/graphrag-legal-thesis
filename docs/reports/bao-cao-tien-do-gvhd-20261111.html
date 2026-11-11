@@ -35,7 +35,7 @@ Số liệu lấy từ kho mã nguồn của đề tài; mỗi con số đều c
 cùng một bộ dữ liệu đánh giá tên <b>ViLexTime</b>. Đến nay đã có: kho văn bản và đồ thị phiên bản khoảng 1,5 triệu đơn vị điều khoản;
 15 cấu hình hệ (từ hỏi thẳng mô hình ngôn ngữ đến hệ đề xuất dùng đồ thị); bộ đánh giá đã chạy hai vòng thử.
 Hai tuần qua chúng em tập trung vào <b>độ tin cậy của thước đo</b>: kiểm đáp án chuẩn bằng nguồn độc lập với đồ thị,
-tìm ra và sửa 4 nhóm lỗi trong đồ thị, dựng lại một lần, và đang chạy lại toàn bộ hệ trên tập phát triển.
+tìm ra và sửa 4 nhóm lỗi trong đồ thị, dựng lại một lần, và đã chạy lại toàn bộ 15 hệ trên tập phát triển.
 Phần còn thiếu chủ yếu là <b>xác nhận của con người</b>: nhãn bộ test cuối do AI gán và sinh viên duyệt, chưa có hai người gán độc lập;
 một số ca pháp lý chưa qua luật sư. Dự kiến khóa dữ liệu và hệ trong tuần 16–20/11, chạy test cuối cuối tháng 11,
 hoàn thiện khóa luận trước 26/12/2026.
@@ -71,7 +71,7 @@ trả về <b>phiên bản hiện hành hoặc phiên bản sai thời điểm</
 </ul>
 
 <h3>2.2. Hệ thống và các đối chứng</h3>
-<p>15 cấu hình chạy trên cùng một đường ống, mỗi cấu hình chỉ đổi một yếu tố so với cấu hình trước, để biết yếu tố nào tạo ra khác biệt:</p>
+<p>15 cấu hình chạy trên cùng một đường ống và cùng mô hình sinh, để tách được phần đóng góp của từng thành phần (phần lớn các cặp liền kề chỉ khác một yếu tố; b2ctx→b3 và b6→b7 khác hai yếu tố):</p>
 <table>
 <tr><th>Cấu hình</th><th>Ý nghĩa dễ hiểu</th></tr>
 <tr><td>b1</td><td>Hỏi thẳng mô hình ngôn ngữ, không cho đọc tài liệu</td></tr>
@@ -97,18 +97,19 @@ trả về <b>phiên bản hiện hành hoặc phiên bản sai thời điểm</
 </table>
 <p class="cap">Bảng 3. Dev với GPT-4o mini (tệp <code>runs/gpt4omini_dev/all.score.json</code> và <code>runs/rebuild_20261110_dev/all.score.json</code>).
 Dev chỉ dùng để phát triển, không dùng để kết luận. Theo quy tắc chọn đã khai báo trước, hệ đề xuất vẫn là <b>proposed2</b>:
-proposed3 chỉ hơn 1/21 câu bãi bỏ, khoảng tin cậy chứa 0. Thứ tự các hệ giữ nguyên sau khi sửa đồ thị.</p>
-<div class="box">Đọc bảng: (1) lọc theo ngày tạo bước nhảy lớn nhất (+0,19 từ b6 lên b7, +0,13 lên b7plus); (2) khoảng cách giữa hệ tốt nhất (≈0,72) và oracle (≈0,95)
-cho thấy phần lớn lỗi còn lại nằm ở <b>khâu tìm</b> đúng đoạn văn bản; (3) tỷ lệ trả về sai phiên bản giảm từ 0,53 (b4) xuống 0,03 (proposed2).</div>
+proposed3 chỉ hơn 1/21 câu bãi bỏ, khoảng tin cậy chứa 0. Sau khi sửa đồ thị, nhóm hệ lọc đến phiên bản vẫn đứng đầu và hệ đề xuất vẫn được chọn; trong nhóm RAG thường, thứ tự b2ctx/b4/b5/b6 có đổi.</p>
+<div class="box">Đọc bảng: (1) lọc theo ngày tạo bước nhảy lớn nhất (+0,13 từ b7 lên b7plus khi lọc đến phiên bản; b7 hơn b4 khoảng +0,20, ước lượng điểm); (2) khoảng cách giữa các hệ tốt nhất (0,72–0,74) và oracle (≈0,95)
+gợi ý phần lớn lỗi còn lại nằm ở <b>khâu tìm</b> đúng đoạn văn bản (đây là diễn giải, chưa đo trực tiếp); (3) tỷ lệ câu trả lời dẫn căn cứ không còn hiệu lực (TVER) giảm từ 0,53 (b4) xuống 0,03 (proposed2) và 0 (b7pp).<br>
+Lưu ý: GPT-4o mini không hoàn toàn tất định: cùng một prompt, hai lần gọi cho kết quả đúng/sai khác nhau ở 3–5/151 câu (2–3 điểm %), cỡ bằng các chênh lệch cũ → mới trong bảng.</div>
 
 <h3>2.4. Hai vòng thử trên tập test (đã có, được khai là vòng thử)</h3>
 <ul>
   <li><b>v1.0</b> (211 câu, sinh bằng Qwen3-4B): độ chính xác tăng dần từ 0 (hỏi thẳng) → 0,474 (RAG thường) → 0,640 (lọc theo ngày) → 0,654 (hệ đề xuất);
-      tỷ lệ trả về sai phiên bản giảm từ 0,133 (b7) xuống 0 (b7pp). Sáu so sánh khai báo trước đều có ý nghĩa sau hiệu chỉnh Holm.
+      tỷ lệ dẫn căn cứ không còn hiệu lực (TVER) giảm từ 0,133 (b7) xuống 0 (b7pp). Sáu so sánh khai báo trước đều có ý nghĩa sau hiệu chỉnh Holm.
       Điểm yếu lớn: các câu hỏi về quy định đã bãi bỏ đúng <b>0/15</b> ở cả sáu hệ.</li>
-  <li><b>test 2</b> (211 câu có đáp án): chỉ dùng được các chỉ số truy xuất; độ chính xác của lần chấm đầu không hợp lệ do thiếu đáp án ngắn và đã chấm lại.</li>
+  <li><b>test 2</b> (211 câu có đáp án, nhãn do mô hình ngôn ngữ gán): lần chấm độ chính xác đầu tiên không hợp lệ do thiếu đáp án ngắn; đã chấm lại và giữ cả lần sai làm hồ sơ.</li>
 </ul>
-<p>Hai vòng này có nhãn do mô hình ngôn ngữ gán, nên chúng em coi là <b>vòng thử</b>. Kết luận chính sẽ dựa trên <b>bộ test cuối</b> (mục 4).</p>
+<p>Vì nhãn chưa đủ chuẩn (test 2 toàn bộ do mô hình gán; v1.0 có 90/211 dòng do mô hình gán, phần còn lại do người), chúng em coi hai vòng này là <b>vòng thử</b>. Kết luận chính sẽ dựa trên <b>bộ test cuối</b> (mục 4).</p>
 
 <h2>3. Việc hai ngày qua: kiểm và sửa thước đo</h2>
 <p>Đáp án chuẩn của ViLexTime sinh từ chính đồ thị. Nếu đồ thị sai thì đáp án sai, và hệ đúng luật vẫn bị chấm sai.
@@ -117,7 +118,7 @@ Vì vậy chúng em kiểm đồ thị bằng ba nguồn <b>độc lập</b>:</p
 <tr><th>Cách kiểm</th><th>Kết quả</th></tr>
 <tr><td>Gold mù đợt 1: người gán đọc văn bản gốc, không thấy đồ thị (120 câu)</td><td class="n">119/120 khớp (ngưỡng đặt trước ≥ 114)</td></tr>
 <tr><td>Gold mù đợt 2: AI gán mù 30 câu T1/T6 (người đối chiếu sau)</td><td class="n">28/30 khớp; 2 ca lệch đều do người gán AI sai hoặc ca tranh chấp pháp lý</td></tr>
-<tr><td>So với văn bản hợp nhất (VBHN) của cơ quan ban hành</td><td>9 ca cần xem: cả 9 đồ thị chọn đúng phiên bản; độ phủ VBHN rất thấp (96 cặp, 2 so được chữ)</td></tr>
+<tr><td>So với văn bản hợp nhất (VBHN) của cơ quan ban hành</td><td>9 ca cần xem: cả 9 đồ thị chọn đúng phiên bản (AI đề xuất, sinh viên xác nhận, chưa qua luật sư); độ phủ VBHN rất thấp (96 cặp, 2 so được chữ)</td></tr>
 </table>
 <p class="cap">Bảng 4. Đối chiếu đáp án đồ thị với nguồn độc lập. Các ca pháp lý được tra lại trên Lawgical và cổng vbpl, có số hiệu, điều khoản, ngày hiệu lực và lời văn trích.</p>
 
@@ -130,18 +131,18 @@ Vì vậy chúng em kiểm đồ thị bằng ba nguồn <b>độc lập</b>:</p
 <tr><td>Dòng cần loại</td><td>Câu hỏi có hai đáp án vì luật cấp cao hơn điều chỉnh cùng vấn đề</td><td>Loại theo từng dòng</td></tr>
 </table>
 <p class="cap">Bảng 5. Lỗi đồ thị đã sửa. Quy tắc: chỉ sửa và dựng lại <b>một lần</b>, trước khi khóa hệ; lỗi phát hiện sau đó được loại dòng hoặc khai là giới hạn.</p>
-<p>Kết quả dựng lại: khoảng 50 nghìn phiên bản được bổ sung câu bị thiếu, 278 văn bản được đóng hiệu lực đúng.
+<p>Kết quả dựng lại: khoảng 50 nghìn phiên bản được bổ sung câu bị thiếu, 263 văn bản (278 sự kiện bãi bỏ) được đóng hiệu lực; kiểm lại thấy 2 sự kiện áp sai, ghi là giới hạn.
 Tác động lên đáp án nhỏ: dev đổi 4 dòng, test v1.0 loại 2 dòng. Nhưng nội dung hệ tìm được thay đổi ở <b>61–92%</b> câu hỏi,
 nên đã chạy lại toàn bộ 15 hệ trên dev (<span class="ok">xong 11/11</span>, Bảng 3).
-Mọi bước đều có kiểm tra độc lập (một phiên AI riêng tính lại số liệu); lần kiểm gần nhất không thấy lỗi buộc dựng lại,
-còn 2 ca áp sai nhỏ được ghi là giới hạn.</p>
+Các bước chính được một phiên AI riêng kiểm lại bằng cách tính lại số liệu; lần kiểm bản sửa không thấy lỗi buộc dựng lại.
+Còn ghi là giới hạn: 2 sự kiện áp sai, 83 điều khoản (~0,17%) bị nối nhầm phần “Nơi nhận”, và một số bước dựng chạy trước khi mã được commit.</p>
 
 <h2>4. Bộ test cuối và cách gán nhãn</h2>
 <ul>
   <li>Bộ test cuối chỉ gồm câu hỏi <b>chưa hệ nào từng chạy</b>, để tránh tinh chỉnh theo test.</li>
   <li>Từ 06/11, quy trình gán nhãn là: <b>hai AI gán độc lập</b> (Claude và Codex, khác mô hình) → AI thứ ba đề xuất cho dòng lệch → <b>sinh viên duyệt mọi dòng</b> → ca phân vân chuyển luật sư.</li>
   <li>Hiện có <b>165 chuỗi câu hỏi đạt</b> (silver 80, lô mới 73, bổ sung 12), vượt mức tối thiểu 130 đặt ra trước.</li>
-  <li>Đồng thuận giữa hai AI trước hòa giải (chỉ số AC1 cho kết luận đạt/không đạt): 0,50–0,89 tùy lô; trên lô mới 128 câu là 0,50.</li>
+  <li>Đồng thuận giữa hai AI trước hòa giải (chỉ số AC1 cho kết luận đạt/không đạt): 0,50–0,69 ở các lô khác mô hình (Claude–Codex); lô mới 128 câu là 0,50. Lô cùng mô hình cao hơn (đến 0,89) nên không dùng làm số chính.</li>
 </ul>
 
 <h2>5. Còn thiếu gì và đang gặp khó ở đâu</h2>
@@ -155,9 +156,9 @@ còn 2 ca áp sai nhỏ được ghi là giới hạn.</p>
     <td>Gửi luật sư phiếu đã có sẵn căn cứ; nếu không kịp thì khai là giới hạn</td></tr>
 <tr><td>24 dòng silver còn mở hoặc phân vân</td><td class="wait">Vừa</td><td>Cần một người độc lập xem</td><td>Chọn người xem; AI chuẩn bị phiếu</td></tr>
 <tr><td>Cỡ mẫu nhỏ so với hiệu ứng cần phát hiện</td><td class="wait">Vừa</td>
-    <td>Với 162 chuỗi, xác suất phát hiện hiệu ứng cỡ test 2 chỉ khoảng 0,37</td><td>Báo đúng như vậy; không hạ tiêu chuẩn nhãn để tăng cỡ mẫu</td></tr>
+    <td>Với khoảng 165 chuỗi, xác suất phát hiện hiệu ứng cỡ test 2 (TV-Recall@1, +0,028) chỉ khoảng 0,37</td><td>Báo đúng như vậy; không hạ tiêu chuẩn nhãn để tăng cỡ mẫu</td></tr>
 <tr><td>Phần trích sự kiện sửa đổi còn bỏ sót</td><td class="wait">Vừa</td>
-    <td>Bắt được 64,6% sự kiện so với danh mục của cổng; còn ~2.700 sự kiện dạng danh sách chưa đo</td><td>Khai là giới hạn; không sửa đồ thị thêm sau lần dựng lại</td></tr>
+    <td>Bắt được 64,6% sự kiện so với danh mục của cổng; riêng sự kiện bãi bỏ cấp văn bản còn 2.633 sự kiện dạng danh sách chưa đo</td><td>Khai là giới hạn; không sửa đồ thị thêm sau lần dựng lại</td></tr>
 <tr><td>Hệ vẫn yếu ở câu hỏi về quy định đã bãi bỏ</td><td class="wait">Vừa</td><td>Đúng 0/15 ở vòng thử v1.0</td><td>Đo lại trên dev mới; cải tiến proposed2 đã nhắm vào đúng chỗ này</td></tr>
 <tr><td>Hai quyết định thiết kế chưa được duyệt chính thức</td><td class="wait">Vừa</td>
     <td>Dùng GPT-4o mini làm mô hình sinh chính; danh sách hệ cuối</td><td>Cần thầy cô và đồng tác giả duyệt trước khi chạy test</td></tr>

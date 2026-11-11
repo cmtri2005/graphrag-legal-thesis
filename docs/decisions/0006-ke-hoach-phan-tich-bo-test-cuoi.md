@@ -54,6 +54,7 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
   - P là `proposed3` nếu trên dev, `proposed3` − `proposed2` ở `t6_unanswerable` có KTC ghép cặp > 0, **và** trên các dòng có đáp án, cận dưới KTC của hiệu Accuracy ≥ −0,02.
   - Ngược lại, P là `proposed2`.
   - Kết quả áp quy tắc trên dev (09/11, `runs/gpt4omini_dev/select_p.json`): **P = `proposed2`**. Ở `t6_unanswerable` (21 dòng), `proposed3` − `proposed2` = +2/21, KTC ghép cặp [0; 0,238], cận dưới không > 0 nên điều kiện đầu không đạt. Dòng có đáp án (112 dòng): +1/112, KTC [0; 0,028]. Nếu quy tắc chạy lại vì đồ thị đổi (mục 7), ghi kết quả mới ở đây.
+  - Chạy lại sau khi sửa đồ thị một lần (11/11, `runs/rebuild_20261110_dev/select_p.json`, quy tắc không đổi): **P = `proposed2`**. `t6_unanswerable`: +1/21, KTC [−0,095; 0,190]; dòng có đáp án: +1/112, KTC [0; 0,028]. Gate: `docs/reports/gate/h6-gate2-dev-20261111.md`.
 
 ### 3. Họ kiểm định xác nhận (Holm, α = 0,05)
 
