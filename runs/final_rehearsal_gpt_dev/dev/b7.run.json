@@ -1,0 +1,46 @@
+{
+  "system": "b7",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "6f1892afa7f738958230d356fd57f028d3d60eb0dbeae57328344199a923ff39",
+  "raw_file_sha256": "2e187314be52fb1d2c1be36b1dede8598648fe84797eca46e51c74d4d2fe5214",
+  "model": "gpt-4o-mini-2024-07-18",
+  "revision": "gpt-4o-mini-2024-07-18",
+  "gpu": [
+    "api"
+  ],
+  "rows": 151,
+  "format_ok": 150,
+  "truncated": 0,
+  "prompt_tokens_mean": 4934.860927152318,
+  "completion_tokens_mean": 108.71523178807946,
+  "generation_seconds": 513.5524069450039,
+  "export": {
+    "system": "b7",
+    "spec": {
+      "name": "b7-hyb",
+      "layer": "asis",
+      "lexical": true,
+      "dense": true,
+      "rerank": false,
+      "temporal": "document",
+      "context": true,
+      "expand": 0,
+      "expand_edges": "none",
+      "verify": "off",
+      "k": 20,
+      "note": "B7 — document-level date filter, no graph (the main control)",
+      "repeal_note": false
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": "data/derived/embed/asis-vietnamese-embedding",
+    "embed_sha256": "3a8b143bd5e6307642b2f011020d3a7ed9b32599de7861ef992555343ee4915e",
+    "rows": 151,
+    "release_sha256": "7cf51ee66c7e242b0d3a7b03e62f1ed9bede6527082d9b2f8483ec75d278b366",
+    "corpus_manifest_sha256": "de3838c4d90fc35d1b7eef473a575ef933fcab6f4d7bd1de87da525d91a98608",
+    "prompt_file_sha256": "6f1892afa7f738958230d356fd57f028d3d60eb0dbeae57328344199a923ff39"
+  }
+}
