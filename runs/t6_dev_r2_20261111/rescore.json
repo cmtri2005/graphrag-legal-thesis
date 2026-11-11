@@ -1,0 +1,709 @@
+{
+ "dropped_lineages": [
+  "provision:1634ac90-55ad-11f1-b4ac-edc16f8d4525",
+  "provision:1a267400-2c8b-11f1-bae3-519acfdd7a39",
+  "provision:2cb2c1fa-eb7c-11f0-afa9-05bad552a7a0",
+  "provision:41522558-2d42-11f1-be12-85fe9520288d",
+  "provision:6caa8e70-eac1-11f0-9d41-ebeb0e2a77c6",
+  "provision:6cab03a0-eac1-11f0-bdcc-017d0628e025",
+  "provision:6e3d884a-eb76-11f0-a7b2-1dc1265897ba#k1#h",
+  "provision:7dc9e82a-22c2-11f1-b41f-6b8c93c8a257",
+  "provision:7dd23e64-e157-11f0-82bf-4fb1080abc7d",
+  "provision:92d51460-2d44-11f1-9f02-bdadc5058392",
+  "provision:c203f3d0-304d-11f1-bad2-35de013506a0",
+  "provision:fe9e225a-eb76-11f0-bf1a-5960624b6493#k5"
+ ],
+ "rows_before": 151,
+ "rows_after": 127,
+ "accuracy": {
+  "before": {
+   "b1": {
+    "all": [
+     0,
+     151
+    ],
+    "t6": [
+     0,
+     42
+    ],
+    "t6_answerable": [
+     0,
+     21
+    ],
+    "t6_unanswerable": [
+     0,
+     21
+    ],
+    "all_answerable_core": [
+     0,
+     112
+    ]
+   },
+   "b2ctx": {
+    "all": [
+     64,
+     151
+    ],
+    "t6": [
+     17,
+     42
+    ],
+    "t6_answerable": [
+     16,
+     21
+    ],
+    "t6_unanswerable": [
+     1,
+     21
+    ],
+    "all_answerable_core": [
+     53,
+     112
+    ]
+   },
+   "b3": {
+    "all": [
+     50,
+     151
+    ],
+    "t6": [
+     15,
+     42
+    ],
+    "t6_answerable": [
+     12,
+     21
+    ],
+    "t6_unanswerable": [
+     3,
+     21
+    ],
+    "all_answerable_core": [
+     39,
+     112
+    ]
+   },
+   "b4": {
+    "all": [
+     54,
+     151
+    ],
+    "t6": [
+     15,
+     42
+    ],
+    "t6_answerable": [
+     15,
+     21
+    ],
+    "t6_unanswerable": [
+     0,
+     21
+    ],
+    "all_answerable_core": [
+     44,
+     112
+    ]
+   },
+   "b5": {
+    "all": [
+     58,
+     151
+    ],
+    "t6": [
+     15,
+     42
+    ],
+    "t6_answerable": [
+     15,
+     21
+    ],
+    "t6_unanswerable": [
+     0,
+     21
+    ],
+    "all_answerable_core": [
+     48,
+     112
+    ]
+   },
+   "b6": {
+    "all": [
+     56,
+     151
+    ],
+    "t6": [
+     16,
+     42
+    ],
+    "t6_answerable": [
+     16,
+     21
+    ],
+    "t6_unanswerable": [
+     0,
+     21
+    ],
+    "all_answerable_core": [
+     46,
+     112
+    ]
+   },
+   "b7": {
+    "all": [
+     85,
+     151
+    ],
+    "t6": [
+     18,
+     42
+    ],
+    "t6_answerable": [
+     18,
+     21
+    ],
+    "t6_unanswerable": [
+     0,
+     21
+    ],
+    "all_answerable_core": [
+     71,
+     112
+    ]
+   },
+   "b7plus": {
+    "all": [
+     105,
+     151
+    ],
+    "t6": [
+     20,
+     42
+    ],
+    "t6_answerable": [
+     18,
+     21
+    ],
+    "t6_unanswerable": [
+     2,
+     21
+    ],
+    "all_answerable_core": [
+     89,
+     112
+    ]
+   },
+   "b7pp": {
+    "all": [
+     107,
+     151
+    ],
+    "t6": [
+     22,
+     42
+    ],
+    "t6_answerable": [
+     18,
+     21
+    ],
+    "t6_unanswerable": [
+     4,
+     21
+    ],
+    "all_answerable_core": [
+     89,
+     112
+    ]
+   },
+   "oracle": {
+    "all": [
+     143,
+     151
+    ],
+    "t6": [
+     40,
+     42
+    ],
+    "t6_answerable": [
+     21,
+     21
+    ],
+    "t6_unanswerable": [
+     19,
+     21
+    ],
+    "all_answerable_core": [
+     109,
+     112
+    ]
+   },
+   "oracle_now": {
+    "all": [
+     79,
+     151
+    ],
+    "t6": [
+     22,
+     42
+    ],
+    "t6_answerable": [
+     21,
+     21
+    ],
+    "t6_unanswerable": [
+     1,
+     21
+    ],
+    "all_answerable_core": [
+     62,
+     112
+    ]
+   },
+   "p2a2": {
+    "all": [
+     106,
+     151
+    ],
+    "t6": [
+     21,
+     42
+    ],
+    "t6_answerable": [
+     18,
+     21
+    ],
+    "t6_unanswerable": [
+     3,
+     21
+    ],
+    "all_answerable_core": [
+     90,
+     112
+    ]
+   },
+   "p2a3": {
+    "all": [
+     110,
+     151
+    ],
+    "t6": [
+     22,
+     42
+    ],
+    "t6_answerable": [
+     18,
+     21
+    ],
+    "t6_unanswerable": [
+     4,
+     21
+    ],
+    "all_answerable_core": [
+     92,
+     112
+    ]
+   },
+   "proposed2": {
+    "all": [
+     109,
+     151
+    ],
+    "t6": [
+     22,
+     42
+    ],
+    "t6_answerable": [
+     18,
+     21
+    ],
+    "t6_unanswerable": [
+     4,
+     21
+    ],
+    "all_answerable_core": [
+     91,
+     112
+    ]
+   },
+   "proposed3": {
+    "all": [
+     111,
+     151
+    ],
+    "t6": [
+     23,
+     42
+    ],
+    "t6_answerable": [
+     18,
+     21
+    ],
+    "t6_unanswerable": [
+     5,
+     21
+    ],
+    "all_answerable_core": [
+     92,
+     112
+    ]
+   }
+  },
+  "after": {
+   "b1": {
+    "all": [
+     0,
+     127
+    ],
+    "t6": [
+     0,
+     18
+    ],
+    "t6_answerable": [
+     0,
+     9
+    ],
+    "t6_unanswerable": [
+     0,
+     9
+    ],
+    "all_answerable_core": [
+     0,
+     100
+    ]
+   },
+   "b2ctx": {
+    "all": [
+     54,
+     127
+    ],
+    "t6": [
+     7,
+     18
+    ],
+    "t6_answerable": [
+     6,
+     9
+    ],
+    "t6_unanswerable": [
+     1,
+     9
+    ],
+    "all_answerable_core": [
+     43,
+     100
+    ]
+   },
+   "b3": {
+    "all": [
+     43,
+     127
+    ],
+    "t6": [
+     8,
+     18
+    ],
+    "t6_answerable": [
+     5,
+     9
+    ],
+    "t6_unanswerable": [
+     3,
+     9
+    ],
+    "all_answerable_core": [
+     32,
+     100
+    ]
+   },
+   "b4": {
+    "all": [
+     45,
+     127
+    ],
+    "t6": [
+     6,
+     18
+    ],
+    "t6_answerable": [
+     6,
+     9
+    ],
+    "t6_unanswerable": [
+     0,
+     9
+    ],
+    "all_answerable_core": [
+     35,
+     100
+    ]
+   },
+   "b5": {
+    "all": [
+     49,
+     127
+    ],
+    "t6": [
+     6,
+     18
+    ],
+    "t6_answerable": [
+     6,
+     9
+    ],
+    "t6_unanswerable": [
+     0,
+     9
+    ],
+    "all_answerable_core": [
+     39,
+     100
+    ]
+   },
+   "b6": {
+    "all": [
+     46,
+     127
+    ],
+    "t6": [
+     6,
+     18
+    ],
+    "t6_answerable": [
+     6,
+     9
+    ],
+    "t6_unanswerable": [
+     0,
+     9
+    ],
+    "all_answerable_core": [
+     36,
+     100
+    ]
+   },
+   "b7": {
+    "all": [
+     74,
+     127
+    ],
+    "t6": [
+     7,
+     18
+    ],
+    "t6_answerable": [
+     7,
+     9
+    ],
+    "t6_unanswerable": [
+     0,
+     9
+    ],
+    "all_answerable_core": [
+     60,
+     100
+    ]
+   },
+   "b7plus": {
+    "all": [
+     94,
+     127
+    ],
+    "t6": [
+     9,
+     18
+    ],
+    "t6_answerable": [
+     7,
+     9
+    ],
+    "t6_unanswerable": [
+     2,
+     9
+    ],
+    "all_answerable_core": [
+     78,
+     100
+    ]
+   },
+   "b7pp": {
+    "all": [
+     94,
+     127
+    ],
+    "t6": [
+     9,
+     18
+    ],
+    "t6_answerable": [
+     7,
+     9
+    ],
+    "t6_unanswerable": [
+     2,
+     9
+    ],
+    "all_answerable_core": [
+     78,
+     100
+    ]
+   },
+   "oracle": {
+    "all": [
+     121,
+     127
+    ],
+    "t6": [
+     18,
+     18
+    ],
+    "t6_answerable": [
+     9,
+     9
+    ],
+    "t6_unanswerable": [
+     9,
+     9
+    ],
+    "all_answerable_core": [
+     97,
+     100
+    ]
+   },
+   "oracle_now": {
+    "all": [
+     66,
+     127
+    ],
+    "t6": [
+     9,
+     18
+    ],
+    "t6_answerable": [
+     9,
+     9
+    ],
+    "t6_unanswerable": [
+     0,
+     9
+    ],
+    "all_answerable_core": [
+     50,
+     100
+    ]
+   },
+   "p2a2": {
+    "all": [
+     94,
+     127
+    ],
+    "t6": [
+     9,
+     18
+    ],
+    "t6_answerable": [
+     7,
+     9
+    ],
+    "t6_unanswerable": [
+     2,
+     9
+    ],
+    "all_answerable_core": [
+     79,
+     100
+    ]
+   },
+   "p2a3": {
+    "all": [
+     98,
+     127
+    ],
+    "t6": [
+     10,
+     18
+    ],
+    "t6_answerable": [
+     7,
+     9
+    ],
+    "t6_unanswerable": [
+     3,
+     9
+    ],
+    "all_answerable_core": [
+     81,
+     100
+    ]
+   },
+   "proposed2": {
+    "all": [
+     97,
+     127
+    ],
+    "t6": [
+     10,
+     18
+    ],
+    "t6_answerable": [
+     7,
+     9
+    ],
+    "t6_unanswerable": [
+     3,
+     9
+    ],
+    "all_answerable_core": [
+     80,
+     100
+    ]
+   },
+   "proposed3": {
+    "all": [
+     98,
+     127
+    ],
+    "t6": [
+     10,
+     18
+    ],
+    "t6_answerable": [
+     7,
+     9
+    ],
+    "t6_unanswerable": [
+     3,
+     9
+    ],
+    "all_answerable_core": [
+     81,
+     100
+    ]
+   }
+  }
+ },
+ "select_p_after": {
+  "t6_unanswerable": {
+   "rows": 9,
+   "lineages": 9,
+   "proposed2": 3,
+   "proposed3": 3,
+   "diff": 0.0,
+   "ci95": [
+    -0.33333333333333337,
+    0.33333333333333337
+   ]
+  },
+  "all_answerable": {
+   "rows": 100,
+   "lineages": 51,
+   "proposed2": 80,
+   "proposed3": 81,
+   "diff": 0.01,
+   "ci95": [
+    0.0,
+    0.03061224489795918
+   ]
+  },
+  "P": "proposed2"
+ }
+}
