@@ -102,6 +102,15 @@ proposed3 chỉ hơn 1/21 câu bãi bỏ, khoảng tin cậy chứa 0. Sau khi s
 gợi ý phần lớn lỗi còn lại nằm ở <b>khâu tìm</b> đúng đoạn văn bản (đây là diễn giải, chưa đo trực tiếp); (3) tỷ lệ câu trả lời dẫn căn cứ không còn hiệu lực (TVER) giảm từ 0,53 (b4) xuống 0,03 (proposed2) và 0 (b7pp).<br>
 Lưu ý: GPT-4o mini không hoàn toàn tất định: cùng một prompt, hai lần gọi cho kết quả đúng/sai khác nhau ở 3–5/151 câu (2–3 điểm %), cỡ bằng các chênh lệch cũ → mới trong bảng.</div>
 
+<h3>2.3b. Vấn đề phát hiện ở câu hỏi T6 (quy định đã bãi bỏ)</h3>
+<p>Trên dev, proposed2 chỉ đúng <b>4/21</b> câu T6 “không có đáp án” (hệ phải nói quy định đã bị bãi bỏ). Chúng tôi kiểm hai giả thuyết:</p>
+<ul>
+  <li><b>Hệ không thấy lệnh bãi bỏ?</b> Không phải. Đặt lệnh bãi bỏ lên đầu ngữ cảnh vẫn đúng 4/21 (gọi lại nguyên prompt: 2/21). Lỗi chính là mô hình có căn cứ nhưng vẫn trả lời “còn hiệu lực”.</li>
+  <li><b>Nhãn có đúng không?</b> Tra văn bản gốc 17 câu sai: <b>11 câu</b> nội dung bị bãi bỏ đã <b>chuyển sang văn bản khác</b> (ví dụ điều khoản sang nghị định mới), 5 câu nhãn đúng, 1 câu chưa đủ căn cứ. Với câu đã chuyển chỗ, người hỏi vẫn có câu trả lời, nên chấm “không đáp án” là sai chiều.</li>
+</ul>
+<p>Định nghĩa bộ dữ liệu đã có quy tắc cho trường hợp này (R2): dòng T6 mà nội dung đã chuyển chỗ thì <b>loại</b> (mã <code>relocated</code>), không đổi đáp án. Lỗi nằm ở chỗ quy tắc chưa được kiểm hết trên các dòng dev. Việc đang làm: AI chốt lại 17 dòng theo bảy tiêu chí chuyển chỗ, rà toàn bộ dòng T6 của bộ test cuối trước khi khóa, rồi chấm lại T6 dev (không gọi lại mô hình). Chỉ sau đó mới quyết có sửa hệ đề xuất hay không. Số T6 trong Bảng 3 vì vậy là <b>tạm</b>.</p>
+<p class="cap">Nguồn: <code>docs/reports/chan-doan-t6-dev-20261111.md</code>, <code>docs/reports/t6-chuyen-cho-tra-cuu-20261111.md</code>, <code>runs/x8_t6_dev_20261111/</code>. Kết luận pháp lý ở mức AI-đề xuất.</p>
+
 <h3>2.4. Hai vòng thử trên tập test (đã có, được khai là vòng thử)</h3>
 <ul>
   <li><b>v1.0</b> (211 câu, sinh bằng Qwen3-4B): độ chính xác tăng dần từ 0 (hỏi thẳng) → 0,474 (RAG thường) → 0,640 (lọc theo ngày) → 0,654 (hệ đề xuất);
@@ -140,7 +149,7 @@ Còn ghi là giới hạn: 2 sự kiện áp sai, 83 điều khoản (~0,17%) b�
 <h2>4. Bộ test cuối và cách gán nhãn</h2>
 <ul>
   <li>Bộ test cuối chỉ gồm câu hỏi <b>chưa hệ nào từng chạy</b>, để tránh tinh chỉnh theo test.</li>
-  <li>Từ 06/11, quy trình gán nhãn là: <b>hai AI gán độc lập</b> (Claude và Codex, khác mô hình) → AI thứ ba đề xuất cho dòng lệch → <b>sinh viên duyệt mọi dòng</b> → ca phân vân chuyển luật sư.</li>
+  <li>Từ 06/11, quy trình gán nhãn là: <b>hai AI gán độc lập</b> (Claude và Codex, khác mô hình) → AI thứ ba đề xuất cho dòng lệch → <b>sinh viên duyệt mọi dòng</b> → ca phân vân do một AI chốt riêng (<code>legal-adjudicator</code>, phiên mới), sinh viên ủy quyền; không qua luật sư (quyết định 11/11, khai trong khóa luận).</li>
   <li>Hiện có <b>165 chuỗi câu hỏi đạt</b> (silver 80, lô mới 73, bổ sung 12), vượt mức tối thiểu 130 đặt ra trước.</li>
   <li>Đồng thuận giữa hai AI trước hòa giải (chỉ số AC1 cho kết luận đạt/không đạt): 0,50–0,69 ở các lô khác mô hình (Claude–Codex); lô mới 128 câu là 0,50. Lô cùng mô hình cao hơn (đến 0,89) nên không dùng làm số chính.</li>
 </ul>
@@ -153,13 +162,13 @@ Còn ghi là giới hạn: 2 sự kiện áp sai, 83 điều khoản (~0,17%) b�
     <td>Khai rõ tầng “AI gán, người xác nhận”; xin ý kiến thầy cô có cần một người thứ hai kiểm mẫu</td></tr>
 <tr><td>Một số kết luận pháp lý chưa qua luật sư</td><td class="wait">Vừa</td>
     <td>9 ca VBHN, 2 tín hiệu bãi bỏ, 1 ca gold, quy ước một ca gold đợt 1 đang ở mức “AI đề xuất, sinh viên xác nhận”</td>
-    <td>Gửi luật sư phiếu đã có sẵn căn cứ; nếu không kịp thì khai là giới hạn</td></tr>
-<tr><td>24 dòng silver còn mở hoặc phân vân</td><td class="wait">Vừa</td><td>Cần một người độc lập xem</td><td>Chọn người xem; AI chuẩn bị phiếu</td></tr>
+    <td>Quyết định 11/11: AI chốt (phiên mới, mô hình khác người tra trước), mỗi kết luận có số hiệu, điều khoản, trích văn bản gốc; khai là giới hạn</td></tr>
+<tr><td>24 dòng silver còn mở hoặc phân vân</td><td class="wait">Vừa</td><td>Cần người thứ hai xem</td><td>Đang cho AI chốt 47 dòng (24 dòng + các dòng phân vân); khai là “AI chốt”</td></tr>
 <tr><td>Cỡ mẫu nhỏ so với hiệu ứng cần phát hiện</td><td class="wait">Vừa</td>
     <td>Với khoảng 165 chuỗi, xác suất phát hiện hiệu ứng cỡ test 2 (TV-Recall@1, +0,028) chỉ khoảng 0,37</td><td>Báo đúng như vậy; không hạ tiêu chuẩn nhãn để tăng cỡ mẫu</td></tr>
 <tr><td>Phần trích sự kiện sửa đổi còn bỏ sót</td><td class="wait">Vừa</td>
     <td>Bắt được 64,6% sự kiện so với danh mục của cổng; riêng sự kiện bãi bỏ cấp văn bản còn 2.633 sự kiện dạng danh sách chưa đo</td><td>Khai là giới hạn; không sửa đồ thị thêm sau lần dựng lại</td></tr>
-<tr><td>Hệ vẫn yếu ở câu hỏi về quy định đã bãi bỏ</td><td class="wait">Vừa</td><td>Đúng 0/15 ở vòng thử v1.0</td><td>Đo lại trên dev mới; cải tiến proposed2 đã nhắm vào đúng chỗ này</td></tr>
+<tr><td>Hệ vẫn yếu ở câu hỏi về quy định đã bãi bỏ</td><td class="wait">Vừa</td><td>Dev 11/11: proposed2 đúng 4/21 câu T6 không đáp án; 11/17 câu sai có thể do nhãn (mục 2.3b)</td><td>Áp quy tắc R2 đã có, chấm lại, rồi mới quyết sửa hệ</td></tr>
 <tr><td>Hai quyết định thiết kế chưa được duyệt chính thức</td><td class="wait">Vừa</td>
     <td>Dùng GPT-4o mini làm mô hình sinh chính; danh sách hệ cuối</td><td>Cần thầy cô và đồng tác giả duyệt trước khi chạy test</td></tr>
 <tr><td>Chưa có: chương 1 và 7, giao diện demo, hiệu chuẩn chấm bằng LLM</td><td class="ok">Nhỏ</td><td>Phụ thuộc kết quả test</td><td>Làm sau khi chạy test</td></tr>
