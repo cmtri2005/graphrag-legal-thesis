@@ -25,6 +25,7 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
 ### 1. Dữ liệu
 
 - **Bộ test cuối** chỉ gồm lineage chưa từng có dự đoán của hệ nào trong `runs/`: silver T2, T3 (`data/review/the4/lo1_silver_worksheet.jsonl`) và lô mới T2, T3, T6 (`lo2_moi_worksheet.jsonl`).
+- **T1 đối chứng (thêm 11/11, CMT duyệt, nháp chờ Accepted):** khoảng 60 lineage T1 mới (`data/review/the4/t1_moi_worksheet.jsonl`), cùng điều kiện chưa có dự đoán, không trùng văn bản với dev, cùng quy trình nhãn như phần còn lại. T1 **không** vào lát `all` và **không** vào họ Holm; chỉ dùng cho phép kiểm không làm hại ở §4.
 - **Điều kiện vào bộ cuối:** A và B gán độc lập theo hướng dẫn 4.0, luật sư chốt dòng lệch, và nhãn cuối là `dat`.
 - **Danh sách khóa:** danh sách lineage, sha256 của release và manifest được ghi ở đây trước khi duyệt: `[ĐIỀN Ở G2]`.
 - **Dev:** giữ nguyên 151 dòng `dev`, `giua_khoang`, như ADR 0005.
@@ -39,6 +40,7 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
   | `t6_ancestor` | T6 bãi bỏ qua nút cha |
   | `t2_near` | T2 gần giống |
   | `qsource_silver`, `qsource_new` | theo quy trình viết câu hỏi |
+  | `t1_control` | T1 đối chứng; ngoài `all` |
 
 - **Không gộp** dòng của v1.0 hay test 2 vào bộ cuối. Dòng T6 của hai bộ đó đã được xem, nên chỉ báo riêng với nhãn "đã thấy".
 
@@ -77,6 +79,11 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
 - `b7pp` − `b7plus`, Accuracy trên `t6_ancestor`: phép đo duy nhất cho nấc lan truyền. Chỉ được nói lan truyền có tác dụng khi khoảng tin cậy loại trừ 0.
 - **TVER theo người:** rút có seed khoảng 100 đơn vị được trích bởi `b2ctx`, `b7`, `b7pp`, P. Người đọc văn bản gốc, không thấy cửa sổ đồ thị, rồi xác định đơn vị đó còn hiệu lực tại mốc hay không. Báo tỷ lệ kèm Wilson.
 - **Hai điều kiện cấp sẵn căn cứ:** `oracle` (bản đúng mốc) và `oracle_now` (bản hiện hành), theo nhóm, có T1 của v1.0 làm đối chứng.
+- **Không làm hại trên T1 (`t1_control`, ngoài Holm, khai trước 11/11):**
+  - Hiệu Accuracy ghép cặp P − `b2ctx`, KTC 95% như §5. Biên không làm hại δ = 0,05: nói "không làm hại" chỉ khi cận dưới KTC > −0,05; cận dưới ≤ −0,05 thì báo "không chứng minh được không làm hại", không đổi thành "có hại" trừ khi cận trên < 0.
+  - Cùng phép đo cho `b7`, `b7pp` so với `b2ctx`, báo mô tả.
+  - Số dòng T1 mà mỗi hệ khẳng định "không còn hiệu lực" (khẳng định sai, vì T1 không đổi): đếm và tỷ lệ kèm Wilson.
+  - Với khoảng 60 lineage, KTC dự kiến rộng khoảng ±0,1; phép kiểm này chỉ bắt được tác hại lớn. Ghi đúng như vậy.
 - **Khẳng định "đã bãi bỏ":** precision trên dòng có đáp án và recall trên dòng không đáp án, mọi hệ.
 - **Các chỉ số khác:** TCS, VCR, MRR, EM/F1.
 - **Các lát:** theo miền, theo quy trình câu hỏi, theo mức trùng chữ giữa câu hỏi và đáp án.
