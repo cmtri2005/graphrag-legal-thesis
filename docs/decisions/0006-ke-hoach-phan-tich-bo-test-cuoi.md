@@ -13,7 +13,7 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
 ## Context
 
 - ADR 0005 khai báo trước họ XN1–XN9 cho v1.0, rồi amendment 03/11 lặp lại trên test 2 (nhãn LLM). Kết quả: v1.0 có 6/6 kiểm định ủng hộ. Test 2 có XN2, XN3, XN8, XN9 ủng hộ, còn XN1, XN4 không đủ bằng chứng.
-- Ngày 05/11, sau khi đã thấy các kết quả này, nhóm quyết định dựng một bộ test cuối do người gán, vì ba lý do đo được: nhãn chưa đáng tin (AC1 0,377; 90/211 dòng v1.0 chỉ có nhãn Codex; test 2 toàn nhãn LLM), đáp án dẫn từ chính đồ thị của hệ, và hệ đã chạy chưa có lai ghép như L4 của đề cương. Việc gọi v1.0 và test 2 là "vòng thử" có từ ngày đó. Không được viết như thể vai này có từ đầu.
+- Ngày 05/11, sau khi đã thấy các kết quả này, nhóm quyết định dựng một bộ test cuối mới (lúc đầu định do người gán; từ 06/11 đổi thành AI gán, CMT duyệt, xem §1 và §11), vì ba lý do đo được: nhãn chưa đáng tin (AC1 0,377; 90/211 dòng v1.0 chỉ có nhãn Codex; test 2 toàn nhãn LLM), đáp án dẫn từ chính đồ thị của hệ, và hệ đã chạy chưa có lai ghép như L4 của đề cương. Việc gọi v1.0 và test 2 là "vòng thử" có từ ngày đó. Không được viết như thể vai này có từ đầu.
 - Phản biện ngày 05/11 (`docs/reports/phan-bien-ban-nhap-20261105.md`) chỉ ra:
   - TVER, Verifier và gold cùng dùng cửa sổ hiệu lực của đồ thị, nên TVER = 0 của `b7pp` là do cách dựng;
   - nấc lan truyền đo được bằng 0 ở tầng truy xuất (`b7pp` = `b7plus` mọi nhóm, cả hai bộ);
@@ -24,9 +24,18 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
 
 ### 1. Dữ liệu
 
-- **Bộ test cuối** chỉ gồm lineage chưa từng có dự đoán của hệ nào trong `runs/`: silver T2, T3 (`data/review/the4/lo1_silver_worksheet.jsonl`) và lô mới T2, T3, T6 (`lo2_moi_worksheet.jsonl`).
-- **T1 đối chứng (thêm 11/11, CMT duyệt, nháp chờ Accepted):** khoảng 60 lineage T1 mới (`data/review/the4/t1_moi_worksheet.jsonl`), cùng điều kiện chưa có dự đoán, không trùng văn bản với dev, cùng quy trình nhãn như phần còn lại. T1 **không** vào lát `all` và **không** vào họ Holm; chỉ dùng cho phép kiểm không làm hại ở §4.
-- **Điều kiện vào bộ cuối:** A và B gán độc lập theo hướng dẫn 4.0, luật sư chốt dòng lệch, và nhãn cuối là `dat`.
+- **Bộ test cuối** chỉ gồm lineage chưa từng có dự đoán của hệ nào trong `runs/`: silver T2, T3 (`data/review/the4/lo1_silver_worksheet.jsonl`), lô mới T2, T6 (`lo2_moi_worksheet.jsonl`) và lô bổ sung (`data/review/ai_research/2026-11-08_supp18/`). Đếm ngày 11/11 (`data/review/ai_research/2026-11-11_final_count/count_final.py`): **156 lineage** = T2 127, T6 23, T3 6.
+- **T1 đối chứng (thêm 11/11, CMT duyệt):** 60 lineage T1 mới được gán (`data/review/the4/t1_moi_worksheet.jsonl`), **43 đạt** (`data/review/ai_research/2026-11-11_t1_labels/cmt_confirmed_t1.json`), cùng điều kiện chưa có dự đoán, không trùng văn bản với dev, cùng quy trình nhãn như phần còn lại. Câu hỏi và đáp án ngắn T1 do `claude-haiku-5-5` viết. T1 **không** vào lát `all` và **không** vào họ Holm; chỉ dùng cho phép kiểm không làm hại ở §4.
+- **Điều kiện vào bộ cuối (quy trình thật, từ 06/11):** AI-A (Claude) và AI-B (Codex) gán mù độc lập theo thẻ 4.0; `legal-adjudicator` đề xuất cho dòng lệch và chốt ca khó (CMT ủy quyền 11/11, thay luật sư); CMT duyệt mọi dòng; nhãn cuối là `dat`. Không có người gán độc lập thứ hai và không có luật sư kiểm các ca này (§11).
+- **Đồng thuận AI–AI trước hòa giải** (verdict, Gwet AC1): gộp silver + lo2 + supp18 **0,608** trên 314 lineage, **dưới ngưỡng 0,80** (`docs/reports/g2-co-mau-dong-thuan-20261109.md`; lo2 0,503, supp18 0,538); T1 **0,919** trên 60 lineage. Phần chính của bộ cuối vì vậy không đạt ngưỡng đồng thuận đặt ra; mọi kết quả phải kèm giới hạn này.
+- **Dòng bị loại sau khi gán** (quyết định không dùng đầu ra hệ nào trên bộ cuối):
+
+  | Mã | Căn cứ | Lineage bộ cuối |
+  |---|---|---:|
+  | `relocation_unclear` (R2) | `legal-adjudicator`, `data/review/ai_research/2026-11-11_t6_r2/` | 3 |
+  | `reference_only` (N2, CMT 11/11) | e9ffd3da | 1 |
+  | đồ thị trỏ nhầm văn bản (lo2 `dafc3b40`, CMT 11/11) | sự kiện `event:168125:…` | 0 (không nằm trong tập đạt) |
+  | `relocation_unclear` (Q1, CMT 11/11) | chỉ dev: 6cab03a0, 6caa8e70, 1a267400 | 0 |
 - **Danh sách khóa:** danh sách lineage, sha256 của release và manifest được ghi ở đây trước khi duyệt: `[ĐIỀN Ở G2]`.
 - **Dev:** giữ nguyên 151 dòng `dev`, `giua_khoang`, như ADR 0005.
 - **Lát khai báo trước** trên `giua_khoang`:
@@ -39,7 +48,7 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
   | `t6_unanswerable` | T6, không có đáp án |
   | `t6_ancestor` | T6 bãi bỏ qua nút cha |
   | `t2_near` | T2 gần giống |
-  | `qsource_silver`, `qsource_new` | theo quy trình viết câu hỏi |
+  | `qsource_silver`, `qsource_new`, `qsource_supp` | theo quy trình viết câu hỏi |
   | `t1_control` | T1 đối chứng; ngoài `all` |
 
 - **Không gộp** dòng của v1.0 hay test 2 vào bộ cuối. Dòng T6 của hai bộ đó đã được xem, nên chỉ báo riêng với nhãn "đã thấy".
@@ -47,7 +56,7 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
 ### 2. Hệ và cấu hình bị khóa
 
 - **Generator:** `gpt-4o-mini-2024-07-18` (OpenAI), nhiệt độ 0, `max_tokens` 1024, `seed` 20261109, theo amendment 09/11 của ADR 0004 (Proposed). Qwen3-4B rev `cdbee75` chỉ ở bảng phụ RQ1 và các vòng thử lịch sử, không đặt số cạnh cột chính.
-- **Embedding:** `dangvantuan/vietnamese-embedding`, trừ khi X6 trên dev cho R@10 tăng với KTC ghép cặp > 0: `[ĐIỀN Ở G3]`.
+- **Embedding:** `dangvantuan/vietnamese-embedding`. X6 (`AITeamVN`) **không chạy trước G3**, nên theo quy tắc gốc giữ `dangvantuan`; X6 không được chạy để đổi embedding sau khi ADR này Accepted.
 - **Thang truy xuất** (F4–F6): `b2ctx → b7 → b7v → b7plus → b7pp`, từ vựng, `k = 20`, như ADR 0005, để so được với v1.0 và test 2.
 - **Hệ có sinh câu trả lời:** `b1`, `b2ctx`, `b3`, `b4`, `b5`, `b6`, `b7`, `b7plus`, `b7pp`, `oracle`, `oracle_now` và **P**. Danh sách gốc là `FINAL_GENERATION` trong `src/vilexgraph/framework/systems.py`; bảng cấu hình in bằng `python -m vilexgraph.framework.systems`. Mọi hệ có truy xuất dense chạy ở chế độ lai ghép (`--hybrid`), không reranker.
 - **Chỉ chạy trên dev:** `proposed2`, `proposed3` để chọn P; `p2a2`, `p2a3` để mô tả thành phần.
@@ -57,6 +66,8 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
   - Ngược lại, P là `proposed2`.
   - Kết quả áp quy tắc trên dev (09/11, `runs/gpt4omini_dev/select_p.json`): **P = `proposed2`**. Ở `t6_unanswerable` (21 dòng), `proposed3` − `proposed2` = +2/21, KTC ghép cặp [0; 0,238], cận dưới không > 0 nên điều kiện đầu không đạt. Dòng có đáp án (112 dòng): +1/112, KTC [0; 0,028]. Nếu quy tắc chạy lại vì đồ thị đổi (mục 7), ghi kết quả mới ở đây.
   - Chạy lại sau khi sửa đồ thị một lần (11/11, `runs/rebuild_20261110_dev/select_p.json`, quy tắc không đổi): **P = `proposed2`**. `t6_unanswerable`: +1/21, KTC [−0,095; 0,190]; dòng có đáp án: +1/112, KTC [0; 0,028]. Gate: `docs/reports/gate/h6-gate2-dev-20261111.md`.
+  - Chấm lại dev sau khi loại 12 lineage T6 theo R2 và Q1 (11/11, `runs/t6_dev_r2_20261111/rescore.json`, không gọi API mới): `t6_unanswerable` còn 9 dòng, hiệu 0, KTC [−0,33; 0,33]; **P = `proposed2`**.
+  - **P = `proposed2` khóa tại commit Accepted của ADR này.** Mọi phân tích dev sau đó (kể cả chẩn đoán T6) chỉ báo cáo, không mở lại P, không đổi prompt hay cấu hình hệ.
 
 ### 3. Họ kiểm định xác nhận (Holm, α = 0,05)
 
@@ -70,8 +81,10 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
 | F6 | Giả thuyết đề cương (H0) | `b7pp` − `b7` | TV-Recall@1 | all_answerable | > 0 |
 | F7 | T6 | P − `b7pp` | Accuracy | t6_unanswerable | > 0 |
 
-- **F7** chỉ vào họ khi lát có ít nhất 20 lineage. Không đủ thì tự chuyển sang thăm dò; công cụ ghi rõ.
-- **H0 chỉ quyết bằng F6.**
+- **F7** chỉ vào họ khi lát có ít nhất 20 lineage. Không đủ thì tự chuyển sang thăm dò; công cụ ghi rõ. Đếm trước khi Accepted (11/11): `t6_unanswerable` có **23 lineage**, nên họ Holm có **7** phép thử. Báo T6 tách dòng có và không có đáp án.
+- **H0 chỉ quyết bằng F6.** Trên `all_answerable` lớp B luôn bằng 0, nên về cấu trúc `b7pp` ≡ `b7plus` và F6 trùng F5: H0 đo bước lọc theo chuỗi phiên bản, **không** đo lan truyền. Phép đo lan truyền duy nhất là `b7pp` − `b7plus` trên `t6_ancestor` (§4, thăm dò).
+- **F3–F6 đo "nhất quán với đồ thị"**, vì gold và cửa sổ hiệu lực của hệ cùng lấy từ đồ thị phiên bản. Bằng chứng đúng với luật đến từ gold mù (§7) và TVER theo người (§4), không từ F3–F6.
+- F1–F7 được chọn sau khi đã thấy dev và hai vòng thử (§8): đây là **xác nhận có điều kiện**, không phải kiểm định độc lập hoàn toàn.
 - **TVER không còn là kiểm định xác nhận**, vì nó dùng chung cửa sổ của đồ thị với gold. Công cụ vẫn tính nó dưới mã F8, luôn ngoài Holm, như một phép kiểm nhất quán nội bộ.
 
 ### 4. Thăm dò và mô tả (ngoài Holm)
@@ -94,6 +107,14 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
 
 Như ADR 0005 §5: bootstrap theo cụm lineage, B = 10.000, khoảng phân vị 95%, ghép cặp dùng chung lần lấy mẫu lại. Với B = 10.000, p nhỏ nhất khác 0 là 0,0002; p bằng 0 trong file được ghi là "p < 0,0002".
 
+### 5b. Dao động của generator API
+
+GPT-4o mini ở nhiệt độ 0 vẫn đổi câu trả lời giữa các lần gọi (dev: 3–5/151 câu). Vì vậy:
+- Mỗi hệ có sinh câu trả lời chạy **hai lần độc lập** trên bộ cuối, cùng prompt và seed. **Lần 1 là kết quả chính**, khai trước; lần 2 chỉ để đo độ ổn định. Không được chọn lần "đẹp hơn".
+- Một kiểm định chỉ được gọi là **ủng hộ** khi phán quyết giống nhau ở cả hai lần. Khác nhau thì báo "không ổn định", tính như không đủ bằng chứng.
+- Ghi `system_fingerprint` và model trả về cho mọi lần gọi; báo tỷ lệ câu đổi giữa hai lần theo hệ và lát.
+- Các hệ chỉ truy xuất (F4–F6) không chịu dao động này.
+
 ### 6. Quy tắc kết luận
 
 - **Ủng hộ, bác, không đủ bằng chứng:** như ADR 0005 §6.
@@ -106,12 +127,15 @@ Như ADR 0005 §5: bootstrap theo cụm lineage, B = 10.000, khoảng phân vị
   | Không đủ bằng chứng | **Không được ủng hộ.** Đề tài theo nhánh tài nguyên và phân tích, dù v1.0 ủng hộ |
   | Bác | Bác |
 
-- **Cỡ mẫu và power:** ghi cạnh mọi phán quyết. Ước lượng với khoảng 150 lineage là MDE khoảng 0,05: `[ĐIỀN Ở G2]`.
+- **Không đủ bằng chứng** được viết theo mẫu: "KTC không loại trừ 0 và không loại trừ hiệu ≥ MDE; không diễn giải là không có hiệu ứng".
+- **Cỡ mẫu và power:** ghi cạnh mọi phán quyết. Bảng MDE cho F1–F7 ở N thật (156 lineage; F7 23 lineage), tính từ phương sai ghép cặp của test 2 và dev, ghi rõ là ước lượng trước khi chạy: `[ĐIỀN Ở G2: data/vilextime_final/adr0006_g2_fill.md]`. Power 0,37 trước đây chỉ là kịch bản xấu cho F5/F6.
 
 ### 7. Gold mù và sửa gold
 
-- Gold mù theo B6 (120 + 30 dòng), mù theo từng người (`independent_gold.py` với `--only`). Đạt khi ≥ 114/120 khớp.
-- **Dòng mà gold mù cho thấy gold sai:** giữ trong bộ cuối với gold đã sửa, có luật sư chốt, không loại.
+- Gold mù theo B6, mù theo từng người (`independent_gold.py` với `--only`). Đạt khi ≥ 114/120 khớp.
+  - Đợt 1 (người, T2/T3): **119/120 khớp, đạt** (H4, CMT xác nhận 10/11).
+  - Đợt 2 (30 dòng T1/T6): do AI gán mù, **không phải người**; 28/30 khớp. Gold mù người cho T1/T6 (H3) chưa có, ghi là giới hạn.
+- **Dòng mà gold mù cho thấy gold sai:** giữ trong bộ cuối với gold đã sửa, không loại. **Khác** với các dòng bị loại theo quy tắc nhãn (R2, Q1, N2, `partial_repeal`, đồ thị trỏ nhầm) ở §1: các dòng đó loại theo quy tắc đã chốt trước khi chạy test, không dựa trên đầu ra hệ.
 - **Lỗi đồ thị phải sửa:** dựng lại release và chạy lại mọi hệ trên dev trước G3. Không sửa sau khi đã chạy test.
 - **Báo song song** F1–F6 trên phần gold mù.
 
@@ -120,7 +144,9 @@ Như ADR 0005 §5: bootstrap theo cụm lineage, B = 10.000, khoảng phân vị
 - **Đã thấy:**
   - kết quả test của v1.0 (E1, E3) và test 2 (E1, E3, lần chấm sai và lần chấm lại);
   - mọi kết quả dev (B2, lai ghép, X4, tập dượt, và từ 09/11 cả 15 hệ sinh bằng GPT-4o mini, gồm `proposed2`, `proposed3`);
-  - phân rã lỗi E7 do máy; hiệu chuẩn lời dặn v2; phản biện 05/11; đối chiếu VBHN.
+  - phân rã lỗi E7 do máy; hiệu chuẩn lời dặn v2; phản biện 05/11; đối chiếu VBHN;
+  - chẩn đoán T6 dev, X8 C0/C1 (dùng gold), chấm lại T6 dev sau R2/Q1 (11/11);
+  - **nhãn và câu hỏi của chính bộ cuối** (khi gán, hòa giải, rà R2 và sửa đồ thị): sửa đồ thị có nhìn lineage của bộ cuối, nhưng chưa nhìn đầu ra hệ nào trên chúng.
 - **Chưa thấy:** mọi dự đoán trên bộ test cuối; kết quả Colab đợt 2 (niêm phong, xem mục 9).
 
 ### 9. Niêm phong Colab đợt 2
@@ -140,9 +166,17 @@ Kết quả đợt 2 (các hệ còn thiếu trên v1.0 và test 2) được nh�
 
 RQ1–RQ3 giữ nguyên văn đề cương.
 
+### 11. Giới hạn phải khai cạnh kết quả
+
+- **Nhãn:** bộ cuối là **silver-AI có CMT duyệt**, không gọi là gold. Không có người gán độc lập thứ hai; ca khó do `legal-adjudicator` chốt, CMT ủy quyền, chưa qua luật sư (danh sách ở `data/review/ai_research/2026-11-11_h7/`, `2026-11-11_t6_package/`, `2026-11-11_t6_r2/`, `2026-11-11_t6_dev4/`, `2026-11-11_t1_labels/`). AC1 AI–AI gộp 0,608 < 0,80. CMT duyệt qua hội thoại, thời gian từng dòng không đo.
+- **T1:** AI-A là Claude Sonnet (các lô khác Opus); AI-B dùng bản gán lại, phiên đó đã thấy nhãn AI-B lượt trước (không thấy AI-A). Câu hỏi và đáp án ngắn do Haiku viết.
+- **Một generator chính** (GPT-4o mini); **một nguồn dữ liệu** (vbpl); 111 sự kiện "Luật/Pháp lệnh <tên>" và 2.633 sự kiện danh sách điều khoản chưa đo.
+- **Cỡ mẫu nhỏ:** T3 6 lineage, chỉ báo mô tả.
+- **`b5` không phải GraphRAG thật** (một bước láng giềng, không cộng đồng).
+
 ## Alternatives Considered
 
-1. **Giữ v1.0 làm bộ xác nhận chính.** Bị loại: 43% dòng test chỉ có nhãn Codex, AC1 0,377, T3 chỉ 4 lineage.
+1. **Giữ v1.0 làm bộ xác nhận chính.** Bị loại: 43% dòng test chỉ có nhãn Codex, AC1 0,377, T3 chỉ 4 lineage. (Bộ cuối cũng chỉ có nhãn AI + CMT duyệt; lợi thế của nó là chưa hệ nào thấy, không phải nhãn tốt hơn hẳn.)
 2. **Gộp ba bộ thành một phân tích tổng hợp.** Bị loại: khác cách gán nhãn và quy trình câu hỏi, và vai các bộ đổi sau khi thấy kết quả.
 3. **Giữ TVER trong họ.** Bị loại vì là phép đo do cách dựng.
 4. **Chọn P sau khi chạy test.** Bị loại: chọn trên dev theo quy tắc ở mục 2.
@@ -151,12 +185,12 @@ RQ1–RQ3 giữ nguyên văn đề cương.
 
 Positive:
 
-- Có một lần xác nhận trên nhãn người, với cấu hình đúng L4–L5 của đề cương.
+- Có một lần xác nhận trên bộ chưa hệ nào thấy, nhãn "AI gán, CMT duyệt", với cấu hình đúng L4–L5 của đề cương.
 - Mọi bậc tự do đã dùng được ghi ra.
 
 Tradeoffs:
 
-- Bộ cuối nhỏ (dự báo khoảng 150 lineage), nên power cho hiệu cỡ +0,03 thấp. Kết quả "không đủ bằng chứng" là khả năng thật.
+- Bộ cuối nhỏ (156 lineage chính), nên power cho hiệu cỡ +0,03 thấp. Kết quả "không đủ bằng chứng" là khả năng thật.
 - F7 có thể không vào họ vì T6 thiếu. Nấc lan truyền có thể chỉ có bằng chứng thăm dò.
 - Kết luận về bãi bỏ chỉ đúng với generator đã khóa (GPT-4o mini) và với đồ thị hiện tại.
 
