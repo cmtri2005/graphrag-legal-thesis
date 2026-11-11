@@ -14,7 +14,10 @@ supp = {r['lineage_id'] for r in rd(B / '2026-11-08_supp18/cmt_accepted_labels.j
         if tuple(r['label'][q] for q in ('q1', 'q2', 'q3', 'q4')) == ('dung', 'co', 'co', 'khong')}
 r2 = {r['lineage_id']: r['ket_luan'] for f in sorted(glob.glob(str(B / '2026-11-11_t6_r2/out_batch*.jsonl'))) for r in rd(f)}
 assert not (silver & lo2 or silver & supp or lo2 & supp) and set(r2) <= lo2 | supp
-drop = {x for x, v in r2.items() if v != 'giu'}
+# CMT decisions after R2 (lineage -> reason)
+CMT_DROP = {'provision:e9ffd3da-eb7a-11f0-9830-4feb5d5132b5': 'N2 (CMT 11/11): đáp án nửa dẫn chiếu, câu hỏi hỏi phần dẫn chiếu -> reference_only'}
+assert set(CMT_DROP) <= silver | lo2 | supp
+drop = {x for x, v in r2.items() if v != 'giu'} | set(CMT_DROP)
 final = sorted((silver | lo2 | supp) - drop)
 grp = {}
 for f in glob.glob('data/review/**/*.jsonl', recursive=True):
@@ -23,6 +26,6 @@ for f in glob.glob('data/review/**/*.jsonl', recursive=True):
             if isinstance(r, dict) and r.get('lineage_id') and r.get('group'): grp.setdefault(r['lineage_id'], r['group'])
     except (json.JSONDecodeError, UnicodeDecodeError): pass
 out = {'n': len(final), 'by_source': {'silver': len(silver - drop), 'lo2': len(lo2 - drop), 'supp': len(supp - drop)},
-       'by_group': dict(sorted(collections.Counter(grp[x] for x in final).items())), 'dropped_r2': sorted(drop), 'lineages': final}
+       'by_group': dict(sorted(collections.Counter(grp[x] for x in final).items())), 'dropped': sorted(drop), 'cmt_drop': CMT_DROP, 'lineages': final}
 Path(__file__).with_name('final_lineages.json').write_text(json.dumps(out, ensure_ascii=False, indent=1) + '\n')
 print({k: v for k, v in out.items() if k != 'lineages'})

@@ -1,20 +1,24 @@
 {
- "n": 157,
+ "n": 156,
  "by_source": {
   "silver": 75,
   "lo2": 70,
-  "supp": 12
+  "supp": 11
  },
  "by_group": {
   "T2": 127,
   "T3": 6,
-  "T6": 24
+  "T6": 23
  },
- "dropped_r2": [
+ "dropped": [
   "provision:0ba67328-df45-11f0-8f9a-3f6911248235",
   "provision:0ba67346-df45-11f0-bada-e31b16fb5d5d",
-  "provision:d88e3c54-e161-11f0-9d1f-f5709b6cd6ca"
+  "provision:d88e3c54-e161-11f0-9d1f-f5709b6cd6ca",
+  "provision:e9ffd3da-eb7a-11f0-9830-4feb5d5132b5"
  ],
+ "cmt_drop": {
+  "provision:e9ffd3da-eb7a-11f0-9830-4feb5d5132b5": "N2 (CMT 11/11): đáp án nửa dẫn chiếu, câu hỏi hỏi phần dẫn chiếu -> reference_only"
+ },
  "lineages": [
   "provision:0297fec0-31a0-11f1-ad11-4f6eee776099",
   "provision:089b0e44-39fb-11f1-a16c-4f6a99b9f514",
@@ -159,7 +163,6 @@
   "provision:e902d34e-df52-11f0-b1c8-1baca6cbd210",
   "provision:e99406b0-df4e-11f0-a5c9-eb4d717a0f21",
   "provision:e9b9d5f4-df42-11f0-a5f2-138bc0b82b6b",
-  "provision:e9ffd3da-eb7a-11f0-9830-4feb5d5132b5",
   "provision:ea1e8fe0-2c85-11f1-90e2-cb5f8b4211e0",
   "provision:eb08eabe-eb70-11f0-b9af-f97f0ab81722#k1#c",
   "provision:eb4c1020-2d45-11f1-aaae-d517cf429e25",
