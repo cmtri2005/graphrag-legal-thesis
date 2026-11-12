@@ -1,0 +1,58 @@
+{
+  "system": "b7",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "393a43f86c339fb064db2dd001656930aff473364be514dc65faa39476cdf0db",
+  "raw_file_sha256": "aa9a5b8aa686c88615cd4a3c0c550aa09a9410fd61e570a8931e3093af3b5fc7",
+  "model": "gpt-4o-mini-2024-07-18",
+  "revision": "gpt-4o-mini-2024-07-18",
+  "gpu": [
+    "api"
+  ],
+  "run_tag": "r2",
+  "served_models": {
+    "gpt-4o-mini-2024-07-18": 151
+  },
+  "system_fingerprints": {
+    "fp_3a3c79652c": 114,
+    "fp_dbcd9f3637": 6,
+    "fp_eb10824ee9": 14,
+    "fp_48eea167bf": 15,
+    "fp_5b87d7aaca": 1,
+    "fp_e61d09ff08": 1
+  },
+  "rows": 151,
+  "format_ok": 151,
+  "truncated": 0,
+  "prompt_tokens_mean": 4985.139072847682,
+  "completion_tokens_mean": 113.08609271523179,
+  "generation_seconds": 460.2847937990073,
+  "export": {
+    "system": "b7",
+    "spec": {
+      "name": "b7-hyb",
+      "layer": "asis",
+      "lexical": true,
+      "dense": true,
+      "rerank": false,
+      "temporal": "document",
+      "context": true,
+      "expand": 0,
+      "expand_edges": "none",
+      "verify": "off",
+      "k": 20,
+      "note": "B7 — document-level date filter, no graph (the main control)",
+      "repeal_note": false
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": "data/derived/embed/asis-vietnamese-embedding",
+    "embed_sha256": "3a8b143bd5e6307642b2f011020d3a7ed9b32599de7861ef992555343ee4915e",
+    "rows": 151,
+    "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "393a43f86c339fb064db2dd001656930aff473364be514dc65faa39476cdf0db"
+  }
+}

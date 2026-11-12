@@ -11,6 +11,7 @@ Inputs are the locked lists and worksheets only; no model is called, no label is
   3. `export_release.published` / `meta` write vilextime.jsonl + vilextime_meta.jsonl (schema of h6).
 
 Usage: python scripts/pipeline/build_final_release.py [--out data/vilextime_final]
+Also writes <out>/internal/ (data dir for final_run.py --data, see <out>/README.md "Chạy G4").
 """
 from __future__ import annotations
 
@@ -175,6 +176,17 @@ def main() -> None:
         f.writelines(json.dumps({"row_id": i, **x}, ensure_ascii=False) + "\n" for i, x in sorted(excluded.items()))
     shutil.copyfile(stage / "derived/vilextime/release.jsonl", out / "inputs/internal_release_with_truoc_hieu_luc.jsonl")
     shutil.copyfile(stage / "derived/vilextime/selected.jsonl", out / "inputs/selected_boundary_rows.jsonl")
+    # internal data dir for `final_run.py --data`: the internal rows behind the published release (split "test", same ids)
+    # plus relative symlinks to the three real inputs; `derived/vilextime` is the only real directory (tracked).
+    internal = out / "internal"
+    shutil.rmtree(internal, ignore_errors=True)
+    for name in ("temporal.sqlite", "derived/corpus", "derived/versions.jsonl"):   # all that check/score/confirm read
+        (internal / name).parent.mkdir(parents=True, exist_ok=True)
+        os.symlink(os.path.relpath(data / name, (internal / name).parent.resolve()), internal / name)
+    (internal / "derived/vilextime").mkdir()
+    with (internal / "derived/vilextime/release.jsonl").open("w", encoding="utf-8") as f:
+        f.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in kept)
+    shutil.copyfile(stage / "derived/vilextime/selected.jsonl", internal / "derived/vilextime/selected.jsonl")
     counts = collections.Counter(f"{r['group']} · {r['as_of_strategy']}" for r in kept)
     print(json.dumps({"rows": len(kept), "lineages": len({r["lineage_id"] for r in kept}), "schema": SCHEMA_VERSION,
                       "excluded_rows": len(excluded), "extra_pool_lineages": len(extra),

@@ -27,6 +27,51 @@ sha256sum -c SHA256SUMS
 ```
 `check_release.py` OK (805 dòng nội bộ gồm truoc_hieu_luc); `final_run.validate_rows` OK (361 dòng giua_khoang); 0 trùng lineage và 0 trùng document_id với dev; 0 file dự đoán trong `runs/` có id dòng của 199 lineage (chỉ bản chụp release/phiếu ở `runs/rebuild_*`).
 
+## Chạy G4
+`internal/` là thư mục `--data` cho `final_run.py`: `derived/vilextime/release.jsonl` (722 dòng nội bộ, `split` = `test`, đúng các id của `vilextime.jsonl`; `final_run` đòi `published(nội bộ) == công bố` từng dòng) và `selected.jsonl` là file thật; `temporal.sqlite`, `derived/corpus`, `derived/versions.jsonl` là symlink tương đối tới `data/`. Không ghi đè `data/derived/vilextime` (dev). `build_final_release.py` dựng lại thư mục này (cùng byte, đã kiểm hai lần); `sha256sum -c SHA256SUMS` kiểm hash.
+
+Điều kiện: ADR 0006 `Accepted` đã commit; `internal/`, `vilextime*.jsonl`, `manifest.json` đã commit. Cổng `guard_test` đòi mọi đầu vào theo dõi của lệnh (`--release`, `--data`, `--raw`, `--retrieval`, `--source-prompts`, `--prompts` của `api_generate`) sạch trong git, nên **commit sau mỗi bước sinh ra file mà bước sau đọc** (truy xuất, prompt, raw). Chưa chạy trên test; phần dưới là đúng lệnh đã tập dượt trên dev ở `runs/final_rehearsal_g3_20261112/`.
+
+```
+cd /home/trica/UIT_Thesis/graphrag-legal-thesis
+export PYTHONPATH=src HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+PY=.venv/bin/python; R=data/vilextime_final/vilextime.jsonl; D=data/vilextime_final/internal; O=runs/final_g4_$(date +%Y%m%d)
+M=gpt-4o-mini-2024-07-18
+FR="$PY scripts/eval/final_run.py --split test --release $R --data $D --raw $O/raw --retrieval $O/retrieval"
+mkdir -p $O/raw $O/retrieval
+
+# 1. F4-F6: truy xuất từ vựng k=20, không gọi model; rồi commit $O/retrieval
+for s in b2ctx b7 b7plus b7pp; do
+  $PY scripts/eval/run_vilextime.py --system $s --no-dense --retrieval-only --split test --as-of-strategy giua_khoang \
+    --release $R --hits-cache $O/retrieval.sqlite --out $O/retrieval/$s.jsonl
+done
+
+# 2. kiểm + xuất prompt mọi hệ (bộ đệm truy xuất mới ở $O/r1/retrieval.sqlite); rồi commit $O/r1/prompts
+$FR --step check --out $O/r1
+$FR --step export --out $O/r1
+
+# 3. gọi API hai lần độc lập, cùng prompt (ADR 0006 5b); commit $O/raw sau mỗi lần
+for t in r1 r2; do
+  for p in $O/r1/prompts/*.jsonl; do
+    $PY scripts/eval/api_generate.py --prompts $p --provider openai --model $M --out-dir $O/raw --run-tag $t \
+      --temperature 0 --max-tokens 1024 --seed 20261109
+  done
+done
+
+# 4. nhập, chấm, kiểm định, báo cáo từng lần (lần 2 phát lại prompt của lần 1)
+$FR --step check --run-tag r1 --out $O/r1
+for st in import score confirm report; do $FR --step $st --run-tag r1 --out $O/r1; done
+$FR --step check --run-tag r2 --source-prompts $O/r1/prompts --out $O/r2
+for st in export import score confirm report; do $FR --step $st --run-tag r2 --source-prompts $O/r1/prompts --out $O/r2; done
+
+# 5. so hai lần
+$PY scripts/eval/compare_runs.py --confirm1 $O/r1/confirm.json --confirm2 $O/r2/confirm.json \
+  --gen1 $O/r1/test --gen2 $O/r2/test --release $R --split test --out $O/compare_runs.json
+```
+Lần 1 là kết quả chính; lần 2 chỉ đo độ ổn định (ADR 0006 5b). `--systems` mặc định là `FINAL_GENERATION` + `proposed2`.
+
+Đã kiểm (12/11, chưa có ADR Accepted): `final_run.py --split test --step check --release $R --data $D ...` dừng ngay ở cổng với `test requires ADR 0006 Status Accepted in a commit contained in HEAD (master plan G3); commit it before running test`. Với `guard_test` bị tắt trong bộ nhớ (chỉ để chứng minh, không sửa `final_run.py`), bước `check` đi hết: `check_release.py` OK 722 dòng, `validate_rows` (không rò dev theo lineage và document_id), `validate_published_release` (722/722 dòng công bố khớp bản nội bộ), tính hash đầu vào; exit 0.
+
 ## Hash
 - vilextime.jsonl `5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c`
 - vilextime_meta.jsonl `22142241f8eae7296b48ddad042a3552746070a89d1042663fd41c586acaaa49`
@@ -36,5 +81,5 @@ sha256sum -c SHA256SUMS
 ## Giới hạn
 - Nhãn tầng "AI gán, CMT duyệt, chưa qua luật sư" (meta `review.source = "ai_cmt"`, `guideline_version 4.0`); không người độc lập nào kiểm.
 - T1: câu hỏi và đáp án ngắn do `claude-haiku-5-5` viết, chưa người đọc; AC1 AI-A/AI-B của T1 theo `2026-11-11_t1_labels/metrics.json`.
-- `final_run.py --step check` đọc `<data>/derived/vilextime/release.jsonl` và so với bộ công bố: để chạy G3 phải có thư mục `--data` chứa bản nội bộ của release này (như thư mục tạm của build); chưa làm.
+- `final_run.py --step check` so bản công bố với `<data>/derived/vilextime/release.jsonl`; bản nội bộ của release này nằm ở `internal/` (xem "Chạy G4").
 - `check_release` đòi `review.guideline_version == crosscheck.GUIDELINE` (3.0) ở dòng nội bộ; dùng giá trị giữ chỗ, nhãn thật nằm ở meta.

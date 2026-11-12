@@ -1,0 +1,339 @@
+{
+ "split": "dev",
+ "draws": 10000,
+ "tests_run": 7,
+ "family": "final",
+ "family_size": 7,
+ "proposed": "proposed2",
+ "test_definitions": [
+  [
+   "F1",
+   "RQ2: lai ghép",
+   "paired",
+   "accuracy",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b4",
+    "proposed2"
+   ],
+   1
+  ],
+  [
+   "F2",
+   "RQ2: đồ thị phi thời gian",
+   "paired",
+   "accuracy",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b5",
+    "proposed2"
+   ],
+   1
+  ],
+  [
+   "F3",
+   "RQ2: lỗi sai phiên bản",
+   "paired",
+   "wrong_version",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b4",
+    "proposed2"
+   ],
+   -1
+  ],
+  [
+   "F4",
+   "RQ3: lọc văn bản",
+   "paired",
+   "tv_recall@1",
+   [
+    "all_answerable"
+   ],
+   "retrieval",
+   [
+    "b2ctx",
+    "b7"
+   ],
+   1
+  ],
+  [
+   "F5",
+   "RQ3: phiên bản",
+   "paired",
+   "tv_recall@1",
+   [
+    "all_answerable"
+   ],
+   "retrieval",
+   [
+    "b7",
+    "b7plus"
+   ],
+   1
+  ],
+  [
+   "F6",
+   "H0: truy xuất",
+   "paired",
+   "tv_recall@1",
+   [
+    "all_answerable"
+   ],
+   "retrieval",
+   [
+    "b7",
+    "b7pp"
+   ],
+   1
+  ],
+  [
+   "F7",
+   "T6: không đáp án",
+   "paired",
+   "accuracy",
+   [
+    "t6_unanswerable"
+   ],
+   "generation",
+   [
+    "b7pp",
+    "proposed2"
+   ],
+   1
+  ],
+  [
+   "F8",
+   "Nhất quán nội bộ: TVER",
+   "paired",
+   "tver",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b7",
+    "b7pp"
+   ],
+   -1
+  ]
+ ],
+ "exploratory": [
+  "F8"
+ ],
+ "family_note": null,
+ "files": {
+  "generation/b4": {
+   "path": "runs/final_rehearsal_g3_20261112/r2/dev/b4.jsonl",
+   "sha256": "a89a35cfeaab7a8e94b121a27a145c9b3a1f274bc5bea76aa271d726390b3b08"
+  },
+  "generation/proposed2": {
+   "path": "runs/final_rehearsal_g3_20261112/r2/dev/proposed2.jsonl",
+   "sha256": "0ae9f2750b714543a536f074f9b0da2526ec87d47634ee9560d871e299eabec3"
+  },
+  "generation/b5": {
+   "path": "runs/final_rehearsal_g3_20261112/r2/dev/b5.jsonl",
+   "sha256": "6009da541e52bfce9fc7b98fb5d1546583b39205ecb8dec7fe7e22931a0c6388"
+  },
+  "retrieval/b2ctx": {
+   "path": "runs/final_rehearsal_g3_20261112/retrieval/b2ctx.jsonl",
+   "sha256": "12dbbdc066b383b629609d2cabe2167694a5c385088a8f1f93a9e8711820d3e1"
+  },
+  "retrieval/b7": {
+   "path": "runs/final_rehearsal_g3_20261112/retrieval/b7.jsonl",
+   "sha256": "2ec495036fcaf704bb52b5af433879b0b5f664bd694897e8c78c644dd7cdded0"
+  },
+  "retrieval/b7plus": {
+   "path": "runs/final_rehearsal_g3_20261112/retrieval/b7plus.jsonl",
+   "sha256": "cdc9cdfd3c1fa5bfa6cb0d1f26c3ea6636819ceec503acd805d53fc3c88e018a"
+  },
+  "retrieval/b7pp": {
+   "path": "runs/final_rehearsal_g3_20261112/retrieval/b7pp.jsonl",
+   "sha256": "7ba9491439e96810131180c7ea876d595bbe8e69a78e658390ed59d637464fd8"
+  },
+  "generation/b7pp": {
+   "path": "runs/final_rehearsal_g3_20261112/r2/dev/b7pp.jsonl",
+   "sha256": "28c387537af3e98dd2bfdd0b9b4726ff1fb3d8d7fc3f0c65d5a785faf5a7a7f4"
+  },
+  "generation/b7": {
+   "path": "runs/final_rehearsal_g3_20261112/r2/dev/b7.jsonl",
+   "sha256": "7a04f8110e3a5806032bd00a630bcfc51b48d4cbb9d0d51bfc936e2ee238e41f"
+  },
+  "generation/b1": {
+   "path": "runs/final_rehearsal_g3_20261112/r2/dev/b1.jsonl",
+   "sha256": "d0428d0dcdb4128030749d1900f7402120db5ee960674be46b513f259773ef1c"
+  },
+  "generation/b2ctx": {
+   "path": "runs/final_rehearsal_g3_20261112/r2/dev/b2ctx.jsonl",
+   "sha256": "8e76cc93eb04c649110774bf3f766267bff7dbb3984f76b20ec040c4547b962e"
+  },
+  "generation/b3": {
+   "path": "runs/final_rehearsal_g3_20261112/r2/dev/b3.jsonl",
+   "sha256": "835495b1ccc3c223d8aef999e3ad8ed6f587650f20c424ee356319a56560f5ba"
+  },
+  "generation/b6": {
+   "path": "runs/final_rehearsal_g3_20261112/r2/dev/b6.jsonl",
+   "sha256": "294b6139c35c3883c7975d516d2e80f6484caa9ea4e728a030ea6b348c001c1b"
+  },
+  "generation/b7plus": {
+   "path": "runs/final_rehearsal_g3_20261112/r2/dev/b7plus.jsonl",
+   "sha256": "62754914d0df07d7138b632ac249ac6bcd28f473f7b5acc51236d4f3574a9693"
+  },
+  "generation/oracle": {
+   "path": "runs/final_rehearsal_g3_20261112/r2/dev/oracle.jsonl",
+   "sha256": "808306c6e911cb0dba7f5fe316fa8e8395d90891c83b0e54e454079edc7fbad2"
+  },
+  "generation/oracle_now": {
+   "path": "runs/final_rehearsal_g3_20261112/r2/dev/oracle_now.jsonl",
+   "sha256": "2bba2924e9835696f0a6c37a12265a25603ff69c99d4d1d0c88cd35d25219b1b"
+  }
+ },
+ "t1_no_harm": null,
+ "results": {
+  "F1": {
+   "estimate": 0.3533834586466166,
+   "ci95": [
+    0.26315789473684215,
+    0.44275081788440573
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 133
+   },
+   "lineages": {
+    "all": 63
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F2": {
+   "estimate": 0.32330827067669177,
+   "ci95": [
+    0.23134328358208958,
+    0.4117647058823529
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 133
+   },
+   "lineages": {
+    "all": 63
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F3": {
+   "estimate": -0.4,
+   "ci95": [
+    -0.48863636363636365,
+    -0.3088235294117647
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 133
+   },
+   "lineages": {
+    "all": 63
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": -1
+  },
+  "F4": {
+   "estimate": 0.1517857142857143,
+   "ci95": [
+    0.09174311926605505,
+    0.21621621621621623
+   ],
+   "p": 0.0,
+   "rows": {
+    "all_answerable": 112
+   },
+   "lineages": {
+    "all_answerable": 63
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F5": {
+   "estimate": 0.1071428571428571,
+   "ci95": [
+    0.028301886792452824,
+    0.18488173046996575
+   ],
+   "p": 0.0074,
+   "rows": {
+    "all_answerable": 112
+   },
+   "lineages": {
+    "all_answerable": 63
+   },
+   "p_holm": 0.0222,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F6": {
+   "estimate": 0.1071428571428571,
+   "ci95": [
+    0.028301886792452824,
+    0.1842105263157895
+   ],
+   "p": 0.009,
+   "rows": {
+    "all_answerable": 112
+   },
+   "lineages": {
+    "all_answerable": 63
+   },
+   "p_holm": 0.0222,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F7": {
+   "estimate": -0.047619047619047616,
+   "ci95": [
+    -0.19047619047619047,
+    0.09523809523809523
+   ],
+   "p": 0.788,
+   "rows": {
+    "t6_unanswerable": 21
+   },
+   "lineages": {
+    "t6_unanswerable": 21
+   },
+   "p_holm": 0.788,
+   "verdict": "không đủ bằng chứng",
+   "predicted": 1
+  },
+  "F8": {
+   "estimate": -0.3533834586466165,
+   "ci95": [
+    -0.4148148148148148,
+    -0.28888888888888886
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 133
+   },
+   "lineages": {
+    "all": 63
+   },
+   "p_holm": null,
+   "verdict": "thăm dò",
+   "predicted": -1
+  }
+ }
+}

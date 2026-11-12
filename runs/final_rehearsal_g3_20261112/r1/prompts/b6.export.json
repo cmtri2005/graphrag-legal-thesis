@@ -1,0 +1,28 @@
+{
+  "system": "b6",
+  "spec": {
+    "name": "b6",
+    "layer": "asis",
+    "lexical": true,
+    "dense": true,
+    "rerank": false,
+    "temporal": "none",
+    "context": true,
+    "expand": 1,
+    "expand_edges": "part",
+    "verify": "off",
+    "k": 20,
+    "note": "B6 — hierarchical legal KG, structure only",
+    "repeal_note": false
+  },
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "no_dense": false,
+  "hybrid": true,
+  "embed": "data/derived/embed/asis-vietnamese-embedding",
+  "embed_sha256": "3a8b143bd5e6307642b2f011020d3a7ed9b32599de7861ef992555343ee4915e",
+  "rows": 151,
+  "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+  "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+  "prompt_file_sha256": "6c99fb2425ad9fbfe37e43718b9f633795141f4d4006e6298d80b8508078b50b"
+}

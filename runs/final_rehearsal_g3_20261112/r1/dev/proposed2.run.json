@@ -1,0 +1,55 @@
+{
+  "system": "proposed2",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "a31ed09a40e1a1bb3636131b26070ab8e1256d910fa549e1c3d88a6d9b4e7e3d",
+  "raw_file_sha256": "712180adac691194761351e20fed9260e10a7a061b9187de65d98de9947a6325",
+  "model": "gpt-4o-mini-2024-07-18",
+  "revision": "gpt-4o-mini-2024-07-18",
+  "gpu": [
+    "api"
+  ],
+  "run_tag": "r1",
+  "served_models": {
+    "gpt-4o-mini-2024-07-18": 151
+  },
+  "system_fingerprints": {
+    "fp_3a3c79652c": 117,
+    "fp_48eea167bf": 25,
+    "fp_b11ef98e16": 9
+  },
+  "rows": 151,
+  "format_ok": 151,
+  "truncated": 0,
+  "prompt_tokens_mean": 5169.463576158941,
+  "completion_tokens_mean": 116.34437086092716,
+  "generation_seconds": 411.447588448018,
+  "export": {
+    "system": "proposed2",
+    "spec": {
+      "name": "proposed2",
+      "layer": "version",
+      "lexical": true,
+      "dense": true,
+      "rerank": false,
+      "temporal": "propagated",
+      "context": true,
+      "expand": 1,
+      "expand_edges": "rel_up",
+      "verify": "reject",
+      "k": 20,
+      "note": "L4–L5: 𝒰ₜ by formula (3), hybrid ranking, citation-constrained answer, Verifier",
+      "repeal_note": false
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": "data/derived/embed/version-vietnamese-embedding",
+    "embed_sha256": null,
+    "rows": 151,
+    "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "a31ed09a40e1a1bb3636131b26070ab8e1256d910fa549e1c3d88a6d9b4e7e3d"
+  }
+}

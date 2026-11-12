@@ -1,0 +1,111 @@
+{
+ "b1": {
+  "rows": 151,
+  "seeded": 151,
+  "to_request": 0,
+  "sources": [
+   "runs/rebuild_20261110_dev/raw/b1__gpt-4o-mini-2024-07-18__643f9fc81fc0.jsonl"
+  ],
+  "raw": "runs/final_rehearsal_g3_20261112/raw/b1__gpt-4o-mini-2024-07-18__643f9fc81fc0.r1.jsonl"
+ },
+ "b2ctx": {
+  "rows": 151,
+  "seeded": 151,
+  "to_request": 0,
+  "sources": [
+   "runs/rebuild_20261110_dev/raw/b2ctx__gpt-4o-mini-2024-07-18__d39f07e54b2b.jsonl"
+  ],
+  "raw": "runs/final_rehearsal_g3_20261112/raw/b2ctx__gpt-4o-mini-2024-07-18__d39f07e54b2b.r1.jsonl"
+ },
+ "b3": {
+  "rows": 151,
+  "seeded": 151,
+  "to_request": 0,
+  "sources": [
+   "runs/rebuild_20261110_dev/raw/b3__gpt-4o-mini-2024-07-18__21afd0ce3227.jsonl"
+  ],
+  "raw": "runs/final_rehearsal_g3_20261112/raw/b3__gpt-4o-mini-2024-07-18__21afd0ce3227.r1.jsonl"
+ },
+ "b4": {
+  "rows": 151,
+  "seeded": 151,
+  "to_request": 0,
+  "sources": [
+   "runs/rebuild_20261110_dev/raw/b4__gpt-4o-mini-2024-07-18__5c497de1ff3b.jsonl"
+  ],
+  "raw": "runs/final_rehearsal_g3_20261112/raw/b4__gpt-4o-mini-2024-07-18__5c497de1ff3b.r1.jsonl"
+ },
+ "b5": {
+  "rows": 151,
+  "seeded": 151,
+  "to_request": 0,
+  "sources": [
+   "runs/rebuild_20261110_dev/raw/b5__gpt-4o-mini-2024-07-18__3b390b407262.jsonl"
+  ],
+  "raw": "runs/final_rehearsal_g3_20261112/raw/b5__gpt-4o-mini-2024-07-18__3b390b407262.r1.jsonl"
+ },
+ "b6": {
+  "rows": 151,
+  "seeded": 151,
+  "to_request": 0,
+  "sources": [
+   "runs/rebuild_20261110_dev/raw/b6__gpt-4o-mini-2024-07-18__6c99fb2425ad.jsonl"
+  ],
+  "raw": "runs/final_rehearsal_g3_20261112/raw/b6__gpt-4o-mini-2024-07-18__6c99fb2425ad.r1.jsonl"
+ },
+ "b7": {
+  "rows": 151,
+  "seeded": 151,
+  "to_request": 0,
+  "sources": [
+   "runs/rebuild_20261110_dev/raw/b7__gpt-4o-mini-2024-07-18__393a43f86c33.jsonl"
+  ],
+  "raw": "runs/final_rehearsal_g3_20261112/raw/b7__gpt-4o-mini-2024-07-18__393a43f86c33.r1.jsonl"
+ },
+ "b7plus": {
+  "rows": 151,
+  "seeded": 151,
+  "to_request": 0,
+  "sources": [
+   "runs/rebuild_20261110_dev/raw/b7plus__gpt-4o-mini-2024-07-18__84aea4ee3f87.jsonl"
+  ],
+  "raw": "runs/final_rehearsal_g3_20261112/raw/b7plus__gpt-4o-mini-2024-07-18__84aea4ee3f87.r1.jsonl"
+ },
+ "b7pp": {
+  "rows": 151,
+  "seeded": 151,
+  "to_request": 0,
+  "sources": [
+   "runs/rebuild_20261110_dev/raw/b7pp__gpt-4o-mini-2024-07-18__e02be4c99f9b.jsonl"
+  ],
+  "raw": "runs/final_rehearsal_g3_20261112/raw/b7pp__gpt-4o-mini-2024-07-18__e02be4c99f9b.r1.jsonl"
+ },
+ "oracle": {
+  "rows": 151,
+  "seeded": 151,
+  "to_request": 0,
+  "sources": [
+   "runs/rebuild_20261110_dev/raw/oracle__gpt-4o-mini-2024-07-18__21986e306acd.jsonl"
+  ],
+  "raw": "runs/final_rehearsal_g3_20261112/raw/oracle__gpt-4o-mini-2024-07-18__21986e306acd.r1.jsonl"
+ },
+ "oracle_now": {
+  "rows": 151,
+  "seeded": 151,
+  "to_request": 0,
+  "sources": [
+   "runs/rebuild_20261110_dev/raw/oracle_now__gpt-4o-mini-2024-07-18__a31fc68566c6.jsonl"
+  ],
+  "raw": "runs/final_rehearsal_g3_20261112/raw/oracle_now__gpt-4o-mini-2024-07-18__a31fc68566c6.r1.jsonl"
+ },
+ "proposed2": {
+  "rows": 151,
+  "seeded": 151,
+  "to_request": 0,
+  "sources": [
+   "runs/rebuild_20261110_dev/raw/proposed2__gpt-4o-mini-2024-07-18__3275bb291c34.jsonl",
+   "runs/repeal_persist_dev_20261112/raw/proposed2__gpt-4o-mini-2024-07-18__a31ed09a40e1.jsonl"
+  ],
+  "raw": "runs/final_rehearsal_g3_20261112/raw/proposed2__gpt-4o-mini-2024-07-18__a31ed09a40e1.r1.jsonl"
+ }
+}
