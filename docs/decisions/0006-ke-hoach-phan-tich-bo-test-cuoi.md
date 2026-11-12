@@ -55,7 +55,7 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
 
 ### 2. Hệ và cấu hình bị khóa
 
-- **Generator:** `gpt-4o-mini-2024-07-18` (OpenAI), nhiệt độ 0, `max_tokens` 1024, `seed` 20261109, theo amendment 09/11 của ADR 0004 (Proposed). Qwen3-4B rev `cdbee75` chỉ ở bảng phụ RQ1 và các vòng thử lịch sử, không đặt số cạnh cột chính.
+- **Generator:** `gpt-4o-mini-2024-07-18` (OpenAI), nhiệt độ 0, `max_tokens` 1024, `seed` 20261109, theo amendment 09/11 của ADR 0004 (Accepted 12/11, CMT). Qwen3-4B rev `cdbee75` chỉ ở bảng phụ RQ1 và các vòng thử lịch sử, không đặt số cạnh cột chính.
 - **Embedding:** `dangvantuan/vietnamese-embedding`. X6 (`AITeamVN`) **không chạy trước G3**, nên theo quy tắc gốc giữ `dangvantuan`; X6 không được chạy để đổi embedding sau khi ADR này Accepted.
 - **Thang truy xuất** (F4–F6): `b2ctx → b7 → b7v → b7plus → b7pp`, từ vựng, `k = 20`, như ADR 0005, để so được với v1.0 và test 2.
 - **Hệ có sinh câu trả lời:** `b1`, `b2ctx`, `b3`, `b4`, `b5`, `b6`, `b7`, `b7plus`, `b7pp`, `oracle`, `oracle_now` và **P**. Danh sách gốc là `FINAL_GENERATION` trong `src/vilexgraph/framework/systems.py`; bảng cấu hình in bằng `python -m vilexgraph.framework.systems`. Mọi hệ có truy xuất dense chạy ở chế độ lai ghép (`--hybrid`), không reranker.
@@ -109,7 +109,7 @@ Như ADR 0005 §5: bootstrap theo cụm lineage, B = 10.000, khoảng phân vị
 
 ### 5b. Dao động của generator API
 
-GPT-4o mini ở nhiệt độ 0 vẫn đổi câu trả lời giữa các lần gọi (dev: 3–5/151 câu). Vì vậy:
+GPT-4o mini ở nhiệt độ 0 vẫn đổi câu trả lời giữa các lần gọi (dev: 3–5/151 câu). Vì vậy (CMT chọn 12/11):
 - Mỗi hệ có sinh câu trả lời chạy **hai lần độc lập** trên bộ cuối, cùng prompt và seed. **Lần 1 là kết quả chính**, khai trước; lần 2 chỉ để đo độ ổn định. Không được chọn lần "đẹp hơn".
 - Một kiểm định chỉ được gọi là **ủng hộ** khi phán quyết giống nhau ở cả hai lần. Khác nhau thì báo "không ổn định", tính như không đủ bằng chứng.
 - Ghi `system_fingerprint` và model trả về cho mọi lần gọi; báo tỷ lệ câu đổi giữa hai lần theo hệ và lát.

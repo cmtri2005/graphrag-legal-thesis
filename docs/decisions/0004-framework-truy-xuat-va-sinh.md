@@ -4,7 +4,7 @@ Date: 2026-10-01
 
 ## Status
 
-Proposed
+Proposed (phần gốc). Amendment 2026-10-29 và 2026-11-09 (generator) đã Accepted.
 
 Phần `Decision` 1–3 đã có bằng chứng đo và đang được dùng trong code. Phần 4
 (embedding model) và phần 5 (chế độ Verifier) cần nhóm chốt trước khi chạy P4,
@@ -217,7 +217,7 @@ tức khoảng 45 phút mỗi hệ (`b2` khoảng 90 phút); 17 hệ khoảng 13
 nhiều LLM) vì thời gian; `microsoft/Phi-3.5-mini-instruct` chưa chạy cổng B1, để cho phase 2. ADR 0005
 §7 ghi giới hạn này.
 
-## Amendment 2026-11-09 (§3, generator bộ test cuối) — Proposed, chờ CMT và NMT duyệt trước G3
+## Amendment 2026-11-09 (§3, generator bộ test cuối) — Accepted 12/11/2026 (CMT duyệt trong hội thoại, trước G3; NMT chưa có xác nhận riêng trong repo)
 
 **Thay đổi:** với bộ test cuối, generator cột chính là `gpt-4o-mini-2024-07-18` (OpenAI), thay cho
 Qwen3-4B. Không thuộc họ Claude hay DeepSeek (§3). Qwen3-4B giữ ở bảng phụ RQ1 và ở các vòng thử lịch sử

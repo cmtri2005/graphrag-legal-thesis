@@ -528,6 +528,7 @@ paper; Lawgical dưới 20 lượt/ngày, thiếu thì dùng API vbpl và ghi ng
 - 2026-11-11 (CMT): **thêm ~60 lineage T1 mới vào bộ test cuối** làm phép kiểm không làm hại, ngoài Holm (thay dòng "T1 không vào bộ này" ở mục bộ test cuối). Nháp ADR 0006 §1, §4 (δ = 0,05). Quy trình: rút mẫu, viết câu hỏi và đáp án ngắn bằng model rẻ (haiku), AI-A/AI-B gán, CMT duyệt. G2 có thể trễ 1–2 ngày.
 - 2026-11-11 (CMT): **Q1 loại.** Dòng T6 không đáp án mà quy phạm cấp thấp hơn hoặc có từ trước vẫn điều chỉnh đúng nội dung được hỏi: loại lineage, mã `relocation_unclear`. Áp cho dev 6cab03a0, 6caa8e70, 1a267400; bộ test cuối không có ca nào.
 - 2026-11-11 (CMT): **duyệt phiếu T1 theo đề xuất** ("ok bạn nhé"): 43/60 T1 đạt (`2026-11-11_t1_labels/cmt_confirmed_t1.json`). Bộ test cuối: 156 lineage chính (T2 127, T6 23, T3 6) + 43 T1 đối chứng = 199 lineage, 361 cặp (câu hỏi, mốc) ở ranh giới. Xác nhận qua hội thoại, thời gian từng dòng không đo.
+- 2026-11-12 (CMT): **chạy mỗi hệ sinh hai lần trên bộ cuối** (ADR 0006 §5b: lần 1 chính, chỉ "ủng hộ" khi hai lần cùng phán quyết). **ADR 0004 amendment 09/11 (GPT-4o mini) Accepted.** NMT chưa có xác nhận riêng trong repo.
 - Quyết định cũ còn hiệu lực: A2, A3, B2, B6, B7, B9, C2, C3, C4, C5, E1–E5 (MASTER_RESEARCH_GUIDE §13.3 tại `51f36c7`), và reranker cắt 05/11.
 
 ## Validation
