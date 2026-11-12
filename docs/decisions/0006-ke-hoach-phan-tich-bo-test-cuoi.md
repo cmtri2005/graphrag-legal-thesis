@@ -4,7 +4,9 @@ Date: 2026-11-05
 
 ## Status
 
-**Proposed, bản nháp.** Phải được CMT và NMT duyệt, chuyển sang Accepted và commit **trước** lần chạy đầu tiên của bất kỳ hệ nào trên bộ test cuối (cổng G3 của `docs/plans/active/master-plan.md`). `scripts/eval/final_run.py` từ chối chạy split `test` khi chưa có commit đó.
+Accepted, 12/11/2026. Người duyệt: CMT (NMT chưa có xác nhận riêng trong repo). Chuyển Status sau khi tập dượt trọn đường ống trên dev qua (`runs/final_rehearsal_g3_20261112/`: `proposed2` Accuracy dev lần 1 = 0,722, khớp lần chấm 12/11; F1–F7 cùng phán quyết ở hai lần chạy). Lúc chuyển chưa hệ nào chạy trên bộ test cuối.
+
+Quy định gốc: phải được CMT và NMT duyệt, chuyển sang Accepted và commit **trước** lần chạy đầu tiên của bất kỳ hệ nào trên bộ test cuối (cổng G3 của `docs/plans/active/master-plan.md`). `scripts/eval/final_run.py` từ chối chạy split `test` khi chưa có commit đó.
 
 Các chỗ ghi `[ĐIỀN Ở G2]`, `[ĐIỀN Ở G3]` được điền bằng số đo thật trước khi duyệt. Không chỗ nào được điền sau khi đã thấy kết quả của bộ test cuối.
 
