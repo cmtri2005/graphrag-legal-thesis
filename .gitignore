@@ -57,6 +57,9 @@ data/*
 # exists as the output of a ~2h reverse-closure crawl
 !data/reverse_seeds.json
 
+# Final test release (G2, ADR 0006): hash-locked in the ADR, must be reproducible from git (~9 MB)
+!data/vilextime_final/
+
 # Corpus definition at a point in time. Cheap to regenerate, but the sitemap
 # changes underneath (12 new in-domain documents appeared in 11 days), so
 # regenerating gives a DIFFERENT list. Pin it.

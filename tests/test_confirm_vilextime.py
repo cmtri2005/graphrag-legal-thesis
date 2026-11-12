@@ -73,3 +73,12 @@ def test_final_family_holm_counts_and_exploratory_threshold(tmp_path, monkeypatc
     text = '\n'.join(confirm_section(out))
     assert f'Holm trên {expected_size}/{expected_size}' in text
     assert 'F1–F8' in text and ('F7 thăm dò' in text) == (lineages < 20)
+
+
+def test_final_slices_keep_t1_control_out_of_all():
+    from confirm_vilextime import FINAL_SLICES
+    rows = [{"group": g, "answerable": a, "qsource": q, "repeal_mode": None, "near_identical": False}
+            for g, a, q in (("T1", True, "t1"), ("T2", True, "silver"), ("T6", False, "new"), ("T3", True, "supp"))]
+    n = lambda s: sum(bool(FINAL_SLICES[s](r)) for r in rows)
+    assert (n("all"), n("all_answerable"), n("t1_control"), n("t6_unanswerable")) == (3, 2, 1, 1)
+    assert (n("qsource_silver"), n("qsource_new"), n("qsource_supp")) == (1, 1, 1)

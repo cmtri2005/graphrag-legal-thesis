@@ -1,0 +1,37 @@
+{
+ "schema_version": "2.0.0",
+ "status": "draft, chưa Accepted/commit; nhãn tầng 'AI gán, CMT duyệt, chưa qua luật sư'",
+ "head": "5f8b5d7e8342b59e4a737cf0fb376a08657ef7ba",
+ "working_tree_note": "build_final_release.py và sửa scorer/confirm chưa commit lúc dựng",
+ "rows": 722,
+ "lineages": 199,
+ "lineages_by_group": {
+  "T1": 43,
+  "T2": 127,
+  "T3": 6,
+  "T6": 23
+ },
+ "counts": {
+  "T1 · giua_khoang · test": 43,
+  "T1 · ranh_gioi · test": 43,
+  "T2 · giua_khoang · test": 254,
+  "T2 · ranh_gioi · test": 254,
+  "T3 · giua_khoang · test": 18,
+  "T3 · ranh_gioi · test": 18,
+  "T6 · giua_khoang · test": 46,
+  "T6 · ranh_gioi · test": 46
+ },
+ "locked_inputs": {
+  "data/review/ai_research/2026-11-11_final_count/final_lineages.json": "b00b9878d985e85f4c6f095e493ff9876f86ababa3267e8ad41edb4f20c22cb0",
+  "data/review/ai_research/2026-11-11_t1_labels/cmt_confirmed_t1.json": "e54f48e2c27cf93d27a1b14301f90e6acfc8cccb3302f9bdf53560fe3a5272a0",
+  "data/review/the4/lo1_silver_worksheet.jsonl": "6b3d878334a24d6c46c6694c5d0afdc78ab4619e2fad82f8bd6cd789bf7f8442",
+  "data/review/the4/lo2_moi_worksheet.jsonl": "5843505dde30fca84f5975aa5fc9231ab1c77493a36c6c2c53e3629b3f7c7e2a",
+  "data/review/the4/t1_moi_worksheet.jsonl": "083b7ee86637fb6b90bf86cd8400709e7aaaf48e1c1f64b4748f5c78e84d2d22"
+ },
+ "sha256": {
+  "vilextime.jsonl": "5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c",
+  "vilextime_meta.jsonl": "22142241f8eae7296b48ddad042a3552746070a89d1042663fd41c586acaaa49",
+  "lineages_199.txt": "d34a1ff2086b293152f24706006c25afcaf983b19326a64c014228e3156b4f1d",
+  "excluded_rows.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+ }
+}

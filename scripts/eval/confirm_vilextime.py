@@ -79,6 +79,23 @@ def final_family(rows: list[dict], proposed: str = "proposed2") -> tuple[tuple, 
 
 SLICES['t6_unanswerable'] = lambda r: r['group'] == 'T6' and not r['answerable']
 
+# ADR 0006 §1 slices. "all" is T2+T3+T6 there: the T1 control (qsource "t1") is outside it. Applied only for
+# --family final, so the ADR 0005 family on v1.0 / test 2 (T1 inside "all") is scored as before.
+_F = ("T2", "T3", "T6")
+FINAL_SLICES = {
+    "all": lambda r: r["group"] in _F,
+    "all_answerable": lambda r: r["group"] in _F and r["answerable"],
+    "t6": lambda r: r["group"] == "T6",
+    "t6_unanswerable": lambda r: r["group"] == "T6" and not r["answerable"],
+    "t6_ancestor": lambda r: (r["group"] == "T6" and r.get("repeal_mode") == "ancestor"
+                              and not r["answerable"]),  # như t6_ancestor_repealed (XN5, ADR 0005)
+    "t2_near": lambda r: r["group"] == "T2" and bool(r.get("near_identical")),
+    "qsource_silver": lambda r: r["group"] in _F and r.get("qsource") == "silver",
+    "qsource_new": lambda r: r["group"] in _F and r.get("qsource") == "new",
+    "qsource_supp": lambda r: r["group"] in _F and r.get("qsource") == "supp",
+    "t1_control": lambda r: r.get("qsource") == "t1",
+}
+
 
 def holm(p: dict[str, float]) -> dict[str, float]:
     """Holm-adjusted p: the i-th smallest times (m − i), kept monotone."""
@@ -145,6 +162,8 @@ def main() -> None:
     extra = distractors(release)
     rows = [{**r, "_distractors": extra.get(r["id"], [])} for r in release
             if r.get("split") == args.split and r["as_of_strategy"] == "giua_khoang"]
+    if args.family == 'final':
+        SLICES.update(FINAL_SLICES)
     tests, exploratory = final_family(rows, args.proposed) if args.family == 'final' else (TESTS, EXPLORATORY)
     family_size = len(tests) - len(exploratory)
 

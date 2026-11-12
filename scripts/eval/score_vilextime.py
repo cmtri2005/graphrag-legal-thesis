@@ -148,6 +148,8 @@ def load_rows(path: Path) -> list[dict]:
         r["target"] = m["target"]
         r["near_identical"] = m.get("near_identical")
         r["repeal_mode"] = m.get("repeal_mode")
+        if "qsource" in m:      # final test release (ADR 0006 §1): question process; "t1" marks the control lineages
+            r["qsource"] = m["qsource"]
     return rows
 
 
@@ -337,8 +339,12 @@ def report(rows: list[dict], preds: dict[str, dict], units: dict, split: str | N
     out = {}
     for strategy in sorted({r["as_of_strategy"] for r in rows}):
         these = [r for r in rows if r["as_of_strategy"] == strategy]
-        out[strategy] = {"all": score([r for r in these if r["group"] not in DIAGNOSTIC], preds, units, ks,
-                                      draws, seed(strategy, "all"))}
+        # ADR 0006 §1: the T1 control (qsource "t1") is outside "all"; its own row is the group T1 and `t1_control`.
+        out[strategy] = {"all": score([r for r in these if r["group"] not in DIAGNOSTIC and r.get("qsource") != "t1"],
+                                      preds, units, ks, draws, seed(strategy, "all"))}
+        if any(r.get("qsource") == "t1" for r in these):
+            out[strategy]["t1_control"] = score([r for r in these if r.get("qsource") == "t1"], preds, units, ks,
+                                                draws, seed(strategy, "T1"))
         for group in sorted({r["group"] for r in these}):
             out[strategy][group] = score([r for r in these if r["group"] == group], preds, units, ks,
                                          draws, seed(strategy, group))

@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from score_vilextime import load_rows, nearest, probe, resolve, score
+from score_vilextime import load_rows, nearest, probe, report, resolve, score
 
 # provision P: v1 in force 2019-01-01..2021-01-01, v2 from then (written by event E2);
 # provision Q: v1 until 2021-06-01, when instruction R repealed it.
@@ -261,3 +261,14 @@ def test_intervals_resample_whole_lineages_and_two_systems_are_paired():
     assert 0.3 < d["p"]["accuracy"] < 0.7               # a quarter of the resamples draw lineage A twice
     same = difference(b, score(rows, half, {}, draws=300))
     assert (same["ci95"]["accuracy"], same["p"]["accuracy"]) == ([0, 0], 1)   # the same resamples
+
+
+def test_t1_control_is_outside_all_but_reported_alone():
+    """ADR 0006 §1: qsource "t1" rows leave "all"; a release without qsource scores as before."""
+    t1 = {**_row("c1", "T1", "provision:P", "version:P:1", "2020-01-01", ["asis:provision:P"], "từ 1 … 2 triệu đồng"),
+          "qsource": "t1"}
+    preds = {"r1": _pred("Phạt tiền từ 1 đến 2 triệu đồng.", ["version:P:1"]), "c1": _pred("sai", [])}
+    rep = report([ROWS[0], t1], preds, UNITS, None)["giua_khoang"]
+    assert rep["all"]["rows"] == 1 and rep["t1_control"]["rows"] == 1 and rep["T1"]["rows"] == 1
+    assert "t1_control" not in report(ROWS, {}, UNITS, None)["giua_khoang"]
+    assert report([ROWS[0], {**t1, "qsource": None}], preds, UNITS, None)["giua_khoang"]["all"]["rows"] == 2

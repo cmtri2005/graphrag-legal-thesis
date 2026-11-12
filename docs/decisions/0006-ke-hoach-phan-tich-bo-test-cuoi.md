@@ -36,7 +36,10 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
   | `reference_only` (N2, CMT 11/11) | e9ffd3da | 1 |
   | đồ thị trỏ nhầm văn bản (lo2 `dafc3b40`, CMT 11/11) | sự kiện `event:168125:…` | 0 (không nằm trong tập đạt) |
   | `relocation_unclear` (Q1, CMT 11/11) | chỉ dev: 6cab03a0, 6caa8e70, 1a267400 | 0 |
-- **Danh sách khóa:** danh sách lineage, sha256 của release và manifest được ghi ở đây trước khi duyệt: `[ĐIỀN Ở G2]`.
+- **Danh sách khóa (G2, 12/11):**
+  - Lineage: `data/vilextime_final/lineages_199.txt` sha256 `d34a1ff2086b293152f24706006c25afcaf983b19326a64c014228e3156b4f1d` (156 chính + 43 T1).
+  - Release: `data/vilextime_final/vilextime.jsonl` sha256 `5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c`; meta `vilextime_meta.jsonl` sha256 `22142241f8eae7296b48ddad042a3552746070a89d1042663fd41c586acaaa49`; manifest `manifest.json` sha256 `87093c3f78f4205e77b2c64a45b116cb3dd627465c47b7491a8f264d6675cbcd`.
+  - 722 dòng; ở `giua_khoang`: `all` 156 lineage / 318 dòng (295 có đáp án), `t6_unanswerable` 23, `t6_ancestor` 9, `t2_near` 38, `t1_control` 43. Dựng bằng `scripts/pipeline/build_final_release.py`; `check_release.py` qua; 0 trùng lineage và văn bản với dev; 0 dự đoán trong `runs/`. Đáp án của 676 dòng có đáp án khớp cửa sổ và lời văn của đồ thị dựng lại 10/11 (kể cả 27 lineage không còn trong `vilextime_pool.jsonl`).
 - **Dev:** giữ nguyên 151 dòng `dev`, `giua_khoang`, như ADR 0005.
 - **Lát khai báo trước** trên `giua_khoang`:
 
@@ -128,7 +131,18 @@ GPT-4o mini ở nhiệt độ 0 vẫn đổi câu trả lời giữa các lần 
   | Bác | Bác |
 
 - **Không đủ bằng chứng** được viết theo mẫu: "KTC không loại trừ 0 và không loại trừ hiệu ≥ MDE; không diễn giải là không có hiệu ứng".
-- **Cỡ mẫu và power:** ghi cạnh mọi phán quyết. Bảng MDE cho F1–F7 ở N thật (156 lineage; F7 23 lineage), tính từ phương sai ghép cặp của test 2 và dev, ghi rõ là ước lượng trước khi chạy: `[ĐIỀN Ở G2: data/vilextime_final/adr0006_g2_fill.md]`. Power 0,37 trước đây chỉ là kịch bản xấu cho F5/F6.
+- **Cỡ mẫu và power:** ghi cạnh mọi phán quyết. Bảng MDE cho F1–F7 ở N thật (156 lineage; F7 23 lineage), tính từ phương sai ghép cặp của test 2 và dev, ghi rõ là ước lượng trước khi chạy: xấp xỉ chuẩn, power 80% (`data/vilextime_final/g2_mde.py`, `g2_mde_table.md`). Power 0,37 trước đây chỉ là kịch bản xấu cho F5/F6.
+
+  | Mã | MDE α 0,05 | MDE Holm xấu nhất α/7 | Nguồn SD | Hiệu đã thấy (dev / test 2) |
+  |---|---:|---:|---|---|
+  | F1 | 0,084 | 0,106 | dev | +0,377 / — |
+  | F2 | 0,080 (test 2: 0,068) | 0,100 (0,086) | dev, test 2 | +0,351 / +0,186 |
+  | F3 | 0,072 | 0,091 | dev | −0,399 / — |
+  | F4 | 0,087 (test 2: 0,032) | 0,110 (0,040) | dev, test 2 | +0,138 / +0,046 |
+  | F5, F6 | 0,058 (test 2: 0,047) | 0,073 (0,060) | dev, test 2 | +0,085 / +0,028 |
+  | F7 | 0,185 | 0,233 | dev (21 dòng, trước R2) | 0 / — |
+
+  F5/F6 có hiệu đã thấy gần hoặc dưới MDE: "không đủ bằng chứng" là khả năng thật. F7 chỉ phát hiện được hiệu rất lớn.
 
 ### 7. Gold mù và sửa gold
 
