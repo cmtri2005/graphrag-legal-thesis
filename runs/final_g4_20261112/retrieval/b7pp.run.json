@@ -1,0 +1,61 @@
+[
+ {
+  "spec": {
+   "name": "b7pp-lex",
+   "layer": "version",
+   "lexical": true,
+   "dense": false,
+   "rerank": false,
+   "temporal": "propagated",
+   "context": true,
+   "expand": 0,
+   "expand_edges": "none",
+   "verify": "off",
+   "k": 20,
+   "note": "B7+ with propagated windows: the ladder's top rung, no online graph (K-07)",
+   "repeal_note": false
+  },
+  "as_of_strategy": "giua_khoang",
+  "embed": null,
+  "argv": [
+   "--system",
+   "b7pp",
+   "--no-dense",
+   "--retrieval-only",
+   "--split",
+   "test",
+   "--as-of-strategy",
+   "giua_khoang",
+   "--release",
+   "data/vilextime_final/vilextime.jsonl",
+   "--hits-cache",
+   "runs/final_g4_20261112/retrieval.sqlite",
+   "--out",
+   "runs/final_g4_20261112/retrieval/b7pp.jsonl"
+  ],
+  "commit": "ac32a89f284f159cc25e094c95f2d6fcd94b2f74",
+  "uncommitted": null,
+  "release_sha256": "5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c",
+  "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+  "index_counts": {
+   "documents": 17333,
+   "units_asis": 1509363,
+   "units_version": 1477102,
+   "instructions": 53991,
+   "propagated_windows": 1476969,
+   "versions_with_local_window": 1477102,
+   "provisions_with_context": 1700484
+  },
+  "prompt_sha256": "8dc3549b4773fc4cd866480f61d0afc90cc008ee45332ca3b4a0014f55e5716a",
+  "python": "3.12.3",
+  "started": "2026-11-12T15:27:04+00:00",
+  "finished": true,
+  "ended": "2026-11-12T16:02:37+00:00",
+  "written": 361,
+  "cached": 0,
+  "failed": 0,
+  "models": {
+   "none/none": 361
+  }
+ }
+]

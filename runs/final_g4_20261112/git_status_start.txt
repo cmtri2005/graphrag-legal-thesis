@@ -1,0 +1,6 @@
+?? runs/final_g4_20261112/
+?? runs/final_rehearsal_g3_20261112/r1/retrieval.sqlite
+?? runs/final_rehearsal_g3_20261112/retrieval.sqlite
+?? runs/final_rehearsal_g3_20261112/retrieval_b7.sqlite
+?? runs/final_rehearsal_g3_20261112/retrieval_b7plus.sqlite
+?? runs/final_rehearsal_g3_20261112/retrieval_b7pp.sqlite
