@@ -94,7 +94,9 @@ def windows_for(corpus, unit_id: str, tier: str) -> list[tuple[str | None, str |
     if row is None:
         return []
     local_from, local_to, doc_from, doc_to, kind = tuple(row)
-    if tier == "document" or kind == "instruction":
+    if kind == "instruction":           # effect outlives the acting document (graphx.Graph.rel)
+        return [(doc_from, None)]
+    if tier == "document":
         return [(doc_from, doc_to)]
     if tier == "version":
         return _intersect([(doc_from, doc_to)], [(local_from, local_to)])

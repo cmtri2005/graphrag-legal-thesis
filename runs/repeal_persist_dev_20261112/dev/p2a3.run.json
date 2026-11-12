@@ -1,0 +1,55 @@
+{
+  "system": "p2a3",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "63520c0af4618f052b4b7962b215547a82d1c88005d2cb8969d5e8d5c9fe55f1",
+  "raw_file_sha256": "001a07847a26e55129d9fafc3cc5fb60cbbc9a5d185052b57753f81ffa705bb6",
+  "model": "gpt-4o-mini-2024-07-18",
+  "revision": "gpt-4o-mini-2024-07-18",
+  "gpu": [
+    "api"
+  ],
+  "run_tag": null,
+  "served_models": {
+    "gpt-4o-mini-2024-07-18": 151
+  },
+  "system_fingerprints": {
+    "fp_3a3c79652c": 127,
+    "fp_48eea167bf": 22,
+    "fp_b11ef98e16": 2
+  },
+  "rows": 151,
+  "format_ok": 151,
+  "truncated": 0,
+  "prompt_tokens_mean": 5169.463576158941,
+  "completion_tokens_mean": 116.8476821192053,
+  "generation_seconds": 427.2327278419598,
+  "export": {
+    "system": "p2a3",
+    "spec": {
+      "name": "p2a3",
+      "layer": "version",
+      "lexical": true,
+      "dense": true,
+      "rerank": false,
+      "temporal": "propagated",
+      "context": true,
+      "expand": 1,
+      "expand_edges": "rel_up",
+      "verify": "off",
+      "k": 20,
+      "note": "L4–L5: 𝒰ₜ by formula (3), hybrid ranking, citation-constrained answer, Verifier",
+      "repeal_note": false
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": "data/derived/embed/version-vietnamese-embedding",
+    "embed_sha256": null,
+    "rows": 151,
+    "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "63520c0af4618f052b4b7962b215547a82d1c88005d2cb8969d5e8d5c9fe55f1"
+  }
+}

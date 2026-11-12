@@ -182,3 +182,22 @@ def test_repeal_note_does_not_read_events_for_old_system_or_no_graph_command(gra
     assert repeal_notes(corpus, new, "q", "2021-01-01", []) == []
     assert repeal_notes(corpus, new.variant("old", repeal_note=False), "q", "2021-01-01",
                         [Hit(REPEAL_UP, {"graph": 1.0})], events=Path("absent")) == []
+
+
+@pytest.mark.parametrize("tier", ["document", "version", "propagated"])
+def test_a_command_keeps_its_effect_after_its_document_lapses(graph, tier):
+    """Repeal persists when the repealing act expires (12/11/2026); the Verifier agrees."""
+    import sqlite3
+
+    g, corpus = graph
+    lapsed = "asis:event:lapsed"
+    with sqlite3.connect(corpus.path) as db:
+        db.execute("INSERT INTO documents(document_id,effective_from,effective_to) VALUES (?,?,?)",
+                   ("old_act", "2015-01-01", "2018-01-01"))
+        db.execute("INSERT INTO units(unit_id,layer,kind,provision_id,document_id,text) "
+                   "VALUES (?, 'asis', 'instruction', ?, 'old_act', '')", (lapsed, CLAUSE))
+    temporal = spec(layer="asis" if tier == "document" else "version", expand_edges="rel", temporal=tier)
+    assert lapsed in ids(expand(g, temporal, [Hit(SEED)], "2021-01-01"))
+    assert lapsed not in ids(expand(g, temporal, [Hit(SEED)], "2014-06-01"))   # not yet issued
+    assert invalid_units(corpus, tier, "2021-01-01", [lapsed]) == ()
+    assert invalid_units(corpus, tier, "2014-06-01", [lapsed]) == (lapsed,)

@@ -22,7 +22,8 @@ temporal system only admits neighbours that pass its own predicate. A
 non-temporal system (tier `none`, B5/B6) admits all of them — that is exactly
 what makes it the non-temporal baseline. An instruction unit has no version
 window, so under a temporal tier it is judged by its acting document alone: a
-command is in force once the document that issues it is.
+command takes effect once the document that issues it starts, and keeps that
+effect after the document lapses (12/11/2026, see `Graph.rel`).
 
 Parameters are deliberately small and fixed; they are not part of any result and
 may be tuned on `dev` only (ADR 0003 §7):
@@ -166,8 +167,11 @@ class Graph:
         """
         if tier != "none" and as_of is None:
             raise ValueError("temporal relation lookup requires as_of")
-        clause, params = predicate("none" if tier == "none" else "document", as_of)
-        where = f" AND {clause}" if clause else ""
+        # A command keeps its effect after the document that issued it lapses: a repealed
+        # provision does not come back when the repealing act expires (Luật 80/2015 Điều 154,
+        # Luật 64/2025 Điều 57 list no revival; vn-law-verifier 12/11/2026). So a temporal tier
+        # only asks that the acting document has *started*, never that it is still in force.
+        where, params = ("", []) if tier == "none" else (f" AND {_ISSUED}", [as_of])
         return [r[0] for r in self.corpus.db.execute(
             "SELECT u.unit_id FROM units u LEFT JOIN documents d ON d.document_id=u.document_id"
             " WHERE u.kind='instruction' AND u.provision_id=?"
@@ -201,8 +205,8 @@ class Graph:
             return unit_ids
         marks = ",".join("?" * len(unit_ids))
         kept = set()
-        for kind, use in (("instruction", "document"), (None, tier)):
-            clause, params = predicate(use, as_of)
+        for kind, use in (("instruction", None), (None, tier)):
+            clause, params = (_ISSUED, [as_of]) if use is None else predicate(use, as_of)
             rows = self.corpus.db.execute(
                 "SELECT u.unit_id FROM units u"
                 " LEFT JOIN documents d ON d.document_id = u.document_id"
@@ -210,6 +214,10 @@ class Graph:
                 f" AND {clause}", [*unit_ids, kind or "instruction", *params])
             kept.update(r[0] for r in rows)
         return [u for u in unit_ids if u in kept]
+
+
+# A command is admitted once its acting document has started; it is never dropped for lapsing.
+_ISSUED = "d.effective_from IS NOT NULL AND d.effective_from <= ?"
 
 
 def expand(graph: Graph, spec: SystemSpec, hits: list[Hit], as_of: str,

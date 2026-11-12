@@ -98,8 +98,9 @@ class RetrievalCache:
 
     @staticmethod
     def key(spec: SystemSpec, question: str, as_of: str, *, fast: bool = False) -> str:
-        # Versioned: old entries predate filter-before-fanout and fast-mode isolation.
-        signature = json.dumps(["retrieval-v2", fast, spec.layer, spec.temporal, spec.context,
+        # Versioned: v2 entries predate the 12/11/2026 change that keeps a command after its
+        # acting document lapses (graphx._ISSUED); bump again whenever expansion logic changes.
+        signature = json.dumps(["retrieval-v3", fast, spec.layer, spec.temporal, spec.context,
                                 spec.k, spec.lexical,
                                 spec.dense, spec.rerank, spec.expand, spec.expand_edges,
                                 question, as_of if spec.temporal != "none" or spec.expand else None],
