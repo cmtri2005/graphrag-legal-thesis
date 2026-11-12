@@ -531,6 +531,7 @@ paper; Lawgical dưới 20 lượt/ngày, thiếu thì dùng API vbpl và ghi ng
 - 2026-11-11 (CMT): **duyệt phiếu T1 theo đề xuất** ("ok bạn nhé"): 43/60 T1 đạt (`2026-11-11_t1_labels/cmt_confirmed_t1.json`). Bộ test cuối: 156 lineage chính (T2 127, T6 23, T3 6) + 43 T1 đối chứng = 199 lineage, 361 cặp (câu hỏi, mốc) ở ranh giới. Xác nhận qua hội thoại, thời gian từng dòng không đo.
 - 2026-11-12 (CMT): **chạy mỗi hệ sinh hai lần trên bộ cuối** (ADR 0006 §5b: lần 1 chính, chỉ "ủng hộ" khi hai lần cùng phán quyết). **ADR 0004 amendment 09/11 (GPT-4o mini) Accepted.** NMT chưa có xác nhận riêng trong repo.
 - 2026-11-12 (CMT): theo rà code framework 12/11 (chỉ đọc; không lỗi làm sai số đã chấm): **sửa trước G3** cổng test (đòi ADR 0006 Accepted), công cụ chạy hai lần §5b, phép T1 không làm hại, tự kiểm cấu hình khóa; **sửa parse** nhãn cùng dòng (A, khai trong ADR); **sửa lệnh bãi bỏ biến mất khi văn bản chứa lệnh hết hiệu lực** (`graphx.py:169`, B) sau khi `vn-law-verifier` xác nhận căn cứ, rồi chạy lại dev các hệ có mở rộng và áp lại quy tắc chọn P. G3 có thể trễ khoảng 1 ngày.
+- 2026-11-12 (CMT): **duyệt ADR 0006 ("Accepted")**. Phiên điều phối chỉ chuyển dòng Status sau khi tập dượt trọn đường ống trên dev qua (để không phải viết amendment nếu tập dượt cần sửa ADR). NMT chưa có xác nhận riêng trong repo.
 - Quyết định cũ còn hiệu lực: A2, A3, B2, B6, B7, B9, C2, C3, C4, C5, E1–E5 (MASTER_RESEARCH_GUIDE §13.3 tại `51f36c7`), và reranker cắt 05/11.
 
 ## Validation
