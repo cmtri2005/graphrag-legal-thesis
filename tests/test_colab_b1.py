@@ -51,9 +51,12 @@ def test_b2_import_is_dev_only_and_keeps_system_metadata(tmp_path):
                                "model": "Qwen/Qwen3-4B-Instruct-2507", "revision": "abc",
                                "raw": "TRẢ LỜI: X\nHIỆU LỰC: còn\nCĂN CỨ:",
                                "finish_reason": "eos", "prompt_tokens": 10,
-                               "completion_tokens": 10, "elapsed_s": 1, "gpu": "T4"}) + "\n")
+                               "completion_tokens": 10, "elapsed_s": 1, "gpu": "T4",
+                               "system_fingerprint": "fp_1"}) + "\n")
     out = tmp_path / "b1.jsonl"
-    import_completions(SimpleNamespace(prompts=prompts, raw=raw, out=out))
+    import_completions(SimpleNamespace(prompts=prompts, raw=raw, out=out, run_tag="r2"))
+    run = json.loads(out.with_suffix(".run.json").read_text())
+    assert (run["run_tag"], run["system_fingerprints"], run["served_models"]) == ("r2", {"fp_1": 1}, {"abc": 1})
     assert json.loads(out.read_text())["signals"] == {}
     assert json.loads(out.with_suffix(".run.json").read_text())["system"] == "b1"
     assert json.loads(out.with_suffix(".run.json").read_text())["export"] == export

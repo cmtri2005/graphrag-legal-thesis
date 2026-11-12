@@ -98,7 +98,7 @@ ADR này không sửa ADR 0005. Kết luận đã báo của v1.0 và test 2 gi�
 - **Không làm hại trên T1 (`t1_control`, ngoài Holm, khai trước 11/11):**
   - Hiệu Accuracy ghép cặp P − `b2ctx`, KTC 95% như §5. Biên không làm hại δ = 0,05: nói "không làm hại" chỉ khi cận dưới KTC > −0,05; cận dưới ≤ −0,05 thì báo "không chứng minh được không làm hại", không đổi thành "có hại" trừ khi cận trên < 0.
   - Cùng phép đo cho `b7`, `b7pp` so với `b2ctx`, báo mô tả.
-  - Số dòng T1 mà mỗi hệ khẳng định "không còn hiệu lực" (khẳng định sai, vì T1 không đổi): đếm và tỷ lệ kèm Wilson.
+  - Số dòng T1 mà mỗi hệ khẳng định "không còn hiệu lực" (khẳng định sai, vì T1 không đổi): đếm và tỷ lệ kèm Wilson. Cài ở `confirm_vilextime.py --family final` (khóa `t1_no_harm`).
   - Với khoảng 60 lineage, KTC dự kiến rộng khoảng ±0,1; phép kiểm này chỉ bắt được tác hại lớn. Ghi đúng như vậy.
 - **Khẳng định "đã bãi bỏ":** precision trên dòng có đáp án và recall trên dòng không đáp án, mọi hệ.
 - **Các chỉ số khác:** TCS, VCR, MRR, EM/F1.
@@ -117,6 +117,11 @@ GPT-4o mini ở nhiệt độ 0 vẫn đổi câu trả lời giữa các lần 
 - Một kiểm định chỉ được gọi là **ủng hộ** khi phán quyết giống nhau ở cả hai lần. Khác nhau thì báo "không ổn định", tính như không đủ bằng chứng.
 - Ghi `system_fingerprint` và model trả về cho mọi lần gọi; báo tỷ lệ câu đổi giữa hai lần theo hệ và lát.
 - Các hệ chỉ truy xuất (F4–F6) không chịu dao động này.
+- Công cụ (12/11): `api_generate.py --run-tag r1|r2`, `final_run.py --run-tag`, so hai lần bằng `scripts/eval/compare_runs.py`. `final_run` tự kiểm model, nhiệt độ 0, `max_tokens` 1024, seed 20261109, và file truy xuất F4–F6 là từ vựng k = 20; sai thì dừng.
+
+### 5c. Đọc câu trả lời (khai trước 12/11)
+
+Parser nhận nhãn `HIỆU LỰC`, `CĂN CỨ` ở đầu dòng hoặc viết HOA giữa dòng ("TRẢ LỜI: … HIỆU LỰC: không CĂN CỨ: [1]"); lần xuất hiện cuối thắng. Sửa trên dev đổi 6 dòng `format_ok`, 0 dòng đổi đúng/sai, P vẫn `proposed2` (`runs/parse_fix_dev_20261112/`). Áp như nhau cho mọi hệ.
 
 ### 6. Quy tắc kết luận
 

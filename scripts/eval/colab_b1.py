@@ -8,6 +8,7 @@ import json
 import random
 import subprocess
 import sys
+from collections import Counter
 from dataclasses import asdict
 from pathlib import Path
 
@@ -23,15 +24,29 @@ from run_vilextime import INDEX, embed_dir, RELEASE, queries, retriever  # noqa:
 ORACLE = "oracle"
 ORACLE_NOW = "oracle_now"
 SPLITS = ("dev", "test")
-ADR = Path(__file__).resolve().parents[2] / "docs/decisions/0005-ke-hoach-phan-tich.md"
+ADR = Path(__file__).resolve().parents[2] / "docs/decisions/0006-ke-hoach-phan-tich-bo-test-cuoi.md"
+
+
+def adr_accepted_commit(path: Path = ADR) -> str | None:
+    """ADR 0006 gate: the Status of the committed file (HEAD) reads Accepted. Returns the commit that
+    moved it there (the oldest of the unbroken run of Accepted commits in the history of HEAD, so
+    an ancestor of HEAD by construction), else None. The working tree alone does not count."""
+    root, rel = path.parents[2], str(path.relative_to(path.parents[2]))
+    run = lambda *a: subprocess.run(["git", *a], cwd=root, capture_output=True, text=True)  # noqa: E731
+    accepted = lambda commit: (run("show", f"{commit}:{rel}").stdout.split("## Status", 1)[-1]  # noqa: E731
+                               .split("##", 1)[0].lstrip("*_ \n").startswith("Accepted"))
+    if run("status", "--porcelain", "--", rel).stdout.strip():
+        return None
+    found = None
+    for commit in run("log", "--format=%H", "HEAD", "--", rel).stdout.split():
+        if not accepted(commit):
+            break
+        found = commit
+    return found
 
 
 def adr_accepted(path: Path = ADR) -> bool:
-    """ADR 0005 §Status reads Accepted in the committed file, not only in the working tree."""
-    text = subprocess.run(["git", "show", f"HEAD:{path.relative_to(path.parents[2])}"],
-                          cwd=path.parents[2], capture_output=True, text=True).stdout
-    status = text.split("## Status", 1)[-1].split("##", 1)[0]
-    return status.strip().startswith("Accepted")
+    return adr_accepted_commit(path) is not None
 
 
 def digest(row: dict) -> str:
@@ -204,6 +219,10 @@ def import_completions(args) -> None:
               # Later runtimes write the GPU list per row instead of a joined string.
               "gpu": sorted({" + ".join(g) if isinstance(g, list) else g
                              for g in (r.get("gpu", "unknown") for r in completions)}),
+              "run_tag": getattr(args, "run_tag", None),
+              # ADR 0006 5b: what the API reported per call, counted by value.
+              "served_models": dict(Counter(r["revision"] for r in completions)),
+              "system_fingerprints": dict(Counter(str(r.get("system_fingerprint")) for r in completions)),
               "rows": n, "format_ok": good, "truncated": cut,
               "prompt_tokens_mean": sum(r["prompt_tokens"] for r in predictions) / n,
               "completion_tokens_mean": sum(r["completion_tokens"] for r in predictions) / n,

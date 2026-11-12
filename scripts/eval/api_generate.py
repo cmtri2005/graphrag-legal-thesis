@@ -22,6 +22,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -93,10 +94,11 @@ def main() -> None:
     ap.add_argument("--temperature", type=float, default=0.0)
     ap.add_argument("--max-tokens", type=int, default=1024)
     ap.add_argument("--seed", type=int, default=20261109, help="best effort on providers that take one")
+    ap.add_argument("--run-tag", help="r1, r2, ...: a separate raw file per independent run of the same prompts "
+                                      "(ADR 0006 5b); a tagged run never counts the other run's rows as answered")
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--limit", type=int, help="stop after this many rows of the file are answered")
     ap.add_argument("--ids", type=Path, help="only these row ids, one per line, for a targeted probe")
-    ap.add_argument("--amendment", help="G3 amendment commit; required on the test split")
     args = ap.parse_args()
 
     rows = read_jsonl(args.prompts)
@@ -106,11 +108,13 @@ def main() -> None:
     bad = [r["id"] for r in rows if digest(r) != r["prompt_sha256"]]
     if bad:
         raise SystemExit(f"{len(bad)} prompts do not match their hash, first {bad[0]}")
+    if args.run_tag and not re.fullmatch(r"r\d+", args.run_tag):
+        raise SystemExit("--run-tag must look like r1, r2")
     splits = {r.get("split", "dev") for r in rows}
     if len(splits) != 1:
         raise SystemExit(f"mixed splits: {splits}")
     split = splits.pop()
-    guard_test(split, args.amendment, [args.prompts], root=ROOT)
+    guard_test(split, [args.prompts], root=ROOT)
 
     names = {r.get("system_name", "b2ctx") for r in rows}
     if len(names) != 1:
@@ -118,7 +122,7 @@ def main() -> None:
     system = names.pop()
     file_sha = hashlib.sha256(args.prompts.read_bytes()).hexdigest()
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    raw = args.out_dir / f"{system}__{args.model.replace('/', '__')}__{file_sha[:12]}.jsonl"
+    raw = args.out_dir / f"{system}__{args.model.replace('/', '__')}__{file_sha[:12]}{'.' + args.run_tag if args.run_tag else ''}.jsonl"
     meta_path = raw.with_suffix(".meta.json")
 
     settings = {k: getattr(args, k) for k in SETTINGS}
@@ -129,7 +133,7 @@ def main() -> None:
     else:
         meta_path.write_text(json.dumps({
             **settings, "system": system, "split": split, "prompt_file_sha256": file_sha,
-            "commit": git("rev-parse", "HEAD"),
+            "run_tag": args.run_tag, "commit": git("rev-parse", "HEAD"),
             "uncommitted": bool(git("status", "--porcelain", "--untracked-files=no")),
             "started": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

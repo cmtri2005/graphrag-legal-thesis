@@ -1,0 +1,46 @@
+{
+  "system": "b5",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "3b390b407262cf39295d1a61afb46a1a7a85496df660f79a8c3acc0283ad45c6",
+  "raw_file_sha256": "6129843d7e414e076f92b1b552bb58b8c561e042c80da8acf8722f95d2cd02d8",
+  "model": "gpt-4o-mini-2024-07-18",
+  "revision": "gpt-4o-mini-2024-07-18",
+  "gpu": [
+    "api"
+  ],
+  "rows": 151,
+  "format_ok": 151,
+  "truncated": 0,
+  "prompt_tokens_mean": 5279.781456953642,
+  "completion_tokens_mean": 108.74172185430463,
+  "generation_seconds": 503.2412664989679,
+  "export": {
+    "system": "b5",
+    "spec": {
+      "name": "b5",
+      "layer": "asis",
+      "lexical": true,
+      "dense": true,
+      "rerank": false,
+      "temporal": "none",
+      "context": true,
+      "expand": 1,
+      "expand_edges": "rel",
+      "verify": "off",
+      "k": 20,
+      "note": "B5 — non-temporal GraphRAG; reduced corpus, see the plan",
+      "repeal_note": false
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": "data/derived/embed/asis-vietnamese-embedding",
+    "embed_sha256": "3a8b143bd5e6307642b2f011020d3a7ed9b32599de7861ef992555343ee4915e",
+    "rows": 151,
+    "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "3b390b407262cf39295d1a61afb46a1a7a85496df660f79a8c3acc0283ad45c6"
+  }
+}

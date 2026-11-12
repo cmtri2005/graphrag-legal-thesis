@@ -50,7 +50,8 @@ def test_final_family_holm_counts_and_exploratory_threshold(tmp_path, monkeypatc
     assert len(tests) == 8 and len(tests) - len(exploratory) == expected_size
     assert 'F8' in exploratory and tests[2][3] == 'wrong_version' and tests[2][7] == -1
     assert tests[0][6] == ('b4', 'P') and tests[6][6] == ('b7pp', 'P')
-    release = tmp_path / 'release.jsonl'
+    release = tmp_path / 'rel' / 'release.jsonl'     # outside the prediction folder, which final reads whole
+    release.parent.mkdir()
     release.write_text('[]')
     for system in {s for t in tests for s in t[6]}:
         (tmp_path / f'{system}.jsonl').write_text('')
@@ -82,3 +83,16 @@ def test_final_slices_keep_t1_control_out_of_all():
     n = lambda s: sum(bool(FINAL_SLICES[s](r)) for r in rows)
     assert (n("all"), n("all_answerable"), n("t1_control"), n("t6_unanswerable")) == (3, 2, 1, 1)
     assert (n("qsource_silver"), n("qsource_new"), n("qsource_supp")) == (1, 1, 1)
+
+
+def test_t1_no_harm_verdict_and_false_expired_wilson():
+    from confirm_vilextime import t1_no_harm, wilson
+    rows = [{**_row(f"L{i}", "T1"), "qsource": "t1"} for i in range(20)]
+    good = {r["id"]: {"answer": "x", "answerable": True, "retrieved": [], "citations": []} for r in rows}
+    bad = {r["id"]: {"answer": "", "answerable": i < 4, "retrieved": [], "citations": []} for i, r in enumerate(rows)}
+    out = t1_no_harm(rows, {"b2ctx": good, "b7": good, "b7pp": bad, "P": good}, "P", {}, 200)
+    assert out["rows"] == 20 and out["diff"]["P"]["verdict"] == "không làm hại"      # difference 0, CI [0, 0]
+    assert out["diff"]["b7pp"]["estimate"] == -1.0 and out["diff"]["b7pp"]["verdict"] == "có hại"
+    assert out["false_expired"]["b7pp"]["count"] == 16 and out["false_expired"]["P"]["count"] == 0
+    assert out["false_expired"]["b7pp"]["wilson95"] == wilson(16, 20)
+    assert wilson(0, 20)[0] == pytest.approx(0, abs=1e-12)

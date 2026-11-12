@@ -23,33 +23,48 @@ def test_final_release_refuses_missing_short_answer(gold):
         final_run.validate_rows([r], 'dev', [])
 
 
-def test_final_refuses_test_without_amendment_before_reading_inputs(tmp_path):
-    with pytest.raises(SystemExit, match='requires --amendment'):
-        final_run.guard_test('test', None, [tmp_path / 'absent'])
-    final_run.guard_test('dev', None, [tmp_path / 'absent'])
+def adr_repo(tmp_path):
+    """A throwaway git repo holding a Proposed ADR 0006, an old ADR 0005 amendment and one input file."""
+    import subprocess
+
+    import colab_b1
+    git = lambda *a: subprocess.run(['git', '-c', 'user.name=t', '-c', 'user.email=t@t', *a], cwd=tmp_path,
+                                    check=True, capture_output=True)
+    adr = tmp_path / colab_b1.ADR.relative_to(final_run.ROOT)
+    adr.parent.mkdir(parents=True)
+    git('init', '-q')
+    adr.write_text('# 0006\n\n## Status\n\n**Proposed, bản nháp.**\n\n## Context\n\nAccepted later.\n')
+    (adr.parent / '0005-ke-hoach-phan-tich.md').write_text('# 0005\n\n## Status\n\nAccepted\n\n## Amendment 2026-11-05\n')
+    (tmp_path / 'input').write_text('x')
+    git('add', '.')
+    git('commit', '-qm', 'proposed')
+    return adr, git
 
 
-def test_final_refuses_amendment_outside_head(monkeypatch):
-    monkeypatch.setattr(final_run, 'git', lambda *a, **k: SimpleNamespace(returncode=1, stdout=''))
-    with pytest.raises(SystemExit, match='not a commit contained in HEAD'):
-        final_run.guard_test('test', 'missing', [])
-
-
-def test_final_test_gate_checks_dirty_inputs_and_accepts_clean(monkeypatch, tmp_path):
-    dirty = False
-    def git(*args, **kwargs):
-        if args[0] == 'show':
-            text = '+## Amendment 2026-11-05'
-        elif args[0] == 'status':
-            text = ' M scripts/eval/score_vilextime.py' if dirty else ''
-        else:
-            text = 'a' * 40
-        return SimpleNamespace(returncode=0, stdout=text)
-    monkeypatch.setattr(final_run, 'git', git)
-    final_run.guard_test('test', 'abc', [tmp_path / 'input'], root=tmp_path)
-    dirty = True
+def test_final_test_gate_needs_committed_accepted_adr_0006(tmp_path):
+    adr, git = adr_repo(tmp_path)
+    final_run.guard_test('dev', [tmp_path / 'absent'], root=tmp_path)
+    with pytest.raises(SystemExit, match='ADR 0006 Status Accepted'):
+        final_run.guard_test('test', [tmp_path / 'input'], root=tmp_path)      # Proposed; ADR 0005 amendment is no longer enough
+    adr.write_text(adr.read_text().replace('**Proposed, bản nháp.**', '**Accepted (CMT).**'))
+    with pytest.raises(SystemExit, match='ADR 0006 Status Accepted'):
+        final_run.guard_test('test', [tmp_path / 'input'], root=tmp_path)      # the working tree alone does not count
+    git('commit', '-qam', 'accepted')
+    final_run.guard_test('test', [tmp_path / 'input'], root=tmp_path)
+    (tmp_path / 'input').write_text('changed')
     with pytest.raises(SystemExit, match='inputs are dirty'):
-        final_run.guard_test('test', 'abc', [tmp_path / 'input'], root=tmp_path)
+        final_run.guard_test('test', [tmp_path / 'input'], root=tmp_path)
+
+
+def test_final_test_gate_refuses_accepted_reverted_to_proposed(tmp_path):
+    adr, git = adr_repo(tmp_path)
+    adr.write_text(adr.read_text().replace('**Proposed, bản nháp.**', 'Accepted'))
+    git('commit', '-qam', 'accepted')
+    import colab_b1
+    assert colab_b1.adr_accepted_commit(adr) is not None
+    adr.write_text(adr.read_text().replace('Accepted\n\n## Context', '**Proposed, lại.**\n\n## Context'))
+    git('commit', '-qam', 'back')
+    assert colab_b1.adr_accepted_commit(adr) is None
 
 
 def test_final_refuses_dev_document_leakage():
@@ -96,3 +111,42 @@ def test_each_dense_system_reads_embeddings_of_its_own_layer():
         if spec.dense:
             assert (embed_dir(spec.layer) / 'texts.sqlite').exists(), name
             assert spec.layer in embed_dir(spec.layer).name, name
+
+
+def test_raw_files_split_by_run_tag(tmp_path):
+    for name in ('b7__m__abc.jsonl', 'b7__m__abc.r1.jsonl', 'b7__m__abc.r2.jsonl', 'b7__m__abc.r2.meta.json'):
+        (tmp_path / name).write_text('')
+    names = lambda tag: [p.name for p in final_run.raw_files(tmp_path, 'b7', tag)]
+    assert names(None) == ['b7__m__abc.jsonl']
+    assert names('r1') == ['b7__m__abc.r1.jsonl']
+    assert names('r2') == ['b7__m__abc.r2.jsonl']
+
+
+@pytest.mark.parametrize('change, ok', [({}, True), ({'model': 'gpt-4o-mini'}, False), ({'temperature': 0.2}, False),
+                                        ({'max_tokens': 512}, False), ({'seed': 1}, False)])
+def test_locked_generation_config(tmp_path, change, ok):
+    raw = tmp_path / 'b7__m__abc.jsonl'
+    raw.write_text('')
+    raw.with_suffix('.meta.json').write_text(json.dumps({**final_run.LOCKED_GENERATION, **change}))
+    if ok:
+        final_run.check_locked_generation(raw)
+    else:
+        with pytest.raises(SystemExit, match='locked'):
+            final_run.check_locked_generation(raw)
+    raw.with_suffix('.meta.json').unlink()
+    with pytest.raises(SystemExit, match='locked'):
+        final_run.check_locked_generation(raw)
+
+
+@pytest.mark.parametrize('spec, ok', [({'lexical': True, 'dense': False, 'k': 20}, True),
+                                      ({'lexical': True, 'dense': True, 'k': 20}, False),
+                                      ({'lexical': True, 'dense': False, 'k': 10}, False)])
+def test_locked_retrieval_is_lexical_k20(tmp_path, spec, ok):
+    (tmp_path / 'b7.run.json').write_text(json.dumps([{'spec': {'lexical': True, 'dense': True, 'k': 5}}, {'spec': spec}]))
+    if ok:
+        final_run.check_locked_retrieval(tmp_path, ['b7'])
+    else:
+        with pytest.raises(SystemExit, match='lexical'):
+            final_run.check_locked_retrieval(tmp_path, ['b7'])
+    with pytest.raises(SystemExit, match='lexical'):
+        final_run.check_locked_retrieval(tmp_path, ['absent'])

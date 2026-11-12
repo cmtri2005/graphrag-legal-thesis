@@ -82,14 +82,25 @@ CĂN CỨ:"""
 USER = "MỐC THỜI GIAN: {as_of}\nCÂU HỎI: {question}\n\nCÁC ĐOẠN CĂN CỨ:\n{body}"
 REPEAL_NOTES = "\n\nTHÔNG BÁO BÃI BỎ TỪ ĐỒ THỊ:\n"
 
+# A label counts at the start of a line (any case) or, for a one-line answer, after a space
+# in capitals ("TRẢ LỜI: x HIỆU LỰC: không CĂN CỨ: [1]"). A value ends at the next capital label
+# on the same line or at the end of the line; the last label of each kind wins.
+_NEXT = r"(?-i:HIỆU\s*L\w*|CĂN\s*C\w*|TRẢ\s*LỜI)\s*:"
+
+
+def _label(body: str, value: str) -> re.Pattern:
+    return re.compile(rf"(?:(?i:^[ \t]*{body})|(?<=\s)(?-i:{body}))\s*:\s*({value})(?=[ \t]+{_NEXT}|$)",
+                      re.IGNORECASE | re.MULTILINE)
+
+
 # The answer runs until the next label, counting a mistyped one ("HIỆU LỰNG:"),
 # so a typo cannot be swallowed into the answer text.
 _ANSWER = re.compile(r"^\s*TRẢ\s*LỜI\s*:\s*(.*?)"
-                     r"(?=^\s*(?:TRẢ\s*LỜI|HIỆU\s*L\w*|CĂN\s*C\w*)\s*:|\Z)",
+                     r"(?=^\s*(?:TRẢ\s*LỜI|HIỆU\s*L\w*|CĂN\s*C\w*)\s*:|\s(?-i:HIỆU\s*L\w*|CĂN\s*C\w*)\s*:|\Z)",
                      re.IGNORECASE | re.MULTILINE | re.DOTALL)
-# The whole line, not one token: "không rõ" must not truncate to "không".
-_FORCE = re.compile(r"^\s*HIỆU\s*LỰC\s*:\s*(.+)$", re.IGNORECASE | re.MULTILINE)
-_CITES = re.compile(r"^\s*CĂN\s*CỨ\s*:\s*(.*)$", re.IGNORECASE | re.MULTILINE)
+# The whole value, not one token: "không rõ" must not truncate to "không".
+_FORCE = _label(r"HIỆU\s*LỰC", ".+?")
+_CITES = _label(r"CĂN\s*CỨ", ".*?")
 _TAG = re.compile(r"\[(\d+)\]")
 # Only the three known labels, allowing a mistyped tail ("HIỆU LỰNG:").
 _LOOSE_LABEL = re.compile(r"^\s*(?:TRẢ\s*LỜI|HIỆU\s*L\w*|CĂN\s*C\w*)\s*:", re.IGNORECASE)
@@ -147,9 +158,9 @@ def parse(raw: str, ids: list[str]) -> tuple[str, bool, tuple[str, ...]]:
     else:
         kept = [ln for ln in raw.splitlines() if not _LOOSE_LABEL.match(ln)]
         text = "\n".join(kept).strip()
-    force = _FORCE.search(raw)
+    force = _last(_FORCE, raw)
     verdict = _normalise_force(force.group(1) if force else "")
-    cite_line = _CITES.search(raw)
+    cite_line = _last(_CITES, raw)
     seen, cites = set(), []
     for tag in _TAG.findall(cite_line.group(1) if cite_line else ""):
         index = int(tag) - 1
@@ -161,9 +172,14 @@ def parse(raw: str, ids: list[str]) -> tuple[str, bool, tuple[str, ...]]:
     return text, verdict != "expired", tuple(cites)
 
 
+def _last(pattern: re.Pattern, raw: str):
+    found = list(pattern.finditer(raw))
+    return found[-1] if found else None
+
+
 def format_ok(raw: str, citations: tuple[str, ...], *, has_evidence: bool) -> bool:
     """B1 gate: required fields, plus a usable citation when evidence was supplied."""
-    return bool(_ANSWER.search(raw) and _FORCE.search(raw) and _CITES.search(raw)
+    return bool(_ANSWER.search(raw) and _last(_FORCE, raw) and _last(_CITES, raw)
                 and (not has_evidence or citations))
 
 

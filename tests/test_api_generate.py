@@ -102,14 +102,28 @@ def test_crash_cut_last_line_is_dropped_and_rerequested(run, monkeypatch):
     assert len(raw.read_text().splitlines()) == 2
 
 
-def test_test_split_needs_the_amendment_commit(run, monkeypatch):
+def test_run_tag_keeps_runs_apart(run, monkeypatch):
+    calls = []
+    monkeypatch.setattr(llm, "complete", lambda s, user, **k: calls.append(user) or done())
+    run.go("--run-tag", "r1")
+    run.go("--run-tag", "r2")                      # the second run is not "already answered"
+    assert len(calls) == 6
+    names = sorted(p.name for p in (run.tmp / "raw").glob("*.jsonl"))
+    assert [n.split(".")[-2] for n in names] == ["r1", "r2"]
+    with pytest.raises(SystemExit, match="run-tag"):
+        run.go("--run-tag", "second")
+
+
+def test_test_split_needs_accepted_adr_0006(run, monkeypatch):
+    import colab_b1
+    monkeypatch.setattr(colab_b1, "adr_accepted", lambda *a: False)
     called = []
     monkeypatch.setattr(llm, "complete", lambda *a, **k: called.append(1) or done())
     rows = [{**r, "system_name": "b2ctx", "split": "test", "as_of": "2024-01-01", "signals": {}} for r in run.rows]
     for row in rows:
         row["prompt_sha256"] = digest(row)
     run.prompts.write_text("".join(json.dumps(r) + "\n" for r in rows))
-    with pytest.raises(SystemExit, match="amendment"):
+    with pytest.raises(SystemExit, match="ADR 0006"):
         run.go()
     assert not called
 

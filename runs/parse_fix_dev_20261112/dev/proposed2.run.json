@@ -1,0 +1,46 @@
+{
+  "system": "proposed2",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "3275bb291c34e472a3726194ecd75fa710ef05cf87609d0a15645076312e82f8",
+  "raw_file_sha256": "9e266e5484943e9fca6df52a253a7c67857619dbcba51098d3018fa8b82fba67",
+  "model": "gpt-4o-mini-2024-07-18",
+  "revision": "gpt-4o-mini-2024-07-18",
+  "gpu": [
+    "api"
+  ],
+  "rows": 151,
+  "format_ok": 151,
+  "truncated": 0,
+  "prompt_tokens_mean": 5156.913907284768,
+  "completion_tokens_mean": 116.34437086092716,
+  "generation_seconds": 403.0232591960157,
+  "export": {
+    "system": "proposed2",
+    "spec": {
+      "name": "proposed2",
+      "layer": "version",
+      "lexical": true,
+      "dense": true,
+      "rerank": false,
+      "temporal": "propagated",
+      "context": true,
+      "expand": 1,
+      "expand_edges": "rel_up",
+      "verify": "reject",
+      "k": 20,
+      "note": "L4–L5: 𝒰ₜ by formula (3), hybrid ranking, citation-constrained answer, Verifier",
+      "repeal_note": false
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": "data/derived/embed/version-vietnamese-embedding",
+    "embed_sha256": null,
+    "rows": 151,
+    "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "3275bb291c34e472a3726194ecd75fa710ef05cf87609d0a15645076312e82f8"
+  }
+}

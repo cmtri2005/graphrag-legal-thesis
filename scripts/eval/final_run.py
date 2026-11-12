@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -22,7 +23,10 @@ import score_vilextime as scorer
 from report_results import render
 
 ROOT = Path(__file__).resolve().parents[2]
-ADR = 'docs/decisions/0005-ke-hoach-phan-tich.md'
+# ADR 0004 amendment 09/11 (generator) and ADR 0006 §2 (retrieval ladder): read back from the run files, not trusted.
+LOCKED_GENERATION = dict(model='gpt-4o-mini-2024-07-18', temperature=0, max_tokens=1024, seed=20261109)
+LOCKED_RETRIEVAL = ('b2ctx', 'b7', 'b7plus', 'b7pp')
+RUN_TAG = re.compile(r'\.r\d+\.jsonl$')
 STEPS = ('check', 'export', 'import', 'score', 'confirm', 'report')
 
 
@@ -35,18 +39,12 @@ def git(*args, root=ROOT):
     return subprocess.run(['git', *args], cwd=root, text=True, capture_output=True)
 
 
-def guard_test(split, amendment, inputs, root=ROOT):
-    """C11/G3: amendment must be in HEAD; tracked inputs must be clean."""
+def guard_test(split, inputs, root=ROOT):
+    """G3 (ADR 0006): the committed ADR 0006 reads Accepted (its Accepted commit is in HEAD); tracked inputs are clean."""
     if split != 'test':
         return
-    if not amendment:
-        raise SystemExit('test requires --amendment COMMIT already in HEAD (master plan G3); commit it before running test')
-    commit = git('rev-parse', '--verify', f'{amendment}^{{commit}}', root=root)
-    if commit.returncode or git('merge-base', '--is-ancestor', commit.stdout.strip(), 'HEAD', root=root).returncode:
-        raise SystemExit('test amendment is not a commit contained in HEAD (master plan G3)')
-    change = git('show', '--format=', '--unified=0', commit.stdout.strip(), '--', ADR, root=root)
-    if not any(line.startswith('+## Amendment') for line in change.stdout.splitlines()):
-        raise SystemExit(f'test amendment must add an Amendment to {ADR}; select the G3 amendment commit')
+    if not colab_b1.adr_accepted(root / colab_b1.ADR.relative_to(ROOT)):
+        raise SystemExit('test requires ADR 0006 Status Accepted in a commit contained in HEAD (master plan G3); commit it before running test')
     paths = []
     for path in inputs:
         try:
@@ -56,6 +54,30 @@ def guard_test(split, amendment, inputs, root=ROOT):
     status = git('status', '--porcelain', '--untracked-files=all', '--', *paths, root=root)
     if status.returncode or status.stdout.strip():
         raise SystemExit('test inputs are dirty (C11/G3); review and commit inputs first:\n' + status.stdout)
+
+
+def raw_files(folder, system, tag=None):
+    """Raw completion files of one system: those of run `tag` (r1, r2), or the untagged ones."""
+    files = sorted(folder.glob(f'{system}__*.jsonl'))
+    return [p for p in files if (p.name.endswith(f'.{tag}.jsonl') if tag else not RUN_TAG.search(p.name))]
+
+
+def check_locked_generation(raw):
+    meta_path = raw.with_suffix('.meta.json')
+    meta = json.loads(meta_path.read_text()) if meta_path.exists() else {}
+    bad = {k: (meta.get(k), v) for k, v in LOCKED_GENERATION.items() if meta.get(k) != v}
+    if bad:
+        raise SystemExit(f'{raw.name}: generation config differs from the locked one (found, locked): {bad}')
+
+
+def check_locked_retrieval(folder, systems=LOCKED_RETRIEVAL):
+    """F4-F6 ladder: lexical only (--no-dense), k = 20."""
+    for system in systems:
+        path = folder / f'{system}.run.json'
+        spec = (json.loads(path.read_text() or '[{}]') if path.exists() else [{}])[-1].get('spec', {})
+        if spec.get('dense') or not spec.get('lexical') or spec.get('k') != 20:
+            raise SystemExit(f'{path}: retrieval must be lexical (--no-dense) with k=20, found '
+                             f'dense={spec.get("dense")} lexical={spec.get("lexical")} k={spec.get("k")}')
 
 
 def validate_rows(rows, split, dev_rows):
@@ -136,7 +158,7 @@ def validate_published_release(args):
 
 
 def pipeline(args):
-    guard_test(args.split, args.amendment, input_files(args))
+    guard_test(args.split, input_files(args))
     required = {'b4', 'b5', 'b7', 'b7pp', args.proposed}
     if len(set(args.systems)) != len(args.systems) or not required <= set(args.systems):
         raise SystemExit(f'final family needs unique systems including {sorted(required)}')
@@ -191,11 +213,13 @@ def pipeline(args):
             for system in args.systems:
                 prompts = out / 'prompts' / f'{system}.jsonl'
                 expected = {p['id']: p['prompt_sha256'] for p in colab_b1.read_jsonl(prompts)}
-                matches = [p for p in sorted(args.raw.glob(f'{system}__*.jsonl'))
+                matches = [p for p in raw_files(args.raw, system, args.run_tag)
                            if {r['id']: r['prompt_sha256'] for r in colab_b1.read_jsonl(p)} == expected]
                 if len(matches) != 1:
                     raise SystemExit(f'{system}: expected exactly one matching raw file, found {matches}; provide complete raw for this export')
-                colab_b1.import_completions(SimpleNamespace(prompts=prompts, raw=matches[0],
+                if args.split == 'test':
+                    check_locked_generation(matches[0])
+                colab_b1.import_completions(SimpleNamespace(prompts=prompts, raw=matches[0], run_tag=args.run_tag,
                     out=out / args.split / f'{system}.jsonl', index=args.index))
         elif step == 'score':
             validate_predictions(out / args.split, args.systems, rows, args.split)
@@ -204,6 +228,8 @@ def pipeline(args):
                        '--split', args.split, '--release', args.release, '--data', args.data,
                        '--ci', args.draws, '--out', out / args.split / 'all.score.json')
         elif step == 'confirm':
+            if args.split == 'test':
+                check_locked_retrieval(args.retrieval)
             validate_predictions(args.retrieval, ['b2ctx', 'b7', 'b7plus', 'b7pp'], rows, args.split)
             validate_predictions(out / args.split, args.systems, rows, args.split)
             run_script('scripts/eval/confirm_vilextime.py', '--family', 'final', '--proposed', args.proposed,
@@ -223,7 +249,6 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--step', choices=('all', *STEPS), default='all')
     ap.add_argument('--split', choices=('dev', 'test'), required=True)
-    ap.add_argument('--amendment', help='G3 amendment commit, an ancestor of HEAD')
     ap.add_argument('--release', type=Path, required=True)
     ap.add_argument('--dev-release', type=Path, default=Path('data/vilextime_dataset/vilextime.jsonl'))
     ap.add_argument('--data', type=Path, default=Path('data'))
@@ -232,6 +257,7 @@ def main():
     ap.add_argument('--raw', type=Path, required=True)
     ap.add_argument('--retrieval', type=Path, required=True)
     ap.add_argument('--systems', nargs='+', default=[*colab_b1.systems.FINAL_GENERATION, 'proposed2'])
+    ap.add_argument('--run-tag', help='r1, r2: import the raw files of this independent run (ADR 0006 5b); use one --out per run')
     ap.add_argument('--proposed', default='proposed2')
     ap.add_argument('--draws', type=int, default=10000)
     ap.add_argument('--out', type=Path, required=True)

@@ -51,6 +51,18 @@ def test_no_evidence_gets_its_own_system_message() -> None:
     ("TRẢ LỜI:\nHIỆU LỰC: không\nCĂN CỨ: [1]", False, "", ("version:p1:1",)),
     ("TRẢ LỜI: x\nHIỆU LỰC:  KHÔNG \nCĂN CỨ:", False, "", ()),
     ("TRẢ LỜI: a\nHIỆU LỰC: [2], [2], [9]\nCĂN CỨ: [2], [2], [9]", True, "a", ("version:p2:1",)),
+    ("TRẢ LỜI: a\nHIỆU LỰC: không rõ\nCĂN CỨ: [1]", True, "a", ("version:p1:1",)),
+    ("trả lời: a\nhiệu lực: còn\ncăn cứ: [1]", True, "a", ("version:p1:1",)),
+    # one line: the labels need not start a line
+    ("TRẢ LỜI: x HIỆU LỰC: không CĂN CỨ: [1]", False, "", ("version:p1:1",)),
+    ("TRẢ LỜI: x HIỆU LỰC: còn CĂN CỨ: [2]", True, "x", ("version:p2:1",)),
+    ("TRẢ LỜI: x HIỆU LỰC: không rõ CĂN CỨ: [1]", True, "x", ("version:p1:1",)),
+    ("TRẢ LỜI: x\nHIỆU LỰC: còn CĂN CỨ: [1]", True, "x", ("version:p1:1",)),
+    # the last label of each kind wins
+    ("TRẢ LỜI: x HIỆU LỰC: còn CĂN CỨ: [1] HIỆU LỰC: không CĂN CỨ: [2]", False, "", ("version:p2:1",)),
+    # a lower-case "hiệu lực:" inside the answer is not a label
+    ("TRẢ LỜI: Luật có hiệu lực: từ 2020\nHIỆU LỰC: còn\nCĂN CỨ: [1]", True,
+     "Luật có hiệu lực: từ 2020", ("version:p1:1",)),
 ])
 def test_parse(raw, answerable, text, cites) -> None:
     ids = ["version:p1:1", "version:p2:1"]

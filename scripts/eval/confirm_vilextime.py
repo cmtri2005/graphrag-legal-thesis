@@ -144,6 +144,41 @@ def run(test: tuple, rows: list[dict], preds: dict[str, dict], units: dict, draw
             "lineages": {s: len({r["lineage_id"] for r in cut[s]}) for s in slices}}
 
 
+def wilson(k: int, n: int) -> list[float] | None:
+    if not n:
+        return None
+    z = 1.959963984540054
+    den = 1 + z * z / n
+    centre = (k / n + z * z / (2 * n)) / den
+    radius = z * ((k / n * (1 - k / n) / n + z * z / (4 * n * n)) ** 0.5) / den
+    return [centre - radius, centre + radius]
+
+
+DELTA = 0.05
+
+
+def t1_no_harm(rows: list[dict], gen: dict[str, dict], proposed: str, units: dict, draws: int) -> dict:
+    """ADR 0006 §4 (outside Holm): T1 does not change, so P should not lose Accuracy there against `b2ctx`.
+    Paired lineage bootstrap as §5. "No harm" only when the lower bound > -DELTA; "harm" only when the
+    upper bound < 0. `b7` and `b7pp` are descriptive. Also, per system, the T1 rows answered
+    "HIỆU LỰC: không" (a false claim, as T1 never changes), with Wilson 95%."""
+    t1 = [r for r in rows if SLICES["t1_control"](r)]
+    out: dict = {"delta": DELTA, "rows": len(t1), "lineages": len({r["lineage_id"] for r in t1}), "diff": {}, "false_expired": {}}
+    for name in (proposed, "b7", "b7pp"):
+        if name in gen and "b2ctx" in gen:
+            r = run((f"T1H-{name}", "", "paired", "accuracy", ("t1_control",), "generation", ("b2ctx", name), +1),
+                    rows, {"b2ctx": gen["b2ctx"], name: gen[name]}, units, draws)
+            lo, hi = r["ci95"] if r["ci95"] else (None, None)
+            r["verdict"] = (None if lo is None else "không làm hại" if lo > -DELTA else
+                            "có hại" if hi < 0 else "không chứng minh được không làm hại")
+            out["diff"][name] = r
+    for name, preds in sorted(gen.items()):
+        k = sum(not preds[r["id"]]["answerable"] for r in t1 if r["id"] in preds)
+        n = sum(r["id"] in preds for r in t1)
+        out["false_expired"][name] = {"count": k, "rows": n, "rate": k / n if n else None, "wilson95": wilson(k, n)}
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--retrieval", type=Path, help="directory of retrieval-only runs (E1): <system>.jsonl")
@@ -174,6 +209,10 @@ def main() -> None:
             path = folder / f"{system}.jsonl" if folder else None
             if path and path.exists():
                 files[(test[5], system)] = path
+    if args.family == 'final' and args.generation:
+        for path in sorted(args.generation.glob("*.jsonl")):
+            if not path.name.endswith(".sample.jsonl"):
+                files.setdefault(("generation", path.stem), path)
     for key, path in files.items():
         preds[key] = {p["id"]: p for p in map(json.loads, path.open(encoding="utf-8"))}
 
@@ -184,6 +223,10 @@ def main() -> None:
         name, _, _, _, _, source, systems, _ = test
         if all((source, s) in preds for s in systems):
             results[name] = run(test, rows, {s: preds[(source, s)] for s in systems}, units, args.draws)
+    t1 = None
+    if args.family == 'final' and any(r.get("qsource") == "t1" for r in rows):
+        t1 = t1_no_harm(rows, {n: p for (src, n), p in preds.items() if src == "generation"},
+                        args.proposed, units, args.draws)
     ran = {k: v["p"] for k, v in results.items() if v["p"] is not None and k not in exploratory}
     adjusted = holm(ran)
     lines = [f"ADR 0005 · split {args.split} · {args.draws:,} lần lấy mẫu lại · "
@@ -207,6 +250,14 @@ def main() -> None:
         lines.append(f"{what}: {r['estimate']:+.3f} [{r['ci95'][0]:+.3f}; {r['ci95'][1]:+.3f}] "
                      f"p={r['p']:.4f} p_Holm={holm_p} → {r['verdict']} "
                      f"({', '.join(f'{s} {r['rows'][s]} dòng/{r['lineages'][s]} lineage' for s in slices)})")
+    if t1:
+        lines.append(f"T1 không làm hại (ADR 0006 §4, ngoài Holm, δ={DELTA}): {t1['rows']} dòng/{t1['lineages']} lineage")
+        for name, r in t1["diff"].items():
+            lines.append(f"  {name} − b2ctx · accuracy · t1_control: {r['estimate']:+.3f} "
+                         f"[{r['ci95'][0]:+.3f}; {r['ci95'][1]:+.3f}] → {r['verdict']}")
+        for name, r in t1["false_expired"].items():
+            lines.append(f"  {name}: {r['count']}/{r['rows']} dòng T1 trả HIỆU LỰC không "
+                         f"(Wilson 95% {r['wilson95'][0]:.3f}–{r['wilson95'][1]:.3f})")
     h0 = [results.get(k, {}).get("verdict") for k in ("XN1", "XN2")]
     if all(h0):
         lines.append("H0: " + ("ủng hộ" if h0 == ["ủng hộ", "ủng hộ"] else
@@ -221,7 +272,7 @@ def main() -> None:
             "family_note": 'F7 thăm dò: dưới 20 lineage' if args.family == 'final' and 'F7' in exploratory else None,
             "files": {f"{s}/{n}": {"path": str(p), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
                       for (s, n), p in files.items()},
-            "results": results}, ensure_ascii=False, indent=1), encoding="utf-8")
+            "t1_no_harm": t1, "results": results}, ensure_ascii=False, indent=1), encoding="utf-8")
         print(f"-> {args.out}")
 
 
