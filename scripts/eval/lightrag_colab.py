@@ -84,11 +84,13 @@ def preflight() -> None:
     print(f"LLM sẵn sàng: {served}", flush=True)
 
 
-def failed_docs(work: Path) -> int:
+def failed_docs(work: Path, ids: set[str]) -> int:
+    """Failed documents of this corpus only: LightRAG also logs a re-sent id as a separate failed 'dup' record."""
     path = work / "kv_store_doc_status.json"
     if not path.exists():
         return 0
-    return sum(str(v.get("status", "")).lower().endswith("failed") for v in json.loads(path.read_text()).values())
+    return sum(k in ids and str(v.get("status", "")).lower().endswith("failed")
+               for k, v in json.loads(path.read_text()).items())
 
 
 async def build(args) -> None:
@@ -103,12 +105,12 @@ async def build(args) -> None:
         part = docs[i:i + args.batch]
         await rag.ainsert([d["text"] for d in part], ids=[d["id"] for d in part],
                           file_paths=[d["id"] for d in part])
-        failed = failed_docs(args.work)
+        failed = failed_docs(args.work, {d["id"] for d in docs[:i + args.batch]})
         print(f"{min(i + args.batch, len(docs))}/{len(docs)} văn bản · {failed} thất bại · "
               f"{time.time() - started:.0f}s", flush=True)
         if failed > max(3, (i + args.batch) // 10):
             raise SystemExit(f"Dừng: {failed} văn bản trích thất bại. Kiểm vllm.log rồi chạy lại "
-                             "(xóa thư mục --work nếu chưa có văn bản nào thành công).")
+                             "(văn bản lỗi không tự làm lại: xóa thư mục --work, giữ kv_store_llm_response_cache.json).")
     await rag.finalize_storages()
     (args.work / "build_done.json").write_text(json.dumps(
         {"docs": len(docs), "limit": args.limit, "llm": LLM_NAME, "model_env": os.environ.get("MODEL"),
