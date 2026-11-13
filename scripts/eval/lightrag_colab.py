@@ -6,7 +6,7 @@ Chạy trên Colab (A100), từng bước, mọi trạng thái lưu ở --work t
     !pip install -q "lightrag-hku" vllm sentence-transformers
     # 1. bật vLLM (ô riêng, chạy nền):
     !nohup python -m vllm.entrypoints.openai.api_server --model $MODEL --served-model-name qwen \\
-        --max-model-len 32768 --gpu-memory-utilization 0.80 --port 8000 > vllm.log 2>&1 &
+        --quantization fp8 --max-model-len 16384 --gpu-memory-utilization 0.92 --port 8000 > vllm.log 2>&1 &
     # 2. chạy thử trên vài văn bản, xem log định dạng trích xuất:
     !python lightrag_colab.py build  --work /content/drive/MyDrive/lightrag --corpus corpus.jsonl --limit 5
     # 3. dựng toàn bộ (chạy lại cùng lệnh nếu bị ngắt; văn bản đã xử lý được bỏ qua):
@@ -30,6 +30,8 @@ LLM_BASE = os.environ.get("LLM_BASE", "http://127.0.0.1:8000/v1")
 LLM_NAME = os.environ.get("LLM_NAME", "qwen")          # --served-model-name of vLLM
 EMBED_MODEL = os.environ.get("EMBED_MODEL", "AITeamVN/Vietnamese_Embedding")   # bge-m3, 1024 chiều
 MODE = "mix"     # mặc định của LightRAG: local + global + naive
+MAX_TOKENS = int(os.environ.get("MAX_TOKENS", "4096"))   # chặn model lặp chữ đến hết ngữ cảnh (finish_reason=length)
+os.environ.setdefault("LLM_TIMEOUT", "900")              # LightRAG đọc lúc import; mặc định 240 s quá ngắn khi vLLM xếp hàng
 
 
 def make_rag(work: Path):
@@ -43,6 +45,7 @@ def make_rag(work: Path):
     encoder.max_seq_length = 8192
 
     async def llm(prompt, system_prompt=None, history_messages=[], **kwargs):
+        kwargs.setdefault("max_tokens", MAX_TOKENS)
         return await openai_complete_if_cache(LLM_NAME, prompt, system_prompt=system_prompt,
                                               history_messages=history_messages, api_key="local",
                                               base_url=LLM_BASE, **kwargs)
@@ -52,7 +55,8 @@ def make_rag(work: Path):
         return encoder.encode(texts, normalize_embeddings=True, batch_size=32, convert_to_numpy=True)
 
     return LightRAG(working_dir=str(work), llm_model_func=llm, embedding_func=embed,
-                    llm_model_max_async=int(os.environ.get("MAX_ASYNC", "16")),
+                    llm_model_max_async=int(os.environ.get("MAX_ASYNC", "6")),
+                    entity_extract_max_gleaning=0,   # lượt "trích thêm" làm lời nhắc vượt 16k token
                     addon_params={"language": "Vietnamese"})
 
 
