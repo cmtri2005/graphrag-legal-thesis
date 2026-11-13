@@ -1,0 +1,14 @@
+{
+  "provider": "openai",
+  "model": "gpt-4o-mini-2024-07-18",
+  "temperature": 0.0,
+  "max_tokens": 1024,
+  "seed": 20261109,
+  "system": "proposed2",
+  "split": "test",
+  "prompt_file_sha256": "ed3b6f08ccdd777a7a8c591f32932181c6f23f7e61cf9514f979411d80e58f10",
+  "run_tag": "r2",
+  "commit": "f40310e217e1797e4a37940a668e40619a681ffd",
+  "uncommitted": true,
+  "started": "2026-11-13T00:18:39+00:00"
+}
