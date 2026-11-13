@@ -193,6 +193,8 @@ Accuracy: `b4` 0,324 / 0,296; `bvnone` 0,311 / 0,302; `bvdate` 0,409 / 0,418; `b
 - [x] 13/11 3.3 LightRAG (CMT đồng ý: Qwen trên Colab Pro dựng đồ thị, trả lời bằng prompt và GPT-4o mini chung): `scripts/eval/lightrag_package.py` (kho 591 văn bản, 27,4 triệu ký tự; 512 truy vấn; dựng prompt), `scripts/eval/lightrag_colab.py`, gói `colab_upload/lightrag/`. Đường ống thử bằng ngữ cảnh giả: prompt → nhập → chấm thông. Chờ CMT chạy Colab; chạy bộ cuối cần amendment.
 - [x] 13/11 2.6 trên dev: xuất prompt, gọi API hai lần, chấm (`run_after_b7v.sh`, xong 07:45:56 UTC, exit 0). Phần bộ cuối chờ CMT duyệt amendment.
 - [x] 13/11 2.6 (phần code): thêm `bvnone`, `bvdate` vào `systems.py` (`POSTHOC`, ngoài `FINAL_GENERATION`), dòng khoảng hiệu lực trong `generate.build_prompt` (mặc định tắt, prompt các hệ đã khóa không đổi), nối ở `colab_b1.export_prompts`; chặn đường sinh trực tiếp của `run_vilextime.py` cho `bvdate`. Test: `tests/test_rag_generate.py`, `tests/test_rag_systems.py`. Bộ test: 777 passed.
+- [x] 13/11 6.2 (phần bảng lệch): cập nhật chương 1 mục 1.6 theo bộ cuối và G4 (tầng nhãn `ai_cmt`, cơ cấu T1/T2/T3/T5/T6, vai đồ thị, một generator, demo, gold mù 24/156). Số `proposed2 − b7plus` để `[CHỜ 6.6]`. Phụ lục khai báo AI chưa làm.
+- [ ] 13/11 6.6: `evidence-gate` đang đối soát số hậu nghiệm.
 
 ## Decisions
 

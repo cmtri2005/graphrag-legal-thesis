@@ -76,9 +76,9 @@ Bảng sau ghi các lệch đã được kế hoạch chính yêu cầu giải t
 
 | Lệch | Lý do | Xử lý trong khóa luận |
 |---|---|---|
-| Nhãn LLM ở v1.0 và test 2 | Thiếu giờ người khi chạy theo mốc 31/10 | Báo thành vòng thử; bộ cuối do người gán, phân biệt tầng chất lượng |
+| Nhãn LLM ở v1.0 và test 2 | Thiếu giờ người khi chạy theo mốc 31/10 | Báo thành vòng thử. Bộ cuối cũng không do người độc lập gán: hai agent AI gán mù, CMT duyệt, chưa luật sư kiểm (`review.source = "ai_cmt"`); báo đúng tầng này |
 | “Chuyển miền” đổi thành phân rã theo miền | Hệ không huấn luyện lại, miền đa nhãn | Thực hiện theo C5; không gọi là phép chuyển miền đã chạy |
-| GraphRAG là bản xấp xỉ trong cùng đường ống | Cần so sánh chỉ đổi một yếu tố; dựng GraphRAG đầy đủ trên kho lớn có chi phí cao | Gọi rõ đối chứng mở rộng một bước; nêu giới hạn; LightRAG trên tập con báo riêng khi có |
+| GraphRAG là bản xấp xỉ trong cùng đường ống | Cần so sánh chỉ đổi một yếu tố; dựng GraphRAG đầy đủ trên kho lớn có chi phí cao | Gọi rõ đối chứng mở rộng một bước, không gọi `b5` là GraphRAG. LightRAG thật đang dựng (REFACTOR_PLAN 3.3): chỉ đổi phần truy xuất, cùng prompt và generator; chạy trên bộ cuối cần amendment ADR 0006 riêng |
 | T5 thiếu, T4 có thể dưới 150 | Điều kiện pháp lý hẹp | Báo số thật, không nới định nghĩa để đủ quota |
 | Kho rộng hơn bốn miền | Cần đóng kín quan hệ sửa đổi | Giải thích trong phần dữ liệu và datasheet |
 <!-- nguồn: docs/plans/active/master-plan.md, mục 4 -->
@@ -87,11 +87,16 @@ Các lệch bổ sung so với đề cương và định nghĩa cần công bố
 
 | Cam kết / định nghĩa | Thực hiện và giới hạn |
 |---|---|
-| T1 250 câu | Định nghĩa giảm còn 150 cho đối chứng; không đồng nhất với số đã kiểm |
-| T3 200 câu | Định nghĩa sàn 120, mục tiêu 150; thực tế nhóm đòi từ ba đáp án theo mốc, không bắt buộc truy vết A→B→C như đề cương |
+| T1 250 câu | Định nghĩa giảm còn 150 cho đối chứng. Bộ cuối có 43 lineage T1, ngoài `all`; đáp án ngắn là nguyên lời văn còn ký hiệu liệt kê nên cột T1 chưa dùng được, nháp sửa ở REFACTOR_PLAN 3.2 chờ duyệt |
+| T2 400 câu | Bộ cuối 127 lineage |
+| T3 200 câu | Định nghĩa sàn 120, mục tiêu 150; thực tế nhóm đòi từ ba đáp án theo mốc, không bắt buộc truy vết A→B→C như đề cương. Bộ cuối chỉ 6 lineage: chỉ báo mô tả |
 | T4 riêng 150 câu | Đổi thành lát chồng lắp của T2, không cộng hai lần |
-| T5 hồi tố “có lợi”, 50 câu | T5a bỏ vế “có lợi”, T5b là đã ký chưa hiệu lực; hiện chỉ chẩn đoán |
-| T6 100 câu | Định nghĩa T6a sàn 100, T6b sàn 200; bộ cuối chưa đủ bằng chứng cho quota hay lợi ích lan truyền |
+| T5 hồi tố “có lợi”, 50 câu | T5a bỏ vế “có lợi”, T5b là đã ký chưa hiệu lực; hiện chỉ chẩn đoán. Bộ cuối không có T5 |
+| T6 100 câu | Định nghĩa T6a sàn 100, T6b sàn 200. Bộ cuối 23 lineage, không đủ quota; không đủ bằng chứng cho lợi ích lan truyền |
+| Đồ thị tri thức thời gian là thành phần truy xuất | Đồ thị đóng góp chủ yếu ở bước dựng kho phiên bản offline. So `proposed2` với `b7plus` (cùng kho, không dùng đồ thị lúc truy vấn) cho hiệu không phân biệt được với 0 [CHỜ 6.6: số đã đối soát]; không viết “GraphRAG vượt trội” |
+| Một mô hình sinh | Mọi hệ dùng GPT-4o mini (ADR 0004); độ bền theo generator khác họ chưa đo (REFACTOR_PLAN 3.7) |
+| Giao diện minh họa | `scripts/demo.py` chạy dòng lệnh trọn đường, khoảng 5 phút một câu; chưa có giao diện web |
+| Gold độc lập trên bộ test | Gold mù chỉ phủ 24/156 lineage chính của bộ cuối; F1–F6 trên phần này báo riêng, không thay cho cả bộ |
 | 1.100–1.300 câu hỏi kiểm thủ công | Hiện đếm nhiều cặp câu hỏi–mốc và tầng nhãn; mọi tầng có 515 lineage chưa tính T5: test v1.0 165, dev 81, test 2 101, silver 168; không phải 515 câu người kiểm đạt |
 | LLM chỉ hỗ trợ diễn đạt | Thực tế model viết nháp, Claude chọn span đáp án (tiêu chí chấm), agent kiểm phần test, và LLM lọc trước khi đưa người; có thiên lệch chọn mẫu |
 | Bốn miền tiêu biểu | Test v1.0 có 136/211 dòng `khac`, silver 243/389; đất đai ở test chỉ 5 dòng/3 lineage; kho rộng không có nghĩa đánh giá cân bằng bốn miền |
@@ -102,8 +107,8 @@ Các lệch bổ sung so với đề cương và định nghĩa cần công bố
 V1.0 được khai là bản xác nhận lần 1 trong ADR 0005; amendment 03/11 gọi test 2 là bản lặp lại. Ngày 05/11, sau khi đã thấy kết quả (XN1 được ủng hộ ở v1.0, không đủ bằng chứng ở test 2), kế hoạch mới đổi vai cả hai thành vòng thử và mở bộ cuối. Đây là thay đổi sau quan sát, không phải vai trò được định trước. Giữ cả ba phán quyết cạnh nhau, không gộp điểm hoặc chọn phán quyết thuận lợi. [CHỜ G3: amendment ghi lịch sử các lần nhìn và quy tắc kết luận trước bộ cuối].
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md, §1 và amendment 03/11; runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json; docs/plans/active/master-plan.md, xử lý C3 -->
 
-Ngoài các lệch trên, trạng thái chưa hoàn tất cũng phải được công bố: M2 kiểm chứng snapshot chưa đạt; cấu hình `proposed` đã chạy dùng từ vựng; `proposed2` lai ghép mới có số truy xuất trên dev; Verifier chưa cho thấy tác dụng khi bộ lọc đã loại căn cứ không hợp lệ. Chương phương pháp phân biệt kiến trúc cam kết với cấu hình đã đo, còn chương thực nghiệm để trống kết quả bộ cuối.
-<!-- nguồn: docs/plans/active/master-plan.md -->
+Ngoài các lệch trên, trạng thái chưa hoàn tất cũng phải được công bố: M2 kiểm chứng snapshot chưa đạt; Verifier chưa cho thấy tác dụng khi bộ lọc đã loại căn cứ không hợp lệ; scorer chưa có số khớp với người chấm (phiếu 100 câu đang chờ). Bộ cuối đã chạy một lần theo ADR 0006 (G4, 12–13/11); các so sánh thêm sau đó (`b7v`, `bvnone`, `bvdate`, quy kết) là thăm dò hậu nghiệm, báo tách khỏi phép kiểm đã khai.
+<!-- nguồn: docs/plans/active/master-plan.md; docs/plans/active/REFACTOR_PLAN.md; data/vilextime_final/README.md; data/vilextime_final/STATUS.md; runs/final_g4_20261112/; runs/posthoc_g4_20261113/ -->
 <!-- nguồn: runs/README.md -->
 
 ## 1.7. Cấu trúc khóa luận
