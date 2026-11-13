@@ -2,7 +2,7 @@
 """LightRAG thật làm baseline "GraphRAG phi thời gian" (REFACTOR_PLAN 3.3). Gói cho Colab và đường về.
 
 Kho: lời văn gốc (lớp A, chỉ đơn vị điều khoản, theo thứ tự đọc) của văn bản mà dev và bộ cuối hỏi tới,
-cộng văn bản ban hành lệnh sửa đổi/bãi bỏ nhắm vào chúng. Không có thông tin thời gian: đúng vai baseline.
+cộng các lệnh sửa đổi/bãi bỏ nhắm vào chúng (chỉ lệnh, không cả văn bản tác động). Không có thông tin thời gian: đúng vai baseline.
 Truy xuất do LightRAG (Colab, `colab_upload/lightrag/lightrag_colab.py`); câu trả lời sinh bằng ĐÚNG prompt
 và generator của các hệ khác, nên chỉ cách truy xuất khác. LightRAG trả đoạn văn, không trả mã đơn vị, nên
 các chỉ số dựa trên trích dẫn (TVER, phủ trích dẫn, VCR) không xác định.
@@ -60,16 +60,24 @@ def corpus(args) -> None:
         "SELECT DISTINCT u.document_id FROM units u WHERE u.kind='instruction' AND u.provision_id IN "
         f"(SELECT provision_id FROM units WHERE layer='asis' AND kind='provision' AND document_id IN ({marks}))",
         targets)}
+    target_set = set(targets)
+    target_provisions = {p for (p,) in db.execute(
+        f"SELECT provision_id FROM units WHERE layer='asis' AND kind='provision' AND document_id IN ({marks})", targets)}
     out, chars = [], 0
     for doc in sorted(set(targets) | acting):
         title = db.execute("SELECT title FROM documents WHERE document_id=?", (doc,)).fetchone()
-        body = "\n".join(t for (t,) in db.execute(
-            "SELECT text FROM units WHERE layer='asis' AND kind='provision' AND document_id=? ORDER BY rowid", (doc,)) if t)
+        if doc in target_set:
+            body = "\n".join(t for (t,) in db.execute(
+                "SELECT text FROM units WHERE layer='asis' AND kind='provision' AND document_id=? ORDER BY rowid", (doc,)) if t)
+        else:     # văn bản tác động: chỉ lệnh sửa đổi/bãi bỏ nhắm vào văn bản đích (bớt 35% kho, xem REFACTOR_PLAN 3.3)
+            body = "\n".join(t for (t, prov) in db.execute(
+                "SELECT text, provision_id FROM units WHERE kind='instruction' AND document_id=? ORDER BY rowid", (doc,))
+                if t and prov in target_provisions)
         if not body:
             continue
         text = f"{(title[0] if title else doc).strip()}\n{body}"
         chars += len(text)
-        out.append({"id": doc, "role": "target" if doc in targets else "acting", "text": text})
+        out.append({"id": doc, "role": "target" if doc in target_set else "acting", "text": text})
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text("".join(json.dumps(d, ensure_ascii=False) + "\n" for d in out), encoding="utf-8")
     print(f"{args.out}: {len(out)} văn bản ({sum(d['role'] == 'target' for d in out)} đích, "

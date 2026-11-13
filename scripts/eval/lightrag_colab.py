@@ -55,7 +55,7 @@ def make_rag(work: Path):
         return encoder.encode(texts, normalize_embeddings=True, batch_size=8, convert_to_numpy=True)
 
     return LightRAG(working_dir=str(work), llm_model_func=llm, embedding_func=embed,
-                    llm_model_max_async=int(os.environ.get("MAX_ASYNC", "6")),
+                    llm_model_max_async=int(os.environ.get("MAX_ASYNC", "16")),
                     entity_extract_max_gleaning=0,   # lượt "trích thêm" làm lời nhắc vượt 16k token
                     addon_params={"language": "Vietnamese"})
 
