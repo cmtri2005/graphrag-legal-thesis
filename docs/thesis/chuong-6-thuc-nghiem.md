@@ -33,42 +33,36 @@ TVER tự động đọc `effective_intervals` của cùng đồ thị mà bộ 
 TVER theo người là phép đo riêng còn chờ: lấy khoảng 100 đơn vị thực sự được trích từ các hệ, người đọc nguồn gốc và mốc hỏi mà không thấy cửa sổ đồ thị, kết luận còn hiệu lực hay không. Báo mẫu số, tỷ lệ sai, Wilson và phụ thuộc do cùng lineage; không thay bằng gold phiên bản. [CHỜ G4: phiếu, kết quả và khoảng Wilson của TVER theo người].
 <!-- nguồn: docs/plans/active/master-plan.md, xử lý C1 và việc người thêm -->
 
-### Bộ test cuối: thiết kế sẽ dùng để kết luận
+### Bộ test cuối: thiết kế đã khóa
 
-Kế hoạch hiện hành dành kết luận chính cho bộ test cuối mới, sau kiểm nhãn người, gold mù và khóa hệ. Bảng thiết kế sau không thay đổi phán quyết lịch sử trong ADR: amendment cuối vẫn phải được khóa trước lần chạy cuối, ghi rõ đã thấy các vòng thử nào. Chưa có kết quả bộ cuối trong chương này.
-<!-- nguồn: docs/plans/active/master-plan.md, mục 6 và 7 -->
+Thiết kế cho bộ test cuối được khóa trong ADR 0006, Accepted ở commit `ac32a89` ngày 12/11/2026, trước lần chạy duy nhất (G4, 12–13/11). ADR ghi rõ các vòng thử đã thấy (v1.0, test 2, dev). Hệ đề xuất P là `proposed2`; generator GPT-4o mini khóa theo ADR 0004.
+<!-- nguồn: docs/decisions/0006-*.md, §2, §3, §8 -->
 
-| Câu hỏi | So sánh / phép đo dự kiến | Loại kết luận |
-|---|---|---|
-| RQ1, RAG | TVER, wrong_version, VCR của `b2ctx`, `b4` | Mô tả có KTC |
-| RQ1, LLM | Sai phiên bản trên câu có trả lời của các LLM không truy xuất | Mô tả, bảng phụ |
-| RQ2 | `wrong_version` cùng Accuracy; khóa một hệ và đối chứng cùng chế độ truy xuất | [CHỜ G3: amendment] |
-| RQ3, lọc văn bản | TV-Recall@1: `b7` − `b2ctx` | Xác nhận sau amendment |
-| RQ3 / giả thuyết, phiên bản | TV-Recall@1: `b7plus` − `b7`, `b7pp` − `b7` | Xác nhận sau amendment |
-| Giả thuyết, câu trả lời | TVER tự động: kiểm nhất quán; TVER theo người là phép đo riêng | Mô tả, ngoài họ xác nhận |
-| T6 | Accuracy/precision/recall của hệ cuối trên gold mù; `proposed2 − b7pp` đo mở rộng trực tuyến | [CHỜ G3: điều kiện cỡ lát và loại phân tích] |
-| Lan truyền hiệu lực | XN5: Accuracy `b7pp − b7plus` trên T6 qua nút cha | [CHỜ: đầu ra sinh, khai trong amendment] |
-| Thành phần | `p2a2`, `p2a3` so với `proposed2` | Mô tả |
-<!-- nguồn: docs/plans/active/master-plan.md, mục 6 -->
+Họ xác nhận gồm bảy kiểm định, Holm α = 0,05, bootstrap theo cụm lineage B = 10.000:
 
-Trước G3, amendment còn phải liệt kê từng thay đổi về đại lượng so với ADR và kết quả đã thấy: RQ1 lịch sử có Accuracy/`wrong_version`, thiết kế mới thêm TVER/VCR; RQ2 phải báo `wrong_version` cùng Accuracy thay vì chỉ Accuracy; XN2 chuyển thành nhất quán nội bộ; vai trò XN8 và XN9 trên bộ cuối phải khai rõ, không âm thầm bỏ. RQ3 giữ nguyên câu hỏi về biểu diễn đồ thị của đề cương. [CHỜ G3: tên một hệ cuối, generator, embedding, baseline cùng chế độ truy xuất và họ xác nhận cuối].
-<!-- nguồn: docs/plans/active/master-plan.md, mục "Phản biện 05/11 và cách xử lý"; docs/decisions/0005-ke-hoach-phan-tich.md -->
+| Mã | Câu hỏi | So sánh | Thước đo | Lát |
+|---|---|---|---|---|
+| F1 | RQ2, so với RAG phẳng lai ghép | P − `b4` | Accuracy | all |
+| F2 | RQ2, so với mở rộng đồ thị phi thời gian | P − `b5` | Accuracy | all |
+| F3 | RQ2, lỗi sai phiên bản | P − `b4` | `wrong_version` | all |
+| F4 | RQ3, lọc ngày văn bản | `b7` − `b2ctx` | TV-Recall@1 | all_answerable |
+| F5 | RQ3, lọc khoảng phiên bản | `b7plus` − `b7` | TV-Recall@1 | all_answerable |
+| F6 | Giả thuyết đề cương (H0) | `b7pp` − `b7` | TV-Recall@1 | all_answerable |
+| F7 | T6 | P − `b7pp` | Accuracy | t6_unanswerable |
+<!-- nguồn: docs/decisions/0006-*.md, §3 -->
 
-V1.0 giữ phán quyết lịch sử ủng hộ và test 2 (nhãn LLM) giữ “điểm quyết định B7”. Với lần nhìn mới, dự kiến quy tắc sau cần khóa ở G3: nếu XN1 bộ cuối ủng hộ thì chỉ nói ủng hộ có điều kiện trên bộ cuối, kèm sự không lặp đầy đủ trước đó; nếu không đủ bằng chứng thì giả thuyết không được ủng hộ; nếu ngược chiều có ý nghĩa thì bác trên bộ cuối. Không dùng hai bộ cũ để đảo phán quyết cuối, không gộp ba lần nhìn. [CHỜ G3: khóa bảng ba phán quyết và quy tắc này trong amendment; chưa phải đăng ký trước đã hoàn tất].
-<!-- nguồn: docs/plans/active/master-plan.md, mục "Phản biện 05/11 và cách xử lý"; docs/decisions/0005-ke-hoach-phan-tich.md -->
+`b5` là mở rộng một bước trên cùng đường ống, không phải GraphRAG đầy đủ. TVER nội bộ (F8), RQ1, thành phần, nhóm và miền là mô tả, ngoài Holm (ADR 0006 §4).
 
-Bảng ba phán quyết cần điền sau G4; chỉ bộ cuối dùng cho xác nhận mới:
+Vì GPT-4o mini ở nhiệt độ 0 vẫn đổi câu trả lời giữa các lần gọi, mỗi hệ sinh chạy hai lần độc lập. Lần 1 là kết quả chính, khai trước. Một kiểm định chỉ được gọi là ủng hộ khi cả hai lần cùng phán quyết (ADR 0006 §5b).
 
-| Phán quyết v1.0 theo ADR | Phán quyết test 2 (nhãn LLM) theo ADR | XN1 bộ cuối (chưa chạy) | Diễn giải cần khóa G3 |
+Quy tắc cho H0 theo F6, khóa trước khi chạy (ADR 0006 §6). Hai vòng thử cũ không được dùng để đổi phán quyết của bộ cuối:
+
+| Phán quyết v1.0 | Phán quyết test 2 (nhãn LLM) | F6 bộ cuối | Kết luận cho H0 |
 |---|---|---|---|
-| Ủng hộ | Điểm quyết định B7 | [CHỜ G4: nếu ủng hộ] | Ủng hộ có điều kiện trên bộ cuối; chưa lặp đầy đủ qua ba lần nhìn |
-| Ủng hộ | Điểm quyết định B7 | [CHỜ G4: nếu không đủ bằng chứng] | Giả thuyết không được ủng hộ; không lấy bộ cũ bù |
-| Ủng hộ | Điểm quyết định B7 | [CHỜ G4: nếu bác] | Bác trên bộ cuối; giữ công khai cả ba phán quyết |
-<!-- nguồn: runs/E3_v1/test/confirm.log; runs/E3_test2/rescore/confirm.log; docs/plans/active/master-plan.md, xử lý C1 và C3; quy tắc dự kiến chưa khóa G3 -->
+| Ủng hộ | Điểm quyết định B7 | **Ủng hộ, cả hai lần** | Ủng hộ, kèm ghi chú lần lặp test 2 không đủ bằng chứng |
+<!-- nguồn: runs/E3_v1/test/confirm.log; runs/E3_test2/rescore/confirm.log; runs/final_g4_20261112/compare_runs.json; docs/decisions/0006-*.md §6 -->
 
-
-Các chỉ số Recall@k, MRR, TV-Recall, Accuracy, EM/F1, TVER, VCR và TCS được giữ theo scorer. Giám khảo LLM cần hiệu chuẩn với người trước khi sử dụng; chưa có điểm giám khảo hợp lệ để điền. Mỗi cấu hình bộ cuối chỉ chạy một lần sau khi khóa; mọi thay đổi hoặc chấm lại do lỗi cần hồ sơ amendment. [CHỜ G4: danh sách xác nhận và họ Holm cuối đã khóa ở G3].
-<!-- nguồn: docs/plans/active/master-plan.md; docs/decisions/0005-ke-hoach-phan-tich.md -->
+Các chỉ số Recall@k, MRR, TV-Recall, Accuracy, EM/F1, TVER, VCR và TCS lấy từ scorer. Giám khảo LLM chưa được hiệu chuẩn với người nên không dùng. Phiếu người chấm 100 câu trả lời đang chờ (REFACTOR_PLAN 1.5).
 
 ## 6.2. Vòng thử v1.0 — nhãn hỗn hợp người và agent
 
@@ -386,7 +380,7 @@ Dự đoán dương là cờ `answerable=False`, không phải mọi câu bỏ t
 | `proposed` | 1/16 = 0,062 | 4 | 1/5 = 0,200 |
 <!-- nguồn: data/vilextime/test2_release_v2.jsonl; runs/E3_test2/test/{b1,b2ctx,b5,b7,b7pp,proposed}.jsonl; scripts/paper/paper_values.py -->
 
-[CHỜ COLAB: precision, recall và số khẳng định sai của `proposed3` trên dev và từng bộ T6 đã thấy, báo riêng; CHỜ G4: trên bộ cuối đã qua gold mù]. Không suy các số này từ TVER hoặc từ việc đã có thông báo bãi bỏ.
+Bộ cuối (thăm dò hậu nghiệm, lần 1): `proposed2` khẳng định "hết hiệu lực" 11 lần, 7 đúng, 4 sai. Precision 0,64, recall 7/23. Lệnh bãi bỏ có trong prompt ở 12/23 dòng, trong đó đúng 5. `oracle` 22/23 khi được cấp sẵn căn cứ. Số lần 2 ở `attribution.json`. T6 bộ cuối chưa có gold mù người. `proposed3` không chạy trên bộ cuối. Không suy các số này từ TVER hoặc từ việc đã có thông báo bãi bỏ.
 <!-- nguồn: docs/plans/active/master-plan.md, xử lý C2, N8 và V5 -->
 
 ### Đóng góp XN1 theo nhóm và độ nhạy cỡ mẫu — thăm dò
@@ -449,37 +443,108 @@ X8 phải so hai điều kiện **cấp sẵn căn cứ đúng mốc** và **c�
 | Điều kiện X8 | Kết quả |
 |---|---|
 | Dev: đúng mốc so với hiện hành, từng nhóm | [CHỜ COLAB: điểm, mẫu số và chênh lệch ghép cặp X8 dev] |
-| Bộ cuối: đúng mốc so với hiện hành, từng nhóm | [CHỜ COLAB: chỉ chạy sau khóa dữ liệu, hệ và phân tích; chưa có số X8 test] |
+| Bộ cuối: đúng mốc so với hiện hành, từng nhóm | Lần 1, `oracle` / `oracle_now`: all 0,956 / 0,456; T2 0,969 / 0,476; T3 1,000 / 0,278; T6 0,870 / 0,413 (`runs/final_g4_20261112/r1/results.md`) |
 <!-- nguồn: docs/plans/active/master-plan.md, X8 -->
 
 Lọc thời gian có lợi và hai nút thắt tìm–đọc đã có tiền lệ [@prior2026oldfriend] [@yao2026lawinforce] [@akarajaradwong2026nitibenchplus]. Phân rã E7 hiện tại là mô tả/thăm dò trên pháp luật Việt Nam; không tuyên bố phát hiện riêng hai nút thắt. Phần có thể kiểm là hai nấc ngày văn bản và khoảng phiên bản; lan truyền chưa có lợi ích đo được. Nhóm bãi bỏ đã có ở NitiBench+, nên chỉ giữ đặc thù lệnh nằm ở văn bản khác và bãi bỏ qua nút cha của Việt Nam. Không đưa số nghiên cứu khác vào bảng điểm chung khi khác tác vụ, gold hoặc mẫu số.
 <!-- nguồn: related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md; docs/plans/active/master-plan.md, mục 10 -->
 
-## 6.6. Bộ test cuối — chưa có kết quả
+## 6.6. Bộ test cuối (G4)
 
-Bảng này dành cho kết luận chính sau G4. Không đưa số vòng thử hoặc dev vào thay. Tầng nhãn chính phải là người kiểm theo quy trình đã khóa; phần LLM/agent báo riêng. Cỡ mẫu, miền, thời gian gán, gold mù và cấu hình cuối phải dẫn về bản khóa dữ liệu/hệ trước khi diễn giải kết quả.
-<!-- nguồn: docs/plans/active/master-plan.md -->
+**Dữ liệu.** 199 lineage, 361 dòng `giua_khoang`. Lát `all` gồm T2, T3, T6: 156 lineage, 318 dòng. T1 có 43 lineage, là đối chứng ngoài `all`. Cơ cấu: T2 127 lineage, T3 6, T6 23, không có T5. Nhãn thuộc tầng "AI-A/AI-B gán mù, CMT duyệt", chưa luật sư hay người độc lập kiểm (`review.source = "ai_cmt"`).
+<!-- nguồn: data/vilextime_final/README.md; data/vilextime_final/STATUS.md -->
 
-| Hạng mục | Kết quả | Tình trạng |
-|---|---|---|
-| Cỡ mẫu và nguồn nhãn bộ cuối | [CHỜ G4: bản khóa G2] | Chưa báo là đã chạy |
-| RQ1: sai phiên bản của LLM / RAG | [CHỜ G4: bảng mô tả, mẫu số có trả lời và KTC] | Chưa có kết luận cuối |
-| RQ2: hệ chốt ở G3 so với RAG phẳng và đối chứng đồ thị | [CHỜ G4: wrong_version, Accuracy, KTC, kiểm định và tên hệ đã khóa] | Chưa có kết luận cuối |
-| RQ3 và giả thuyết về cấp lọc | [CHỜ G4: XN1 truy xuất; TVER nội bộ và TVER theo người báo riêng] | Chưa có kết luận cuối |
-| T6 và lan truyền (phép đo riêng) | [CHỜ G4: cỡ lát và loại phân tích đúng amendment] | Chưa có kết luận cuối |
-| Thành phần, nhóm và miền | [CHỜ G4: ablation, phân rã và KTC] | Mô tả theo thiết kế |
-| Gold mù và E7 người kiểm | [CHỜ G4: độ khớp do người tự đọc nguồn, mã hóa lỗi và đồng thuận] | Chưa có bằng chứng độc lập |
-| Giám khảo LLM | [CHỜ G4: hiệu chuẩn và điểm nếu đạt] | Không thay điểm người bằng nhãn LLM |
-<!-- nguồn: docs/plans/active/master-plan.md, mục 6 và 7 -->
+### 6.6.1. Họ xác nhận F1–F7
 
-### 6.6.1. Colab đợt 2 — các vòng thử cũ, còn chờ
+| F | So sánh | Lần 1 (chính) | Lần 2 | Phán quyết |
+|---|---|---|---|---|
+| F1 | P − `b4`, Accuracy | +0,343 [+0,283; +0,401] | +0,368 [+0,312; +0,422] | ủng hộ, ổn định |
+| F2 | P − `b5`, Accuracy | +0,355 [+0,297; +0,414] | +0,352 [+0,297; +0,409] | ủng hộ, ổn định |
+| F3 | P − `b4`, `wrong_version` | −0,283 [−0,330; −0,237] | −0,287 [−0,334; −0,239] | ủng hộ, ổn định |
+| F4 | `b7` − `b2ctx`, TV-R@1 | +0,078 [+0,049; +0,110] | như lần 1 | ủng hộ |
+| F5 | `b7plus` − `b7`, TV-R@1 | +0,115 [+0,076; +0,156] | như lần 1 | ủng hộ |
+| F6 | `b7pp` − `b7`, TV-R@1 | +0,115 [+0,076; +0,156] | như lần 1 | ủng hộ |
+| F7 | P − `b7pp`, Accuracy, T6 không đáp án | +0,087 [0,000; +0,217] | +0,043 [0,000; +0,130] | không đủ bằng chứng, cả hai lần |
+<!-- nguồn: runs/final_g4_20261112/r1/confirm.json; runs/final_g4_20261112/r2/results.md; runs/final_g4_20261112/compare_runs.json -->
 
-Các lượt bổ sung cho **vòng thử cũ** vẫn báo riêng, không dùng chọn cấu hình cuối; mỗi cấu hình chạy một lần theo X7:
+F1–F3 đều có p Holm < 0,0002 ở cả hai lần. F4–F6 là hệ chỉ truy xuất nên không chịu dao động của generator. F7 có 23 lineage. MDE ước trước khi chạy là 0,185, nên chỉ phát hiện được hiệu rất lớn. F7 "không đủ bằng chứng" nghĩa là KTC không loại trừ 0 và không loại trừ hiệu ≥ MDE, không có nghĩa là không có hiệu ứng.
 
-- [CHỜ COLAB: `b7plus b7v` trên test 2, nhãn LLM].
-- [CHỜ COLAB: `b7plus b7v a4 b2 b6 oracle b3 b4 a1 a2 a3` trên v1.0].
-- [CHỜ G4: LightRAG trên tập con sau G3, báo riêng vì không cùng corpus].
-<!-- nguồn: docs/plans/active/master-plan.md, X7 và C3 -->
+**F5 và F6 bằng nhau.** `b7pp` và `b7plus` có cùng TV-R@1 (0,336). Lan truyền trên đồ thị không đổi căn cứ đứng đầu ở dòng nào có đáp án. Vì vậy F6 ủng hộ H0 hoàn toàn nhờ bước lọc khoảng phiên bản, đúng phần F5 đo. Không được đọc F6 là bằng chứng cho phần duyệt đồ thị lúc truy vấn.
+
+### 6.6.2. Bảng mô tả, lần 1
+
+| Hệ | Accuracy [KTC 95%] | TV-R@1 | TVER | Sai phiên bản |
+|---|---|---|---|---|
+| `b1` | 0,006 [0,000; 0,016] | 0,000 | — | 0,008 |
+| `b2ctx` | 0,302 [0,256; 0,348] | 0,151 | 0,535 | 0,253 |
+| `b4` | 0,324 [0,277; 0,369] | 0,164 | 0,544 | 0,291 |
+| `b5` | 0,311 [0,265; 0,356] | 0,164 | 0,566 | 0,294 |
+| `b6` | 0,340 [0,293; 0,386] | 0,164 | 0,553 | 0,283 |
+| `b7` | 0,487 [0,428; 0,547] | 0,242 | 0,248 | 0,177 |
+| `b7plus` | 0,654 [0,585; 0,722] | 0,336 | 0,022 | 0,008 |
+| `b7pp` | 0,660 [0,593; 0,726] | 0,336 | 0,000 | 0,008 |
+| `proposed2` | 0,667 [0,598; 0,733] | 0,336 | 0,013 | 0,008 |
+| `oracle` | 0,956 [0,927; 0,981] | 1,000 | 0,000 | 0,000 |
+| `oracle_now` | 0,456 [0,432; 0,478] | 0,484 | 0,516 | 0,502 |
+<!-- nguồn: runs/final_g4_20261112/r1/results.md (all.score.json, 318 dòng) -->
+
+- **RQ1, vế RAG:** RAG phẳng (`b2ctx`, `b4`) trích sai phiên bản ở khoảng một phần tư đến gần một phần ba số dòng (0,253; 0,291).
+- **RQ1, vế LLM không truy xuất:** `b1` gần 0 vì thước đo đòi chép đúng lời văn. Bộ cuối chưa đo được tỷ lệ sai phiên bản của LLM không truy xuất (REFACTOR_PLAN 3.1).
+- **Đọc bản hiện hành thay bản đúng mốc:** Accuracy rơi từ 0,956 (`oracle`) xuống 0,456 (`oracle_now`), cùng generator. Đây là cỡ của bài toán thời gian khi căn cứ đã có sẵn.
+- **Dao động generator:** số câu trả lời đổi giữa hai lần trên `all`: `b4` 49 (12 từ đúng sang sai, 1 ngược lại), `b5` 58, `b7pp` 58, `proposed2` 39, `oracle` 12.
+- **T1:** đáp án ngắn của 43 dòng T1 là nguyên lời văn còn ký hiệu liệt kê, `oracle` chỉ đúng 2/43. Cột T1 chưa dùng được, chờ amendment (REFACTOR_PLAN 3.2).
+<!-- nguồn: runs/final_g4_20261112/compare_runs.json; runs/final_g4_20261112/r1/results.md -->
+
+### 6.6.3. Quy kết sau khi chạy (thăm dò hậu nghiệm)
+
+Mọi số trong mục này được tính **sau khi đã thấy kết quả G4**, nên chỉ là thăm dò, không thuộc họ xác nhận. Script `scripts/eval/posthoc_g4.py`, kết quả `runs/posthoc_g4_20261113/attribution.json`. Evidence-gate (một phiên AI tách riêng, không phải duyệt của người) ngày 13/11 đã tái chạy và nhận kết quả trùng từng byte.
+
+**Đồ thị lúc truy vấn.** Trên `all` (318 dòng):
+- `proposed2 − b7pp`: +0,006 [−0,016; +0,028] lần 1; 0,000 [−0,016; +0,016] lần 2.
+- `proposed2 − b7plus`: +0,013 [−0,009; +0,035] lần 1; +0,016 [−0,006; +0,038] lần 2.
+
+KTC chứa 0 ở cả hai lần. Không thấy lợi ích lớn hơn khoảng 4 điểm. Không được viết "bằng nhau".
+
+Ngoại lệ ở T6 không đáp án (23 dòng): `proposed2 − b7plus` +0,174 [+0,043; +0,348] ở cả hai lần. `proposed2 − b7pp` có KTC chạm 0.
+
+**Tách bước kho phiên bản và bước lọc khoảng.** Hệ `b7v` (kho phiên bản, không lọc khoảng) chỉ chạy phần truy xuất, sau khi đã thấy test, theo thang đã khai ở ADR 0006 §2. Kết quả TV-R@1:
+- `b7v − b7`: −0,044 [−0,072; −0,019].
+- `b7plus − b7v`: +0,159 [+0,120; +0,199].
+
+Kho phiên bản không có bộ lọc khoảng còn kém lớp lời văn gốc. Lợi ích của F5 cần cả kho phiên bản lẫn bộ lọc khoảng.
+
+**Lọc cứng hay chỉ báo khoảng hiệu lực.** Có hai baseline thêm theo amendment ADR 0006 ngày 13/11, được CMT duyệt trước khi chạy trên bộ cuối:
+- `bvnone`: kho phiên bản, không lọc.
+- `bvdate`: như `bvnone` nhưng in khoảng hiệu lực vào prompt.
+
+Kết quả:
+- Accuracy `b7plus − bvdate`: +0,245 lần 1, +0,230 lần 2.
+- `bvdate` giảm tỷ lệ trích sai phiên bản (0,317 → 0,064 lần 1; 0,328 → 0,060 lần 2), nhưng vẫn kém lọc cứng xa.
+
+Lọc theo khoảng trước khi xếp hạng có giá trị riêng. Trên dev cùng chiều.
+
+**Nút thắt là xếp hạng.** Khi gold đứng hạng 1, `proposed2` đúng 96%. Nhưng gold chỉ đứng hạng 1 ở 107/295 dòng có đáp án.
+<!-- nguồn: runs/posthoc_g4_20261113/attribution.json; runs/posthoc_g4_20261113/test/; docs/plans/active/REFACTOR_PLAN.md, "Kết quả Nhóm 2"; docs/reports/research-audit-20261113.md §8.2 -->
+
+### 6.6.4. Gold mù trên phần bộ cuối nó phủ
+
+Gold mù đợt 1 do người đọc nguồn: khớp thô 148/150, 119/120 sau phân xử do AI đề xuất, CMT xác nhận. Gold này chỉ phủ 24/156 lineage chính của bộ cuối (T2 19, T3 5, không có T6, T1). Tập con vẫn chấm bằng gold của đồ thị.
+
+Trên 53 dòng này, F1–F6 đều ủng hộ ở cả hai lần, cùng chiều với toàn bộ cuối. Ví dụ: F4 +0,075 [+0,018; +0,154]; F5 +0,189 [+0,071; +0,315]. Đây là mô tả trên tập con nhỏ, không thay cho gold độc lập trên cả bộ.
+<!-- nguồn: runs/posthoc_g4_20261113/gold_subset/confirm_r1.txt, confirm_r2.txt -->
+
+### 6.6.5. Còn chờ
+
+| Hạng mục | Tình trạng |
+|---|---|
+| Người chấm 100 câu trả lời (`b1`, `b4`, `proposed2`), độ khớp scorer–người | Phiếu đã dựng, chờ người chấm |
+| Đáp án ngắn T1 | Nháp amendment chờ duyệt |
+| Gold mù người cho T6 và 132 lineage còn lại | Chưa có người làm |
+| TVER theo người, E7 mã hóa lỗi bằng người | Chưa làm |
+| LightRAG (GraphRAG phi thời gian thật) | Đang dựng đồ thị trên Colab; chạy bộ cuối cần amendment riêng |
+| Generator thứ hai khác họ | Chưa chạy |
+
+Các lượt Colab đợt 2 cho vòng thử cũ (v1.0, test 2) không chạy nữa: kết luận đã lấy từ bộ cuối.
 
 ## 6.7. Mối đe dọa tính hợp lệ
 
