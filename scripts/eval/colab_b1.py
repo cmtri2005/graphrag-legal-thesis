@@ -165,7 +165,7 @@ def import_completions(args) -> None:
         if (export_record["system"] != system_name or export_record["rows"] != len(prompts)
                 or export_record["prompt_file_sha256"] != hashlib.sha256(args.prompts.read_bytes()).hexdigest()):
             raise SystemExit("B2 prompt export record mismatch")
-    spec = None if system_name in (ORACLE, ORACLE_NOW) else systems.get(system_name)
+    spec = None if system_name in (ORACLE, ORACLE_NOW, *systems.EXTERNAL) else systems.get(system_name)
     corpus = Corpus(getattr(args, "index", INDEX)) if spec and spec.verify != "off" else None
     completions = read_jsonl(args.raw)
     seen, models, predictions = set(), set(), []

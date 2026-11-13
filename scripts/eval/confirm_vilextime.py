@@ -125,6 +125,9 @@ def run(test: tuple, rows: list[dict], preds: dict[str, dict], units: dict, draw
     name, _, kind, metric, slices, _, systems, _ = test
     cut = {s: [r for r in rows if SLICES[s](r)] for s in slices}
     seed = lambda s: zlib.crc32(f"{name}/{s}".encode())  # noqa: E731
+    if not all(cut.values()):   # a subset without rows for this slice (e.g. no T6): not run, not a crash
+        return {"estimate": None, "ci95": None, "p": None,
+                "rows": {s: len(cut[s]) for s in slices}, "lineages": {s: 0 for s in slices}}
     if kind == "paired":
         est, d = _paired(cut[slices[0]], preds[systems[0]], preds[systems[1]], units, metric, draws, seed(slices[0]))
     elif kind == "two_sample":

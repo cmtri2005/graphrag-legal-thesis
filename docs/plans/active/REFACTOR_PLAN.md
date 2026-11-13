@@ -151,6 +151,28 @@ Nguồn: `runs/posthoc_g4_20261113/dev/{r1,r2}/baselines.{txt,score.json}`; `b4`
 
 Đọc (theo cách đọc đã viết trong nháp amendment, **trên dev**): KTC của `b7plus − bvdate` loại 0 về phía dương ở cả hai lần, nên lọc cứng trước khi xếp hạng có giá trị riêng; cho model thấy ngày hiệu lực chỉ giảm trích sai phiên bản, nhưng model lại khẳng định "hết hiệu lực" bừa nhiều hơn. Chưa có số trên bộ cuối; muốn có phải duyệt amendment.
 
+**Phần bộ cuối có gold mù người (ADR 0006 §7, "báo song song F1–F6"):** gold mù đợt 1 (người, 119/120, CMT xác nhận 10/11) chỉ phủ **24/156 lineage** chính của bộ cuối (T2 19, T3 5, T6 0, T1 0). Trên 53 dòng đó F1–F6 đều ủng hộ ở cả hai lần, cùng chiều với bộ cuối: F4 +0,075 [+0,018; +0,154], F5 = F6 +0,189 [+0,071; +0,315], F1 +0,415 / +0,434. F7 không chạy được (0 dòng T6). Nguồn: `runs/posthoc_g4_20261113/gold_subset/confirm_r{1,2}.{txt,json}`, `run.sh`. Giới hạn: mẫu nhỏ; không phủ T6 và 132 lineage còn lại.
+
+### Nháp amendment ADR 0006 cho việc 3.2: sửa đáp án ngắn T1 (CHƯA có hiệu lực, chờ CMT duyệt)
+
+> **Amendment: đáp án ngắn của 43 dòng T1 đối chứng.**
+> - **Lỗi:** đáp án ngắn T1 là nguyên lời văn của đơn vị, mở đầu bằng ký hiệu liệt kê ("1.", "d)") và ở 4 dòng có câu dẫn của khoản cha; 41/43 dòng bắt đầu bằng ký hiệu. Phép so khớp đòi chuỗi chứa đủ các ký hiệu đó, nên câu trả lời đúng bị chấm sai (`oracle` T1: 2/43; dev T1: 0,833).
+> - **Đã thấy gì:** toàn bộ kết quả G4 và hậu nghiệm, kể cả Accuracy T1 của mọi hệ và `t1_no_harm`; đã thử quy tắc dưới đây trên **`oracle` T1** (2/43 → 37/43), chưa tính lại cho hệ nào khác.
+> - **Sửa (cơ học, không phán đoán):** với mỗi đoạn của đáp án ngắn (tách bằng "…"), bỏ một ký hiệu liệt kê ở đầu theo biểu thức `^\s*(?:\d+(?:\.\d+)*\.|[a-zđ]\)|[a-zđ]\.\d+\))\s+`. Không đổi chữ nào khác, không bỏ câu dẫn, không viết lại đáp án. Bản cũ giữ nguyên; bản sửa là file release T1 riêng, có hash.
+> - **Chấm lại:** dự đoán G4 lần 1 và lần 2 đã lưu, không gọi model. Tính lại `t1_no_harm` (ADR 0006 §4, δ = 0,05) và Accuracy T1 mọi hệ. Báo cả bản trước và sau sửa, ghi "chấm lại sau khi đã thấy kết quả".
+> - **Không đổi:** họ F1–F7 (T1 ngoài `all`), scorer, các nhóm khác.
+
+**2.6 trên bộ cuối (amendment 13/11, thăm dò; 318 dòng `all`, hai lần):**
+
+| So sánh, Accuracy | Lần 1 | Lần 2 |
+|---|---|---|
+| `bvnone` (lớp phiên bản, không lọc) − `b4` | −0,013 [−0,05; +0,02] | +0,006 [−0,03; +0,04] |
+| `bvdate` (in ngày) − `bvnone` | +0,097 [+0,04; +0,15] | +0,116 [+0,07; +0,17] |
+| `b7plus` (lọc cứng) − `bvdate` | **+0,245 [+0,18; +0,31]** | **+0,230 [+0,17; +0,29]** |
+| `proposed2 − bvdate` | +0,258 [+0,20; +0,32] | +0,245 [+0,19; +0,31] |
+
+Accuracy: `b4` 0,324 / 0,296; `bvnone` 0,311 / 0,302; `bvdate` 0,409 / 0,418; `b7plus` 0,654 / 0,648. `bvdate` giảm trích sai phiên bản (0,317 → 0,064) nhưng vẫn kém lọc cứng xa. Theo cách đọc đã khai trong amendment: **lọc cứng trước khi xếp hạng còn giá trị riêng**; cùng chiều với dev. Nguồn: `runs/posthoc_g4_20261113/test/{r1,r2}/baselines.{txt,score.json}`, `proposed2_vs_bvdate.*`.
+
 ## Risks And Recovery
 
 - **Phân tích hậu nghiệm bị đọc như xác nhận.** Mọi file kết quả của Nhóm 2 ghi rõ "thăm dò, sau khi đã thấy test"; không đổi phán quyết F1–F7.
@@ -163,6 +185,12 @@ Nguồn: `runs/posthoc_g4_20261113/dev/{r1,r2}/baselines.{txt,score.json}`; `b4`
 - [x] 13/11 Lập plan.
 - [x] 13/11 2.1–2.5: script `scripts/eval/posthoc_g4.py` (dùng lại `confirm_vilextime.run`, `t6_breakdown.event_rank`), test `tests/test_posthoc_g4.py`. Tự kiểm trong script: Accuracy tính lại khớp `all.score.json` của hai lần; F4, F5 dùng cùng seed với `confirm.json`.
 - [x] 13/11 2.1–2.5 chạy xong (`run_after_b7v.sh` bước attribution); 2.2 `b7v` truy xuất xong 361/361, exit 0. Kết quả ở mục "Kết quả Nhóm 2".
+- [x] 13/11 Gold mù người trên phần bộ cuối nó phủ (24 lineage): F1–F6 ủng hộ cả hai lần. `confirm_vilextime.run` thêm kiểm lát rỗng (báo "chưa chạy" thay vì lỗi); test hiện có vẫn qua.
+- [x] 13/11 1.5: phiếu chấm tay `data/review/human_score_g4/phieu_cham.xlsx` (100 câu: `b1`, `b4`, `proposed2` lần 1, ẩn tên hệ; khóa ở `khoa.jsonl`, không mở khi chấm). Script `scripts/review/human_answer_sheet.py`. CMT chấm.
+- [x] 13/11 3.2: nháp amendment sửa đáp án ngắn T1 (cơ học, bỏ ký hiệu liệt kê); `oracle` T1 2/43 → 37/43. Chờ CMT duyệt.
+- [x] 13/11 2.6 trên bộ cuối: `run_test_baselines.sh` xong 12:56:13 UTC, exit 0; kết quả ở mục 2.6 trên bộ cuối.
+- [x] 13/11 3.6 demo: chạy trọn một câu (20 căn cứ, GPT-4o mini, Verifier `pass`); sửa hai lỗi: demo theo `.env` gọi DeepSeek (trái ADR 0004 §3) nên nay mặc định generator đã khóa; `llm.complete(retries=0)` không gọi lần nào nên nay luôn thử ít nhất một lần (test hồi quy). Chậm: khoảng 5 phút một câu.
+- [x] 13/11 3.3 LightRAG (CMT đồng ý: Qwen trên Colab Pro dựng đồ thị, trả lời bằng prompt và GPT-4o mini chung): `scripts/eval/lightrag_package.py` (kho 591 văn bản, 27,4 triệu ký tự; 512 truy vấn; dựng prompt), `scripts/eval/lightrag_colab.py`, gói `colab_upload/lightrag/`. Đường ống thử bằng ngữ cảnh giả: prompt → nhập → chấm thông. Chờ CMT chạy Colab; chạy bộ cuối cần amendment.
 - [x] 13/11 2.6 trên dev: xuất prompt, gọi API hai lần, chấm (`run_after_b7v.sh`, xong 07:45:56 UTC, exit 0). Phần bộ cuối chờ CMT duyệt amendment.
 - [x] 13/11 2.6 (phần code): thêm `bvnone`, `bvdate` vào `systems.py` (`POSTHOC`, ngoài `FINAL_GENERATION`), dòng khoảng hiệu lực trong `generate.build_prompt` (mặc định tắt, prompt các hệ đã khóa không đổi), nối ở `colab_b1.export_prompts`; chặn đường sinh trực tiếp của `run_vilextime.py` cho `bvdate`. Test: `tests/test_rag_generate.py`, `tests/test_rag_systems.py`. Bộ test: 777 passed.
 

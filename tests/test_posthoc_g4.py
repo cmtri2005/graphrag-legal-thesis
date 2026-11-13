@@ -41,3 +41,15 @@ def test_writer_family():
     assert writer({"question_source": {"model": "claude-opus-5-5"}}) == "claude"
     assert writer({"question_source": {"model": "deepseek-flash"}}) == "deepseek"
     assert writer({}) == "?"
+
+
+def test_human_sheet_sample_is_balanced_and_seeded():
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts" / "review"))
+    from human_answer_sheet import SYSTEMS, sample
+    rows = [{"id": f"r{i}", "answerable": i % 10 != 0} for i in range(100)]
+    a, b = sample(rows, {}, 100, 7), sample(rows, {}, 100, 7)
+    assert a == b and len(a) == 100
+    per = {s: [r for x, r in a if x == s] for s in SYSTEMS}
+    assert sorted(len(v) for v in per.values()) == [33, 33, 34]
+    assert all(sum(not r["answerable"] for r in v) == round(len(v) * 0.1) for v in per.values())
+    assert all(len({r["id"] for r in v}) == len(v) for v in per.values())

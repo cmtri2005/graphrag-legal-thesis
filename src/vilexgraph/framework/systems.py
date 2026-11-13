@@ -158,6 +158,9 @@ FINAL_GENERATION = ("b1", "b2ctx", "b3", "b4", "b5", "b6", "b7", "b7plus", "b7pp
 DEV_ONLY = ("proposed2", "proposed3", "p2a2", "p2a3")
 #: Exploratory baselines added after the final test was seen; reported apart from the locked table.
 POSTHOC = ("bvnone", "bvdate")
+#: Retrieval run outside this pipeline (LightRAG on Colab, scripts/eval/lightrag_package.py); answers use the
+#: shared prompt and generator. Not a SystemSpec: no layer, tier or unit ids.
+EXTERNAL = ("lightrag",)
 
 
 def get(name: str) -> SystemSpec:

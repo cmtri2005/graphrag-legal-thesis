@@ -1,0 +1,13 @@
+ADR 0005 · split test · 10,000 lần lấy mẫu lại · Holm trên 6/6 kiểm định
+Họ final (ADR 0006): công cụ chờ ADR được Accepted và commit; dev chỉ tập dượt.
+F8 (TVER) luôn ngoài Holm: kiểm nhất quán nội bộ, dùng chung cửa sổ đồ thị với gold.
+F7 tự chuyển thăm dò: T6 không đáp án có dưới 20 lineage; ngoài Holm.
+F1 RQ2: lai ghép: proposed2 − b4 · accuracy · all: +0.434 [+0.275; +0.589] p=0.0000 p_Holm=0.0000 → ủng hộ (all 53 dòng/24 lineage)
+F2 RQ2: đồ thị phi thời gian: proposed2 − b5 · accuracy · all: +0.434 [+0.275; +0.589] p=0.0000 p_Holm=0.0000 → ủng hộ (all 53 dòng/24 lineage)
+F3 RQ2: lỗi sai phiên bản: proposed2 − b4 · wrong_version · all: -0.400 [-0.510; -0.288] p=0.0000 p_Holm=0.0000 → ủng hộ (all 53 dòng/24 lineage)
+F4 RQ3: lọc văn bản: b7 − b2ctx · tv_recall@1 · all_answerable: +0.075 [+0.018; +0.154] p=0.0280 p_Holm=0.0280 → ủng hộ (all_answerable 53 dòng/24 lineage)
+F5 RQ3: phiên bản: b7plus − b7 · tv_recall@1 · all_answerable: +0.189 [+0.071; +0.315] p=0.0030 p_Holm=0.0090 → ủng hộ (all_answerable 53 dòng/24 lineage)
+F6 H0: truy xuất: b7pp − b7 · tv_recall@1 · all_answerable: +0.189 [+0.073; +0.315] p=0.0030 p_Holm=0.0090 → ủng hộ (all_answerable 53 dòng/24 lineage)
+F7 T6: không đáp án: proposed2 − b7pp · accuracy · t6_unanswerable: chưa chạy (đại lượng không xác định)
+F8 Nhất quán nội bộ: TVER: b7pp − b7 · tver · all: -0.321 [-0.407; -0.229] p=0.0000 p_Holm=— → thăm dò (all 53 dòng/24 lineage)
+-> runs/posthoc_g4_20261113/gold_subset/confirm_r2.json

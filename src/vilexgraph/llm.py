@@ -184,6 +184,7 @@ def complete(system: str, user: str, *, provider: str | None = None, model: str 
     if seed is not None:
         payload["seed"] = seed
 
+    retries = max(1, retries)   # `retries` counts attempts; 0 must still make one call, not none
     for attempt in range(retries):
         response = post(f"{base}/chat/completions", json=payload, timeout=timeout,
                         headers={"Authorization": f"Bearer {os.environ[key]}",

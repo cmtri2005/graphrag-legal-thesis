@@ -201,3 +201,19 @@ def test_validity_lines_follow_each_block_and_are_half_open():
     assert generate.validity_line([]) == "(Hiệu lực của đoạn này: không có khoảng hiệu lực nào)"
     # mặc định không đổi prompt của các hệ đã khóa
     assert "Hiệu lực của đoạn này" not in generate.build_prompt("q", "2024-05-01", [unit(1)], with_context=False)[1]
+
+
+def test_zero_retries_still_makes_one_call(monkeypatch) -> None:
+    """`retries` counts attempts in llm.complete; 0 used to mean no call at all (demo bug, 13/11)."""
+    calls = []
+
+    class Response:
+        status_code, ok, headers, text = 200, True, {}, ""
+
+        def json(self):
+            return {"choices": [{"message": {"content": "x"}, "finish_reason": "stop"}], "model": "m"}
+
+    monkeypatch.setenv("OPENAI_API_KEY", "k")
+    monkeypatch.setattr(llm.requests, "post", lambda *a, **kw: calls.append(1) or Response())
+    assert llm.complete("s", "u", provider="openai", model="m", retries=0).text == "x"
+    assert calls == [1]

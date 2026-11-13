@@ -52,8 +52,12 @@ el('verifier').textContent=result.verification?JSON.stringify(result.verificatio
 </script></html>'''
 
 
+# The locked generator of the final run (ADR 0004 amendment 09/11), not whatever `.env` pins.
+PROVIDER, MODEL = 'openai', 'gpt-4o-mini-2024-07-18'
+
+
 def handle_request(payload, *, spec, corpus, search, generator=generate.answer,
-                   note_builder=repeal_notes):
+                   note_builder=repeal_notes, provider=PROVIDER, model=MODEL):
     """Request processing is injectable so tests never need models, keys or a server."""
     question, as_of = payload.get('question'), payload.get('as_of')
     if not isinstance(question, str) or not question.strip():
@@ -75,7 +79,8 @@ def handle_request(payload, *, spec, corpus, search, generator=generate.answer,
 
     def ask(evidence):
         return generator(question, as_of, evidence, with_context=spec.context,
-                         repeal_notes=notes if spec.repeal_note else (), retries=0, timeout=15)
+                         repeal_notes=notes if spec.repeal_note else (), retries=1, timeout=60,
+                         provider=provider, model=model)
 
     try:
         answer = ask(units)
@@ -94,7 +99,7 @@ def handle_request(payload, *, spec, corpus, search, generator=generate.answer,
     return result
 
 
-def handler_for(spec, corpus, search):
+def handler_for(spec, corpus, search, provider=PROVIDER, model=MODEL):
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
             if self.path != '/':
@@ -115,7 +120,8 @@ def handler_for(spec, corpus, search):
                 payload = json.loads(self.rfile.read(int(self.headers.get('Content-Length', '0'))))
                 if not isinstance(payload, dict):
                     raise ValueError('Yêu cầu phải là một JSON object.')
-                result = handle_request(payload, spec=spec, corpus=corpus, search=search)
+                result = handle_request(payload, spec=spec, corpus=corpus, search=search,
+                                        provider=provider, model=model)
                 status = 200
             except (ValueError, TypeError):
                 result, status = {'error': 'Nhập câu hỏi và ngày hợp lệ dạng YYYY-MM-DD.'}, 400
@@ -136,6 +142,8 @@ def main():
     ap.add_argument('--index', type=Path, default=INDEX)
     ap.add_argument('--embed', type=Path, help='default: embeddings of the selected system layer')
     ap.add_argument('--port', type=int, default=8000)
+    ap.add_argument('--provider', default=PROVIDER)
+    ap.add_argument('--model', default=MODEL)
     args = ap.parse_args()
     spec = systems.get(args.system)
     corpus = Corpus(args.index) if spec.retrieves else None
@@ -144,8 +152,8 @@ def main():
         spec = spec.variant(spec.name + '-hyb', rerank=False)
     embed = args.embed or (embed_dir(spec.layer) if spec.dense else None)
     search = retriever(spec, corpus, None, embed=embed)
-    server = HTTPServer(('127.0.0.1', args.port), handler_for(spec, corpus, search))
-    print(f'http://127.0.0.1:{server.server_port} · {spec.name}', flush=True)
+    server = HTTPServer(('127.0.0.1', args.port), handler_for(spec, corpus, search, args.provider, args.model))
+    print(f'http://127.0.0.1:{server.server_port} · {spec.name} · {args.provider}/{args.model}', flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
