@@ -65,7 +65,30 @@ async def ready(rag):
         pass
 
 
+def preflight() -> None:
+    """Stop before LightRAG starts if the LLM server does not answer: otherwise every chunk fails
+    with a connection error and the run walks through the whole corpus doing nothing."""
+    import urllib.request
+    try:
+        with urllib.request.urlopen(f"{LLM_BASE}/models", timeout=10) as response:
+            served = [m["id"] for m in json.load(response)["data"]]
+    except Exception as exc:
+        raise SystemExit(f"LLM server không trả lời ở {LLM_BASE} ({type(exc).__name__}). "
+                         "Xem `tail -40 vllm.log`; vLLM phải chạy và tải xong model trước.") from None
+    if LLM_NAME not in served:
+        raise SystemExit(f"vLLM đang phục vụ {served}, không có {LLM_NAME!r} (--served-model-name).")
+    print(f"LLM sẵn sàng: {served}", flush=True)
+
+
+def failed_docs(work: Path) -> int:
+    path = work / "kv_store_doc_status.json"
+    if not path.exists():
+        return 0
+    return sum(str(v.get("status", "")).lower().endswith("failed") for v in json.loads(path.read_text()).values())
+
+
 async def build(args) -> None:
+    preflight()
     docs = [json.loads(line) for line in args.corpus.open(encoding="utf-8")]
     if args.limit:
         docs = sorted(docs, key=lambda d: len(d["text"]))[:args.limit]     # chạy thử: văn bản ngắn nhất
@@ -76,7 +99,12 @@ async def build(args) -> None:
         part = docs[i:i + args.batch]
         await rag.ainsert([d["text"] for d in part], ids=[d["id"] for d in part],
                           file_paths=[d["id"] for d in part])
-        print(f"{min(i + args.batch, len(docs))}/{len(docs)} văn bản · {time.time() - started:.0f}s", flush=True)
+        failed = failed_docs(args.work)
+        print(f"{min(i + args.batch, len(docs))}/{len(docs)} văn bản · {failed} thất bại · "
+              f"{time.time() - started:.0f}s", flush=True)
+        if failed > max(3, (i + args.batch) // 10):
+            raise SystemExit(f"Dừng: {failed} văn bản trích thất bại. Kiểm vllm.log rồi chạy lại "
+                             "(xóa thư mục --work nếu chưa có văn bản nào thành công).")
     await rag.finalize_storages()
     (args.work / "build_done.json").write_text(json.dumps(
         {"docs": len(docs), "limit": args.limit, "llm": LLM_NAME, "model_env": os.environ.get("MODEL"),
@@ -88,6 +116,7 @@ async def query(args) -> None:
     out = args.work / "contexts.jsonl"
     done = {json.loads(line)["id"] for line in out.open(encoding="utf-8")} if out.exists() else set()
     todo = [q for q in map(json.loads, args.queries.open(encoding="utf-8")) if q["id"] not in done]
+    preflight()
     rag = make_rag(args.work)
     await ready(rag)
     with out.open("a", encoding="utf-8") as sink:
