@@ -2,14 +2,14 @@
 
 Phiên audit chỉ đọc, làm theo yêu cầu của CMT sau khi G4 chạy xong. Không sửa code, dữ liệu, nhãn, cấu hình, ADR, plan hay bản thảo. Không gọi API trả phí, không chạy lại test.
 
-Đây là báo cáo của một phiên AI trong dự án, không phải phản biện ngoài. Chưa qua `evidence-gate`.
+Đây là báo cáo của một phiên AI trong dự án, không phải phản biện ngoài. Các số [HN] đã được tính lại bằng `scripts/eval/posthoc_g4.py` (`runs/posthoc_g4_20261113/attribution.json`) và qua `evidence-gate` 13/11 (việc 6.6 của REFACTOR_PLAN; tái chạy trùng từng byte). Số trong báo cáo này đã thay bằng số của file đó.
 
 ## Cách đọc nhãn bằng chứng
 
 | Nhãn | Nghĩa |
 |---|---|
 | **[XM]** | Đã xác minh từ artifact trong repo |
-| **[HN]** | Phân tích hậu nghiệm: tự tính trong phiên này từ `runs/final_g4_20261112/{r1,r2}/test/*.jsonl` bằng hàm `correct`, `load_rows`, `distractors` của `scripts/eval/score_vilextime.py`; bootstrap theo lineage, B = 10.000. Chưa lưu file kết quả, chưa đối soát. **Phải tính lại trước khi đưa vào khóa luận hay paper** |
+| **[HN]** | Phân tích hậu nghiệm: tự tính trong phiên này từ `runs/final_g4_20261112/{r1,r2}/test/*.jsonl` bằng hàm `correct`, `load_rows`, `distractors` của `scripts/eval/score_vilextime.py`; bootstrap theo lineage, B = 10.000. Bản lưu: `runs/posthoc_g4_20261113/attribution.json`, đã qua `evidence-gate` 13/11. Vẫn là thăm dò hậu nghiệm |
 | **[SL]** | Suy luận từ bằng chứng |
 | **[GT]** | Giả thuyết cần kiểm |
 
@@ -32,8 +32,8 @@ Mọi số [HN] là thăm dò, tính sau khi đã thấy kết quả test.
 
 **Rủi ro 1. Tên và claim "đồ thị" vượt quá cơ chế đã đo.**
 
-- `proposed2 − b7plus` trên `all`: +0,013 [−0,010; +0,035] ở lần 1, +0,016 [−0,006; +0,038] ở lần 2 **[HN]**.
-- `proposed2 − b7pp`: +0,006 [−0,016; +0,028] ở lần 1, 0,000 [−0,019; +0,019] ở lần 2 **[HN]**.
+- `proposed2 − b7plus` trên `all`: +0,013 [−0,009; +0,035] ở lần 1, +0,016 [−0,006; +0,038] ở lần 2 **[HN]**.
+- `proposed2 − b7pp`: +0,006 [−0,016; +0,028] ở lần 1, 0,000 [−0,016; +0,016] ở lần 2 **[HN]**.
 - F1–F3 "ủng hộ" (P − `b4` = +0,343) vì thế cũng sẽ đúng nếu thay P bằng `b7plus` **[SL]**.
 - `b7plus` chỉ là một vị từ SQL trên bảng khoảng hiệu lực (`src/vilexgraph/framework/temporal.py`).
 - "Đồ thị trực tuyến" của `proposed2` là một phép nối SQL một bước lên các nút cha (`graphx.py`, `rel_up`). Không dùng Neo4j lúc truy vấn, không đi nhiều bước.
@@ -55,10 +55,12 @@ Mọi số [HN] là thăm dò, tính sau khi đã thấy kết quả test.
 - Nấc tách là `b7v`. ADR 0006 §2 khai thang `b2ctx → b7 → b7v → b7plus → b7pp`, nhưng `b7v` **không chạy** trên bộ cuối: `runs/final_g4_20261112/retrieval/` chỉ có `b2ctx`, `b7`, `b7plus`, `b7pp` **[XM]**.
 - Toàn bộ lợi ích của bước này nằm ở dòng mà đáp án là phiên bản thứ hai trở đi **[HN]**:
 
-  | Dòng có đáp án | `b7` đúng | `b7plus` đúng | Hiệu |
-  |---|---:|---:|---|
-  | Gold là phiên bản 1 (156 dòng) | 100 | 102 | +0,013 [−0,013; +0,039] |
-  | Gold là phiên bản ≥ 2 (139 dòng) | 53 | 103 | +0,360 [+0,270; +0,449] |
+  | Dòng có đáp án | `b7` đúng (lần 1) | `b7plus` đúng (lần 1) | Hiệu lần 1 | Hiệu lần 2 |
+  |---|---:|---:|---|---|
+  | Gold là phiên bản 1 (156 dòng) | 100 | 102 | +0,013 [−0,013; +0,038] | −0,013 [−0,032; 0,000] |
+  | Gold là phiên bản ≥ 2 (139 dòng) | 53 | 103 | +0,360 [+0,269; +0,450] | +0,324 [+0,235; +0,413] |
+
+  Nguồn: `attribution.json`, `pairs` lát `gold_v1`, `gold_v2plus`. Ở gold bản 1, hiệu đổi dấu giữa hai lần, KTC chứa 0 cả hai lần.
 
 - Lợi ích chủ yếu không đến từ việc tìm thấy nhiều hơn, mà từ việc ngữ cảnh sạch hơn **[HN]**:
 
@@ -143,7 +145,7 @@ Mọi số [HN] là thăm dò, tính sau khi đã thấy kết quả test.
   | So sánh, `all` | Lần 1 | Lần 2 |
   |---|---|---|
   | `b5 − b4` | −0,013 [−0,025; −0,003] | +0,016 [+0,003; +0,031] |
-  | `b6 − b4` | +0,016 [−0,003; +0,038] | +0,028 [+0,009; +0,050] |
+  | `b6 − b4` | +0,016 [−0,003; +0,037] | +0,028 [+0,009; +0,050] |
   | `b4` số câu đúng | 103 | 94 |
 
   Hai KTC của `b5 − b4` đều loại 0 và ngược dấu.
@@ -398,7 +400,7 @@ Mục này sửa hai nhận định ở lượt trao đổi về "cải thiện 
 ### 8.1. Hai chỗ tôi nói chưa đúng, đã kiểm lại
 
 1. **"Chia đơn vị cha–con là nút thắt": sai.** 294/295 đơn vị gold trong chỉ mục đã chứa đủ đáp án ngắn **[HN, `data/derived/corpus/index.sqlite`]**. Không cần đổi cách chia đơn vị.
-2. **"Thẻ trạng thái từ đồ thị cho T6": đã thử gần như vậy và không ăn thua.** `proposed3` đưa thông báo bãi bỏ có cấu trúc vào prompt: +1/21 trên dev. X8 đặt lệnh bãi bỏ gold lên vị trí 1: 4/21, ngang lượt cũ. `oracle` chỉ đưa lệnh bãi bỏ: 19/21 **[XM, `docs/reports/chan-doan-t6-dev-20261111.md` mục 5, 9]**. Nguyên nhân theo chẩn đoán đó: 19–20 đoạn cùng chủ đề còn hiệu lực trong prompt, cộng quy tắc 4 của prompt cho phép trả theo quy phạm khác.
+2. **"Thẻ trạng thái từ đồ thị cho T6": đã thử gần như vậy và không ăn thua.** `proposed3` đưa thông báo bãi bỏ có cấu trúc vào prompt: +1/21 trên dev. X8 đặt lệnh bãi bỏ gold lên vị trí 1: 4/21, ngang lượt cũ. `oracle` chỉ đưa lệnh bãi bỏ: 19/21 **[XM, `docs/reports/chan-doan-t6-dev-20261111.md` mục 5; mục 9 là nháp chưa đối soát]**. Nguyên nhân theo chẩn đoán đó: 19–20 đoạn cùng chủ đề còn hiệu lực trong prompt, cộng quy tắc 4 của prompt cho phép trả theo quy phạm khác.
 
 ### 8.2. Phát hiện mới: điểm yếu thật là xếp hạng
 
@@ -415,8 +417,8 @@ Accuracy theo hạng của căn cứ gold, 295 dòng có đáp án, lần 1 **[H
 
 - Gold đứng hạng 1 thì đúng 96%. Hạng 11–20 thì đúng dưới 50%.
 - Gold chỉ đứng hạng 1 ở 107/295 dòng (36%).
-- `proposed2` có 46 câu sai dù gold nằm trong prompt; 39 câu trong đó trích một đoạn khác.
-- Trần nếu mọi gold đang có trong prompt lên hạng 1: khoảng +34 câu, tức +0,10 trên `all`.
+- `proposed2` có 46 câu sai dù gold nằm trong prompt; 40 câu trong đó không trích căn cứ gold; 39 nếu không tính 1 câu trả "hết hiệu lực".
+- Trần nếu mọi gold đang có trong prompt lên hạng 1: khoảng +34 câu (247 × 0,953 − 201), tức khoảng +0,11 trên `all` **[SL]**, không phải số đo.
 
 Vì sao xếp hạng yếu **[XM, `src/vilexgraph/framework/retrieve.py`]**:
 - BM25 chạy trên âm tiết rời, nối bằng OR, gồm cả âm tiết rất phổ biến.
@@ -444,7 +446,7 @@ Hệ quả **[SL]**:
 
 **Về paper:** viết theo hướng bộ đánh giá và phép đo phân rã (hướng A). **Không viết paper "framework GraphRAG đạt SOTA".** Ba lý do:
 
-1. Phần đồ thị lúc truy vấn không tạo khác biệt đo được (+0,01).
+1. Phần đồ thị lúc truy vấn không tạo khác biệt đo được trên `all` (318 dòng, thăm dò hậu nghiệm): `proposed2 − b7pp` +0,006 [−0,016; +0,028] / 0,000 [−0,016; +0,016]; `proposed2 − b7plus` +0,013 [−0,009; +0,035] / +0,016 [−0,006; +0,038]. KTC chứa 0 ở cả hai lần. Ngoại lệ: trên T6 không đáp án (23 dòng), `proposed2 − b7plus` +0,174 [+0,043; +0,348] ở cả hai lần, còn `proposed2 − b7pp` có KTC chạm 0.
 2. Với khoảng hiệu lực lan truyền đã tính sẵn offline, bài toán này không còn việc gì buộc phải duyệt đồ thị lúc truy vấn. Kể cả nhận diện bãi bỏ cũng chỉ cần bảng khoảng và con trỏ tới lệnh. Đây là hệ quả của chính thiết kế "phương án A" ở ADR 0001, không phải lỗi cài đặt.
 3. Gold và hệ dùng chung một kho, kho mới áp được 40% sự kiện. Mọi claim về phương pháp đều vướng điểm này.
 
@@ -478,6 +480,6 @@ LightRAG thật (C3): không khuyên làm. Nó tốn tiền trích thực thể 
 
 1. "Trên phần kho đã dựng được, lọc theo ngày văn bản tăng TV-R@1 +0,08; thêm kho phiên bản và lọc theo khoảng tăng tiếp +0,12." Kèm kết quả `b7v` để tách hai thành phần của bước thứ hai.
 2. "Đọc bản hiện hành thay cho bản đúng mốc làm Accuracy rơi từ 0,956 xuống 0,456." Một generator.
-3. "Mở rộng theo quan hệ lúc truy vấn không tạo khác biệt lớn hơn khoảng 3,5 điểm; nhận diện bãi bỏ còn mở (7/23 so với 22/23 khi cấp sẵn căn cứ)."
+3. "Mở rộng theo quan hệ lúc truy vấn so với `b7plus` (cùng kho, không lan truyền) không tạo khác biệt lớn hơn khoảng 4 điểm trên `all`; nhận diện bãi bỏ còn mở (7/23 so với 22/23 khi cấp sẵn căn cứ)."
 
 Mỗi câu phải đi kèm: nhãn là AI gán, một tác giả duyệt; gold lấy từ cùng kho; kho áp được 40% sự kiện theo phép đo của dự án; kết quả gold mù ở việc 3.

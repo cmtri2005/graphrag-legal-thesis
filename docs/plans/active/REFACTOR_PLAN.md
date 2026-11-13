@@ -127,7 +127,7 @@ Bootstrap theo văn bản (132 văn bản) cho cùng kết luận. Trên `t6_una
 | `b7plus − b7v` | **+0,159 [+0,120; +0,199]** |
 | `b7pp − b7plus` | 0 |
 
-Đọc: lời văn hợp nhất mà không lọc theo khoảng còn **kém hơn** lớp gốc, vì mọi phiên bản cũ cùng vào ứng viên. Toàn bộ lợi ích của F5 đến từ bộ lọc khoảng phiên bản áp trên kho phiên bản; cần cả hai.
+Đọc: lời văn hợp nhất mà không lọc theo khoảng còn **kém hơn** lớp gốc, có lẽ vì mọi phiên bản cũ cùng vào ứng viên **[SL, chưa kiểm]**. Toàn bộ lợi ích của F5 đến từ bộ lọc khoảng phiên bản áp trên kho phiên bản; cần cả hai.
 
 **2.3 Khẳng định "hết hiệu lực" (lần 1; lần 2 gần như trùng):** `proposed2` 11 lần, đúng 7, sai 4 (precision 0,64, recall 7/23); lệnh bãi bỏ vào prompt 12/23, đúng 5 trong 12. `b2ctx` 36 lần, sai 29. `oracle` 23 lần, đúng 22.
 
@@ -151,7 +151,7 @@ Nguồn: `runs/posthoc_g4_20261113/dev/{r1,r2}/baselines.{txt,score.json}`; `b4`
 
 Đọc (theo cách đọc đã viết trong nháp amendment, **trên dev**): KTC của `b7plus − bvdate` loại 0 về phía dương ở cả hai lần, nên lọc cứng trước khi xếp hạng có giá trị riêng; cho model thấy ngày hiệu lực chỉ giảm trích sai phiên bản, nhưng model lại khẳng định "hết hiệu lực" bừa nhiều hơn. Chưa có số trên bộ cuối; muốn có phải duyệt amendment.
 
-**Phần bộ cuối có gold mù người (ADR 0006 §7, "báo song song F1–F6"):** gold mù đợt 1 (người, 119/120, CMT xác nhận 10/11) chỉ phủ **24/156 lineage** chính của bộ cuối (T2 19, T3 5, T6 0, T1 0). Trên 53 dòng đó F1–F6 đều ủng hộ ở cả hai lần, cùng chiều với bộ cuối: F4 +0,075 [+0,018; +0,154], F5 = F6 +0,189 [+0,071; +0,315], F1 +0,415 / +0,434. F7 không chạy được (0 dòng T6). Nguồn: `runs/posthoc_g4_20261113/gold_subset/confirm_r{1,2}.{txt,json}`, `run.sh`. Giới hạn: mẫu nhỏ; không phủ T6 và 132 lineage còn lại.
+**Phần bộ cuối có gold mù người (ADR 0006 §7, "báo song song F1–F6"):** gold mù đợt 1 (người; khớp thô 148/150, 119/120 sau phân xử do AI đề xuất, CMT xác nhận 10/11; tập con vẫn chấm bằng gold đồ thị) chỉ phủ **24/156 lineage** chính của bộ cuối (T2 19, T3 5, T6 0, T1 0). Trên 53 dòng đó F1–F6 đều ủng hộ ở cả hai lần, cùng chiều với bộ cuối: F4 +0,075 [+0,018; +0,154], F5 +0,189 [+0,071; +0,315], F6 +0,189 [+0,073; +0,315], F1 +0,415 / +0,434. F7 không chạy được (0 dòng T6). Nguồn: `runs/posthoc_g4_20261113/gold_subset/confirm_r{1,2}.{txt,json}`, `run.sh`. Giới hạn: mẫu nhỏ; không phủ T6 và 132 lineage còn lại.
 
 ### Nháp amendment ADR 0006 cho việc 3.2: sửa đáp án ngắn T1 (CHƯA có hiệu lực, chờ CMT duyệt)
 
@@ -171,7 +171,7 @@ Nguồn: `runs/posthoc_g4_20261113/dev/{r1,r2}/baselines.{txt,score.json}`; `b4`
 | `b7plus` (lọc cứng) − `bvdate` | **+0,245 [+0,18; +0,31]** | **+0,230 [+0,17; +0,29]** |
 | `proposed2 − bvdate` | +0,258 [+0,20; +0,32] | +0,245 [+0,19; +0,31] |
 
-Accuracy: `b4` 0,324 / 0,296; `bvnone` 0,311 / 0,302; `bvdate` 0,409 / 0,418; `b7plus` 0,654 / 0,648. `bvdate` giảm trích sai phiên bản (0,317 → 0,064) nhưng vẫn kém lọc cứng xa. Theo cách đọc đã khai trong amendment: **lọc cứng trước khi xếp hạng còn giá trị riêng**; cùng chiều với dev. Nguồn: `runs/posthoc_g4_20261113/test/{r1,r2}/baselines.{txt,score.json}`, `proposed2_vs_bvdate.*`.
+Accuracy: `b4` 0,324 / 0,296; `bvnone` 0,311 / 0,302; `bvdate` 0,409 / 0,418; `b7plus` 0,654 / 0,648. `bvdate` giảm trích sai phiên bản (0,317 → 0,064 lần 1; 0,328 → 0,060 lần 2) nhưng vẫn kém lọc cứng xa. Hiệu `wrong_version` (amendment yêu cầu báo, lần 1 / lần 2): `bvnone − b4` +0,026 [−0,02; +0,07] / +0,034 [−0,01; +0,07]; `bvdate − bvnone` −0,253 [−0,30; −0,20] / −0,268 [−0,32; −0,22]; `b7plus − bvdate` −0,057 [−0,09; −0,03] / −0,049 [−0,08; −0,02]; `proposed2 − bvdate` −0,057 [−0,09; −0,03] / −0,053 [−0,08; −0,03]. Theo cách đọc đã khai trong amendment: **lọc cứng trước khi xếp hạng còn giá trị riêng**; cùng chiều với dev. Nguồn: `runs/posthoc_g4_20261113/test/{r1,r2}/baselines.{txt,score.json}`, `proposed2_vs_bvdate.*`.
 
 ## Risks And Recovery
 
@@ -194,7 +194,7 @@ Accuracy: `b4` 0,324 / 0,296; `bvnone` 0,311 / 0,302; `bvdate` 0,409 / 0,418; `b
 - [x] 13/11 2.6 trên dev: xuất prompt, gọi API hai lần, chấm (`run_after_b7v.sh`, xong 07:45:56 UTC, exit 0). Phần bộ cuối chờ CMT duyệt amendment.
 - [x] 13/11 2.6 (phần code): thêm `bvnone`, `bvdate` vào `systems.py` (`POSTHOC`, ngoài `FINAL_GENERATION`), dòng khoảng hiệu lực trong `generate.build_prompt` (mặc định tắt, prompt các hệ đã khóa không đổi), nối ở `colab_b1.export_prompts`; chặn đường sinh trực tiếp của `run_vilextime.py` cho `bvdate`. Test: `tests/test_rag_generate.py`, `tests/test_rag_systems.py`. Bộ test: 777 passed.
 - [x] 13/11 6.2 (phần bảng lệch): cập nhật chương 1 mục 1.6 theo bộ cuối và G4 (tầng nhãn `ai_cmt`, cơ cấu T1/T2/T3/T5/T6, vai đồ thị, một generator, demo, gold mù 24/156). Số `proposed2 − b7plus` để `[CHỜ 6.6]`. Phụ lục khai báo AI chưa làm.
-- [ ] 13/11 6.6: `evidence-gate` đang đối soát số hậu nghiệm.
+- [x] 13/11 6.6: `evidence-gate` tái chạy `posthoc_g4.py` và scorer, trùng từng byte; khoảng 120 số PASS. Đã sửa câu chữ theo gate: 5 số [HN] cũ trong audit, KTC F6, hiệu `wrong_version` của 2.6 test, nhãn [SL] cho cơ chế 2.2 và trần +0,11, §8.4 nêu cả T6 không đáp án. Không kiểm được: 148/150, G002, AC1 0,608 (lịch sử).
 
 ## Decisions
 

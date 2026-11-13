@@ -93,7 +93,7 @@ Các lệch bổ sung so với đề cương và định nghĩa cần công bố
 | T4 riêng 150 câu | Đổi thành lát chồng lắp của T2, không cộng hai lần |
 | T5 hồi tố “có lợi”, 50 câu | T5a bỏ vế “có lợi”, T5b là đã ký chưa hiệu lực; hiện chỉ chẩn đoán. Bộ cuối không có T5 |
 | T6 100 câu | Định nghĩa T6a sàn 100, T6b sàn 200. Bộ cuối 23 lineage, không đủ quota; không đủ bằng chứng cho lợi ích lan truyền |
-| Đồ thị tri thức thời gian là thành phần truy xuất | Đồ thị đóng góp chủ yếu ở bước dựng kho phiên bản offline. So `proposed2` với `b7plus` (cùng kho, không dùng đồ thị lúc truy vấn) cho hiệu không phân biệt được với 0 [CHỜ 6.6: số đã đối soát]; không viết “GraphRAG vượt trội” |
+| Đồ thị tri thức thời gian là thành phần truy xuất | Đồ thị đóng góp chủ yếu ở bước dựng kho phiên bản offline. So `proposed2` với `b7plus` (cùng kho, không dùng đồ thị lúc truy vấn) cho hiệu không phân biệt được với 0 (thăm dò hậu nghiệm: +0,013 [−0,009; +0,035] lần 1, +0,016 [−0,006; +0,038] lần 2; `runs/posthoc_g4_20261113/attribution.json`); không viết “GraphRAG vượt trội” |
 | Một mô hình sinh | Mọi hệ dùng GPT-4o mini (ADR 0004); độ bền theo generator khác họ chưa đo (REFACTOR_PLAN 3.7) |
 | Giao diện minh họa | `scripts/demo.py` chạy dòng lệnh trọn đường, khoảng 5 phút một câu; chưa có giao diện web |
 | Gold độc lập trên bộ test | Gold mù chỉ phủ 24/156 lineage chính của bộ cuối; F1–F6 trên phần này báo riêng, không thay cho cả bộ |
