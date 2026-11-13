@@ -92,9 +92,9 @@ Thứ tự: Nhóm 2 → Nhóm 1 (song song, cần người) → Nhóm 3 → Nhó
 | 6.5 | Dòng G4 trong `runs/README.md`; sửa trạng thái "NHÁP" ở `data/vilextime_final/`; NMT xác nhận ADR 0004, 0006 |
 | 6.6 | Số hậu nghiệm của audit tính lại bằng script và qua `evidence-gate` trước khi trích |
 
-### Nháp amendment ADR 0006 cho việc 2.6 (CHƯA có hiệu lực, chờ CMT duyệt)
+### Amendment ADR 0006 cho việc 2.6 (CMT duyệt 13/11, đã chép vào ADR 0006)
 
-Chỉ khi CMT duyệt đoạn này mới chép vào cuối ADR 0006, commit, rồi mới chạy trên bộ cuối.
+CMT duyệt 13/11 ("ok bạn nhé"); bản có hiệu lực nằm ở cuối ADR 0006.
 
 > **Amendment 2026-11-13: hai baseline thăm dò sau khi đã thấy kết quả bộ cuối.**
 > - **Đã thấy gì:** toàn bộ kết quả G4 (hai lần chạy), phân tích hậu nghiệm ở `runs/posthoc_g4_20261113/attribution.json`, và kết quả dev của hai hệ dưới đây.

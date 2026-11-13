@@ -221,3 +221,16 @@ Tradeoffs:
 - G2: điền danh sách lineage, sha256, cỡ mẫu, power.
 - G3: điền kết quả áp quy tắc chọn P, generator, embedding; CMT, NMT duyệt; commit; rồi mới chạy test.
 - `confirm_vilextime.py --family final` đã khớp mục 3 (05/11): F1–F7, F8 là TVER luôn ngoài Holm.
+
+## Amendment 2026-11-13: hai baseline thăm dò sau khi đã thấy kết quả bộ cuối
+
+Accepted 13/11/2026, CMT duyệt trong hội thoại ("ok bạn nhé"), **trước** khi hai hệ dưới đây chạy trên bộ cuối. NMT chưa có xác nhận riêng trong repo. Không sửa phần nào ở trên.
+- **Đã thấy gì:** toàn bộ kết quả G4 (hai lần chạy), phân tích hậu nghiệm ở `runs/posthoc_g4_20261113/attribution.json`, và kết quả dev của hai hệ dưới đây.
+- **Hệ thêm:** `bvnone` (lớp B, lai ghép, không lọc thời gian, không mở rộng, không Verifier) và `bvdate` (như `bvnone`, mỗi đoạn trong prompt có thêm một dòng khoảng hiệu lực đã lan truyền). Cùng generator, prompt hệ thống, `k`, seed và hai lần chạy như ADR 0006 §2, §5b. Định nghĩa ở `src/vilexgraph/framework/systems.py` (`POSTHOC`).
+- **Câu hỏi:** RAG phẳng được đọc cùng kho phiên bản thì còn kém bao nhiêu; cho model thấy ngày hiệu lực thì có thay được bộ lọc cứng không.
+- **Phép so, đều là thăm dò, ngoài Holm, không có phán quyết:** Accuracy và `wrong_version` trên `all` của `bvnone − b4`, `bvdate − bvnone`, `b7plus − bvdate`, `proposed2 − bvdate`; báo ở cả hai lần chạy.
+- **Không đổi:** P, F1–F7, phán quyết đã báo, scorer, gold, prompt của các hệ đã khóa.
+- **Cách đọc đã khai trước:** nếu KTC của `b7plus − bvdate` chứa 0 ở cả hai lần thì viết "không thấy khác biệt lớn hơn độ rộng KTC giữa lọc cứng và để model tự chọn theo ngày"; nếu loại 0 về phía dương ở cả hai lần thì viết "lọc cứng trước khi xếp hạng còn giá trị riêng".
+- **Kết quả dev lúc duyệt** (`runs/posthoc_g4_20261113/dev/`, đã thấy): `b7plus − bvdate` Accuracy +0,272 [+0,19; +0,36] lần 1, +0,245 [+0,16; +0,33] lần 2.
+- **Đường chạy trên bộ cuối:** `runs/posthoc_g4_20261113/run_test_baselines.sh`; cùng prompt hệ thống, generator, seed, hai lần gọi như §5b; kết quả ở `runs/posthoc_g4_20261113/test/`.
+
