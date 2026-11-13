@@ -6,7 +6,7 @@ Chạy trên Colab (A100), từng bước, mọi trạng thái lưu ở --work t
     !pip install -q "lightrag-hku" vllm sentence-transformers
     # 1. bật vLLM (ô riêng, chạy nền):
     !nohup python -m vllm.entrypoints.openai.api_server --model $MODEL --served-model-name qwen \\
-        --quantization fp8 --max-model-len 16384 --gpu-memory-utilization 0.92 --port 8000 > vllm.log 2>&1 &
+        --quantization fp8 --max-model-len 16384 --gpu-memory-utilization 0.80 --port 8000 > vllm.log 2>&1 &
     # 2. chạy thử trên vài văn bản, xem log định dạng trích xuất:
     !python lightrag_colab.py build  --work /content/drive/MyDrive/lightrag --corpus corpus.jsonl --limit 5
     # 3. dựng toàn bộ (chạy lại cùng lệnh nếu bị ngắt; văn bản đã xử lý được bỏ qua):
@@ -41,8 +41,8 @@ def make_rag(work: Path):
     from lightrag.utils import wrap_embedding_func_with_attrs
     from sentence_transformers import SentenceTransformer
 
-    encoder = SentenceTransformer(EMBED_MODEL, device="cuda")
-    encoder.max_seq_length = 8192
+    encoder = SentenceTransformer(EMBED_MODEL, device="cuda").half()   # chung GPU với vLLM: giữ nhỏ
+    encoder.max_seq_length = 2048     # đoạn của LightRAG khoảng 1.200 token
 
     async def llm(prompt, system_prompt=None, history_messages=[], **kwargs):
         kwargs.setdefault("max_tokens", MAX_TOKENS)
@@ -52,7 +52,7 @@ def make_rag(work: Path):
 
     @wrap_embedding_func_with_attrs(embedding_dim=1024, max_token_size=8192, model_name=EMBED_MODEL)
     async def embed(texts: list[str]) -> np.ndarray:
-        return encoder.encode(texts, normalize_embeddings=True, batch_size=32, convert_to_numpy=True)
+        return encoder.encode(texts, normalize_embeddings=True, batch_size=8, convert_to_numpy=True)
 
     return LightRAG(working_dir=str(work), llm_model_func=llm, embedding_func=embed,
                     llm_model_max_async=int(os.environ.get("MAX_ASYNC", "6")),
