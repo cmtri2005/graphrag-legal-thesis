@@ -1,0 +1,59 @@
+{
+  "system": "b1",
+  "split": "test",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "588e28b89601d59494a395b7954214edf310d5267dc01c2784ecf5ae08bd15c0",
+  "raw_file_sha256": "9402f5ea7b866935f236a73a0305eaa102b8a8e2424c1a98ead865a7fbc6cf2d",
+  "model": "gpt-4o-mini-2024-07-18",
+  "revision": "gpt-4o-mini-2024-07-18",
+  "gpu": [
+    "api"
+  ],
+  "run_tag": "r1",
+  "served_models": {
+    "gpt-4o-mini-2024-07-18": 361
+  },
+  "system_fingerprints": {
+    "fp_c1f2277d8b": 115,
+    "fp_9fb70b4f64": 176,
+    "fp_9123aa2e8c": 13,
+    "fp_7e39a221d1": 36,
+    "fp_dbcd9f3637": 9,
+    "fp_9483e83037": 5,
+    "fp_9650d7bf2c": 7
+  },
+  "rows": 361,
+  "format_ok": 361,
+  "truncated": 0,
+  "prompt_tokens_mean": 298.55124653739614,
+  "completion_tokens_mean": 95.53185595567867,
+  "generation_seconds": 985.0612129009969,
+  "export": {
+    "system": "b1",
+    "spec": {
+      "name": "b1",
+      "layer": null,
+      "lexical": false,
+      "dense": false,
+      "rerank": false,
+      "temporal": "none",
+      "context": false,
+      "expand": 0,
+      "expand_edges": "none",
+      "verify": "off",
+      "k": 20,
+      "note": "B1 — the generator alone, no retrieval",
+      "repeal_note": false
+    },
+    "split": "test",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": null,
+    "embed_sha256": null,
+    "rows": 361,
+    "release_sha256": "5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "588e28b89601d59494a395b7954214edf310d5267dc01c2784ecf5ae08bd15c0"
+  }
+}

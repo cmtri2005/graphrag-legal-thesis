@@ -1,0 +1,56 @@
+{
+  "system": "b5",
+  "split": "test",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "9db758db92f963c9486a98b45a01fd4b05d0b10dca1f2bd8b4b562f156319c78",
+  "raw_file_sha256": "9301599a3dcff6b3b00992ef627f4cf295698797d42d0579e8274247cb83d4c0",
+  "model": "gpt-4o-mini-2024-07-18",
+  "revision": "gpt-4o-mini-2024-07-18",
+  "gpu": [
+    "api"
+  ],
+  "run_tag": "r1",
+  "served_models": {
+    "gpt-4o-mini-2024-07-18": 361
+  },
+  "system_fingerprints": {
+    "fp_3a3c79652c": 291,
+    "fp_48eea167bf": 63,
+    "fp_5a966493b3": 3,
+    "fp_9400314673": 4
+  },
+  "rows": 361,
+  "format_ok": 361,
+  "truncated": 0,
+  "prompt_tokens_mean": 4987.072022160665,
+  "completion_tokens_mean": 104.99168975069252,
+  "generation_seconds": 1084.8428124560232,
+  "export": {
+    "system": "b5",
+    "spec": {
+      "name": "b5",
+      "layer": "asis",
+      "lexical": true,
+      "dense": true,
+      "rerank": false,
+      "temporal": "none",
+      "context": true,
+      "expand": 1,
+      "expand_edges": "rel",
+      "verify": "off",
+      "k": 20,
+      "note": "B5 — non-temporal GraphRAG; reduced corpus, see the plan",
+      "repeal_note": false
+    },
+    "split": "test",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": "data/derived/embed/asis-vietnamese-embedding",
+    "embed_sha256": "3a8b143bd5e6307642b2f011020d3a7ed9b32599de7861ef992555343ee4915e",
+    "rows": 361,
+    "release_sha256": "5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "9db758db92f963c9486a98b45a01fd4b05d0b10dca1f2bd8b4b562f156319c78"
+  }
+}

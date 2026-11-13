@@ -1,0 +1,60 @@
+{
+  "system": "b3",
+  "split": "test",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "c5bcdb3a25a72c6e86cab9349003e2998b48d57f75dec5906b853516f1ab8611",
+  "raw_file_sha256": "e19adb67f052599fdec793000ad6526af9acb335bf4ca49706077487f26af83c",
+  "model": "gpt-4o-mini-2024-07-18",
+  "revision": "gpt-4o-mini-2024-07-18",
+  "gpu": [
+    "api"
+  ],
+  "run_tag": "r1",
+  "served_models": {
+    "gpt-4o-mini-2024-07-18": 361
+  },
+  "system_fingerprints": {
+    "fp_9400314673": 14,
+    "fp_3a3c79652c": 285,
+    "fp_48eea167bf": 23,
+    "fp_dbcd9f3637": 15,
+    "fp_e61d09ff08": 8,
+    "fp_092a91faee": 3,
+    "fp_7e39a221d1": 1,
+    "fp_5a966493b3": 12
+  },
+  "rows": 361,
+  "format_ok": 361,
+  "truncated": 0,
+  "prompt_tokens_mean": 4687.434903047091,
+  "completion_tokens_mean": 102.13296398891967,
+  "generation_seconds": 1130.9723113510663,
+  "export": {
+    "system": "b3",
+    "spec": {
+      "name": "b3",
+      "layer": "asis",
+      "lexical": false,
+      "dense": true,
+      "rerank": false,
+      "temporal": "none",
+      "context": true,
+      "expand": 0,
+      "expand_edges": "none",
+      "verify": "off",
+      "k": 20,
+      "note": "B3 — dense",
+      "repeal_note": false
+    },
+    "split": "test",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": "data/derived/embed/asis-vietnamese-embedding",
+    "embed_sha256": "3a8b143bd5e6307642b2f011020d3a7ed9b32599de7861ef992555343ee4915e",
+    "rows": 361,
+    "release_sha256": "5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "c5bcdb3a25a72c6e86cab9349003e2998b48d57f75dec5906b853516f1ab8611"
+  }
+}

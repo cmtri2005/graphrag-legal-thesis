@@ -1,0 +1,914 @@
+{
+ "split": "test",
+ "stability": {
+  "F1": {
+   "run1": "ủng hộ",
+   "run2": "ủng hộ",
+   "stable": true,
+   "final": "ủng hộ"
+  },
+  "F2": {
+   "run1": "ủng hộ",
+   "run2": "ủng hộ",
+   "stable": true,
+   "final": "ủng hộ"
+  },
+  "F3": {
+   "run1": "ủng hộ",
+   "run2": "ủng hộ",
+   "stable": true,
+   "final": "ủng hộ"
+  },
+  "F4": {
+   "run1": "ủng hộ",
+   "run2": "ủng hộ",
+   "stable": true,
+   "final": "ủng hộ"
+  },
+  "F5": {
+   "run1": "ủng hộ",
+   "run2": "ủng hộ",
+   "stable": true,
+   "final": "ủng hộ"
+  },
+  "F6": {
+   "run1": "ủng hộ",
+   "run2": "ủng hộ",
+   "stable": true,
+   "final": "ủng hộ"
+  },
+  "F7": {
+   "run1": "không đủ bằng chứng",
+   "run2": "không đủ bằng chứng",
+   "stable": true,
+   "final": "không đủ bằng chứng"
+  }
+ },
+ "flips": {
+  "b1": {
+   "all": {
+    "rows": 318,
+    "answer_changed": 223,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.7012578616352201
+   },
+   "all_answerable": {
+    "rows": 295,
+    "answer_changed": 204,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.6915254237288135
+   },
+   "t6": {
+    "rows": 46,
+    "answer_changed": 36,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.782608695652174
+   },
+   "t6_unanswerable": {
+    "rows": 23,
+    "answer_changed": 19,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.8260869565217391
+   },
+   "t6_ancestor": {
+    "rows": 9,
+    "answer_changed": 7,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.7777777777777778
+   },
+   "t2_near": {
+    "rows": 76,
+    "answer_changed": 47,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.618421052631579
+   },
+   "qsource_silver": {
+    "rows": 156,
+    "answer_changed": 106,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.6794871794871795
+   },
+   "qsource_new": {
+    "rows": 140,
+    "answer_changed": 97,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.6928571428571428
+   },
+   "qsource_supp": {
+    "rows": 22,
+    "answer_changed": 20,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.9090909090909091
+   },
+   "t1_control": {
+    "rows": 43,
+    "answer_changed": 30,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.6976744186046512
+   }
+  },
+  "b2ctx": {
+   "all": {
+    "rows": 318,
+    "answer_changed": 69,
+    "right_to_wrong": 5,
+    "wrong_to_right": 11,
+    "rate_changed": 0.2169811320754717
+   },
+   "all_answerable": {
+    "rows": 295,
+    "answer_changed": 66,
+    "right_to_wrong": 4,
+    "wrong_to_right": 10,
+    "rate_changed": 0.22372881355932203
+   },
+   "t6": {
+    "rows": 46,
+    "answer_changed": 7,
+    "right_to_wrong": 2,
+    "wrong_to_right": 1,
+    "rate_changed": 0.15217391304347827
+   },
+   "t6_unanswerable": {
+    "rows": 23,
+    "answer_changed": 3,
+    "right_to_wrong": 1,
+    "wrong_to_right": 1,
+    "rate_changed": 0.13043478260869565
+   },
+   "t6_ancestor": {
+    "rows": 9,
+    "answer_changed": 2,
+    "right_to_wrong": 1,
+    "wrong_to_right": 0,
+    "rate_changed": 0.2222222222222222
+   },
+   "t2_near": {
+    "rows": 76,
+    "answer_changed": 13,
+    "right_to_wrong": 1,
+    "wrong_to_right": 3,
+    "rate_changed": 0.17105263157894737
+   },
+   "qsource_silver": {
+    "rows": 156,
+    "answer_changed": 36,
+    "right_to_wrong": 1,
+    "wrong_to_right": 5,
+    "rate_changed": 0.23076923076923078
+   },
+   "qsource_new": {
+    "rows": 140,
+    "answer_changed": 32,
+    "right_to_wrong": 4,
+    "wrong_to_right": 6,
+    "rate_changed": 0.22857142857142856
+   },
+   "qsource_supp": {
+    "rows": 22,
+    "answer_changed": 1,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.045454545454545456
+   },
+   "t1_control": {
+    "rows": 43,
+    "answer_changed": 7,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.16279069767441862
+   }
+  },
+  "b3": {
+   "all": {
+    "rows": 318,
+    "answer_changed": 61,
+    "right_to_wrong": 4,
+    "wrong_to_right": 3,
+    "rate_changed": 0.1918238993710692
+   },
+   "all_answerable": {
+    "rows": 295,
+    "answer_changed": 56,
+    "right_to_wrong": 4,
+    "wrong_to_right": 3,
+    "rate_changed": 0.18983050847457628
+   },
+   "t6": {
+    "rows": 46,
+    "answer_changed": 7,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.15217391304347827
+   },
+   "t6_unanswerable": {
+    "rows": 23,
+    "answer_changed": 5,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.21739130434782608
+   },
+   "t6_ancestor": {
+    "rows": 9,
+    "answer_changed": 2,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.2222222222222222
+   },
+   "t2_near": {
+    "rows": 76,
+    "answer_changed": 14,
+    "right_to_wrong": 1,
+    "wrong_to_right": 0,
+    "rate_changed": 0.18421052631578946
+   },
+   "qsource_silver": {
+    "rows": 156,
+    "answer_changed": 33,
+    "right_to_wrong": 2,
+    "wrong_to_right": 3,
+    "rate_changed": 0.21153846153846154
+   },
+   "qsource_new": {
+    "rows": 140,
+    "answer_changed": 25,
+    "right_to_wrong": 2,
+    "wrong_to_right": 0,
+    "rate_changed": 0.17857142857142858
+   },
+   "qsource_supp": {
+    "rows": 22,
+    "answer_changed": 3,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.13636363636363635
+   },
+   "t1_control": {
+    "rows": 43,
+    "answer_changed": 8,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.18604651162790697
+   }
+  },
+  "b4": {
+   "all": {
+    "rows": 318,
+    "answer_changed": 49,
+    "right_to_wrong": 12,
+    "wrong_to_right": 1,
+    "rate_changed": 0.1540880503144654
+   },
+   "all_answerable": {
+    "rows": 295,
+    "answer_changed": 46,
+    "right_to_wrong": 11,
+    "wrong_to_right": 1,
+    "rate_changed": 0.15593220338983052
+   },
+   "t6": {
+    "rows": 46,
+    "answer_changed": 6,
+    "right_to_wrong": 2,
+    "wrong_to_right": 0,
+    "rate_changed": 0.13043478260869565
+   },
+   "t6_unanswerable": {
+    "rows": 23,
+    "answer_changed": 3,
+    "right_to_wrong": 1,
+    "wrong_to_right": 0,
+    "rate_changed": 0.13043478260869565
+   },
+   "t6_ancestor": {
+    "rows": 9,
+    "answer_changed": 1,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.1111111111111111
+   },
+   "t2_near": {
+    "rows": 76,
+    "answer_changed": 11,
+    "right_to_wrong": 3,
+    "wrong_to_right": 0,
+    "rate_changed": 0.14473684210526316
+   },
+   "qsource_silver": {
+    "rows": 156,
+    "answer_changed": 25,
+    "right_to_wrong": 6,
+    "wrong_to_right": 1,
+    "rate_changed": 0.16025641025641027
+   },
+   "qsource_new": {
+    "rows": 140,
+    "answer_changed": 21,
+    "right_to_wrong": 4,
+    "wrong_to_right": 0,
+    "rate_changed": 0.15
+   },
+   "qsource_supp": {
+    "rows": 22,
+    "answer_changed": 3,
+    "right_to_wrong": 2,
+    "wrong_to_right": 0,
+    "rate_changed": 0.13636363636363635
+   },
+   "t1_control": {
+    "rows": 43,
+    "answer_changed": 12,
+    "right_to_wrong": 1,
+    "wrong_to_right": 1,
+    "rate_changed": 0.27906976744186046
+   }
+  },
+  "b5": {
+   "all": {
+    "rows": 318,
+    "answer_changed": 58,
+    "right_to_wrong": 4,
+    "wrong_to_right": 4,
+    "rate_changed": 0.18238993710691823
+   },
+   "all_answerable": {
+    "rows": 295,
+    "answer_changed": 53,
+    "right_to_wrong": 4,
+    "wrong_to_right": 3,
+    "rate_changed": 0.17966101694915254
+   },
+   "t6": {
+    "rows": 46,
+    "answer_changed": 9,
+    "right_to_wrong": 0,
+    "wrong_to_right": 1,
+    "rate_changed": 0.1956521739130435
+   },
+   "t6_unanswerable": {
+    "rows": 23,
+    "answer_changed": 5,
+    "right_to_wrong": 0,
+    "wrong_to_right": 1,
+    "rate_changed": 0.21739130434782608
+   },
+   "t6_ancestor": {
+    "rows": 9,
+    "answer_changed": 3,
+    "right_to_wrong": 0,
+    "wrong_to_right": 1,
+    "rate_changed": 0.3333333333333333
+   },
+   "t2_near": {
+    "rows": 76,
+    "answer_changed": 11,
+    "right_to_wrong": 1,
+    "wrong_to_right": 0,
+    "rate_changed": 0.14473684210526316
+   },
+   "qsource_silver": {
+    "rows": 156,
+    "answer_changed": 34,
+    "right_to_wrong": 3,
+    "wrong_to_right": 3,
+    "rate_changed": 0.21794871794871795
+   },
+   "qsource_new": {
+    "rows": 140,
+    "answer_changed": 21,
+    "right_to_wrong": 1,
+    "wrong_to_right": 1,
+    "rate_changed": 0.15
+   },
+   "qsource_supp": {
+    "rows": 22,
+    "answer_changed": 3,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.13636363636363635
+   },
+   "t1_control": {
+    "rows": 43,
+    "answer_changed": 10,
+    "right_to_wrong": 0,
+    "wrong_to_right": 1,
+    "rate_changed": 0.23255813953488372
+   }
+  },
+  "b6": {
+   "all": {
+    "rows": 318,
+    "answer_changed": 66,
+    "right_to_wrong": 8,
+    "wrong_to_right": 3,
+    "rate_changed": 0.20754716981132076
+   },
+   "all_answerable": {
+    "rows": 295,
+    "answer_changed": 60,
+    "right_to_wrong": 8,
+    "wrong_to_right": 3,
+    "rate_changed": 0.2033898305084746
+   },
+   "t6": {
+    "rows": 46,
+    "answer_changed": 8,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.17391304347826086
+   },
+   "t6_unanswerable": {
+    "rows": 23,
+    "answer_changed": 6,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.2608695652173913
+   },
+   "t6_ancestor": {
+    "rows": 9,
+    "answer_changed": 2,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.2222222222222222
+   },
+   "t2_near": {
+    "rows": 76,
+    "answer_changed": 18,
+    "right_to_wrong": 2,
+    "wrong_to_right": 0,
+    "rate_changed": 0.23684210526315788
+   },
+   "qsource_silver": {
+    "rows": 156,
+    "answer_changed": 28,
+    "right_to_wrong": 5,
+    "wrong_to_right": 2,
+    "rate_changed": 0.1794871794871795
+   },
+   "qsource_new": {
+    "rows": 140,
+    "answer_changed": 33,
+    "right_to_wrong": 2,
+    "wrong_to_right": 1,
+    "rate_changed": 0.2357142857142857
+   },
+   "qsource_supp": {
+    "rows": 22,
+    "answer_changed": 5,
+    "right_to_wrong": 1,
+    "wrong_to_right": 0,
+    "rate_changed": 0.22727272727272727
+   },
+   "t1_control": {
+    "rows": 43,
+    "answer_changed": 8,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.18604651162790697
+   }
+  },
+  "b7": {
+   "all": {
+    "rows": 318,
+    "answer_changed": 62,
+    "right_to_wrong": 1,
+    "wrong_to_right": 8,
+    "rate_changed": 0.1949685534591195
+   },
+   "all_answerable": {
+    "rows": 295,
+    "answer_changed": 58,
+    "right_to_wrong": 1,
+    "wrong_to_right": 8,
+    "rate_changed": 0.19661016949152543
+   },
+   "t6": {
+    "rows": 46,
+    "answer_changed": 9,
+    "right_to_wrong": 0,
+    "wrong_to_right": 1,
+    "rate_changed": 0.1956521739130435
+   },
+   "t6_unanswerable": {
+    "rows": 23,
+    "answer_changed": 4,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.17391304347826086
+   },
+   "t6_ancestor": {
+    "rows": 9,
+    "answer_changed": 1,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.1111111111111111
+   },
+   "t2_near": {
+    "rows": 76,
+    "answer_changed": 10,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.13157894736842105
+   },
+   "qsource_silver": {
+    "rows": 156,
+    "answer_changed": 30,
+    "right_to_wrong": 0,
+    "wrong_to_right": 5,
+    "rate_changed": 0.19230769230769232
+   },
+   "qsource_new": {
+    "rows": 140,
+    "answer_changed": 24,
+    "right_to_wrong": 1,
+    "wrong_to_right": 2,
+    "rate_changed": 0.17142857142857143
+   },
+   "qsource_supp": {
+    "rows": 22,
+    "answer_changed": 8,
+    "right_to_wrong": 0,
+    "wrong_to_right": 1,
+    "rate_changed": 0.36363636363636365
+   },
+   "t1_control": {
+    "rows": 43,
+    "answer_changed": 5,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.11627906976744186
+   }
+  },
+  "b7plus": {
+   "all": {
+    "rows": 318,
+    "answer_changed": 61,
+    "right_to_wrong": 4,
+    "wrong_to_right": 3,
+    "rate_changed": 0.1918238993710692
+   },
+   "all_answerable": {
+    "rows": 295,
+    "answer_changed": 54,
+    "right_to_wrong": 3,
+    "wrong_to_right": 2,
+    "rate_changed": 0.18305084745762712
+   },
+   "t6": {
+    "rows": 46,
+    "answer_changed": 13,
+    "right_to_wrong": 2,
+    "wrong_to_right": 1,
+    "rate_changed": 0.2826086956521739
+   },
+   "t6_unanswerable": {
+    "rows": 23,
+    "answer_changed": 7,
+    "right_to_wrong": 1,
+    "wrong_to_right": 1,
+    "rate_changed": 0.30434782608695654
+   },
+   "t6_ancestor": {
+    "rows": 9,
+    "answer_changed": 1,
+    "right_to_wrong": 0,
+    "wrong_to_right": 1,
+    "rate_changed": 0.1111111111111111
+   },
+   "t2_near": {
+    "rows": 76,
+    "answer_changed": 10,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.13157894736842105
+   },
+   "qsource_silver": {
+    "rows": 156,
+    "answer_changed": 22,
+    "right_to_wrong": 2,
+    "wrong_to_right": 1,
+    "rate_changed": 0.14102564102564102
+   },
+   "qsource_new": {
+    "rows": 140,
+    "answer_changed": 29,
+    "right_to_wrong": 1,
+    "wrong_to_right": 1,
+    "rate_changed": 0.20714285714285716
+   },
+   "qsource_supp": {
+    "rows": 22,
+    "answer_changed": 10,
+    "right_to_wrong": 1,
+    "wrong_to_right": 1,
+    "rate_changed": 0.45454545454545453
+   },
+   "t1_control": {
+    "rows": 43,
+    "answer_changed": 4,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.09302325581395349
+   }
+  },
+  "b7pp": {
+   "all": {
+    "rows": 318,
+    "answer_changed": 58,
+    "right_to_wrong": 1,
+    "wrong_to_right": 3,
+    "rate_changed": 0.18238993710691823
+   },
+   "all_answerable": {
+    "rows": 295,
+    "answer_changed": 53,
+    "right_to_wrong": 1,
+    "wrong_to_right": 2,
+    "rate_changed": 0.17966101694915254
+   },
+   "t6": {
+    "rows": 46,
+    "answer_changed": 9,
+    "right_to_wrong": 0,
+    "wrong_to_right": 2,
+    "rate_changed": 0.1956521739130435
+   },
+   "t6_unanswerable": {
+    "rows": 23,
+    "answer_changed": 5,
+    "right_to_wrong": 0,
+    "wrong_to_right": 1,
+    "rate_changed": 0.21739130434782608
+   },
+   "t6_ancestor": {
+    "rows": 9,
+    "answer_changed": 2,
+    "right_to_wrong": 0,
+    "wrong_to_right": 1,
+    "rate_changed": 0.2222222222222222
+   },
+   "t2_near": {
+    "rows": 76,
+    "answer_changed": 14,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.18421052631578946
+   },
+   "qsource_silver": {
+    "rows": 156,
+    "answer_changed": 20,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.1282051282051282
+   },
+   "qsource_new": {
+    "rows": 140,
+    "answer_changed": 30,
+    "right_to_wrong": 1,
+    "wrong_to_right": 2,
+    "rate_changed": 0.21428571428571427
+   },
+   "qsource_supp": {
+    "rows": 22,
+    "answer_changed": 8,
+    "right_to_wrong": 0,
+    "wrong_to_right": 1,
+    "rate_changed": 0.36363636363636365
+   },
+   "t1_control": {
+    "rows": 43,
+    "answer_changed": 8,
+    "right_to_wrong": 0,
+    "wrong_to_right": 1,
+    "rate_changed": 0.18604651162790697
+   }
+  },
+  "oracle": {
+   "all": {
+    "rows": 318,
+    "answer_changed": 12,
+    "right_to_wrong": 0,
+    "wrong_to_right": 1,
+    "rate_changed": 0.03773584905660377
+   },
+   "all_answerable": {
+    "rows": 295,
+    "answer_changed": 11,
+    "right_to_wrong": 0,
+    "wrong_to_right": 1,
+    "rate_changed": 0.03728813559322034
+   },
+   "t6": {
+    "rows": 46,
+    "answer_changed": 2,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.043478260869565216
+   },
+   "t6_unanswerable": {
+    "rows": 23,
+    "answer_changed": 1,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.043478260869565216
+   },
+   "t6_ancestor": {
+    "rows": 9,
+    "answer_changed": 0,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.0
+   },
+   "t2_near": {
+    "rows": 76,
+    "answer_changed": 3,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.039473684210526314
+   },
+   "qsource_silver": {
+    "rows": 156,
+    "answer_changed": 8,
+    "right_to_wrong": 0,
+    "wrong_to_right": 1,
+    "rate_changed": 0.05128205128205128
+   },
+   "qsource_new": {
+    "rows": 140,
+    "answer_changed": 3,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.02142857142857143
+   },
+   "qsource_supp": {
+    "rows": 22,
+    "answer_changed": 1,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.045454545454545456
+   },
+   "t1_control": {
+    "rows": 43,
+    "answer_changed": 1,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.023255813953488372
+   }
+  },
+  "oracle_now": {
+   "all": {
+    "rows": 318,
+    "answer_changed": 21,
+    "right_to_wrong": 1,
+    "wrong_to_right": 1,
+    "rate_changed": 0.0660377358490566
+   },
+   "all_answerable": {
+    "rows": 295,
+    "answer_changed": 19,
+    "right_to_wrong": 1,
+    "wrong_to_right": 1,
+    "rate_changed": 0.06440677966101695
+   },
+   "t6": {
+    "rows": 46,
+    "answer_changed": 4,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.08695652173913043
+   },
+   "t6_unanswerable": {
+    "rows": 23,
+    "answer_changed": 2,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.08695652173913043
+   },
+   "t6_ancestor": {
+    "rows": 9,
+    "answer_changed": 0,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.0
+   },
+   "t2_near": {
+    "rows": 76,
+    "answer_changed": 7,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.09210526315789473
+   },
+   "qsource_silver": {
+    "rows": 156,
+    "answer_changed": 13,
+    "right_to_wrong": 1,
+    "wrong_to_right": 1,
+    "rate_changed": 0.08333333333333333
+   },
+   "qsource_new": {
+    "rows": 140,
+    "answer_changed": 7,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.05
+   },
+   "qsource_supp": {
+    "rows": 22,
+    "answer_changed": 1,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.045454545454545456
+   },
+   "t1_control": {
+    "rows": 43,
+    "answer_changed": 0,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.0
+   }
+  },
+  "proposed2": {
+   "all": {
+    "rows": 318,
+    "answer_changed": 39,
+    "right_to_wrong": 3,
+    "wrong_to_right": 1,
+    "rate_changed": 0.12264150943396226
+   },
+   "all_answerable": {
+    "rows": 295,
+    "answer_changed": 38,
+    "right_to_wrong": 3,
+    "wrong_to_right": 1,
+    "rate_changed": 0.1288135593220339
+   },
+   "t6": {
+    "rows": 46,
+    "answer_changed": 3,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.06521739130434782
+   },
+   "t6_unanswerable": {
+    "rows": 23,
+    "answer_changed": 1,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.043478260869565216
+   },
+   "t6_ancestor": {
+    "rows": 9,
+    "answer_changed": 0,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.0
+   },
+   "t2_near": {
+    "rows": 76,
+    "answer_changed": 16,
+    "right_to_wrong": 2,
+    "wrong_to_right": 0,
+    "rate_changed": 0.21052631578947367
+   },
+   "qsource_silver": {
+    "rows": 156,
+    "answer_changed": 12,
+    "right_to_wrong": 1,
+    "wrong_to_right": 0,
+    "rate_changed": 0.07692307692307693
+   },
+   "qsource_new": {
+    "rows": 140,
+    "answer_changed": 25,
+    "right_to_wrong": 1,
+    "wrong_to_right": 1,
+    "rate_changed": 0.17857142857142858
+   },
+   "qsource_supp": {
+    "rows": 22,
+    "answer_changed": 2,
+    "right_to_wrong": 1,
+    "wrong_to_right": 0,
+    "rate_changed": 0.09090909090909091
+   },
+   "t1_control": {
+    "rows": 43,
+    "answer_changed": 9,
+    "right_to_wrong": 0,
+    "wrong_to_right": 0,
+    "rate_changed": 0.20930232558139536
+   }
+  }
+ },
+ "only_in_one_run": []
+}

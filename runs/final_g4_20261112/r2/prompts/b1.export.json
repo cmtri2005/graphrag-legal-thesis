@@ -1,0 +1,28 @@
+{
+  "system": "b1",
+  "spec": {
+    "name": "b1",
+    "layer": null,
+    "lexical": false,
+    "dense": false,
+    "rerank": false,
+    "temporal": "none",
+    "context": false,
+    "expand": 0,
+    "expand_edges": "none",
+    "verify": "off",
+    "k": 20,
+    "note": "B1 — the generator alone, no retrieval",
+    "repeal_note": false
+  },
+  "split": "test",
+  "as_of_strategy": "giua_khoang",
+  "no_dense": false,
+  "hybrid": true,
+  "embed": null,
+  "embed_sha256": null,
+  "rows": 361,
+  "release_sha256": "5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c",
+  "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+  "prompt_file_sha256": "588e28b89601d59494a395b7954214edf310d5267dc01c2784ecf5ae08bd15c0"
+}

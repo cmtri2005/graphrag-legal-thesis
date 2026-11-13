@@ -1,0 +1,500 @@
+{
+ "split": "test",
+ "draws": 10000,
+ "tests_run": 7,
+ "family": "final",
+ "family_size": 7,
+ "proposed": "proposed2",
+ "test_definitions": [
+  [
+   "F1",
+   "RQ2: lai ghép",
+   "paired",
+   "accuracy",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b4",
+    "proposed2"
+   ],
+   1
+  ],
+  [
+   "F2",
+   "RQ2: đồ thị phi thời gian",
+   "paired",
+   "accuracy",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b5",
+    "proposed2"
+   ],
+   1
+  ],
+  [
+   "F3",
+   "RQ2: lỗi sai phiên bản",
+   "paired",
+   "wrong_version",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b4",
+    "proposed2"
+   ],
+   -1
+  ],
+  [
+   "F4",
+   "RQ3: lọc văn bản",
+   "paired",
+   "tv_recall@1",
+   [
+    "all_answerable"
+   ],
+   "retrieval",
+   [
+    "b2ctx",
+    "b7"
+   ],
+   1
+  ],
+  [
+   "F5",
+   "RQ3: phiên bản",
+   "paired",
+   "tv_recall@1",
+   [
+    "all_answerable"
+   ],
+   "retrieval",
+   [
+    "b7",
+    "b7plus"
+   ],
+   1
+  ],
+  [
+   "F6",
+   "H0: truy xuất",
+   "paired",
+   "tv_recall@1",
+   [
+    "all_answerable"
+   ],
+   "retrieval",
+   [
+    "b7",
+    "b7pp"
+   ],
+   1
+  ],
+  [
+   "F7",
+   "T6: không đáp án",
+   "paired",
+   "accuracy",
+   [
+    "t6_unanswerable"
+   ],
+   "generation",
+   [
+    "b7pp",
+    "proposed2"
+   ],
+   1
+  ],
+  [
+   "F8",
+   "Nhất quán nội bộ: TVER",
+   "paired",
+   "tver",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b7",
+    "b7pp"
+   ],
+   -1
+  ]
+ ],
+ "exploratory": [
+  "F8"
+ ],
+ "family_note": null,
+ "files": {
+  "generation/b4": {
+   "path": "runs/final_g4_20261112/r1/test/b4.jsonl",
+   "sha256": "f633e5650f5f3e0e0ad7ea3c1cc696405bd508c7808b6473ca0dcf96131b41a3"
+  },
+  "generation/proposed2": {
+   "path": "runs/final_g4_20261112/r1/test/proposed2.jsonl",
+   "sha256": "45723f8a2a3ee0e6115885b4613a9d1622f77e5e808042ac5f77dcf0deaf3a02"
+  },
+  "generation/b5": {
+   "path": "runs/final_g4_20261112/r1/test/b5.jsonl",
+   "sha256": "0cd2ed1691f77109ebf84bd8ef9d22c2595f0b2aca89b352ddc4826ef3d31ff8"
+  },
+  "retrieval/b2ctx": {
+   "path": "runs/final_g4_20261112/retrieval/b2ctx.jsonl",
+   "sha256": "a765020c1b86b0ce4d3ccd80985b89a389121025afada851d5aab7d6dbc42a9a"
+  },
+  "retrieval/b7": {
+   "path": "runs/final_g4_20261112/retrieval/b7.jsonl",
+   "sha256": "9145487a50eb2160ee42185fddb264dd7768d5394935afbb6f6e9ba5041f1f56"
+  },
+  "retrieval/b7plus": {
+   "path": "runs/final_g4_20261112/retrieval/b7plus.jsonl",
+   "sha256": "2f87b3610494beac4aaa04815f557777042e1625ca544b909c640d297d8122c5"
+  },
+  "retrieval/b7pp": {
+   "path": "runs/final_g4_20261112/retrieval/b7pp.jsonl",
+   "sha256": "71c6625cc3bfafc0451993c6dfa3375ade306e2b39e37c4ab2536a083b0b7805"
+  },
+  "generation/b7pp": {
+   "path": "runs/final_g4_20261112/r1/test/b7pp.jsonl",
+   "sha256": "3cf48df80f65e0025f353113ba996f585a19db48db5a715e01f23f01c9228461"
+  },
+  "generation/b7": {
+   "path": "runs/final_g4_20261112/r1/test/b7.jsonl",
+   "sha256": "93e13c13a70a8917e0c4ddeacc5c4e6ed81b4624c073392d465bede5400c74dd"
+  },
+  "generation/b1": {
+   "path": "runs/final_g4_20261112/r1/test/b1.jsonl",
+   "sha256": "52c6dd3380c18c2fa26b187ee846117489ae51cad8f13779c062ed61f50aae00"
+  },
+  "generation/b2ctx": {
+   "path": "runs/final_g4_20261112/r1/test/b2ctx.jsonl",
+   "sha256": "f277241993b17cceaab5ad8ed1e97cae08ed041e5692b3110fc402621344fb95"
+  },
+  "generation/b3": {
+   "path": "runs/final_g4_20261112/r1/test/b3.jsonl",
+   "sha256": "68d30e09f87cc6d111b3687a2059049ca17738e4afda889b8d80e0843631ada5"
+  },
+  "generation/b6": {
+   "path": "runs/final_g4_20261112/r1/test/b6.jsonl",
+   "sha256": "2e6deec6ea1735a4c30d113878fdde4b5d029f7db30e5d26f76d980220f93003"
+  },
+  "generation/b7plus": {
+   "path": "runs/final_g4_20261112/r1/test/b7plus.jsonl",
+   "sha256": "49ad1e8ba83ff3bf95e29c446b36789c7d46b03e7e000b79bbf5c29e33bb8bdd"
+  },
+  "generation/oracle": {
+   "path": "runs/final_g4_20261112/r1/test/oracle.jsonl",
+   "sha256": "1357ad31b94e9b95fd2277665190725c9bf2500b4ad782156398ba48430baf74"
+  },
+  "generation/oracle_now": {
+   "path": "runs/final_g4_20261112/r1/test/oracle_now.jsonl",
+   "sha256": "23dc7e3bee87eeed6f96ba4e36ee4cfef543abac9aa12a17b0984e5026af4e33"
+  }
+ },
+ "t1_no_harm": {
+  "delta": 0.05,
+  "rows": 43,
+  "lineages": 43,
+  "diff": {
+   "proposed2": {
+    "estimate": 0.023255813953488372,
+    "ci95": [
+     -0.06976744186046513,
+     0.11627906976744187
+    ],
+    "p": 0.8266,
+    "rows": {
+     "t1_control": 43
+    },
+    "lineages": {
+     "t1_control": 43
+    },
+    "verdict": "không chứng minh được không làm hại"
+   },
+   "b7": {
+    "estimate": 0.023255813953488372,
+    "ci95": [
+     -0.06976744186046512,
+     0.11627906976744187
+    ],
+    "p": 0.8234,
+    "rows": {
+     "t1_control": 43
+    },
+    "lineages": {
+     "t1_control": 43
+    },
+    "verdict": "không chứng minh được không làm hại"
+   },
+   "b7pp": {
+    "estimate": 0.0,
+    "ci95": [
+     -0.09302325581395349,
+     0.09302325581395349
+    ],
+    "p": 1.0,
+    "rows": {
+     "t1_control": 43
+    },
+    "lineages": {
+     "t1_control": 43
+    },
+    "verdict": "không chứng minh được không làm hại"
+   }
+  },
+  "false_expired": {
+   "b1": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   },
+   "b2ctx": {
+    "count": 11,
+    "rows": 43,
+    "rate": 0.2558139534883721,
+    "wilson95": [
+     0.14929517123808245,
+     0.40238403498846675
+    ]
+   },
+   "b3": {
+    "count": 5,
+    "rows": 43,
+    "rate": 0.11627906976744186,
+    "wilson95": [
+     0.05070427739804166,
+     0.24479161810082128
+    ]
+   },
+   "b4": {
+    "count": 6,
+    "rows": 43,
+    "rate": 0.13953488372093023,
+    "wilson95": [
+     0.06555723427964878,
+     0.2726358796738286
+    ]
+   },
+   "b5": {
+    "count": 7,
+    "rows": 43,
+    "rate": 0.16279069767441862,
+    "wilson95": [
+     0.08116627347062008,
+     0.29972405893747167
+    ]
+   },
+   "b6": {
+    "count": 9,
+    "rows": 43,
+    "rate": 0.20930232558139536,
+    "wilson95": [
+     0.11422834220995602,
+     0.3520564271073644
+    ]
+   },
+   "b7": {
+    "count": 1,
+    "rows": 43,
+    "rate": 0.023255813953488372,
+    "wilson95": [
+     0.004117087274333769,
+     0.12058993440607177
+    ]
+   },
+   "b7plus": {
+    "count": 1,
+    "rows": 43,
+    "rate": 0.023255813953488372,
+    "wilson95": [
+     0.004117087274333769,
+     0.12058993440607177
+    ]
+   },
+   "b7pp": {
+    "count": 1,
+    "rows": 43,
+    "rate": 0.023255813953488372,
+    "wilson95": [
+     0.004117087274333769,
+     0.12058993440607177
+    ]
+   },
+   "oracle": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   },
+   "oracle_now": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   },
+   "proposed2": {
+    "count": 1,
+    "rows": 43,
+    "rate": 0.023255813953488372,
+    "wilson95": [
+     0.004117087274333769,
+     0.12058993440607177
+    ]
+   }
+  }
+ },
+ "results": {
+  "F1": {
+   "estimate": 0.34276729559748426,
+   "ci95": [
+    0.28343949044585987,
+    0.40123505166608614
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 318
+   },
+   "lineages": {
+    "all": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F2": {
+   "estimate": 0.3553459119496855,
+   "ci95": [
+    0.296875,
+    0.41433588666745524
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 318
+   },
+   "lineages": {
+    "all": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F3": {
+   "estimate": -0.2830188679245283,
+   "ci95": [
+    -0.32958801498127344,
+    -0.2369451490171211
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 318
+   },
+   "lineages": {
+    "all": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": -1
+  },
+  "F4": {
+   "estimate": 0.07796610169491527,
+   "ci95": [
+    0.04878048780487804,
+    0.11034540422096646
+   ],
+   "p": 0.0,
+   "rows": {
+    "all_answerable": 295
+   },
+   "lineages": {
+    "all_answerable": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F5": {
+   "estimate": 0.11525423728813558,
+   "ci95": [
+    0.07560137457044674,
+    0.15593220338983052
+   ],
+   "p": 0.0,
+   "rows": {
+    "all_answerable": 295
+   },
+   "lineages": {
+    "all_answerable": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F6": {
+   "estimate": 0.11525423728813558,
+   "ci95": [
+    0.07560137457044674,
+    0.1559322033898305
+   ],
+   "p": 0.0,
+   "rows": {
+    "all_answerable": 295
+   },
+   "lineages": {
+    "all_answerable": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F7": {
+   "estimate": 0.08695652173913046,
+   "ci95": [
+    0.0,
+    0.2173913043478261
+   ],
+   "p": 0.26,
+   "rows": {
+    "t6_unanswerable": 23
+   },
+   "lineages": {
+    "t6_unanswerable": 23
+   },
+   "p_holm": 0.26,
+   "verdict": "không đủ bằng chứng",
+   "predicted": 1
+  },
+  "F8": {
+   "estimate": -0.24842767295597484,
+   "ci95": [
+    -0.2884012539184953,
+    -0.2095238095238095
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 318
+   },
+   "lineages": {
+    "all": 156
+   },
+   "p_holm": null,
+   "verdict": "thăm dò",
+   "predicted": -1
+  }
+ }
+}
