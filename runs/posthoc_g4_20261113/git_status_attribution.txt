@@ -1,0 +1,19 @@
+ M docs/plans/active/master-plan.md
+ M runs/README.md
+ M scripts/eval/colab_b1.py
+ M scripts/eval/run_vilextime.py
+ M src/vilexgraph/framework/generate.py
+ M src/vilexgraph/framework/systems.py
+ M tests/test_rag_generate.py
+ M tests/test_rag_systems.py
+?? docs/plans/active/REFACTOR_PLAN.md
+?? docs/reports/research-audit-20261113.md
+?? runs/final_g4_20261112/retrieval.sqlite
+?? runs/final_rehearsal_g3_20261112/r1/retrieval.sqlite
+?? runs/final_rehearsal_g3_20261112/retrieval.sqlite
+?? runs/final_rehearsal_g3_20261112/retrieval_b7.sqlite
+?? runs/final_rehearsal_g3_20261112/retrieval_b7plus.sqlite
+?? runs/final_rehearsal_g3_20261112/retrieval_b7pp.sqlite
+?? runs/posthoc_g4_20261113/
+?? scripts/eval/posthoc_g4.py
+?? tests/test_posthoc_g4.py

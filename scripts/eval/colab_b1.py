@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from vilexgraph.framework import generate, systems, verify  # noqa: E402
 from vilexgraph.framework.corpus import Corpus  # noqa: E402
 from vilexgraph.framework.graphx import repeal_notes  # noqa: E402
+from vilexgraph.framework.temporal import windows_for  # noqa: E402
 from run_vilextime import INDEX, embed_dir, RELEASE, queries, retriever  # noqa: E402
 
 
@@ -110,7 +111,9 @@ def export_prompts(args) -> None:
                                                    with_context=spec.context,
                                                    repeal_notes=repeal_notes(
                                                        corpus, spec, q.question, q.as_of, hits,
-                                                       seed_search=getattr(search, "seeds", None)))
+                                                       seed_search=getattr(search, "seeds", None)),
+                                                   validity={u.unit_id: windows_for(corpus, u.unit_id, "propagated")
+                                                             for u in units} if spec.validity_note else None)
         row = {"id": q.id, "system": system, "user": user, "ids": ids,
                "retrieved": retrieved}
         if name != "b2ctx" or getattr(args, "b2", False):

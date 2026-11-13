@@ -123,3 +123,14 @@ def test_proposed3_only_enables_repeal_note():
     assert {k for k in old if old[k] != new[k]} == {"name", "repeal_note"}
     assert new["repeal_note"] is True
     assert all(not s.repeal_note for n, s in REGISTRY.items() if n != "proposed3")
+
+
+def test_posthoc_baselines_read_the_version_store_without_a_filter():
+    from vilexgraph.framework import systems
+    none, date = systems.get("bvnone"), systems.get("bvdate")
+    assert (none.layer, none.temporal, none.expand, none.verify) == ("version", "none", 0, "off")
+    assert date.validity_note and not none.validity_note
+    assert date.variant("x", validity_note=False) == none.variant("x", note=date.note)
+    assert not set(systems.POSTHOC) & (set(systems.FINAL_GENERATION) | set(systems.DEV_ONLY))
+    with pytest.raises(systems.SystemError_):
+        systems.SystemSpec(name="bad", layer="asis", lexical=True, validity_note=True)

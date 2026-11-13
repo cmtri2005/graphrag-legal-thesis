@@ -190,3 +190,14 @@ def test_no_gold_field_can_reach_the_prompt(tmp_path: Path, monkeypatch) -> None
 
 def test_query_exposes_only_three_fields() -> None:
     assert list(run_vilextime.Query.__slots__) == ["id", "question", "as_of"]
+
+
+def test_validity_lines_follow_each_block_and_are_half_open():
+    _, user, _ = generate.build_prompt(
+        "q", "2024-05-01", [unit(1), unit(2)], with_context=False,
+        validity={unit(1).unit_id: [("2020-01-01", "2023-07-01")], unit(2).unit_id: [("2023-07-01", None)]})
+    assert "(Hiệu lực của đoạn này: từ 2020-01-01 đến trước 2023-07-01)" in user
+    assert "(Hiệu lực của đoạn này: từ 2023-07-01, chưa có ngày kết thúc)" in user
+    assert generate.validity_line([]) == "(Hiệu lực của đoạn này: không có khoảng hiệu lực nào)"
+    # mặc định không đổi prompt của các hệ đã khóa
+    assert "Hiệu lực của đoạn này" not in generate.build_prompt("q", "2024-05-01", [unit(1)], with_context=False)[1]

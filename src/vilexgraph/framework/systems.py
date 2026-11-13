@@ -51,6 +51,7 @@ class SystemSpec:
     k: int = 20
     note: str = ""
     repeal_note: bool = False         # graph-derived repeal links in the user prompt (X2)
+    validity_note: bool = False       # each unit's propagated windows printed in the prompt (post hoc, 13/11)
 
     def __post_init__(self) -> None:
         if self.temporal not in TIERS:
@@ -70,6 +71,8 @@ class SystemSpec:
             raise SystemError_(
                 f"{self.name}: tier {self.temporal!r} needs layer 'version' — layer A units "
                 f"carry no version window, so the filter would reject every candidate")
+        if self.validity_note and self.layer != "version":
+            raise SystemError_(f"{self.name}: validity_note needs layer 'version' — only versions carry windows")
         if self.expand_edges == "rel_up" and self.temporal != "propagated":
             raise SystemError_(f"{self.name}: rel_up needs tier propagated")
         if self.expand and self.expand_edges == "none":
@@ -95,6 +98,11 @@ _B7PLUS = SystemSpec(name="b7plus", layer="version", lexical=True, dense=True, r
                      note="B7+ — version-level filter; the proposed system minus the online graph")
 
 _PROPOSED2 = _PROPOSED.variant("proposed2", rerank=False, expand_edges="rel_up")
+# Post hoc, after the final test was seen (REFACTOR_PLAN 2.6): a flat RAG that reads the same version
+# store. `bvnone` gets the consolidated wordings but no filter; `bvdate` also shows each unit's
+# windows and leaves the choice to the generator. Exploratory only, never part of FINAL_GENERATION.
+_BVNONE = SystemSpec(name="bvnone", layer="version", lexical=True, dense=True, context=True,
+                     note="post hoc — layer B, no temporal filter: flat RAG over the version store")
 
 REGISTRY: dict[str, SystemSpec] = {s.name: s for s in (
     SystemSpec(name="b1", note="B1 — the generator alone, no retrieval"),
@@ -123,6 +131,9 @@ REGISTRY: dict[str, SystemSpec] = {s.name: s for s in (
     _PROPOSED2.variant("proposed3", repeal_note=True),
     _PROPOSED2.variant("p2a2", expand=0, expand_edges="none"),
     _PROPOSED2.variant("p2a3", verify="off"),
+    _BVNONE,
+    _BVNONE.variant("bvdate", validity_note=True,
+                    note="post hoc — bvnone with each unit's validity windows printed in the prompt"),
     _PROPOSED.variant("a1", temporal="none", note="A1 — drop the effectivity constraint"),
     _PROPOSED.variant("a2", expand=0, expand_edges="none", note="A2 — drop graph expansion"),
     _PROPOSED.variant("a3", verify="off", note="A3 — drop the Temporal Verifier"),
@@ -145,6 +156,8 @@ ORACLES = ("oracle", "oracle_now")
 FINAL_GENERATION = ("b1", "b2ctx", "b3", "b4", "b5", "b6", "b7", "b7plus", "b7pp", *ORACLES)
 #: Dev only: the two candidates for P, and the two descriptive component drops.
 DEV_ONLY = ("proposed2", "proposed3", "p2a2", "p2a3")
+#: Exploratory baselines added after the final test was seen; reported apart from the locked table.
+POSTHOC = ("bvnone", "bvdate")
 
 
 def get(name: str) -> SystemSpec:

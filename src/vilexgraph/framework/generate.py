@@ -121,13 +121,26 @@ class Answer:
     completion_tokens: int | None = None
 
 
+def validity_line(windows) -> str:
+    """Half-open windows `[(start, end or None), ...]` as one prompt line (`bvdate`, post hoc 13/11)."""
+    spans = "; ".join(f"từ {start} đến trước {end}" if end else f"từ {start}, chưa có ngày kết thúc"
+                      for start, end in windows if start)
+    return f"(Hiệu lực của đoạn này: {spans or 'không có khoảng hiệu lực nào'})"
+
+
 def build_prompt(question: str, as_of: str, units, *, with_context: bool,
-                 repeal_notes=()) -> tuple[str, str, list[str]]:
-    """The two messages, and the unit id each `[n]` stands for."""
+                 repeal_notes=(), validity=None) -> tuple[str, str, list[str]]:
+    """The two messages, and the unit id each `[n]` stands for.
+
+    `validity` maps a unit id to its windows; when given, each block ends with them.
+    """
     blocks, ids = [], []
     for n, unit in enumerate(units, 1):
         ids.append(unit.unit_id)
-        blocks.append(f"[{n}] {unit.retrieval_text(with_context)}".strip())
+        block = f"[{n}] {unit.retrieval_text(with_context)}".strip()
+        if validity is not None:
+            block += "\n" + validity_line(validity.get(unit.unit_id, ()))
+        blocks.append(block)
     body = "\n\n".join(blocks) if blocks else "(không có)"
     user = USER.format(as_of=as_of, question=question, body=body)
     lines = [note.prompt_line(ids.index(note.unit_id) + 1) for note in repeal_notes

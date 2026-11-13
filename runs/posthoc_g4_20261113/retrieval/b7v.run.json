@@ -1,0 +1,61 @@
+[
+ {
+  "spec": {
+   "name": "b7v-lex",
+   "layer": "version",
+   "lexical": true,
+   "dense": false,
+   "rerank": false,
+   "temporal": "document",
+   "context": true,
+   "expand": 0,
+   "expand_edges": "none",
+   "verify": "off",
+   "k": 20,
+   "note": "B7 over layer B: consolidated version texts, still the document filter. Separates the wording L3 consolidated from the version window (K-07)",
+   "repeal_note": false
+  },
+  "as_of_strategy": "giua_khoang",
+  "embed": null,
+  "argv": [
+   "--system",
+   "b7v",
+   "--no-dense",
+   "--retrieval-only",
+   "--split",
+   "test",
+   "--as-of-strategy",
+   "giua_khoang",
+   "--release",
+   "data/vilextime_final/vilextime.jsonl",
+   "--hits-cache",
+   "runs/posthoc_g4_20261113/retrieval.sqlite",
+   "--out",
+   "runs/posthoc_g4_20261113/retrieval/b7v.jsonl"
+  ],
+  "commit": "7b6360bc24d63cfc0ad937de67976a8bcdf9d064",
+  "uncommitted": null,
+  "release_sha256": "5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c",
+  "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+  "index_counts": {
+   "documents": 17333,
+   "units_asis": 1509363,
+   "units_version": 1477102,
+   "instructions": 53991,
+   "propagated_windows": 1476969,
+   "versions_with_local_window": 1477102,
+   "provisions_with_context": 1700484
+  },
+  "prompt_sha256": "8dc3549b4773fc4cd866480f61d0afc90cc008ee45332ca3b4a0014f55e5716a",
+  "python": "3.12.3",
+  "started": "2026-11-13T05:58:23+00:00",
+  "finished": true,
+  "ended": "2026-11-13T07:10:33+00:00",
+  "written": 361,
+  "cached": 0,
+  "failed": 0,
+  "models": {
+   "none/none": 361
+  }
+ }
+]

@@ -168,6 +168,9 @@ def main() -> None:
     args = ap.parse_args()
 
     spec = systems.get(args.system)
+    if spec.validity_note and not args.retrieval_only:
+        raise SystemExit(f"{spec.name}: validity lines are only built by colab_b1.py export; "
+                         "run it through that path, or use --retrieval-only here")
     if args.no_dense and spec.dense:
         spec = spec.variant(f"{spec.name}-lex", dense=False, rerank=False)
     if args.hybrid and spec.rerank:
