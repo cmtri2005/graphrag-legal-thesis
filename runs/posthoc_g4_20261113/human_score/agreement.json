@@ -1,16 +1,16 @@
 {
  "n": 100,
- "agree": 95,
- "agree_rate": 0.95,
+ "agree": 96,
+ "agree_rate": 0.96,
  "agree_wilson95": [
-  0.8882,
-  0.9785
+  0.9016,
+  0.9843
  ],
- "cohen_kappa": 0.8881,
+ "cohen_kappa": 0.9097,
  "human_ok_scorer_ok": 31,
- "human_ok_scorer_wrong": 5,
+ "human_ok_scorer_wrong": 4,
  "human_wrong_scorer_ok": 0,
- "human_wrong_scorer_wrong": 64,
+ "human_wrong_scorer_wrong": 65,
  "per_system": {
   "b1": {
    "n": 34,
@@ -41,11 +41,11 @@
   },
   "proposed2": {
    "n": 33,
-   "human_correct": 24,
+   "human_correct": 23,
    "scorer_correct": 22,
    "labels": {
-    "dung": 23,
-    "sai_noi_dung": 4,
+    "dung": 22,
+    "sai_noi_dung": 5,
     "khong_tra_loi": 4,
     "khang_dinh_bai_bo_sai": 1,
     "tu_choi_dung": 1
@@ -59,8 +59,8 @@
   "flagged_human_sai_phien_ban": 3,
   "human_sai_phien_ban": 3,
   "table": {
-   "gan_co|dung": 2,
-   "gan_co|sai_noi_dung": 4,
+   "gan_co|dung": 1,
+   "gan_co|sai_noi_dung": 5,
    "gan_co|sai_phien_ban": 3,
    "khong_co|dung": 29,
    "khong_co|khang_dinh_bai_bo_sai": 4,
@@ -91,13 +91,6 @@
    "scorer_accuracy": false
   },
   {
-   "stt": 93,
-   "system": "proposed2",
-   "group": "T2",
-   "human": "dung",
-   "scorer_accuracy": false
-  },
-  {
    "stt": 100,
    "system": "b4",
    "group": "T2",
@@ -107,7 +100,7 @@
  ],
  "note": "Người chấm: CMT, tự chấm toàn bộ, không có AI nháp; chấm mù tên hệ và điểm máy. Mẫu: test, giua_khoang, T2/T3/T6, lần 1; không có T1.",
  "inputs": {
-  "data/review/human_score_g4/phieu_cham_da_cham.xlsx": "614c267e6bc32d34cdc91cf4d0bf841867fef842e9894a1a2cc9737ca4a850ca",
+  "data/review/human_score_g4/phieu_cham_da_cham.xlsx": "efc01d53dd114a2dccf044d37eedfcef936c23896633397c29b07a8f115c2508",
   "data/review/human_score_g4/khoa.jsonl": "a972973966114a457ad7821b0615512d6296808eb31ebc38a2d608104e7f0c21",
   "data/vilextime_final/vilextime.jsonl": "5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c",
   "runs/final_g4_20261112/r1/test/b1.jsonl": "52c6dd3380c18c2fa26b187ee846117489ae51cad8f13779c062ed61f50aae00",
