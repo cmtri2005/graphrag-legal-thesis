@@ -1,0 +1,24 @@
+{
+ "seed": 20261114,
+ "n": 33,
+ "labels": "dung | sai_phien_ban | sai_noi_dung",
+ "by_reason": {
+  "wrong_version": 9,
+  "b1_sai_noi_dung": 24
+ },
+ "excluded": "dòng b1 sai_noi_dung mà điều khoản chỉ có một phiên bản (không thể sai phiên bản)",
+ "caveat": "Người chấm đã thấy các câu này ở phiếu 1.5 và đã thấy kết quả độ khớp; chỉ mù tên hệ, cờ scorer và nhãn cũ.",
+ "inputs": {
+  "data/vilextime_final/vilextime.jsonl": "5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c",
+  "data/derived/corpus/versions.jsonl": "dba038bbc47afed41d590add7422921b71c6c9d102619947f85e2bd2078d8c3b",
+  "data/review/human_score_g4/phieu_cham_da_cham.xlsx": "efc01d53dd114a2dccf044d37eedfcef936c23896633397c29b07a8f115c2508",
+  "data/review/human_score_g4/khoa.jsonl": "a972973966114a457ad7821b0615512d6296808eb31ebc38a2d608104e7f0c21",
+  "runs/final_g4_20261112/r1/test/b1.jsonl": "52c6dd3380c18c2fa26b187ee846117489ae51cad8f13779c062ed61f50aae00",
+  "runs/final_g4_20261112/r1/test/b4.jsonl": "f633e5650f5f3e0e0ad7ea3c1cc696405bd508c7808b6473ca0dcf96131b41a3",
+  "runs/final_g4_20261112/r1/test/proposed2.jsonl": "45723f8a2a3ee0e6115885b4613a9d1622f77e5e808042ac5f77dcf0deaf3a02"
+ },
+ "outputs": {
+  "phieu.xlsx": "5a47327ccbee223d080d26f6013c6dee81a21639f75df36fd690b6c4f1bde985",
+  "khoa.jsonl": "8d3eddb919c0bdf11b11ee9b2a011f2ecad475d5f9de726a1df039c933277411"
+ }
+}

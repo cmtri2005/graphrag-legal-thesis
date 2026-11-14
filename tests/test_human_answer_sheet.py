@@ -26,3 +26,12 @@ def test_unknown_label_stops():
     import pytest
     with pytest.raises(SystemExit):
         agreement(["đúng"], [{"stt": 1, "system": "b1", "group": "T2", "scorer_accuracy": True}], [None])
+
+
+def test_version_recheck_marks_only_the_version_in_force():
+    from version_recheck_sheet import show_versions
+    chain = [{"ordinal": "2", "text": "80%", "effective_intervals": [{"start": "2019-09-16", "end": None}]},
+             {"ordinal": "1", "text": "90%", "effective_intervals": [{"start": "2014-09-15", "end": "2019-09-16"}]}]
+    out = show_versions(chain, "2020-12-01")
+    assert out.index("Bản 1") < out.index("Bản 2")
+    assert out.count("ÁP DỤNG TẠI MỐC") == 1 and "2019-09-16 → nay — ÁP DỤNG TẠI MỐC]\n80%" in out
