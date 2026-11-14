@@ -2,7 +2,7 @@
 
 **Câu hỏi của chương:** Các kết quả đã có cho biết gì về giá trị của bộ lọc thời gian, biểu diễn phiên bản và mở rộng đồ thị; những kết luận nào vẫn chưa đủ bằng chứng?
 
-> Bộ test cuối chưa chạy. v1.0 và test 2 được đổi vai thành vòng thử ngày 05/11 sau khi đã thấy kết quả; các bảng dưới giữ kết quả và phán quyết lịch sử, không phải kết luận cuối của khóa luận. Bản nháp chỉ sử dụng kết quả đã lưu. Mọi phân tích ngoài họ xác nhận được ghi là **thăm dò**. Test 2 là **nhãn LLM**, được trình bày riêng với v1.0. Không dùng số dev để kết luận trên test.
+> Bộ test cuối đã chạy một lần (G4, 12–13/11; §6.6). v1.0 và test 2 được đổi vai thành vòng thử ngày 05/11 sau khi đã thấy kết quả; các bảng dưới giữ kết quả và phán quyết lịch sử, không phải kết luận cuối của khóa luận. Bản nháp chỉ sử dụng kết quả đã lưu. Mọi phân tích ngoài họ xác nhận được ghi là **thăm dò**. Test 2 là **nhãn LLM**, được trình bày riêng với v1.0. Không dùng số dev để kết luận trên test.
 
 ## 6.1. Thiết kế phép đo và phạm vi kết quả
 
@@ -62,7 +62,7 @@ Quy tắc cho H0 theo F6, khóa trước khi chạy (ADR 0006 §6). Hai vòng th
 | Ủng hộ | Điểm quyết định B7 | **Ủng hộ, cả hai lần** | Ủng hộ, kèm ghi chú lần lặp test 2 không đủ bằng chứng |
 <!-- nguồn: runs/E3_v1/test/confirm.log; runs/E3_test2/rescore/confirm.log; runs/final_g4_20261112/compare_runs.json; docs/decisions/0006-*.md §6 -->
 
-Các chỉ số Recall@k, MRR, TV-Recall, Accuracy, EM/F1, TVER, VCR và TCS lấy từ scorer. Giám khảo LLM chưa được hiệu chuẩn với người nên không dùng. Phiếu người chấm 100 câu (§6.6.5) cho scorer khớp người 96/100, không dương giả; vì vậy không dùng giám khảo LLM.
+Các chỉ số Recall@k, MRR, TV-Recall, Accuracy, EM/F1, TVER, VCR và TCS lấy từ scorer. Không dùng giám khảo LLM: phiếu người chấm 100 câu (§6.6.5) cho Accuracy của scorer khớp người 96/100, không dương giả.
 
 ## 6.2. Vòng thử v1.0 — nhãn hỗn hợp người và agent
 
@@ -469,7 +469,7 @@ Lọc thời gian có lợi và hai nút thắt tìm–đọc đã có tiền l�
 
 F1–F3 đều có p Holm < 0,0002 ở cả hai lần. F3 dùng `wrong_version` của scorer. Phiếu người chấm không xác nhận cũng không bác được tỷ lệ sai phiên bản (§6.6.5). Phán quyết F3 giữ nguyên; độ lớn −0,28 là theo scorer. F4–F6 là hệ chỉ truy xuất nên không chịu dao động của generator. F7 có 23 lineage. MDE ước trước khi chạy là 0,185, nên chỉ phát hiện được hiệu rất lớn. F7 "không đủ bằng chứng" nghĩa là KTC không loại trừ 0 và không loại trừ hiệu ≥ MDE, không có nghĩa là không có hiệu ứng.
 
-**F5 và F6 bằng nhau.** `b7pp` và `b7plus` có cùng TV-R@1 (0,336). Lan truyền trên đồ thị không đổi căn cứ đứng đầu ở dòng nào có đáp án. Vì vậy F6 ủng hộ H0 hoàn toàn nhờ bước lọc khoảng phiên bản, đúng phần F5 đo. Không được đọc F6 là bằng chứng cho phần duyệt đồ thị lúc truy vấn.
+**F5 và F6 bằng nhau.** `b7pp` và `b7plus` có cùng TV-R@1 trên tệp truy xuất F5–F6 (0,356, 295 dòng có đáp án; bảng §6.6.2 đo trên danh sách prompt sinh, 318 dòng, cũng bằng nhau ở 0,336). `b7pp` chỉ khác `b7plus` ở chỗ lan truyền khoảng hiệu lực (`temporal="propagated"`). Lan truyền này không đổi kết quả TV-R@1 ở dòng nào có đáp án; căn cứ đứng đầu chỉ đổi ở 1/295 dòng có đáp án, và ở dòng đó cả hai đều sai. Vì vậy F6 ủng hộ H0 hoàn toàn nhờ bước lọc khoảng phiên bản, đúng phần F5 đo. Không được đọc F6 là bằng chứng cho lan truyền hay cho phần duyệt đồ thị lúc truy vấn.
 
 ### 6.6.2. Bảng mô tả, lần 1
 
@@ -523,7 +523,7 @@ Kết quả:
 
 Lọc theo khoảng trước khi xếp hạng có giá trị riêng. Trên dev cùng chiều.
 
-**Nút thắt là xếp hạng.** Khi gold đứng hạng 1, `proposed2` đúng 96%. Nhưng gold chỉ đứng hạng 1 ở 107/295 dòng có đáp án.
+**Nút thắt là xếp hạng.** Khi gold đứng hạng 1, `proposed2` đúng 102/107 (95%). Nhưng gold chỉ đứng hạng 1 ở 107/295 dòng có đáp án. Trong 247 dòng có gold trong prompt, `proposed2` sai 46 (5 khi gold ở hạng 1, 41/140 khi gold ở hạng 2 trở xuống); số giống nhau ở hai lần.
 <!-- nguồn: runs/posthoc_g4_20261113/attribution.json; runs/posthoc_g4_20261113/test/; docs/plans/active/REFACTOR_PLAN.md, "Kết quả Nhóm 2"; docs/reports/research-audit-20261113.md §8.2 -->
 
 ### 6.6.4. Gold mù trên phần bộ cuối nó phủ
@@ -537,7 +537,7 @@ Trên 53 dòng này, F1–F6 đều ủng hộ ở cả hai lần, cùng chiều
 
 CMT tự chấm toàn bộ 100 câu, không có AI viết nháp nhãn hay ghi chú (CMT tự khai). Câu được rút có seed từ lần 1 của bộ cuối: `b1` 34, `b4` 33, `proposed2` 33. Chỉ lấy lát giữa khoảng, nhóm T2/T3/T6; không có T1. Ở lần chấm đầu, người chấm không thấy tên hệ và điểm máy; lần xem lại (dòng 93) diễn ra sau khi đã thấy các dòng lệch với scorer. "Đúng theo người" là nhãn `dung` hoặc `tu_choi_dung`.
 
-**Scorer khớp người 96/100** [Wilson 95%: 0,902; 0,984], κ Cohen 0,910. Đây là số sau khi CMT xem lại. Bản chấm đầu cho 95/100 [0,888; 0,979], κ 0,888. Sau khi đã thấy các dòng lệch với scorer, CMT đổi đúng một nhãn (dòng 93, `dung` → `sai_noi_dung`, theo hướng khớp scorer) viết lại ghi chú dòng 5, thêm ghi chú dòng 36, 64 và 93. Cả hai bản đều được báo.
+**Scorer khớp người 96/100** [Wilson 95%: 0,902; 0,984], κ Cohen 0,910. Đây là số sau khi CMT xem lại. Bản chấm đầu cho 95/100 [0,888; 0,979], κ 0,888. Sau khi đã thấy các dòng lệch với scorer, và sau khi trợ lý AI (Claude) gợi ý xem lại dòng 5, 36, 93, CMT đổi đúng một nhãn (dòng 93, `dung` → `sai_noi_dung`, theo hướng khớp scorer) viết lại ghi chú dòng 5, thêm ghi chú dòng 36, 64 và 93. Cả hai bản đều được báo.
 - Người đúng, scorer đúng: 31. Người sai, scorer sai: 65.
 - Người sai, scorer đúng: **0**. Scorer không chấm dễ dãi.
 - Người đúng, scorer sai: 4 (`b1` 2, `proposed2` 1, `b4` 1). Ba câu không chứa nguyên chuỗi đáp án ngắn (diễn đạt lại, hoặc khác ký hiệu liệt kê như "b)" thay "g)"). Một câu chứa đủ đáp án ngắn nhưng cũng chứa đoạn chỉ phiên bản khác có, nên phép tương phản chấm khác người; người chấm gán `dung` (không ghi chú).
@@ -618,7 +618,7 @@ Về độ phủ trích dẫn, b7 và b7pp có cùng độ phủ tổng thể tr
 <!-- nguồn: runs/E3_v1/test/all.score.json -->
 <!-- nguồn: runs/E3_test2/rescore/all.score.json -->
 
-Điều kiện không hệ nào vượt oracle trên cùng test **chưa kiểm được**, vì oracle context test chưa có. Oracle context dev chỉ là đối chiếu mô tả; oracle probe tất định của scorer kiểm đường chấm, không phải generator nhận căn cứ gold trên test. Các điều kiện của §8.6 vì thế chưa đồng thời hoàn tất, dù các phán quyết ủng hộ đã báo trong họ XN vẫn giữ nguyên.
+Trên bộ cuối, điều kiện không hệ nào vượt oracle **đạt**: `oracle` (cấp sẵn căn cứ gold, cùng generator) 0,956, hệ cao nhất `proposed2` 0,667 (§6.6.2). Với hai vòng thử, điều kiện này **chưa kiểm được**, vì oracle context test của vòng thử không có. Oracle context dev chỉ là đối chiếu mô tả; oracle probe tất định của scorer kiểm đường chấm, không phải generator nhận căn cứ gold trên test. Với hai vòng thử, các điều kiện của §8.6 vì thế chưa đồng thời hoàn tất, dù các phán quyết ủng hộ đã báo trong họ XN vẫn giữ nguyên.
 <!-- nguồn: docs/plans/active/master-plan.md -->
 <!-- nguồn: runs/README.md -->
 <!-- nguồn: scripts/eval/score_vilextime.py -->
@@ -628,7 +628,7 @@ Về độ phủ trích dẫn, b7 và b7pp có cùng độ phủ tổng thể tr
 Ở mức **xác nhận trong vòng thử**, các phán quyết lịch sử của XN được giữ nguyên; chúng không trở thành xác nhận trên bộ test cuối. Ở mức **mô tả**, RAG phẳng còn trích sai phiên bản. Người chấm xác nhận LLM không truy xuất gần như không trả lời đúng (2/34, phần lớn sai nội dung); tỷ lệ sai phiên bản của nó chưa đo được (§6.6.5). Ở mức **thăm dò**, lợi ích mở rộng một bước trên toàn tập nhỏ và chưa nhất quán giữa hai vòng; phân rã lỗi máy gợi ý cả nút thắt tìm và đọc căn cứ. Nguồn nhãn hỗn hợp của v1.0 và nhãn LLM của test 2 giới hạn các diễn giải này.
 <!-- nguồn: runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json; docs/reports/e7_phan_ra_loi.md -->
 
-Bản nháp đi theo hướng tài nguyên và phép đo có đối chứng của master plan: sửa thước đo, hoàn thiện hệ trên dev rồi chạy bộ cuối. Chưa kết luận hệ đề xuất thắng, cũng chưa bác giả thuyết đề cương từ việc một khoảng tin cậy chứa không. [CHỜ G4: kết luận chính của khóa luận, kể cả kết quả không đủ bằng chứng hoặc ngược chiều dự kiến].
+Bản nháp đi theo hướng tài nguyên và phép đo có đối chứng của master plan: sửa thước đo, hoàn thiện hệ trên dev rồi chạy bộ cuối. Chưa kết luận hệ đề xuất thắng, cũng chưa bác giả thuyết đề cương từ việc một khoảng tin cậy chứa không. Kết luận chính dựa trên bộ cuối nằm ở §6.6 và Chương 7, kể cả F7 không đủ bằng chứng.
 <!-- nguồn: docs/plans/active/master-plan.md -->
 
 ## Việc còn thiếu trước khi nộp

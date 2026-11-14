@@ -24,7 +24,7 @@ Phụ lục chỉ xác nhận những hoạt động có hồ sơ trong kho. A/B
 | Hòa giải D4 | AI soạn bản nháp và đối chiếu kho gốc theo biên bản | A xác nhận bản được ghi trong biên bản | Chưa phải lượt hòa giải độc lập hoàn toàn do người; một số nháp tự ghi chưa đối chiếu nguồn |
 | Silver T2–T3 và tiếp xúc trước của A | Phiếu A chứa đáp án và chuỗi phiên bản đồ thị; AI không chỉ hỗ trợ diễn đạt | Đo lại từ phiếu có verdict và silver: A đã gán 131/168 lineage, 283 dòng, 280 `dat` trong vòng 25/10 | A đã thấy đáp án đồ thị ở phần này; nhãn gán lại không được khai là một lượt mù mới; gold1 chia theo người, còn trống |
 | Test 2 — nhãn LLM | Hai LLM gán độc lập, model hòa giải và agent hỗ trợ các ca phân vân | Chưa có người hoặc luật sư xác nhận nhãn theo amendment | Luôn gọi là nhãn LLM; không coi là gold độc lập của người |
-| Generator thực nghiệm | Qwen sinh câu trả lời từ prompt đã khóa | Cổng định dạng, kiểm hash, parser và scorer; hồ sơ có CMT đọc mẫu dev | Chỉ một generator, chưa có kiểm độ bền khác họ; điểm scorer không thay thế đánh giá người |
+| Generator thực nghiệm | Vòng thử: Qwen sinh câu trả lời từ prompt đã khóa; bộ cuối: GPT-4o mini (`gpt-4o-mini-2024-07-18`) | Cổng định dạng, kiểm hash, parser và scorer; hồ sơ có CMT đọc mẫu dev | Chỉ một generator, chưa có kiểm độ bền khác họ; điểm scorer không thay thế đánh giá người |
 | E7 lượt máy | Script phân loại lỗi theo quy tắc ưu tiên, tạo thống kê và phiếu | Assert tổng, test hành vi và đối chiếu với score đã lưu | Chưa có người mã hóa; tầng máy là phân tích thăm dò |
 | Tài liệu và bản nháp khóa luận | AI hỗ trợ tổng hợp code, ADR, số đo và soạn văn bản | Bản nháp hiện chờ tác giả và người hướng dẫn rà nội dung, số liệu, cách diễn giải | Không khai rằng đã được GVHD hoặc UIT phê duyệt |
 
@@ -84,8 +84,17 @@ Claude đã soạn bản nháp paper ban đầu; Codex cập nhật các chươn
 Ở đợt này, agent tổng hợp và biên tập từ file cục bộ; không gọi mạng, không gửi bản thảo cho LLM ngoài, không tạo nhãn người hoặc điền kết quả còn thiếu. Không có lượt kiểm độc lập mới của Claude trong chính phiên soạn này. Quy trình dự kiến “Codex làm, Claude kiểm” trong kế hoạch chưa được khai thành việc đã xảy ra. Hai sinh viên vẫn phải đọc, sửa và kiểm từng kết luận trước khi gửi GVHD.
 <!-- nguồn: docs/plans/active/master-plan.md; yêu cầu C9 của tác giả ngày 05/11/2026 -->
 
-Theo quy trình bộ cuối, AI có thể hỗ trợ mã, chuẩn bị phiếu và diễn đạt ứng viên; AI không gợi ý nhãn, nháp ghi chú hay hòa giải cho người gán bộ cuối. Khi mô tả dữ liệu cũ, phải giữ nguyên khai báo rằng các vòng trước đã có các can thiệp đó. [CHỜ G4: hồ sơ kiểm người và khai báo công cụ của các lượt tiếp theo].
-<!-- nguồn: docs/plans/active/master-plan.md, mục 9 -->
+Theo quy trình bộ cuối, AI có thể hỗ trợ mã, chuẩn bị phiếu và diễn đạt ứng viên; AI không gợi ý nhãn, nháp ghi chú hay hòa giải cho người gán bộ cuối. Khi mô tả dữ liệu cũ, phải giữ nguyên khai báo rằng các vòng trước đã có các can thiệp đó. <!-- nguồn: docs/plans/active/master-plan.md, mục 9 -->
+
+### Bộ test cuối và sau G4 (12–14/11)
+
+- **Nhãn bộ cuối:** hai agent AI-A (Claude), AI-B (Codex) gán mù; agent `legal-adjudicator` đề xuất cho dòng lệch và chốt ca khó (CMT ủy quyền 11/11, thay luật sư); CMT duyệt mọi dòng (`review.source = "ai_cmt"`). Chưa có luật sư hay người độc lập kiểm. Đồng thuận AI–AI trước hòa giải AC1 0,608.
+- **Generator bộ cuối:** GPT-4o mini (`gpt-4o-mini-2024-07-18`), nhiệt độ 0, gọi hai lần. Không còn là Qwen như các vòng thử.
+- **Người chấm 100 câu trả lời (REFACTOR_PLAN 1.5):** Claude dựng phiếu, ẩn tên hệ và điểm máy, và viết script tính độ khớp. CMT tự gán toàn bộ 100 nhãn và viết toàn bộ ghi chú; không có AI nháp nhãn hay ghi chú (CMT tự khai).
+- **Xem lại sau khi thấy kết quả:** khi báo bản đầu (95/100), Claude đã nêu các dòng lệch với scorer và gợi ý xem lại dòng 5, 36, 93. Sau đó CMT đổi một nhãn (dòng 93, `dung` → `sai_noi_dung`, theo hướng khớp scorer). Chương 6 báo cả hai bản.
+- **Kiểm số:** các số hậu nghiệm, số chấm tay và chương 7 được một phiên AI tách riêng (`evidence-gate`) tái chạy và đối soát; các lượt gate 14/11 tìm ra lỗi số và câu chữ ở Chương 6 và 7 (kể cả hai lỗi các lượt trước bỏ sót), đã sửa trước khi commit. Đây là kiểm của AI, không phải duyệt của người hay GVHD.
+- **Viết:** Claude viết lại Chương 7 theo kết quả G4 và sửa câu chữ Chương 6 theo các lượt gate. Hai tác giả vẫn phải đọc và chịu trách nhiệm từng kết luận.
+<!-- nguồn: docs/thesis/chuong-6-thuc-nghiem.md §6.6, §6.6.5; runs/README.md; runs/posthoc_g4_20261113/human_score/agreement.json -->
 
 ### Cập nhật C9b
 
