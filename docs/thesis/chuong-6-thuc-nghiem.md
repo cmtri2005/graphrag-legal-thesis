@@ -467,7 +467,7 @@ Lọc thời gian có lợi và hai nút thắt tìm–đọc đã có tiền l�
 | F7 | P − `b7pp`, Accuracy, T6 không đáp án | +0,087 [0,000; +0,217] | +0,043 [0,000; +0,130] | không đủ bằng chứng, cả hai lần |
 <!-- nguồn: runs/final_g4_20261112/r1/confirm.json; runs/final_g4_20261112/r2/results.md; runs/final_g4_20261112/compare_runs.json -->
 
-F1–F3 đều có p Holm < 0,0002 ở cả hai lần. F4–F6 là hệ chỉ truy xuất nên không chịu dao động của generator. F7 có 23 lineage. MDE ước trước khi chạy là 0,185, nên chỉ phát hiện được hiệu rất lớn. F7 "không đủ bằng chứng" nghĩa là KTC không loại trừ 0 và không loại trừ hiệu ≥ MDE, không có nghĩa là không có hiệu ứng.
+F1–F3 đều có p Holm < 0,0002 ở cả hai lần. F3 dùng `wrong_version` của scorer. Phiếu người chấm không xác nhận cũng không bác được tỷ lệ sai phiên bản (§6.6.5). Phán quyết F3 giữ nguyên; độ lớn −0,28 là theo scorer. F4–F6 là hệ chỉ truy xuất nên không chịu dao động của generator. F7 có 23 lineage. MDE ước trước khi chạy là 0,185, nên chỉ phát hiện được hiệu rất lớn. F7 "không đủ bằng chứng" nghĩa là KTC không loại trừ 0 và không loại trừ hiệu ≥ MDE, không có nghĩa là không có hiệu ứng.
 
 **F5 và F6 bằng nhau.** `b7pp` và `b7plus` có cùng TV-R@1 (0,336). Lan truyền trên đồ thị không đổi căn cứ đứng đầu ở dòng nào có đáp án. Vì vậy F6 ủng hộ H0 hoàn toàn nhờ bước lọc khoảng phiên bản, đúng phần F5 đo. Không được đọc F6 là bằng chứng cho phần duyệt đồ thị lúc truy vấn.
 
@@ -489,7 +489,7 @@ F1–F3 đều có p Holm < 0,0002 ở cả hai lần. F4–F6 là hệ chỉ tr
 <!-- nguồn: runs/final_g4_20261112/r1/results.md (all.score.json, 318 dòng) -->
 
 - **RQ1, vế RAG:** RAG phẳng (`b2ctx`, `b4`) trích sai phiên bản ở khoảng một phần tư đến gần một phần ba số dòng (0,253; 0,291).
-- **RQ1, vế LLM không truy xuất:** `b1` gần 0 vì thước đo đòi chép đúng lời văn. Bộ cuối chưa đo được tỷ lệ sai phiên bản của LLM không truy xuất (REFACTOR_PLAN 3.1).
+- **RQ1, vế LLM không truy xuất:** `b1` thấp là thật: người chấm thấy 2/34 câu đúng (scorer 0/34), 27/34 sai nội dung (§6.6.5). Phiếu không hiện phiên bản khác, nên chưa đo được `b1` có trả theo phiên bản cũ hay không. Mẫu nhỏ, một LLM, một người chấm.
 - **Đọc bản hiện hành thay bản đúng mốc:** Accuracy rơi từ 0,956 (`oracle`) xuống 0,456 (`oracle_now`), cùng generator. Đây là cỡ của bài toán thời gian khi căn cứ đã có sẵn.
 - **Dao động generator:** số câu trả lời đổi giữa hai lần trên `all`: `b4` 49 (12 từ đúng sang sai, 1 ngược lại), `b5` 58, `b7pp` 58, `proposed2` 39, `oracle` 12.
 - **T1:** đáp án ngắn của 43 dòng T1 là nguyên lời văn còn ký hiệu liệt kê, `oracle` chỉ đúng 2/43. Cột T1 chưa dùng được, chờ amendment (REFACTOR_PLAN 3.2).
@@ -519,7 +519,7 @@ Kho phiên bản không có bộ lọc khoảng còn kém lớp lời văn gốc
 
 Kết quả:
 - Accuracy `b7plus − bvdate`: +0,245 lần 1, +0,230 lần 2.
-- `bvdate` giảm tỷ lệ trích sai phiên bản (0,317 → 0,064 lần 1; 0,328 → 0,060 lần 2), nhưng vẫn kém lọc cứng xa.
+- `bvdate` giảm tỷ lệ trích sai phiên bản theo scorer (0,317 → 0,064 lần 1; 0,328 → 0,060 lần 2), nhưng vẫn kém lọc cứng xa. Phiếu người chấm không xác nhận được độ lớn của `wrong_version` (§6.6.5), nên đọc là chiều giảm theo scorer.
 
 Lọc theo khoảng trước khi xếp hạng có giá trị riêng. Trên dev cùng chiều.
 
@@ -533,11 +533,30 @@ Gold mù đợt 1 do người đọc nguồn: khớp thô 148/150, 119/120 sau p
 Trên 53 dòng này, F1–F6 đều ủng hộ ở cả hai lần, cùng chiều với toàn bộ cuối. Ví dụ: F4 +0,075 [+0,018; +0,154]; F5 +0,189 [+0,071; +0,315]. Đây là mô tả trên tập con nhỏ, không thay cho gold độc lập trên cả bộ.
 <!-- nguồn: runs/posthoc_g4_20261113/gold_subset/confirm_r1.txt, confirm_r2.txt -->
 
-### 6.6.5. Còn chờ
+### 6.6.5. Người chấm 100 câu trả lời
+
+CMT tự chấm toàn bộ 100 câu, không có AI viết nháp nhãn hay ghi chú (CMT tự khai). Câu được rút có seed từ lần 1 của bộ cuối: `b1` 34, `b4` 33, `proposed2` 33. Chỉ lấy lát giữa khoảng, nhóm T2/T3/T6; không có T1. Người chấm không thấy tên hệ và điểm máy. "Đúng theo người" là nhãn `dung` hoặc `tu_choi_dung`.
+
+**Scorer khớp người 95/100** [Wilson 95%: 0,888; 0,979], κ Cohen 0,888.
+- Người đúng, scorer đúng: 31. Người sai, scorer sai: 64.
+- Người sai, scorer đúng: **0**. Scorer không chấm dễ dãi.
+- Người đúng, scorer sai: 5 (`b1` 2, `proposed2` 2, `b4` 1). Ba câu không chứa nguyên chuỗi đáp án ngắn (diễn đạt lại, hoặc khác ký hiệu liệt kê như "b)" thay "g)"). Hai câu chứa đủ đáp án ngắn nhưng cũng chứa đoạn chỉ phiên bản khác có, nên phép tương phản chấm khác người; người chấm gán `dung` (không ghi chú).
+
+| Hệ | n | Đúng theo người | Đúng theo scorer |
+|---|---|---|---|
+| `b1` | 34 | 2 | 0 |
+| `b4` | 33 | 10 | 9 |
+| `proposed2` | 33 | 24 | 22 |
+
+Trên mẫu này, scorer chấm thấp hơn người một chút ở cả ba hệ. Mỗi hệ có dòng riêng nên đây chỉ là mô tả, không phải phép so ghép cặp. Trong phạm vi mẫu (T2/T3/T6, giữa khoảng, lần 1, một người chấm), không cần LLM giám khảo cho Accuracy.
+
+**`wrong_version` chưa đo được bằng phiếu này.** Scorer gắn cờ 9 dòng (`b4` 8, `proposed2` 1, `b1` 0). Người gán 3 sai phiên bản (đều `b4`), 4 sai nội dung, 2 đúng; 7/9 dòng gắn cờ là câu sai theo người. Bốn dòng sai nội dung đều chép lời văn của phiên bản khác, nhưng phiếu chỉ hiện bản tại mốc, nên người chấm khó tách sai phiên bản khỏi sai nội dung. Vì vậy mẫu này không đo được độ chính xác của `wrong_version`, và số 0 sai phiên bản của `b1` chỉ là cận dưới.
+<!-- nguồn: runs/posthoc_g4_20261113/human_score/agreement.json; data/review/human_score_g4/phieu_cham_da_cham.xlsx; scripts/review/human_answer_sheet.py -->
+
+### 6.6.6. Còn chờ
 
 | Hạng mục | Tình trạng |
 |---|---|
-| Người chấm 100 câu trả lời (`b1`, `b4`, `proposed2`), độ khớp scorer–người | Phiếu đã dựng, chờ người chấm |
 | Đáp án ngắn T1 | Nháp amendment chờ duyệt |
 | Gold mù người cho T6 và 132 lineage còn lại | Chưa có người làm |
 | TVER theo người, E7 mã hóa lỗi bằng người | Chưa làm |
@@ -550,6 +569,9 @@ Các lượt Colab đợt 2 cho vòng thử cũ (v1.0, test 2) không chạy n�
 
 **Gold tự chấm và TVER do cách dựng.** Gold phiên bản lấy từ cùng đồ thị mà bộ lọc `b7pp` sử dụng; khi sự kiện bị bỏ sót, cả hai có thể cùng sai. TVER = 0 của `b7pp` phần lớn do cách dựng: bộ lọc đã loại phiên bản không hợp lệ theo chính khoảng hiệu lực mà scorer tham chiếu. Nó kiểm được tính nhất quán trong mô hình, chưa xác nhận độc lập độ đúng pháp lý. Bảng TVER phải đọc cùng gold mù, độ phủ trích dẫn và khả năng trả lời dòng bãi bỏ. [CHỜ G4: TVER theo người trên các đơn vị được trích, không đồng nhất với gold mù phiên bản].
 <!-- nguồn: docs/plans/active/master-plan.md, D2; src/vilexgraph/framework/temporal.py; scripts/eval/score_vilextime.py -->
+
+**Độ tin của scorer.** Người chấm 100 câu cho thấy Accuracy của scorer khớp người 95/100 và không có dương giả (§6.6.5). Mẫu không có T1 và chỉ có lần 1. Phiếu không hiện phiên bản khác nên không xác nhận hay bác được `wrong_version`; F3 và các số sai phiên bản là theo scorer.
+<!-- nguồn: runs/posthoc_g4_20261113/human_score/agreement.json -->
 
 **Giới hạn thành phần.** Các so sánh `proposed` trong vòng thử chỉ đo mở rộng quan hệ một bước cùng Verifier trên đường từ vựng; không suy ra “đồ thị không giúp” cho mọi GraphRAG. `proposed2` chưa được đánh giá câu trả lời. Chuyển từ kết quả một bước sang kết luận về suy luận đồ thị nhiều bước sẽ vượt phạm vi thực nghiệm.
 <!-- nguồn: src/vilexgraph/framework/graphx.py; runs/README.md -->
@@ -603,7 +625,7 @@ Về độ phủ trích dẫn, b7 và b7pp có cùng độ phủ tổng thể tr
 
 ## 6.8. Điều có thể diễn giải ở bản nháp
 
-Ở mức **xác nhận trong vòng thử**, các phán quyết lịch sử của XN được giữ nguyên; chúng không trở thành xác nhận trên bộ test cuối. Ở mức **mô tả**, RAG phẳng còn trích sai phiên bản, trong khi baseline LLM không truy xuất gần như không trả lời, nên vế LLM của RQ1 chưa đo được đủ. Ở mức **thăm dò**, lợi ích mở rộng một bước trên toàn tập nhỏ và chưa nhất quán giữa hai vòng; phân rã lỗi máy gợi ý cả nút thắt tìm và đọc căn cứ. Nguồn nhãn hỗn hợp của v1.0 và nhãn LLM của test 2 giới hạn các diễn giải này.
+Ở mức **xác nhận trong vòng thử**, các phán quyết lịch sử của XN được giữ nguyên; chúng không trở thành xác nhận trên bộ test cuối. Ở mức **mô tả**, RAG phẳng còn trích sai phiên bản. Người chấm xác nhận LLM không truy xuất gần như không trả lời đúng (2/34, phần lớn sai nội dung); tỷ lệ sai phiên bản của nó chưa đo được (§6.6.5). Ở mức **thăm dò**, lợi ích mở rộng một bước trên toàn tập nhỏ và chưa nhất quán giữa hai vòng; phân rã lỗi máy gợi ý cả nút thắt tìm và đọc căn cứ. Nguồn nhãn hỗn hợp của v1.0 và nhãn LLM của test 2 giới hạn các diễn giải này.
 <!-- nguồn: runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json; docs/reports/e7_phan_ra_loi.md -->
 
 Bản nháp đi theo hướng tài nguyên và phép đo có đối chứng của master plan: sửa thước đo, hoàn thiện hệ trên dev rồi chạy bộ cuối. Chưa kết luận hệ đề xuất thắng, cũng chưa bác giả thuyết đề cương từ việc một khoảng tin cậy chứa không. [CHỜ G4: kết luận chính của khóa luận, kể cả kết quả không đủ bằng chứng hoặc ngược chiều dự kiến].

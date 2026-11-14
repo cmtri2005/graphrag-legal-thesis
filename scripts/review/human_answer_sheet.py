@@ -8,6 +8,12 @@ Không gọi model; không sửa dự đoán hay scorer.
     PYTHONPATH=src .venv/bin/python scripts/review/human_answer_sheet.py \\
         --g4 runs/final_g4_20261112/r1/test --release data/vilextime_final/vilextime.jsonl \\
         --out data/review/human_score_g4/  --n 100 --seed 20261113
+
+Đọc phiếu đã chấm (sau khi chấm xong mới mở khóa), so người với scorer:
+
+    PYTHONPATH=src .venv/bin/python scripts/review/human_answer_sheet.py \\
+        --g4 runs/final_g4_20261112/r1/test --release data/vilextime_final/vilextime.jsonl \\
+        --filled data/review/human_score_g4/phieu_cham_da_cham.xlsx --out runs/posthoc_g4_20261113/human_score/
 """
 from __future__ import annotations
 
@@ -16,6 +22,7 @@ import hashlib
 import json
 import random
 import sys
+from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "eval"))
@@ -43,6 +50,87 @@ def sample(rows: list[dict], preds: dict[str, dict], n: int, seed: int) -> list[
     return out
 
 
+HUMAN_OK = ("dung", "tu_choi_dung")
+
+
+def wilson(k: int, n: int, z: float = 1.96) -> list[float]:
+    p, d = k / n, 1 + z * z / n
+    mid, half = (p + z * z / (2 * n)) / d, z * ((p * (1 - p) + z * z / (4 * n)) / n) ** 0.5 / d
+    return [round(mid - half, 4), round(mid + half, 4)]
+
+
+def kappa(pairs: list[tuple[bool, bool]]) -> float:
+    n = len(pairs)
+    po = sum(a == b for a, b in pairs) / n
+    pa, pb = sum(a for a, _ in pairs) / n, sum(b for _, b in pairs) / n
+    pe = pa * pb + (1 - pa) * (1 - pb)
+    return round((po - pe) / (1 - pe), 4)
+
+
+def agreement(labels: list[str], key: list[dict], wrong_version: list[bool | None]) -> dict:
+    """labels[i], key[i], wrong_version[i] cùng một dòng phiếu. Đúng theo người = dung | tu_choi_dung."""
+    bad = sorted({l for l in labels if l not in LABELS.split(" | ")})
+    if bad:
+        raise SystemExit(f"nhãn lạ: {bad}")
+    pairs = [(l in HUMAN_OK, bool(k["scorer_accuracy"])) for l, k in zip(labels, key)]
+    agree = sum(a == b for a, b in pairs)
+    per = {}
+    for s in SYSTEMS:
+        idx = [i for i, k in enumerate(key) if k["system"] == s]
+        per[s] = {"n": len(idx), "human_correct": sum(pairs[i][0] for i in idx),
+                  "scorer_correct": sum(pairs[i][1] for i in idx),
+                  "labels": dict(Counter(labels[i] for i in idx).most_common()),
+                  "wrong_version_flagged": sum(bool(wrong_version[i]) for i in idx),
+                  "wrong_version_flagged_human_sai_phien_ban": sum(bool(wrong_version[i]) and labels[i] == "sai_phien_ban"
+                                                                   for i in idx)}
+    wv = Counter(f"{'gan_co' if w else 'khong_co'}|{l}" for w, l in zip(wrong_version, labels) if w is not None)
+    return {"n": len(pairs), "agree": agree, "agree_rate": round(agree / len(pairs), 4),
+            "agree_wilson95": wilson(agree, len(pairs)), "cohen_kappa": kappa(pairs),
+            "human_ok_scorer_ok": sum(a and b for a, b in pairs), "human_ok_scorer_wrong": sum(a and not b for a, b in pairs),
+            "human_wrong_scorer_ok": sum(b and not a for a, b in pairs), "human_wrong_scorer_wrong": sum(not a and not b for a, b in pairs),
+            "per_system": per,
+            "wrong_version_vs_human": {"flagged": sum(bool(w) for w in wrong_version),
+                                       "flagged_human_sai_phien_ban": wv["gan_co|sai_phien_ban"],
+                                       "human_sai_phien_ban": labels.count("sai_phien_ban"),
+                                       "table": dict(sorted(wv.items()))},
+            "disagreements": [{"stt": k["stt"], "system": k["system"], "group": k["group"], "human": l,
+                               "scorer_accuracy": k["scorer_accuracy"]}
+                              for (a, b), l, k in zip(pairs, labels, key) if a != b]}
+
+
+def score_filled(args: argparse.Namespace, release: list[dict], extra: dict, preds: dict) -> None:
+    from openpyxl import load_workbook
+    key_path = args.filled.parent / "khoa.jsonl"
+    key = [json.loads(line) for line in key_path.open(encoding="utf-8")]
+    sheet = list(load_workbook(args.filled, read_only=True)["Chấm"].iter_rows(min_row=2, values_only=True))
+    sheet = [r for r in sheet if r and r[0] is not None]
+    if len(sheet) != len(key):
+        raise SystemExit(f"phiếu {len(sheet)} dòng, khóa {len(key)} dòng")
+    by_id = {r["id"]: {**r, "_distractors": extra.get(r["id"], [])} for r in release}
+    labels, wrong = [], []
+    for line, k in zip(sheet, key):
+        r, p = by_id[k["id"]], preds[k["system"]][k["id"]]
+        if int(float(line[0])) != k["stt"] or line[1] != r["question"] or (line[4] or "") != (p.get("answer") or ""):
+            raise SystemExit(f"dòng {k['stt']} của phiếu không khớp khóa/dự đoán")
+        if sv.correct(r, p) != k["scorer_accuracy"]:
+            raise SystemExit(f"dòng {k['stt']}: scorer hiện tại khác khóa")
+        if not line[6]:
+            raise SystemExit(f"dòng {k['stt']} chưa có nhãn")
+        labels.append(line[6].strip())
+        said = f" {sv.norm(p.get('answer') if p.get('answerable') is not False else '')} "   # như row_scores
+        wrong.append(any(f" {d} " in said for d in r["_distractors"]) if r["answerable"] and r["_distractors"] else None)
+    out = agreement(labels, key, wrong)
+    out["note"] = ("Người chấm: CMT, tự chấm toàn bộ, không có AI nháp; chấm mù tên hệ và điểm máy. "
+                   "Mẫu: test, giua_khoang, T2/T3/T6, lần 1; không có T1.")
+    out["inputs"] = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
+                     for p in [args.filled, key_path, args.release, *(args.g4 / f"{s}.jsonl" for s in SYSTEMS)]}
+    args.out.mkdir(parents=True, exist_ok=True)
+    (args.out / "agreement.json").write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print(f"khớp {out['agree']}/{out['n']} {out['agree_wilson95']}, kappa {out['cohen_kappa']}; "
+          f"wrong_version {out['wrong_version_vs_human']['flagged_human_sai_phien_ban']}/{out['wrong_version_vs_human']['flagged']}"
+          f" → {args.out}/agreement.json")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--g4", type=Path, required=True)
@@ -50,6 +138,7 @@ def main() -> None:
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--n", type=int, default=100)
     ap.add_argument("--seed", type=int, default=20261113)
+    ap.add_argument("--filled", type=Path, help="phiếu đã chấm; khóa đọc ở cùng thư mục")
     args = ap.parse_args()
 
     release = sv.load_rows(args.release)
@@ -57,6 +146,8 @@ def main() -> None:
     rows = [{**r, "_distractors": extra.get(r["id"], [])} for r in release
             if r.get("split") == "test" and r["as_of_strategy"] == "giua_khoang" and r["group"] in ("T2", "T3", "T6")]
     preds = {s: {p["id"]: p for p in map(json.loads, (args.g4 / f"{s}.jsonl").open(encoding="utf-8"))} for s in SYSTEMS}
+    if args.filled:
+        return score_filled(args, release, extra, preds)
     picked = sample(rows, preds, args.n, args.seed)
 
     args.out.mkdir(parents=True, exist_ok=True)

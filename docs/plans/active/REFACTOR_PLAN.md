@@ -56,7 +56,7 @@ Thứ tự: Nhóm 2 → Nhóm 1 (song song, cần người) → Nhóm 3 → Nhó
 
 | # | Đề cương hứa | Hiện có | Cần làm |
 |---|---|---|---|
-| 3.1 | RQ1, vế LLM không truy xuất | `b1` gần 0 vì thước đòi chép đúng lời văn | 2–3 LLM; chấm tỷ lệ sai phiên bản bằng người hoặc giám khảo đã hiệu chuẩn (phụ thuộc 1.5) |
+| 3.1 | RQ1, vế LLM không truy xuất | `b1` gần 0 là thật: người chấm 2/34 đúng, 27/34 sai nội dung (1.5); sai phiên bản chưa đo được (phiếu không hiện bản khác) | 2–3 LLM; chấm tỷ lệ sai phiên bản bằng người hoặc giám khảo đã hiệu chuẩn (phụ thuộc 1.5) |
 | 3.2 | Bảng 1: T1 250, T2 400, T3 200, T4 150, T5 50, T6 100 | Bộ cuối: T2 127, T6 23, T3 6, T1 43 (đáp án ngắn hỏng), không có T5 | Amendment sửa đáp án ngắn T1 rồi chấm lại; bổ sung T3, T5, T6 có kiểm; báo số theo tầng chất lượng |
 | 3.3 | So với GraphRAG phi thời gian | `b5` là mở rộng một bước tự xây | LightRAG/GraphRAG thật trên tập con, hoặc ghi vào bảng lệch đề cương |
 | 3.4 | Thí nghiệm chuyển miền | Chưa có | Bảng theo miền (2.5 cung cấp số); ghi lệch |
@@ -187,6 +187,7 @@ Accuracy: `b4` 0,324 / 0,296; `bvnone` 0,311 / 0,302; `bvdate` 0,409 / 0,418; `b
 - [x] 13/11 2.1–2.5 chạy xong (`run_after_b7v.sh` bước attribution); 2.2 `b7v` truy xuất xong 361/361, exit 0. Kết quả ở mục "Kết quả Nhóm 2".
 - [x] 13/11 Gold mù người trên phần bộ cuối nó phủ (24 lineage): F1–F6 ủng hộ cả hai lần. `confirm_vilextime.run` thêm kiểm lát rỗng (báo "chưa chạy" thay vì lỗi); test hiện có vẫn qua.
 - [x] 13/11 1.5: phiếu chấm tay `data/review/human_score_g4/phieu_cham.xlsx` (100 câu: `b1`, `b4`, `proposed2` lần 1, ẩn tên hệ; khóa ở `khoa.jsonl`, không mở khi chấm). Script `scripts/review/human_answer_sheet.py`. CMT chấm.
+- [x] 14/11 1.5 xong: CMT tự chấm toàn bộ, không AI nháp; phiếu đã chấm `data/review/human_score_g4/phieu_cham_da_cham.xlsx` (sha256 614c267e…). `--filled` của cùng script tính độ khớp → `runs/posthoc_g4_20261113/human_score/agreement.json`; test `tests/test_human_answer_sheet.py`. Scorer khớp người 95/100 [0,888; 0,979], κ 0,888, 0 dương giả, 5 âm giả. Đúng theo người / scorer: `b1` 2/0 (34), `b4` 10/9 (33), `proposed2` 24/22 (33). `wrong_version`: 9 dòng gắn cờ; người gán 3 sai phiên bản, 4 sai nội dung (đều chép lời phiên bản khác), 2 đúng — phiếu không hiện bản khác nên không đo được độ chính xác chỉ số này. Evidence-gate 14/11: số PASS, tái chạy trùng byte; câu chữ đã sửa theo gate. Chương 6 §6.6.1, 6.6.2, 6.6.3, 6.6.5, 6.7, 6.8 đã sửa câu chữ.
 - [x] 13/11 3.2: nháp amendment sửa đáp án ngắn T1 (cơ học, bỏ ký hiệu liệt kê); `oracle` T1 2/43 → 37/43. Chờ CMT duyệt.
 - [x] 13/11 2.6 trên bộ cuối: `run_test_baselines.sh` xong 12:56:13 UTC, exit 0; kết quả ở mục 2.6 trên bộ cuối.
 - [x] 13/11 3.6 demo: chạy trọn một câu (20 căn cứ, GPT-4o mini, Verifier `pass`); sửa hai lỗi: demo theo `.env` gọi DeepSeek (trái ADR 0004 §3) nên nay mặc định generator đã khóa; `llm.complete(retries=0)` không gọi lần nào nên nay luôn thử ít nhất một lần (test hồi quy). Chậm: khoảng 5 phút một câu.
@@ -199,6 +200,7 @@ Accuracy: `b4` 0,324 / 0,296; `bvnone` 0,311 / 0,302; `bvdate` 0,409 / 0,418; `b
 ## Decisions
 
 - 2026-11-13 (CMT): gom sáu nhóm việc vào file này và làm Nhóm 2 ngay.
+- 2026-11-14 (1.5): không dùng LLM giám khảo cho Accuracy; scorer khớp người 95/100, không dương giả. F3 giữ phán quyết, độ lớn ghi là theo scorer; phiếu người không xác nhận hay bác được tỷ lệ sai phiên bản. Muốn đo: thêm lời văn phiên bản khác vào phiếu, chấm lại 9 dòng gắn cờ và 27 dòng `sai_noi_dung` của `b1`.
 
 ## Validation
 

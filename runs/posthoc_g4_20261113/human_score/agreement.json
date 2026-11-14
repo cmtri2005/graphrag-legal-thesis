@@ -1,0 +1,117 @@
+{
+ "n": 100,
+ "agree": 95,
+ "agree_rate": 0.95,
+ "agree_wilson95": [
+  0.8882,
+  0.9785
+ ],
+ "cohen_kappa": 0.8881,
+ "human_ok_scorer_ok": 31,
+ "human_ok_scorer_wrong": 5,
+ "human_wrong_scorer_ok": 0,
+ "human_wrong_scorer_wrong": 64,
+ "per_system": {
+  "b1": {
+   "n": 34,
+   "human_correct": 2,
+   "scorer_correct": 0,
+   "labels": {
+    "sai_noi_dung": 27,
+    "khong_tra_loi": 5,
+    "dung": 2
+   },
+   "wrong_version_flagged": 0,
+   "wrong_version_flagged_human_sai_phien_ban": 0
+  },
+  "b4": {
+   "n": 33,
+   "human_correct": 10,
+   "scorer_correct": 9,
+   "labels": {
+    "sai_noi_dung": 12,
+    "dung": 9,
+    "khong_tra_loi": 5,
+    "sai_phien_ban": 3,
+    "khang_dinh_bai_bo_sai": 3,
+    "tu_choi_dung": 1
+   },
+   "wrong_version_flagged": 8,
+   "wrong_version_flagged_human_sai_phien_ban": 3
+  },
+  "proposed2": {
+   "n": 33,
+   "human_correct": 24,
+   "scorer_correct": 22,
+   "labels": {
+    "dung": 23,
+    "sai_noi_dung": 4,
+    "khong_tra_loi": 4,
+    "khang_dinh_bai_bo_sai": 1,
+    "tu_choi_dung": 1
+   },
+   "wrong_version_flagged": 1,
+   "wrong_version_flagged_human_sai_phien_ban": 0
+  }
+ },
+ "wrong_version_vs_human": {
+  "flagged": 9,
+  "flagged_human_sai_phien_ban": 3,
+  "human_sai_phien_ban": 3,
+  "table": {
+   "gan_co|dung": 2,
+   "gan_co|sai_noi_dung": 4,
+   "gan_co|sai_phien_ban": 3,
+   "khong_co|dung": 29,
+   "khong_co|khang_dinh_bai_bo_sai": 4,
+   "khong_co|khong_tra_loi": 13,
+   "khong_co|sai_noi_dung": 33
+  }
+ },
+ "disagreements": [
+  {
+   "stt": 36,
+   "system": "b1",
+   "group": "T2",
+   "human": "dung",
+   "scorer_accuracy": false
+  },
+  {
+   "stt": 38,
+   "system": "proposed2",
+   "group": "T6",
+   "human": "dung",
+   "scorer_accuracy": false
+  },
+  {
+   "stt": 56,
+   "system": "b1",
+   "group": "T2",
+   "human": "dung",
+   "scorer_accuracy": false
+  },
+  {
+   "stt": 93,
+   "system": "proposed2",
+   "group": "T2",
+   "human": "dung",
+   "scorer_accuracy": false
+  },
+  {
+   "stt": 100,
+   "system": "b4",
+   "group": "T2",
+   "human": "dung",
+   "scorer_accuracy": false
+  }
+ ],
+ "note": "Người chấm: CMT, tự chấm toàn bộ, không có AI nháp; chấm mù tên hệ và điểm máy. Mẫu: test, giua_khoang, T2/T3/T6, lần 1; không có T1.",
+ "inputs": {
+  "data/review/human_score_g4/phieu_cham_da_cham.xlsx": "614c267e6bc32d34cdc91cf4d0bf841867fef842e9894a1a2cc9737ca4a850ca",
+  "data/review/human_score_g4/khoa.jsonl": "a972973966114a457ad7821b0615512d6296808eb31ebc38a2d608104e7f0c21",
+  "data/vilextime_final/vilextime.jsonl": "5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c",
+  "runs/final_g4_20261112/r1/test/b1.jsonl": "52c6dd3380c18c2fa26b187ee846117489ae51cad8f13779c062ed61f50aae00",
+  "runs/final_g4_20261112/r1/test/b4.jsonl": "f633e5650f5f3e0e0ad7ea3c1cc696405bd508c7808b6473ca0dcf96131b41a3",
+  "runs/final_g4_20261112/r1/test/proposed2.jsonl": "45723f8a2a3ee0e6115885b4613a9d1622f77e5e808042ac5f77dcf0deaf3a02"
+ }
+}
