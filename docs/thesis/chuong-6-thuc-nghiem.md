@@ -62,7 +62,7 @@ Quy tắc cho H0 theo F6, khóa trước khi chạy (ADR 0006 §6). Hai vòng th
 | Ủng hộ | Điểm quyết định B7 | **Ủng hộ, cả hai lần** | Ủng hộ, kèm ghi chú lần lặp test 2 không đủ bằng chứng |
 <!-- nguồn: runs/E3_v1/test/confirm.log; runs/E3_test2/rescore/confirm.log; runs/final_g4_20261112/compare_runs.json; docs/decisions/0006-*.md §6 -->
 
-Các chỉ số Recall@k, MRR, TV-Recall, Accuracy, EM/F1, TVER, VCR và TCS lấy từ scorer. Giám khảo LLM chưa được hiệu chuẩn với người nên không dùng. Phiếu người chấm 100 câu trả lời đang chờ (REFACTOR_PLAN 1.5).
+Các chỉ số Recall@k, MRR, TV-Recall, Accuracy, EM/F1, TVER, VCR và TCS lấy từ scorer. Giám khảo LLM chưa được hiệu chuẩn với người nên không dùng. Phiếu người chấm 100 câu (§6.6.5) cho scorer khớp người 96/100, không dương giả; vì vậy không dùng giám khảo LLM.
 
 ## 6.2. Vòng thử v1.0 — nhãn hỗn hợp người và agent
 
@@ -535,9 +535,9 @@ Trên 53 dòng này, F1–F6 đều ủng hộ ở cả hai lần, cùng chiều
 
 ### 6.6.5. Người chấm 100 câu trả lời
 
-CMT tự chấm toàn bộ 100 câu, không có AI viết nháp nhãn hay ghi chú (CMT tự khai). Câu được rút có seed từ lần 1 của bộ cuối: `b1` 34, `b4` 33, `proposed2` 33. Chỉ lấy lát giữa khoảng, nhóm T2/T3/T6; không có T1. Người chấm không thấy tên hệ và điểm máy. "Đúng theo người" là nhãn `dung` hoặc `tu_choi_dung`.
+CMT tự chấm toàn bộ 100 câu, không có AI viết nháp nhãn hay ghi chú (CMT tự khai). Câu được rút có seed từ lần 1 của bộ cuối: `b1` 34, `b4` 33, `proposed2` 33. Chỉ lấy lát giữa khoảng, nhóm T2/T3/T6; không có T1. Ở lần chấm đầu, người chấm không thấy tên hệ và điểm máy; lần xem lại (dòng 93) diễn ra sau khi đã thấy các dòng lệch với scorer. "Đúng theo người" là nhãn `dung` hoặc `tu_choi_dung`.
 
-**Scorer khớp người 96/100** [Wilson 95%: 0,902; 0,984], κ Cohen 0,910. Đây là số sau khi CMT xem lại. Bản chấm đầu cho 95/100 [0,888; 0,979], κ 0,888. Sau khi đã thấy các dòng lệch với scorer, CMT đổi đúng một nhãn (dòng 93, `dung` → `sai_noi_dung`, theo hướng khớp scorer) và thêm ghi chú ở ba dòng. Cả hai bản đều được báo.
+**Scorer khớp người 96/100** [Wilson 95%: 0,902; 0,984], κ Cohen 0,910. Đây là số sau khi CMT xem lại. Bản chấm đầu cho 95/100 [0,888; 0,979], κ 0,888. Sau khi đã thấy các dòng lệch với scorer, CMT đổi đúng một nhãn (dòng 93, `dung` → `sai_noi_dung`, theo hướng khớp scorer) viết lại ghi chú dòng 5, thêm ghi chú dòng 36, 64 và 93. Cả hai bản đều được báo.
 - Người đúng, scorer đúng: 31. Người sai, scorer sai: 65.
 - Người sai, scorer đúng: **0**. Scorer không chấm dễ dãi.
 - Người đúng, scorer sai: 4 (`b1` 2, `proposed2` 1, `b4` 1). Ba câu không chứa nguyên chuỗi đáp án ngắn (diễn đạt lại, hoặc khác ký hiệu liệt kê như "b)" thay "g)"). Một câu chứa đủ đáp án ngắn nhưng cũng chứa đoạn chỉ phiên bản khác có, nên phép tương phản chấm khác người; người chấm gán `dung` (không ghi chú).

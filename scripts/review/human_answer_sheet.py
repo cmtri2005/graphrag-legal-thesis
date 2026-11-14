@@ -120,7 +120,7 @@ def score_filled(args: argparse.Namespace, release: list[dict], extra: dict, pre
         said = f" {sv.norm(p.get('answer') if p.get('answerable') is not False else '')} "   # như row_scores
         wrong.append(any(f" {d} " in said for d in r["_distractors"]) if r["answerable"] and r["_distractors"] else None)
     out = agreement(labels, key, wrong)
-    out["note"] = ("Người chấm: CMT, tự chấm toàn bộ, không có AI nháp; chấm mù tên hệ và điểm máy. "
+    out["note"] = ("Người chấm: CMT, tự chấm toàn bộ, không có AI nháp; lần chấm đầu mù tên hệ và điểm máy; lần xem lại (dòng 93) sau khi đã thấy các dòng lệch với scorer. "
                    "Mẫu: test, giua_khoang, T2/T3/T6, lần 1; không có T1.")
     out["inputs"] = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
                      for p in [args.filled, key_path, args.release, *(args.g4 / f"{s}.jsonl" for s in SYSTEMS)]}

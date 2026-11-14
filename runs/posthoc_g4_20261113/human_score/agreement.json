@@ -98,7 +98,7 @@
    "scorer_accuracy": false
   }
  ],
- "note": "Người chấm: CMT, tự chấm toàn bộ, không có AI nháp; chấm mù tên hệ và điểm máy. Mẫu: test, giua_khoang, T2/T3/T6, lần 1; không có T1.",
+ "note": "Người chấm: CMT, tự chấm toàn bộ, không có AI nháp; lần chấm đầu mù tên hệ và điểm máy; lần xem lại (dòng 93) sau khi đã thấy các dòng lệch với scorer. Mẫu: test, giua_khoang, T2/T3/T6, lần 1; không có T1.",
  "inputs": {
   "data/review/human_score_g4/phieu_cham_da_cham.xlsx": "efc01d53dd114a2dccf044d37eedfcef936c23896633397c29b07a8f115c2508",
   "data/review/human_score_g4/khoa.jsonl": "a972973966114a457ad7821b0615512d6296808eb31ebc38a2d608104e7f0c21",
