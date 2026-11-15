@@ -43,6 +43,8 @@ class SystemSpec:
     lexical: bool = False
     dense: bool = False
     rerank: bool = False
+    rerank_model: str = ""            # cross-encoder id; empty = no reranker built (old specs that declare one)
+    pool: int = 0                     # candidates fused and reranked before the top-k cut (rerank only)
     temporal: str = "none"            # a tier of temporal.TIERS
     context: bool = False
     expand: int = 0                   # hops

@@ -355,3 +355,22 @@ def test_dense_reuses_query_scores_but_applies_each_dates_filter(indexed, tmp_pa
     assert VERSION_UNIT in [h.unit_id for h in local]
     dense.search(indexed, "different", "2021-01-01", layer="version", tier="none", k=1)
     assert encoded == ["q", "different"], "the date-only change recomputed dense scores"
+
+
+def test_reranker_reorders_the_pool_and_keeps_old_cache_keys():
+    from types import SimpleNamespace
+    from vilexgraph.framework import systems
+    from vilexgraph.framework.retrieve import Hit, Reranker, RetrievalCache
+
+    class Units:
+        def units(self, ids):
+            return [SimpleNamespace(unit_id=i, retrieval_text=lambda ctx, i=i: f"text {i}") for i in ids]
+
+    hits = [Hit(u, {"lexical_rrf": 1.0}) for u in ("a", "b", "c")]
+    reranker = Reranker("m", score=lambda pairs: [{"text a": 0.1, "text b": 0.9, "text c": 0.5}[t] for _, t in pairs])
+    out = reranker.rerank(Units(), "q", hits, k=2, context=True)
+    assert [h.unit_id for h in out] == ["b", "c"] and out[0].signals == {"lexical_rrf": 1.0, "rerank": 0.9}
+    b4 = systems.get("b4")
+    assert RetrievalCache.key(b4, "q", "2020-01-01") == RetrievalCache.key(b4.variant("x"), "q", "2020-01-01")
+    assert RetrievalCache.key(b4, "q", "2020-01-01") != RetrievalCache.key(
+        b4.variant("b4", rerank=True, rerank_model="m", pool=100), "q", "2020-01-01")

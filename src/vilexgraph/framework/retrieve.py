@@ -103,7 +103,8 @@ class RetrievalCache:
         signature = json.dumps(["retrieval-v3", fast, spec.layer, spec.temporal, spec.context,
                                 spec.k, spec.lexical,
                                 spec.dense, spec.rerank, spec.expand, spec.expand_edges,
-                                question, as_of if spec.temporal != "none" or spec.expand else None],
+                                question, as_of if spec.temporal != "none" or spec.expand else None]
+                               + ([spec.rerank_model, spec.pool] if spec.rerank_model else []),
                                ensure_ascii=False)
         return hashlib.sha256(signature.encode()).hexdigest()
 
@@ -337,6 +338,33 @@ class Dense:
         return hits
 
 
+class Reranker:
+    """Cross-encoder over (question, unit text) for the fused candidate pool, then the top-k cut.
+
+    Runs after the temporal filter, so it reorders admissible units only. Order ties keep the fused rank.
+    """
+
+    MAX_LENGTH = 512
+
+    def __init__(self, model: str, score=None) -> None:
+        self.model, self._score = model, score
+
+    def score(self, pairs: list[tuple[str, str]]) -> list[float]:
+        if self._score is None:
+            from sentence_transformers import CrossEncoder
+            encoder = CrossEncoder(self.model, max_length=self.MAX_LENGTH, device="cpu")
+            self._score = lambda batch: encoder.predict(batch, batch_size=16, show_progress_bar=False).tolist()
+        return self._score(pairs)
+
+    def rerank(self, corpus, question: str, hits: list[Hit], *, k: int, context: bool) -> list[Hit]:
+        if not hits:
+            return []
+        text = {u.unit_id: u.retrieval_text(context) for u in corpus.units([h.unit_id for h in hits])}
+        scores = self.score([(question, text.get(h.unit_id, "")) for h in hits])
+        order = sorted(range(len(hits)), key=lambda i: (-scores[i], i))[:k]
+        return [Hit(hits[i].unit_id, {**hits[i].signals, "rerank": float(scores[i])}) for i in order]
+
+
 @dataclass(frozen=True)
 class Search:
     """Callable ranking plus the shared unfiltered seed lookup for repeal notes."""
@@ -357,10 +385,11 @@ def searcher(corpus, spec: SystemSpec, cache: "RetrievalCache | None" = None, *,
         raise RuntimeError(
             "this index has no BM25 table; build it with "
             "`python scripts/eval/index_corpus.py --lexical`")
-    if spec.rerank:
+    if spec.rerank and not spec.rerank_model:
         raise NotImplementedError(
-            f"{spec.name} needs a reranker, which is not built. "
-            f"Run it on lexical retrieval alone with --no-dense.")
+            f"{spec.name} declares a reranker but names none. "
+            f"Run it with --hybrid (no reranker) or --rerank <model>.")
+    reranker = Reranker(spec.rerank_model) if spec.rerank_model else None
     if spec.dense and dense is None:
         raise RuntimeError(f"{spec.name} needs the embeddings: pass --embed <dir>")
     graph = None
@@ -384,18 +413,21 @@ def searcher(corpus, spec: SystemSpec, cache: "RetrievalCache | None" = None, *,
             hit = cache.get(key)
             if hit is not None:
                 return hit
+        depth = spec.pool if reranker else spec.k
         if spec.lexical and spec.dense:
             lexical_hits = lexical(corpus, question, as_of, layer=spec.layer, tier=spec.temporal,
-                                   context=spec.context, k=spec.k, fast=fast)
+                                   context=spec.context, k=depth, fast=fast)
             dense_hits = dense.search(corpus, question, as_of, layer=spec.layer,
-                                      tier=spec.temporal, k=spec.k)
-            found = fuse_rrf(lexical_hits, dense_hits, spec.k)
+                                      tier=spec.temporal, k=depth)
+            found = fuse_rrf(lexical_hits, dense_hits, depth)
         elif spec.dense:
             found = dense.search(corpus, question, as_of, layer=spec.layer,
                                  tier=spec.temporal, k=spec.k)
         else:
             found = lexical(corpus, question, as_of, layer=spec.layer, tier=spec.temporal,
                             context=spec.context, k=spec.k, fast=fast)
+        if reranker is not None:
+            found = reranker.rerank(corpus, question, found, k=spec.k, context=spec.context)
         if graph is not None:
             from .graphx import expand
             initial = None

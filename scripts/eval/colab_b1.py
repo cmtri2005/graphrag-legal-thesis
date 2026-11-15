@@ -90,6 +90,10 @@ def export_prompts(args) -> None:
         spec = spec.variant(f"{spec.name}-lex", dense=False, rerank=False)
     if getattr(args, "hybrid", False) and spec.rerank:
         spec = spec.variant(f"{spec.name}-hyb", rerank=False)
+    if getattr(args, "rerank", None):
+        if not (spec.lexical and spec.dense) or getattr(args, "hybrid", False):
+            raise SystemExit("--rerank reorders the BM25 + dense pool; it needs a hybrid system and no --hybrid")
+        spec = spec.variant(f"{spec.name}-rr", rerank=True, rerank_model=args.rerank, pool=args.pool)
     embed = (getattr(args, "embed", None) or embed_dir(spec.layer)) if spec.dense and not oracle else None
     corpus = Corpus(args.index) if spec.retrieves else None
     search = None if oracle else retriever(spec, corpus, args.hits_cache, embed=embed)
@@ -254,6 +258,8 @@ def main() -> None:
     ex.add_argument("--system", choices=sorted(systems.REGISTRY) + [ORACLE, ORACLE_NOW], default="b2ctx")
     ex.add_argument("--no-dense", action="store_true")
     ex.add_argument("--hybrid", action="store_true", help="BM25 + dense (RRF), no reranker: the proposal's L4")
+    ex.add_argument("--rerank", metavar="MODEL", help="cross-encoder that reorders a deeper pool before the top-k cut")
+    ex.add_argument("--pool", type=int, default=100, help="candidates fused and reranked (with --rerank)")
     ex.add_argument("--embed", type=Path, help="embeddings for dense systems (default: the system's layer)")
     ex.add_argument("--b2", action="store_true", help="include B2 metadata for b2ctx prompts")
     ex.add_argument("--out", required=True, type=Path)
