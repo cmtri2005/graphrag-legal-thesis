@@ -168,9 +168,20 @@ Mọi cấu hình mới chọn trên dev. Lên bộ cuối sau **một amendment
 - Tùy chọn, 0 đồng: thêm Qwen3-4B (đường chạy có sẵn theo ADR 0004) để có ba cỡ model.
 
 **B2. Bảng retriever × bộ lọc.**
-- Trước hết đo Recall@100 của vùng ứng viên hiện tại trên dev (miễn phí). Thấp thì reranker bị chặn trần; khi đó đổi embedding trước. **Đang chạy 15/11:** `runs/rerank_pool_dev_20261115/` (`b4`, `b7plus`, `b7`, `bvnone`).
+- **Bước 1 xong 15/11: vùng 100 ứng viên không chặn trần reranker** [XM, `runs/rerank_pool_dev_20261115/pool_recall.json`, dev]. Chưa cần đổi embedding.
+
+  | Hệ, T2 dev (72 dòng) | TV-Recall@1 | @20 | @100 |
+  |---|---|---|---|
+  | `b4` (không lọc) | 0,181 | 0,889 | 0,958 |
+  | `b7` (lọc ngày văn bản) | 0,319 | 0,917 | 0,972 |
+  | `b7plus` (lọc khoảng phiên bản) | 0,444 | 0,944 | 1,000 |
+  | `bvnone` (kho phiên bản, không lọc) | 0,194 | 0,903 | 0,972 |
+
+  T3 (19 dòng): @100 = 1,000 ở cả bốn hệ. T6 (42 dòng): Recall@100 theo đơn vị 0,833–0,952, thấp hơn. Đọc: căn cứ đúng gần như luôn nằm trong 100 ứng viên, nhưng chỉ đứng đầu ở 18–44% dòng. Chỗ để reranker cải thiện là rất lớn; câu hỏi của B2 là RAG phẳng hưởng bao nhiêu.
 - Ứng viên reranker: ba model trong PAPER_GAP P1-1. **Chọn theo MRR của RAG phẳng trên dev, không theo độ lợi của bộ lọc.** Chọn retriever tốt nhất cho đối thủ thì kết quả mới công bằng.
-- Code reranker đã commit 15/11 (`56b9c3e`). Còn thiếu: đường chấm cặp trên Colab (mục 3.3 điểm 3). Xuất cặp (câu hỏi, đoạn) của vùng 100 ứng viên, chấm bằng GPU, nhập điểm về, xếp lại tại máy.
+- **Bước 2, chờ CMT chạy Colab:** gói `colab_upload/rerank/` (14.012 cặp của dev, `rerank_score.py`, `README_COLAB.md`). T4 là đủ.
+- **Bước 3:** đặt file điểm vào `runs/rerank_pool_dev_20261115/scores/`, chạy `select.sh`. Tiêu chí chọn đã ghi trong script trước khi có điểm: MRR của `b4` trên `all`. Xếp lại đọc vùng ứng viên từ bộ đệm, không truy xuất lại (chạy thử với điểm giả: 151 câu trong 2,7 giây).
+- Số gốc để so trên dev, lai ghép k=20 (tập dượt G3): `b4` MRR 0,536, TV-R@1 0,212; `b7` 0,604, 0,331; `b7plus` 0,565, 0,411.
 - Bảng: {retriever hiện tại, retriever mạnh} × {không lọc, lọc ngày văn bản, lọc khoảng phiên bản}, thêm `bvdate`.
 - Truy xuất (TV-R@1, MRR) chạy cả thang, miễn phí và tất định. Sinh câu trả lời: Qwen (miễn phí) và GPT-4o mini hai lần cho 4 ô.
 - Dự đoán [GT]: reranker tăng MRR của RAG phẳng, TCS gần như đứng yên. Nếu đúng, đây là bằng chứng mạnh nhất cho C1.
@@ -386,7 +397,9 @@ Hoàn tác: plan này chỉ thêm file và thư mục run mới. Xóa thư mục
 - [ ] A3 Dựng phiếu / NMT gán sau khi A2 khóa / luật sư 30 dòng / đo đồng thuận.
 - [ ] B1 Qwen: dev / thêm `bvdate` / bộ cuối.
 - [x] 15/11 B2 code reranker commit `56b9c3e` (viết trước đó trong ngày, 35 test liên quan qua).
-- [ ] B2 Reranker: Recall@100 trên dev (đang chạy, `runs/rerank_pool_dev_20261115/`) / đường chấm cặp trên Colab / chọn trên dev / bộ cuối.
+- [x] 15/11 B2 bước 1: vùng ứng viên trên dev, 4 hệ, xong 11:42 UTC, exit 0 (`runs/rerank_pool_dev_20261115/`, dòng sổ chạy 15/11). T2 TV-Recall@100 từ 0,958 đến 1,000.
+- [x] 15/11 B2 đường chấm trên GPU: `scripts/eval/rerank_score.py` (`pairs`, `score`), `Reranker.from_scores`, cờ `--rerank-scores` ở `run_vilextime.py` và `colab_b1.py export`, vùng ứng viên dùng chung bộ đệm với lượt `--hybrid --k 100`. Thiếu điểm của một cặp thì báo lỗi, không tự chạy CPU. Test mới trong `tests/test_rag_retrieve.py`.
+- [ ] B2 CMT chạy Colab chấm cặp / `select.sh` chọn trên dev / amendment / bộ cuối.
 - [ ] B3 Chọn một trong hai.
 - [ ] B4 Sửa T1, chấm lại.
 - [ ] B5 `ranh_gioi`.

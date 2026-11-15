@@ -1,0 +1,66 @@
+[
+ {
+  "spec": {
+   "name": "bvnone",
+   "layer": "version",
+   "lexical": true,
+   "dense": true,
+   "rerank": false,
+   "rerank_model": "",
+   "pool": 0,
+   "temporal": "none",
+   "context": true,
+   "expand": 0,
+   "expand_edges": "none",
+   "verify": "off",
+   "k": 100,
+   "note": "post hoc — layer B, no temporal filter: flat RAG over the version store",
+   "repeal_note": false,
+   "validity_note": false
+  },
+  "as_of_strategy": "giua_khoang",
+  "embed": "None",
+  "argv": [
+   "--system",
+   "bvnone",
+   "--hybrid",
+   "--retrieval-only",
+   "--k",
+   "100",
+   "--split",
+   "dev",
+   "--as-of-strategy",
+   "giua_khoang",
+   "--release",
+   "data/vilextime_dataset_h6/vilextime.jsonl",
+   "--hits-cache",
+   "runs/rerank_pool_dev_20261115/retrieval.sqlite",
+   "--out",
+   "runs/rerank_pool_dev_20261115/pool/bvnone.jsonl"
+  ],
+  "commit": "816970143ddb41d17dbeb1d76bc4d01ba27692ba",
+  "uncommitted": null,
+  "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+  "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+  "index_counts": {
+   "documents": 17333,
+   "units_asis": 1509363,
+   "units_version": 1477102,
+   "instructions": 53991,
+   "propagated_windows": 1476969,
+   "versions_with_local_window": 1477102,
+   "provisions_with_context": 1700484
+  },
+  "prompt_sha256": "8dc3549b4773fc4cd866480f61d0afc90cc008ee45332ca3b4a0014f55e5716a",
+  "python": "3.12.3",
+  "started": "2026-11-15T11:24:49+00:00",
+  "finished": true,
+  "ended": "2026-11-15T11:42:28+00:00",
+  "written": 151,
+  "cached": 0,
+  "failed": 0,
+  "models": {
+   "none/none": 151
+  }
+ }
+]
