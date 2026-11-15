@@ -374,3 +374,34 @@ def test_reranker_reorders_the_pool_and_keeps_old_cache_keys():
     assert RetrievalCache.key(b4, "q", "2020-01-01") == RetrievalCache.key(b4.variant("x"), "q", "2020-01-01")
     assert RetrievalCache.key(b4, "q", "2020-01-01") != RetrievalCache.key(
         b4.variant("b4", rerank=True, rerank_model="m", pool=100), "q", "2020-01-01")
+
+
+def test_reranker_reads_gpu_scores_and_shares_the_unreranked_pool(tmp_path):
+    import json
+    import sys
+    from types import SimpleNamespace
+    from vilexgraph.framework import systems
+    from vilexgraph.framework.retrieve import Hit, Reranker, RetrievalCache, pair_key, pool_spec
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts/eval"))
+    import rerank_score
+    assert rerank_score.pair_key("q", "t ế") == pair_key("q", "t ế") and rerank_score.MAX_LENGTH == Reranker.MAX_LENGTH
+
+    class Units:
+        def units(self, ids):
+            return [SimpleNamespace(unit_id=i, retrieval_text=lambda ctx, i=i: f"text {i}") for i in ids]
+
+    scores = tmp_path / "scores.jsonl"
+    scores.write_text("".join(json.dumps({"key": pair_key("q", f"text {u}"), "score": s, "model": "m"}) + "\n"
+                              for u, s in (("a", 0.1), ("b", 0.9))), encoding="utf-8")
+    hits = [Hit(u, {}) for u in ("a", "b")]
+    assert [h.unit_id for h in Reranker.from_scores("m", scores).rerank(Units(), "q", hits, k=2, context=True)] == ["b", "a"]
+    with pytest.raises(RuntimeError, match="no score"):     # never a silent CPU fallback
+        Reranker.from_scores("m", scores).rerank(Units(), "q", hits + [Hit("c", {})], k=2, context=True)
+    with pytest.raises(ValueError, match="scores of 'm'"):
+        Reranker.from_scores("other", scores)
+    # one `--hybrid --k 100` retrieval feeds every reranker: the pool's cache key is that run's key
+    for name in ("b4", "b7", "b7plus"):
+        plain = systems.get(name).variant("x", rerank=False, k=100)
+        reranked = systems.get(name).variant("y", rerank=True, rerank_model="m", pool=100)
+        assert RetrievalCache.key(pool_spec(reranked), "q", "2020-01-01") == RetrievalCache.key(plain, "q", "2020-01-01")

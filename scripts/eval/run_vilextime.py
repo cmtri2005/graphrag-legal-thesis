@@ -111,14 +111,14 @@ def provenance(args, spec: systems.SystemSpec, corpus: Corpus | None) -> dict:
 
 
 def retriever(spec: systems.SystemSpec, corpus: Corpus | None, hits: Path | None,
-              fast: bool = False, embed: Path | None = None):
+              fast: bool = False, embed: Path | None = None, rerank_scores: Path | None = None):
     """The search callable for this system, or None when it does not retrieve."""
     if not spec.retrieves:
         return None
     from vilexgraph.framework import retrieve  # imported late: P1 ships without it
     dense = retrieve.Dense(embed) if spec.dense and embed else None
     return retrieve.searcher(corpus, spec, retrieve.RetrievalCache(hits, cache_scope(corpus, dense)),
-                             fast=fast, dense=dense)
+                             fast=fast, dense=dense, rerank_scores=rerank_scores)
 
 
 def cache_scope(corpus: Corpus | None, dense) -> str:
@@ -151,6 +151,9 @@ def main() -> None:
     ap.add_argument("--hybrid", action="store_true",
                     help="run a reranker-declaring system on BM25 + dense (RRF) without the reranker, "
                          "which is not built: the retrieval the proposal's L4 commits to")
+    ap.add_argument("--rerank", metavar="MODEL", help="cross-encoder that reorders a deeper pool before the top-k cut")
+    ap.add_argument("--pool", type=int, default=100, help="candidates fused and reranked (with --rerank)")
+    ap.add_argument("--rerank-scores", type=Path, help="scores of --rerank from rerank_score.py (GPU), instead of CPU")
     ap.add_argument("--embed", type=Path,
                     help="embeddings written by scripts/eval/embed_corpus.py (default: the system's layer)")
     ap.add_argument("--cache", type=Path, default=CACHE)
@@ -177,6 +180,10 @@ def main() -> None:
         spec = spec.variant(f"{spec.name}-hyb", rerank=False)
     if args.k:
         spec = spec.variant(spec.name, k=args.k)
+    if args.rerank:     # same rule as colab_b1.py export
+        if not (spec.lexical and spec.dense) or args.hybrid:
+            raise SystemExit("--rerank reorders the BM25 + dense pool; it needs a hybrid system and no --hybrid")
+        spec = spec.variant(f"{spec.name}-rr", rerank=True, rerank_model=args.rerank, pool=args.pool)
 
     rows = queries(args.release, args.split, args.limit, args.as_of_strategy)
     skip = set() if args.restart else done_ids(args.out)
@@ -188,7 +195,8 @@ def main() -> None:
 
     corpus = Corpus(args.index) if spec.retrieves else None
     search = retriever(spec, corpus, None if args.no_cache else args.hits_cache,
-                       fast=args.fast_retrieval, embed=args.embed or (embed_dir(spec.layer) if spec.dense else None))
+                       fast=args.fast_retrieval, embed=args.embed or (embed_dir(spec.layer) if spec.dense else None),
+                       rerank_scores=args.rerank_scores)
     cache = generate.Cache(None if args.no_cache else args.cache)
     args.out.parent.mkdir(parents=True, exist_ok=True)
 

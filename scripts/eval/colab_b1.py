@@ -96,7 +96,8 @@ def export_prompts(args) -> None:
         spec = spec.variant(f"{spec.name}-rr", rerank=True, rerank_model=args.rerank, pool=args.pool)
     embed = (getattr(args, "embed", None) or embed_dir(spec.layer)) if spec.dense and not oracle else None
     corpus = Corpus(args.index) if spec.retrieves else None
-    search = None if oracle else retriever(spec, corpus, args.hits_cache, embed=embed)
+    search = None if oracle else retriever(spec, corpus, args.hits_cache, embed=embed,
+                                           rerank_scores=getattr(args, "rerank_scores", None))
     gold = {r["id"]: [r["version_id"]] if r["version_id"] else r["accepted_evidence"]
             for r in read_jsonl(args.release)} if oracle else {}
     if name == ORACLE_NOW:
@@ -260,6 +261,7 @@ def main() -> None:
     ex.add_argument("--hybrid", action="store_true", help="BM25 + dense (RRF), no reranker: the proposal's L4")
     ex.add_argument("--rerank", metavar="MODEL", help="cross-encoder that reorders a deeper pool before the top-k cut")
     ex.add_argument("--pool", type=int, default=100, help="candidates fused and reranked (with --rerank)")
+    ex.add_argument("--rerank-scores", type=Path, help="scores of --rerank from rerank_score.py (GPU), instead of CPU")
     ex.add_argument("--embed", type=Path, help="embeddings for dense systems (default: the system's layer)")
     ex.add_argument("--b2", action="store_true", help="include B2 metadata for b2ctx prompts")
     ex.add_argument("--out", required=True, type=Path)

@@ -338,6 +338,19 @@ class Dense:
         return hits
 
 
+def pair_key(question: str, text: str) -> str:
+    """Names one (question, unit text) pair in a score file of scripts/eval/rerank_score.py."""
+    return hashlib.sha256(f"{question}\x00{text}".encode()).hexdigest()
+
+
+def pool_spec(spec: SystemSpec) -> SystemSpec:
+    """The reranker's candidate pool is what the same system returns unreranked at k = pool.
+
+    Sharing that cache entry lets one `--hybrid --k <pool>` retrieval feed every reranker tried on it.
+    """
+    return spec.variant(spec.name, k=spec.pool, rerank=False, rerank_model="", pool=0, expand=0)
+
+
 class Reranker:
     """Cross-encoder over (question, unit text) for the fused candidate pool, then the top-k cut.
 
@@ -348,6 +361,25 @@ class Reranker:
 
     def __init__(self, model: str, score=None) -> None:
         self.model, self._score = model, score
+
+    @classmethod
+    def from_scores(cls, model: str, path: Path | str) -> "Reranker":
+        """Scores computed on a GPU elsewhere (rerank_score.py). A pair without a score is an error:
+        this machine has no GPU, and a silent CPU fallback would mix two scorers in one run."""
+        table = {}
+        for line in Path(path).open(encoding="utf-8"):
+            row = json.loads(line)
+            if row["model"] != model:
+                raise ValueError(f"{path} holds scores of {row['model']!r}, not {model!r}")
+            table[row["key"]] = row["score"]
+
+        def score(pairs: list[tuple[str, str]]) -> list[float]:
+            try:
+                return [table[pair_key(q, t)] for q, t in pairs]
+            except KeyError:
+                raise RuntimeError(f"{path} has no score for a (question, unit) pair of this pool; "
+                                   "export the pairs again and score them") from None
+        return cls(model, score)
 
     def score(self, pairs: list[tuple[str, str]]) -> list[float]:
         if self._score is None:
@@ -377,7 +409,7 @@ class Search:
 
 
 def searcher(corpus, spec: SystemSpec, cache: "RetrievalCache | None" = None, *,
-             fast: bool = False, dense: Dense | None = None):
+             fast: bool = False, dense: Dense | None = None, rerank_scores: Path | None = None):
     """The search callable for one system: `(question, as_of) -> [Hit, ...]`."""
     if not spec.retrieves:
         raise ValueError(f"{spec.name} does not retrieve")
@@ -389,7 +421,10 @@ def searcher(corpus, spec: SystemSpec, cache: "RetrievalCache | None" = None, *,
         raise NotImplementedError(
             f"{spec.name} declares a reranker but names none. "
             f"Run it with --hybrid (no reranker) or --rerank <model>.")
-    reranker = Reranker(spec.rerank_model) if spec.rerank_model else None
+    reranker = None
+    if spec.rerank_model:
+        reranker = (Reranker.from_scores(spec.rerank_model, rerank_scores) if rerank_scores
+                    else Reranker(spec.rerank_model))
     if spec.dense and dense is None:
         raise RuntimeError(f"{spec.name} needs the embeddings: pass --embed <dir>")
     graph = None
@@ -415,11 +450,16 @@ def searcher(corpus, spec: SystemSpec, cache: "RetrievalCache | None" = None, *,
                 return hit
         depth = spec.pool if reranker else spec.k
         if spec.lexical and spec.dense:
-            lexical_hits = lexical(corpus, question, as_of, layer=spec.layer, tier=spec.temporal,
-                                   context=spec.context, k=depth, fast=fast)
-            dense_hits = dense.search(corpus, question, as_of, layer=spec.layer,
-                                      tier=spec.temporal, k=depth)
-            found = fuse_rrf(lexical_hits, dense_hits, depth)
+            pool_key = RetrievalCache.key(pool_spec(spec), question, as_of, fast=fast) if cache and reranker else None
+            found = cache.get(pool_key) if pool_key else None
+            if found is None:
+                lexical_hits = lexical(corpus, question, as_of, layer=spec.layer, tier=spec.temporal,
+                                       context=spec.context, k=depth, fast=fast)
+                dense_hits = dense.search(corpus, question, as_of, layer=spec.layer,
+                                          tier=spec.temporal, k=depth)
+                found = fuse_rrf(lexical_hits, dense_hits, depth)
+                if pool_key:
+                    cache.put(pool_key, found)
         elif spec.dense:
             found = dense.search(corpus, question, as_of, layer=spec.layer,
                                  tier=spec.temporal, k=spec.k)
