@@ -159,6 +159,30 @@ def list_models(provider: str | None = None) -> list[str]:
     return sorted(m["id"] for m in response.json().get("data", []))
 
 
+def chat_payload(system: str, user: str, *, model: str, temperature: float, max_tokens: int,
+                 effort: str | None = None, seed: int | None = None) -> dict:
+    """The request body of one completion. `complete` and the batch path both send exactly this."""
+    payload = {"model": model, "temperature": temperature, "max_tokens": max_tokens,
+               "messages": [{"role": "system", "content": system},
+                            {"role": "user", "content": user}]}
+    if effort:
+        payload["effort"] = effort
+    if seed is not None:
+        payload["seed"] = seed
+    return payload
+
+
+def read_completion(body: dict, provider: str, model: str, temperature: float) -> Completion:
+    """A `chat/completions` response body as a Completion; a cut-off answer is the caller's to judge."""
+    choices = body.get("choices") or []
+    if not choices:
+        raise LLMError(f"{provider} returned no choice: {str(body)[:400]}")
+    usage = body.get("usage") or {}
+    return Completion((choices[0]["message"].get("content") or "").strip(), provider, model, temperature,
+                      usage.get("prompt_tokens"), usage.get("completion_tokens"), choices[0].get("finish_reason"),
+                      body.get("model"), body.get("system_fingerprint"))
+
+
 def complete(system: str, user: str, *, provider: str | None = None, model: str | None = None,
              temperature: float = 0.0, max_tokens: int = 4096, timeout: int = 90,
              retries: int = 5, session: requests.Session | None = None,
@@ -176,13 +200,8 @@ def complete(system: str, user: str, *, provider: str | None = None, model: str 
     base, key, _ = PROVIDERS[provider]
     model = model_for(provider, model)
     post = (session or requests).post
-    payload = {"model": model, "temperature": temperature, "max_tokens": max_tokens,
-               "messages": [{"role": "system", "content": system},
-                            {"role": "user", "content": user}]}
-    if effort:
-        payload["effort"] = effort
-    if seed is not None:
-        payload["seed"] = seed
+    payload = chat_payload(system, user, model=model, temperature=temperature, max_tokens=max_tokens,
+                           effort=effort, seed=seed)
 
     retries = max(1, retries)   # `retries` counts attempts; 0 must still make one call, not none
     for attempt in range(retries):
@@ -197,15 +216,8 @@ def complete(system: str, user: str, *, provider: str | None = None, model: str 
             continue
         if not response.ok:
             raise LLMError(f"{provider} {response.status_code}: {response.text[:400]}")
-        payload_out = response.json()
-        choices = payload_out.get("choices") or []
-        if not choices:
-            raise LLMError(f"{provider} returned no choice: {response.text[:400]}")
-        usage = payload_out.get("usage") or {}
-        finish = choices[0].get("finish_reason")
-        done = Completion((choices[0]["message"].get("content") or "").strip(), provider, model, temperature,
-                          usage.get("prompt_tokens"), usage.get("completion_tokens"), finish,
-                          payload_out.get("model"), payload_out.get("system_fingerprint"))
+        done = read_completion(response.json(), provider, model, temperature)
+        finish = done.finish_reason
         # Reasoning models (gpt-oss, qwen3) spend max_tokens on hidden thinking
         # first, so a cut-off answer looks like a bad one. Never pass it on.
         if finish == "length":
