@@ -1,0 +1,9 @@
+{
+  "rows": 151,
+  "raw_identical_r2_vs_r1": 100,
+  "raw_identical_batch_vs_r1": 92,
+  "raw_identical_batch_vs_r2": 96,
+  "accuracy_b4_r1": 0.3576158940397351,
+  "accuracy_b4_r2": 0.3708609271523179,
+  "accuracy_b4_batch": 0.3841059602649007
+}

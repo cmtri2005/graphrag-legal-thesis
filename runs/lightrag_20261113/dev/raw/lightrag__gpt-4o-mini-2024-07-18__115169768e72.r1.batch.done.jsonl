@@ -1,0 +1,1 @@
+{"batch_id": "batch_6af94baa9d9481908ab544c8abb4a0bb", "input_file_id": "file-X9gxfeBFmY6quf6zbQ1JEK", "input_sha256": "29b594bb05796ca7ebe2eb9063ab78a4b8e7694e870c7b1074634098935d472e", "rows": 30, "submitted": "2026-11-15T06:05:30+00:00", "status": "completed", "request_counts": {"total": 30, "completed": 30, "failed": 0}, "refused": []}
