@@ -1,0 +1,18 @@
+{
+  "provider": "vllm",
+  "model": "Qwen/Qwen3.8-27B",
+  "revision": "37561816e66b5b9153b1b64c10968c18c1e6f4a0",
+  "temperature": 0.0,
+  "max_tokens": 1024,
+  "seed": 20261109,
+  "transport": "local",
+  "thinking": false,
+  "max_model_len": 40960,
+  "system": "lightrag",
+  "split": "dev",
+  "prompt_file_sha256": "115169768e728fd49aa28d6b4723ea3e90126d838da276dcd7aad501415a2d8d",
+  "run_tag": "r1",
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "vllm": "0.33.0",
+  "started": "2026-11-15T10:49:45+00:00"
+}

@@ -1,0 +1,39 @@
+{
+  "system": "oracle",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "21986e306acdaa44d3ddd774c4ec78164ca2eb1497d4a00e3c624ac406752f7a",
+  "raw_file_sha256": "22d8daa59eb8681ab354d75bf687794a95e176f73513e95b09f20894aad70dfa",
+  "model": "Qwen/Qwen3.8-27B",
+  "revision": "37561816e66b5b9153b1b64c10968c18c1e6f4a0",
+  "gpu": [
+    "NVIDIA A100-SXM4-80GB"
+  ],
+  "run_tag": null,
+  "served_models": {
+    "37561816e66b5b9153b1b64c10968c18c1e6f4a0": 151
+  },
+  "system_fingerprints": {
+    "None": 151
+  },
+  "rows": 151,
+  "format_ok": 148,
+  "truncated": 0,
+  "prompt_tokens_mean": 780.8211920529801,
+  "completion_tokens_mean": 79.78145695364239,
+  "generation_seconds": 63.07577024599982,
+  "export": {
+    "system": "oracle",
+    "spec": null,
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": null,
+    "embed_sha256": null,
+    "rows": 151,
+    "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "21986e306acdaa44d3ddd774c4ec78164ca2eb1497d4a00e3c624ac406752f7a"
+  }
+}

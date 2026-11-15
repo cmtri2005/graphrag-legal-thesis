@@ -1,0 +1,53 @@
+{
+  "system": "proposed2",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "a31ed09a40e1a1bb3636131b26070ab8e1256d910fa549e1c3d88a6d9b4e7e3d",
+  "raw_file_sha256": "0d849146746e2ef48777cb235fa5280270a825948ab4d76f81932fca84d73590",
+  "model": "Qwen/Qwen3.8-27B",
+  "revision": "37561816e66b5b9153b1b64c10968c18c1e6f4a0",
+  "gpu": [
+    "NVIDIA A100-SXM4-80GB"
+  ],
+  "run_tag": null,
+  "served_models": {
+    "37561816e66b5b9153b1b64c10968c18c1e6f4a0": 151
+  },
+  "system_fingerprints": {
+    "None": 151
+  },
+  "rows": 151,
+  "format_ok": 141,
+  "truncated": 0,
+  "prompt_tokens_mean": 4727.87417218543,
+  "completion_tokens_mean": 85.41059602649007,
+  "generation_seconds": 203.6532105869992,
+  "export": {
+    "system": "proposed2",
+    "spec": {
+      "name": "proposed2",
+      "layer": "version",
+      "lexical": true,
+      "dense": true,
+      "rerank": false,
+      "temporal": "propagated",
+      "context": true,
+      "expand": 1,
+      "expand_edges": "rel_up",
+      "verify": "reject",
+      "k": 20,
+      "note": "L4–L5: 𝒰ₜ by formula (3), hybrid ranking, citation-constrained answer, Verifier",
+      "repeal_note": false
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": "data/derived/embed/version-vietnamese-embedding",
+    "embed_sha256": null,
+    "rows": 151,
+    "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "a31ed09a40e1a1bb3636131b26070ab8e1256d910fa549e1c3d88a6d9b4e7e3d"
+  }
+}

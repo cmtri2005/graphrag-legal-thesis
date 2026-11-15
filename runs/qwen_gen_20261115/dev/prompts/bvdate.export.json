@@ -1,0 +1,29 @@
+{
+  "system": "bvdate",
+  "spec": {
+    "name": "bvdate",
+    "layer": "version",
+    "lexical": true,
+    "dense": true,
+    "rerank": false,
+    "temporal": "none",
+    "context": true,
+    "expand": 0,
+    "expand_edges": "none",
+    "verify": "off",
+    "k": 20,
+    "note": "post hoc — bvnone with each unit's validity windows printed in the prompt",
+    "repeal_note": false,
+    "validity_note": true
+  },
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "no_dense": false,
+  "hybrid": true,
+  "embed": "data/derived/embed/version-vietnamese-embedding",
+  "embed_sha256": null,
+  "rows": 151,
+  "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+  "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+  "prompt_file_sha256": "ac401f5cbdb1a18a98ff2ba90a93f7cc87cf89a5b38215a6374d2927e68e5a3f"
+}

@@ -1,0 +1,36 @@
+{
+  "system": "lightrag",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "115169768e728fd49aa28d6b4723ea3e90126d838da276dcd7aad501415a2d8d",
+  "raw_file_sha256": "4b4d0299a3b1b04db1bc7b5e828016af5cd4d071ca9b7d8cf372f733c899412b",
+  "model": "Qwen/Qwen3.8-27B",
+  "revision": "37561816e66b5b9153b1b64c10968c18c1e6f4a0",
+  "gpu": [
+    "NVIDIA A100-SXM4-80GB"
+  ],
+  "run_tag": null,
+  "served_models": {
+    "37561816e66b5b9153b1b64c10968c18c1e6f4a0": 151
+  },
+  "system_fingerprints": {
+    "None": 151
+  },
+  "rows": 151,
+  "format_ok": 76,
+  "truncated": 0,
+  "prompt_tokens_mean": 27335.774834437085,
+  "completion_tokens_mean": 104.94039735099338,
+  "generation_seconds": 1207.5022318770007,
+  "export": {
+    "system": "lightrag",
+    "spec": null,
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "rows": 151,
+    "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+    "contexts_sha256": "a78d24dcbfeda8ccf17bb1743b7e580376b8403491889ce21411466cabed9101",
+    "empty_contexts": 0,
+    "prompt_file_sha256": "115169768e728fd49aa28d6b4723ea3e90126d838da276dcd7aad501415a2d8d"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "system": "b3",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "21afd0ce32274799573b90eb4daffe2d7b02c2765b99bad09b5db0080ebfd037",
+  "raw_file_sha256": "7406178de1b6035f6278965be909377d7c399c6ac56e1e5fa3fc61c814435f9a",
+  "model": "Qwen/Qwen3.8-27B",
+  "revision": "37561816e66b5b9153b1b64c10968c18c1e6f4a0",
+  "gpu": [
+    "NVIDIA A100-SXM4-80GB"
+  ],
+  "run_tag": null,
+  "served_models": {
+    "37561816e66b5b9153b1b64c10968c18c1e6f4a0": 151
+  },
+  "system_fingerprints": {
+    "None": 151
+  },
+  "rows": 151,
+  "format_ok": 129,
+  "truncated": 0,
+  "prompt_tokens_mean": 4715.880794701987,
+  "completion_tokens_mean": 95.31788079470199,
+  "generation_seconds": 208.86033796900006,
+  "export": {
+    "system": "b3",
+    "spec": {
+      "name": "b3",
+      "layer": "asis",
+      "lexical": false,
+      "dense": true,
+      "rerank": false,
+      "temporal": "none",
+      "context": true,
+      "expand": 0,
+      "expand_edges": "none",
+      "verify": "off",
+      "k": 20,
+      "note": "B3 — dense",
+      "repeal_note": false
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": "data/derived/embed/asis-vietnamese-embedding",
+    "embed_sha256": "3a8b143bd5e6307642b2f011020d3a7ed9b32599de7861ef992555343ee4915e",
+    "rows": 151,
+    "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "21afd0ce32274799573b90eb4daffe2d7b02c2765b99bad09b5db0080ebfd037"
+  }
+}
