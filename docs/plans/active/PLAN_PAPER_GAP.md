@@ -75,7 +75,7 @@ Nguồn: `runs/final_g4_20261112/{r1,r2}/test/all.score.json` (đọc lại hôm
 | W1–W6, W8 | Xong | |
 | W7, W9–W12 | Chưa | |
 
-Khóa luận: chương 6 còn 11 chỗ `[CHỜ]`, chương 2 còn 9 chỗ `[CẦN]`, chương 4 còn 6 + 2, chương 3 còn 1 + 2. Chương 6 mới nhắc LightRAG một lần, chưa có Qwen3.8 và reranker.
+Khóa luận: còn 50 chỗ `[CHỜ]`, `[CẦN]` (chương 6: 11 + 1; chương 2: 13; chương 4: 7 + 2; chương 5: 2 + 3; chương 1: 3; chương 3: 1 + 2). Bảng từng chỗ ở mục 6, WP-E chi tiết. Chương 6 mới nhắc LightRAG một lần, chưa có Qwen3.8 và reranker.
 
 ### 3.3. Sáu điều thấy thêm khi rà, PAPER_GAP chưa ghi
 
@@ -134,13 +134,26 @@ Bãi bỏ (T6) **không** nằm trong bảng. Viết thẳng là bài toán mở
 - Việc này cũng là M2 (đối chiếu tay) mà đề cương hứa. Ghi rõ như vậy, không làm M2 riêng.
 - Ngưỡng: giữ B6 của kế hoạch chính (95% sau phân xử). Không hạ.
 
-**A3. Người thứ hai kiểm nhãn.** Thiết kế "một mẫu, hai pha" để đỡ giờ đọc:
-- Pha 1 là A2 (mù). Khóa kết quả.
-- Pha 2: mở câu hỏi và đáp án của 50 dòng trong chính mẫu đó, người đọc trả lời Q1–Q4. Thêm 50 dòng đã bị loại ở vòng nhãn AI.
-- Báo đồng thuận người–người và người–AI (AC1, kèm KTC). Luật sư kiểm 30 dòng `dat`.
-- Chỉ gọi là alt-test nếu đủ ba người gán. Không đủ thì gọi đúng tên: đồng thuận.
+**A3. Người thứ hai kiểm nhãn (đặc tả 15/11).**
 
-**A4. Việc người còn nợ trong đề cương, làm nếu còn giờ:** TVER theo người (khoảng 100 trích dẫn), mã hóa lỗi E7. Không làm thì ghi "không làm" trong chương 6, không để `[CHỜ]`.
+Câu hỏi: nhãn "AI gán, CMT duyệt" lệch nhãn của một người độc lập bao nhiêu.
+
+- **Người gán:** NMT, sau khi xong A2. Người đọc thứ hai của A2 nếu có. Luật sư: 30 dòng `dat`.
+- **Mẫu: 139 lineage, không rút ngẫu nhiên** [XM]:
+  - 81 lineage `dat`: chính 81 lineage của A2. NMT đã đọc nguồn nên pha này nhanh.
+  - 58 lineage `khong_dat`: toàn bộ dòng bị loại của hai lô mới. Lô 2: 55 (T2 35, T6 18, T3 2), là 128 lineage của `data/review/the4/lo2_moi_worksheet.jsonl` trừ `lo2_dat` trong `data/review/ai_research/2026-11-10_cmt_confirmed/cmt_confirmed.json`. Lô bổ sung: 3, từ `2026-11-08_supp18/cmt_accepted_labels.jsonl`.
+  - Không lấy 87 dòng bị loại của lô silver: người gán A đã tự gán chúng ngày 25/10.
+  - `data/vilextime_final/excluded_rows.jsonl` rỗng, không dùng làm nguồn.
+- **Phiếu:** câu hỏi, các mốc, đáp án, toàn văn nguồn (worksheet đã có sẵn). Không hiện nhãn AI, lý do của AI, quyết định của CMT. Trộn thứ tự hai loại. Người gán trả lời Q1–Q4 theo hướng dẫn 4.0 (`docs/vilextime-annotation.md`) và ghi phút.
+- **Q1 của phần `dat` không hỏi lại:** lấy từ kết quả A2, vì đó là lần đọc mù. Pha này chỉ thêm Q2–Q4 cho 81 dòng đó.
+- **Thứ tự:** chỉ đưa phiếu này sau khi bước `reveal` của A2 đã khóa. Phiếu hiện đáp án của kho.
+- **Luật sư:** 30 dòng `dat` trùng 30 dòng chung của A2 (12 T6, 18 T2). Ba người cùng xem 30 dòng này.
+- **Đo:** phán quyết `dat`/`khong_dat` và từng Q: AC1, κ, p_neg, kèm KTC. Người–AI trên 139 dòng; người–người trên phần hai người cùng gán; tỷ lệ luật sư đồng ý kèm Wilson.
+- **Còn phải làm trước:** script dựng phiếu. Mẫu phiếu người đã có ở `data/review/the4/gan_nhan_B.xlsx`; chưa xác định script nào sinh ra nó. Kiểm `scripts/review/ai_labels.py measure` có đọc được nhãn người không.
+- **Giờ:** 58 dòng mới × 4–5 phút, 81 dòng đã đọc × 1–2 phút: khoảng 6–8 giờ [ước lượng].
+- **Phải khai khi báo:** NMT là tác giả; phần `dat` chỉ gồm lô mới và T6; chỉ gọi là alt-test nếu đủ ba người gán.
+
+**A4. Việc người còn nợ, làm nếu còn giờ:** TVER theo người (khoảng 100 trích dẫn, khoảng 3 giờ); mã hóa lỗi E7; kiểm 20 ứng viên T6 bị bộ lọc LLM loại (chương 4 hứa, khoảng 2 giờ, CMT làm được vì không cần mù). Không làm thì ghi "không làm" trong khóa luận, không để `[CHỜ]`. **CMT chốt làm hay không trước 22/11.**
 
 ### WP-B. Độ bền (máy làm)
 
@@ -215,7 +228,7 @@ Thiếu chỗ thì rút bảng hạng hậu nghiệm và Bảng I.
 - E1. Chương 6: thêm LightRAG, TCS/MRR, Qwen, bảng retriever, chọn một trong hai, cột T1, kết quả người kiểm. Dọn 11 chỗ `[CHỜ]`: chỗ nào thuộc vòng thử cũ thì xóa hoặc ghi "không làm".
 - E2. Chương 3: bảng phễu (C1), M2 (A2), một ví dụ chuỗi sửa đổi có nguồn, số của C4.
 - E3. Chương 4: phễu T6, số người kiểm, datasheet khớp manifest.
-- E4. Chương 2: hai tác giả đọc và xác minh 9 chỗ `[CẦN]`.
+- E4. Chương 2: hai tác giả đọc và xác minh 13 chỗ `[CẦN]`.
 - E5. Chương 1 mục 1.6 và chương 7: cập nhật bảng lệch đề cương. Phụ lục khai báo AI; tra quy định của UIT về dùng AI.
 - E6. Demo: đo xem 5 phút mỗi câu chậm ở đâu rồi mới sửa.
 - E7. Ba câu hỏi hội đồng và số mới để trả lời:
@@ -227,6 +240,63 @@ Thiếu chỗ thì rút bảng hạng hậu nghiệm và Bảng I.
 | Đề tài tên đồ thị, đồ thị làm gì? | F5 +0,115 là phần của chuỗi phiên bản; số toàn kho ở C4; thẳng thắn: lúc truy vấn không thêm gì, LightRAG cũng không |
 
 - E8. `thesis-critic` và `evidence-gate` rà toàn văn sau ngày khóa số.
+
+#### WP-E chi tiết: từng chỗ `[CHỜ]`, `[CẦN]` (rà 15/11, 50 chỗ)
+
+"Agent" là phiên Claude hoặc Codex. Hạn theo bốn đợt: **22/11** số đã có, chỉ việc điền; **29/11** cần tính hoặc đối soát nhỏ; **06/12** cần người đọc hoặc chờ số người kiểm; **10/12** khóa số.
+
+| Chỗ | Đang chờ gì | Đóng bằng | Ai | Hạn |
+|---|---|---|---|---|
+| C1:49 | Kết quả bộ cuối cho RQ và giả thuyết | F1–F7 từ `runs/final_g4_20261112/r1/results.md` | Agent | 22/11 |
+| C1:61 | X8 đúng mốc so với hiện hành | Cặp oracle bộ cuối (0,956 / 0,456) | Agent | 22/11 |
+| C1:107, C6:27 | Amendment ghi các lần đã nhìn | Dẫn ADR 0006 §6, §8 | Agent | 22/11 |
+| C2:24 | Đối chiếu PDF với bản trích | Mở PDF, kiểm số trang từng nguồn đã dẫn | CMT, NMT | 06/12 |
+| C2:48, C5:59 | BM25 so với FTS5; DPR so với embedding thật | Đối chiếu code (`retrieve.py`) với nguồn; sửa chỗ lệch tập, trang | Agent, tác giả đọc | 29/11 |
+| C2:61 | Cấu hình nếu so trực tiếp với GraphRAG | Ba chỗ không ngang hàng trong amendment 15/11 | Agent | 22/11 |
+| C2:75 | SAT-Graph: arXiv v5 so với kỷ yếu | Đối chiếu hai bản, chốt bản dẫn | NMT | 06/12 |
+| C2:123 | Nơi công bố của VLQA | Tra bản đã xuất bản | Agent tra, CMT xác nhận | 29/11 |
+| C2:147 | Đọc đủ VLegal-Bench, ViLegalExpert, LegalGraphRAG | Đọc; chưa đọc thì bỏ đoạn | CMT, NMT | 06/12 |
+| C2:199 | Nguồn của Holm và bootstrap theo cụm | Thêm khóa bib sau khi đọc bản gốc | Agent tìm, tác giả đọc | 29/11 |
+| C2:214 (5 chỗ) | Năm nguồn gần chưa có trong bib | Đọc bản gốc rồi thêm, hoặc bỏ. Trùng việc D3 của paper | CMT, NMT | 06/12 |
+| C2:220 | Chuẩn gốc Akoma Ntoso, LRMoo | Thêm bib, hoặc giữ câu "theo SAT-Graph RAG" | NMT | 06/12 |
+| C3:51, C4:206a, C4:250 | Phễu dữ liệu; phễu ứng viên; phân bố năm và loại văn bản | Bảng phễu C1, cùng một snapshot; dùng `docs/reports/pheu-loc-lo-moi.md` | Agent | 29/11 |
+| C3:126 | M2, gold mù, TVER theo người | Số A2 (cũng là M2); TVER theo quyết định A4 | Agent, sau NMT | 10/12 |
+| C3:140 | Một ví dụ chuỗi sửa đổi đã kiểm độc lập | Một ca của A2 sau phân xử | Agent, NMT xác nhận | 10/12 |
+| C4:94 | Log thời gian, nghĩa cột `phut` | Ghi "không có log"; báo trung vị `phut` của A2 | Agent, CMT xác nhận | 10/12 |
+| C4:97 | Kết quả mẫu luật sư | 30 dòng của A3; không có luật sư thì ghi "không làm" | CMT lo người | 06/12 |
+| C4:200 | Số lô thử, nhãn bộ cuối, AC1, p_neg | `docs/reports/g2-co-mau-dong-thuan-20261109.md`, `resolve-nhan-va-dong-thuan-20261108.md` | Agent | 22/11 |
+| C4:206b | Người kiểm 20 câu T6 bị LLM loại | Việc A4; không làm thì ghi rõ | CMT | 06/12 |
+| C4:220, C4:223 | Ai đọc gold của lineage nào; độ mù theo người | Bảng từ `gold_sample.tsv` hai đợt; khai 51 lineage người gán A đã thấy | Agent | 10/12 |
+| C4:232 | Đọc bản gốc Datasheets for Datasets | Đọc | CMT | 06/12 |
+| C5:64 | Nguồn của RRF | Thêm khóa bib bài gốc sau khi đọc | Agent tìm, tác giả đọc | 29/11 |
+| C5:124a, C6:426 | Dev của `b7pp`, `proposed2`, `p2a2`, `p2a3` | `runs/final_rehearsal_g3_20261112/`, `runs/rebuild_20261110_dev/dev/` | Agent | 22/11 |
+| C5:124b | Cấu hình đã khóa và kết quả bộ cuối | ADR 0006 §2 và G4 | Agent | 22/11 |
+| C5:181, C6:584 | GPU, phiên bản thư viện, chi phí thật | Trường `gpu` trong `*.run.json`; số tiền API do CMT đưa | Agent, CMT | 29/11 |
+| C6:33, C6:570 | TVER theo người | Theo quyết định A4 | CMT chốt | 22/11, số 06/12 |
+| C6:290, C6:299 | Đầu ra sinh `b7plus` ở vòng cũ (XN5) | Ghi "không chạy ở vòng đó; xem F5 bộ cuối" | Agent | 22/11 |
+| C6:409 | Kết quả theo nguồn câu hỏi (silver, lô mới) | Tính từ dự đoán G4 theo `qsource`; ghi thăm dò | Agent | 29/11 |
+| C6:412 | Họ kiểm định cuối, giả định cỡ mẫu | ADR 0006 §3, §6; `data/vilextime_final/g2_mde_table.md` | Agent | 22/11 |
+| C6:431 | Dev của `proposed3` | `runs/gpt4omini_dev/dev/`; audit 13/11 mục 8.1 | Agent | 22/11 |
+| C6:437 | X3 với generator khác, T6 cấp sẵn căn cứ | Oracle T6 của cột Qwen (B1) | Agent, sau Colab | 10/12 |
+| C6:445 | Đúng mốc so với hiện hành trên dev | `runs/final_rehearsal_g3_20261112/r1/dev/` | Agent | 22/11 |
+| C7:75 | Đọc đủ các nguồn còn thiếu | Xong các dòng C2 ở trên | CMT, NMT | 06/12 |
+| C7:86 | Tác giả và GVHD rà đóng góp, phạm vi | GVHD đọc bản 14/12 | CMT, GVHD | 20/12 |
+| Phụ lục AI:114 | Quy định của UIT về dùng AI | Hỏi khoa và GVHD | CMT | 29/11 |
+| README:18, :26 | Bảng tổng các chỗ chờ | Cập nhật sau cùng | Agent | 10/12 |
+
+Đếm theo hạn: 22/11 có 14 chỗ, số đã có, chỉ việc điền. 29/11 có 12 chỗ. 06/12 có 15 chỗ, phần lớn chờ hai tác giả đọc bản gốc. 10/12 có 8 chỗ, chờ số người kiểm hoặc Colab. 20/12 có 1 chỗ. Tổng 50, gồm 2 chỗ trong `README.md` của thư mục khóa luận.
+
+**Nội dung mới phải viết, ngoài các chỗ chờ:**
+
+| Mục | Nội dung | Nguồn số | Ai | Hạn |
+|---|---|---|---|---|
+| C6, mới | TCS, MRR; LightRAG | G4; `runs/lightrag_20261113/` | Agent | 22/11 |
+| C6, mới | Cột Qwen; bảng retriever × bộ lọc | B1, B2 | Agent | 10/12 |
+| C6, mới | Chọn một trong hai (RQ1); cột T1 chấm lại | B3, B4 | Agent | 10/12 |
+| C4, C6 | Gold mù bộ cuối; đồng thuận nhãn; cờ sai phiên bản | A1, A2, A3 | Agent, sau người | 10/12 |
+| C3, C5 | Giá trị của đồ thị lúc dựng kho | C4 của plan | Agent | 06/12 |
+| C1 mục 1.6, C7 | Bảng lệch đề cương theo trạng thái mới | Toàn bộ | Agent, CMT duyệt | 12/12 |
+| Slide bảo vệ | Ba câu hỏi hội đồng (E7) | — | CMT, NMT | 20/12 |
 
 ### WP-F. Nộp bài
 
@@ -270,7 +340,7 @@ Viết **sau khi có số dev** của B1 và B2, duyệt **trước** khi chạm
 
 | Tuần | Máy | Người | Mốc |
 |---|---|---|---|
-| 16–22/11 | Qwen dev xong, nhập, chấm. Thêm `bvdate`. Reranker: Recall@100, chọn trên dev. Dựng phiếu A2, A3. Gate số TCS, LightRAG | CMT chấm 33 câu. Chốt Q1, Q2. Người đọc bắt đầu A2 | **M1 22/11:** amendment gộp được duyệt |
+| 16–22/11 | Qwen dev xong, nhập, chấm (gồm `bvnone`, `bvdate`). Reranker: Recall@100, đường chấm cặp trên Colab, chọn trên dev. Dựng phiếu A3. Gate số TCS, LightRAG. Khóa luận: 14 chỗ hạn 22/11 | CMT chấm 33 câu; chốt A4, người đọc thứ hai. NMT bắt đầu A2 | **M1 22/11:** amendment gộp được duyệt |
 | 23–29/11 | Bộ cuối: Qwen 15 hệ; bảng retriever; B3; B4; B5 | A2 tiếp | |
 | 30/11–06/12 | Chấm, bootstrap, gate. C1, C3, C4 | A2 xong, phân xử. A3 pha 2 | **M2 06/12:** có số người kiểm |
 | 07–13/12 | Tính lại F1–F6 trên 105 lineage. Chương 6, 3, 4 | Đọc nguồn chương 2. C2 viết câu hỏi | **M3 10/12:** khóa số khóa luận |
@@ -280,7 +350,7 @@ Viết **sau khi có số dev** của B1 và B2, duyệt **trước** khi chạm
 | 11–24/01 | Gate, `paper_check.py`, gói ẩn danh | Người ngoài đọc | **M6 21/01:** khóa bản thảo |
 | 25–28/01 | Dự phòng | Nộp | **28/01** |
 
-Giờ người: A1 3; A2 16–18 (81 dòng của NMT và 30 dòng của người thứ hai); A3 5–7; phân xử 2; C2 4. Tổng khoảng 30 giờ, chia cho CMT, NMT, luật sư.
+Giờ người: A1 3; A2 16–18 (81 dòng của NMT và 30 dòng của người thứ hai); A3 6–8; phân xử 2; C2 4. Tổng khoảng 32 giờ, chia cho CMT, NMT, luật sư. **Các số này là ước lượng, chưa đo.** Sau 10 dòng đầu của NMT, lấy trung vị cột `phut` rồi chỉnh lại lịch.
 Tiền API: bảng retriever khoảng 2 USD, B3 và C2 dưới 1 USD mỗi việc [SL, tính từ 5,3 USD cho 24 lượt hệ ở G4].
 
 ## 10. Không làm
@@ -312,7 +382,8 @@ Hoàn tác: plan này chỉ thêm file và thư mục run mới. Xóa thư mục
 - [ ] A1 Chấm phiếu 33 câu.
 - [x] 15/11 A2 dựng phiếu: `data/review/gold_final/` (commit `afd6bd4`). `independent_gold.py` thêm `--release`, cỡ riêng từng tầng, `--solo`; test mới; 788 test qua. Đã kiểm: 81 dòng A, 30 dòng B nằm trong A, 23 dòng T6 đều là dòng sau bãi bỏ, 0 lineage trùng gold đợt 1 hay danh sách đã thấy, 0 ô chứa đáp án của kho, `reveal` chạy thử trên bản sao.
 - [ ] A2 NMT đọc / người thứ hai đọc / phân xử / tính lại F1–F6.
-- [ ] A3 Kiểm nhãn pha 2; luật sư 30 dòng.
+- [x] 15/11 CMT yêu cầu viết chi tiết: thêm đặc tả A3 và bảng 50 chỗ `[CHỜ]`, `[CẦN]` của khóa luận (WP-E chi tiết).
+- [ ] A3 Dựng phiếu / NMT gán sau khi A2 khóa / luật sư 30 dòng / đo đồng thuận.
 - [ ] B1 Qwen: dev / thêm `bvdate` / bộ cuối.
 - [x] 15/11 B2 code reranker commit `56b9c3e` (viết trước đó trong ngày, 35 test liên quan qua).
 - [ ] B2 Reranker: Recall@100 trên dev (đang chạy, `runs/rerank_pool_dev_20261115/`) / đường chấm cặp trên Colab / chọn trên dev / bộ cuối.
@@ -329,6 +400,7 @@ Hoàn tác: plan này chỉ thêm file và thư mục run mới. Xóa thư mục
 
 - 2026-11-15: đề xuất không dựng bộ test mới trước 28/01; dồn giờ người cho gold mù. Chờ CMT.
 - 2026-11-15 (CMT): NMT là người đọc chính của gold mù. Mở lại reranker.
+- 2026-11-15: A3 lấy hết 81 lineage `dat` của A2 và 58 lineage `khong_dat` của hai lô mới, không rút mẫu. Bỏ lô silver vì người gán A đã gán nó.
 - 2026-11-15: gold mù lấy hết 81 lineage chưa ai thấy đáp án, thay cho "80 rút từ 132". Lý do: người gán A cũ đã thấy 51 lineage còn lại, nên chúng không thể đọc mù; lấy hết thì khỏi phải rút mẫu và phiếu đúng dù NMT là A hay B.
 
 ## Validation
