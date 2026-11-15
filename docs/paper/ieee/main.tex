@@ -42,7 +42,7 @@ Email: \{23521635, 23521643\}@gm.uit.edu.vn, \TBD{advisor email}}
 \maketitle
 
 \begin{abstract}
-A legal question has an answer only at a point in time. Vietnamese statutes are frequently amended, partly repealed and restructured, so a retrieval-augmented generation (RAG) system can cite the right provision and still quote a wording that was not in force on the date the user asks about. We study this \emph{wrong-version} failure. First, we build a versioned corpus of 17{,}333 Vietnamese legal documents in which each provision keeps a stable identity and a history of wordings with half-open effective intervals, derived from amendment and repeal commands. Second, we release ViLexTime, a benchmark of question--date pairs whose gold answer is a specific provision version, scored contrastively: an answer must contain the span of the version in force and must not contain a span that only another version has. Third, under an analysis plan accepted before the final test set was run (156 provision lineages, 318 rows; two independent generation runs; Holm-corrected cluster bootstrap; confirmatory conditional on earlier pilot rounds), we compare a retrieval ladder that changes one component per step. Flat RAG quotes another version's text in 25--29\% of the rows where versions differ. Restricting candidates by document date and then by version interval raises version-exact Recall@1 by 7.8 and 11.5 points, and the full version-aware system improves accuracy over hybrid flat RAG by 34.3 points. Gold versions and filters share one derived store, labels are AI-produced with author review, and wrong-version rates are scorer-based. Post-hoc attribution suggests that the gain comes from the offline version store with hard interval filtering, that one-hop graph expansion at query time adds no detectable accuracy, and that most remaining errors occur when the in-force version is not ranked first.
+Vietnamese legal question answering can retrieve the right provision yet quote a wording that was not in force at the requested date. We release a versioned corpus derived from amendment and repeal commands, ViLexTime question--date pairs with version-level gold evidence, and contrastive measures of this wrong-version failure. A pre-specified evaluation compares temporal retrieval configurations with a shared generator in two independent runs; confirmatory tests are conditional on earlier pilot rounds. Flat RAG quotes text that only another version has in 25--29\% of the rows where versions differ. With the in-force version as its only evidence, the generator reaches 0.956 accuracy, versus 0.456 with the current version. Temporal consistency, requiring both dated answers of a pair to be correct, rises from about 0.07 for flat hybrid RAG to about 0.65 with version filtering, while ordinary mean reciprocal rank barely changes. Exploratory comparisons favour hard filtering over printed effective dates by 0.245 accuracy (primary run); one-hop query-time graph expansion yields no detectable accuracy gain. Gold and filters share a derived store, labels are AI-produced with author review, and wrong-version rates remain scorer-based, so the results establish consistency with the released resource rather than independently verified legal correctness.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -71,10 +71,10 @@ Recent work shows that temporal filtering helps statutory question answering in 
      \fill[cInk] (\x,0) circle (1.7pt);
      \node[lab,below=1pt] at (\x,0) {$t_{\n}$ = \d};}
   \node[lab,anchor=north west] at (0.0,-0.55) {\textbf{Q}: Max.\ fine the Director of a Maritime Port Authority may impose?};
-  \node[lab,anchor=north west,text=cVerm] at (0.0,-0.92) {\xmark\ Flat RAG at $t_1$ ranks $v_2$ first $\Rightarrow$ ``50{,}000{,}000 VND''};
-  \node[lab,anchor=north west,text=cGreen!60!black] at (0.0,-1.28) {\cmark\ Version-aware at $t_1$: only $v_1$ is admissible $\Rightarrow$ ``25{,}000{,}000 VND''};
+  \node[lab,anchor=north west,text=cVerm] at (0.0,-0.92) {\xmark\ Illustrative flat RAG at $t_1$ uses $v_2$ $\Rightarrow$ ``50{,}000{,}000 VND''};
+  \node[lab,anchor=north west,text=cGreen!60!black] at (0.0,-1.28) {\cmark\ Illustrative filtered answer at $t_1$ $\Rightarrow$ ``25{,}000{,}000 VND''};
 \end{tikzpicture}
-\caption{The wrong-version error. One provision, two wordings with half-open effective intervals, and one question asked at two dates (an item of ViLexTime; text abridged and translated). The flat-RAG line is illustrative.}
+\caption{The wrong-version error. One provision, two wordings with half-open effective intervals, and one question asked at two dates (an item of ViLexTime; text abridged and translated). Both system-output lines are illustrative, not saved predictions: on this lineage Hybrid run~1 returns an empty answer at $t_1$ and a different fine formula at $t_2$.}
 \label{fig:teaser}
 \end{figure}
 
@@ -82,7 +82,7 @@ We answer both questions with a resource and a controlled measurement. Our contr
 \begin{itemize}
 \item \textbf{A versioned corpus of Vietnamese law} built from the official portal. Each provision has a stable identity, a chain of wordings derived by applying amendment and repeal commands, and effective intervals intersected with the intervals of its ancestors and its document (\cref{sec:corpus}).
 \item \textbf{ViLexTime}, a benchmark of question--date pairs with version-level gold evidence, contrastive scoring that detects quoted text of a wrong version, and a full record of who or what produced each label; labels are AI-produced and author-reviewed, a silver tier (\cref{sec:benchmark}).
-\item \textbf{A pre-specified evaluation on an unseen test set} of twelve generating configurations, including a retrieval ladder that adds one level of temporal information per step, two oracle conditions, two independent generation runs, and a human check of the scorer (\cref{sec:systems,sec:protocol,sec:results}).
+\item \textbf{A measurement framework and pre-specified evaluation on an unseen test set} of twelve generating configurations, including a retrieval ladder that adds one level of temporal information per step, two oracle conditions, two independent generation runs, and a human check of the scorer (\cref{sec:systems,sec:protocol,sec:results}).
 \end{itemize}
 The main findings are: flat RAG quotes another version in a quarter or more of the contrastive rows; giving the correct evidence lifts accuracy to 0.956, while giving the \emph{current} version instead drops it to 0.456; and both document-date filtering and version-interval filtering improve version-exact retrieval. Post-hoc attribution suggests that the benefit sits in the offline version store with hard interval filtering, while one-hop query-time graph expansion shows no measurable accuracy gain. Because gold versions and filters come from the same derived store, these results measure consistency with that store; \cref{sec:discussion} lists this and the other limits.
 
@@ -186,7 +186,7 @@ The checks in \cref{tab:corpus} bound what the corpus can claim. Applied events 
 % (c)
 \node[b=cGreen,below=17mm of cand] (query) {Question $x$,\\date $t$};
 \node[b=cGreen,right=of query] (ret) {BM25 + dense (RRF),\\$k{=}20$, only units with\\$t\in\mathrm{Eff}(u)$};
-\node[b=cGreen,right=of ret] (exp) {\texttt{rel\_up}: commands\\on the target\\and its ancestors};
+\node[b=cGreen,right=of ret] (exp) {ancestor-command: commands\\on the target\\and its ancestors};
 \node[b=cGreen,right=of exp] (gen) {GPT-4o mini ($T{=}0$):\\answer + citations;\\citation check at $t$};
 \node[b=cGreen,right=of gen] (score) {Contrastive scorer:\\Acc, wrong-version,\\TV-Recall@$k$, TVER};
 \foreach \u/\v in {query/ret,ret/exp,exp/gen,gen/score} \draw[ar] (\u) -- (\v);
@@ -197,7 +197,7 @@ The checks in \cref{tab:corpus} bound what the corpus can claim. Applied events 
 \end{scope}
 \node[ptitle] at ([yshift=0.6mm]P1.north west) {(a) Offline: versioned corpus (\S\ref{sec:corpus})};
 \node[ptitle] at ([yshift=0.6mm]P2.north west) {(b) ViLexTime construction (\S\ref{sec:benchmark})};
-\node[ptitle] at ([yshift=0.6mm]P3.north west) {(c) Online: TV-RAG answering and evaluation (\S\ref{sec:systems})};
+\node[ptitle] at ([yshift=0.6mm]P3.north west) {(c) Online: full configuration and evaluation (\S\ref{sec:systems})};
 \draw[flow,cBlue] (store.south) -- node[right,font=\scriptsize\itshape,text=cBlue,align=left]{version chains,\\intervals} (store.south |- P2.north);
 \draw[flow,cOrange!85!black] (asof.south) -- node[right,font=\scriptsize\itshape,text=cOrange!85!black,align=left]{rows $(x,t)$,\\gold, distractors} (asof.south |- P3.north);
 \end{tikzpicture}
@@ -242,37 +242,36 @@ All generating systems share one prompt, one generator (\texttt{gpt-4o-mini-2024
 \centering
 \caption{Compared configurations. Layer A: original wordings and commands; B: version texts. Filter: none, doc (document dates), ver (local version interval), prop (effective interval, \cref{eq:eff}).}
 \label{tab:systems}
-\setlength{\tabcolsep}{2.2pt}
-\footnotesize
-\begin{tabular}{@{}l l c c l l@{}}
+\setlength{\tabcolsep}{1.7pt}
+\scriptsize
+\begin{tabular}{@{}l c c l l l@{}}
 \toprule
-Name & ID & Layer & Filter & Retrieval & Query-time graph \\
+Name & Layer & Filter & \makecell{Retrieval for\\generation} & \makecell{Retrieval for\\F4--F6 tests} & Graph \\
 \midrule
-LLM only & \sys{b1} & -- & -- & none & -- \\
-BM25 & \sys{b2ctx} & A & none & lexical & -- \\
-Dense & \sys{b3} & A & none & dense & -- \\
-Hybrid & \sys{b4} & A & none & hybrid & -- \\
-Hybrid+AmendHop & \sys{b5} & A & none & hybrid & 1-hop commands \\
-Hybrid+Hierarchy & \sys{b6} & A & none & hybrid & 1-hop parent/child \\
+LLM only & -- & -- & none & -- & -- \\
+BM25 & A & none & lexical & lexical & -- \\
+Dense & A & none & dense & -- & -- \\
+Hybrid & A & none & hybrid & -- & -- \\
++AmendHop & A & none & hybrid & -- & commands \\
++Hierarchy & A & none & hybrid & -- & hierarchy \\
++DocDate & A & doc & hybrid & lexical & -- \\
++VersionStore & B & doc & -- & --$^\ast$ & -- \\
++VersionFilter & B & ver & hybrid & lexical & -- \\
++Propagation & B & prop & hybrid & lexical & -- \\
+Full config. & B & prop & hybrid & -- & ancestor + check \\
 \midrule
-+DocDate & \sys{b7} & A & doc & hybrid$^\dagger$ & -- \\
-+VersionStore & \sys{b7v} & B & doc & lexical$^\dagger$ & -- \\
-+VersionFilter & \sys{b7plus} & B & ver & hybrid$^\dagger$ & -- \\
-+Propagation & \sys{b7pp} & B & prop & hybrid$^\dagger$ & -- \\
-\textbf{TV-RAG} & \sys{proposed2} & B & prop & hybrid & \texttt{rel\_up} + check \\
-\midrule
-Oracle (in force) & \sys{oracle} & \multicolumn{4}{l}{in-force gold version is the only evidence} \\
-Oracle (current) & \sys{oracle\_now} & \multicolumn{4}{l}{current version of the same provision} \\
+Oracle (in force) & \multicolumn{5}{l}{in-force gold version is the only evidence} \\
+Oracle (current) & \multicolumn{5}{l}{current version of the same provision} \\
 \bottomrule
-\multicolumn{6}{@{}p{0.97\columnwidth}@{}}{\scriptsize $^\dagger$The ladder tests F4--F6 use lexical retrieval for every rung; \sys{b7v} was run for retrieval only.}
+\multicolumn{6}{@{}p{0.97\columnwidth}@{}}{\scriptsize $^\ast$VersionStore uses lexical retrieval only in the post-hoc ladder, outside F4--F6.}
 \end{tabular}
 \end{table}
 
-\textbf{The ladder.} From \sys{b2ctx} to \sys{b7pp}, each rung changes one field: document-date filter (\sys{b7}), version texts instead of original wordings (\sys{b7v}), local version interval (\sys{b7plus}), and effective interval with ancestor propagation (\sys{b7pp}). Filters are applied inside the retrieval query, before the top-$k$ cut, not as post-filters on a short list.
+\textbf{The ladder.} From \sys{BM25} to \sys{Propagation}, each rung changes one field: document-date filter (\sys{DocDate}), version texts instead of original wordings (\sys{VersionStore}), local version interval (\sys{VersionFilter}), and effective interval with ancestor propagation (\sys{Propagation}). Filters are applied inside the retrieval query, before the top-$k$ cut, not as post-filters on a short list.
 
-\textbf{TV-RAG.} Our full system adds two query-time components to \sys{b7pp}. (i) \texttt{rel\_up} expansion takes the top seeds \emph{before} the date filter (after a repeal, the relevant provision may no longer be admissible) and adds commands that target the seed or any of its ancestors; commands are admitted by the validity of the document that issues them, and new units are appended after the ranked list (5 seeds, fan-out 3). (ii) A citation check rejects cited units not admissible at $t$; since the filter already removes such units, we expect it to act rarely and do not attribute gains to it. TV-RAG was selected on dev by a rule fixed in advance, before the final test was run.
+\textbf{Pre-specified full configuration.} This configuration adds two query-time components to \sys{Propagation}. (i) ancestor-command expansion takes the top seeds \emph{before} the date filter (after a repeal, the relevant provision may no longer be admissible) and adds commands that target the seed or any of its ancestors; commands are admitted by the validity of the document that issues them, and new units are appended after the ranked list (5 seeds, fan-out 3). (ii) A citation check rejects cited units not admissible at $t$; since the filter already removes such units, we expect it to act rarely and do not attribute gains to it. The full configuration was selected on dev by a rule fixed in advance, before the final test was run.
 
-\textbf{Graph baselines.} \sys{b5} and \sys{b6} are one-step expansions over amendment relations and the provision hierarchy inside the same pipeline. They are \emph{not} full GraphRAG or LightRAG systems; we name them accordingly.
+\textbf{Graph baselines.} \sys{Hybrid+AmendHop} and \sys{Hybrid+Hierarchy} are one-step expansions over amendment relations and the provision hierarchy inside the same pipeline. They are \emph{not} full GraphRAG or LightRAG systems; we name them accordingly.
 
 % ======================================================================
 \section{Evaluation Protocol}
@@ -282,7 +281,7 @@ Oracle (current) & \sys{oracle\_now} & \multicolumn{4}{l}{current version of the
 
 \textbf{Confirmatory family.} Seven paired tests, F1--F7 (\cref{tab:confirm}), are corrected with Holm's procedure~\cite{holm1979} at $\alpha=0.05$. Confidence intervals and $p$-values use a paired bootstrap with $B=10{,}000$ resamples of provision lineages, since rows of one lineage are dependent~\cite{dror2018hitchhiker}. F4--F6 are retrieval-only and deterministic. Because the generator is not deterministic at temperature 0, every generating system is run twice from identical prompts; a test is called \emph{supported} only if both runs agree. Run~1 is the pre-declared primary result. Anything outside F1--F7 is labelled \emph{descriptive} or \emph{exploratory (post hoc)}; exploratory numbers were computed after seeing the test results.
 
-\textbf{Checking the scorer.} The first author scored 100 answers sampled with a fixed seed from run~1 (34 \sys{b1}, 33 \sys{b4}, 33 TV-RAG; T2/T3/T6), blind to system names and automatic scores, with no AI-drafted labels.
+\textbf{Checking the scorer.} The first author scored 100 answers sampled with a fixed seed from run~1 (34 \sys{LLM only}, 33 \sys{Hybrid}, 33 Full config.; T2/T3/T6), blind to system names and automatic scores, with no AI-drafted labels.
 
 % ======================================================================
 \section{Results}
@@ -290,7 +289,7 @@ Oracle (current) & \sys{oracle\_now} & \multicolumn{4}{l}{current version of the
 
 \subsection{How often does RAG use the wrong version? (descriptive)}
 
-\Cref{fig:acc} reports accuracy on \textit{all}. Without retrieval, the generator almost never answers correctly (\sys{b1}: 0.006; the human scorer found 2/34 correct, mostly wrong content). Flat RAG answers about a third of the rows, and its answers contain a span that only another version has in 25.3\% (\sys{b2ctx}) and 29.1\% (\sys{b4}) of the rows with such spans (\cref{tab:main}). Non-temporal one-step graph expansion does not change this (\sys{b5}: 0.311; \sys{b6}: 0.340). The oracle pair isolates the temporal part of the problem: with the in-force version as the only evidence, the same generator reaches 0.956; with the current version of the same provision it reaches 0.456.
+\Cref{fig:acc} reports accuracy on \textit{all}. Without retrieval, the generator almost never answers correctly (\sys{LLM only}: 0.006; the human scorer found 2/34 correct, mostly wrong content). Flat RAG answers about a third of the rows, and its answers contain a span that only another version has in 25.3\% (\sys{BM25}) and 29.1\% (\sys{Hybrid}) of the rows with such spans (\cref{tab:main}). Non-temporal one-step graph expansion does not change this (\sys{Hybrid+AmendHop}: 0.311; \sys{Hybrid+Hierarchy}: 0.340). The oracle pair isolates the temporal part of the problem: with the in-force version as the only evidence, the same generator reaches 0.956; with the current version of the same provision it reaches 0.456.
 
 \begin{figure}[t]
 \centering
@@ -298,8 +297,8 @@ Oracle (current) & \sys{oracle\_now} & \multicolumn{4}{l}{current version of the
 \begin{axis}[
   xbar, width=0.86\columnwidth, height=6.6cm,
   xmin=0, xmax=1.13, bar width=5.2pt,
-  y dir=reverse, ytick={LLM only,BM25,Dense,Hybrid,Hybrid+AmendHop,Hybrid+Hierarchy,+DocDate,+VersionFilter,+Propagation,TV-RAG,Oracle: current,Oracle: in force}, enlarge y limits=0.05, bar shift=0pt,
-  symbolic y coords={LLM only,BM25,Dense,Hybrid,Hybrid+AmendHop,Hybrid+Hierarchy,+DocDate,+VersionFilter,+Propagation,TV-RAG,Oracle: current,Oracle: in force},
+  y dir=reverse, ytick={LLM only,BM25,Dense,Hybrid,Hybrid+AmendHop,Hybrid+Hierarchy,+DocDate,+VersionFilter,+Propagation,Full config.,Oracle: current,Oracle: in force}, enlarge y limits=0.05, bar shift=0pt,
+  symbolic y coords={LLM only,BM25,Dense,Hybrid,Hybrid+AmendHop,Hybrid+Hierarchy,+DocDate,+VersionFilter,+Propagation,Full config.,Oracle: current,Oracle: in force},
   yticklabel style={font=\scriptsize}, xticklabel style={font=\scriptsize},
   xlabel={Accuracy on \textit{all} (318 rows), run 1}, xlabel style={font=\scriptsize},
   xmajorgrids, grid style={cGrey!25},
@@ -318,25 +317,25 @@ Oracle (current) & \sys{oracle\_now} & \multicolumn{4}{l}{current version of the
  (0.487,+DocDate) += (0.060,0) -= (0.059,0) [0.487]
  (0.654,+VersionFilter) += (0.068,0) -= (0.069,0) [0.654]
  (0.660,+Propagation) += (0.066,0) -= (0.067,0) [0.660]};
-\addplot[fill=cBlue,draw=cBlue!70!black] coordinates {(0.667,TV-RAG) += (0.066,0) -= (0.069,0) [0.667]};
+\addplot[fill=cBlue,draw=cBlue!70!black] coordinates {(0.667,Full config.) += (0.066,0) -= (0.069,0) [0.667]};
 \addplot[fill=cOrange!60,draw=cOrange!80!black] coordinates {
  (0.456,Oracle: current) += (0.022,0) -= (0.024,0) [0.456]
  (0.956,Oracle: in force) += (0.025,0) -= (0.029,0) [0.956]};
 \end{axis}
 \end{tikzpicture}
-\caption{Accuracy with 95\% lineage-cluster bootstrap intervals. Grey: no temporal information; blue: temporal filters; orange: oracle evidence (same generator). Dense is \sys{b3}.}
+\caption{Accuracy with 95\% lineage-cluster bootstrap intervals. Grey: no temporal information; blue: temporal filters; orange: oracle evidence (same generator). }
 \label{fig:acc}
 \end{figure}
 
 \begin{table}[t]
 \centering
-\caption{Descriptive results on \textit{all}, run 1 (318 rows). WV: wrong-version rate (lower is better; scorer-based). TV-R@1 here is over all 318 rows (unanswerable rows score 0) on the hybrid generation lists, unlike \cref{fig:ladder}.}
+\caption{Descriptive results on \textit{all}, run 1 (318 rows). WV: wrong-version rate (lower is better; scorer-based). Gen-TV-R@1 uses all 318 rows (unanswerable rows score 0) and the generation lists; lexical TV-R@1 in \cref{fig:ladder} uses 295 answerable rows.}
 \label{tab:main}
 \setlength{\tabcolsep}{3.5pt}
 \footnotesize
 \begin{tabular}{@{}l c c c c@{}}
 \toprule
-System & Accuracy [95\% CI] & TV-R@1 & TVER & WV \\
+System & Accuracy [95\% CI] & Gen-TV-R@1 & TVER & WV \\
 \midrule
 LLM only & 0.006 [0.000, 0.016] & 0.000 & -- & 0.008 \\
 BM25 & 0.302 [0.256, 0.348] & 0.151 & 0.535 & 0.253 \\
@@ -346,7 +345,7 @@ Hybrid+Hierarchy & 0.340 [0.293, 0.386] & 0.164 & 0.553 & 0.283 \\
 +DocDate & 0.487 [0.428, 0.547] & 0.242 & 0.248 & 0.177 \\
 +VersionFilter & 0.654 [0.585, 0.722] & 0.336 & 0.022 & 0.008 \\
 +Propagation & 0.660 [0.593, 0.726] & 0.336 & 0.000 & 0.008 \\
-\textbf{TV-RAG} & \textbf{0.667} [0.598, 0.733] & 0.336 & 0.013 & 0.008 \\
+\textbf{Full config.} & \textbf{0.667} [0.598, 0.733] & 0.336 & 0.013 & 0.008 \\
 \midrule
 Oracle (in force) & 0.956 [0.927, 0.981] & 1.000 & 0.000 & 0.000 \\
 Oracle (current) & 0.456 [0.432, 0.478] & 0.484 & 0.516 & 0.502 \\
@@ -354,13 +353,34 @@ Oracle (current) & 0.456 [0.432, 0.478] & 0.484 & 0.516 & 0.502 \\
 \end{tabular}
 \end{table}
 
+\begin{table}[t]
+\centering
+\caption{Descriptive G4 metrics, outside F1--F7. TCS: both dated answers correct in each of 127 T2 pairs; ordinary MRR accepts any version of the provision (318 rows). Stored 95\% lineage-bootstrap intervals; identical MRR and intervals in both runs are shown once.}
+\label{tab:tcs}
+\setlength{\tabcolsep}{1.5pt}
+\scriptsize
+\begin{tabular}{@{}l l l l@{}}
+\toprule
+System & TCS run 1 [95\% CI] & TCS run 2 [95\% CI] & MRR runs 1, 2 [95\% CI] \\
+\midrule
+Hybrid & 0.071 [0.031, 0.117] & 0.047 [0.016, 0.087] & 0.445 [0.378, 0.512] \\
++VersionFilter & 0.654 [0.570, 0.736] & 0.646 [0.562, 0.727] & 0.456 [0.394, 0.517] \\
+Full config. & 0.661 [0.577, 0.744] & 0.646 [0.562, 0.728] & 0.453 [0.391, 0.513] \\
+Oracle (in force) & 0.961 [0.924, 0.992] & 0.969 [0.935, 0.992] & 1.000 [1.000, 1.000] \\
+Oracle (current) & 0.000 [0.000, 0.000] & 0.000 [0.000, 0.000] & 1.000 [1.000, 1.000] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Ordinary MRR is nearly unchanged between flat hybrid RAG and version-filtered retrieval (0.445 versus 0.456 in both runs), while TCS rises from about 0.07 to 0.65 in run~1 (0.047 to 0.646 in run~2; \cref{tab:tcs}). Thus conventional retrieval scoring does not reveal the wrong-version failure. These are descriptive measures computed during G4 scoring, not additional confirmatory tests.
+
 \subsection{Confirmatory tests}
 
-All six tests on the main slice are supported in both runs (\cref{tab:confirm}); because F6 coincides with F5 (below), they amount to five distinct findings. TV-RAG improves accuracy over hybrid flat RAG by 0.343 (F1) and over the non-temporal one-step graph baseline by 0.355 (F2), and lowers the wrong-version rate by 0.283 (F3). Document-date filtering (F4) and version-interval filtering (F5) both raise TV-Recall@1. F7, on the 23 unanswerable T6 rows, is inconclusive in both runs: with a minimum detectable effect of about 0.185 planned before the run, only very large effects were detectable, so this is not evidence of no effect.
+All six tests on the main slice are supported in both runs (\cref{tab:confirm}); because F6 coincides with F5 (below), they amount to five distinct findings. The full configuration improves accuracy over hybrid flat RAG by 0.343 (F1) and over the non-temporal one-step graph baseline by 0.355 (F2), and lowers the wrong-version rate by 0.283 (F3). Document-date filtering (F4) and version-interval filtering (F5) both raise TV-Recall@1. F7, on the 23 unanswerable T6 rows, is inconclusive in both runs: with a minimum detectable effect of about 0.185 planned before the run, only very large effects were detectable, so this is not evidence of no effect.
 
 \begin{table}[t]
 \centering
-\caption{Confirmatory family (Holm, $\alpha=0.05$; lineage-cluster bootstrap, $B=10{,}000$). P = TV-RAG. For F1--F6 no bootstrap resample reached the null in either run (Holm-adjusted $p<0.001$). $^\ast$Identical to F5; not evidence for propagation.}
+\caption{Confirmatory family (Holm, $\alpha=0.05$; lineage-cluster bootstrap, $B=10{,}000$). P = full configuration. For F1--F6 no bootstrap resample reached the null in either run (Holm-adjusted $p<0.001$). $^\ast$Identical to F5; not evidence for propagation.}
 \label{tab:confirm}
 \setlength{\tabcolsep}{2.0pt}
 \scriptsize
@@ -379,11 +399,11 @@ F7 & P$-$Propag. (Acc, T6 unans.) & $+$0.087 [.000, $+$.217] & $+$0.043 & -- bot
 \end{tabular}
 \end{table}
 
-F5 and F6 are numerically identical, and this matters for interpretation. \sys{b7pp} differs from \sys{b7plus} only by ancestor propagation; on the 295 answerable rows propagation changes the top-ranked unit in one row, where both are wrong. F6 is therefore supported entirely by the version-interval filter that F5 measures, and must not be read as evidence for propagation.
+F5 and F6 are numerically identical, and this matters for interpretation. \sys{Propagation} differs from \sys{VersionFilter} only by ancestor propagation; on the 295 answerable rows propagation changes the top-ranked unit in one row, where both are wrong. F6 is therefore supported entirely by the version-interval filter that F5 measures, and must not be read as evidence for propagation.
 
 \subsection{Where does the gain come from? (post hoc)}
 
-\Cref{fig:ladder} extends the ladder with \sys{b7v}, run for retrieval after the test was seen. Version texts \emph{without} interval filtering are worse than original wordings with a document filter ($-$0.044 [$-$0.072, $-$0.019]): a version store exposes every historical wording, so in this post-hoc, retrieval-only comparison it helps only when combined with the interval filter ($+$0.159 [$+$0.120, $+$0.199]).
+\Cref{fig:ladder} extends the ladder with \sys{VersionStore}, run for retrieval after the test was seen. Version texts \emph{without} interval filtering are worse than original wordings with a document filter ($-$0.044 [$-$0.072, $-$0.019]): a version store exposes every historical wording, so in this post-hoc, retrieval-only comparison it helps only when combined with the interval filter ($+$0.159 [$+$0.120, $+$0.199]).
 
 \begin{figure}[t]
 \centering
@@ -392,7 +412,7 @@ F5 and F6 are numerically identical, and this matters for interpretation. \sys{b
   ybar, width=\columnwidth, height=5.0cm, bar width=18pt,
   ymin=0, ymax=0.5, ylabel={TV-Recall@1 (295 rows)}, ylabel style={font=\scriptsize},
   symbolic x coords={BM25,+DocDate,+VersionStore,+VersionFilter,+Propagation},
-  xtick=data, xticklabels={BM25\\(\sys{b2ctx}),+DocDate\\(\sys{b7}),+VersionStore\\(\sys{b7v}),+VersionFilter\\(\sys{b7plus}),+Propagation\\(\sys{b7pp})},
+  xtick=data, xticklabels={BM25,+DocDate,+VersionStore,+VersionFilter,+Propagation},
   xticklabel style={font=\tiny,align=center},
   yticklabel style={font=\scriptsize}, ymajorgrids, grid style={cGrey!25},
   nodes near coords, nodes near coords style={font=\tiny}, enlarge x limits=0.13,
@@ -410,22 +430,22 @@ F5 and F6 are numerically identical, and this matters for interpretation. \sys{b
 \label{fig:ladder}
 \end{figure}
 
-\textbf{Graph at query time.} On \textit{all}, TV-RAG minus \sys{b7plus} (same store and filter, no query-time graph) is $+$0.013 [$-$0.009, $+$0.035] in run~1 and $+$0.016 [$-$0.006, $+$0.038] in run~2; TV-RAG minus \sys{b7pp} is $+$0.006 and 0.000. The intervals contain zero in both runs, so we see no accuracy benefit larger than about four points from query-time graph use; we do not claim the systems are equal. On the 23 unanswerable T6 rows, TV-RAG beats \sys{b7plus} by $+$0.174 [$+$0.043, $+$0.348] in both runs, but half of that difference ($+$0.087) already separates \sys{b7pp} from \sys{b7plus}, and the test that isolates the query-time graph (F7) is inconclusive; a repeal benefit of the graph is therefore not established.
+\textbf{Graph at query time.} On \textit{all}, the full configuration minus \sys{VersionFilter} (same store and filter, no query-time graph) is $+$0.013 [$-$0.009, $+$0.035] in run~1 and $+$0.016 [$-$0.006, $+$0.038] in run~2; the full configuration minus \sys{Propagation} is $+$0.006 and 0.000. The intervals contain zero in both runs, so we see no accuracy benefit larger than about four points from query-time graph use; we do not claim the systems are equal. On the 23 unanswerable T6 rows, the full configuration beats \sys{VersionFilter} by $+$0.174 [$+$0.043, $+$0.348] in both runs, but half of that difference ($+$0.087) already separates \sys{Propagation} from \sys{VersionFilter}, and the test that isolates the query-time graph (F7) is inconclusive; a repeal benefit of the graph is therefore not established.
 
-\textbf{Hard filtering versus telling the model the dates.} Two further baselines, added by a dated amendment to the plan after the test was seen and approved before they were run, read the version store with no filter (\sys{bvnone}) and with each passage's effective interval printed in the prompt (\sys{bvdate}). Printing dates raises accuracy from 0.311 to 0.409 and cuts the wrong-version rate from 0.317 to 0.064, but hard filtering before ranking is still far better: \sys{b7plus} minus \sys{bvdate} is $+$0.245 [$+$0.18, $+$0.31] in run~1 and $+$0.230 [$+$0.17, $+$0.29] in run~2.
+\textbf{Hard filtering versus telling the model the dates.} Two further baselines, added by a dated amendment to the plan after the test was seen and approved before they were run, read the version store with no filter (\sys{Unfiltered versions}) and with each passage's effective interval printed in the prompt (\sys{Dates in prompt}). Printing dates raises accuracy from 0.311 to 0.409 and cuts the wrong-version rate from 0.317 to 0.064, but hard filtering before ranking is still far better: \sys{VersionFilter} minus \sys{Dates in prompt} is $+$0.245 [$+$0.18, $+$0.31] in run~1 and $+$0.230 [$+$0.17, $+$0.29] in run~2.
 
-\textbf{Repeal.} TV-RAG asserts that a provision is no longer in force 11 times, 7 correctly (precision 0.64, Wilson 95\% [0.35, 0.85]), recovering 7 of the 23 unanswerable rows (recall 0.30 [0.16, 0.51]). Flat BM25 also recovers 7 but makes 29 false repeal claims; the in-force oracle answers 22/23. Repeal detection remains weak for every retrieval system.
+\textbf{Repeal.} The full configuration asserts that a provision is no longer in force 11 times, 7 correctly (precision 0.64, Wilson 95\% [0.35, 0.85]), recovering 7 of the 23 unanswerable rows (recall 0.30 [0.16, 0.51]). Flat BM25 also recovers 7 but makes 29 false repeal claims; the in-force oracle answers 22/23. Repeal detection remains weak for every retrieval system.
 
 \subsection{Where the remaining errors occur (post hoc)}
 
-\Cref{fig:rank} conditions TV-RAG's accuracy on the rank of the gold version in its prompt. When the gold version is ranked first, the answer is correct in 102 of 107 rows (95\%); accuracy falls with rank, to 8/20 at ranks 11--20 and 4/48 when the gold version is absent. The gold version is ranked first in only 107 of 295 answerable rows. Of the 247 rows whose prompt contains the gold version, 46 are still answered wrongly, 41 of them when the gold is below rank one. This is a correlational breakdown, not a causal test; it points to ranking within the admissible set, applied equally to all systems, as the most promising next step.
+\Cref{fig:rank} conditions the full configuration's accuracy on the rank of the gold version in its prompt. When the gold version is ranked first, the answer is correct in 102 of 107 rows (95\%); accuracy falls with rank, to 8/20 at ranks 11--20 and 4/48 when the gold version is absent. The gold version is ranked first in only 107 of 295 answerable rows. Of the 247 rows whose prompt contains the gold version, 46 are still answered wrongly, 41 of them when the gold is below rank one. This is a correlational breakdown, not a causal test; it points to ranking within the admissible set, applied equally to all systems, as the most promising next step.
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
   ybar, width=\columnwidth, height=4.6cm, bar width=15pt,
-  ymin=0, ymax=1.12, ylabel={TV-RAG accuracy}, ylabel style={font=\scriptsize},
+  ymin=0, ymax=1.12, ylabel={Full configuration accuracy}, ylabel style={font=\scriptsize},
   symbolic x coords={1,2--5,6--10,11--20,$>$20,absent},
   xtick=data, xlabel={rank of the gold version in the prompt}, xlabel style={font=\scriptsize},
   xticklabel style={font=\scriptsize}, yticklabel style={font=\scriptsize},
@@ -441,13 +461,15 @@ F5 and F6 are numerically identical, and this matters for interpretation. \sys{b
  (absent,0.083) [4/48]};
 \end{axis}
 \end{tikzpicture}
-\caption{TV-RAG accuracy (run 1, 295 answerable rows) by the rank of the gold version in the generation prompt. Labels: correct / rows.}
+\caption{Full configuration accuracy (run 1, 295 answerable rows) by the rank of the gold version in the generation prompt. Labels: correct / rows.}
 \label{fig:rank}
 \end{figure}
 
+\textbf{Saved failure cases (post hoc).} The following excerpts from run~1 are abridged and translated, and interpreted against release labels. (i) \emph{Near-identical wording:} for the customs-tax question dated 8~September~2016, Hybrid quotes a 20\% penalty on tax underdeclared, exempted, reduced or refunded, omitting ``not collected'', which the dated gold includes. (ii) \emph{Repeal through a parent:} for the bank-entrustment question dated 30~August~2020, the full configuration quotes requirements to assess the trustee's management, personnel and infrastructure; the release marks the target clause unanswerable because its parent article was repealed. (iii) \emph{Gold present, answer wrong:} for the electrical-safety reporting question dated 29~June~2020, the full configuration has the gold version at prompt rank~6 but answers ``periodic six-monthly, annual reports''; the gold requires annual reporting before 1~February of the following year. These selected examples illustrate failure modes, not their prevalence.
+
 \subsection{Is the scorer trustworthy?}
 
-In a first, blind pass the automatic accuracy agreed with the human scorer on 95 of 100 answers ($\kappa=0.888$; Wilson 95\% [0.888, 0.979]); after one human label was revised (below), agreement is 96/100 ($\kappa=0.910$). In neither pass was an answer judged correct by the scorer but wrong by the human. In the four disagreements the human accepted the answer: three paraphrase the gold span or use a different enumeration mark, and one contains the gold span together with a span of another version. The revision was made after seeing the disagreements and an AI assistant's suggestion to re-check three items. A single scorer, who is also an author, judged all 100 answers. The human counts per system (\sys{b1} 2/34, \sys{b4} 10/33, TV-RAG 23/33) follow the same order as F1. We therefore use no LLM judge for accuracy. The sheet showed only the in-force version, so it could not validate the wrong-version flag; F3 and all wrong-version rates are scorer-based.
+In a first, blind pass the automatic accuracy agreed with the human scorer on 95 of 100 answers ($\kappa=0.888$; Wilson 95\% [0.888, 0.979]); after one human label was revised (below), agreement is 96/100 ($\kappa=0.910$). In neither pass was an answer judged correct by the scorer but wrong by the human. In the four disagreements the human accepted the answer: three paraphrase the gold span or use a different enumeration mark, and one contains the gold span together with a span of another version. The revision was made after seeing the disagreements and an AI assistant's suggestion to re-check three items. A single scorer, who is also an author, judged all 100 answers. The human counts per system (\sys{LLM only} 2/34, \sys{Hybrid} 10/33, Full config. 23/33) follow the same order as F1. We therefore use no LLM judge for accuracy. The sheet showed only the in-force version, so it could not validate the wrong-version flag; F3 and all wrong-version rates are scorer-based.
 
 \textbf{Subset with blind human gold.} For 24 of the 156 lineages (53 rows; no T6) a human built the gold version blind to the graph; it matched the graph-derived gold on 119 of 120 items after AI-proposed, author-confirmed adjudication. Scored with the release labels, F1--F6 point in the same direction on this subset in both runs (e.g., F5 $+$0.189 [$+$0.071, $+$0.315]). This is descriptive and does not replace independent gold for the whole set.
 
@@ -457,7 +479,7 @@ In a first, blind pass the automatic accuracy agreed with the human scorer on 95
 
 \textbf{What the results support.} For Vietnamese law, the large and robust effect is that of \emph{knowing which wording is in force}: an offline version store plus a hard interval filter before ranking. This agrees with the as-of filtering results for German, US and Thai law~\cite{prior2026oldfriend,yao2026lawinforce,akarajaradwong2026nitibenchplus}; what ViLexTime adds is a decomposition on the same rows, whose post-hoc steps suggest that a version store without the filter hurts and that printing dates in the prompt does not substitute for filtering. The graph's main role is offline, in deriving versions and intervals; at query time we detect no gain, and a repeal-specific benefit is not established.
 
-\textbf{Threats to validity.} (i) \emph{Shared source.} Gold versions and filter intervals come from the same derived graph; when an event is missed, both can be wrong together, so F3--F6 measure consistency with the graph. Blind gold covers only 24/156 lineages and no T6. (ii) \emph{Labels.} The final set is AI-labelled and reviewed by the first author, with pre-reconciliation AI--AI AC1 of 0.608 and hard cases settled by an AI adjudicator under author delegation; no lawyer checked them. (iii) \emph{Coverage.} T3 (6 lineages) and T6 (23) are small, 76 of the 254 T2 rows are near-identical wordings, T5 (retroactive or signed-but-not-yet-effective) is absent, and 220 of the 318 rows fall outside the four target domains. The T1 short answers were found, after the run, to contain whole clause text with enumeration marks, making the T1 column unusable; it is excluded and will be corrected only through a declared amendment. (iv) \emph{Scope.} One generator, no reranker and one source portal; \sys{b5}/\sys{b6} are one-step expansions, not full GraphRAG, and a LightRAG comparison is pending. (v) \emph{Selection.} The confirmatory family was fixed after the dev set and two pilot rounds had been seen.
+\textbf{Threats to validity.} (i) \emph{Shared source.} Gold versions and filter intervals come from the same derived graph; when an event is missed, both can be wrong together, so F3--F6 measure consistency with the graph. Blind gold covers only 24/156 lineages and no T6. (ii) \emph{Labels.} The final set is AI-labelled and reviewed by the first author, with pre-reconciliation AI--AI AC1 of 0.608 and hard cases settled by an AI adjudicator under author delegation; no lawyer checked them. (iii) \emph{Coverage.} T3 (6 lineages) and T6 (23) are small, 76 of the 254 T2 rows are near-identical wordings, T5 (retroactive or signed-but-not-yet-effective) is absent, and 220 of the 318 rows fall outside the four target domains. The T1 short answers were found, after the run, to contain whole clause text with enumeration marks, making the T1 column unusable; it is excluded and will be corrected only through a declared amendment. (iv) \emph{Scope.} One generator, no reranker and one source portal; \sys{Hybrid+AmendHop}/\sys{Hybrid+Hierarchy} are one-step expansions, not full GraphRAG, and a LightRAG comparison is pending. (v) \emph{Selection.} The confirmatory family was fixed after the dev set and two pilot rounds had been seen.
 
 % ======================================================================
 \section{Conclusion}
