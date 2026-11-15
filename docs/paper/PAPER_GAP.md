@@ -2,7 +2,7 @@
 
 Ngày viết: 15/11/2026. Bản được đọc: `docs/paper/ieee/main.pdf` và `main.tex` (commit `835c032`, 7 trang).
 
-Cập nhật cùng ngày: bổ sung kết quả LightRAG chạy trên Colab (mục 7, việc P1-2).
+Cập nhật cùng ngày: bổ sung kết quả LightRAG trên dev và bộ test cuối (mục 7, việc P1-2); Codex đã sửa paper theo P0-1, W1–W6, W8 và dựng bản ACM ẩn danh (`docs/paper/acm/`).
 
 Người viết: một phiên AI trong dự án (Claude), đọc theo năm vai phản biện. Đây **không phải phản biện độc lập**: cùng họ model đã giúp viết paper, nên có thể cùng điểm mù. File này không sửa paper, không chạy lại thực nghiệm, không đổi số nào.
 
@@ -47,7 +47,7 @@ Nhãn bằng chứng dùng trong file:
 | 6 | Reranker, áp đều cho mọi nấc | GPU, cần amendment | Dập câu hỏi "baseline yếu" |
 | 7 | Ẩn danh, đổi sang mẫu ACM, sửa trình bày (mục 8) | 1–2 ngày | Không làm thì bị loại vì hình thức |
 
-Riêng đối chứng LightRAG: Colab đã dựng xong đồ thị và lấy xong ngữ cảnh cho 512 truy vấn. Còn thiếu bước sinh câu trả lời và chấm, nên **chưa có Accuracy**. Chi tiết ở việc P1-2.
+Riêng đối chứng LightRAG: **đã có số trên bộ test cuối** (thăm dò). Accuracy 0,346 / 0,355, ngang flat RAG; hệ có lọc theo khoảng hơn nó khoảng 0,3, KTC loại 0 ở cả hai lần. Chi tiết ở việc P1-2.
 
 **Về xác suất được nhận.** Tôi không đưa con số phần trăm, vì không có căn cứ để tính. Nói theo mức:
 - Nộp bản hiện tại làm bài dài ở ICAIL 2027: nhiều khả năng bị từ chối.
@@ -126,7 +126,7 @@ So với các bộ gần nhất: LawInForce-eCFR báo hai người gán đồng 
 | M2 | Hệ đề xuất không hơn nấc ngay dưới | TV-RAG − `+VersionFilter` = +0,013 [−0,009; +0,035]; F1–F3 vẫn đúng nếu thay bằng `+VersionFilter` [SL] | Tên "TV-RAG" gợi một hệ mới, nhưng chính paper cho thấy nó không thêm gì |
 | M3 | Retriever yếu | Căn cứ đúng đứng hạng 1 ở 107/295 dòng; BM25 trên âm tiết rời nối bằng OR; dense PhoBERT-base cắt 256 token; chỉ trộn top 20 + top 20; không reranker | Reviewer hỏi: retriever mạnh thì flat RAG có tự hết lỗi không? Paper chưa trả lời |
 | M4 | Một generator, lại là model đóng | GPT-4o mini; `b5 − b4` đổi dấu giữa hai lần chạy, cả hai KTC đều loại 0 | Hiệu nhỏ hơn khoảng 0,03 không đọc được. Trái yêu cầu của ICAIL (mục 6) |
-| M5 | Đối chứng đồ thị không phải GraphRAG | `b5`, `b6` là mở rộng một bước tự xây. LightRAG đã dựng đồ thị và lấy ngữ cảnh trên Colab (15/11), chưa sinh câu trả lời, chưa có điểm | Đề cương hứa "GraphRAG phi thời gian" |
+| M5 | ~~Đối chứng đồ thị không phải GraphRAG~~ Đã có LightRAG thật (15/11, thăm dò) | Cấu hình đầy đủ − LightRAG +0,321 / +0,308 Accuracy, KTC loại 0 cả hai lần | Còn phải ghi rõ: kết quả sau khi đã thấy test, kho LightRAG nhỏ hơn |
 | M6 | Bãi bỏ yếu ở mọi hệ | 7/23; F7 không đủ lực (MDE khoảng 0,185) | Không có kết quả dương nào cho T6 |
 | M7 | Verifier và lan truyền không tác động | Verifier không tác động do cách dựng; lan truyền đổi 1/295 dòng | Hai thành phần của kiến trúc đề cương không có bằng chứng lợi ích |
 | M8 | Ngày hỏi được cấp sẵn | Đầu vào là cặp (câu hỏi, ngày) | Người dùng thật hiếm khi ghi ngày. Cần nêu là giới hạn |
@@ -145,7 +145,7 @@ Nguồn: `docs/DeCuongKLTN_23521635_23521643_UIT.docx` [XM]. Bảng lệch chi t
 |---|---|---|
 | Tên: Temporal-Aware KG-RAG | Paper đổi trọng tâm sang "benchmark + phép đo có đối chứng"; đồ thị có vai lúc dựng kho | Lệch có lý do. Khóa luận giữ tên và giải trình; paper đổi tên là đúng |
 | RQ1: LLM và RAG sai phiên bản đến đâu | Vế RAG: có, theo scorer. Vế LLM: chưa đo được | Một nửa |
-| RQ2: đồ thị theo phiên bản có giảm lỗi so với RAG phẳng và GraphRAG phi thời gian | Hơn RAG phẳng: có (F1–F3). So với GraphRAG thật: LightRAG đã có ngữ cảnh, chưa có điểm (P1-2) | Phần lớn |
+| RQ2: đồ thị theo phiên bản có giảm lỗi so với RAG phẳng và GraphRAG phi thời gian | Hơn RAG phẳng: có (F1–F3). So với GraphRAG thật (LightRAG): có, thăm dò, +0,32 / +0,31 Accuracy | Đạt, mức thăm dò |
 | RQ3: lợi ích từ đồ thị hay từ lọc siêu dữ liệu | Trả lời rõ: từ lọc khoảng trên kho phiên bản; đồ thị lúc truy vấn không thêm | **Đạt. Đây là phần mạnh nhất** |
 | Giả thuyết: mô hình hóa chuỗi phiên bản hơn lọc theo ngày văn bản | F5 +0,115 [+0,076; +0,156], ủng hộ ở cả hai lần | **Đạt** |
 | 1.100–1.300 câu, kiểm định thủ công, LLM chỉ hỗ trợ diễn đạt | Bộ cuối 199 lineage, 361 dòng; AI gán nhãn, một tác giả duyệt; LLM còn chọn đoạn đáp án và lọc trước | **Lệch lớn** |
@@ -154,7 +154,7 @@ Nguồn: `docs/DeCuongKLTN_23521635_23521643_UIT.docx` [XM]. Bảng lệch chi t
 | L0–L3 dựng đồ thị và chuỗi phiên bản | Có, là đóng góp thật. Độ phủ 40,2% | Đạt một phần |
 | L4: lọc hiệu lực trước, lai ghép, mở rộng đồ thị | Có đủ. Mở rộng đồ thị không có tác dụng; `rel_up` lấy seed trước khi lọc | Đạt về cài đặt |
 | L5: Temporal Verifier | Có, không tác động | Chỉ là lưới an toàn |
-| Đối chứng: LLM, BM25, dense, hybrid, GraphRAG phi thời gian, KG phân cấp, lọc siêu dữ liệu | Đủ, trừ GraphRAG thật (LightRAG đang ở giữa chừng, P1-2) | Thiếu một |
+| Đối chứng: LLM, BM25, dense, hybrid, GraphRAG phi thời gian, KG phân cấp, lọc siêu dữ liệu | Đủ; GraphRAG thật là LightRAG, chạy sau khi đã thấy test nên chỉ là thăm dò | Đạt |
 | Chỉ số: Recall@k, MRR, TV-Recall@k, Accuracy, EM/F1, LLM-judge, TVER, VCR, TCS | Paper chỉ có Accuracy, TV-R@1, TVER, sai phiên bản. MRR, EM/F1, VCR, TCS **đã tính sẵn** trong file điểm bộ cuối nhưng chưa vào paper. LLM-judge bỏ, có lý do | Dễ lấp |
 | Thí nghiệm chuyển miền | Chỉ có phân rã theo miền | Lệch |
 | Giao diện minh họa | Dòng lệnh, khoảng 5 phút một câu | Yếu |
@@ -260,28 +260,23 @@ Bộ test cuối đã xem. Mọi cấu hình mới chạy trên bộ này phải
 - Trần ước tính nếu mọi căn cứ đúng lên hạng 1: khoảng +0,11 Accuracy [SL của audit, không phải số đo].
 - Cần: amendment; chỉnh trên dev; báo "thăm dò" hoặc dựng test mới. Quyết định mở lại reranker là của CMT.
 
-**P1-2. Đối chứng GraphRAG thật (LightRAG): đã dựng xong trên Colab, chưa có điểm.**
-- Trạng thái ngày 15/11 [XM, `runs/lightrag_20261113/intake.json`]:
-  - Xong: dựng đồ thị từ 608 văn bản (5.069 đoạn, 101.330 nút, 35.460 cạnh; khoảng 10,8 giờ; `Qwen/Qwen2.5-14B-Instruct`) và lấy ngữ cảnh cho 512 truy vấn (151 dev, 361 bộ cuối). Kiểm toàn vẹn đạt: đủ 512 mã, không ngữ cảnh rỗng. Hai văn bản bị LightRAG bỏ vì trùng nguyên nội dung với văn bản khác, không mất nội dung.
-  - Chưa: sinh câu trả lời và chấm. Colab chỉ làm phần truy xuất. Câu trả lời phải sinh bằng GPT-4o mini với prompt chung, như mọi hệ khác. Vì vậy **chưa có Accuracy của LightRAG**.
-- Số đo được ngay, không gọi model, **chỉ trên dev** (130 dòng có đáp án; 85 dòng có đoạn phân biệt phiên bản) [XM, `runs/lightrag_20261113/dev/coverage.json`]:
+**P1-2. Đối chứng GraphRAG thật (LightRAG): xong, thăm dò.**
+- Đồ thị dựng trên Colab (608 văn bản, `Qwen/Qwen2.5-14B-Instruct`); câu trả lời sinh bằng GPT-4o mini với prompt chung, gửi thường, hai lần; amendment ADR 0006 ngày 15/11 duyệt trước khi chạy test [XM, `runs/lightrag_20261113/`].
+- Bộ test cuối, `all` 318 dòng, lần 1 / lần 2 [XM, `test/{r1,r2}/*.score.json`]:
 
-  | Hệ | Đáp án đúng mốc có trong căn cứ | Lời văn chỉ phiên bản khác có, nằm trong căn cứ | Độ dài căn cứ (trung vị, ký tự) |
-  |---|---:|---:|---:|
-  | LightRAG | 123/130 | 81/85 | 98.955 |
-  | Lai ghép phẳng (`b4`) | 115/130 | 78/85 | 13.235 |
-  | Mở rộng một bước (`b5`) | 117/130 | 80/85 | 13.235 |
-  | +DocDate (`b7`) | 122/130 | 42/85 | 11.971 |
-  | +VersionFilter (`b7plus`) | 125/130 | 4/85 | 11.887 |
-  | TV-RAG (`proposed2`) | 125/130 | 8/85 | 12.098 |
+  | Chỉ số | LightRAG | Lai ghép phẳng | Cấu hình đầy đủ |
+  |---|---|---|---|
+  | Accuracy | 0,346 / 0,355 | 0,324 / 0,296 | 0,667 / 0,664 |
+  | Sai phiên bản | 0,355 / 0,351 | 0,291 / 0,294 | 0,008 / 0,008 |
+  | TCS (127 cặp T2) | 0,055 / 0,055 | 0,071 / 0,047 | 0,661 / 0,646 |
 
-  Cách đọc: LightRAG kéo về lượng chữ gấp khoảng 7,5 lần, nên đáp án đúng có mặt nhiều hơn flat RAG. Nhưng lời văn của phiên bản sai cũng có mặt ở gần như mọi dòng, giống flat RAG. Chỉ bộ lọc theo khoảng mới gạt được nó ra. Đây là độ phủ của ngữ cảnh, **không phải Accuracy**: model còn phải tìm và chọn đúng đoạn trong 99.000 ký tự. Dự đoán [GT]: Accuracy của LightRAG gần flat RAG và thấp hơn hệ có lọc. Phải sinh câu trả lời mới biết.
-- Ba chỗ không ngang hàng, phải khai khi viết: kho của LightRAG chỉ có 608 văn bản (các hệ khác tìm trên toàn kho); ngữ cảnh dài gấp khoảng 7,5 lần; kho không có ngày hiệu lực. Hai chỗ đầu có lợi cho LightRAG. Nếu LightRAG vẫn thua hệ có lọc thì kết luận càng chắc.
-- Việc còn lại:
-  1. Dev: gọi API hai lần, ước lượng 0,73 USD mỗi lần. Script đã soạn ở `runs/lightrag_20261113/run_dev_api.sh`, đường nhập và chấm đã thử khô. Chờ CMT đồng ý chi.
-  2. Bộ cuối: cần CMT duyệt nháp amendment ADR 0006 (đã soạn trong REFACTOR_PLAN). Ước lượng 1,7 USD mỗi lần, hai lần. Kết quả ghi "thăm dò".
-  3. Lấy thêm từ Colab nếu còn: `vllm.log`, phiên bản thư viện, revision model. Gói tải về không có ba thứ này.
-- Khi có số: đóng được M5 và dòng lệch "GraphRAG phi thời gian" của đề cương; paper thêm một dòng LightRAG vào bảng mô tả.
+  - Cấu hình đầy đủ − LightRAG: +0,321 [+0,249; +0,392] / +0,308 [+0,235; +0,382]. +VersionFilter − LightRAG: +0,308 / +0,292, KTC cũng loại 0.
+  - LightRAG − lai ghép phẳng: +0,022 [−0,037; +0,080] / +0,060 [+0,003; +0,117]. LightRAG − mở rộng một bước: KTC chứa 0 cả hai lần.
+  - Trên dev (đã thấy lúc duyệt): LightRAG 0,417 / 0,404; cấu hình đầy đủ 0,722 / 0,709.
+- Đọc theo câu đã khai trước trong amendment: hệ có lọc theo khoảng hiệu lực hơn một GraphRAG phi thời gian thật, dù hệ đó có kho nhỏ hơn (608 văn bản) và ngữ cảnh dài hơn nhiều (khoảng 29.000 token). LightRAG không hơn flat RAG rõ ràng, và trích sai phiên bản ít nhất ngang flat RAG.
+- Phải khai khi viết: chạy sau khi đã thấy kết quả test; kho không ngang hàng; LightRAG không trả mã đơn vị nên không có TV-Recall, TVER; định dạng trích dẫn đạt 242/361 vì model dẫn nhãn đoạn nội bộ của LightRAG (không ảnh hưởng Accuracy).
+- Còn thiếu từ Colab: `vllm.log`, phiên bản thư viện, revision model.
+- Việc tiếp: thêm một dòng LightRAG vào bảng mô tả và một câu vào phần kết quả của paper; F2 giữ nguyên (P − `b5`).
 - Dẫn GraphRAG-Bench ("When to use Graphs in RAG", Xiang và cộng sự, ICLR 2026) [WEB]: RAG thường ngang hoặc hơn GraphRAG ở câu tra cứu sự kiện đơn. Kết quả của mình khớp với nhận định đó. Viết như vậy thì kết quả "không thấy tác dụng" thành một điểm xác nhận, không phải một thất bại.
 - Dẫn dòng GraphRAG có thời gian: T-GRAG (arXiv 2508.01680), TG-RAG (2510.13590), STAR-RAG (2510.16715), DyG-RAG [WEB]. Nêu khác biệt: các hệ đó dựng đồ thị thực thể bằng LLM trên tin tức hoặc báo cáo; ở đây đồ thị là tất định, dựng từ lệnh sửa đổi, và dùng trước lúc truy vấn. Không cần chạy các hệ này.
 
@@ -371,7 +366,7 @@ Xử lý lập luận này:
 - Phần web: chỉ đọc tóm tắt và trích đoạn do công cụ trả về. Chưa mở toàn văn bài nào hôm nay. Quy định của ICAIL đọc qua công cụ tóm tắt, câu trích bị cắt.
 - Tên model ở P0-3 và P1-1 lấy từ thẻ model và kết quả tìm kiếm. Chưa có phép đo độc lập nào trên văn bản luật Việt Nam.
 - Chưa tra hạn 2027 của các hội nghị IEEE trong khu vực.
-- Số LightRAG ở P1-2 là độ phủ ngữ cảnh trên dev, đo bằng phép khớp đoạn của scorer. Chưa qua evidence-gate. Chưa có số nào của LightRAG trên bộ test cuối.
+- Số LightRAG ở P1-2 đọc thẳng từ file điểm, chưa qua evidence-gate.
 - Các mục gắn [GT] là đề xuất chưa thử. Không viết chúng vào paper như kết quả.
 
 ---
