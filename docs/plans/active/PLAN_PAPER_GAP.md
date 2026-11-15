@@ -4,7 +4,7 @@ Date: 2026-11-15
 
 ## Status
 
-Đề xuất, chờ CMT duyệt. Chưa việc nào trong plan này được chạy.
+Đang chạy từ 15/11. CMT đã chốt Q1 (người đọc chính) và Q2. Q3–Q7 và người đọc thứ hai còn chờ.
 
 Plan này nối `REFACTOR_PLAN.md` (các nhóm 1, 3, 5, 6 còn mở) và `docs/paper/PAPER_GAP.md` (mục 7–8).
 `REFACTOR_PLAN.md` giữ làm sổ kết quả đã có. Tiến độ việc mới ghi ở đây. Không thay ADR nào.
@@ -21,7 +21,7 @@ Nhãn bằng chứng: **[XM]** đã kiểm trong repo hôm nay; **[SL]** suy lu�
 - **Điểm nghẽn là giờ người, không phải máy.** Cần khoảng 30 giờ người trong ba tuần tới. Phải bắt đầu tuần này, chạy song song với máy.
 - **Không dựng bộ test mới trước 28/01.** Hiệu chính lớn (+0,3), KTC xa 0. Nhãn "thăm dò có khai trước" là đủ cho các phép kiểm độ bền.
 - **Hai mốc cứng:** khóa luận 26/12/2026; ICAIL 28/01/2027.
-- **Cần CMT chốt 7 việc** (mục 8). Gấp nhất: ai đọc gold mù, và có mở lại reranker không.
+- **Cần CMT chốt** (mục 8): còn Q3–Q7 và người đọc thứ hai của gold mù. Q1, Q2 đã chốt 15/11.
 
 ## 2. Outcome
 
@@ -80,8 +80,8 @@ Khóa luận: chương 6 còn 11 chỗ `[CHỜ]`, chương 2 còn 9 chỗ `[CẦ
 ### 3.3. Sáu điều thấy thêm khi rà, PAPER_GAP chưa ghi
 
 1. **Gói Qwen thiếu `bvnone` và `bvdate`.** `colab_upload/qwen_gen/dev/` có 13 hệ, không có hai hệ này. "Lọc cứng hơn in ngày 0,245" là một trong ba số chính của abstract. Reviewer sẽ hỏi: model lớn hơn có tự dùng được ngày không? Prompt đã có sẵn ở `runs/posthoc_g4_20261113/{dev,test}/prompts/`. Thêm vào gói là xong.
-2. **CMT không còn mù.** CMT đã duyệt mọi dòng bộ cuối, có thấy đáp án của kho. Gold mù phải do người khác đọc [SL].
-3. **Reranker đang chạy trên CPU.** `retrieve.py:355` ghi cứng `device="cpu"`. 512 truy vấn × 100 ứng viên × vài hệ thì quá chậm [SL]. Cần mở tham số thiết bị trước khi chạy Colab.
+2. **CMT không còn mù.** CMT đã duyệt mọi dòng bộ cuối, có thấy đáp án của kho. Gold mù phải do người khác đọc [SL]. Người gán A của các vòng cũ cũng đã thấy đáp án của 51/132 lineage chưa có gold (qua `kiem_A.tsv`); người gán B thấy 16, đều nằm trong 51 đó [XM].
+3. **Reranker không chạy nổi trên máy này.** Máy không có GPU (4 nhân, 8 GB) [XM]; `retrieve.py` ghi cứng `device="cpu"`. 512 truy vấn × 100 ứng viên × vài hệ thì quá chậm [SL]. Phần chấm cặp (câu hỏi, đoạn) phải đưa lên Colab.
 4. **Chế độ `ranh_gioi` có dữ liệu, chưa có dự đoán.** File release có đủ 722 dòng (361 × 2 chế độ); file điểm toàn số 0.
 5. **Paper còn đúng 2 trang.** Mọi nội dung thêm phải vừa 2 trang (ngân sách ở WP-D).
 6. **Lần Colab LightRAG thiếu log, phiên bản thư viện, revision model.** Lần Qwen này phải lưu đủ ngay từ đầu.
@@ -122,12 +122,15 @@ Bãi bỏ (T6) **không** nằm trong bảng. Viết thẳng là bài toán mở
 **A1. Chấm cờ sai phiên bản.** CMT chấm phiếu 33 câu đã dựng. Xong khi có độ chính xác của cờ kèm khoảng Wilson. Ghi rõ người chấm là tác giả và đã thấy các câu này ở phiếu trước.
 
 **A2. Gold mù người trên bộ cuối. Việc quan trọng nhất của plan.**
-- Mẫu: 80 lineage rút từ 132 lineage chưa có gold người: đủ 23 T6, 1 T3 còn lại, 56 T2 (phân tầng theo lát lời văn gần giống và theo miền). Cộng 24 lineage cũ thành **104/156, khoảng hai phần ba bộ cuối** [SL].
-- Người đọc 1 làm cả 80. Người đọc 2 làm 30 dòng trùng (có 12 T6) để có đồng thuận người–người.
-- Người đọc không phải CMT, chưa xem phiếu duyệt, không thấy phiên bản của kho. Đọc văn bản gốc hoặc văn bản hợp nhất.
-- Công cụ có sẵn: `scripts/review/independent_gold.py build --only … --strata … --per-stratum …`.
+- **Đã dựng 15/11** ở `data/review/gold_final/` (lệnh dựng: `build.sh` cùng thư mục) [XM].
+- Không rút mẫu. Lấy **hết 81 lineage** của bộ cuối mà chưa có gold mù đợt 1 và chưa người gán nào thấy đáp án của kho: 23 T6 (14 bãi bỏ trực tiếp, 9 qua nút cha), 58 T2 (19 lời văn gần giống, 39 thường). Cộng 24 lineage cũ thành **105/156, khoảng hai phần ba bộ cuối**.
+- Vì sao không phải 80 rút từ 132: 51 lineage còn lại (50 T2 lô silver, 1 T3) đã bị người gán A thấy kèm đáp án. Phiếu này đúng dù NMT là A hay B. Nếu NMT là B và còn giờ, có thể đọc thêm 35 lineage mà B chưa thấy.
+- Mỗi lineage một dòng. T6 lấy dòng sau bãi bỏ, vì đó là khẳng định cần kiểm (23 dòng của lát F7). Phiếu không hiện nhóm, đáp án hay ngày của kho.
+- Người đọc chính (NMT): `gold_A.xlsx`, 81 dòng. Người đọc thứ hai: `gold_B.xlsx`, 30 dòng chung (12 T6, 18 T2), để có đồng thuận người–người. **Chưa chọn người thứ hai.**
+- Người đọc không phải CMT, chưa xem phiếu duyệt của các lô này, không mở `data/vilextime_final/` và `gold_sample.tsv`. Đọc văn bản gốc hoặc văn bản hợp nhất.
+- Trả file xong: `independent_gold.py import A --review data/review/gold_final`, rồi `reveal A --review … --release data/vilextime_final/internal/derived/vilextime/release.jsonl`.
 - Báo: tỷ lệ khớp **thô trước phân xử** và sau phân xử, tách riêng, kèm Wilson. Phân xử do người làm, mỗi dòng lệch có lý do viết ra. AI không đề xuất `dong_y`.
-- Tính lại F1–F6 trên 104 lineage (ADR 0006 §7). Xem lại G002 và quy ước `dong_y` của đợt 1 theo cùng quy tắc.
+- Tính lại F1–F6 trên 105 lineage (ADR 0006 §7). Xem lại G002 và quy ước `dong_y` của đợt 1 theo cùng quy tắc.
 - Việc này cũng là M2 (đối chiếu tay) mà đề cương hứa. Ghi rõ như vậy, không làm M2 riêng.
 - Ngưỡng: giữ B6 của kế hoạch chính (95% sau phân xử). Không hạ.
 
@@ -152,9 +155,9 @@ Mọi cấu hình mới chọn trên dev. Lên bộ cuối sau **một amendment
 - Tùy chọn, 0 đồng: thêm Qwen3-4B (đường chạy có sẵn theo ADR 0004) để có ba cỡ model.
 
 **B2. Bảng retriever × bộ lọc.**
-- Trước hết đo Recall@100 của vùng ứng viên hiện tại trên dev (miễn phí). Thấp thì reranker bị chặn trần; khi đó đổi embedding trước.
+- Trước hết đo Recall@100 của vùng ứng viên hiện tại trên dev (miễn phí). Thấp thì reranker bị chặn trần; khi đó đổi embedding trước. **Đang chạy 15/11:** `runs/rerank_pool_dev_20261115/` (`b4`, `b7plus`, `b7`, `bvnone`).
 - Ứng viên reranker: ba model trong PAPER_GAP P1-1. **Chọn theo MRR của RAG phẳng trên dev, không theo độ lợi của bộ lọc.** Chọn retriever tốt nhất cho đối thủ thì kết quả mới công bằng.
-- Sửa `device` ghi cứng (mục 3.3 điểm 3). Commit code reranker trước khi chạy, để run có commit sạch.
+- Code reranker đã commit 15/11 (`56b9c3e`). Còn thiếu: đường chấm cặp trên Colab (mục 3.3 điểm 3). Xuất cặp (câu hỏi, đoạn) của vùng 100 ứng viên, chấm bằng GPU, nhập điểm về, xếp lại tại máy.
 - Bảng: {retriever hiện tại, retriever mạnh} × {không lọc, lọc ngày văn bản, lọc khoảng phiên bản}, thêm `bvdate`.
 - Truy xuất (TV-R@1, MRR) chạy cả thang, miễn phí và tất định. Sinh câu trả lời: Qwen (miễn phí) và GPT-4o mini hai lần cho 4 ô.
 - Dự đoán [GT]: reranker tăng MRR của RAG phẳng, TCS gần như đứng yên. Nếu đúng, đây là bằng chứng mạnh nhất cho C1.
@@ -219,7 +222,7 @@ Thiếu chỗ thì rút bảng hạng hậu nghiệm và Bảng I.
 
 | Hội đồng hỏi | Trả lời bằng |
 |---|---|
-| Vì sao 361 dòng thay vì 1.150? | Bảng MDE có sẵn; hai phần ba bộ cuối có người đọc mù (A2); phễu công khai (C1) |
+| Vì sao 361 dòng thay vì 1.150? | Bảng MDE có sẵn; 105/156 lineage có người đọc mù (A2); phễu công khai (C1) |
 | Vì sao AI gán nhãn? | Đồng thuận người–AI và luật sư (A3); scorer khớp người 96/100 |
 | Đề tài tên đồ thị, đồ thị làm gì? | F5 +0,115 là phần của chuỗi phiên bản; số toàn kho ở C4; thẳng thắn: lúc truy vấn không thêm gì, LightRAG cũng không |
 
@@ -255,8 +258,8 @@ Viết **sau khi có số dev** của B1 và B2, duyệt **trước** khi chạm
 
 | # | Quyết định | Đề xuất | Chặn |
 |---|---|---|---|
-| Q1 | Ai đọc gold mù (không phải CMT)? Ai là người thứ hai? | NMT làm 80; luật sư hoặc một sinh viên luật làm 30 | A2, A3. **Gấp nhất** |
-| Q2 | Mở lại reranker (đã cắt 05/11)? | Có. Lý do mới: reviewer hỏi baseline yếu; code đã viết | B2 |
+| Q1 | Ai đọc gold mù (không phải CMT)? Ai là người thứ hai? | **Chốt 15/11: NMT đọc chính (81 dòng).** Người thứ hai (30 dòng) chưa chọn; đề xuất luật sư hoặc một sinh viên luật | Người thứ hai chặn đồng thuận người–người |
+| Q2 | Mở lại reranker (đã cắt 05/11)? | **Chốt 15/11: mở lại.** Lý do mới: reviewer hỏi baseline yếu | — |
 | Q3 | Duyệt amendment gộp (mục 7) khi có số dev | Có | B1–B5 trên bộ cuối |
 | Q4 | Repo công khai đang chứa bản thảo có tên | Chuyển riêng tư đến 19/04/2027; hoặc ít nhất gỡ `docs/paper/` khỏi nhánh công khai. Hỏi GVHD | F2 |
 | Q5 | Nơi nộp | ICAIL bài dài. Ngày 10/01 chưa có A2 và B1 thì chuyển bài ngắn. GVHD chốt | WP-D |
@@ -270,14 +273,14 @@ Viết **sau khi có số dev** của B1 và B2, duyệt **trước** khi chạm
 | 16–22/11 | Qwen dev xong, nhập, chấm. Thêm `bvdate`. Reranker: Recall@100, chọn trên dev. Dựng phiếu A2, A3. Gate số TCS, LightRAG | CMT chấm 33 câu. Chốt Q1, Q2. Người đọc bắt đầu A2 | **M1 22/11:** amendment gộp được duyệt |
 | 23–29/11 | Bộ cuối: Qwen 15 hệ; bảng retriever; B3; B4; B5 | A2 tiếp | |
 | 30/11–06/12 | Chấm, bootstrap, gate. C1, C3, C4 | A2 xong, phân xử. A3 pha 2 | **M2 06/12:** có số người kiểm |
-| 07–13/12 | Tính lại F1–F6 trên 104 lineage. Chương 6, 3, 4 | Đọc nguồn chương 2. C2 viết câu hỏi | **M3 10/12:** khóa số khóa luận |
+| 07–13/12 | Tính lại F1–F6 trên 105 lineage. Chương 6, 3, 4 | Đọc nguồn chương 2. C2 viết câu hỏi | **M3 10/12:** khóa số khóa luận |
 | 14–20/12 | `thesis-critic`, `evidence-gate`. Demo | GVHD đọc | |
 | 21–26/12 | Sửa theo góp ý | | **M4 26/12:** nộp khóa luận |
 | 27/12–10/01 | Viết lại paper theo WP-D. C2 chạy. C5 | Đọc bản gốc nguồn mới | **M5 10/01:** chọn bài dài hay ngắn |
 | 11–24/01 | Gate, `paper_check.py`, gói ẩn danh | Người ngoài đọc | **M6 21/01:** khóa bản thảo |
 | 25–28/01 | Dự phòng | Nộp | **28/01** |
 
-Giờ người: A1 3; A2 16–18; A3 5–7; phân xử 2; C2 4. Tổng khoảng 30 giờ, chia cho CMT, NMT, luật sư.
+Giờ người: A1 3; A2 16–18 (81 dòng của NMT và 30 dòng của người thứ hai); A3 5–7; phân xử 2; C2 4. Tổng khoảng 30 giờ, chia cho CMT, NMT, luật sư.
 Tiền API: bảng retriever khoảng 2 USD, B3 và C2 dưới 1 USD mỗi việc [SL, tính từ 5,3 USD cho 24 lượt hệ ở G4].
 
 ## 10. Không làm
@@ -292,7 +295,7 @@ Tiền API: bảng retriever khoảng 2 USD, B3 và C2 dưới 1 USD mỗi việ
 
 | Rủi ro | Xử lý |
 |---|---|
-| Không tìm được người đọc mù kịp | Giảm xuống 23 T6 + 37 T2 (60 lineage). Dưới mức đó thì nộp bài ngắn (Q5) |
+| NMT không đọc kịp 81 dòng | Ưu tiên 23 T6 và 30 dòng chung trước. Dưới 60 dòng thì nộp bài ngắn (Q5) |
 | Gold mù lộ lỗi kho | Báo đúng số; chấm lại theo gold người; không sửa kho trước hạn |
 | Model mở hoặc reranker đảo một kết luận | Viết theo bảng mục 7. Biết trước reviewer vẫn hơn |
 | Trùng hạn khóa luận | Khóa số 10/12. Sau ngày đó số mới chỉ vào paper |
@@ -305,12 +308,14 @@ Hoàn tác: plan này chỉ thêm file và thư mục run mới. Xóa thư mục
 ## Progress
 
 - [x] 15/11 Rà hiện trạng, lập plan.
-- [ ] Q1–Q7: CMT chốt.
+- [x] 15/11 Q1 (người đọc chính: NMT), Q2 (mở lại reranker): CMT chốt. Còn Q3–Q7 và người đọc thứ hai.
 - [ ] A1 Chấm phiếu 33 câu.
-- [ ] A2 Gold mù 80 lineage: dựng phiếu / đọc / phân xử / tính lại F1–F6.
+- [x] 15/11 A2 dựng phiếu: `data/review/gold_final/` (commit `afd6bd4`). `independent_gold.py` thêm `--release`, cỡ riêng từng tầng, `--solo`; test mới; 788 test qua. Đã kiểm: 81 dòng A, 30 dòng B nằm trong A, 23 dòng T6 đều là dòng sau bãi bỏ, 0 lineage trùng gold đợt 1 hay danh sách đã thấy, 0 ô chứa đáp án của kho, `reveal` chạy thử trên bản sao.
+- [ ] A2 NMT đọc / người thứ hai đọc / phân xử / tính lại F1–F6.
 - [ ] A3 Kiểm nhãn pha 2; luật sư 30 dòng.
 - [ ] B1 Qwen: dev / thêm `bvdate` / bộ cuối.
-- [ ] B2 Reranker: Recall@100 / chọn trên dev / bộ cuối.
+- [x] 15/11 B2 code reranker commit `56b9c3e` (viết trước đó trong ngày, 35 test liên quan qua).
+- [ ] B2 Reranker: Recall@100 trên dev (đang chạy, `runs/rerank_pool_dev_20261115/`) / đường chấm cặp trên Colab / chọn trên dev / bộ cuối.
 - [ ] B3 Chọn một trong hai.
 - [ ] B4 Sửa T1, chấm lại.
 - [ ] B5 `ranh_gioi`.
@@ -323,6 +328,8 @@ Hoàn tác: plan này chỉ thêm file và thư mục run mới. Xóa thư mục
 ## Decisions
 
 - 2026-11-15: đề xuất không dựng bộ test mới trước 28/01; dồn giờ người cho gold mù. Chờ CMT.
+- 2026-11-15 (CMT): NMT là người đọc chính của gold mù. Mở lại reranker.
+- 2026-11-15: gold mù lấy hết 81 lineage chưa ai thấy đáp án, thay cho "80 rút từ 132". Lý do: người gán A cũ đã thấy 51 lineage còn lại, nên chúng không thể đọc mù; lấy hết thì khỏi phải rút mẫu và phiếu đúng dù NMT là A hay B.
 
 ## Validation
 
