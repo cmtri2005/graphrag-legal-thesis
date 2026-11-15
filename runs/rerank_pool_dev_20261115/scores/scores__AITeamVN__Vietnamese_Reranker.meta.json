@@ -1,0 +1,16 @@
+{
+ "model": "AITeamVN/Vietnamese_Reranker",
+ "revision": "f536976248403314225d7fdfdbc87f0e9516a54e",
+ "max_length": 512,
+ "batch": 64,
+ "pairs_file": "pairs.jsonl",
+ "pairs_sha256": "9086f597e1fb97f85cc8d0ab881d115c65b8acecc3191b5f59a95b9942caf432",
+ "scores_sha256": "dc3ad8bfe40515ba8a486069b6b7e0f8fe6f010b789d03b93adeeef8a8b34631",
+ "rows": 14012,
+ "scored_this_call": 0,
+ "gpu": "cpu",
+ "torch": "2.14.1+cpu",
+ "transformers": "5.22.1",
+ "sentence_transformers": "6.3.0",
+ "finished_utc": "2026-11-15T13:28:37+00:00"
+}

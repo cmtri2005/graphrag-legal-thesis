@@ -1,0 +1,16 @@
+{
+ "model": "BAAI/bge-reranker-v2-m3",
+ "revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+ "max_length": 512,
+ "batch": 64,
+ "pairs_file": "pairs.jsonl",
+ "pairs_sha256": "9086f597e1fb97f85cc8d0ab881d115c65b8acecc3191b5f59a95b9942caf432",
+ "scores_sha256": "37b05b63cfe6938d2a319e7ad98ae1012384eb209948005bfaea4c9d8c6de134",
+ "rows": 14012,
+ "scored_this_call": 0,
+ "gpu": "cpu",
+ "torch": "2.14.1+cpu",
+ "transformers": "5.22.1",
+ "sentence_transformers": "6.3.0",
+ "finished_utc": "2026-11-15T13:28:02+00:00"
+}

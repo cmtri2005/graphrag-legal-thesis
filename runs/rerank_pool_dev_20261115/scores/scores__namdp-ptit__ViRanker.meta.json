@@ -1,0 +1,16 @@
+{
+ "model": "namdp-ptit/ViRanker",
+ "revision": "922bd0d698b12e02f37717051374f40a5297e6a9",
+ "max_length": 512,
+ "batch": 64,
+ "pairs_file": "pairs.jsonl",
+ "pairs_sha256": "9086f597e1fb97f85cc8d0ab881d115c65b8acecc3191b5f59a95b9942caf432",
+ "scores_sha256": "c6096bffb57715c3be610978fa06e6e47e34150dd917ac8c0641ed2995c505b7",
+ "rows": 14012,
+ "scored_this_call": 0,
+ "gpu": "cpu",
+ "torch": "2.14.1+cpu",
+ "transformers": "5.22.1",
+ "sentence_transformers": "6.3.0",
+ "finished_utc": "2026-11-15T13:29:12+00:00"
+}

@@ -399,6 +399,7 @@ Hoàn tác: plan này chỉ thêm file và thư mục run mới. Xóa thư mục
 - [x] 15/11 B1 dev 13 hệ × 2 lần nhập và chấm (`runs/qwen_gen_20261115/run_dev.sh`, exit 0). Qwen giữ thứ tự: `b4` 0,424, `b7plus` 0,715, `proposed2` 0,762; oracle 0,894 với oracle hiện hành 0,497. Điểm mới: `b7` ngang `b7plus` về Accuracy (0,715) nhưng sai phiên bản 0,129 so với 0,012, nên C3 phải dựa vào sai phiên bản và TCS, không dựa riêng Accuracy. Hai lần trùng nguyên văn 97,1%. Còn: `bvnone`, `bvdate`; log vLLM, `pip freeze`.
 - [x] 15/11 B2 code reranker commit `56b9c3e` (viết trước đó trong ngày, 35 test liên quan qua).
 - [x] 15/11 B2 bước 1: vùng ứng viên trên dev, 4 hệ, xong 11:42 UTC, exit 0 (`runs/rerank_pool_dev_20261115/`, dòng sổ chạy 15/11). T2 TV-Recall@100 từ 0,958 đến 1,000.
+- [x] 15/11 B2 bước 3: chọn reranker trên dev (`select.sh`, exit 0). Theo tiêu chí khai trước (MRR `b4`): **`AITeamVN/Vietnamese_Reranker`** 0,696 (bge-m3 0,685, ViRanker 0,624, không reranker 0,536). Reranker không thay bộ lọc: TV-Recall@1 `b4` 0,285 so với `b7plus` 0,550. Còn: sinh câu trả lời với reranker trên dev.
 - [x] 15/11 B2 đường chấm trên GPU: `scripts/eval/rerank_score.py` (`pairs`, `score`), `Reranker.from_scores`, cờ `--rerank-scores` ở `run_vilextime.py` và `colab_b1.py export`, vùng ứng viên dùng chung bộ đệm với lượt `--hybrid --k 100`. Thiếu điểm của một cặp thì báo lỗi, không tự chạy CPU. Test mới trong `tests/test_rag_retrieve.py`.
 - [ ] B2 CMT chạy Colab chấm cặp / `select.sh` chọn trên dev / amendment / bộ cuối.
 - [ ] B3 Chọn một trong hai.
