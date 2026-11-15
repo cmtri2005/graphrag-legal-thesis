@@ -26,3 +26,55 @@ Paper IEEE (tiếng Anh), dựng: `latexmk -xelatex main.tex`. Số chép từ f
 | 220/318 dòng ngoài bốn miền | `docs/reports/research-audit-20261113.md` |
 
 Tài liệu tham khảo: `references.bib` (chép từ `references.bib` gốc đã xác minh, bỏ trường `checked`), thêm `holm1979` (OpenAlex: Scand. J. Stat. 6:65–70, DOI 10.2307/4615733) và `cormack2009rrf` (Crossref: SIGIR 2009, tr. 758–759), xác minh ngày 14/11/2026.
+
+## Bổ sung P0-1 ngày 15/11/2026 (chỉ đọc điểm G4 có sẵn)
+
+| Số mới trong paper | File, key, lần chạy |
+|---|---|
+| Hybrid, r1, TCS 0.071 [0.031, 0.117] — MT | `runs/final_g4_20261112/r1/test/all.score.json` → `b4.giua_khoang.all.tcs` và `b4.giua_khoang.all.ci95.tcs`; G4 r1 |
+| Hybrid, r1, MRR 0.445 [0.378, 0.512] — MT | `runs/final_g4_20261112/r1/test/all.score.json` → `b4.giua_khoang.all.mrr` và `b4.giua_khoang.all.ci95.mrr`; G4 r1 |
+| Hybrid, r2, TCS 0.047 [0.016, 0.087] — MT | `runs/final_g4_20261112/r2/test/all.score.json` → `b4.giua_khoang.all.tcs` và `b4.giua_khoang.all.ci95.tcs`; G4 r2 |
+| Hybrid, r2, MRR 0.445 [0.378, 0.512] — MT | `runs/final_g4_20261112/r2/test/all.score.json` → `b4.giua_khoang.all.mrr` và `b4.giua_khoang.all.ci95.mrr`; G4 r2 |
+| +VersionFilter, r1, TCS 0.654 [0.570, 0.736] — MT | `runs/final_g4_20261112/r1/test/all.score.json` → `b7plus.giua_khoang.all.tcs` và `b7plus.giua_khoang.all.ci95.tcs`; G4 r1 |
+| +VersionFilter, r1, MRR 0.456 [0.394, 0.517] — MT | `runs/final_g4_20261112/r1/test/all.score.json` → `b7plus.giua_khoang.all.mrr` và `b7plus.giua_khoang.all.ci95.mrr`; G4 r1 |
+| +VersionFilter, r2, TCS 0.646 [0.562, 0.727] — MT | `runs/final_g4_20261112/r2/test/all.score.json` → `b7plus.giua_khoang.all.tcs` và `b7plus.giua_khoang.all.ci95.tcs`; G4 r2 |
+| +VersionFilter, r2, MRR 0.456 [0.394, 0.517] — MT | `runs/final_g4_20261112/r2/test/all.score.json` → `b7plus.giua_khoang.all.mrr` và `b7plus.giua_khoang.all.ci95.mrr`; G4 r2 |
+| Full config., r1, TCS 0.661 [0.577, 0.744] — MT | `runs/final_g4_20261112/r1/test/all.score.json` → `proposed2.giua_khoang.all.tcs` và `proposed2.giua_khoang.all.ci95.tcs`; G4 r1 |
+| Full config., r1, MRR 0.453 [0.391, 0.513] — MT | `runs/final_g4_20261112/r1/test/all.score.json` → `proposed2.giua_khoang.all.mrr` và `proposed2.giua_khoang.all.ci95.mrr`; G4 r1 |
+| Full config., r2, TCS 0.646 [0.562, 0.728] — MT | `runs/final_g4_20261112/r2/test/all.score.json` → `proposed2.giua_khoang.all.tcs` và `proposed2.giua_khoang.all.ci95.tcs`; G4 r2 |
+| Full config., r2, MRR 0.453 [0.391, 0.513] — MT | `runs/final_g4_20261112/r2/test/all.score.json` → `proposed2.giua_khoang.all.mrr` và `proposed2.giua_khoang.all.ci95.mrr`; G4 r2 |
+| Oracle (in force), r1, TCS 0.961 [0.924, 0.992] — MT | `runs/final_g4_20261112/r1/test/all.score.json` → `oracle.giua_khoang.all.tcs` và `oracle.giua_khoang.all.ci95.tcs`; G4 r1 |
+| Oracle (in force), r1, MRR 1.000 [1.000, 1.000] — MT | `runs/final_g4_20261112/r1/test/all.score.json` → `oracle.giua_khoang.all.mrr` và `oracle.giua_khoang.all.ci95.mrr`; G4 r1 |
+| Oracle (in force), r2, TCS 0.969 [0.935, 0.992] — MT | `runs/final_g4_20261112/r2/test/all.score.json` → `oracle.giua_khoang.all.tcs` và `oracle.giua_khoang.all.ci95.tcs`; G4 r2 |
+| Oracle (in force), r2, MRR 1.000 [1.000, 1.000] — MT | `runs/final_g4_20261112/r2/test/all.score.json` → `oracle.giua_khoang.all.mrr` và `oracle.giua_khoang.all.ci95.mrr`; G4 r2 |
+| Oracle (current), r1, TCS 0.000 [0.000, 0.000] — MT | `runs/final_g4_20261112/r1/test/all.score.json` → `oracle_now.giua_khoang.all.tcs` và `oracle_now.giua_khoang.all.ci95.tcs`; G4 r1 |
+| Oracle (current), r1, MRR 1.000 [1.000, 1.000] — MT | `runs/final_g4_20261112/r1/test/all.score.json` → `oracle_now.giua_khoang.all.mrr` và `oracle_now.giua_khoang.all.ci95.mrr`; G4 r1 |
+| Oracle (current), r2, TCS 0.000 [0.000, 0.000] — MT | `runs/final_g4_20261112/r2/test/all.score.json` → `oracle_now.giua_khoang.all.tcs` và `oracle_now.giua_khoang.all.ci95.tcs`; G4 r2 |
+| Oracle (current), r2, MRR 1.000 [1.000, 1.000] — MT | `runs/final_g4_20261112/r2/test/all.score.json` → `oracle_now.giua_khoang.all.mrr` và `oracle_now.giua_khoang.all.ci95.mrr`; G4 r2 |
+
+## Ví dụ W3/W8 — ca đã lưu, rút gọn và dịch
+
+- W3 giữ minh họa: id `vilextime:T2:provision:0297fec0-31a0-11f1-ad11-4f6eee776099:2020-02-16`.
+  - `runs/final_g4_20261112/r1/test/b4.jsonl:42`; key `id`, `answer, answerable, retrieved; G4 r1`.
+  - `data/vilextime_final/vilextime.jsonl:89`; key `id`, `question, answer, context, as_of, version_id, accepted_evidence`.
+  - `data/vilextime_final/vilextime_meta.jsonl:89`; key `id`, `near_identical, repeal_mode, repealed_by, target, no_answer_reason`.
+- W3 giữ minh họa: id `vilextime:T2:provision:0297fec0-31a0-11f1-ad11-4f6eee776099:2022-07-19`.
+  - `runs/final_g4_20261112/r1/test/b4.jsonl:45`; key `id`, `answer, answerable, retrieved; G4 r1`.
+  - `data/vilextime_final/vilextime.jsonl:90`; key `id`, `question, answer, context, as_of, version_id, accepted_evidence`.
+  - `data/vilextime_final/vilextime_meta.jsonl:90`; key `id`, `near_identical, repeal_mode, repealed_by, target, no_answer_reason`.
+- W8 gần giống; 20%, 2016-09-08: id `vilextime:T2:provision:0bd8196a-df3f-11f0-8933-5bedca54c5c8#k2:2016-09-08`.
+  - `runs/final_g4_20261112/r1/test/b4.jsonl:54`; key `id`, `answer, answerable, retrieved; G4 r1`.
+  - `data/vilextime_final/vilextime.jsonl:110`; key `id`, `question, answer, context, as_of, version_id, accepted_evidence`.
+  - `data/vilextime_final/vilextime_meta.jsonl:110`; key `id`, `near_identical, repeal_mode, repealed_by, target, no_answer_reason`.
+- W8 bãi bỏ qua cha; 2020-08-30: id `vilextime:T6:provision:834d699a-df54-11f0-9a69-b14ee0870a7b:2020-08-30`.
+  - `runs/final_g4_20261112/r1/test/proposed2.jsonl:341`; key `id`, `answer, answerable, retrieved; G4 r1`.
+  - `data/vilextime_final/vilextime.jsonl:682`; key `id`, `question, answer, context, as_of, version_id, accepted_evidence`.
+  - `data/vilextime_final/vilextime_meta.jsonl:682`; key `id`, `near_identical, repeal_mode, repealed_by, target, no_answer_reason`.
+- W8 gold trong prompt; 2020-06-29, hạng 6, báo cáo 6 tháng/hàng năm; gold trước 01/02 năm sau: id `vilextime:T2:provision:1bd29b3e-df57-11f0-90b9-2b5fe92f1dbd#k3#c:2020-06-29`.
+  - `runs/final_g4_20261112/r1/test/proposed2.jsonl:64`; key `id`, `answer, answerable, retrieved; G4 r1`.
+  - `data/vilextime_final/vilextime.jsonl:130`; key `id`, `question, answer, context, as_of, version_id, accepted_evidence`.
+  - `data/vilextime_final/vilextime_meta.jsonl:130`; key `id`, `near_identical, repeal_mode, repealed_by, target, no_answer_reason`.
+
+W3: Hybrid r1 mốc đầu trả chuỗi rỗng; mốc sau trả công thức 50% khác gold. Không có dự đoán 50 triệu sai mốc như hình. Cả hai dòng đầu ra được ghi rõ là minh họa. W8 rank 6 là vị trí 1-based của version_id trong retrieved, không chạy lại truy xuất/sinh/chấm.
+
+W5: cột Gen-TV-R@1 dùng 318 dòng và danh sách khi sinh; Hình 4 giữ TV-R@1 lexical với 295 dòng có đáp án. Không thay số.
