@@ -393,6 +393,7 @@ Hoàn tác: plan này chỉ thêm file và thư mục run mới. Xóa thư mục
 - [ ] A1 Chấm phiếu 33 câu.
 - [x] 15/11 A2 dựng phiếu: `data/review/gold_final/` (commit `afd6bd4`). `independent_gold.py` thêm `--release`, cỡ riêng từng tầng, `--solo`; test mới; 788 test qua. Đã kiểm: 81 dòng A, 30 dòng B nằm trong A, 23 dòng T6 đều là dòng sau bãi bỏ, 0 lineage trùng gold đợt 1 hay danh sách đã thấy, 0 ô chứa đáp án của kho, `reveal` chạy thử trên bản sao.
 - [ ] A2 NMT đọc / người thứ hai đọc / phân xử / tính lại F1–F6.
+- [x] 15/11 A2: NMT đọc mù 81/81 và tự đối chiếu sau khi mở khóa. Hiệu lực khớp kho 80/81; kho đúng 79/81 (2 dòng T2 `kg_missed_amendment`, 1 dòng T6 `annotator_error`); T6 23/23. Cột `ly_do` chuyển về mã theo CMT duyệt. F1–F7 trên 103 lineage có gold người (bỏ 2 lineage kho sai): F1–F6 ủng hộ, F7 không đủ bằng chứng, cả hai lần (`runs/gold_final_subset_20261115/`). Còn: người đọc thứ hai 30 dòng (`gold_B.xlsx`); NMT không ghi `phut`.
 - [x] 15/11 CMT yêu cầu viết chi tiết: thêm đặc tả A3 và bảng 50 chỗ `[CHỜ]`, `[CẦN]` của khóa luận (WP-E chi tiết).
 - [ ] A3 Dựng phiếu / NMT gán sau khi A2 khóa / luật sư 30 dòng / đo đồng thuận.
 - [ ] B1 Qwen: dev / thêm `bvdate` / bộ cuối.
