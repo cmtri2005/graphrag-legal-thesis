@@ -10,6 +10,12 @@ then `--limit 100`, then the whole file extend one run. Any provider error stops
 than leaving a gap, and the same command continues it. A truncated answer is recorded, because
 stopping would stall on that row at every rerun.
 
+`--batch` (OpenAI only) sends the same request bodies through the Batch API at half the price and
+returns within 24 hours. One command submits the rows still unanswered as one batch; rerunning the
+same command polls it, and once it is finished writes the answers into the same raw file in the same
+shape, so import, scoring and the hash checks do not change. Rows the batch did not answer are sent
+again by the next run. Use `--limit` to keep one batch under the account's enqueued-token limit.
+
 Example, dev only:
     python scripts/eval/colab_b1.py export --system b2ctx --split dev \
         --as-of-strategy giua_khoang --limit 0 --b2 --out runs/G_dev/prompts/b2ctx.jsonl
@@ -85,6 +91,71 @@ def call(row: dict, args: argparse.Namespace) -> dict:
             "system_fingerprint": done.system_fingerprint}
 
 
+BATCH_ENDPOINT = "/v1/chat/completions"
+
+
+def openai_request(method: str, path: str, **kwargs) -> requests.Response:
+    """One call to the OpenAI files/batches API (the only place the batch path touches the network)."""
+    base, key, _ = llm.PROVIDERS["openai"]
+    response = requests.request(method, f"{base}{path}", timeout=120,
+                                headers={"Authorization": f"Bearer {os.environ[key]}"}, **kwargs)
+    if not response.ok:
+        raise SystemExit(f"openai {method} {path}: {response.status_code} {response.text[:400]}")
+    return response
+
+
+def batch_submit(todo: list[dict], args: argparse.Namespace, state_path: Path) -> None:
+    lines = [json.dumps({"custom_id": r["id"], "method": "POST", "url": BATCH_ENDPOINT,
+                         "body": llm.chat_payload(r["system"], r["user"], model=args.model,
+                                                  temperature=args.temperature, max_tokens=args.max_tokens,
+                                                  seed=args.seed)}, ensure_ascii=False) for r in todo]
+    body = ("\n".join(lines) + "\n").encode("utf-8")
+    upload = openai_request("POST", "/files", data={"purpose": "batch"},
+                            files={"file": (state_path.stem + ".input.jsonl", body)}).json()
+    batch = openai_request("POST", "/batches", json={"input_file_id": upload["id"], "endpoint": BATCH_ENDPOINT,
+                                                     "completion_window": "24h"}).json()
+    state_path.write_text(json.dumps({
+        "batch_id": batch["id"], "input_file_id": upload["id"], "input_sha256": hashlib.sha256(body).hexdigest(),
+        "rows": len(todo), "submitted": datetime.now(timezone.utc).isoformat(timespec="seconds")},
+        indent=2) + "\n", encoding="utf-8")
+    print(f"submitted batch {batch['id']} with {len(todo)} rows; rerun the same command to collect", file=sys.stderr)
+
+
+def batch_collect(state_path: Path, args: argparse.Namespace, by_id: dict, keep, skip: set[str]) -> bool:
+    """Write what a finished batch answered. False while it is still running."""
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    batch = openai_request("GET", f"/batches/{state['batch_id']}").json()
+    status = batch["status"]
+    if status not in ("completed", "failed", "expired", "cancelled"):
+        print(f"batch {state['batch_id']}: {status} {batch.get('request_counts')}; rerun later", file=sys.stderr)
+        return False
+    refused = []
+    if batch.get("output_file_id"):
+        text = openai_request("GET", f"/files/{batch['output_file_id']}/content").text
+        for line in filter(None, text.splitlines()):
+            item = json.loads(line)
+            row_id, response = item["custom_id"], item.get("response") or {}
+            if row_id not in by_id or row_id in skip or response.get("status_code") != 200:
+                continue                      # unanswered: the next run sends it again
+            done = llm.read_completion(response["body"], "openai", args.model, args.temperature)
+            if done.finish_reason not in ("stop", "length") or done.prompt_tokens is None:
+                refused.append(row_id)
+                continue
+            keep({"id": row_id, "prompt_sha256": by_id[row_id]["prompt_sha256"], "model": args.model,
+                  "revision": done.served_model or args.model, "raw": done.text,
+                  "finish_reason": done.finish_reason, "prompt_tokens": done.prompt_tokens,
+                  "completion_tokens": done.completion_tokens, "elapsed_s": 0.0, "gpu": "api-batch",
+                  "provider": "openai", "system_fingerprint": done.system_fingerprint,
+                  "batch_id": state["batch_id"]})
+    history = state_path.with_suffix(".done.jsonl")
+    with history.open("a", encoding="utf-8") as sink:
+        sink.write(json.dumps({**state, "status": status, "request_counts": batch.get("request_counts"),
+                               "refused": refused}) + "\n")
+    state_path.unlink()
+    print(f"batch {state['batch_id']}: {status}; {len(refused)} refused rows left for the next run", file=sys.stderr)
+    return True
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--prompts", type=Path, required=True)
@@ -99,7 +170,10 @@ def main() -> None:
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--limit", type=int, help="stop after this many rows of the file are answered")
     ap.add_argument("--ids", type=Path, help="only these row ids, one per line, for a targeted probe")
+    ap.add_argument("--batch", action="store_true", help="OpenAI Batch API: half price, answers within 24 h")
     args = ap.parse_args()
+    if args.batch and args.provider != "openai":
+        raise SystemExit("--batch is OpenAI only")
 
     rows = read_jsonl(args.prompts)
     by_id = {r["id"]: r for r in rows}
@@ -130,9 +204,13 @@ def main() -> None:
         before = json.loads(meta_path.read_text(encoding="utf-8"))
         if {k: before[k] for k in SETTINGS} != settings:
             raise SystemExit(f"{raw.name} was started with {before}; one file holds one configuration")
+        if before.get("transport", "direct") != ("batch" if args.batch else "direct"):
+            raise SystemExit(f"{raw.name} was started with transport {before.get('transport', 'direct')}; "
+                             "one file holds one transport")
     else:
         meta_path.write_text(json.dumps({
-            **settings, "system": system, "split": split, "prompt_file_sha256": file_sha,
+            **settings, "transport": "batch" if args.batch else "direct",
+            "system": system, "split": split, "prompt_file_sha256": file_sha,
             "run_tag": args.run_tag, "commit": git("rev-parse", "HEAD"),
             "uncommitted": bool(git("status", "--porcelain", "--untracked-files=no")),
             "started": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -165,6 +243,16 @@ def main() -> None:
             if len(written) % 50 == 0:
                 print(f"  {len(written)}/{len(todo)}", file=sys.stderr)
 
+        if args.batch:
+            state_path = raw.with_suffix(".batch.json")
+            if state_path.exists():
+                if not batch_collect(state_path, args, by_id, keep, done):
+                    return
+            else:
+                if todo:
+                    batch_submit(todo, args, state_path)
+                return
+            todo = []
         pool = ThreadPoolExecutor(args.workers)
         futures = [pool.submit(call, row, args) for row in todo]
         try:

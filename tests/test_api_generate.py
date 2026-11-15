@@ -145,3 +145,45 @@ def test_seed_is_sent_only_when_given(monkeypatch):
     llm.complete("s", "u", provider="openai", model="m", session=session)
     assert sent[0]["seed"] == 7 and "seed" not in sent[1]
     assert (got.served_model, got.finish_reason) == ("m-2024", "stop")
+
+
+def test_batch_submits_then_collects_the_same_raw_shape(run, monkeypatch):
+    calls, state = [], {}
+
+    class R:
+        def __init__(self, data=None, text=""):
+            self.data, self.text = data, text
+
+        def json(self):
+            return self.data
+
+    def fake(method, path, **kw):
+        calls.append((method, path))
+        if path == "/files":
+            state["input"] = kw["files"]["file"][1].decode()
+            return R({"id": "file-in"})
+        if path == "/batches":
+            return R({"id": "batch-1"})
+        if path == "/batches/batch-1":
+            return R({"status": state.get("status", "in_progress"), "output_file_id": "file-out"})
+        body = {"model": "m-2024", "system_fingerprint": "fp", "usage": {"prompt_tokens": 10, "completion_tokens": 5},
+                "choices": [{"finish_reason": "stop", "message": {"content": ANSWER}}]}
+        lines = [{"custom_id": f"dev-{n}", "response": {"status_code": 200, "body": body}} for n in (0, 2)]
+        lines.append({"custom_id": "dev-1", "response": {"status_code": 500, "body": {}}})
+        return R(text="\n".join(json.dumps(x) for x in lines))
+
+    monkeypatch.setattr(api_generate, "openai_request", fake)
+    monkeypatch.setattr(llm, "complete", lambda *a, **k: pytest.fail("batch must not call the direct API"))
+    raw = run.go("--batch")
+    sent = [json.loads(line) for line in state["input"].splitlines()]
+    assert [x["custom_id"] for x in sent] == ["dev-0", "dev-1", "dev-2"]
+    assert sent[0]["body"]["seed"] == 20261109 and sent[0]["body"]["messages"][1]["content"] == "u0"
+    run.go("--batch")                                   # still running: nothing written
+    assert raw.read_text() == ""
+    state["status"] = "completed"
+    run.go("--batch")
+    assert sorted(json.loads(line)["id"] for line in raw.read_text().splitlines()) == ["dev-0", "dev-2"]
+    run.go("--batch")                                   # the failed row goes into a new batch
+    assert calls.count(("POST", "/batches")) == 2
+    with pytest.raises(SystemExit, match="transport"):
+        run.go()                                        # one raw file, one transport
