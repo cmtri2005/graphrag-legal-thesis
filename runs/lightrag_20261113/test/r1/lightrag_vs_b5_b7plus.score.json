@@ -1,0 +1,4070 @@
+{
+ "b5": {
+  "giua_khoang": {
+   "all": {
+    "rows": 318,
+    "cited_rows": 318,
+    "contrast_rows": 265,
+    "accuracy": 0.3113207547169811,
+    "accuracy_lenient": 0.33647798742138363,
+    "mrr": 0.4453994519477317,
+    "recall@1": 0.33962264150943394,
+    "tv_recall@1": 0.16352201257861634,
+    "recall@5": 0.5691823899371069,
+    "tv_recall@5": 0.4276729559748428,
+    "recall@10": 0.6698113207547169,
+    "tv_recall@10": 0.5345911949685535,
+    "em": 0.061016949152542375,
+    "f1": 0.5066580878268755,
+    "tver": 0.5660377358490566,
+    "tver_strict": 0.5660377358490566,
+    "citation_coverage": 1.0,
+    "wrong_version": 0.2943396226415094,
+    "vcr": 0.2610062893081761,
+    "tcs": 0.07086614173228346,
+    "tcs_lenient": 0.10236220472440945,
+    "tcs_pairs": 127,
+    "ci95": {
+     "recall@1": [
+      0.26582278481012656,
+      0.41509433962264153
+     ],
+     "tv_recall@1": [
+      0.12779552715654952,
+      0.2
+     ],
+     "mrr": [
+      0.3785793325408253,
+      0.51253378813985
+     ],
+     "accuracy": [
+      0.26479750778816197,
+      0.35646687697160884
+     ],
+     "accuracy_lenient": [
+      0.2870662460567823,
+      0.38557993730407525
+     ],
+     "f1": [
+      0.4645763314983905,
+      0.5485666054659324
+     ],
+     "tver": [
+      0.5158227848101266,
+      0.6151419558359621
+     ],
+     "tver_strict": [
+      0.5158227848101266,
+      0.6151419558359621
+     ],
+     "vcr": [
+      0.21835443037974683,
+      0.303125
+     ],
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": [
+      0.24814814814814815,
+      0.3408239700374532
+     ],
+     "tcs": [
+      0.03076923076923077,
+      0.1171875
+     ]
+    }
+   },
+   "t1_control": {
+    "rows": 43,
+    "cited_rows": 43,
+    "contrast_rows": 0,
+    "accuracy": 0.046511627906976744,
+    "accuracy_lenient": 0.046511627906976744,
+    "mrr": 0.15927450762212084,
+    "recall@1": 0.11627906976744186,
+    "tv_recall@1": 0.11627906976744186,
+    "recall@5": 0.20930232558139536,
+    "tv_recall@5": 0.20930232558139536,
+    "recall@10": 0.2558139534883721,
+    "tv_recall@10": 0.2558139534883721,
+    "em": 0.0,
+    "f1": 0.48902066147528706,
+    "tver": 0.4186046511627907,
+    "tver_strict": 0.4186046511627907,
+    "citation_coverage": 1.0,
+    "wrong_version": null,
+    "vcr": 0.0,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.023255813953488372,
+      0.23255813953488375
+     ],
+     "tv_recall@1": [
+      0.023255813953488372,
+      0.23255813953488375
+     ],
+     "mrr": [
+      0.0698525648158451,
+      0.26321983605949334
+     ],
+     "accuracy": [
+      0.0,
+      0.11627906976744187
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.11627906976744187
+     ],
+     "f1": [
+      0.3788686455264963,
+      0.5985593414596146
+     ],
+     "tver": [
+      0.27906976744186046,
+      0.5813953488372093
+     ],
+     "tver_strict": [
+      0.27906976744186046,
+      0.5813953488372093
+     ],
+     "vcr": [
+      0.0,
+      0.0
+     ],
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   },
+   "T1": {
+    "rows": 43,
+    "cited_rows": 43,
+    "contrast_rows": 0,
+    "accuracy": 0.046511627906976744,
+    "accuracy_lenient": 0.046511627906976744,
+    "mrr": 0.15927450762212084,
+    "recall@1": 0.11627906976744186,
+    "tv_recall@1": 0.11627906976744186,
+    "recall@5": 0.20930232558139536,
+    "tv_recall@5": 0.20930232558139536,
+    "recall@10": 0.2558139534883721,
+    "tv_recall@10": 0.2558139534883721,
+    "em": 0.0,
+    "f1": 0.48902066147528706,
+    "tver": 0.4186046511627907,
+    "tver_strict": 0.4186046511627907,
+    "citation_coverage": 1.0,
+    "wrong_version": null,
+    "vcr": 0.0,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.023255813953488372,
+      0.23255813953488375
+     ],
+     "tv_recall@1": [
+      0.023255813953488372,
+      0.23255813953488375
+     ],
+     "mrr": [
+      0.0698525648158451,
+      0.26321983605949334
+     ],
+     "accuracy": [
+      0.0,
+      0.11627906976744187
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.11627906976744187
+     ],
+     "f1": [
+      0.3788686455264963,
+      0.5985593414596146
+     ],
+     "tver": [
+      0.27906976744186046,
+      0.5813953488372093
+     ],
+     "tver_strict": [
+      0.27906976744186046,
+      0.5813953488372093
+     ],
+     "vcr": [
+      0.0,
+      0.0
+     ],
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   },
+   "T2": {
+    "rows": 254,
+    "cited_rows": 254,
+    "contrast_rows": 247,
+    "accuracy": 0.3346456692913386,
+    "accuracy_lenient": 0.35826771653543305,
+    "mrr": 0.45536230598180577,
+    "recall@1": 0.3464566929133858,
+    "tv_recall@1": 0.1732283464566929,
+    "recall@5": 0.5826771653543307,
+    "tv_recall@5": 0.4645669291338583,
+    "recall@10": 0.6850393700787402,
+    "tv_recall@10": 0.5787401574803149,
+    "em": 0.04330708661417323,
+    "f1": 0.49588874049849524,
+    "tver": 0.547244094488189,
+    "tver_strict": 0.547244094488189,
+    "citation_coverage": 1.0,
+    "wrong_version": 0.2793522267206478,
+    "vcr": 0.2440944881889764,
+    "tcs": 0.07086614173228346,
+    "tcs_lenient": 0.10236220472440945,
+    "tcs_pairs": 127,
+    "ci95": {
+     "recall@1": [
+      0.25984251968503935,
+      0.4330708661417323
+     ],
+     "tv_recall@1": [
+      0.12992125984251968,
+      0.21653543307086615
+     ],
+     "mrr": [
+      0.38112957471225184,
+      0.5288197013474921
+     ],
+     "accuracy": [
+      0.2795275590551181,
+      0.3858267716535433
+     ],
+     "accuracy_lenient": [
+      0.3031496062992126,
+      0.41338582677165353
+     ],
+     "f1": [
+      0.45007490449343646,
+      0.54062449323265
+     ],
+     "tver": [
+      0.4921259842519685,
+      0.6023622047244095
+     ],
+     "tver_strict": [
+      0.4921259842519685,
+      0.6023622047244095
+     ],
+     "vcr": [
+      0.20078740157480315,
+      0.2874015748031496
+     ],
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": [
+      0.23199999999999998,
+      0.3253012048192771
+     ],
+     "tcs": [
+      0.031496062992125984,
+      0.11811023622047243
+     ]
+    }
+   },
+   "T3": {
+    "rows": 18,
+    "cited_rows": 18,
+    "contrast_rows": 18,
+    "accuracy": 0.16666666666666666,
+    "accuracy_lenient": 0.2777777777777778,
+    "mrr": 0.75,
+    "recall@1": 0.6666666666666666,
+    "tv_recall@1": 0.2222222222222222,
+    "recall@5": 0.8333333333333334,
+    "tv_recall@5": 0.5,
+    "recall@10": 0.8333333333333334,
+    "tv_recall@10": 0.6111111111111112,
+    "em": 0.0,
+    "f1": 0.5876936683918632,
+    "tver": 0.8333333333333334,
+    "tver_strict": 0.8333333333333334,
+    "citation_coverage": 1.0,
+    "wrong_version": 0.5,
+    "vcr": 0.5555555555555556,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.33333333333333337,
+      1.0
+     ],
+     "tv_recall@1": [
+      0.11111111111111109,
+      0.33333333333333337
+     ],
+     "mrr": [
+      0.4166666666666667,
+      1.0
+     ],
+     "accuracy": [
+      0.055555555555555546,
+      0.2777777777777778
+     ],
+     "accuracy_lenient": [
+      0.11111111111111109,
+      0.44444444444444436
+     ],
+     "f1": [
+      0.42766789109410797,
+      0.7080817219226425
+     ],
+     "tver": [
+      0.7222222222222222,
+      0.9444444444444444
+     ],
+     "tver_strict": [
+      0.7222222222222222,
+      0.9444444444444444
+     ],
+     "vcr": [
+      0.2777777777777778,
+      0.7777777777777778
+     ],
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": [
+      0.2777777777777778,
+      0.6666666666666667
+     ],
+     "tcs": null
+    }
+   },
+   "T6": {
+    "rows": 46,
+    "cited_rows": 46,
+    "contrast_rows": 0,
+    "accuracy": 0.2391304347826087,
+    "accuracy_lenient": 0.2391304347826087,
+    "mrr": 0.27119565217391306,
+    "recall@1": 0.17391304347826086,
+    "tv_recall@1": 0.08695652173913043,
+    "recall@5": 0.391304347826087,
+    "tv_recall@5": 0.1956521739130435,
+    "recall@10": 0.5217391304347826,
+    "tv_recall@10": 0.2608695652173913,
+    "em": 0.30434782608695654,
+    "f1": 0.5621699909242145,
+    "tver": 0.5652173913043478,
+    "tver_strict": 0.5652173913043478,
+    "citation_coverage": 1.0,
+    "wrong_version": null,
+    "vcr": 0.2391304347826087,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.043478260869565216,
+      0.34782608695652173
+     ],
+     "tv_recall@1": [
+      0.021739130434782608,
+      0.17391304347826086
+     ],
+     "mrr": [
+      0.13084109730848864,
+      0.43013328157349895
+     ],
+     "accuracy": [
+      0.13043478260869562,
+      0.34782608695652173
+     ],
+     "accuracy_lenient": [
+      0.13043478260869562,
+      0.34782608695652173
+     ],
+     "f1": [
+      0.3964803615166138,
+      0.723454418148347
+     ],
+     "tver": [
+      0.45652173913043476,
+      0.6739130434782609
+     ],
+     "tver_strict": [
+      0.45652173913043476,
+      0.6739130434782609
+     ],
+     "vcr": [
+      0.13043478260869562,
+      0.34782608695652173
+     ],
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   }
+  },
+  "ranh_gioi": {
+   "all": {
+    "rows": 318,
+    "cited_rows": 0,
+    "contrast_rows": 265,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "vcr": null,
+    "tcs": 0.0,
+    "tcs_lenient": 0.0,
+    "tcs_pairs": 127,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": [
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "t1_control": {
+    "rows": 43,
+    "cited_rows": 0,
+    "contrast_rows": 0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   },
+   "T1": {
+    "rows": 43,
+    "cited_rows": 0,
+    "contrast_rows": 0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   },
+   "T2": {
+    "rows": 254,
+    "cited_rows": 0,
+    "contrast_rows": 247,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "vcr": null,
+    "tcs": 0.0,
+    "tcs_lenient": 0.0,
+    "tcs_pairs": 127,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": [
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "T3": {
+    "rows": 18,
+    "cited_rows": 0,
+    "contrast_rows": 18,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": null
+    }
+   },
+   "T6": {
+    "rows": 46,
+    "cited_rows": 0,
+    "contrast_rows": 0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   }
+  }
+ },
+ "lightrag": {
+  "giua_khoang": {
+   "all": {
+    "rows": 318,
+    "cited_rows": 0,
+    "contrast_rows": 265,
+    "accuracy": 0.34591194968553457,
+    "accuracy_lenient": 0.3584905660377358,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.05084745762711865,
+    "f1": 0.48895261427629516,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.35471698113207545,
+    "vcr": null,
+    "tcs": 0.05511811023622047,
+    "tcs_lenient": 0.08661417322834646,
+    "tcs_pairs": 127,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.3028391167192429,
+      0.3885350318471338
+     ],
+     "accuracy_lenient": [
+      0.31269349845201233,
+      0.40378700558116964
+     ],
+     "f1": [
+      0.44944975066804754,
+      0.5276415329116682
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.30196078431372547,
+      0.4087301587301587
+     ],
+     "tcs": [
+      0.01666666666666667,
+      0.09774436090225563
+     ]
+    }
+   },
+   "t1_control": {
+    "rows": 43,
+    "cited_rows": 0,
+    "contrast_rows": 0,
+    "accuracy": 0.4418604651162791,
+    "accuracy_lenient": 0.4418604651162791,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.06976744186046512,
+    "f1": 0.5305040978889649,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.3023255813953488,
+      0.5813953488372093
+     ],
+     "accuracy_lenient": [
+      0.3023255813953488,
+      0.5813953488372093
+     ],
+     "f1": [
+      0.43880247203889217,
+      0.6242060131534559
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   },
+   "T1": {
+    "rows": 43,
+    "cited_rows": 0,
+    "contrast_rows": 0,
+    "accuracy": 0.4418604651162791,
+    "accuracy_lenient": 0.4418604651162791,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.06976744186046512,
+    "f1": 0.5305040978889649,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.3023255813953488,
+      0.5813953488372093
+     ],
+     "accuracy_lenient": [
+      0.3023255813953488,
+      0.5813953488372093
+     ],
+     "f1": [
+      0.43880247203889217,
+      0.6242060131534559
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   },
+   "T2": {
+    "rows": 254,
+    "cited_rows": 0,
+    "contrast_rows": 247,
+    "accuracy": 0.36220472440944884,
+    "accuracy_lenient": 0.3779527559055118,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.04330708661417323,
+    "f1": 0.4842666290172284,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.3522267206477733,
+    "vcr": null,
+    "tcs": 0.05511811023622047,
+    "tcs_lenient": 0.08661417322834646,
+    "tcs_pairs": 127,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.31496062992125984,
+      0.4094488188976378
+     ],
+     "accuracy_lenient": [
+      0.32677165354330706,
+      0.4291338582677165
+     ],
+     "f1": [
+      0.4420332420837857,
+      0.5256214066752876
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.3008130081300813,
+      0.4032258064516129
+     ],
+     "tcs": [
+      0.015748031496062992,
+      0.10236220472440945
+     ]
+    }
+   },
+   "T3": {
+    "rows": 18,
+    "cited_rows": 0,
+    "contrast_rows": 18,
+    "accuracy": 0.05555555555555555,
+    "accuracy_lenient": 0.05555555555555555,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.5038338252147255,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.3888888888888889,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.16666666666666669
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.16666666666666669
+     ],
+     "f1": [
+      0.3635752700644055,
+      0.6391904292356865
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.11111111111111109,
+      0.7222222222222222
+     ],
+     "tcs": null
+    }
+   },
+   "T6": {
+    "rows": 46,
+    "cited_rows": 0,
+    "contrast_rows": 0,
+    "accuracy": 0.3695652173913043,
+    "accuracy_lenient": 0.3695652173913043,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.17391304347826086,
+    "f1": 0.529056025533304,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.2826086956521739,
+      0.45652173913043476
+     ],
+     "accuracy_lenient": [
+      0.2826086956521739,
+      0.45652173913043476
+     ],
+     "f1": [
+      0.40404960330361855,
+      0.6599572548347605
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   }
+  },
+  "ranh_gioi": {
+   "all": {
+    "rows": 318,
+    "cited_rows": 0,
+    "contrast_rows": 265,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "vcr": null,
+    "tcs": 0.0,
+    "tcs_lenient": 0.0,
+    "tcs_pairs": 127,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": [
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "t1_control": {
+    "rows": 43,
+    "cited_rows": 0,
+    "contrast_rows": 0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   },
+   "T1": {
+    "rows": 43,
+    "cited_rows": 0,
+    "contrast_rows": 0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   },
+   "T2": {
+    "rows": 254,
+    "cited_rows": 0,
+    "contrast_rows": 247,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "vcr": null,
+    "tcs": 0.0,
+    "tcs_lenient": 0.0,
+    "tcs_pairs": 127,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": [
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "T3": {
+    "rows": 18,
+    "cited_rows": 0,
+    "contrast_rows": 18,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": null
+    }
+   },
+   "T6": {
+    "rows": 46,
+    "cited_rows": 0,
+    "contrast_rows": 0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   }
+  }
+ },
+ "b7plus": {
+  "giua_khoang": {
+   "all": {
+    "rows": 318,
+    "cited_rows": 318,
+    "contrast_rows": 265,
+    "accuracy": 0.6540880503144654,
+    "accuracy_lenient": 0.6540880503144654,
+    "mrr": 0.45556449512835695,
+    "recall@1": 0.33962264150943394,
+    "tv_recall@1": 0.33647798742138363,
+    "recall@5": 0.60062893081761,
+    "tv_recall@5": 0.5911949685534591,
+    "recall@10": 0.720125786163522,
+    "tv_recall@10": 0.7044025157232704,
+    "em": 0.15593220338983052,
+    "f1": 0.6106510652708028,
+    "tver": 0.0220125786163522,
+    "tver_strict": 0.0220125786163522,
+    "citation_coverage": 1.0,
+    "wrong_version": 0.007547169811320755,
+    "vcr": 0.015723270440251572,
+    "tcs": 0.6535433070866141,
+    "tcs_lenient": 0.6535433070866141,
+    "tcs_pairs": 127,
+    "ci95": {
+     "recall@1": [
+      0.27129337539432175,
+      0.4088050314465409
+     ],
+     "tv_recall@1": [
+      0.26875,
+      0.4055727554179566
+     ],
+     "mrr": [
+      0.3935403793808117,
+      0.5166961633768551
+     ],
+     "accuracy": [
+      0.5849056603773585,
+      0.7215278876582278
+     ],
+     "accuracy_lenient": [
+      0.5849056603773585,
+      0.7215278876582278
+     ],
+     "f1": [
+      0.5641985679465125,
+      0.6563149176223744
+     ],
+     "tver": [
+      0.006369426751592357,
+      0.0380952380952381
+     ],
+     "tver_strict": [
+      0.006369426751592357,
+      0.0380952380952381
+     ],
+     "vcr": [
+      0.0031446540880503146,
+      0.03125
+     ],
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.019230769230769232
+     ],
+     "tcs": [
+      0.5703125,
+      0.7355371900826446
+     ]
+    }
+   },
+   "t1_control": {
+    "rows": 43,
+    "cited_rows": 43,
+    "contrast_rows": 0,
+    "accuracy": 0.09302325581395349,
+    "accuracy_lenient": 0.09302325581395349,
+    "mrr": 0.325729890264774,
+    "recall@1": 0.23255813953488372,
+    "tv_recall@1": 0.23255813953488372,
+    "recall@5": 0.46511627906976744,
+    "tv_recall@5": 0.46511627906976744,
+    "recall@10": 0.6511627906976745,
+    "tv_recall@10": 0.6511627906976745,
+    "em": 0.046511627906976744,
+    "f1": 0.6415902772256263,
+    "tver": 0.0,
+    "tver_strict": 0.0,
+    "citation_coverage": 1.0,
+    "wrong_version": null,
+    "vcr": 0.0,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.11627906976744187,
+      0.37209302325581395
+     ],
+     "tv_recall@1": [
+      0.11627906976744187,
+      0.37209302325581395
+     ],
+     "mrr": [
+      0.2118969596295178,
+      0.4482981601731602
+     ],
+     "accuracy": [
+      0.023255813953488372,
+      0.18604651162790697
+     ],
+     "accuracy_lenient": [
+      0.023255813953488372,
+      0.18604651162790697
+     ],
+     "f1": [
+      0.5327284676819416,
+      0.7457515146399574
+     ],
+     "tver": [
+      0.0,
+      0.0
+     ],
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": [
+      0.0,
+      0.0
+     ],
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   },
+   "T1": {
+    "rows": 43,
+    "cited_rows": 43,
+    "contrast_rows": 0,
+    "accuracy": 0.09302325581395349,
+    "accuracy_lenient": 0.09302325581395349,
+    "mrr": 0.325729890264774,
+    "recall@1": 0.23255813953488372,
+    "tv_recall@1": 0.23255813953488372,
+    "recall@5": 0.46511627906976744,
+    "tv_recall@5": 0.46511627906976744,
+    "recall@10": 0.6511627906976745,
+    "tv_recall@10": 0.6511627906976745,
+    "em": 0.046511627906976744,
+    "f1": 0.6415902772256263,
+    "tver": 0.0,
+    "tver_strict": 0.0,
+    "citation_coverage": 1.0,
+    "wrong_version": null,
+    "vcr": 0.0,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.11627906976744187,
+      0.37209302325581395
+     ],
+     "tv_recall@1": [
+      0.11627906976744187,
+      0.37209302325581395
+     ],
+     "mrr": [
+      0.2118969596295178,
+      0.4482981601731602
+     ],
+     "accuracy": [
+      0.023255813953488372,
+      0.18604651162790697
+     ],
+     "accuracy_lenient": [
+      0.023255813953488372,
+      0.18604651162790697
+     ],
+     "f1": [
+      0.5327284676819416,
+      0.7457515146399574
+     ],
+     "tver": [
+      0.0,
+      0.0
+     ],
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": [
+      0.0,
+      0.0
+     ],
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   },
+   "T2": {
+    "rows": 254,
+    "cited_rows": 254,
+    "contrast_rows": 247,
+    "accuracy": 0.7244094488188977,
+    "accuracy_lenient": 0.7244094488188977,
+    "mrr": 0.48528809841567333,
+    "recall@1": 0.36220472440944884,
+    "tv_recall@1": 0.36220472440944884,
+    "recall@5": 0.6535433070866141,
+    "tv_recall@5": 0.6535433070866141,
+    "recall@10": 0.7677165354330708,
+    "tv_recall@10": 0.7677165354330708,
+    "em": 0.15354330708661418,
+    "f1": 0.6141434409618405,
+    "tver": 0.0,
+    "tver_strict": 0.0,
+    "citation_coverage": 1.0,
+    "wrong_version": 0.008097165991902834,
+    "vcr": 0.0,
+    "tcs": 0.6535433070866141,
+    "tcs_lenient": 0.6535433070866141,
+    "tcs_pairs": 127,
+    "ci95": {
+     "recall@1": [
+      0.2874015748031496,
+      0.4409448818897638
+     ],
+     "tv_recall@1": [
+      0.2874015748031496,
+      0.4409448818897638
+     ],
+     "mrr": [
+      0.4165432263949068,
+      0.5532336667576354
+     ],
+     "accuracy": [
+      0.6496062992125984,
+      0.7952755905511811
+     ],
+     "accuracy_lenient": [
+      0.6496062992125984,
+      0.7952755905511811
+     ],
+     "f1": [
+      0.5639366263757791,
+      0.6638320232044468
+     ],
+     "tver": [
+      0.0,
+      0.0
+     ],
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": [
+      0.0,
+      0.0
+     ],
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.02040816326530612
+     ],
+     "tcs": [
+      0.5669291338582677,
+      0.7322834645669292
+     ]
+    }
+   },
+   "T3": {
+    "rows": 18,
+    "cited_rows": 18,
+    "contrast_rows": 18,
+    "accuracy": 0.6111111111111112,
+    "accuracy_lenient": 0.6111111111111112,
+    "mrr": 0.5996683814408272,
+    "recall@1": 0.5,
+    "tv_recall@1": 0.5,
+    "recall@5": 0.6666666666666666,
+    "tv_recall@5": 0.6666666666666666,
+    "recall@10": 0.7777777777777778,
+    "tv_recall@10": 0.7777777777777778,
+    "em": 0.0,
+    "f1": 0.5488486182567863,
+    "tver": 0.0,
+    "tver_strict": 0.0,
+    "citation_coverage": 1.0,
+    "wrong_version": 0.0,
+    "vcr": 0.0,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.16666666666666669,
+      0.8333333333333334
+     ],
+     "tv_recall@1": [
+      0.16666666666666669,
+      0.8333333333333334
+     ],
+     "mrr": [
+      0.2729377104377104,
+      0.9027777777777779
+     ],
+     "accuracy": [
+      0.2777777777777778,
+      0.9444444444444444
+     ],
+     "accuracy_lenient": [
+      0.2777777777777778,
+      0.9444444444444444
+     ],
+     "f1": [
+      0.36423250664714363,
+      0.7277736469891869
+     ],
+     "tver": [
+      0.0,
+      0.0
+     ],
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": [
+      0.0,
+      0.0
+     ],
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": null
+    }
+   },
+   "T6": {
+    "rows": 46,
+    "cited_rows": 46,
+    "contrast_rows": 0,
+    "accuracy": 0.2826086956521739,
+    "accuracy_lenient": 0.2826086956521739,
+    "mrr": 0.23505003450655623,
+    "recall@1": 0.15217391304347827,
+    "tv_recall@1": 0.13043478260869565,
+    "recall@5": 0.2826086956521739,
+    "tv_recall@5": 0.21739130434782608,
+    "recall@10": 0.43478260869565216,
+    "tv_recall@10": 0.32608695652173914,
+    "em": 0.30434782608695654,
+    "f1": 0.6204502226937911,
+    "tver": 0.15217391304347827,
+    "tver_strict": 0.15217391304347827,
+    "citation_coverage": 1.0,
+    "wrong_version": null,
+    "vcr": 0.10869565217391304,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.043478260869565216,
+      0.2826086956521739
+     ],
+     "tv_recall@1": [
+      0.043478260869565216,
+      0.21739130434782608
+     ],
+     "mrr": [
+      0.12773464458247066,
+      0.3569718340234645
+     ],
+     "accuracy": [
+      0.15217391304347827,
+      0.43478260869565216
+     ],
+     "accuracy_lenient": [
+      0.15217391304347827,
+      0.43478260869565216
+     ],
+     "f1": [
+      0.46901817241717436,
+      0.7658683458669774
+     ],
+     "tver": [
+      0.06521739130434781,
+      0.26086956521739124
+     ],
+     "tver_strict": [
+      0.06521739130434781,
+      0.26086956521739124
+     ],
+     "vcr": [
+      0.021739130434782608,
+      0.19565217391304351
+     ],
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   }
+  },
+  "ranh_gioi": {
+   "all": {
+    "rows": 318,
+    "cited_rows": 0,
+    "contrast_rows": 265,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "vcr": null,
+    "tcs": 0.0,
+    "tcs_lenient": 0.0,
+    "tcs_pairs": 127,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": [
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "t1_control": {
+    "rows": 43,
+    "cited_rows": 0,
+    "contrast_rows": 0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   },
+   "T1": {
+    "rows": 43,
+    "cited_rows": 0,
+    "contrast_rows": 0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   },
+   "T2": {
+    "rows": 254,
+    "cited_rows": 0,
+    "contrast_rows": 247,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "vcr": null,
+    "tcs": 0.0,
+    "tcs_lenient": 0.0,
+    "tcs_pairs": 127,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": [
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "T3": {
+    "rows": 18,
+    "cited_rows": 0,
+    "contrast_rows": 18,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": null
+    }
+   },
+   "T6": {
+    "rows": 46,
+    "cited_rows": 0,
+    "contrast_rows": 0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "mrr": 0.0,
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "recall@5": 0.0,
+    "tv_recall@5": 0.0,
+    "recall@10": 0.0,
+    "tv_recall@10": 0.0,
+    "em": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 1.0,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "vcr": null,
+    "tcs": null,
+    "tcs_lenient": null,
+    "tcs_pairs": 0,
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      1.0,
+      1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    }
+   }
+  }
+ },
+ "lightrag − b5": {
+  "giua_khoang": {
+   "all": {
+    "ci95": {
+     "recall@1": [
+      -0.41509433962264153,
+      -0.26582278481012656
+     ],
+     "tv_recall@1": [
+      -0.2,
+      -0.12779552715654952
+     ],
+     "mrr": [
+      -0.51253378813985,
+      -0.3785793325408253
+     ],
+     "accuracy": [
+      -0.02208201892744477,
+      0.09148264984227128
+     ],
+     "accuracy_lenient": [
+      -0.037617554858934144,
+      0.08201892744479494
+     ],
+     "f1": [
+      -0.0581360035692573,
+      0.02527332844735128
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.3848580441640379,
+      0.48417721518987344
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      -1.0,
+      -1.0
+     ],
+     "wrong_version": [
+      -0.01107113571135713,
+      0.12996389891696747
+     ],
+     "tcs": [
+      -0.0703125,
+      0.03787878787878787
+     ]
+    },
+    "p": {
+     "recall@1": 0.0,
+     "tv_recall@1": 0.0,
+     "mrr": 0.0,
+     "accuracy": 0.264,
+     "accuracy_lenient": 0.496,
+     "f1": 0.4134,
+     "tver": null,
+     "tver_strict": 0.0,
+     "vcr": null,
+     "citation_coverage": 0.0,
+     "wrong_version": 0.104,
+     "tcs": 0.6622
+    },
+    "recall@1": -0.33962264150943394,
+    "tv_recall@1": -0.16352201257861634,
+    "mrr": -0.4453994519477317,
+    "accuracy": 0.03459119496855345,
+    "accuracy_lenient": 0.022012578616352196,
+    "f1": -0.01770547355058033,
+    "tver": null,
+    "tver_strict": 0.4339622641509434,
+    "vcr": null,
+    "citation_coverage": -1.0,
+    "wrong_version": 0.060377358490566024,
+    "tcs": -0.015748031496062992
+   },
+   "t1_control": {
+    "ci95": {
+     "recall@1": [
+      -0.23255813953488375,
+      -0.023255813953488372
+     ],
+     "tv_recall@1": [
+      -0.23255813953488375,
+      -0.023255813953488372
+     ],
+     "mrr": [
+      -0.26321983605949334,
+      -0.0698525648158451
+     ],
+     "accuracy": [
+      0.2558139534883721,
+      0.5348837209302326
+     ],
+     "accuracy_lenient": [
+      0.2558139534883721,
+      0.5348837209302326
+     ],
+     "f1": [
+      -0.0985377223757408,
+      0.17947339937436838
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.41860465116279066,
+      0.7209302325581395
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      -1.0,
+      -1.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 0.012,
+     "tv_recall@1": 0.012,
+     "mrr": 0.0,
+     "accuracy": 0.0,
+     "accuracy_lenient": 0.0,
+     "f1": 0.5496,
+     "tver": null,
+     "tver_strict": 0.0,
+     "vcr": null,
+     "citation_coverage": 0.0,
+     "wrong_version": null,
+     "tcs": null
+    },
+    "recall@1": -0.11627906976744186,
+    "tv_recall@1": -0.11627906976744186,
+    "mrr": -0.15927450762212084,
+    "accuracy": 0.39534883720930236,
+    "accuracy_lenient": 0.39534883720930236,
+    "f1": 0.041483436413677854,
+    "tver": null,
+    "tver_strict": 0.5813953488372092,
+    "vcr": null,
+    "citation_coverage": -1.0,
+    "wrong_version": null,
+    "tcs": null
+   },
+   "T1": {
+    "ci95": {
+     "recall@1": [
+      -0.23255813953488375,
+      -0.023255813953488372
+     ],
+     "tv_recall@1": [
+      -0.23255813953488375,
+      -0.023255813953488372
+     ],
+     "mrr": [
+      -0.26321983605949334,
+      -0.0698525648158451
+     ],
+     "accuracy": [
+      0.2558139534883721,
+      0.5348837209302326
+     ],
+     "accuracy_lenient": [
+      0.2558139534883721,
+      0.5348837209302326
+     ],
+     "f1": [
+      -0.0985377223757408,
+      0.17947339937436838
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.41860465116279066,
+      0.7209302325581395
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      -1.0,
+      -1.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 0.012,
+     "tv_recall@1": 0.012,
+     "mrr": 0.0,
+     "accuracy": 0.0,
+     "accuracy_lenient": 0.0,
+     "f1": 0.5496,
+     "tver": null,
+     "tver_strict": 0.0,
+     "vcr": null,
+     "citation_coverage": 0.0,
+     "wrong_version": null,
+     "tcs": null
+    },
+    "recall@1": -0.11627906976744186,
+    "tv_recall@1": -0.11627906976744186,
+    "mrr": -0.15927450762212084,
+    "accuracy": 0.39534883720930236,
+    "accuracy_lenient": 0.39534883720930236,
+    "f1": 0.041483436413677854,
+    "tver": null,
+    "tver_strict": 0.5813953488372092,
+    "vcr": null,
+    "citation_coverage": -1.0,
+    "wrong_version": null,
+    "tcs": null
+   },
+   "T2": {
+    "ci95": {
+     "recall@1": [
+      -0.4330708661417323,
+      -0.25984251968503935
+     ],
+     "tv_recall@1": [
+      -0.21653543307086615,
+      -0.12992125984251968
+     ],
+     "mrr": [
+      -0.5288197013474921,
+      -0.38112957471225184
+     ],
+     "accuracy": [
+      -0.039370078740157466,
+      0.09448818897637795
+     ],
+     "accuracy_lenient": [
+      -0.047244094488189003,
+      0.08661417322834647
+     ],
+     "f1": [
+      -0.053856572142853755,
+      0.030824997820301493
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.3976377952755905,
+      0.5078740157480315
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      -1.0,
+      -1.0
+     ],
+     "wrong_version": [
+      0.004081632653061218,
+      0.1411290322580645
+     ],
+     "tcs": [
+      -0.07086614173228346,
+      0.03937007874015748
+     ]
+    },
+    "p": {
+     "recall@1": 0.0,
+     "tv_recall@1": 0.0,
+     "mrr": 0.0,
+     "accuracy": 0.4362,
+     "accuracy_lenient": 0.5984,
+     "f1": 0.587,
+     "tver": null,
+     "tver_strict": 0.0,
+     "vcr": null,
+     "citation_coverage": 0.0,
+     "wrong_version": 0.0404,
+     "tcs": 0.6712
+    },
+    "recall@1": -0.3464566929133858,
+    "tv_recall@1": -0.1732283464566929,
+    "mrr": -0.45536230598180577,
+    "accuracy": 0.027559055118110243,
+    "accuracy_lenient": 0.01968503937007876,
+    "f1": -0.01162211148126685,
+    "tver": null,
+    "tver_strict": 0.452755905511811,
+    "vcr": null,
+    "citation_coverage": -1.0,
+    "wrong_version": 0.07287449392712547,
+    "tcs": -0.015748031496062992
+   },
+   "T3": {
+    "ci95": {
+     "recall@1": [
+      -1.0,
+      -0.33333333333333337
+     ],
+     "tv_recall@1": [
+      -0.33333333333333337,
+      -0.11111111111111109
+     ],
+     "mrr": [
+      -1.0,
+      -0.4166666666666667
+     ],
+     "accuracy": [
+      -0.2777777777777778,
+      0.11111111111111109
+     ],
+     "accuracy_lenient": [
+      -0.44444444444444436,
+      -0.055555555555555546
+     ],
+     "f1": [
+      -0.28815034829928354,
+      0.17372639468657192
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.05555555555555558,
+      0.2777777777777778
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      -1.0,
+      -1.0
+     ],
+     "wrong_version": [
+      -0.5,
+      0.33333333333333337
+     ],
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 0.0024,
+     "tv_recall@1": 0.0024,
+     "mrr": 0.0,
+     "accuracy": 0.411,
+     "accuracy_lenient": 0.0314,
+     "f1": 0.5014,
+     "tver": null,
+     "tver_strict": 0.0314,
+     "vcr": null,
+     "citation_coverage": 0.0,
+     "wrong_version": 0.7176,
+     "tcs": null
+    },
+    "recall@1": -0.6666666666666666,
+    "tv_recall@1": -0.2222222222222222,
+    "mrr": -0.75,
+    "accuracy": -0.1111111111111111,
+    "accuracy_lenient": -0.22222222222222224,
+    "f1": -0.08385984317713768,
+    "tver": null,
+    "tver_strict": 0.16666666666666663,
+    "vcr": null,
+    "citation_coverage": -1.0,
+    "wrong_version": -0.1111111111111111,
+    "tcs": null
+   },
+   "T6": {
+    "ci95": {
+     "recall@1": [
+      -0.34782608695652173,
+      -0.043478260869565216
+     ],
+     "tv_recall@1": [
+      -0.17391304347826086,
+      -0.021739130434782608
+     ],
+     "mrr": [
+      -0.43013328157349895,
+      -0.13084109730848864
+     ],
+     "accuracy": [
+      0.0,
+      0.26086956521739135
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.26086956521739135
+     ],
+     "f1": [
+      -0.23147705358746684,
+      0.17289751865567066
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.32608695652173914,
+      0.5434782608695652
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      -1.0,
+      -1.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 0.0234,
+     "tv_recall@1": 0.0234,
+     "mrr": 0.0,
+     "accuracy": 0.0958,
+     "accuracy_lenient": 0.0958,
+     "f1": 0.7438,
+     "tver": null,
+     "tver_strict": 0.0,
+     "vcr": null,
+     "citation_coverage": 0.0,
+     "wrong_version": null,
+     "tcs": null
+    },
+    "recall@1": -0.17391304347826086,
+    "tv_recall@1": -0.08695652173913043,
+    "mrr": -0.27119565217391306,
+    "accuracy": 0.13043478260869562,
+    "accuracy_lenient": 0.13043478260869562,
+    "f1": -0.033113965390910494,
+    "tver": null,
+    "tver_strict": 0.4347826086956522,
+    "vcr": null,
+    "citation_coverage": -1.0,
+    "wrong_version": null,
+    "tcs": null
+   }
+  },
+  "ranh_gioi": {
+   "all": {
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": [
+      0.0,
+      0.0
+     ]
+    },
+    "p": {
+     "recall@1": 1.0,
+     "tv_recall@1": 1.0,
+     "mrr": 1.0,
+     "accuracy": 1.0,
+     "accuracy_lenient": 1.0,
+     "f1": 1.0,
+     "tver": null,
+     "tver_strict": 1.0,
+     "vcr": null,
+     "citation_coverage": 1.0,
+     "wrong_version": 1.0,
+     "tcs": 1.0
+    },
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "mrr": 0.0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 0.0,
+    "vcr": null,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "tcs": 0.0
+   },
+   "t1_control": {
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 1.0,
+     "tv_recall@1": 1.0,
+     "mrr": 1.0,
+     "accuracy": 1.0,
+     "accuracy_lenient": 1.0,
+     "f1": 1.0,
+     "tver": null,
+     "tver_strict": 1.0,
+     "vcr": null,
+     "citation_coverage": 1.0,
+     "wrong_version": null,
+     "tcs": null
+    },
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "mrr": 0.0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 0.0,
+    "vcr": null,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "tcs": null
+   },
+   "T1": {
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 1.0,
+     "tv_recall@1": 1.0,
+     "mrr": 1.0,
+     "accuracy": 1.0,
+     "accuracy_lenient": 1.0,
+     "f1": 1.0,
+     "tver": null,
+     "tver_strict": 1.0,
+     "vcr": null,
+     "citation_coverage": 1.0,
+     "wrong_version": null,
+     "tcs": null
+    },
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "mrr": 0.0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 0.0,
+    "vcr": null,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "tcs": null
+   },
+   "T2": {
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": [
+      0.0,
+      0.0
+     ]
+    },
+    "p": {
+     "recall@1": 1.0,
+     "tv_recall@1": 1.0,
+     "mrr": 1.0,
+     "accuracy": 1.0,
+     "accuracy_lenient": 1.0,
+     "f1": 1.0,
+     "tver": null,
+     "tver_strict": 1.0,
+     "vcr": null,
+     "citation_coverage": 1.0,
+     "wrong_version": 1.0,
+     "tcs": 1.0
+    },
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "mrr": 0.0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 0.0,
+    "vcr": null,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "tcs": 0.0
+   },
+   "T3": {
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 1.0,
+     "tv_recall@1": 1.0,
+     "mrr": 1.0,
+     "accuracy": 1.0,
+     "accuracy_lenient": 1.0,
+     "f1": 1.0,
+     "tver": null,
+     "tver_strict": 1.0,
+     "vcr": null,
+     "citation_coverage": 1.0,
+     "wrong_version": 1.0,
+     "tcs": null
+    },
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "mrr": 0.0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 0.0,
+    "vcr": null,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "tcs": null
+   },
+   "T6": {
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 1.0,
+     "tv_recall@1": 1.0,
+     "mrr": 1.0,
+     "accuracy": 1.0,
+     "accuracy_lenient": 1.0,
+     "f1": 1.0,
+     "tver": null,
+     "tver_strict": 1.0,
+     "vcr": null,
+     "citation_coverage": 1.0,
+     "wrong_version": null,
+     "tcs": null
+    },
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "mrr": 0.0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 0.0,
+    "vcr": null,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "tcs": null
+   }
+  }
+ },
+ "b7plus − lightrag": {
+  "giua_khoang": {
+   "all": {
+    "ci95": {
+     "recall@1": [
+      0.27129337539432175,
+      0.4088050314465409
+     ],
+     "tv_recall@1": [
+      0.26875,
+      0.4055727554179566
+     ],
+     "mrr": [
+      0.3935403793808117,
+      0.5166961633768551
+     ],
+     "accuracy": [
+      0.23492063492063497,
+      0.380503144654088
+     ],
+     "accuracy_lenient": [
+      0.22118380062305293,
+      0.36875
+     ],
+     "f1": [
+      0.07812566181353078,
+      0.16405435235360427
+     ],
+     "tver": null,
+     "tver_strict": [
+      -0.9936305732484078,
+      -0.9619047619047618
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": [
+      -0.4014869888475837,
+      -0.29454068914956016
+     ],
+     "tcs": [
+      0.5118064457059146,
+      0.6825396825396826
+     ]
+    },
+    "p": {
+     "recall@1": 0.0,
+     "tv_recall@1": 0.0,
+     "mrr": 0.0,
+     "accuracy": 0.0,
+     "accuracy_lenient": 0.0,
+     "f1": 0.0,
+     "tver": null,
+     "tver_strict": 0.0,
+     "vcr": null,
+     "citation_coverage": 0.0,
+     "wrong_version": 0.0,
+     "tcs": 0.0
+    },
+    "recall@1": 0.33962264150943394,
+    "tv_recall@1": 0.33647798742138363,
+    "mrr": 0.45556449512835695,
+    "accuracy": 0.3081761006289308,
+    "accuracy_lenient": 0.29559748427672955,
+    "f1": 0.12169845099450766,
+    "tver": null,
+    "tver_strict": -0.9779874213836478,
+    "vcr": null,
+    "citation_coverage": 1.0,
+    "wrong_version": -0.3471698113207547,
+    "tcs": 0.5984251968503936
+   },
+   "t1_control": {
+    "ci95": {
+     "recall@1": [
+      0.11627906976744187,
+      0.37209302325581395
+     ],
+     "tv_recall@1": [
+      0.11627906976744187,
+      0.37209302325581395
+     ],
+     "mrr": [
+      0.2118969596295178,
+      0.4482981601731602
+     ],
+     "accuracy": [
+      -0.4883720930232558,
+      -0.20930232558139533
+     ],
+     "accuracy_lenient": [
+      -0.4883720930232558,
+      -0.20930232558139533
+     ],
+     "f1": [
+      -0.008836665187377708,
+      0.2287780560773644
+     ],
+     "tver": null,
+     "tver_strict": [
+      -1.0,
+      -1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 0.0002,
+     "tv_recall@1": 0.0002,
+     "mrr": 0.0,
+     "accuracy": 0.0,
+     "accuracy_lenient": 0.0,
+     "f1": 0.0672,
+     "tver": null,
+     "tver_strict": 0.0,
+     "vcr": null,
+     "citation_coverage": 0.0,
+     "wrong_version": null,
+     "tcs": null
+    },
+    "recall@1": 0.23255813953488372,
+    "tv_recall@1": 0.23255813953488372,
+    "mrr": 0.325729890264774,
+    "accuracy": -0.3488372093023256,
+    "accuracy_lenient": -0.3488372093023256,
+    "f1": 0.11108617933666143,
+    "tver": null,
+    "tver_strict": -1.0,
+    "vcr": null,
+    "citation_coverage": 1.0,
+    "wrong_version": null,
+    "tcs": null
+   },
+   "T1": {
+    "ci95": {
+     "recall@1": [
+      0.11627906976744187,
+      0.37209302325581395
+     ],
+     "tv_recall@1": [
+      0.11627906976744187,
+      0.37209302325581395
+     ],
+     "mrr": [
+      0.2118969596295178,
+      0.4482981601731602
+     ],
+     "accuracy": [
+      -0.4883720930232558,
+      -0.20930232558139533
+     ],
+     "accuracy_lenient": [
+      -0.4883720930232558,
+      -0.20930232558139533
+     ],
+     "f1": [
+      -0.008836665187377708,
+      0.2287780560773644
+     ],
+     "tver": null,
+     "tver_strict": [
+      -1.0,
+      -1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 0.0002,
+     "tv_recall@1": 0.0002,
+     "mrr": 0.0,
+     "accuracy": 0.0,
+     "accuracy_lenient": 0.0,
+     "f1": 0.0672,
+     "tver": null,
+     "tver_strict": 0.0,
+     "vcr": null,
+     "citation_coverage": 0.0,
+     "wrong_version": null,
+     "tcs": null
+    },
+    "recall@1": 0.23255813953488372,
+    "tv_recall@1": 0.23255813953488372,
+    "mrr": 0.325729890264774,
+    "accuracy": -0.3488372093023256,
+    "accuracy_lenient": -0.3488372093023256,
+    "f1": 0.11108617933666143,
+    "tver": null,
+    "tver_strict": -1.0,
+    "vcr": null,
+    "citation_coverage": 1.0,
+    "wrong_version": null,
+    "tcs": null
+   },
+   "T2": {
+    "ci95": {
+     "recall@1": [
+      0.2874015748031496,
+      0.4409448818897638
+     ],
+     "tv_recall@1": [
+      0.2874015748031496,
+      0.4409448818897638
+     ],
+     "mrr": [
+      0.4165432263949068,
+      0.5532336667576354
+     ],
+     "accuracy": [
+      0.28346456692913385,
+      0.43700787401574803
+     ],
+     "accuracy_lenient": [
+      0.2677165354330709,
+      0.42125984251968507
+     ],
+     "f1": [
+      0.08524026339149637,
+      0.17510643167129752
+     ],
+     "tver": null,
+     "tver_strict": [
+      -1.0,
+      -1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": [
+      -0.3958354591836735,
+      -0.291497975708502
+     ],
+     "tcs": [
+      0.5118110236220472,
+      0.68503937007874
+     ]
+    },
+    "p": {
+     "recall@1": 0.0,
+     "tv_recall@1": 0.0,
+     "mrr": 0.0,
+     "accuracy": 0.0,
+     "accuracy_lenient": 0.0,
+     "f1": 0.0,
+     "tver": null,
+     "tver_strict": 0.0,
+     "vcr": null,
+     "citation_coverage": 0.0,
+     "wrong_version": 0.0,
+     "tcs": 0.0
+    },
+    "recall@1": 0.36220472440944884,
+    "tv_recall@1": 0.36220472440944884,
+    "mrr": 0.48528809841567333,
+    "accuracy": 0.36220472440944884,
+    "accuracy_lenient": 0.3464566929133859,
+    "f1": 0.1298768119446121,
+    "tver": null,
+    "tver_strict": -1.0,
+    "vcr": null,
+    "citation_coverage": 1.0,
+    "wrong_version": -0.3441295546558704,
+    "tcs": 0.5984251968503936
+   },
+   "T3": {
+    "ci95": {
+     "recall@1": [
+      0.16666666666666669,
+      0.8333333333333334
+     ],
+     "tv_recall@1": [
+      0.16666666666666669,
+      0.8333333333333334
+     ],
+     "mrr": [
+      0.2729377104377104,
+      0.9027777777777779
+     ],
+     "accuracy": [
+      0.22222222222222218,
+      0.8888888888888887
+     ],
+     "accuracy_lenient": [
+      0.22222222222222218,
+      0.8888888888888887
+     ],
+     "f1": [
+      -0.19703331042208855,
+      0.24396305561541531
+     ],
+     "tver": null,
+     "tver_strict": [
+      -1.0,
+      -1.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": [
+      -0.7222222222222222,
+      -0.11111111111111109
+     ],
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 0.0274,
+     "tv_recall@1": 0.0274,
+     "mrr": 0.0,
+     "accuracy": 0.0026,
+     "accuracy_lenient": 0.0026,
+     "f1": 0.6554,
+     "tver": null,
+     "tver_strict": 0.0,
+     "vcr": null,
+     "citation_coverage": 0.0,
+     "wrong_version": 0.0292,
+     "tcs": null
+    },
+    "recall@1": 0.5,
+    "tv_recall@1": 0.5,
+    "mrr": 0.5996683814408272,
+    "accuracy": 0.5555555555555556,
+    "accuracy_lenient": 0.5555555555555556,
+    "f1": 0.0450147930420608,
+    "tver": null,
+    "tver_strict": -1.0,
+    "vcr": null,
+    "citation_coverage": 1.0,
+    "wrong_version": -0.3888888888888889,
+    "tcs": null
+   },
+   "T6": {
+    "ci95": {
+     "recall@1": [
+      0.043478260869565216,
+      0.2826086956521739
+     ],
+     "tv_recall@1": [
+      0.043478260869565216,
+      0.21739130434782608
+     ],
+     "mrr": [
+      0.12773464458247066,
+      0.3569718340234645
+     ],
+     "accuracy": [
+      -0.23913043478260873,
+      0.06521739130434784
+     ],
+     "accuracy_lenient": [
+      -0.23913043478260873,
+      0.06521739130434784
+     ],
+     "f1": [
+      -0.07797318019742247,
+      0.2591568850121556
+     ],
+     "tver": null,
+     "tver_strict": [
+      -0.9347826086956521,
+      -0.7391304347826086
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      1.0,
+      1.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 0.001,
+     "tv_recall@1": 0.001,
+     "mrr": 0.0,
+     "accuracy": 0.3378,
+     "accuracy_lenient": 0.3378,
+     "f1": 0.2992,
+     "tver": null,
+     "tver_strict": 0.0,
+     "vcr": null,
+     "citation_coverage": 0.0,
+     "wrong_version": null,
+     "tcs": null
+    },
+    "recall@1": 0.15217391304347827,
+    "tv_recall@1": 0.13043478260869565,
+    "mrr": 0.23505003450655623,
+    "accuracy": -0.08695652173913043,
+    "accuracy_lenient": -0.08695652173913043,
+    "f1": 0.09139419716048713,
+    "tver": null,
+    "tver_strict": -0.8478260869565217,
+    "vcr": null,
+    "citation_coverage": 1.0,
+    "wrong_version": null,
+    "tcs": null
+   }
+  },
+  "ranh_gioi": {
+   "all": {
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": [
+      0.0,
+      0.0
+     ]
+    },
+    "p": {
+     "recall@1": 1.0,
+     "tv_recall@1": 1.0,
+     "mrr": 1.0,
+     "accuracy": 1.0,
+     "accuracy_lenient": 1.0,
+     "f1": 1.0,
+     "tver": null,
+     "tver_strict": 1.0,
+     "vcr": null,
+     "citation_coverage": 1.0,
+     "wrong_version": 1.0,
+     "tcs": 1.0
+    },
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "mrr": 0.0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 0.0,
+    "vcr": null,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "tcs": 0.0
+   },
+   "t1_control": {
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 1.0,
+     "tv_recall@1": 1.0,
+     "mrr": 1.0,
+     "accuracy": 1.0,
+     "accuracy_lenient": 1.0,
+     "f1": 1.0,
+     "tver": null,
+     "tver_strict": 1.0,
+     "vcr": null,
+     "citation_coverage": 1.0,
+     "wrong_version": null,
+     "tcs": null
+    },
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "mrr": 0.0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 0.0,
+    "vcr": null,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "tcs": null
+   },
+   "T1": {
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 1.0,
+     "tv_recall@1": 1.0,
+     "mrr": 1.0,
+     "accuracy": 1.0,
+     "accuracy_lenient": 1.0,
+     "f1": 1.0,
+     "tver": null,
+     "tver_strict": 1.0,
+     "vcr": null,
+     "citation_coverage": 1.0,
+     "wrong_version": null,
+     "tcs": null
+    },
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "mrr": 0.0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 0.0,
+    "vcr": null,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "tcs": null
+   },
+   "T2": {
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": [
+      0.0,
+      0.0
+     ]
+    },
+    "p": {
+     "recall@1": 1.0,
+     "tv_recall@1": 1.0,
+     "mrr": 1.0,
+     "accuracy": 1.0,
+     "accuracy_lenient": 1.0,
+     "f1": 1.0,
+     "tver": null,
+     "tver_strict": 1.0,
+     "vcr": null,
+     "citation_coverage": 1.0,
+     "wrong_version": 1.0,
+     "tcs": 1.0
+    },
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "mrr": 0.0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 0.0,
+    "vcr": null,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "tcs": 0.0
+   },
+   "T3": {
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": [
+      0.0,
+      0.0
+     ],
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 1.0,
+     "tv_recall@1": 1.0,
+     "mrr": 1.0,
+     "accuracy": 1.0,
+     "accuracy_lenient": 1.0,
+     "f1": 1.0,
+     "tver": null,
+     "tver_strict": 1.0,
+     "vcr": null,
+     "citation_coverage": 1.0,
+     "wrong_version": 1.0,
+     "tcs": null
+    },
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "mrr": 0.0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 0.0,
+    "vcr": null,
+    "citation_coverage": 0.0,
+    "wrong_version": 0.0,
+    "tcs": null
+   },
+   "T6": {
+    "ci95": {
+     "recall@1": [
+      0.0,
+      0.0
+     ],
+     "tv_recall@1": [
+      0.0,
+      0.0
+     ],
+     "mrr": [
+      0.0,
+      0.0
+     ],
+     "accuracy": [
+      0.0,
+      0.0
+     ],
+     "accuracy_lenient": [
+      0.0,
+      0.0
+     ],
+     "f1": [
+      0.0,
+      0.0
+     ],
+     "tver": null,
+     "tver_strict": [
+      0.0,
+      0.0
+     ],
+     "vcr": null,
+     "citation_coverage": [
+      0.0,
+      0.0
+     ],
+     "wrong_version": null,
+     "tcs": null
+    },
+    "p": {
+     "recall@1": 1.0,
+     "tv_recall@1": 1.0,
+     "mrr": 1.0,
+     "accuracy": 1.0,
+     "accuracy_lenient": 1.0,
+     "f1": 1.0,
+     "tver": null,
+     "tver_strict": 1.0,
+     "vcr": null,
+     "citation_coverage": 1.0,
+     "wrong_version": null,
+     "tcs": null
+    },
+    "recall@1": 0.0,
+    "tv_recall@1": 0.0,
+    "mrr": 0.0,
+    "accuracy": 0.0,
+    "accuracy_lenient": 0.0,
+    "f1": 0.0,
+    "tver": null,
+    "tver_strict": 0.0,
+    "vcr": null,
+    "citation_coverage": 0.0,
+    "wrong_version": null,
+    "tcs": null
+   }
+  }
+ }
+}

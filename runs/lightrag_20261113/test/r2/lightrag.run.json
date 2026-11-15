@@ -1,0 +1,37 @@
+{
+  "system": "lightrag",
+  "split": "test",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "4ef1497c8cbe11b607e274510ef31ccfb9c4023cb6140295aca93d7db17a0723",
+  "raw_file_sha256": "9e6a86278c12ff634a31fdea88a7fe2168f80af32e5e959b4d7c77b9880baee8",
+  "model": "gpt-4o-mini-2024-07-18",
+  "revision": "gpt-4o-mini-2024-07-18",
+  "gpu": [
+    "api"
+  ],
+  "run_tag": null,
+  "served_models": {
+    "gpt-4o-mini-2024-07-18": 361
+  },
+  "system_fingerprints": {
+    "fp_b4300b0f11": 353,
+    "fp_6bfce04edf": 8
+  },
+  "rows": 361,
+  "format_ok": 242,
+  "truncated": 0,
+  "prompt_tokens_mean": 29338.09695290859,
+  "completion_tokens_mean": 135.71745152354572,
+  "generation_seconds": 2741.2163653879834,
+  "export": {
+    "system": "lightrag",
+    "spec": null,
+    "split": "test",
+    "as_of_strategy": "giua_khoang",
+    "rows": 361,
+    "release_sha256": "5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c",
+    "contexts_sha256": "a78d24dcbfeda8ccf17bb1743b7e580376b8403491889ce21411466cabed9101",
+    "empty_contexts": 0,
+    "prompt_file_sha256": "4ef1497c8cbe11b607e274510ef31ccfb9c4023cb6140295aca93d7db17a0723"
+  }
+}
