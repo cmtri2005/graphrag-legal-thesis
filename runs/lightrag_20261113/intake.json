@@ -1,0 +1,52 @@
+{
+  "source_dir": "lightrag_work",
+  "build_done": {
+    "docs": 608,
+    "limit": 0,
+    "llm": "qwen",
+    "model_env": "Qwen/Qwen2.5-14B-Instruct",
+    "embed": "AITeamVN/Vietnamese_Embedding",
+    "seconds": 38907.64833235741
+  },
+  "sha256": {
+    "contexts.jsonl": "a78d24dcbfeda8ccf17bb1743b7e580376b8403491889ce21411466cabed9101",
+    "build_done.json": "111e0a7c0940be8b36643c998e013c3bd457ce6641399b6a23c792ec2567b1f7",
+    "kv_store_doc_status.json": "eeb401446c86bac4135c5744970cf2706e7dae6e5dee64dcf42c567a942cfb67",
+    "corpus.jsonl": "6661e726e2d847a94410211fea4fcc6afd501eff50ff46f3ae4f994790727f5f",
+    "queries.jsonl": "164fb8483f83335cc2311f02922cfebe931b9c33e31834a2a734ba7a544764a2"
+  },
+  "queries": 512,
+  "contexts": 512,
+  "unique_context_ids": 512,
+  "missing_ids": [],
+  "extra_ids": [],
+  "by_split": {
+    "dev": 151,
+    "test": 361
+  },
+  "modes": {
+    "mix": 512
+  },
+  "empty_contexts": 0,
+  "context_chars": {
+    "min": 87918,
+    "median": 99267,
+    "max": 107887,
+    "total": 50795152
+  },
+  "corpus_docs": 608,
+  "docs_processed": 606,
+  "docs_skipped_as_duplicate_content": {
+    "document:25059": "document:113590",
+    "document:b9957300-7f70-11f1-a8d8-27dc586a4c2b": "document:284a9850-80d6-11f1-80a6-c751c94f32dc"
+  },
+  "docs_failed_other": [],
+  "chunks": 5069,
+  "graph_nodes": 101330,
+  "graph_edges": 35460,
+  "not_in_upload": [
+    "vllm.log",
+    "pip freeze (phiên bản lightrag-hku, vllm, sentence-transformers)",
+    "revision của model"
+  ]
+}

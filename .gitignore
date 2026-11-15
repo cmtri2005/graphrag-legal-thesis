@@ -90,3 +90,8 @@ scripts/bin/harness.exe
 /vilextime_*/
 /raw_*.jsonl
 runs/rebuild_20261110/before/
+
+# LightRAG (REFACTOR_PLAN 3.3): trạng thái dựng tải từ Drive (1,4 GB) và ngữ cảnh thô (68 MB).
+# Bằng chứng nằm ở runs/lightrag_20261113/intake.json (sha256) và các file prompt, vốn chứa nguyên ngữ cảnh.
+lightrag_work-*/
+runs/lightrag_20261113/colab/contexts.jsonl

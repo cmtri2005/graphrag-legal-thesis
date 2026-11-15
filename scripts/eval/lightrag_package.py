@@ -10,6 +10,7 @@ các chỉ số dựa trên trích dẫn (TVER, phủ trích dẫn, VCR) không 
     python scripts/eval/lightrag_package.py corpus  --out colab_upload/lightrag/corpus.jsonl
     python scripts/eval/lightrag_package.py queries --out colab_upload/lightrag/queries.jsonl
     python scripts/eval/lightrag_package.py prompts --contexts <contexts.jsonl> --split dev --out <dir>/lightrag.jsonl
+    python scripts/eval/lightrag_package.py diag    --prompts <dir>/lightrag.jsonl <dir>/b4.jsonl --out <dir>/diag.json
 """
 from __future__ import annotations
 
@@ -126,6 +127,59 @@ def prompts(args) -> None:
     print(f"{args.out}: {len(out)} prompt {args.split}, {record['empty_contexts']} ngữ cảnh rỗng")
 
 
+EVIDENCE = "CÁC ĐOẠN CĂN CỨ:"     # generate.USER: everything after it is evidence
+
+
+def coverage(rows: list[dict], evidence: dict[str, str]) -> dict:
+    """What a prompt lets the generator copy, with the scorer's own span matching and no model call.
+
+    `gold`: answerable rows whose evidence holds every gold span. `other`: contrast rows (those with
+    `_distractors`) whose evidence holds a span only another version has. Not Accuracy: a span in a
+    100,000-character context still has to be found and chosen by the generator.
+    """
+    import score_vilextime as sv
+    out = {"rows": 0, "gold": 0, "contrast_rows": 0, "other": 0, "gold_and_other": 0, "chars": []}
+    for r in rows:
+        if not r["answerable"]:
+            continue
+        text = evidence[r["id"]].replace("\\n", "\n").replace('\\"', '"')    # LightRAG chunks arrive JSON-escaped
+        padded = f" {sv.norm(text)} "
+        gold = sv.contains(text, r["short_answer"] or "")
+        other = any(f" {s} " in padded for s in r.get("_distractors", ()))
+        out["rows"] += 1
+        out["gold"] += gold
+        out["contrast_rows"] += bool(r.get("_distractors"))
+        out["other"] += other
+        out["gold_and_other"] += gold and other
+        out["chars"].append(len(text))
+    chars = sorted(out.pop("chars"))
+    out["median_evidence_chars"] = chars[len(chars) // 2] if chars else 0
+    return out
+
+
+def diag(args) -> None:
+    """`coverage` of several prompt files on dev, overall and per group. Dev only: the final test needs ADR 0006."""
+    import score_vilextime as sv
+    rows = sv.load_rows(RELEASES["dev"])
+    extra = sv.distractors(rows)
+    rows = [{**r, "_distractors": extra.get(r["id"], [])} for r in rows
+            if r.get("split") == "dev" and r["as_of_strategy"] == "giua_khoang"]
+    report = {"release": str(RELEASES["dev"]), "release_sha256": sha(RELEASES["dev"]), "split": "dev",
+              "as_of_strategy": "giua_khoang", "systems": {}}
+    for path in args.prompts:
+        prompts = [json.loads(line) for line in path.open(encoding="utf-8")]
+        if {p["split"] for p in prompts} != {"dev"}:
+            raise SystemExit(f"{path}: diag is dev-only")
+        evidence = {p["id"]: p["user"].split(EVIDENCE, 1)[-1] for p in prompts}
+        groups = {"all": rows, **{g: [r for r in rows if r["group"] == g] for g in sorted({r["group"] for r in rows})}}
+        report["systems"][path.stem] = {"prompt_file": str(path), "prompt_file_sha256": sha(path),
+                                        **{g: coverage(part, evidence) for g, part in groups.items()}}
+        a = report["systems"][path.stem]["all"]
+        print(f"{path.stem}: đáp án đúng mốc có trong căn cứ {a['gold']}/{a['rows']}; lời văn bản khác có trong căn cứ "
+              f"{a['other']}/{a['contrast_rows']}; trung vị {a['median_evidence_chars']:,} ký tự")
+    args.out.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -138,8 +192,11 @@ def main() -> None:
     p.add_argument("--contexts", type=Path, required=True)
     p.add_argument("--split", choices=("dev", "test"), required=True)
     p.add_argument("--out", type=Path, required=True)
+    d = sub.add_parser("diag")
+    d.add_argument("--prompts", type=Path, nargs="+", required=True)
+    d.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
-    {"corpus": corpus, "queries": queries, "prompts": prompts}[args.cmd](args)
+    {"corpus": corpus, "queries": queries, "prompts": prompts, "diag": diag}[args.cmd](args)
 
 
 if __name__ == "__main__":
