@@ -1,0 +1,36 @@
+{
+  "system": "lightrag",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "115169768e728fd49aa28d6b4723ea3e90126d838da276dcd7aad501415a2d8d",
+  "raw_file_sha256": "682c257209788775e3220568b3591a50791621df81710666b4d23565520b0602",
+  "model": "gpt-4o-mini-2024-07-18",
+  "revision": "gpt-4o-mini-2024-07-18",
+  "gpu": [
+    "api"
+  ],
+  "run_tag": null,
+  "served_models": {
+    "gpt-4o-mini-2024-07-18": 151
+  },
+  "system_fingerprints": {
+    "fp_b4300b0f11": 151
+  },
+  "rows": 151,
+  "format_ok": 108,
+  "truncated": 0,
+  "prompt_tokens_mean": 29290.417218543047,
+  "completion_tokens_mean": 147.158940397351,
+  "generation_seconds": 1438.9958621630358,
+  "export": {
+    "system": "lightrag",
+    "spec": null,
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "rows": 151,
+    "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+    "contexts_sha256": "a78d24dcbfeda8ccf17bb1743b7e580376b8403491889ce21411466cabed9101",
+    "empty_contexts": 0,
+    "prompt_file_sha256": "115169768e728fd49aa28d6b4723ea3e90126d838da276dcd7aad501415a2d8d"
+  }
+}

@@ -153,18 +153,9 @@ Nguồn: `runs/posthoc_g4_20261113/dev/{r1,r2}/baselines.{txt,score.json}`; `b4`
 
 **Phần bộ cuối có gold mù người (ADR 0006 §7, "báo song song F1–F6"):** gold mù đợt 1 (người; khớp thô 148/150, 119/120 sau phân xử do AI đề xuất, CMT xác nhận 10/11; tập con vẫn chấm bằng gold đồ thị) chỉ phủ **24/156 lineage** chính của bộ cuối (T2 19, T3 5, T6 0, T1 0). Trên 53 dòng đó F1–F6 đều ủng hộ ở cả hai lần, cùng chiều với bộ cuối: F4 +0,075 [+0,018; +0,154], F5 +0,189 [+0,071; +0,315], F6 +0,189 [+0,073; +0,315], F1 +0,415 / +0,434. F7 không chạy được (0 dòng T6). Nguồn: `runs/posthoc_g4_20261113/gold_subset/confirm_r{1,2}.{txt,json}`, `run.sh`. Giới hạn: mẫu nhỏ; không phủ T6 và 132 lineage còn lại.
 
-### Nháp amendment ADR 0006 cho việc 3.3: LightRAG trên bộ cuối (CHƯA có hiệu lực, chờ CMT duyệt)
+### Amendment ADR 0006 cho việc 3.3: LightRAG trên bộ cuối (CMT duyệt 15/11, đã chép vào ADR 0006)
 
-> **Amendment: LightRAG thật làm đối chứng GraphRAG phi thời gian, thăm dò, sau khi đã thấy kết quả bộ cuối.**
-> - **Đã thấy gì:** toàn bộ kết quả G4 (hai lần chạy), hậu nghiệm 13/11, `bvnone` và `bvdate` trên bộ cuối; độ phủ căn cứ của LightRAG trên **dev** (`runs/lightrag_20261113/dev/coverage.json`). Ngữ cảnh LightRAG của 361 dòng bộ cuối đã được lấy trên Colab cùng lượt với dev (15/11); chưa dựng prompt, chưa sinh câu trả lời, chưa chấm, chưa đo độ phủ trên các dòng này.
-> - **Hệ thêm:** `lightrag` = LightRAG (`lightrag-hku`, chế độ `mix` mặc định). Đồ thị dựng bằng `Qwen/Qwen2.5-14B-Instruct` (vLLM, FP8), embedding `AITeamVN/Vietnamese_Embedding`. Truy vấn là "Mốc thời gian: <ngày>. <câu hỏi>". Nguyên ngữ cảnh LightRAG trả về được đặt làm một khối căn cứ trong prompt chung (`scripts/eval/lightrag_package.py prompts`). Generator, prompt hệ thống, `max_tokens`, seed và hai lần chạy như ADR 0006 §2, §5b.
-> - **Cách gửi:** gửi từng request như G4 (`api_generate.py`, không `--batch`). Batch đã thử trên dev và không đạt tiêu chí tương đương đặt trước (`runs/batch_check_20261115/`), nên không dùng cho phép so với các hệ G4.
-> - **Ba chỗ không ngang hàng, phải báo kèm mọi số:** (1) kho của LightRAG chỉ gồm 608 văn bản (văn bản mà dev và bộ cuối hỏi tới, cộng lệnh sửa đổi nhắm vào chúng), các hệ khác tìm trên toàn kho; (2) ngữ cảnh trung vị khoảng 99.000 ký tự, các hệ khác khoảng 12.000–13.000; (3) kho LightRAG không có ngày hiệu lực. (1) và (2) có lợi cho LightRAG.
-> - **Chỉ số:** Accuracy, `wrong_version`, TCS, precision và recall của khẳng định bãi bỏ. LightRAG không trả mã đơn vị nên TV-Recall, TVER, VCR và phủ trích dẫn không xác định.
-> - **Phép so, đều là thăm dò, ngoài Holm, không có phán quyết:** trên `all`, `lightrag − b4`, `lightrag − b5`, `b7plus − lightrag`, `proposed2 − lightrag`; báo ở cả hai lần chạy.
-> - **Cách đọc đã khai trước:** nếu KTC của `proposed2 − lightrag` (Accuracy) loại 0 về phía dương ở cả hai lần thì viết "hệ có lọc theo khoảng hiệu lực hơn một GraphRAG phi thời gian thật, dù hệ đó có kho nhỏ hơn và ngữ cảnh lớn hơn"; nếu chứa 0 ở một trong hai lần thì viết "không thấy khác biệt lớn hơn độ rộng KTC"; nếu loại 0 về phía âm thì báo đúng như vậy.
-> - **Không đổi:** P, F1–F7 (F2 vẫn là P − `b5`), phán quyết đã báo, scorer, gold, prompt của các hệ đã khóa.
-> - **Chi phí ước lượng:** khoảng 11,3 triệu token đầu vào mỗi lần chạy trên bộ cuối (35,8 triệu ký tự, 3,16 ký tự mỗi token đo trên prompt dev của G3), tức khoảng 1,7 USD mỗi lần nếu giá đầu vào là 0,15 USD một triệu token.
+> Đã chép vào ADR 0006 (Amendment 2026-11-15), có hiệu lực.
 
 ### Nháp amendment ADR 0006 cho việc 3.2: sửa đáp án ngắn T1 (CHƯA có hiệu lực, chờ CMT duyệt)
 
