@@ -57,10 +57,15 @@ from pathlib import Path
 SEED = 20261011
 FRESH = False
 REVIEW: Path | None = None   # --review: a later sample keeps its own sheets beside the first
+RELEASE: Path | None = None  # --release: the rows live outside DATA (the final test set's internal release)
 
 
 def review_dir(data: Path) -> Path:
     return REVIEW or data / "review"
+
+
+def release_rows(data: Path) -> list[dict]:
+    return [json.loads(line) for line in (RELEASE or data / "derived/vilextime/release.jsonl").open(encoding="utf-8")]
 
 
 PER_STRATUM, SHARED = 20, 5
@@ -133,12 +138,16 @@ def draw(rows: list[dict], seen: set[str]) -> list[dict]:
     return out
 
 
-def draw_blind(rows: list[dict], seen: dict[str, set[str]], strata: tuple[str, ...], prefix: str) -> list[dict]:
+def draw_blind(rows: list[dict], seen: dict[str, set[str]], strata: tuple[str, ...], prefix: str,
+               sizes: dict[str, tuple[int, int]] | None = None, solo: str | None = None) -> list[dict]:
     """Like `draw`, for a pool one annotator has partly seen (master plan A6, 05/11).
 
     Shared rows are unseen by both. Each other row goes to an annotator who has not seen it, turn by turn,
     and to the other one when that annotator has seen everything left, so B6's blindness holds per person
     even when the split comes out uneven. Raises rather than quietly giving a seen row or a short stratum.
+
+    `sizes` gives a stratum its own (lineages, shared) counts. `solo` sends every unshared row to that one
+    annotator: a main reader, and a second reader who only gets the shared rows.
     """
     pool = collections.defaultdict(lambda: collections.defaultdict(list))
     for r in rows:
@@ -148,15 +157,16 @@ def draw_blind(rows: list[dict], seen: dict[str, set[str]], strata: tuple[str, .
     for s in strata:
         lineages = sorted(pool[s])
         random.Random(f"{SEED}:{prefix}:{s}").shuffle(lineages)
+        per_stratum, shared = (sizes or {}).get(s, (PER_STRATUM, SHARED))
         both = [x for x in lineages if x not in seen["A"] and x not in seen["B"]]
-        if len(both) < SHARED:
-            raise SystemExit(f"{s}: chỉ {len(both)} lineage chưa ai xem, cần {SHARED} để gán đôi")
-        chosen = [(x, "AB") for x in both[:SHARED]]
+        if len(both) < shared:
+            raise SystemExit(f"{s}: chỉ {len(both)} lineage chưa ai xem, cần {shared} để gán đôi")
+        chosen = [(x, "AB") for x in both[:shared]]
         used = {x for x, _ in chosen}
-        for i in range(PER_STRATUM - SHARED):
-            who = "AB"[i % 2]
+        for i in range(per_stratum - shared):
+            who = solo or "AB"[i % 2]
             pick = next((x for x in lineages if x not in used and x not in seen[who]), None)
-            if pick is None:   # this annotator has seen the rest: the other one takes the row
+            if pick is None and not solo:   # this annotator has seen the rest: the other one takes the row
                 who = "AB"[(i + 1) % 2]
                 pick = next((x for x in lineages if x not in used and x not in seen[who]), None)
             if pick is None:
@@ -234,17 +244,18 @@ def refuse_if_labelled(path: Path, cells: list[str]) -> None:
         raise SystemExit(f"{path} đã có nhãn; không ghi đè")
 
 
-def build(data: Path, only: Path | None = None, strata: tuple[str, ...] = STRATA, prefix: str = "G") -> None:
+def build(data: Path, only: Path | None = None, strata: tuple[str, ...] = STRATA, prefix: str = "G",
+          sizes: dict[str, tuple[int, int]] | None = None, solo: str | None = None) -> None:
     review = review_dir(data)
     review.mkdir(parents=True, exist_ok=True)
     for who in "AB":
         refuse_if_labelled(review / f"gold_{who}.tsv", FILLED)
-    rows = [json.loads(line) for line in (data / "derived/vilextime/release.jsonl").open(encoding="utf-8")]
+    rows = release_rows(data)
     lineage_of = {r["id"]: r["lineage_id"] for r in rows}
     if only:
         ids = {json.loads(line)["id"] for line in only.open(encoding="utf-8")}
         seen = {w: set() if FRESH else seen_lineages(data / "review", lineage_of, w) for w in "AB"}
-        items = draw_blind([r for r in rows if r["id"] in ids], seen, strata, prefix)
+        items = draw_blind([r for r in rows if r["id"] in ids], seen, strata, prefix, sizes, solo)
     else:
         items = draw(rows, seen_lineages(review, lineage_of))
     write(review / "gold_sample.tsv", ["khoa", "id", "lineage_id", "stratum", "annotators"],
@@ -377,7 +388,7 @@ def reveal(data: Path, who: str) -> None:
     refuse_if_labelled(out, ["dong_y", "ly_do", "ghi_chu_mo"])
     lock = hashlib.sha256(sheet.read_bytes()).hexdigest()
     row_of = {r["khoa"]: r["id"] for r in read(review / "gold_sample.tsv")}
-    release = {r["id"]: r for r in map(json.loads, (data / "derived/vilextime/release.jsonl").open(encoding="utf-8"))}
+    release = {r["id"]: r for r in release_rows(data)}
     lines = []
     for a in answers:
         kg = release[row_of[a["khoa"]]]
@@ -396,20 +407,24 @@ def main() -> None:
     ap.add_argument("--data", type=Path, default=Path("data"))
     ap.add_argument("--review", type=Path, help="directory for this sample's sheets (default: DATA/review)")
     ap.add_argument("--only", type=Path, help="build: draw only from these rows (a release JSONL), blind per annotator")
-    ap.add_argument("--strata", help="build with --only: comma-separated strata")
+    ap.add_argument("--strata", help="build with --only: comma-separated strata; `name:n:shared` sizes one stratum")
+    ap.add_argument("--solo", choices=("A", "B"), help="build with --only: this annotator reads every row, the other only the shared ones")
+    ap.add_argument("--release", type=Path, help="release JSONL holding the rows (default: DATA/derived/vilextime/release.jsonl)")
     ap.add_argument("--prefix", default="G", help="build: prefix of the row keys")
     ap.add_argument("--per-stratum", type=int, help="build with --only: lineages per stratum (default 20; 5 shared)")
     ap.add_argument("--fresh", action="store_true", help="build with --only: annotators are new (e.g. blind AI sessions); nothing counts as seen")
     args = ap.parse_args()
-    global REVIEW
-    REVIEW = args.review
+    global REVIEW, RELEASE
+    REVIEW, RELEASE = args.review, args.release
     global PER_STRATUM, FRESH
     PER_STRATUM = args.per_stratum or PER_STRATUM
     FRESH = args.fresh
     if args.command != "build" and not args.annotator:
         ap.error(f"{args.command} needs A or B")
     if args.command == "build":
-        build(args.data, args.only, tuple(args.strata.split(",")) if args.strata else STRATA, args.prefix)
+        parts = [p.split(":") for p in args.strata.split(",")] if args.strata else [[s] for s in STRATA]
+        build(args.data, args.only, tuple(p[0] for p in parts), args.prefix,
+              {p[0]: (int(p[1]), int(p[2])) for p in parts if len(p) == 3}, args.solo)
     else:
         {"export": export, "import": ingest, "reveal": reveal}[args.command](args.data, args.annotator)
 

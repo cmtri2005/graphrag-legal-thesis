@@ -86,3 +86,12 @@ def test_draw_blind_refuses_when_nothing_is_blind_for_both():
              "as_of_strategy": "giua_khoang"} for i in range(30)]
     with pytest.raises(SystemExit):
         draw_blind(rows, {"A": {f"l{i}" for i in range(30)}, "B": set()}, ("T3",), "G1")
+
+
+def test_draw_blind_solo_gives_one_reader_everything_and_the_other_only_the_shared_rows():
+    rows = [{"id": f"r{i}", "lineage_id": f"l{i}", "group": "T3", "as_of": "2020-01-01",
+             "as_of_strategy": "giua_khoang"} for i in range(10)]
+    items = draw_blind(rows, {"A": set(), "B": set()}, ("T3",), "F", sizes={"T3": (10, 3)}, solo="A")
+    assert sorted(i["who"] for i in items) == ["A"] * 7 + ["AB"] * 3
+    with pytest.raises(SystemExit):   # a solo reader who has seen a row cannot hand it to the other
+        draw_blind(rows, {"A": {"l0"}, "B": set()}, ("T3",), "F", sizes={"T3": (10, 3)}, solo="A")
