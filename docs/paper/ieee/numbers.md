@@ -78,3 +78,20 @@ Tài liệu tham khảo: `references.bib` (chép từ `references.bib` gốc đ�
 W3: Hybrid r1 mốc đầu trả chuỗi rỗng; mốc sau trả công thức 50% khác gold. Không có dự đoán 50 triệu sai mốc như hình. Cả hai dòng đầu ra được ghi rõ là minh họa. W8 rank 6 là vị trí 1-based của version_id trong retrieved, không chạy lại truy xuất/sinh/chấm.
 
 W5: cột Gen-TV-R@1 dùng 318 dòng và danh sách khi sinh; Hình 4 giữ TV-R@1 lexical với 295 dòng có đáp án. Không thay số.
+
+## Bổ sung LightRAG ngày 15/11/2026 (P1-2, thăm dò, chưa qua evidence-gate)
+
+Amendment: `docs/decisions/0006-ke-hoach-phan-tich-bo-test-cuoi.md`, mục "Amendment 2026-11-15: LightRAG thật". Mọi số dưới là lát `all`, chế độ `giua_khoang`, key `<hệ>.giua_khoang.all.{accuracy,wrong_version,tcs}` và `.ci95`; hiệu ở key `"<a> − <b>".giua_khoang.all`.
+
+| Số mới trong paper | File, lần chạy |
+|---|---|
+| Bảng `tab:lightrag`: Hybrid, LightRAG, Full config. (Acc, WV, TCS) — TD | `runs/lightrag_20261113/test/{r1,r2}/lightrag_vs_b4_p.score.json` (`b4`, `lightrag`, `proposed2`) |
+| Bảng `tab:lightrag`: Hybrid+AmendHop, +VersionFilter — TD | `runs/lightrag_20261113/test/{r1,r2}/lightrag_vs_b5_b7plus.score.json` (`b5`, `b7plus`) |
+| LightRAG − Hybrid +0,022 [−0,037; +0,080] / +0,060 [+0,003; +0,117] — TD | `lightrag_vs_b4_p.score.json` → `lightrag − b4` |
+| LightRAG − AmendHop: KTC chứa 0 cả hai lần (+0,035 [−0,022; +0,091] / +0,044 [−0,015; +0,102]) — TD | `lightrag_vs_b5_b7plus.score.json` → `lightrag − b5` |
+| Hiệu WV LightRAG − Hybrid chứa 0 (+0,064 [−0,004; +0,132] / +0,057 [−0,011; +0,125]) — TD | `lightrag_vs_b4_p.score.json` → `lightrag − b4.wrong_version` |
+| Full − LightRAG +0,321 [+0,249; +0,392] / +0,308 [+0,235; +0,382] — TD | `lightrag_vs_b4_p.score.json` → `proposed2 − lightrag` |
+| VersionFilter − LightRAG +0,308 [+0,235; +0,381] / +0,292 [+0,218; +0,368] — TD | `lightrag_vs_b5_b7plus.score.json` → `b7plus − lightrag` |
+| 608 văn bản; Qwen2.5-14B-Instruct; chế độ `mix` | `runs/lightrag_20261113/intake.json` (`build_done`, `modes`) |
+| Ngữ cảnh trung vị ~99.000 ký tự; hệ khác 12.000–13.000 | `intake.json` → `context_chars.median` = 99.267; amendment ADR 0006 |
+| 119/361 trích nhãn đoạn nội bộ (= 361 − `format_ok` 242, cả hai lần) | `runs/lightrag_20261113/test/{r1,r2}/lightrag.run.json` |

@@ -1,6 +1,6 @@
 # Nguồn số liệu bản ACM
 
-Nội dung và số liệu kế thừa bản IEEE sau sửa P0-1, W1–W6, W8. Nguồn, key JSON, lần chạy, id dòng và mức khẳng định được ghi tại [../ieee/numbers.md](../ieee/numbers.md). Không thêm số liệu thực nghiệm khi chuyển định dạng.
+Nội dung và số liệu kế thừa bản IEEE sau sửa P0-1, W1–W6, W8. Nguồn, key JSON, lần chạy, id dòng và mức khẳng định được ghi tại [../ieee/numbers.md](../ieee/numbers.md). Không thêm số liệu thực nghiệm khi chuyển định dạng. Ngày 15/11 thêm đoạn và bảng LightRAG (thăm dò) vào cả hai bản; nguồn ở mục "Bổ sung LightRAG" của file IEEE.
 
 Build: `latexmk -xelatex main.tex`.
 

@@ -82,7 +82,7 @@ We answer both questions with a resource and a controlled measurement. Our contr
 \item \textbf{ViLexTime}, a benchmark of question--date pairs with version-level gold evidence, contrastive scoring that detects quoted text of a wrong version, and a full record of who or what produced each label; labels are AI-produced and author-reviewed, a silver tier (\cref{sec:benchmark}).
 \item \textbf{A measurement framework and pre-specified evaluation on an unseen test set} of twelve generating configurations, including a retrieval ladder that adds one level of temporal information per step, two oracle conditions, two independent generation runs, and a human check of the scorer (\cref{sec:systems,sec:protocol,sec:results}).
 \end{itemize}
-The main findings are: flat RAG quotes another version in a quarter or more of the contrastive rows; giving the correct evidence lifts accuracy to 0.956, while giving the \emph{current} version instead drops it to 0.456; and both document-date filtering and version-interval filtering improve version-exact retrieval. Post-hoc attribution suggests that the benefit sits in the offline version store with hard interval filtering, while one-hop query-time graph expansion shows no measurable accuracy gain. Because gold versions and filters come from the same derived store, these results measure consistency with that store; \cref{sec:discussion} lists this and the other limits.
+The main findings are: flat RAG quotes another version in a quarter or more of the contrastive rows; giving the correct evidence lifts accuracy to 0.956, while giving the \emph{current} version instead drops it to 0.456; and both document-date filtering and version-interval filtering improve version-exact retrieval. Post-hoc attribution suggests that the benefit sits in the offline version store with hard interval filtering, while one-hop query-time graph expansion shows no measurable accuracy gain and an exploratory LightRAG baseline performs at the level of flat RAG. Because gold versions and filters come from the same derived store, these results measure consistency with that store; \cref{sec:discussion} lists this and the other limits.
 
 % ======================================================================
 \section{Related Work}
@@ -252,6 +252,7 @@ Dense & A & none & dense & -- & -- \\
 Hybrid & A & none & hybrid & -- & -- \\
 +AmendHop & A & none & hybrid & -- & commands \\
 +Hierarchy & A & none & hybrid & -- & hierarchy \\
+LightRAG$^\dagger$ & own & none & entity graph & -- & LLM entities \\
 +DocDate & A & doc & hybrid & lexical & -- \\
 +VersionStore & B & doc & -- & --$^\ast$ & -- \\
 +VersionFilter & B & ver & hybrid & lexical & -- \\
@@ -261,7 +262,7 @@ Full config. & B & prop & hybrid & -- & ancestor + check \\
 Oracle (in force) & \multicolumn{5}{l}{in-force gold version is the only evidence} \\
 Oracle (current) & \multicolumn{5}{l}{current version of the same provision} \\
 \bottomrule
-\multicolumn{6}{@{}p{0.97\columnwidth}@{}}{\scriptsize $^\ast$VersionStore uses lexical retrieval only in the post-hoc ladder, outside F4--F6.}
+\multicolumn{6}{@{}p{0.97\columnwidth}@{}}{\scriptsize $^\ast$VersionStore uses lexical retrieval only in the post-hoc ladder, outside F4--F6. $^\dagger$Exploratory, own 608-document store (\cref{sec:results}).}
 \end{tabular}
 \end{table}
 
@@ -270,7 +271,7 @@ Oracle (current) & \multicolumn{5}{l}{current version of the same provision} \\
 \textbf{Pre-specified full configuration.} This configuration adds two query-time components to \sys{Propagation}. (i) ancestor-command expansion takes the top seeds \emph{before} the date filter (after a repeal, the relevant provision may no longer be admissible) and adds commands that target the seed or any of its ancestors; commands are admitted by the validity of the document that issues them, and new units are appended after the ranked list (5 seeds, fan-out 3). (ii) A citation check rejects cited units not admissible at $t$; since the filter already removes such units, we expect it to act rarely and do not attribute gains to it. The full configuration was selected on dev by a rule fixed in advance, before the final test was run.
 
 \begin{sloppypar}
-\textbf{Graph baselines.} \sys{Hybrid+\allowbreak AmendHop} and \sys{Hybrid+\allowbreak Hierarchy} are one-step expansions over amendment relations and the provision hierarchy inside the same pipeline. They are \emph{not} full GraphRAG or LightRAG systems; we name them accordingly.
+\textbf{Graph baselines.} \sys{Hybrid+\allowbreak AmendHop} and \sys{Hybrid+\allowbreak Hierarchy} are one-step expansions over amendment relations and the provision hierarchy inside the same pipeline. They are \emph{not} full GraphRAG or LightRAG systems; we name them accordingly. A real LightRAG system is reported separately as an exploratory baseline (\cref{sec:results}).
 \end{sloppypar}
 
 % ======================================================================
@@ -434,6 +435,27 @@ F5 and F6 are numerically identical, and this matters for interpretation. \sys{P
 
 \textbf{Hard filtering versus telling the model the dates.} Two further baselines, added by a dated amendment to the plan after the test was seen and approved before they were run, read the version store with no filter (\sys{Unfiltered versions}) and with each passage's effective interval printed in the prompt (\sys{Dates in prompt}). Printing dates raises accuracy from 0.311 to 0.409 and cuts the wrong-version rate from 0.317 to 0.064, but hard filtering before ranking is still far better: \sys{VersionFilter} minus \sys{Dates in prompt} is $+$0.245 [$+$0.18, $+$0.31] in run~1 and $+$0.230 [$+$0.17, $+$0.29] in run~2.
 
+\textbf{A full GraphRAG baseline (exploratory).} LightRAG~\cite{guo2025lightrag} (\texttt{lightrag-hku}, default \texttt{mix} mode) was added by a second dated amendment after the test was seen, approved before it generated any test answer. Its entity graph was built with Qwen2.5-14B-Instruct over the 608 documents that the dev and test rows target plus the amendment commands aimed at them; the query is the date followed by the question, and the returned context fills the evidence block of the shared prompt, with the same generator, settings and two runs. Three conditions are not at parity: the store is smaller than the full corpus, the median context is about 99{,}000 characters versus 12{,}000--13{,}000 for the other systems (both favour LightRAG), and the store carries no effective dates. LightRAG returns no unit identifiers, so TV-Recall and TVER are undefined. LightRAG answers at the level of flat RAG (\cref{tab:lightrag}; LightRAG minus \sys{Hybrid}: $+$0.022 [$-$0.037, $+$0.080] in run~1 and $+$0.060 [$+$0.003, $+$0.117] in run~2; against \sys{Hybrid+AmendHop} the intervals contain zero in both runs) and quotes another version at least as often (0.355 versus 0.291 in run~1; the difference interval contains zero in both runs). The full configuration exceeds LightRAG by $+$0.321 [$+$0.249, $+$0.392] and $+$0.308 [$+$0.235, $+$0.382], and \sys{VersionFilter} exceeds it by $+$0.308 [$+$0.235, $+$0.381] and $+$0.292 [$+$0.218, $+$0.368]. Following the reading rule fixed in the amendment, interval-filtered retrieval outperforms a real non-temporal GraphRAG system even though that system searches a smaller store with a much longer context. F2 is unchanged and still compares against \sys{Hybrid+AmendHop}. In 119 of 361 answers the generator cited LightRAG's internal chunk labels, which breaks the citation format but does not affect accuracy.
+
+\begin{table}[t]
+\centering
+\caption{Exploratory LightRAG comparison on \textit{all} (318 rows; TCS on 127 T2 pairs), run~1 / run~2. Added after the test was seen; LightRAG searches its own 608-document store. WV is scorer-based.}
+\label{tab:lightrag}
+\setlength{\tabcolsep}{3pt}
+\footnotesize
+\begin{tabular}{@{}l c c c@{}}
+\toprule
+System & Accuracy & WV & TCS \\
+\midrule
+Hybrid & 0.324 / 0.296 & 0.291 / 0.294 & 0.071 / 0.047 \\
+Hybrid+AmendHop & 0.311 / 0.311 & 0.294 / 0.279 & 0.071 / 0.055 \\
+LightRAG & 0.346 / 0.355 & 0.355 / 0.351 & 0.055 / 0.055 \\
++VersionFilter & 0.654 / 0.648 & 0.008 / 0.011 & 0.654 / 0.646 \\
+Full config. & 0.667 / 0.664 & 0.008 / 0.008 & 0.661 / 0.646 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \textbf{Repeal.} The full configuration asserts that a provision is no longer in force 11 times, 7 correctly (precision 0.64, Wilson 95\% [0.35, 0.85]), recovering 7 of the 23 unanswerable rows (recall 0.30 [0.16, 0.51]). Flat BM25 also recovers 7 but makes 29 false repeal claims; the in-force oracle answers 22/23. Repeal detection remains weak for every retrieval system.
 
 \subsection{Where the remaining errors occur (post hoc)}
@@ -479,7 +501,7 @@ In a first, blind pass the automatic accuracy agreed with the human scorer on 95
 
 \textbf{What the results support.} For Vietnamese law, the large and robust effect is that of \emph{knowing which wording is in force}: an offline version store plus a hard interval filter before ranking. This agrees with the as-of filtering results for German, US and Thai law~\cite{prior2026oldfriend,yao2026lawinforce,akarajaradwong2026nitibenchplus}; what ViLexTime adds is a decomposition on the same rows, whose post-hoc steps suggest that a version store without the filter hurts and that printing dates in the prompt does not substitute for filtering. The graph's main role is offline, in deriving versions and intervals; at query time we detect no gain, and a repeal-specific benefit is not established.
 
-\textbf{Threats to validity.} (i) \emph{Shared source.} Gold versions and filter intervals come from the same derived graph; when an event is missed, both can be wrong together, so F3--F6 measure consistency with the graph. Blind gold covers only 24/156 lineages and no T6. (ii) \emph{Labels.} The final set is AI-labelled and reviewed by the first author, with pre-reconciliation AI--AI AC1 of 0.608 and hard cases settled by an AI adjudicator under author delegation; no lawyer checked them. (iii) \emph{Coverage.} T3 (6 lineages) and T6 (23) are small, 76 of the 254 T2 rows are near-identical wordings, T5 (retroactive or signed-but-not-yet-effective) is absent, and 220 of the 318 rows fall outside the four target domains. The T1 short answers were found, after the run, to contain whole clause text with enumeration marks, making the T1 column unusable; it is excluded and will be corrected only through a declared amendment. (iv) \emph{Scope.} One generator, no reranker and one source portal; \sys{Hybrid+\allowbreak AmendHop} and \sys{Hybrid+\allowbreak Hierarchy} are one-step expansions, not full GraphRAG, and a LightRAG comparison is pending. (v) \emph{Selection.} The confirmatory family was fixed after the dev set and two pilot rounds had been seen.
+\textbf{Threats to validity.} (i) \emph{Shared source.} Gold versions and filter intervals come from the same derived graph; when an event is missed, both can be wrong together, so F3--F6 measure consistency with the graph. Blind gold covers only 24/156 lineages and no T6. (ii) \emph{Labels.} The final set is AI-labelled and reviewed by the first author, with pre-reconciliation AI--AI AC1 of 0.608 and hard cases settled by an AI adjudicator under author delegation; no lawyer checked them. (iii) \emph{Coverage.} T3 (6 lineages) and T6 (23) are small, 76 of the 254 T2 rows are near-identical wordings, T5 (retroactive or signed-but-not-yet-effective) is absent, and 220 of the 318 rows fall outside the four target domains. The T1 short answers were found, after the run, to contain whole clause text with enumeration marks, making the T1 column unusable; it is excluded and will be corrected only through a declared amendment. (iv) \emph{Scope.} One generator, no reranker and one source portal; \sys{Hybrid+\allowbreak AmendHop} and \sys{Hybrid+\allowbreak Hierarchy} are one-step expansions, not full GraphRAG; LightRAG is compared only exploratorily, after the test was seen, on a smaller store. (v) \emph{Selection.} The confirmatory family was fixed after the dev set and two pilot rounds had been seen.
 
 % ======================================================================
 \section{Conclusion}

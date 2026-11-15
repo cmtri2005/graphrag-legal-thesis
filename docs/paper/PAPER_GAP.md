@@ -276,7 +276,7 @@ Bộ test cuối đã xem. Mọi cấu hình mới chạy trên bộ này phải
 - Đọc theo câu đã khai trước trong amendment: hệ có lọc theo khoảng hiệu lực hơn một GraphRAG phi thời gian thật, dù hệ đó có kho nhỏ hơn (608 văn bản) và ngữ cảnh dài hơn nhiều (khoảng 29.000 token). LightRAG không hơn flat RAG rõ ràng, và trích sai phiên bản ít nhất ngang flat RAG.
 - Phải khai khi viết: chạy sau khi đã thấy kết quả test; kho không ngang hàng; LightRAG không trả mã đơn vị nên không có TV-Recall, TVER; định dạng trích dẫn đạt 242/361 vì model dẫn nhãn đoạn nội bộ của LightRAG (không ảnh hưởng Accuracy).
 - Còn thiếu từ Colab: `vllm.log`, phiên bản thư viện, revision model.
-- Việc tiếp: thêm một dòng LightRAG vào bảng mô tả và một câu vào phần kết quả của paper; F2 giữ nguyên (P − `b5`).
+- Đã đưa vào paper (15/11, cả bản IEEE và ACM): một dòng ở Bảng I, đoạn "A full GraphRAG baseline (exploratory)" kèm bảng `tab:lightrag` ở mục 7, sửa giới hạn (iv), một vế câu ở phần mở đầu; F2 giữ nguyên (P − `b5`). Nguồn số ở `docs/paper/ieee/numbers.md`.
 - Dẫn GraphRAG-Bench ("When to use Graphs in RAG", Xiang và cộng sự, ICLR 2026) [WEB]: RAG thường ngang hoặc hơn GraphRAG ở câu tra cứu sự kiện đơn. Kết quả của mình khớp với nhận định đó. Viết như vậy thì kết quả "không thấy tác dụng" thành một điểm xác nhận, không phải một thất bại.
 - Dẫn dòng GraphRAG có thời gian: T-GRAG (arXiv 2508.01680), TG-RAG (2510.13590), STAR-RAG (2510.16715), DyG-RAG [WEB]. Nêu khác biệt: các hệ đó dựng đồ thị thực thể bằng LLM trên tin tức hoặc báo cáo; ở đây đồ thị là tất định, dựng từ lệnh sửa đổi, và dùng trước lúc truy vấn. Không cần chạy các hệ này.
 
