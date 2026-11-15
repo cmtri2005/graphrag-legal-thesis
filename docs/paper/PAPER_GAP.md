@@ -386,7 +386,7 @@ Trong repo:
 - `docs/thesis/chuong-1-mo-dau.md` mục 1.6, `chuong-7-ket-luan.md`
 - `related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md`
 - `runs/final_g4_20261112/r1/results.md`, `r1/test/all.score.json`
-- `runs/lightrag_20261113/intake.json`, `dev/coverage.json`, `run_intake.log`
+- `runs/lightrag_20261113/intake.json`, `dev/coverage.json`, `run_intake.sh` (file log chỉ nằm ở máy, không vào git)
 
 Web, tra ngày 15/11/2026:
 - ICAIL 2027: <https://icail-vienna-2027.org>, <https://icail-vienna-2027.org/call-for-papers/>
