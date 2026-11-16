@@ -95,3 +95,12 @@ Amendment: `docs/decisions/0006-ke-hoach-phan-tich-bo-test-cuoi.md`, mục "Amen
 | 608 văn bản; Qwen2.5-14B-Instruct; chế độ `mix` | `runs/lightrag_20261113/intake.json` (`build_done`, `modes`) |
 | Ngữ cảnh trung vị ~99.000 ký tự; hệ khác 12.000–13.000 | `intake.json` → `context_chars.median` = 99.267; amendment ADR 0006 |
 | 119/361 trích nhãn đoạn nội bộ (= 361 − `format_ok` 242, cả hai lần) | `runs/lightrag_20261113/test/{r1,r2}/lightrag.run.json` |
+
+## Bổ sung 16/11/2026: generator mở Qwen3.8-27B (thăm dò, amendment 16/11 (b))
+| Số trong paper | Nguồn |
+|---|---|
+| Qwen: P−b4 +0,324 [+0,272; +0,376] / +0,330; P−b5 +0,333 / +0,340; WV −0,306 [−0,353; −0,258]; F7 +0,087 [0; 0,217] | `runs/qwen_chutes_20261116/test/pairs/`, `NOTE_ket_qua.md` (evidence-gate 16/11) |
+| Qwen: b7plus−bvdate +0,085 [+0,041; +0,132] / +0,082 [+0,041; +0,127]; WV −0,038 [−0,064; −0,015]; TCS +0,126 [+0,062; +0,194] | như trên |
+| Qwen: P−lightrag +0,119 [+0,050; +0,187]; oracle 0,884 | như trên; `test/r1/all.score.json` |
+| Lệch Chutes–vLLM ≤ 0,02 trên dev | `runs/qwen_chutes_20261116/dev/` |
+| 0,245 trong tóm tắt là của GPT-4o mini | `runs/posthoc_g4_20261113/test/r1/` |
