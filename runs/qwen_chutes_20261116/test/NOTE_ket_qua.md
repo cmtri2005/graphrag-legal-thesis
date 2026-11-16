@@ -28,3 +28,8 @@ Lệch với dev: trên dev `b7plus − bvdate` chứa 0; trên bộ cuối lo�
 
 Giới hạn phải khai kèm mọi số Qwen (amendment 16/11 (b)): Chutes phục vụ bản FP8, **không ghim revision, không bảo đảm seed**; dev vLLM chạy BF16, revision `37561816`. Mức lệch Chutes–vLLM (≤ 0,02 Accuracy) đo trên dev, `b4` và `b7plus`, r1, 151 dòng, không đo trên bộ cuối. Trùng nguyên văn giữa r1 và r2: 90–98% với mọi hệ trừ `b1` (124/361); dev vLLM 97,1%. Câu "dev chứa 0" nói về dev vLLM BF16.
 Cách viết (evidence-gate): "với hai generator đã thử"; F1–F3 loại 0 ở cả hai lần và cùng dấu với GPT-4o mini; F4–F6 không dùng generator; F7 không đủ bằng chứng ở cả hai. `b7plus − bvdate` cận dưới +0,041 vượt mức lệch 0,02: viết là phân tích hậu nghiệm, ngoài Holm. Chưa báo ở đây: MRR, TV-R@1, cặp oracle, `ranh_gioi`.
+
+Bổ sung 16/11 (sau gate):
+- MRR, TV-R@1: chỉ phụ thuộc truy xuất. Prompt dùng lại của G4 nên trùng G4: `b4` MRR 0,445 / TV-R@1 0,164; `b7` 0,493 / 0,242; `b7plus` 0,456 / 0,336; `proposed2` 0,453 / 0,336; `bvnone`, `bvdate` 0,447 / 0,173.
+- Cặp oracle (Qwen): `oracle` 0,884 / 0,877, `oracle_now` 0,418 / 0,421 (GPT-4o mini: 0,956, 0,456). Trần của Qwen thấp hơn GPT-4o mini khoảng 0,07.
+- `ranh_gioi`: prompt bộ cuối chỉ gồm dòng `giua_khoang` (như G4); lát `ranh_gioi` có 0 dòng. Không có số Qwen cho `ranh_gioi` (B5 chưa chạy).
