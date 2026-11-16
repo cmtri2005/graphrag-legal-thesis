@@ -61,7 +61,7 @@ Nguồn: `runs/final_g4_20261112/{r1,r2}/test/all.score.json` (đọc lại hôm
 |---|---|---|
 | P0-1 TCS, MRR vào paper | Xong trong paper | Số **chưa qua evidence-gate** |
 | P0-2 Người chấm cờ sai phiên bản | Phiếu 33 câu đã dựng, **chưa chấm** | `data/review/human_score_g4/recheck_versions/phieu.xlsx` |
-| P0-3 Generator mở | **Dev xong 13 hệ** (15/11); thiếu `bvnone`, `bvdate` | `runs/qwen_gen_20261115/`, dòng sổ chạy 15/11. Thứ tự hệ giữ. Bộ cuối cần amendment |
+| P0-3 Generator mở | **Dev xong 15 hệ** (16/11, gồm `bvnone`, `bvdate`; evidence-gate PASS) | `runs/qwen_gen_20261115/`, dòng sổ chạy 15/11. Thứ tự hệ giữ. Bộ cuối cần amendment |
 | P0-4 Gold mù người trên bộ cuối | Chưa | Hiện phủ 24/156 lineage, 0 dòng T6 |
 | P0-5 Người thứ hai kiểm nhãn | Chưa | |
 | P0-6 Ẩn danh, preprint | Bản ACM ẩn danh có rồi. Repo công khai vẫn chứa bản thảo | `develop` đã push, trùng `origin` |
@@ -398,6 +398,7 @@ Hoàn tác: plan này chỉ thêm file và thư mục run mới. Xóa thư mục
 - [ ] A3 Dựng phiếu / NMT gán sau khi A2 khóa / luật sư 30 dòng / đo đồng thuận.
 - [ ] B1 Qwen: dev / thêm `bvdate` / bộ cuối.
 - [x] 15/11 B1 dev 13 hệ × 2 lần nhập và chấm (`runs/qwen_gen_20261115/run_dev.sh`, exit 0). Qwen giữ thứ tự: `b4` 0,424, `b7plus` 0,715, `proposed2` 0,762; oracle 0,894 với oracle hiện hành 0,497. Điểm mới: `b7` ngang `b7plus` về Accuracy (0,715) nhưng sai phiên bản 0,129 so với 0,012, nên C3 phải dựa vào sai phiên bản và TCS, không dựa riêng Accuracy. Hai lần trùng nguyên văn 97,1%. Còn: `bvnone`, `bvdate`; log vLLM, `pip freeze`.
+- [x] 16/11 B1 dev thêm `bvnone`, `bvdate` (Qwen, r1/r2): `bvnone` Acc 0,437/0,430, sai phiên bản 0,388/0,376, TCS 0,167; `bvdate` Acc 0,715/0,709, sai phiên bản 0,047, TCS 0,611 (`b7plus` 0,715; 0,012; 0,750). Model lớn dùng được ngày về Accuracy; lọc cứng vẫn hơn ở sai phiên bản và TCS. Evidence-gate PASS (chấm lại byte-khớp, hệ cũ không đổi). Hậu nghiệm, dev. Log vLLM, `pip freeze` ở `runs/qwen_gen_20261115/env/`; ghi chú ở `NOTE_bv_20261116.md`. Còn: bộ cuối, GPT-4o mini ô `bv*` trong `compare_dev.json`.
 - [x] 15/11 B2 code reranker commit `56b9c3e` (viết trước đó trong ngày, 35 test liên quan qua).
 - [x] 15/11 B2 bước 1: vùng ứng viên trên dev, 4 hệ, xong 11:42 UTC, exit 0 (`runs/rerank_pool_dev_20261115/`, dòng sổ chạy 15/11). T2 TV-Recall@100 từ 0,958 đến 1,000.
 - [x] 15/11 B2 bước 3: chọn reranker trên dev (`select.sh`, exit 0). Theo tiêu chí khai trước (MRR `b4`): **`AITeamVN/Vietnamese_Reranker`** 0,696 (bge-m3 0,685, ViRanker 0,624, không reranker 0,536). Reranker không thay bộ lọc: TV-Recall@1 `b4` 0,285 so với `b7plus` 0,550. Còn: sinh câu trả lời với reranker trên dev.

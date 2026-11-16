@@ -6,7 +6,7 @@ Q = Path("runs/qwen_gen_20261115/dev")
 G = {"r1": Path("runs/final_rehearsal_g3_20261112/r1/dev/all.score.json"),
      "r2": Path("runs/final_rehearsal_g3_20261112/r2/dev/all.score.json")}
 L = {t: Path(f"runs/lightrag_20261113/dev/{t}/lightrag_vs_b4_p.score.json") for t in ("r1", "r2")}
-ORDER = ["oracle", "oracle_now", "b1", "b2ctx", "b3", "b4", "b5", "b6", "b7", "b7plus", "b7pp", "proposed2", "lightrag"]
+ORDER = ["oracle", "oracle_now", "b1", "b2ctx", "b3", "b4", "b5", "b6", "b7", "b7plus", "b7pp", "bvnone", "bvdate", "proposed2", "lightrag"]
 KEYS = [("all", "accuracy"), ("all", "wrong_version"), ("all", "tcs"), ("all", "mrr"), ("T2", "accuracy"), ("T6", "accuracy")]
 
 

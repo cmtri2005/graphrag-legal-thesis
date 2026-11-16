@@ -1,0 +1,54 @@
+{
+  "system": "bvdate",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "ac401f5cbdb1a18a98ff2ba90a93f7cc87cf89a5b38215a6374d2927e68e5a3f",
+  "raw_file_sha256": "24789903d61814d27ada1bc7cac2e80541b6fb2230b7725d3888c99e6ba5b930",
+  "model": "Qwen/Qwen3.8-27B",
+  "revision": "37561816e66b5b9153b1b64c10968c18c1e6f4a0",
+  "gpu": [
+    "NVIDIA A100-SXM4-80GB"
+  ],
+  "run_tag": null,
+  "served_models": {
+    "37561816e66b5b9153b1b64c10968c18c1e6f4a0": 151
+  },
+  "system_fingerprints": {
+    "None": 151
+  },
+  "rows": 151,
+  "format_ok": 143,
+  "truncated": 0,
+  "prompt_tokens_mean": 5231.463576158941,
+  "completion_tokens_mean": 89.49006622516556,
+  "generation_seconds": 240.80920617599986,
+  "export": {
+    "system": "bvdate",
+    "spec": {
+      "name": "bvdate",
+      "layer": "version",
+      "lexical": true,
+      "dense": true,
+      "rerank": false,
+      "temporal": "none",
+      "context": true,
+      "expand": 0,
+      "expand_edges": "none",
+      "verify": "off",
+      "k": 20,
+      "note": "post hoc — bvnone with each unit's validity windows printed in the prompt",
+      "repeal_note": false,
+      "validity_note": true
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": "data/derived/embed/version-vietnamese-embedding",
+    "embed_sha256": null,
+    "rows": 151,
+    "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "ac401f5cbdb1a18a98ff2ba90a93f7cc87cf89a5b38215a6374d2927e68e5a3f"
+  }
+}
