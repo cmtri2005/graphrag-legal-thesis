@@ -313,3 +313,17 @@ Qwen, `all`, dev 151 dòng, r1 / r2 (KTC ghép cặp 95%, 10.000 lần):
 
 ### 9. Reranker: bỏ (CMT, 16/11/2026)
 Không đưa reranker lên bộ cuối. Lý do: hết quota, ưu tiên các việc chính. Đã có trên dev, **chỉ truy xuất** (chưa sinh): `AITeamVN/Vietnamese_Reranker` nâng MRR `b4` 0,536 → 0,696; TV-R@1 `b7plus − b4` 0,199 → 0,265 (`runs/rerank_pool_dev_20261115/`). Phần Qwen dev cho 4 ô đã dựng sẵn nhưng chưa chạy (`runs/qwen_gen_rr_20261116/`). Paper phải ghi trong giới hạn: "chưa so sánh với retriever có reranker trên bộ cuối; trên dev, khoảng cách truy xuất giữa lọc và không lọc không co lại khi thêm reranker".
+
+## Amendment 2026-11-16 (b): Qwen trên bộ cuối chạy qua API Chutes, không qua vLLM
+
+Accepted 16/11/2026, CMT duyệt trong hội thoại ("chốt"), **trước** khi Qwen sinh câu trả lời trên bộ cuối. NMT chưa có xác nhận riêng trong repo. Sửa chỗ "vLLM" của Amendment 2026-11-16 ở trên; mọi phần khác giữ nguyên.
+
+- **Lý do đổi:** Colab hết quota. Chạy lại cả 15 hệ bằng vLLM không còn khả thi.
+- **Đường chạy:** `scripts/eval/api_generate.py --provider chutes --model Qwen/Qwen3.8-27B-TEE`, nhiệt độ 0, `max_tokens` 1024, `seed` 20261109, hai lần chạy. Tham số `chat_template_kwargs.enable_thinking = false` được `src/vilexgraph/llm.py` gửi cho provider `chutes` (dev vLLM chạy `thinking: false`; mặc định Qwen3.8 tự suy luận và dùng hết `max_tokens` mà không trả lời).
+- **Prompt:** đúng các file đã dùng cho GPT-4o mini trên bộ cuối (`runs/final_g4_20261112/r1/prompts/`, `runs/posthoc_g4_20261113/test/prompts/`, `runs/lightrag_20261113/test/prompts/`), kiểm hash khi gọi. 15 hệ × 2 lần × 361 dòng.
+- **Chỗ lệch so với dev phải khai kèm mọi số Qwen:** Chutes phục vụ bản FP8 (`Qwen3.8-27B-FP8`, sglang, môi trường TEE); dev vLLM chạy bản gốc `Qwen/Qwen3.8-27B` revision `37561816e66b5b9153b1b64c10968c18c1e6f4a0` (BF16). Chutes không ghim revision và không bảo đảm seed. Qwen bộ cuối là phân tích hậu nghiệm với một đường chạy khác dev.
+- **Đối chiếu đã làm trên dev trước khi duyệt** (`runs/qwen_chutes_20261116/dev/`, `b4` và `b7plus`, r1, 151 dòng): Accuracy Chutes/vLLM `b4` 0,444/0,424, `b7plus` 0,722/0,715; sai phiên bản `b4` 0,424/0,435, `b7plus` 0,012/0,012; TCS `b4` 0,139/0,056 (36 cặp), `b7plus` 0,750/0,750. Trùng nguyên văn với vLLM: 128/151 và 141/151.
+- **Cách đọc đã khai trước:** các cách đọc ở Amendment 2026-11-16 giữ nguyên. Thêm: nếu một kết luận Qwen chỉ đứng được khi chênh nhỏ hơn mức lệch Chutes–vLLM đo ở trên (khoảng 0,02 Accuracy), không nêu kết luận đó.
+- **Không đổi:** P, F1–F7, phán quyết đã báo, scorer, gold, prompt đã khóa.
+- **Chi phí ước lượng:** khoảng 3 USD (khoảng 4.700 token đầu vào mỗi prompt đo trên dev; `lightrag` dài hơn).
+- **Đường chạy trên bộ cuối:** `runs/qwen_chutes_20261116/test/run_test.sh`.
