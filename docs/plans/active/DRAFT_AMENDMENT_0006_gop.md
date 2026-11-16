@@ -61,7 +61,7 @@ Qwen, `all`, dev 151 dòng, r1 / r2 (KTC ghép cặp 95%, 10.000 lần):
 Đọc: trên dev, Qwen với `bvdate` **ngang** `b7plus` ở cả ba chỉ số (KTC chứa 0), khác GPT-4o mini (+0,272 / +0,245, loại 0). Nên có khả năng cao dòng 3 của bảng §5 sẽ rơi vào nhánh "chứa 0".
 
 ### 7. Giới hạn phải khai kèm
-- Qwen và reranker được định nghĩa **sau** khi đã thấy G4: phân tích hậu nghiệm, không phải kiểm định khai trước.
+- Qwen được định nghĩa **sau** khi đã thấy G4: phân tích hậu nghiệm, không phải kiểm định khai trước.
 - `bvnone`, `bvdate` Qwen chạy trong một phiên vLLM khác 13 hệ kia (cấu hình giống; r1 và r2 vẫn lệch 1 dòng ở dev).
 - Dev là tập con 151 dòng; bộ cuối khác kích thước. Không suy từ dev ra bộ cuối.
 - Ba chỗ không ngang hàng của LightRAG (amendment 15/11) vẫn áp dụng, kèm Qwen.
@@ -72,7 +72,6 @@ Qwen, `all`, dev 151 dòng, r1 / r2 (KTC ghép cặp 95%, 10.000 lần):
 
 ### 9. Việc cho CMT chốt trước khi chép vào ADR
 1. Bộ cuối Qwen: chạy `bvdate`, `bvnone`, `lightrag` luôn (đề xuất: có, vì cùng prompt đã khóa).
-2. Reranker có thêm `bvdate` không.
 3. Giữ hay bỏ B3, và C2.
 4. Khóa luận đã đọc `b7plus − bvdate` = 0,245 như số chính; cần ghi rõ "GPT-4o mini" cạnh số đó.
 
