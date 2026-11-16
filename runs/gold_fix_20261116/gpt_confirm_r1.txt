@@ -3,7 +3,7 @@ Họ final (ADR 0006): công cụ chờ ADR được Accepted và commit; dev ch
 F8 (TVER) luôn ngoài Holm: kiểm nhất quán nội bộ, dùng chung cửa sổ đồ thị với gold.
 F1 RQ2: lai ghép: proposed2 − b4 · accuracy · all: +0.343 [+0.283; +0.401] p=0.0000 p_Holm=0.0000 → ủng hộ (all 318 dòng/156 lineage)
 F2 RQ2: đồ thị phi thời gian: proposed2 − b5 · accuracy · all: +0.355 [+0.297; +0.414] p=0.0000 p_Holm=0.0000 → ủng hộ (all 318 dòng/156 lineage)
-F3 RQ2: lỗi sai phiên bản: proposed2 − b4 · wrong_version · all: -0.284 [-0.331; -0.238] p=0.0000 p_Holm=0.0000 → ủng hộ (all 318 dòng/156 lineage)
+F3 RQ2: lỗi sai phiên bản: proposed2 − b4 · wrong_version · all: -0.286 [-0.333; -0.240] p=0.0000 p_Holm=0.0000 → ủng hộ (all 318 dòng/156 lineage)
 F4 RQ3: lọc văn bản: b7 − b2ctx · tv_recall@1 · all_answerable: +0.078 [+0.049; +0.111] p=0.0000 p_Holm=0.0000 → ủng hộ (all_answerable 294 dòng/156 lineage)
 F5 RQ3: phiên bản: b7plus − b7 · tv_recall@1 · all_answerable: +0.116 [+0.076; +0.156] p=0.0000 p_Holm=0.0000 → ủng hộ (all_answerable 294 dòng/156 lineage)
 F6 H0: truy xuất: b7pp − b7 · tv_recall@1 · all_answerable: +0.116 [+0.076; +0.156] p=0.0000 p_Holm=0.0000 → ủng hộ (all_answerable 294 dòng/156 lineage)

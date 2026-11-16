@@ -105,4 +105,4 @@ Amendment: `docs/decisions/0006-ke-hoach-phan-tich-bo-test-cuoi.md`, mục "Amen
 | Lệch Chutes–vLLM ≤ 0,02 trên dev | `runs/qwen_chutes_20261116/dev/` |
 | 0,245 trong tóm tắt là của GPT-4o mini | `runs/posthoc_g4_20261113/test/r1/` |
 | Gold mù 105/156 lineage, 23 T6; NMT 81; luật sư 30, đồng thuận hiệu lực 29/30, κ 0,932; 3 lineage kho sai (2 sửa đổi, 1 bãi bỏ) | `data/review/gold_final/DONG_THUAN_B_20261116.md`; `PLAN_PAPER_GAP.md` A2 |
-| Sửa gold F019, phán quyết F1–F7 không đổi; tập con 103 lineage F1 +0,289 [+0,211; +0,364], F5 +0,075 [+0,032; +0,122] | `runs/gold_fix_20261116/NOTE.md`, `subset/confirm_r1.txt` |
+| Sửa gold 3 lineage (4 dòng: F019, F016, F060), phán quyết F1–F7 không đổi, |Δ| ≤ 0,0033; tập con 105 lineage/215 dòng F1 +0,284 [+0,208; +0,359], F5 +0,073 [+0,032; +0,119] | `runs/gold_fix_20261116/NOTE.md`, `{gpt,qwen}_confirm_*.json`, `subset/confirm_r1.txt` |

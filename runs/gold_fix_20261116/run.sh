@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ADR 0006 §7: chấm lại F1–F7 trên bộ cuối với gold đã sửa (F019, luật sư 16/11). Chỉ chấm lại dự đoán đã lưu, không gọi model.
+# ADR 0006 §7: chấm lại F1–F7 trên bộ cuối với gold đã sửa (F019 luật sư; F016, F060 NMT). Chỉ chấm lại dự đoán đã lưu, không gọi model.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 export PYTHONPATH=src
@@ -14,8 +14,9 @@ for t in r1 r2; do
     --split test --release $O/vilextime.jsonl --data $D --draws 10000 --out $O/qwen_confirm_$t.json > $O/qwen_confirm_$t.txt
 done
 echo "exit=0 done $(date -u +%FT%TZ)"
-# Phần có gold mù người (103 lineage, runs/gold_final_subset_20261115) với F019 đã sửa
-mkdir -p $O/subset; .venv/bin/python $O/make_release.py $O/subset runs/gold_final_subset_20261115
+# Phần có gold mù người: 103 lineage của gold_final_subset + 2 lineage kho sai nay đã sửa gold = 105 lineage
+mkdir -p $O/subset; cat runs/gold_final_subset_20261115/lineages.txt runs/gold_final_subset_20261115/excluded_kg_wrong.txt > $O/subset/lineages.txt
+.venv/bin/python $O/make_release.py $O/subset data/vilextime_final $O/subset/lineages.txt
 for t in r1 r2; do
   .venv/bin/python scripts/eval/confirm_vilextime.py --family final --retrieval $G/retrieval --generation $G/$t/test \
     --split test --release $O/subset/vilextime.jsonl --data $D --draws 10000 --out $O/subset/confirm_$t.json > $O/subset/confirm_$t.txt
