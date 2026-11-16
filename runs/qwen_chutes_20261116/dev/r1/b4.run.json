@@ -1,0 +1,53 @@
+{
+  "system": "b4",
+  "split": "dev",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "5c497de1ff3b4229907458e7b60db90f9c65d1a0422f23f46df99b49189f9cc3",
+  "raw_file_sha256": "e836132984ed3e2e68198f5e382c5eb520cd2a53eca29097781c7f846b417cc5",
+  "model": "Qwen/Qwen3.8-27B-TEE",
+  "revision": "Qwen/Qwen3.8-27B-TEE",
+  "gpu": [
+    "api"
+  ],
+  "run_tag": null,
+  "served_models": {
+    "Qwen/Qwen3.8-27B-TEE": 151
+  },
+  "system_fingerprints": {
+    "None": 151
+  },
+  "rows": 151,
+  "format_ok": 149,
+  "truncated": 0,
+  "prompt_tokens_mean": 4747.662251655629,
+  "completion_tokens_mean": 95.66225165562913,
+  "generation_seconds": 737.0744680299949,
+  "export": {
+    "system": "b4",
+    "spec": {
+      "name": "b4",
+      "layer": "asis",
+      "lexical": true,
+      "dense": true,
+      "rerank": false,
+      "temporal": "none",
+      "context": true,
+      "expand": 0,
+      "expand_edges": "none",
+      "verify": "off",
+      "k": 20,
+      "note": "B4 — BM25 + dense by reciprocal rank fusion (k=60), no reranker",
+      "repeal_note": false
+    },
+    "split": "dev",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": "data/derived/embed/asis-vietnamese-embedding",
+    "embed_sha256": "3a8b143bd5e6307642b2f011020d3a7ed9b32599de7861ef992555343ee4915e",
+    "rows": 151,
+    "release_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "5c497de1ff3b4229907458e7b60db90f9c65d1a0422f23f46df99b49189f9cc3"
+  }
+}

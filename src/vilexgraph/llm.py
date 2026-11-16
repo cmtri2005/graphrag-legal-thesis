@@ -47,6 +47,7 @@ PROVIDERS: dict[str, tuple[str, str, str]] = {
     "openrouter": ("https://openrouter.ai/api/v1", "OPENROUTER_API_KEY", "OPENROUTER_MODEL"),
     "together": ("https://api.together.xyz/v1", "TOGETHER_API_KEY", "TOGETHER_MODEL"),
     "deepseek": ("https://api.deepseek.com/v1", "DEEPSEEK_API_KEY", "DEEPSEEK_MODEL"),
+    "chutes": ("https://llm.chutes.ai/v1", "CHUTES_API_KEY", "CHUTES_LLM_MODEL"),
     "gemini": ("https://generativelanguage.googleapis.com/v1beta/openai",
                "GEMINI_API_KEY", "GEMINI_MODEL"),
 }
@@ -202,6 +203,8 @@ def complete(system: str, user: str, *, provider: str | None = None, model: str 
     post = (session or requests).post
     payload = chat_payload(system, user, model=model, temperature=temperature, max_tokens=max_tokens,
                            effort=effort, seed=seed)
+    if provider == "chutes":   # Qwen3.8 thinks by default and spends max_tokens before answering
+        payload["chat_template_kwargs"] = {"enable_thinking": False}
 
     retries = max(1, retries)   # `retries` counts attempts; 0 must still make one call, not none
     for attempt in range(retries):
