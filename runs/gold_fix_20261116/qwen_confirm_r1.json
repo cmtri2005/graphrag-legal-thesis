@@ -1,0 +1,539 @@
+{
+ "split": "test",
+ "draws": 10000,
+ "tests_run": 7,
+ "family": "final",
+ "family_size": 7,
+ "proposed": "proposed2",
+ "test_definitions": [
+  [
+   "F1",
+   "RQ2: lai ghép",
+   "paired",
+   "accuracy",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b4",
+    "proposed2"
+   ],
+   1
+  ],
+  [
+   "F2",
+   "RQ2: đồ thị phi thời gian",
+   "paired",
+   "accuracy",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b5",
+    "proposed2"
+   ],
+   1
+  ],
+  [
+   "F3",
+   "RQ2: lỗi sai phiên bản",
+   "paired",
+   "wrong_version",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b4",
+    "proposed2"
+   ],
+   -1
+  ],
+  [
+   "F4",
+   "RQ3: lọc văn bản",
+   "paired",
+   "tv_recall@1",
+   [
+    "all_answerable"
+   ],
+   "retrieval",
+   [
+    "b2ctx",
+    "b7"
+   ],
+   1
+  ],
+  [
+   "F5",
+   "RQ3: phiên bản",
+   "paired",
+   "tv_recall@1",
+   [
+    "all_answerable"
+   ],
+   "retrieval",
+   [
+    "b7",
+    "b7plus"
+   ],
+   1
+  ],
+  [
+   "F6",
+   "H0: truy xuất",
+   "paired",
+   "tv_recall@1",
+   [
+    "all_answerable"
+   ],
+   "retrieval",
+   [
+    "b7",
+    "b7pp"
+   ],
+   1
+  ],
+  [
+   "F7",
+   "T6: không đáp án",
+   "paired",
+   "accuracy",
+   [
+    "t6_unanswerable"
+   ],
+   "generation",
+   [
+    "b7pp",
+    "proposed2"
+   ],
+   1
+  ],
+  [
+   "F8",
+   "Nhất quán nội bộ: TVER",
+   "paired",
+   "tver",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b7",
+    "b7pp"
+   ],
+   -1
+  ]
+ ],
+ "exploratory": [
+  "F8"
+ ],
+ "family_note": null,
+ "files": {
+  "generation/b4": {
+   "path": "runs/qwen_chutes_20261116/test/r1/b4.jsonl",
+   "sha256": "3ba53a73057bd0d58f46cc80b1ac5b097f23d4d270e9972ed6608fc550e5b770"
+  },
+  "generation/proposed2": {
+   "path": "runs/qwen_chutes_20261116/test/r1/proposed2.jsonl",
+   "sha256": "bd0b55a7a9c7726a4cca9f7b36d68f8c17ebbc857af7f37819be6e0ba0dd1bbd"
+  },
+  "generation/b5": {
+   "path": "runs/qwen_chutes_20261116/test/r1/b5.jsonl",
+   "sha256": "c76312f70be2ead8e00992bb593c40c43f2b6aed7ca4805398e5bf9b639e098a"
+  },
+  "retrieval/b2ctx": {
+   "path": "runs/final_g4_20261112/retrieval/b2ctx.jsonl",
+   "sha256": "a765020c1b86b0ce4d3ccd80985b89a389121025afada851d5aab7d6dbc42a9a"
+  },
+  "retrieval/b7": {
+   "path": "runs/final_g4_20261112/retrieval/b7.jsonl",
+   "sha256": "9145487a50eb2160ee42185fddb264dd7768d5394935afbb6f6e9ba5041f1f56"
+  },
+  "retrieval/b7plus": {
+   "path": "runs/final_g4_20261112/retrieval/b7plus.jsonl",
+   "sha256": "2f87b3610494beac4aaa04815f557777042e1625ca544b909c640d297d8122c5"
+  },
+  "retrieval/b7pp": {
+   "path": "runs/final_g4_20261112/retrieval/b7pp.jsonl",
+   "sha256": "71c6625cc3bfafc0451993c6dfa3375ade306e2b39e37c4ab2536a083b0b7805"
+  },
+  "generation/b7pp": {
+   "path": "runs/qwen_chutes_20261116/test/r1/b7pp.jsonl",
+   "sha256": "8e958921e9122a24c1ad8413d9c588c36d7bc27b896c1e0720d1fb7d22129e2c"
+  },
+  "generation/b7": {
+   "path": "runs/qwen_chutes_20261116/test/r1/b7.jsonl",
+   "sha256": "55860840e5d4bf28496556b1c1944c6dea4d1bfe1b7220a8192c8f15131c008e"
+  },
+  "generation/b1": {
+   "path": "runs/qwen_chutes_20261116/test/r1/b1.jsonl",
+   "sha256": "fc484001269f1121295352ccfb8211064595ce46725066df5f24322c8f9269e0"
+  },
+  "generation/b2ctx": {
+   "path": "runs/qwen_chutes_20261116/test/r1/b2ctx.jsonl",
+   "sha256": "e0b6c11b87d12b32c728f7a8a51c9aee9757a7bae4443996b48668fd60671c9f"
+  },
+  "generation/b3": {
+   "path": "runs/qwen_chutes_20261116/test/r1/b3.jsonl",
+   "sha256": "e75b748a7f2ae757c8ac8bfd9f30c343b4f4a57653604cf53d921506ab39ef2f"
+  },
+  "generation/b6": {
+   "path": "runs/qwen_chutes_20261116/test/r1/b6.jsonl",
+   "sha256": "b96ecbce848e7f1084bbfe5c19fa622eaf982d1f074591f2cda5bcff895d2ab4"
+  },
+  "generation/b7plus": {
+   "path": "runs/qwen_chutes_20261116/test/r1/b7plus.jsonl",
+   "sha256": "435cc1b033f16227ba982d3ffd5fd9222f7a19f8504f4a8fc2410485b90b0964"
+  },
+  "generation/bvdate": {
+   "path": "runs/qwen_chutes_20261116/test/r1/bvdate.jsonl",
+   "sha256": "3e3d49bd398a834b12f64c2bd64afbc4f822f1b1e5e33c8f9e96efbc3b642959"
+  },
+  "generation/bvnone": {
+   "path": "runs/qwen_chutes_20261116/test/r1/bvnone.jsonl",
+   "sha256": "d65941ef4a63d8790676aabbff5ed20502ff3df2348a0319a325536660fff92e"
+  },
+  "generation/lightrag": {
+   "path": "runs/qwen_chutes_20261116/test/r1/lightrag.jsonl",
+   "sha256": "0c41c5f6b1fca88d1c62ac4834d20aec6426dff20bc5c01386ebb2a8a9ed95de"
+  },
+  "generation/oracle": {
+   "path": "runs/qwen_chutes_20261116/test/r1/oracle.jsonl",
+   "sha256": "ae6796b643ae952fab83609cda6e2f6ce7a9c6c23ef8f4e127315a250a4b49e5"
+  },
+  "generation/oracle_now": {
+   "path": "runs/qwen_chutes_20261116/test/r1/oracle_now.jsonl",
+   "sha256": "97f1e99a029e0e9ad31cd4f4987ca71a6b5a33def39bb840b7711e6470711e29"
+  }
+ },
+ "t1_no_harm": {
+  "delta": 0.05,
+  "rows": 43,
+  "lineages": 43,
+  "diff": {
+   "proposed2": {
+    "estimate": 0.046511627906976744,
+    "ci95": [
+     0.0,
+     0.11627906976744187
+    ],
+    "p": 0.258,
+    "rows": {
+     "t1_control": 43
+    },
+    "lineages": {
+     "t1_control": 43
+    },
+    "verdict": "không làm hại"
+   },
+   "b7": {
+    "estimate": 0.046511627906976744,
+    "ci95": [
+     0.0,
+     0.11627906976744187
+    ],
+    "p": 0.2598,
+    "rows": {
+     "t1_control": 43
+    },
+    "lineages": {
+     "t1_control": 43
+    },
+    "verdict": "không làm hại"
+   },
+   "b7pp": {
+    "estimate": 0.023255813953488372,
+    "ci95": [
+     0.0,
+     0.06976744186046512
+    ],
+    "p": 0.7268,
+    "rows": {
+     "t1_control": 43
+    },
+    "lineages": {
+     "t1_control": 43
+    },
+    "verdict": "không làm hại"
+   }
+  },
+  "false_expired": {
+   "b1": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   },
+   "b2ctx": {
+    "count": 3,
+    "rows": 43,
+    "rate": 0.06976744186046512,
+    "wilson95": [
+     0.024011589577214484,
+     0.18608986901241975
+    ]
+   },
+   "b3": {
+    "count": 4,
+    "rows": 43,
+    "rate": 0.09302325581395349,
+    "wilson95": [
+     0.03677164063171276,
+     0.21602703641253587
+    ]
+   },
+   "b4": {
+    "count": 1,
+    "rows": 43,
+    "rate": 0.023255813953488372,
+    "wilson95": [
+     0.004117087274333769,
+     0.12058993440607177
+    ]
+   },
+   "b5": {
+    "count": 1,
+    "rows": 43,
+    "rate": 0.023255813953488372,
+    "wilson95": [
+     0.004117087274333769,
+     0.12058993440607177
+    ]
+   },
+   "b6": {
+    "count": 3,
+    "rows": 43,
+    "rate": 0.06976744186046512,
+    "wilson95": [
+     0.024011589577214484,
+     0.18608986901241975
+    ]
+   },
+   "b7": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   },
+   "b7plus": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   },
+   "b7pp": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   },
+   "bvdate": {
+    "count": 6,
+    "rows": 43,
+    "rate": 0.13953488372093023,
+    "wilson95": [
+     0.06555723427964878,
+     0.2726358796738286
+    ]
+   },
+   "bvnone": {
+    "count": 4,
+    "rows": 43,
+    "rate": 0.09302325581395349,
+    "wilson95": [
+     0.03677164063171276,
+     0.21602703641253587
+    ]
+   },
+   "lightrag": {
+    "count": 2,
+    "rows": 43,
+    "rate": 0.046511627906976744,
+    "wilson95": [
+     0.012849260094380227,
+     0.15455498004063967
+    ]
+   },
+   "oracle": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   },
+   "oracle_now": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   },
+   "proposed2": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   }
+  }
+ },
+ "results": {
+  "F1": {
+   "estimate": 0.3238993710691824,
+   "ci95": [
+    0.27301587301587305,
+    0.37539432176656146
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 318
+   },
+   "lineages": {
+    "all": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F2": {
+   "estimate": 0.3333333333333333,
+   "ci95": [
+    0.2816356803797468,
+    0.38557993730407525
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 318
+   },
+   "lineages": {
+    "all": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F3": {
+   "estimate": -0.3068181818181818,
+   "ci95": [
+    -0.3539120933585654,
+    -0.2611940298507463
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 318
+   },
+   "lineages": {
+    "all": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": -1
+  },
+  "F4": {
+   "estimate": 0.0782312925170068,
+   "ci95": [
+    0.048948771098608214,
+    0.11072664359861595
+   ],
+   "p": 0.0,
+   "rows": {
+    "all_answerable": 294
+   },
+   "lineages": {
+    "all_answerable": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F5": {
+   "estimate": 0.11564625850340138,
+   "ci95": [
+    0.07586206896551725,
+    0.15614617940199335
+   ],
+   "p": 0.0,
+   "rows": {
+    "all_answerable": 294
+   },
+   "lineages": {
+    "all_answerable": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F6": {
+   "estimate": 0.11564625850340138,
+   "ci95": [
+    0.07586206896551725,
+    0.15614617940199338
+   ],
+   "p": 0.0,
+   "rows": {
+    "all_answerable": 294
+   },
+   "lineages": {
+    "all_answerable": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F7": {
+   "estimate": 0.08695652173913043,
+   "ci95": [
+    0.0,
+    0.21739130434782608
+   ],
+   "p": 0.238,
+   "rows": {
+    "t6_unanswerable": 23
+   },
+   "lineages": {
+    "t6_unanswerable": 23
+   },
+   "p_holm": 0.238,
+   "verdict": "không đủ bằng chứng",
+   "predicted": 1
+  },
+  "F8": {
+   "estimate": -0.1368421052631579,
+   "ci95": [
+    -0.17375886524822695,
+    -0.10108208908288155
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 318
+   },
+   "lineages": {
+    "all": 156
+   },
+   "p_holm": null,
+   "verdict": "thăm dò",
+   "predicted": -1
+  }
+ }
+}

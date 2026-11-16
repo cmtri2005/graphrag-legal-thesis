@@ -1,0 +1,12 @@
+ADR 0005 · split test · 10,000 lần lấy mẫu lại · Holm trên 7/7 kiểm định
+Họ final (ADR 0006): công cụ chờ ADR được Accepted và commit; dev chỉ tập dượt.
+F8 (TVER) luôn ngoài Holm: kiểm nhất quán nội bộ, dùng chung cửa sổ đồ thị với gold.
+F1 RQ2: lai ghép: proposed2 − b4 · accuracy · all: +0.322 [+0.249; +0.396] p=0.0000 p_Holm=0.0000 → ủng hộ (all 211 dòng/103 lineage)
+F2 RQ2: đồ thị phi thời gian: proposed2 − b5 · accuracy · all: +0.303 [+0.232; +0.374] p=0.0000 p_Holm=0.0000 → ủng hộ (all 211 dòng/103 lineage)
+F3 RQ2: lỗi sai phiên bản: proposed2 − b4 · wrong_version · all: -0.261 [-0.322; -0.199] p=0.0000 p_Holm=0.0000 → ủng hộ (all 211 dòng/103 lineage)
+F4 RQ3: lọc văn bản: b7 − b2ctx · tv_recall@1 · all_answerable: +0.048 [+0.021; +0.080] p=0.0002 p_Holm=0.0006 → ủng hộ (all_answerable 187 dòng/103 lineage)
+F5 RQ3: phiên bản: b7plus − b7 · tv_recall@1 · all_answerable: +0.075 [+0.032; +0.122] p=0.0000 p_Holm=0.0000 → ủng hộ (all_answerable 187 dòng/103 lineage)
+F6 H0: truy xuất: b7pp − b7 · tv_recall@1 · all_answerable: +0.075 [+0.031; +0.122] p=0.0004 p_Holm=0.0008 → ủng hộ (all_answerable 187 dòng/103 lineage)
+F7 T6: không đáp án: proposed2 − b7pp · accuracy · t6_unanswerable: +0.043 [+0.000; +0.130] p=0.7130 p_Holm=0.7130 → không đủ bằng chứng (t6_unanswerable 23 dòng/23 lineage)
+F8 Nhất quán nội bộ: TVER: b7pp − b7 · tver · all: -0.261 [-0.308; -0.213] p=0.0000 p_Holm=— → thăm dò (all 211 dòng/103 lineage)
+-> runs/gold_fix_20261116/subset/confirm_r2.json

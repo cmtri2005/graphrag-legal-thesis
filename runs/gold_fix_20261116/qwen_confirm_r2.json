@@ -1,0 +1,539 @@
+{
+ "split": "test",
+ "draws": 10000,
+ "tests_run": 7,
+ "family": "final",
+ "family_size": 7,
+ "proposed": "proposed2",
+ "test_definitions": [
+  [
+   "F1",
+   "RQ2: lai ghép",
+   "paired",
+   "accuracy",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b4",
+    "proposed2"
+   ],
+   1
+  ],
+  [
+   "F2",
+   "RQ2: đồ thị phi thời gian",
+   "paired",
+   "accuracy",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b5",
+    "proposed2"
+   ],
+   1
+  ],
+  [
+   "F3",
+   "RQ2: lỗi sai phiên bản",
+   "paired",
+   "wrong_version",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b4",
+    "proposed2"
+   ],
+   -1
+  ],
+  [
+   "F4",
+   "RQ3: lọc văn bản",
+   "paired",
+   "tv_recall@1",
+   [
+    "all_answerable"
+   ],
+   "retrieval",
+   [
+    "b2ctx",
+    "b7"
+   ],
+   1
+  ],
+  [
+   "F5",
+   "RQ3: phiên bản",
+   "paired",
+   "tv_recall@1",
+   [
+    "all_answerable"
+   ],
+   "retrieval",
+   [
+    "b7",
+    "b7plus"
+   ],
+   1
+  ],
+  [
+   "F6",
+   "H0: truy xuất",
+   "paired",
+   "tv_recall@1",
+   [
+    "all_answerable"
+   ],
+   "retrieval",
+   [
+    "b7",
+    "b7pp"
+   ],
+   1
+  ],
+  [
+   "F7",
+   "T6: không đáp án",
+   "paired",
+   "accuracy",
+   [
+    "t6_unanswerable"
+   ],
+   "generation",
+   [
+    "b7pp",
+    "proposed2"
+   ],
+   1
+  ],
+  [
+   "F8",
+   "Nhất quán nội bộ: TVER",
+   "paired",
+   "tver",
+   [
+    "all"
+   ],
+   "generation",
+   [
+    "b7",
+    "b7pp"
+   ],
+   -1
+  ]
+ ],
+ "exploratory": [
+  "F8"
+ ],
+ "family_note": null,
+ "files": {
+  "generation/b4": {
+   "path": "runs/qwen_chutes_20261116/test/r2/b4.jsonl",
+   "sha256": "50a306d736e4fab6379dc7330c6a8cda139021dff6bfe509f997d8a7f555b459"
+  },
+  "generation/proposed2": {
+   "path": "runs/qwen_chutes_20261116/test/r2/proposed2.jsonl",
+   "sha256": "7f25fd5c7cb746e839eb9d44893445dd9942d5d240adc024000bae73ac05a3b1"
+  },
+  "generation/b5": {
+   "path": "runs/qwen_chutes_20261116/test/r2/b5.jsonl",
+   "sha256": "643fe88ff230540c8968acfbf7606f8933d5fb747126710fb7c849d7877b80d7"
+  },
+  "retrieval/b2ctx": {
+   "path": "runs/final_g4_20261112/retrieval/b2ctx.jsonl",
+   "sha256": "a765020c1b86b0ce4d3ccd80985b89a389121025afada851d5aab7d6dbc42a9a"
+  },
+  "retrieval/b7": {
+   "path": "runs/final_g4_20261112/retrieval/b7.jsonl",
+   "sha256": "9145487a50eb2160ee42185fddb264dd7768d5394935afbb6f6e9ba5041f1f56"
+  },
+  "retrieval/b7plus": {
+   "path": "runs/final_g4_20261112/retrieval/b7plus.jsonl",
+   "sha256": "2f87b3610494beac4aaa04815f557777042e1625ca544b909c640d297d8122c5"
+  },
+  "retrieval/b7pp": {
+   "path": "runs/final_g4_20261112/retrieval/b7pp.jsonl",
+   "sha256": "71c6625cc3bfafc0451993c6dfa3375ade306e2b39e37c4ab2536a083b0b7805"
+  },
+  "generation/b7pp": {
+   "path": "runs/qwen_chutes_20261116/test/r2/b7pp.jsonl",
+   "sha256": "28ecb77a3d68f41787e0b9cb631fd1fb9925030cba466025328b91eaf1e8e39e"
+  },
+  "generation/b7": {
+   "path": "runs/qwen_chutes_20261116/test/r2/b7.jsonl",
+   "sha256": "e785d4afa139649a4ce6c44eb6f8f79b9324f0aaf0c7a138bc6ec6c122b1bcd7"
+  },
+  "generation/b1": {
+   "path": "runs/qwen_chutes_20261116/test/r2/b1.jsonl",
+   "sha256": "3c88fac4cbe1d107cf0f7135f3dfb130cd1813104daa3d5526e2c6cbd41a1c37"
+  },
+  "generation/b2ctx": {
+   "path": "runs/qwen_chutes_20261116/test/r2/b2ctx.jsonl",
+   "sha256": "027f21d7757727e7cea6c9db6d49544124114f925a1846c19454cfeddf6df394"
+  },
+  "generation/b3": {
+   "path": "runs/qwen_chutes_20261116/test/r2/b3.jsonl",
+   "sha256": "2d137fa426f5ac102df848a75dd59edb0e0b9a4aa33d99061a8970a738202230"
+  },
+  "generation/b6": {
+   "path": "runs/qwen_chutes_20261116/test/r2/b6.jsonl",
+   "sha256": "26a59473b3d7e74c3ebaab461efd3984c8e5d73f927d9bed2eec4519604f9552"
+  },
+  "generation/b7plus": {
+   "path": "runs/qwen_chutes_20261116/test/r2/b7plus.jsonl",
+   "sha256": "f66323c0ecba0d61fe0f0ea40558e1f8f863a766a28d81d3b8b105d523a500ea"
+  },
+  "generation/bvdate": {
+   "path": "runs/qwen_chutes_20261116/test/r2/bvdate.jsonl",
+   "sha256": "5a5ec96820318d68c1180db6dace3853fae2f7a64ab7c5f97c6475685f6bde30"
+  },
+  "generation/bvnone": {
+   "path": "runs/qwen_chutes_20261116/test/r2/bvnone.jsonl",
+   "sha256": "efe9c782c04f3aefd891d52c12860dc8174642a21b7d55c53ce8979d0ccb1908"
+  },
+  "generation/lightrag": {
+   "path": "runs/qwen_chutes_20261116/test/r2/lightrag.jsonl",
+   "sha256": "ed3c51187e293f3a18d08c7c2da67690fc053da30bbf4352d3644683b7c5e181"
+  },
+  "generation/oracle": {
+   "path": "runs/qwen_chutes_20261116/test/r2/oracle.jsonl",
+   "sha256": "d5c16ccccbacf7f5f231772a9f4e4c2f78a41786dfffcaa10edebd1b2b2a7a44"
+  },
+  "generation/oracle_now": {
+   "path": "runs/qwen_chutes_20261116/test/r2/oracle_now.jsonl",
+   "sha256": "a5396bfa52398ab221851e453d00e2d5863d9d314a3d2cef28c599013458beb0"
+  }
+ },
+ "t1_no_harm": {
+  "delta": 0.05,
+  "rows": 43,
+  "lineages": 43,
+  "diff": {
+   "proposed2": {
+    "estimate": 0.046511627906976744,
+    "ci95": [
+     0.0,
+     0.11627906976744187
+    ],
+    "p": 0.2574,
+    "rows": {
+     "t1_control": 43
+    },
+    "lineages": {
+     "t1_control": 43
+    },
+    "verdict": "không làm hại"
+   },
+   "b7": {
+    "estimate": 0.046511627906976744,
+    "ci95": [
+     0.0,
+     0.11627906976744187
+    ],
+    "p": 0.2598,
+    "rows": {
+     "t1_control": 43
+    },
+    "lineages": {
+     "t1_control": 43
+    },
+    "verdict": "không làm hại"
+   },
+   "b7pp": {
+    "estimate": 0.046511627906976744,
+    "ci95": [
+     0.0,
+     0.11627906976744187
+    ],
+    "p": 0.2474,
+    "rows": {
+     "t1_control": 43
+    },
+    "lineages": {
+     "t1_control": 43
+    },
+    "verdict": "không làm hại"
+   }
+  },
+  "false_expired": {
+   "b1": {
+    "count": 1,
+    "rows": 43,
+    "rate": 0.023255813953488372,
+    "wilson95": [
+     0.004117087274333769,
+     0.12058993440607177
+    ]
+   },
+   "b2ctx": {
+    "count": 3,
+    "rows": 43,
+    "rate": 0.06976744186046512,
+    "wilson95": [
+     0.024011589577214484,
+     0.18608986901241975
+    ]
+   },
+   "b3": {
+    "count": 3,
+    "rows": 43,
+    "rate": 0.06976744186046512,
+    "wilson95": [
+     0.024011589577214484,
+     0.18608986901241975
+    ]
+   },
+   "b4": {
+    "count": 1,
+    "rows": 43,
+    "rate": 0.023255813953488372,
+    "wilson95": [
+     0.004117087274333769,
+     0.12058993440607177
+    ]
+   },
+   "b5": {
+    "count": 1,
+    "rows": 43,
+    "rate": 0.023255813953488372,
+    "wilson95": [
+     0.004117087274333769,
+     0.12058993440607177
+    ]
+   },
+   "b6": {
+    "count": 3,
+    "rows": 43,
+    "rate": 0.06976744186046512,
+    "wilson95": [
+     0.024011589577214484,
+     0.18608986901241975
+    ]
+   },
+   "b7": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   },
+   "b7plus": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   },
+   "b7pp": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   },
+   "bvdate": {
+    "count": 6,
+    "rows": 43,
+    "rate": 0.13953488372093023,
+    "wilson95": [
+     0.06555723427964878,
+     0.2726358796738286
+    ]
+   },
+   "bvnone": {
+    "count": 4,
+    "rows": 43,
+    "rate": 0.09302325581395349,
+    "wilson95": [
+     0.03677164063171276,
+     0.21602703641253587
+    ]
+   },
+   "lightrag": {
+    "count": 2,
+    "rows": 43,
+    "rate": 0.046511627906976744,
+    "wilson95": [
+     0.012849260094380227,
+     0.15455498004063967
+    ]
+   },
+   "oracle": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   },
+   "oracle_now": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   },
+   "proposed2": {
+    "count": 0,
+    "rows": 43,
+    "rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.08200980322579117
+    ]
+   }
+  }
+ },
+ "results": {
+  "F1": {
+   "estimate": 0.330188679245283,
+   "ci95": [
+    0.2798742138364779,
+    0.38125
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 318
+   },
+   "lineages": {
+    "all": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F2": {
+   "estimate": 0.33962264150943394,
+   "ci95": [
+    0.28706624605678244,
+    0.3925233644859813
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 318
+   },
+   "lineages": {
+    "all": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F3": {
+   "estimate": -0.3068181818181818,
+   "ci95": [
+    -0.3515646462912088,
+    -0.2623574144486692
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 318
+   },
+   "lineages": {
+    "all": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": -1
+  },
+  "F4": {
+   "estimate": 0.0782312925170068,
+   "ci95": [
+    0.048948771098608214,
+    0.11072664359861595
+   ],
+   "p": 0.0,
+   "rows": {
+    "all_answerable": 294
+   },
+   "lineages": {
+    "all_answerable": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F5": {
+   "estimate": 0.11564625850340138,
+   "ci95": [
+    0.07586206896551725,
+    0.15614617940199335
+   ],
+   "p": 0.0,
+   "rows": {
+    "all_answerable": 294
+   },
+   "lineages": {
+    "all_answerable": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F6": {
+   "estimate": 0.11564625850340138,
+   "ci95": [
+    0.07586206896551725,
+    0.15614617940199338
+   ],
+   "p": 0.0,
+   "rows": {
+    "all_answerable": 294
+   },
+   "lineages": {
+    "all_answerable": 156
+   },
+   "p_holm": 0.0,
+   "verdict": "ủng hộ",
+   "predicted": 1
+  },
+  "F7": {
+   "estimate": 0.08695652173913043,
+   "ci95": [
+    0.0,
+    0.21739130434782608
+   ],
+   "p": 0.238,
+   "rows": {
+    "t6_unanswerable": 23
+   },
+   "lineages": {
+    "t6_unanswerable": 23
+   },
+   "p_holm": 0.238,
+   "verdict": "không đủ bằng chứng",
+   "predicted": 1
+  },
+  "F8": {
+   "estimate": -0.12982456140350876,
+   "ci95": [
+    -0.16606498194945846,
+    -0.0944055944055944
+   ],
+   "p": 0.0,
+   "rows": {
+    "all": 318
+   },
+   "lineages": {
+    "all": 156
+   },
+   "p_holm": null,
+   "verdict": "thăm dò",
+   "predicted": -1
+  }
+ }
+}

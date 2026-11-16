@@ -1,0 +1,31 @@
+ADR 0005 · split test · 10,000 lần lấy mẫu lại · Holm trên 7/7 kiểm định
+Họ final (ADR 0006): công cụ chờ ADR được Accepted và commit; dev chỉ tập dượt.
+F8 (TVER) luôn ngoài Holm: kiểm nhất quán nội bộ, dùng chung cửa sổ đồ thị với gold.
+F1 RQ2: lai ghép: proposed2 − b4 · accuracy · all: +0.330 [+0.280; +0.381] p=0.0000 p_Holm=0.0000 → ủng hộ (all 318 dòng/156 lineage)
+F2 RQ2: đồ thị phi thời gian: proposed2 − b5 · accuracy · all: +0.340 [+0.287; +0.393] p=0.0000 p_Holm=0.0000 → ủng hộ (all 318 dòng/156 lineage)
+F3 RQ2: lỗi sai phiên bản: proposed2 − b4 · wrong_version · all: -0.307 [-0.352; -0.262] p=0.0000 p_Holm=0.0000 → ủng hộ (all 318 dòng/156 lineage)
+F4 RQ3: lọc văn bản: b7 − b2ctx · tv_recall@1 · all_answerable: +0.078 [+0.049; +0.111] p=0.0000 p_Holm=0.0000 → ủng hộ (all_answerable 294 dòng/156 lineage)
+F5 RQ3: phiên bản: b7plus − b7 · tv_recall@1 · all_answerable: +0.116 [+0.076; +0.156] p=0.0000 p_Holm=0.0000 → ủng hộ (all_answerable 294 dòng/156 lineage)
+F6 H0: truy xuất: b7pp − b7 · tv_recall@1 · all_answerable: +0.116 [+0.076; +0.156] p=0.0000 p_Holm=0.0000 → ủng hộ (all_answerable 294 dòng/156 lineage)
+F7 T6: không đáp án: proposed2 − b7pp · accuracy · t6_unanswerable: +0.087 [+0.000; +0.217] p=0.2380 p_Holm=0.2380 → không đủ bằng chứng (t6_unanswerable 23 dòng/23 lineage)
+F8 Nhất quán nội bộ: TVER: b7pp − b7 · tver · all: -0.130 [-0.166; -0.094] p=0.0000 p_Holm=— → thăm dò (all 318 dòng/156 lineage)
+T1 không làm hại (ADR 0006 §4, ngoài Holm, δ=0.05): 43 dòng/43 lineage
+  proposed2 − b2ctx · accuracy · t1_control: +0.047 [+0.000; +0.116] → không làm hại
+  b7 − b2ctx · accuracy · t1_control: +0.047 [+0.000; +0.116] → không làm hại
+  b7pp − b2ctx · accuracy · t1_control: +0.047 [+0.000; +0.116] → không làm hại
+  b1: 1/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.004–0.121)
+  b2ctx: 3/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.024–0.186)
+  b3: 3/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.024–0.186)
+  b4: 1/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.004–0.121)
+  b5: 1/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.004–0.121)
+  b6: 3/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.024–0.186)
+  b7: 0/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.000–0.082)
+  b7plus: 0/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.000–0.082)
+  b7pp: 0/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.000–0.082)
+  bvdate: 6/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.066–0.273)
+  bvnone: 4/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.037–0.216)
+  lightrag: 2/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.013–0.155)
+  oracle: 0/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.000–0.082)
+  oracle_now: 0/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.000–0.082)
+  proposed2: 0/43 dòng T1 trả HIỆU LỰC không (Wilson 95% 0.000–0.082)
+-> runs/gold_fix_20261116/qwen_confirm_r2.json
