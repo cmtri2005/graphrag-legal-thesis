@@ -9,8 +9,10 @@ R=data/vilextime_final/vilextime.jsonl; D=data/vilextime_final/internal
 P=(runs/final_g4_20261112/r1/prompts/*.jsonl runs/posthoc_g4_20261113/test/prompts/{bvnone,bvdate}.jsonl runs/lightrag_20261113/test/prompts/lightrag.jsonl)
 mkdir -p $O/raw; git rev-parse HEAD > $O/head.txt; date -u +%FT%TZ > $O/started_utc.txt
 for t in ${1:-r1 r2}; do for p in "${P[@]}"; do echo "=== api $t $(basename $p .jsonl) $(date -u +%T)"
-  $PY scripts/eval/api_generate.py --prompts $p --provider chutes --model $M --out-dir $O/raw --run-tag $t \
-    --temperature 0 --max-tokens 1024 --seed 20261109 --workers 6
+  for try in 1 2 3 4 5 6 7 8; do   # timeout của Chutes làm dừng cả lần chạy; chạy lại thì bỏ qua dòng đã xong
+    $PY scripts/eval/api_generate.py --prompts $p --provider chutes --model $M --out-dir $O/raw --run-tag $t \
+      --temperature 0 --max-tokens 1024 --seed 20261109 --workers 6 && break || { echo "retry $try"; sleep 20; }
+  done
 done; done
 for t in ${1:-r1 r2}; do mkdir -p $O/$t; done_=()
   for p in "${P[@]}"; do s=$(basename $p .jsonl)

@@ -1,0 +1,39 @@
+{
+  "system": "oracle_now",
+  "split": "test",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "022863695acf42f489bc72033f4b4b4ec79064827fc5a38fcf2feada8f459708",
+  "raw_file_sha256": "1007564899303ac09a5c5ef73c031572fb9a1c433a7ccf310ce5420696a25e82",
+  "model": "Qwen/Qwen3.8-27B-TEE",
+  "revision": "Qwen/Qwen3.8-27B-TEE",
+  "gpu": [
+    "api"
+  ],
+  "run_tag": null,
+  "served_models": {
+    "Qwen/Qwen3.8-27B-TEE": 361
+  },
+  "system_fingerprints": {
+    "None": 361
+  },
+  "rows": 361,
+  "format_ok": 347,
+  "truncated": 0,
+  "prompt_tokens_mean": 770.7036011080332,
+  "completion_tokens_mean": 75.87257617728532,
+  "generation_seconds": 1677.3145381980012,
+  "export": {
+    "system": "oracle_now",
+    "spec": null,
+    "split": "test",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": null,
+    "embed_sha256": null,
+    "rows": 361,
+    "release_sha256": "5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "022863695acf42f489bc72033f4b4b4ec79064827fc5a38fcf2feada8f459708"
+  }
+}

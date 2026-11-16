@@ -1,0 +1,15 @@
+{
+  "provider": "chutes",
+  "model": "Qwen/Qwen3.8-27B-TEE",
+  "temperature": 0.0,
+  "max_tokens": 1024,
+  "seed": 20261109,
+  "transport": "direct",
+  "system": "b3",
+  "split": "test",
+  "prompt_file_sha256": "c5bcdb3a25a72c6e86cab9349003e2998b48d57f75dec5906b853516f1ab8611",
+  "run_tag": "r1",
+  "commit": "e5430df4298f38799da4df8f7f3667418a59e5b1",
+  "uncommitted": true,
+  "started": "2026-11-16T13:52:47+00:00"
+}

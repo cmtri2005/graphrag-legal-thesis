@@ -1,0 +1,53 @@
+{
+  "system": "b6",
+  "split": "test",
+  "as_of_strategy": "giua_khoang",
+  "prompt_file_sha256": "dadeed4cb201beff0839d97ceb3f747ba42fb4ade3f4b525a07bf7f6943d63ef",
+  "raw_file_sha256": "31ff288ca0418d3ee60b1d2083396f5e9837f203f5bde664748d95dbad9f680a",
+  "model": "Qwen/Qwen3.8-27B-TEE",
+  "revision": "Qwen/Qwen3.8-27B-TEE",
+  "gpu": [
+    "api"
+  ],
+  "run_tag": null,
+  "served_models": {
+    "Qwen/Qwen3.8-27B-TEE": 361
+  },
+  "system_fingerprints": {
+    "None": 361
+  },
+  "rows": 361,
+  "format_ok": 303,
+  "truncated": 0,
+  "prompt_tokens_mean": 5018.847645429363,
+  "completion_tokens_mean": 74.37673130193906,
+  "generation_seconds": 2190.053454972998,
+  "export": {
+    "system": "b6",
+    "spec": {
+      "name": "b6",
+      "layer": "asis",
+      "lexical": true,
+      "dense": true,
+      "rerank": false,
+      "temporal": "none",
+      "context": true,
+      "expand": 1,
+      "expand_edges": "part",
+      "verify": "off",
+      "k": 20,
+      "note": "B6 — hierarchical legal KG, structure only",
+      "repeal_note": false
+    },
+    "split": "test",
+    "as_of_strategy": "giua_khoang",
+    "no_dense": false,
+    "hybrid": true,
+    "embed": "data/derived/embed/asis-vietnamese-embedding",
+    "embed_sha256": "3a8b143bd5e6307642b2f011020d3a7ed9b32599de7861ef992555343ee4915e",
+    "rows": 361,
+    "release_sha256": "5766f9162939bd7c37471d8b995b56b6b5dae0c0da11e52ff13d8030587e534c",
+    "corpus_manifest_sha256": "30d7bfe39c66f4a66017c12e348a51b10346f0f3171047f38f369ce8bba42a92",
+    "prompt_file_sha256": "dadeed4cb201beff0839d97ceb3f747ba42fb4ade3f4b525a07bf7f6943d63ef"
+  }
+}
