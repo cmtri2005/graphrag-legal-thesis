@@ -431,3 +431,4 @@ Hoàn tác: plan này chỉ thêm file và thư mục run mới. Xóa thư mục
 
 Chưa có.
 - [x] 16/11 CMT bỏ reranker (B2 từ bước 2): không chạy Qwen và GPT cho 4 ô, không lên bộ cuối. Giữ số truy xuất dev (`runs/rerank_pool_dev_20261115/`) và gói đã dựng (`runs/qwen_gen_rr_20261116/`, chưa chạy). Paper ghi vào giới hạn. Nháp amendment đã gỡ reranker.
+- [x] 16/11 CMT duyệt amendment gộp ("Chốt"); đã chép vào `docs/decisions/0006-*.md` (Amendment 2026-11-16). Cổng mở cho Qwen trên bộ cuối (15 hệ × 2 lần). B3, C2, reranker không làm.
