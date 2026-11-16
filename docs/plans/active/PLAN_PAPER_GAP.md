@@ -340,7 +340,7 @@ Viết **sau khi có số dev** của B1 và B2, duyệt **trước** khi chạm
 | # | Quyết định | Đề xuất | Chặn |
 |---|---|---|---|
 | Q1 | Ai đọc gold mù (không phải CMT)? Ai là người thứ hai? | **Chốt 15/11: NMT đọc chính (81 dòng).** Người thứ hai (30 dòng) chưa chọn; đề xuất luật sư hoặc một sinh viên luật | Người thứ hai chặn đồng thuận người–người |
-| Q2 | Mở lại reranker (đã cắt 05/11)? | **Chốt 15/11: mở lại.** Lý do mới: reviewer hỏi baseline yếu | — |
+| Q2 | Mở lại reranker (đã cắt 05/11)? | ~~Chốt 15/11: mở lại.~~ **Chốt 16/11: bỏ lại** (hết quota, ưu tiên việc chính). Giữ số truy xuất dev; ghi vào giới hạn của paper | — |
 | Q3 | Duyệt amendment gộp (mục 7) khi có số dev | Có | B1–B5 trên bộ cuối |
 | Q4 | Repo công khai đang chứa bản thảo có tên | Chuyển riêng tư đến 19/04/2027; hoặc ít nhất gỡ `docs/paper/` khỏi nhánh công khai. Hỏi GVHD | F2 |
 | Q5 | Nơi nộp | ICAIL bài dài. Ngày 10/01 chưa có A2 và B1 thì chuyển bài ngắn. GVHD chốt | WP-D |
@@ -430,3 +430,4 @@ Hoàn tác: plan này chỉ thêm file và thư mục run mới. Xóa thư mục
 ## Result
 
 Chưa có.
+- [x] 16/11 CMT bỏ reranker (B2 từ bước 2): không chạy Qwen và GPT cho 4 ô, không lên bộ cuối. Giữ số truy xuất dev (`runs/rerank_pool_dev_20261115/`) và gói đã dựng (`runs/qwen_gen_rr_20261116/`, chưa chạy). Paper ghi vào giới hạn. Nháp amendment đã gỡ reranker.
