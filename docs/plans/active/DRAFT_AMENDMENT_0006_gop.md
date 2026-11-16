@@ -72,8 +72,8 @@ Qwen, `all`, dev 151 dòng, r1 / r2 (KTC ghép cặp 95%, 10.000 lần):
 
 ### 9. Việc cho CMT chốt trước khi chép vào ADR
 1. Bộ cuối Qwen: chạy `bvdate`, `bvnone`, `lightrag` luôn (đề xuất: có, vì cùng prompt đã khóa).
-3. Giữ hay bỏ B3, và C2.
-4. Khóa luận đã đọc `b7plus − bvdate` = 0,245 như số chính; cần ghi rõ "GPT-4o mini" cạnh số đó.
+2. Giữ hay bỏ B3, và C2.
+3. Khóa luận đã đọc `b7plus − bvdate` = 0,245 như số chính; cần ghi rõ "GPT-4o mini" cạnh số đó.
 
 ### 10. Reranker: bỏ (CMT, 16/11/2026)
 Không đưa reranker lên bộ cuối. Lý do: hết quota, ưu tiên các việc chính. Đã có trên dev, **chỉ truy xuất** (chưa sinh): `AITeamVN/Vietnamese_Reranker` nâng MRR `b4` 0,536 → 0,696; TV-R@1 `b7plus − b4` 0,199 → 0,265 (`runs/rerank_pool_dev_20261115/`). Phần Qwen dev cho 4 ô đã dựng sẵn nhưng chưa chạy (`runs/qwen_gen_rr_20261116/`). Paper phải ghi trong giới hạn: "chưa so sánh với retriever có reranker trên bộ cuối; trên dev, khoảng cách truy xuất giữa lọc và không lọc không co lại khi thêm reranker".
