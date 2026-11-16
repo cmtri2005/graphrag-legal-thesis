@@ -32,4 +32,4 @@ Cách viết (evidence-gate): "với hai generator đã thử"; F1–F3 loại 0
 Bổ sung 16/11 (sau gate):
 - MRR, TV-R@1: chỉ phụ thuộc truy xuất. Prompt dùng lại của G4 nên trùng G4: `b4` MRR 0,445 / TV-R@1 0,164; `b7` 0,493 / 0,242; `b7plus` 0,456 / 0,336; `proposed2` 0,453 / 0,336; `bvnone`, `bvdate` 0,447 / 0,173.
 - Cặp oracle (Qwen): `oracle` 0,884 / 0,877, `oracle_now` 0,418 / 0,421 (GPT-4o mini: 0,956, 0,456). Trần của Qwen thấp hơn GPT-4o mini khoảng 0,07.
-- `ranh_gioi`: prompt bộ cuối chỉ gồm dòng `giua_khoang` (như G4); lát `ranh_gioi` có 0 dòng. Không có số Qwen cho `ranh_gioi` (B5 chưa chạy).
+- `ranh_gioi`: prompt bộ cuối chỉ gồm mốc `giua_khoang` (như G4), nên không có dự đoán cho mốc `ranh_gioi`. Scorer vẫn liệt kê 318 dòng gold của lát này với Accuracy 0,000 ở mọi hệ (cả G4): **đó không phải số đo**, không trích. Không có số Qwen cho `ranh_gioi` (B5 chưa chạy).
