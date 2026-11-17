@@ -66,12 +66,12 @@ Scorer không chấm dễ dãi (§6.6.5). Trên mẫu người chấm, `proposed
 
 ## 7.3. Điều chưa thể kết luận
 
-- **Tỷ lệ sai phiên bản theo người.** Phiếu người chấm 100 câu (§6.6.5) không hiện phiên bản khác. Phiếu chấm lại 33 câu có hiện mọi phiên bản đang chờ người chấm.
+- **Tỷ lệ sai phiên bản theo người.** Phiếu người chấm 100 câu (§6.6.5) không hiện phiên bản khác. Phiếu chấm lại 33 câu có hiện mọi phiên bản: 9/9 dòng scorer gắn cờ được chấm là sai phiên bản, mẫu nhỏ, người chấm là tác giả (§6.6.5).
 - **Vế LLM của RQ1:** mới có một LLM không truy xuất.
 - **Cơ cấu dữ liệu lệch đề cương:** T2 127 lineage, T6 23, T3 6, không có T5; cột T1 chờ amendment sửa đáp án ngắn.
-- **Thước đo chưa độc lập hoàn toàn.** Gold phiên bản lấy từ cùng đồ thị mà bộ lọc dùng; gold mù phủ 105/156 lineage, đa phần do đồng tác giả đọc, và chỉ trên các điều khoản kho đã thấy có thay đổi; TVER theo người chưa làm. Gold mù đợt 2 (A2) đồng thời là phép đối chiếu tay M2 mà đề cương hứa.
+- **Thước đo chưa độc lập hoàn toàn.** Gold phiên bản lấy từ cùng đồ thị mà bộ lọc dùng; gold mù phủ 105/156 lineage, đa phần do đồng tác giả đọc, và chỉ trên các điều khoản kho đã thấy có thay đổi; TVER theo người chưa làm. Gold mù đợt 2 (A2, 81 lineage) được dùng thay một phần phép đối chiếu tay M2; ít hơn 100 truy vấn đề cương nêu.
 - **Nhãn bộ cuối** là silver-AI có CMT duyệt, chưa có người độc lập kiểm. Đồng thuận AI–AI trước hòa giải AC1 0,608, dưới ngưỡng 0,80. Ca khó do agent `legal-adjudicator` chốt, CMT ủy quyền, chưa qua luật sư.
-- **Phạm vi:** một generator (GPT-4o mini); một nguồn dữ liệu (vbpl); chưa so với GraphRAG phi thời gian thật.
+- **Phạm vi:** họ xác nhận dùng một generator (GPT-4o mini), generator thứ hai chỉ thăm dò; một nguồn dữ liệu (vbpl); LightRAG chỉ so thăm dò, với kho nhỏ hơn và ngữ cảnh dài hơn (§6.6.6).
 - Lan truyền chưa có bằng chứng lợi ích, còn nhóm bãi bỏ đã có ở NitiBench+; đặc thù cần kiểm là lệnh ở văn bản khác và bãi bỏ qua nút cha của nguồn Việt Nam. Các tiền lệ gần về lợi ích lọc theo mốc gồm Prior, LawInForce-eCFR và NitiBench+ [@prior2026oldfriend] [@yao2026lawinforce] [@akarajaradwong2026nitibenchplus]. Khóa luận chỉ giữ luận điểm hẹp: phép đo trên pháp luật Việt Nam, hai nấc lọc ngày văn bản và khoảng phiên bản. Chưa có bằng chứng cho thứ tự công bố hoặc ưu thế chung; các nguồn bị chặn và phần chưa đọc vẫn có thể đổi cách định vị. [CẦN: đọc đủ các phần và phiên bản còn thiếu đã nêu trong chương tổng quan].
 <!-- nguồn: docs/plans/active/REFACTOR_PLAN.md; related_paper/notes/2026-11-05-doc-nguon-va-tinh-moi.md -->
 

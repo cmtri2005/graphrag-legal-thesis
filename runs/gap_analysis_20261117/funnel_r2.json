@@ -7,7 +7,8 @@
   "gold@1|dung|oracle_dung": 102,
   "gold@1|sai:noi_dung_khac|oracle_dung": 3,
   "gold@6-20|dung|oracle_dung": 32,
-  "gold_ngoai_top20|sai:noi_dung_khac|oracle_dung": 38,
+  "gold_ngoai_top20+co_cha|sai:noi_dung_khac|oracle_dung": 3,
+  "gold_ngoai_top20|sai:noi_dung_khac|oracle_dung": 35,
   "gold@6-20|dung|oracle_sai": 4,
   "gold@2-5|sai:noi_dung_khac|oracle_dung": 17,
   "gold_ngoai_top20|sai:noi_dung_khac|oracle_sai": 3,
@@ -29,7 +30,8 @@
    "gold@1|dung|oracle_dung": 90,
    "gold@1|sai:noi_dung_khac|oracle_dung": 2,
    "gold@6-20|dung|oracle_dung": 26,
-   "gold_ngoai_top20|sai:noi_dung_khac|oracle_dung": 32,
+   "gold_ngoai_top20+co_cha|sai:noi_dung_khac|oracle_dung": 3,
+   "gold_ngoai_top20|sai:noi_dung_khac|oracle_dung": 29,
    "gold@6-20|dung|oracle_sai": 4,
    "gold@2-5|sai:noi_dung_khac|oracle_dung": 12,
    "gold_ngoai_top20|sai:noi_dung_khac|oracle_sai": 2,
@@ -297,8 +299,12 @@
    "vilextime:T6:provision:b3ab65f0-2c7b-11f1-8b12-cbbbb78c251b:2015-07-23",
    "vilextime:T6:provision:f01b7674-1d8a-11f1-aebe-379b00ea2e21:2018-07-05"
   ],
-  "gold_ngoai_top20|sai:noi_dung_khac|oracle_dung": [
+  "gold_ngoai_top20+co_cha|sai:noi_dung_khac|oracle_dung": [
    "vilextime:T2:provision:214408b0-df3d-11f0-b0cd-c715febddaca#k1#a:2019-09-14",
+   "vilextime:T2:provision:ddf875f6-e152-11f0-b025-af404701d747#k3#b:2008-06-25",
+   "vilextime:T2:provision:ddf875f6-e152-11f0-b025-af404701d747#k3#b:2013-09-25"
+  ],
+  "gold_ngoai_top20|sai:noi_dung_khac|oracle_dung": [
    "vilextime:T2:provision:21ca0f0c-eb70-11f0-85ca-a10d0270e110#k1:2017-02-04",
    "vilextime:T2:provision:21ca0f0c-eb70-11f0-85ca-a10d0270e110#k1:2019-12-15",
    "vilextime:T2:provision:26f8f0b0-1dde-11f1-bb3d-7bd9a7e477b5:2018-03-04",
@@ -325,8 +331,6 @@
    "vilextime:T2:provision:a3183440-21ac-11f1-aefb-d18bdd5a5126:2017-01-12",
    "vilextime:T2:provision:a3183440-21ac-11f1-aefb-d18bdd5a5126:2023-10-07",
    "vilextime:T2:provision:b8681680-2ac1-11f1-a61e-dd5381086c63:2025-09-22",
-   "vilextime:T2:provision:ddf875f6-e152-11f0-b025-af404701d747#k3#b:2008-06-25",
-   "vilextime:T2:provision:ddf875f6-e152-11f0-b025-af404701d747#k3#b:2013-09-25",
    "vilextime:T2:provision:ea1e8fe0-2c85-11f1-90e2-cb5f8b4211e0:2018-01-26",
    "vilextime:T2:provision:ea1e8fe0-2c85-11f1-90e2-cb5f8b4211e0:2024-03-02",
    "vilextime:T2:provision:eb4c1020-2d45-11f1-aaae-d517cf429e25:2021-06-23",

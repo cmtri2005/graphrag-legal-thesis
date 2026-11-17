@@ -18,15 +18,15 @@ Phễu lỗi của `proposed2`, lát `all`, 318 dòng, lần 1 [XM]. Script: `ru
 | Dòng không có đáp án (T6, đã bãi bỏ) | 23 | 16 | 30% |
 | **Tổng** | **318** | **106** | **66,7%** |
 
-Khoảng 92 dòng oracle đúng mà hệ sai. Chia theo nguyên nhân:
+`oracle` đúng mà hệ sai ở 96 dòng (ngược lại 4; hiệu ròng 92; lần 2: 98). Chia theo nguyên nhân (sửa theo evidence-gate 17/11):
 
-1. **Truy xuất hụt hẳn (khoảng 41 dòng, gần một nửa khoảng cách).** Bản gold không nằm trong top 20, kể cả khi bộ lọc đã loại hết bản không hiệu lực. Chỉ 3/48 dòng có điều/khoản cha nằm trong top 20, nên phần lớn không phải lỗi chọn sai cấp (khoản thay vì điểm). Nguyên nhân [SL]:
+1. **Truy xuất hụt hẳn (41 dòng).** Bản gold không nằm trong top 20, kể cả khi bộ lọc đã loại hết bản không hiệu lực. Chỉ 3/41 dòng có điều/khoản cha nằm trong top 20, nên phần lớn không phải lỗi chọn sai cấp (khoản thay vì điểm). Nguyên nhân [SL]:
    - Câu hỏi do LLM viết theo luật "không nhắc thời gian, diễn đạt lại thành tình huống" (`prompts/vilextime/base.md`). Từ ngữ của câu hỏi vì vậy xa lời văn điều khoản.
    - Kho có khoảng 1,48 triệu đơn vị, rất nhiều điều khoản cùng mẫu câu ("Hồ sơ gồm…", "Trong thời hạn … ngày làm việc").
    - Trên dev, gold nằm trong top 100 ở 96–100% dòng T2 (`runs/rerank_pool_dev_20261115/`). Vậy phần lớn gold có trong vùng ứng viên nhưng bị xếp dưới hạng 20. Đây vẫn là xếp hạng, nhưng ở bước truy xuất đầu, không phải chọn giữa các bản.
-2. **Có gold nhưng bị nhiễu (37 dòng có gold ở hạng 2–20 và oracle đúng).** Tỷ lệ đúng giảm dần khi gold xuống hạng: 95% → 79% → 59%. Model lấy nhầm khoản anh em hoặc câu chung chung của cùng văn bản. Ví dụ: hỏi chủ thể lập báo cáo tháng về cung cấp điện, model trả lời công ty điện lực tỉnh thay vì đơn vị điều độ.
-3. **Không nhận ra điều khoản đã bãi bỏ (16 dòng).** Đây không phải lỗi xếp hạng: hệ vẫn trả lời thay vì nói "đã hết hiệu lực". Kiểm F7 không đủ bằng chứng.
-4. **Đưa đúng hạng 1 mà vẫn sai (khoảng 5 dòng)**, cộng một phần do scorer quá chặt. Ví dụ "07 ngày" và "7 ngày", "02 bộ" và "02 bộ hồ sơ". Chấm tay 14/11 cho thấy cả 4/100 dòng lệch đều là scorer chấm sai một câu đúng. Vì vậy 0,667 có thể **thấp hơn thực tế** khoảng 0–4 điểm [SL].
+2. **Có gold nhưng trả lời sai (37 dòng có gold ở hạng 2–20 và oracle đúng: 34 nội dung khác, 2 sai phiên bản, 1 từ chối).** Tỷ lệ đúng giảm dần khi gold xuống hạng: 95% → 79% → 59%. Model lấy nhầm khoản anh em hoặc câu chung chung của cùng văn bản. Ví dụ: hỏi chủ thể lập báo cáo tháng về cung cấp điện, model trả lời công ty điện lực tỉnh thay vì đơn vị điều độ.
+3. **Không nhận ra điều khoản đã bãi bỏ (15 dòng oracle đúng; 16 dòng hệ sai).** Đây không phải lỗi xếp hạng: hệ vẫn trả lời thay vì nói "đã hết hiệu lực". Kiểm F7 không đủ bằng chứng.
+4. **Đưa đúng hạng 1 mà vẫn sai (3 dòng oracle đúng)**, cộng một phần có thể do scorer quá chặt. Ví dụ "07 ngày" và "7 ngày", "02 bộ" và "02 bộ hồ sơ". Chấm tay 14/11 có 4/100 dòng lệch (scorer chấm sai một câu người cho là đúng), nhưng phiếu 33 câu đảo một trong 4 dòng đó, và riêng `proposed2` chỉ lệch 1/33. Độ lệch riêng cho `proposed2` chưa đo [SL].
 
 **Hướng xử lý (chưa làm):** reranker (đã bỏ 16/11 vì hết quota; trên dev MRR `b4` tăng từ 0,536 lên 0,696); đưa ít đoạn hơn khi điểm cao; bước kiểm bãi bỏ riêng cho T6. Nếu làm, phải khai là hậu nghiệm.
 

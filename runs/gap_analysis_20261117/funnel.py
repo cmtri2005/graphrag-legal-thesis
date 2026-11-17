@@ -28,6 +28,10 @@ for r in rows:
     else:
         k = rank(r, p)
         pos = "gold@1" if k == 1 else "gold@2-5" if k and k <= 5 else "gold@6-20" if k else "gold_ngoai_top20"
+        if not k:  # điều/khoản cha của gold có trong prompt? (đơn vị truy xuất là tiền tố tổ tiên của lineage gold)
+            g = r["lineage_id"].split(":", 1)[1]
+            if any(g.startswith(u.split(":", 1)[1].rsplit(":", 1)[0] + "#") for u in p.get("retrieved") or []):
+                pos += "+co_cha"
         if ok: why = "dung"
         elif p.get("answerable") is False: why = "sai:tu_choi"
         elif r["_distractors"] and any(f" {s} " in f" {sv.norm(p.get('answer'))} " for s in r["_distractors"]): why = "sai:sai_phien_ban"
