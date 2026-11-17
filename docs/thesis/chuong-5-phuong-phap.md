@@ -159,7 +159,7 @@ Trong cấu hình đề xuất, truy xuất, mở rộng và Verifier dùng cùn
 
 ## 5.8. Điều kiện so sánh công bằng và khả năng tái lập
 
-Mỗi dự đoán giữ ID dòng, câu trả lời, cờ hiệu lực, trích dẫn và danh sách căn cứ. Provenance bổ sung cấu hình, mã băm release, prompt, raw và revision model. Các cấu hình được thử trên dev trước khi chạy test; không thay metric khi nhìn thấy kết quả. Cùng engine và prompt làm giảm khác biệt ngoài biến đang nghiên cứu, nhưng không bảo đảm rằng một generator duy nhất là baseline mạnh cho mọi loại câu hỏi.
+Mỗi dự đoán giữ ID dòng, câu trả lời, cờ hiệu lực, trích dẫn và danh sách căn cứ. Provenance bổ sung cấu hình, mã băm release, prompt, raw và revision model. Các cấu hình được thử trên dev trước khi chạy test; không thay metric khi nhìn thấy kết quả. Cùng engine và prompt làm giảm khác biệt ngoài biến đang nghiên cứu, nhưng không bảo đảm rằng một generator duy nhất (trong họ xác nhận) là baseline mạnh cho mọi loại câu hỏi.
 <!-- nguồn: scripts/eval/run_vilextime.py -->
 <!-- nguồn: runs/E3_v1/test/proposed.run.json -->
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->

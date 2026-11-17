@@ -50,4 +50,16 @@ Phạm vi: `git diff fecae0b..3a16e5c -- docs/thesis`; phân tích `51123d4` (`r
 
 - **Đã sửa:** F1–F6; m1 (`funnel.py` thêm `+co_cha`, chạy lại r1/r2: 3/41 ở cả hai lần); m2–m11, m13–m15; NGUYEN_NHAN §1.
 - **Chưa làm:** m12, vì không có file gate cũ để thêm.
-- Chờ gate chạy lại trên phần đã sửa.
+## Lượt 2: FAIL, rồi sửa
+
+- F1–F6 PASS. `funnel.py` mới tái lập trùng từng byte; r1 3/41, r2 3/42.
+- `a4c3028` không có câu vượt bằng chứng. Vế "để dồn giờ người" không có căn cứ trong repo, nên đã bỏ.
+- Còn 7 chỗ lỗi thời hoặc mâu thuẫn. Đã sửa cả 7:
+  - LightRAG "chưa qua gate";
+  - §6.7 độ tin của scorer;
+  - 96/100 ở Ch7 (hai chỗ), Ch6, Ch1, nay kèm 92/100 theo phiếu chấm lại;
+  - Ch6 "lần chạy duy nhất";
+  - Ch7 "TVER theo người chưa làm";
+  - phụ lục AI "chỉ một generator";
+  - Ch5 "một generator duy nhất".
+- Gate ghi: sửa xong các mục này thì phần trong phạm vi đủ điều kiện PASS. Không chạy lượt 3.

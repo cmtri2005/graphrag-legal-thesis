@@ -30,12 +30,12 @@ V1.0 được khai là bản xác nhận lần 1 trong ADR 0005; amendment 03/11
 TVER tự động đọc `effective_intervals` của cùng đồ thị mà bộ lọc và gold sử dụng; gold mù của một dòng chỉ kiểm phiên bản đích, không kiểm mọi trích dẫn hệ trả về. Vì thế không gọi việc chấm lại dòng gold mù là “TVER độc lập”. Theo hướng xử lý đã chấp nhận, XN2 được đưa ra khỏi họ xác nhận của bộ cuối, giữ như kiểm nhất quán nội bộ; giả thuyết đề cương được quyết bằng TV-Recall của XN1 sau amendment. Phán quyết XN2 lịch sử vẫn giữ nguyên nhãn lịch sử.
 <!-- nguồn: scripts/eval/score_vilextime.py, row_scores và units_of; runs/x4_verifier_dev/report.json; docs/plans/active/master-plan.md, xử lý C1 -->
 
-TVER được báo theo đúng định nghĩa của đề cương: tỷ lệ câu trả lời dùng trích dẫn không còn hiệu lực. Kế hoạch từng thêm một phép đo phụ, TVER theo người: rút khoảng 100 đơn vị được trích, người đọc văn bản gốc mà không thấy cửa sổ đồ thị. **Phép đo này không làm** (CMT quyết 17/11), để dồn giờ người cho gold mù và kiểm nhãn. Vì vậy TVER trong khóa luận chỉ là kiểm nhất quán nội bộ với kho. Tính đúng luật được kiểm gián tiếp qua gold mù người trên 105/156 lineage và luật sư đọc 30 dòng (§6.6.4); hai phép này kiểm đáp án đúng, không kiểm từng trích dẫn của hệ.
+TVER được báo theo đúng định nghĩa của đề cương: tỷ lệ câu trả lời dùng trích dẫn không còn hiệu lực. Kế hoạch từng thêm một phép đo phụ, TVER theo người: rút khoảng 100 đơn vị được trích, người đọc văn bản gốc mà không thấy cửa sổ đồ thị. **Phép đo này không làm** (CMT quyết 17/11). Vì vậy TVER trong khóa luận chỉ là kiểm nhất quán nội bộ với kho. Tính đúng luật được kiểm gián tiếp qua gold mù người trên 105/156 lineage và luật sư đọc 30 dòng (§6.6.4); hai phép này kiểm đáp án đúng, không kiểm từng trích dẫn của hệ.
 <!-- nguồn: docs/plans/active/master-plan.md, xử lý C1 và việc người thêm -->
 
 ### Bộ test cuối: thiết kế đã khóa
 
-Thiết kế cho bộ test cuối được khóa trong ADR 0006, Accepted ở commit `ac32a89` ngày 12/11/2026, trước lần chạy duy nhất (G4, 12–13/11). ADR ghi rõ các vòng thử đã thấy (v1.0, test 2, dev). Hệ đề xuất P là `proposed2`; generator GPT-4o mini khóa theo ADR 0004.
+Thiết kế cho bộ test cuối được khóa trong ADR 0006, Accepted ở commit `ac32a89` ngày 12/11/2026, trước đợt chạy G4 (hai lần r1, r2, bắt đầu 14:08 UTC 12/11). ADR ghi rõ các vòng thử đã thấy (v1.0, test 2, dev). Hệ đề xuất P là `proposed2`; generator GPT-4o mini khóa theo ADR 0004.
 <!-- nguồn: docs/decisions/0006-*.md, §2, §3, §8 -->
 
 Họ xác nhận gồm bảy kiểm định, Holm α = 0,05, bootstrap theo cụm lineage B = 10.000:
@@ -62,7 +62,7 @@ Quy tắc cho H0 theo F6, khóa trước khi chạy (ADR 0006 §6). Hai vòng th
 | Ủng hộ | Điểm quyết định B7 | **Ủng hộ, cả hai lần** | Ủng hộ, kèm ghi chú lần lặp test 2 không đủ bằng chứng |
 <!-- nguồn: runs/E3_v1/test/confirm.log; runs/E3_test2/rescore/confirm.log; runs/final_g4_20261112/compare_runs.json; docs/decisions/0006-*.md §6 -->
 
-Các chỉ số Recall@k, MRR, TV-Recall, Accuracy, EM/F1, TVER, VCR và TCS lấy từ scorer. Không dùng giám khảo LLM: phiếu người chấm 100 câu (§6.6.5) cho Accuracy của scorer khớp người 96/100, không dương giả.
+Các chỉ số Recall@k, MRR, TV-Recall, Accuracy, EM/F1, TVER, VCR và TCS lấy từ scorer. Không dùng giám khảo LLM: phiếu người chấm 100 câu (§6.6.5) cho Accuracy của scorer khớp người 96/100 (92/100 theo phiếu chấm lại, §6.6.5), không dương giả.
 
 ## 6.2. Vòng thử v1.0 — nhãn hỗn hợp người và agent
 
@@ -598,7 +598,7 @@ Mẫu nhỏ và không mù với câu hỏi. Số này cho thấy cờ không b�
 
 MRR gần như không đổi giữa RAG lai ghép phẳng và hệ có lọc phiên bản, trong khi TCS tăng từ khoảng 0,07 lên 0,65. MRR chấp nhận mọi phiên bản của đúng điều khoản, nên không thấy lỗi lấy nhầm bản.
 
-**LightRAG thật** (thăm dò, amendment ADR 0006 ngày 15/11, sau khi đã thấy bộ cuối; số chưa qua evidence-gate riêng). Ba chỗ không ngang hàng nêu ở §2.2.3 phải đọc kèm. Ngoài ra, đồ thị LightRAG dùng embedding `AITeamVN/Vietnamese_Embedding` (các hệ khác dùng `dangvantuan`), truy vấn của LightRAG có kèm ngày, và lần 2 dừng ở 268/361 câu vì hết credit rồi chạy tiếp.
+**LightRAG thật** (thăm dò, amendment ADR 0006 ngày 15/11, sau khi đã thấy bộ cuối; số đã chấm lại từ dự đoán đã lưu và khớp từng byte ở evidence-gate 17/11). Ba chỗ không ngang hàng nêu ở §2.2.3 phải đọc kèm. Ngoài ra, đồ thị LightRAG dùng embedding `AITeamVN/Vietnamese_Embedding` (các hệ khác dùng `dangvantuan`), truy vấn của LightRAG có kèm ngày, và lần 2 dừng ở 268/361 câu vì hết credit rồi chạy tiếp.
 
 | Hệ | Accuracy lần 1 [KTC 95%] | Lần 2 | Sai phiên bản (lần 1 / 2) | TCS (lần 1 / 2) |
 |---|---|---|---|---|
@@ -640,7 +640,7 @@ Các lượt Colab đợt 2 cho vòng thử cũ (v1.0, test 2) không chạy n�
 **Gold tự chấm và TVER do cách dựng.** Gold phiên bản lấy từ cùng đồ thị mà bộ lọc `b7pp` sử dụng; khi sự kiện bị bỏ sót, cả hai có thể cùng sai. TVER = 0 của `b7pp` phần lớn do cách dựng: bộ lọc đã loại phiên bản không hợp lệ theo chính khoảng hiệu lực mà scorer tham chiếu. Nó kiểm được tính nhất quán trong mô hình, chưa xác nhận độc lập độ đúng pháp lý. Bảng TVER phải đọc cùng gold mù, độ phủ trích dẫn và khả năng trả lời dòng bãi bỏ. TVER theo người không làm (§6.1).
 <!-- nguồn: docs/plans/active/master-plan.md, D2; src/vilexgraph/framework/temporal.py; scripts/eval/score_vilextime.py -->
 
-**Độ tin của scorer.** Người chấm 100 câu cho thấy Accuracy của scorer khớp người 96/100 và không có dương giả (§6.6.5). Mẫu không có T1 và chỉ có lần 1. Phiếu không hiện phiên bản khác nên không xác nhận hay bác được `wrong_version`; F3 và các số sai phiên bản là theo scorer.
+**Độ tin của scorer.** Người chấm 100 câu cho thấy Accuracy của scorer khớp người 96/100, không có dương giả (§6.6.5); với nhãn phiếu thứ hai cho 33 câu, độ khớp là 92/100, và cùng người chấm đổi đúng/sai ở 6/33 dòng. Mẫu không có T1 và chỉ có lần 1. Phiếu thứ hai hiện mọi phiên bản: 9/9 dòng gắn cờ là sai phiên bản (mẫu nhỏ); tỷ lệ sai phiên bản và F3 vẫn theo scorer.
 <!-- nguồn: runs/posthoc_g4_20261113/human_score/agreement.json -->
 
 **Giới hạn thành phần.** Các so sánh `proposed` trong vòng thử chỉ đo mở rộng quan hệ một bước cùng Verifier trên đường từ vựng; không suy ra “đồ thị không giúp” cho mọi GraphRAG. `proposed2` chưa được đánh giá câu trả lời. Chuyển từ kết quả một bước sang kết luận về suy luận đồ thị nhiều bước sẽ vượt phạm vi thực nghiệm.
