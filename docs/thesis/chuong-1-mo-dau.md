@@ -100,7 +100,7 @@ Các lệch bổ sung so với đề cương và định nghĩa cần công bố
 | 1.100–1.300 câu hỏi kiểm thủ công | Hiện đếm nhiều cặp câu hỏi–mốc và tầng nhãn; mọi tầng có 515 lineage chưa tính T5: test v1.0 165, dev 81, test 2 101, silver 168; không phải 515 câu người kiểm đạt |
 | LLM chỉ hỗ trợ diễn đạt | Thực tế model viết nháp, Claude chọn span đáp án (tiêu chí chấm), agent kiểm phần test, và LLM lọc trước khi đưa người; có thiên lệch chọn mẫu |
 | Bốn miền tiêu biểu | Test v1.0 có 136/211 dòng `khac`, silver 243/389; đất đai ở test chỉ 5 dòng/3 lineage; kho rộng không có nghĩa đánh giá cân bằng bốn miền |
-| Chỉ số đề cương | TCS, VCR, MRR, EM/F1 bổ sung mô tả ở Chương 6; LLM-judge chưa có điểm hiệu chuẩn hợp lệ |
+| Chỉ số đề cương | TVER, VCR, TCS, MRR, EM/F1 báo ở Chương 6; TVER chỉ do máy tính, dùng chung kho với bộ lọc, TVER theo người không làm. LLM-as-judge không dùng: thay bằng người chấm 100 câu, scorer khớp người 96/100 (§6.6.5) |
 | L4 lọc trước truy xuất | `rel_up` lấy seed trước bộ lọc ngày để tìm lệnh tác động rồi lọc văn bản lệnh; lệch thứ tự cam kết |
 <!-- nguồn: docs/vilextime-dinh-nghia.md, mục 11; docs/DeCuongKLTN_23521635_23521643_UIT.docx; data/vilextime_dataset/vilextime.jsonl; data/vilextime/test2_release_v2.jsonl; data/vilextime_dataset/vilextime_silver.jsonl; data/vilextime_dataset/vilextime_meta.jsonl; runs/domain_e3/report.json; src/vilexgraph/framework/graphx.py; docs/vilextime-datasheet.md -->
 

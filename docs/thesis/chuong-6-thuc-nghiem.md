@@ -30,7 +30,7 @@ V1.0 được khai là bản xác nhận lần 1 trong ADR 0005; amendment 03/11
 TVER tự động đọc `effective_intervals` của cùng đồ thị mà bộ lọc và gold sử dụng; gold mù của một dòng chỉ kiểm phiên bản đích, không kiểm mọi trích dẫn hệ trả về. Vì thế không gọi việc chấm lại dòng gold mù là “TVER độc lập”. Theo hướng xử lý đã chấp nhận, XN2 được đưa ra khỏi họ xác nhận của bộ cuối, giữ như kiểm nhất quán nội bộ; giả thuyết đề cương được quyết bằng TV-Recall của XN1 sau amendment. Phán quyết XN2 lịch sử vẫn giữ nguyên nhãn lịch sử.
 <!-- nguồn: scripts/eval/score_vilextime.py, row_scores và units_of; runs/x4_verifier_dev/report.json; docs/plans/active/master-plan.md, xử lý C1 -->
 
-TVER theo người là phép đo riêng còn chờ: lấy khoảng 100 đơn vị thực sự được trích từ các hệ, người đọc nguồn gốc và mốc hỏi mà không thấy cửa sổ đồ thị, kết luận còn hiệu lực hay không. Báo mẫu số, tỷ lệ sai, Wilson và phụ thuộc do cùng lineage; không thay bằng gold phiên bản. [CHỜ G4: phiếu, kết quả và khoảng Wilson của TVER theo người].
+TVER được báo theo đúng định nghĩa của đề cương: tỷ lệ câu trả lời dùng trích dẫn không còn hiệu lực. Kế hoạch từng thêm một phép đo phụ, TVER theo người: rút khoảng 100 đơn vị được trích, người đọc văn bản gốc mà không thấy cửa sổ đồ thị. **Phép đo này không làm** (CMT quyết 17/11), để dồn giờ người cho gold mù và kiểm nhãn. Vì vậy TVER trong khóa luận chỉ là kiểm nhất quán nội bộ với kho. Tính đúng luật được kiểm gián tiếp qua gold mù người trên 105/156 lineage và luật sư đọc 30 dòng (§6.6.4); hai phép này kiểm đáp án đúng, không kiểm từng trích dẫn của hệ.
 <!-- nguồn: docs/plans/active/master-plan.md, xử lý C1 và việc người thêm -->
 
 ### Bộ test cuối: thiết kế đã khóa
@@ -624,7 +624,8 @@ Các phép so này đều ngoài họ Holm, không đổi phán quyết F1–F7.
 | Đáp án ngắn T1 | Chưa sửa; cần amendment |
 | Gold mù người | Xong 105/156 lineage, gồm 23 T6 (§6.6.4); 51 lineage còn lại đã bị người gán A thấy đáp án, không đọc mù được |
 | Người thứ hai kiểm nhãn (A3) | Chưa làm |
-| TVER theo người, E7 mã hóa lỗi bằng người | Chờ CMT quyết làm hay ghi "không làm" |
+| TVER theo người | Không làm (CMT, 17/11) |
+| E7 mã hóa lỗi bằng người | Chờ CMT quyết làm hay ghi "không làm" |
 | LightRAG thật | Xong, thăm dò (§6.6.6) |
 | Generator thứ hai | Xong, Qwen3.8-27B, thăm dò (§6.6.6) |
 | Reranker | Không làm (CMT, 16/11); số truy xuất dev giữ ở `runs/rerank_pool_dev_20261115/` |
@@ -633,7 +634,7 @@ Các lượt Colab đợt 2 cho vòng thử cũ (v1.0, test 2) không chạy n�
 
 ## 6.7. Mối đe dọa tính hợp lệ
 
-**Gold tự chấm và TVER do cách dựng.** Gold phiên bản lấy từ cùng đồ thị mà bộ lọc `b7pp` sử dụng; khi sự kiện bị bỏ sót, cả hai có thể cùng sai. TVER = 0 của `b7pp` phần lớn do cách dựng: bộ lọc đã loại phiên bản không hợp lệ theo chính khoảng hiệu lực mà scorer tham chiếu. Nó kiểm được tính nhất quán trong mô hình, chưa xác nhận độc lập độ đúng pháp lý. Bảng TVER phải đọc cùng gold mù, độ phủ trích dẫn và khả năng trả lời dòng bãi bỏ. [CHỜ G4: TVER theo người trên các đơn vị được trích, không đồng nhất với gold mù phiên bản].
+**Gold tự chấm và TVER do cách dựng.** Gold phiên bản lấy từ cùng đồ thị mà bộ lọc `b7pp` sử dụng; khi sự kiện bị bỏ sót, cả hai có thể cùng sai. TVER = 0 của `b7pp` phần lớn do cách dựng: bộ lọc đã loại phiên bản không hợp lệ theo chính khoảng hiệu lực mà scorer tham chiếu. Nó kiểm được tính nhất quán trong mô hình, chưa xác nhận độc lập độ đúng pháp lý. Bảng TVER phải đọc cùng gold mù, độ phủ trích dẫn và khả năng trả lời dòng bãi bỏ. TVER theo người không làm (§6.1).
 <!-- nguồn: docs/plans/active/master-plan.md, D2; src/vilexgraph/framework/temporal.py; scripts/eval/score_vilextime.py -->
 
 **Độ tin của scorer.** Người chấm 100 câu cho thấy Accuracy của scorer khớp người 96/100 và không có dương giả (§6.6.5). Mẫu không có T1 và chỉ có lần 1. Phiếu không hiện phiên bản khác nên không xác nhận hay bác được `wrong_version`; F3 và các số sai phiên bản là theo scorer.
