@@ -390,7 +390,7 @@ Hoàn tác: plan này chỉ thêm file và thư mục run mới. Xóa thư mục
 
 - [x] 15/11 Rà hiện trạng, lập plan.
 - [x] 15/11 Q1 (người đọc chính: NMT), Q2 (mở lại reranker): CMT chốt. Còn Q3–Q7 và người đọc thứ hai.
-- [ ] A1 Chấm phiếu 33 câu. 16/11 CMT đã giao team gán (`recheck_versions/phieu.xlsx`), đang chờ file trả. Khi báo: ghi đúng ai chấm; câu caveat "người chấm là tác giả" trong `manifest.json` chỉ đúng nếu người chấm là CMT.
+- [x] 17/11 A1 team trả phiếu 33/33 (`recheck_versions/phieu_da_cham.xlsx`), mở khóa bằng `scripts/review/version_recheck_score.py` → `runs/version_recheck_20261117/agreement.json`. Cờ `wrong_version` đúng 9/9 (Wilson [0,70; 1,00]); 24 dòng `b1` không cờ: người chấm 2 `sai_phien_ban`, 17 `sai_noi_dung`, 5 `dung` (5 dòng `dung` lệch nhãn phiếu 1.5). Còn: ghi tên người chấm và có AI nháp không vào `note`; evidence-gate; sửa câu "wrong-version rates remain scorer-based" trong paper.
 - [x] 15/11 A2 dựng phiếu: `data/review/gold_final/` (commit `afd6bd4`). `independent_gold.py` thêm `--release`, cỡ riêng từng tầng, `--solo`; test mới; 788 test qua. Đã kiểm: 81 dòng A, 30 dòng B nằm trong A, 23 dòng T6 đều là dòng sau bãi bỏ, 0 lineage trùng gold đợt 1 hay danh sách đã thấy, 0 ô chứa đáp án của kho, `reveal` chạy thử trên bản sao.
 - [ ] A2 NMT đọc / người thứ hai đọc / phân xử / tính lại F1–F6.
 - [x] 15/11 A2: NMT đọc mù 81/81 và tự đối chiếu sau khi mở khóa. Hiệu lực khớp kho 80/81; kho đúng 79/81 (2 dòng T2 `kg_missed_amendment`, 1 dòng T6 `annotator_error`); T6 23/23. Cột `ly_do` chuyển về mã theo CMT duyệt. F1–F7 trên 103 lineage có gold người (bỏ 2 lineage kho sai): F1–F6 ủng hộ, F7 không đủ bằng chứng, cả hai lần (`runs/gold_final_subset_20261115/`). Còn: người đọc thứ hai 30 dòng (`gold_B.xlsx`); NMT không ghi `phut`.

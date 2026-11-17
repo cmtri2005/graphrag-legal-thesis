@@ -1,0 +1,128 @@
+{
+ "table": {
+  "b1_sai_noi_dung": {
+   "sai_phien_ban": 2,
+   "sai_noi_dung": 17,
+   "dung": 5
+  },
+  "wrong_version": {
+   "sai_phien_ban": 9
+  }
+ },
+ "flag_precision": {
+  "k": 9,
+  "n": 9,
+  "wilson95": [
+   0.7008,
+   1.0
+  ]
+ },
+ "unflagged_b1_human_sai_phien_ban": {
+  "k": 2,
+  "n": 24,
+  "wilson95": [
+   0.0232,
+   0.2585
+  ]
+ },
+ "changed_vs_1_5": [
+  {
+   "stt": 1,
+   "system": "b4",
+   "why": "wrong_version",
+   "label_1_5": "sai_noi_dung",
+   "label": "sai_phien_ban"
+  },
+  {
+   "stt": 2,
+   "system": "b1",
+   "why": "b1_sai_noi_dung",
+   "label_1_5": "sai_noi_dung",
+   "label": "sai_phien_ban"
+  },
+  {
+   "stt": 11,
+   "system": "b1",
+   "why": "b1_sai_noi_dung",
+   "label_1_5": "sai_noi_dung",
+   "label": "sai_phien_ban"
+  },
+  {
+   "stt": 13,
+   "system": "b1",
+   "why": "b1_sai_noi_dung",
+   "label_1_5": "sai_noi_dung",
+   "label": "dung"
+  },
+  {
+   "stt": 14,
+   "system": "b4",
+   "why": "wrong_version",
+   "label_1_5": "sai_noi_dung",
+   "label": "sai_phien_ban"
+  },
+  {
+   "stt": 15,
+   "system": "b4",
+   "why": "wrong_version",
+   "label_1_5": "sai_noi_dung",
+   "label": "sai_phien_ban"
+  },
+  {
+   "stt": 16,
+   "system": "proposed2",
+   "why": "wrong_version",
+   "label_1_5": "sai_noi_dung",
+   "label": "sai_phien_ban"
+  },
+  {
+   "stt": 19,
+   "system": "b4",
+   "why": "wrong_version",
+   "label_1_5": "sai_noi_dung",
+   "label": "sai_phien_ban"
+  },
+  {
+   "stt": 20,
+   "system": "b1",
+   "why": "b1_sai_noi_dung",
+   "label_1_5": "sai_noi_dung",
+   "label": "dung"
+  },
+  {
+   "stt": 21,
+   "system": "b1",
+   "why": "b1_sai_noi_dung",
+   "label_1_5": "sai_noi_dung",
+   "label": "dung"
+  },
+  {
+   "stt": 26,
+   "system": "b4",
+   "why": "wrong_version",
+   "label_1_5": "dung",
+   "label": "sai_phien_ban"
+  },
+  {
+   "stt": 29,
+   "system": "b1",
+   "why": "b1_sai_noi_dung",
+   "label_1_5": "sai_noi_dung",
+   "label": "dung"
+  },
+  {
+   "stt": 30,
+   "system": "b1",
+   "why": "b1_sai_noi_dung",
+   "label_1_5": "sai_noi_dung",
+   "label": "dung"
+  }
+ ],
+ "note": "CHƯA GHI: team gán (CMT giao 16/11); chờ ghi tên người chấm và có dùng AI nháp không",
+ "caveat_sheet": "Người chấm đã thấy các câu này ở phiếu 1.5 và đã thấy kết quả độ khớp; chỉ mù tên hệ, cờ scorer và nhãn cũ.",
+ "inputs": {
+  "data/review/human_score_g4/recheck_versions/phieu_da_cham.xlsx": "757aa24b4d9d30d2ba9583299d5469c170f6214b55481e7ac138830fe50145a9",
+  "data/review/human_score_g4/recheck_versions/khoa.jsonl": "8d3eddb919c0bdf11b11ee9b2a011f2ecad475d5f9de726a1df039c933277411",
+  "data/review/human_score_g4/recheck_versions/phieu.xlsx": "5a47327ccbee223d080d26f6013c6dee81a21639f75df36fd690b6c4f1bde985"
+ }
+}
