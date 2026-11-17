@@ -118,7 +118,7 @@
    "label": "dung"
   }
  ],
- "note": "CHƯA GHI: team gán (CMT giao 16/11); chờ ghi tên người chấm và có dùng AI nháp không",
+ "note": "Người chấm: tác giả (CMT xác nhận 17/11), không dùng AI nháp nhãn hay ghi chú. Đã thấy các câu ở phiếu 1.5 và kết quả độ khớp; mù tên hệ, cờ scorer, nhãn cũ.",
  "caveat_sheet": "Người chấm đã thấy các câu này ở phiếu 1.5 và đã thấy kết quả độ khớp; chỉ mù tên hệ, cờ scorer và nhãn cũ.",
  "inputs": {
   "data/review/human_score_g4/recheck_versions/phieu_da_cham.xlsx": "757aa24b4d9d30d2ba9583299d5469c170f6214b55481e7ac138830fe50145a9",
