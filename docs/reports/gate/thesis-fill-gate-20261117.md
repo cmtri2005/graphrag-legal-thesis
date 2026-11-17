@@ -48,8 +48,9 @@ Phạm vi: `git diff fecae0b..3a16e5c -- docs/thesis`; phân tích `51123d4` (`r
 
 ## Đã sửa (phiên chính, 17/11)
 
-- **Đã sửa:** F1–F6; m1 (`funnel.py` thêm `+co_cha`, chạy lại r1/r2: 3/41 ở cả hai lần); m2–m11, m13–m15; NGUYEN_NHAN §1.
+- **Đã sửa:** F1–F6; m1 (`funnel.py` thêm `+co_cha`, chạy lại: r1 3/41, r2 3/42); m2–m11, m13–m15; NGUYEN_NHAN §1.
 - **Chưa làm:** m12, vì không có file gate cũ để thêm.
+
 ## Lượt 2: FAIL, rồi sửa
 
 - F1–F6 PASS. `funnel.py` mới tái lập trùng từng byte; r1 3/41, r2 3/42.
