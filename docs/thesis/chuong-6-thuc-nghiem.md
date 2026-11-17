@@ -24,7 +24,7 @@ Theo ADR, phán quyết lịch sử giữ quy tắc đúng chiều và p sau Hol
 † Với các ô JSON lưu p bằng 0 sau 10.000 lần bootstrap, bảng dùng quy ước độ phân giải p thô < 0,0002, p Holm ≤ 0,0012 cho họ sáu phép lịch sử. Đây là cách trình bày độ phân giải Monte Carlo, không phải khẳng định p lý thuyết bằng 0 hoặc cận tin cậy của p. Các p khác giữ nguyên; không tính lại họ lịch sử khi bỏ XN2 khỏi thiết kế bộ cuối.
 <!-- nguồn: scripts/eval/confirm_vilextime.py, run và holm; runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json -->
 
-V1.0 được khai là bản xác nhận lần 1 trong ADR 0005; amendment 03/11 gọi test 2 là bản lặp lại. Ngày 05/11, sau khi đã thấy kết quả (XN1 được ủng hộ ở v1.0, không đủ bằng chứng ở test 2), kế hoạch mới đổi vai cả hai thành vòng thử và mở bộ cuối. Đây là thay đổi sau quan sát, không phải vai trò được định trước. Giữ cả ba phán quyết cạnh nhau, không gộp điểm hoặc chọn phán quyết thuận lợi. [CHỜ G3: amendment ghi lịch sử các lần nhìn và quy tắc kết luận trước bộ cuối].
+V1.0 được khai là bản xác nhận lần 1 trong ADR 0005; amendment 03/11 gọi test 2 là bản lặp lại. Ngày 05/11, sau khi đã thấy kết quả (XN1 được ủng hộ ở v1.0, không đủ bằng chứng ở test 2), kế hoạch mới đổi vai cả hai thành vòng thử và mở bộ cuối. Đây là thay đổi sau quan sát, không phải vai trò được định trước. Giữ cả ba phán quyết cạnh nhau, không gộp điểm hoặc chọn phán quyết thuận lợi. Lịch sử các lần nhìn được ghi ở ADR 0006 §8 và quy tắc kết luận ở §6; ADR này Accepted ngày 12/11/2026 (commit `ac32a89`), trước lần chạy duy nhất trên bộ cuối.
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md, §1 và amendment 03/11; runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json; docs/plans/active/master-plan.md, xử lý C3 -->
 
 TVER tự động đọc `effective_intervals` của cùng đồ thị mà bộ lọc và gold sử dụng; gold mù của một dòng chỉ kiểm phiên bản đích, không kiểm mọi trích dẫn hệ trả về. Vì thế không gọi việc chấm lại dòng gold mù là “TVER độc lập”. Theo hướng xử lý đã chấp nhận, XN2 được đưa ra khỏi họ xác nhận của bộ cuối, giữ như kiểm nhất quán nội bộ; giả thuyết đề cương được quyết bằng TV-Recall của XN1 sau amendment. Phán quyết XN2 lịch sử vẫn giữ nguyên nhãn lịch sử.
@@ -287,7 +287,7 @@ XN5 là Accuracy `b7pp − b7plus` trên bãi bỏ qua tổ tiên; XN6 là VCR `
 
 | Mã | Ước lượng [KTC 95%] | p thô | Dòng / lineage theo lát |
 |---|---|---:|---|
-| XN5 | [CHỜ: đầu ra sinh `b7plus`] | — | — |
+| XN5 | Không chạy ở vòng này (chưa sinh `b7plus`); xem bộ cuối: `b7pp − b7plus` trên `t6_ancestor` +0,222 [0,000; +0,556] ở cả hai lần, thăm dò (§6.6.3) | — | 9 lineage (bộ cuối) |
 | XN6 | -0,059 [-0,263; +0,191] | 0,5738 | 8/4 và 38/19 |
 | XN7 | -0,154 [-0,274; -0,051] | 0,0042 | 30/15 và 58/27 |
 <!-- nguồn: runs/E3_v1/test/confirm.json -->
@@ -296,7 +296,7 @@ XN5 là Accuracy `b7pp − b7plus` trên bãi bỏ qua tổ tiên; XN6 là VCR `
 
 | Mã | Ước lượng [KTC 95%] | p thô | Dòng / lineage theo lát |
 |---|---|---:|---|
-| XN5 | [CHỜ: đầu ra sinh `b7plus`] | — | — |
+| XN5 | Không chạy ở vòng này (chưa sinh `b7plus`); xem bộ cuối: `b7pp − b7plus` trên `t6_ancestor` +0,222 [0,000; +0,556] ở cả hai lần, thăm dò (§6.6.3) | — | 9 lineage (bộ cuối) |
 | XN6 | +0,100 [-0,067; +0,278] | 0,2706 | 30/15 và 90/45 |
 | XN7 | -0,031 [-0,078; +0,015] | 0,2314 | 32/16 và 195/85 |
 <!-- nguồn: runs/E3_test2/rescore/confirm.json -->
@@ -380,7 +380,7 @@ Dự đoán dương là cờ `answerable=False`, không phải mọi câu bỏ t
 | `proposed` | 1/16 = 0,062 | 4 | 1/5 = 0,200 |
 <!-- nguồn: data/vilextime/test2_release_v2.jsonl; runs/E3_test2/test/{b1,b2ctx,b5,b7,b7pp,proposed}.jsonl; scripts/paper/paper_values.py -->
 
-Bộ cuối (thăm dò hậu nghiệm, lần 1): `proposed2` khẳng định "hết hiệu lực" 11 lần, 7 đúng, 4 sai. Precision 0,64, recall 7/23. Lệnh bãi bỏ có trong prompt ở 12/23 dòng, trong đó đúng 5. `oracle` 22/23 khi được cấp sẵn căn cứ. Số lần 2 ở `attribution.json`. T6 bộ cuối chưa có gold mù người. `proposed3` không chạy trên bộ cuối. Không suy các số này từ TVER hoặc từ việc đã có thông báo bãi bỏ.
+Bộ cuối (thăm dò hậu nghiệm, lần 1): `proposed2` khẳng định "hết hiệu lực" 11 lần, 7 đúng, 4 sai. Precision 0,64, recall 7/23. Lệnh bãi bỏ có trong prompt ở 12/23 dòng, trong đó đúng 5. `oracle` 22/23 khi được cấp sẵn căn cứ. Số lần 2 ở `attribution.json`. Cả 23 lineage T6 bộ cuối đã có gold mù người từ 15/11 (§6.6.4). `proposed3` không chạy trên bộ cuối. Không suy các số này từ TVER hoặc từ việc đã có thông báo bãi bỏ.
 <!-- nguồn: docs/plans/active/master-plan.md, xử lý C2, N8 và V5 -->
 
 ### Đóng góp XN1 theo nhóm và độ nhạy cỡ mẫu — thăm dò
@@ -409,7 +409,7 @@ Bảng chỉ đếm TV-hit@1 trên dòng có đáp án E1; tăng/mất là chuy�
 Ở v1.0, chênh lệch đến từ 10 dòng của T2/T3, T1 đóng góp 0. Lát bỏ T1 có 10/73 = +0,137; không đối chiếu độ lớn toàn tập v1.0 với bộ cuối không có T1. Silver theo quy trình viết của v1.0, còn test 2 (nhãn LLM) có cổng trùng chữ; “lặp lại” chưa độc lập với cách sinh câu hỏi. [CHỜ G4: phân tầng kết quả bộ cuối theo nguồn silver/T2 mới/T3 mới/T6 mới và quy trình sinh].
 <!-- nguồn: data/vilextime_dataset/vilextime.jsonl; data/vilextime/test2_release_v2.jsonl; scripts/review/test2_packs.py; scripts/paper/paper_values.py; docs/plans/active/master-plan.md, mục 10 -->
 
-Xấp xỉ chuẩn hai phía lấy hiệu +0,028 và phương sai theo cụm lineage từ E1 test 2 (nhãn LLM): SE 0,022; nếu giữ phân bố đó và có 150 lineage thì SE dự phóng 0,018, power tại α = 0,05 là 0,346. Nếu phải vượt ngay ngưỡng Holm bảo thủ α/6 của họ sáu phép lịch sử, power còn 0,141; các bậc Holm muộn hơn có thể cao hơn. Không có một power sau Holm duy nhất khi chưa khóa họ và chưa biết thứ tự p. Đây là phân tích độ nhạy sau quan sát, không phải power đo được của bộ cuối. [CHỜ G3: họ cuối và giả định cỡ mẫu đã khóa].
+Xấp xỉ chuẩn hai phía lấy hiệu +0,028 và phương sai theo cụm lineage từ E1 test 2 (nhãn LLM): SE 0,022; nếu giữ phân bố đó và có 150 lineage thì SE dự phóng 0,018, power tại α = 0,05 là 0,346. Nếu phải vượt ngay ngưỡng Holm bảo thủ α/6 của họ sáu phép lịch sử, power còn 0,141; các bậc Holm muộn hơn có thể cao hơn. Không có một power sau Holm duy nhất khi chưa khóa họ và chưa biết thứ tự p. Đây là phân tích độ nhạy sau quan sát, không phải power đo được của bộ cuối. Họ cuối được khóa ở ADR 0006 §3 gồm bảy phép F1–F7 (Holm, α = 0,05). Giả định cỡ mẫu khóa ở §6: MDE ước trước khi chạy, xấp xỉ chuẩn, power 80%, tính từ phương sai ghép cặp của dev và test 2 (`data/vilextime_final/g2_mde_table.md`). Ở α = 0,05, MDE của F5/F6 là 0,058 (theo phương sai test 2: 0,047) và của F7 là 0,185. Hiệu thật trên bộ cuối của F5/F6 là +0,115, lớn hơn MDE.
 <!-- nguồn: runs/E1_test2/test/b7.jsonl; runs/E1_test2/test/b7pp.jsonl; data/vilextime/test2_release_v2.jsonl; runs/E3_test2/rescore/confirm.json; scripts/paper/paper_values.py, phương sai tỷ số theo cụm và NormalDist; docs/plans/active/master-plan.md, dự báo mục 10 -->
 
 ## 6.5. Thử nghiệm `proposed2` trên dev — mô tả để phát triển hệ
@@ -423,18 +423,29 @@ Trước khi thay mở rộng, phép thử lai ghép trên 151 dòng dev ghi R@1
 Sau khi tìm lệnh tác động ở chuỗi cha, R@30 trên dòng T6 không có đáp án từ 0/21 lên 15/21; trên toàn dev từ 122/151 = 0,808 lên 137/151 = 0,907. R@1 vẫn 62/151 và R@10 vẫn 111/151. Đây là Recall theo danh sách truy xuất mở rộng, không phải Accuracy và không phải bằng chứng generator đã nhận ra bãi bỏ. Mức R@30 trước sửa dùng số đã chấm lại từ file, không dùng số ghi nhầm trong kế hoạch cũ.
 <!-- nguồn: runs/hybrid_20261105/dev_graph2/proposed-hyb.jsonl; runs/hybrid_20261105/dev/proposed-hyb.jsonl; runs/README.md -->
 
-[CHỜ COLAB: đầu ra sinh và chấm dev cho `b7pp --hybrid`, `proposed2`, `p2a2`, `p2a3`]. Cần đo tác dụng Verifier khi chưa có bộ lọc mạnh; trên dev cũ, Verifier không bác câu nào và ablation tắt nó trùng đầu ra. Thông báo bãi bỏ có cấu trúc và kiểm độ bền generator còn là công việc theo kế hoạch, không điền số giả định.
+Sinh và chấm dev bằng GPT-4o mini (151 dòng, sau khi sửa đồ thị 11/11; mô tả, đã thấy trước G4):
+
+| Hệ | Khác `proposed2` ở | Accuracy all | T6 | Sai phiên bản | TCS |
+|---|---|---|---|---|---|
+| `b7pp` | không mở rộng, không Verifier | 0,709 | 0,524 | 0,024 | 0,694 |
+| `p2a2` | tắt mở rộng đồ thị | 0,702 | 0,500 | 0,024 | 0,694 |
+| `p2a3` | tắt Verifier | 0,728 | 0,524 | 0,024 | 0,750 |
+| `proposed2` | — | 0,722 | 0,524 | 0,035 | 0,722 |
+| `proposed3` | thêm `repeal_note` | 0,735 | 0,548 | 0,024 | 0,722 |
+<!-- nguồn: runs/rebuild_20261110_dev/all.score.json; runs/repeal_persist_dev_20261112/compare.json -->
+
+Các hiệu ghép cặp đều có KTC chứa 0, ví dụ `p2a3 − p2a2` [−0,007; +0,063], `proposed2 − p2a3` [−0,038; +0,020]. Cùng prompt, API vẫn đổi đúng/sai ở 3–5/151 câu, nên chênh dưới khoảng 0,03 không phân biệt được với dao động generator. Verifier không cho lợi ích đo được trên dev. Thông báo bãi bỏ có cấu trúc và kiểm độ bền generator còn là công việc theo kế hoạch, không điền số giả định.
 <!-- nguồn: docs/plans/active/master-plan.md; runs/README.md -->
 
 ### 6.5.1. `proposed3` và điều kiện cấp sẵn căn cứ X8 — còn chờ
 
-`proposed3` kế thừa `proposed2` và bật `repeal_note`, đưa thông báo bãi bỏ có cấu trúc từ đồ thị vào prompt; đây là phần việc trong A7. Chương chưa có đầu ra sinh đã chấm để kết luận tác dụng của cấu hình này. Không mang số `proposed` hay số truy xuất `proposed2` sang nhãn mới. [CHỜ COLAB: đầu ra dev, provenance và điểm `proposed3`; xác nhận cấu hình được khóa trước khi chạy bộ cuối].
+`proposed3` kế thừa `proposed2` và bật `repeal_note`, đưa thông báo bãi bỏ có cấu trúc từ đồ thị vào prompt; đây là phần việc trong A7. Chương chưa có đầu ra sinh đã chấm để kết luận tác dụng của cấu hình này. Không mang số `proposed` hay số truy xuất `proposed2` sang nhãn mới. Trên dev, `proposed3` đạt 0,735 so với 0,722 của `proposed2`. Ở `t6_unanswerable` (21 dòng), hiệu là +1/21, KTC [−0,095; 0,190]. Quy tắc chọn khai trước đòi cận dưới > 0, nên không đạt, và **P = `proposed2`**, khóa ở ADR 0006 §2 trước khi chạy bộ cuối (`runs/rebuild_20261110_dev/select_p.json`; kiểm lại sau khi sửa lệnh bãi bỏ ngày 12/11, `runs/repeal_persist_dev_20261112/compare.json`). `proposed3` không chạy trên bộ cuối.
 <!-- nguồn: docs/plans/active/master-plan.md, A7; src/vilexgraph/framework/systems.py; src/vilexgraph/framework/generate.py; runs/README.md -->
 
 `proposed3` đưa `repeal_note` từ sự kiện `repeal` đã phân giải vào prompt; gold “không có đáp án” của T6 cũng dẫn từ nguồn sự kiện đó. Accuracy T6 vì vậy là cận trên có điều kiện khi đồ thị đúng, chưa phải bằng chứng pháp lý độc lập. Chỉ kết luận trên T6 đã qua gold mù; phải báo cả recall, precision và số khẳng định sai trên dòng có đáp án. Các lượt bổ sung trên T6 của v1.0 và test 2 phải gắn nhãn “đã thấy”, báo riêng từng bộ, không gộp với nhau hay với bộ cuối vì cấu hình được thiết kế sau khi xem lỗi của chúng.
 <!-- nguồn: src/vilexgraph/framework/graphx.py, _repeals và repeal_notes; docs/plans/active/master-plan.md, xử lý C2 và N8 -->
 
-Trên dev T6 không có đáp án, Qwen3-4B đúng 6/21 ở `oracle` và 3/21 ở `oracle_v2` dù được cấp ngữ cảnh; các lượt khác prompt nên không gộp. Nhận định “nhận diện bãi bỏ yếu” chỉ nói về Qwen3-4B trong điều kiện này. [CHỜ COLAB: X3 với generator khác, tối thiểu ngữ cảnh đúng của T6; chưa thực hiện và không suy giới hạn chung của LLM].
+Trên dev T6 không có đáp án, Qwen3-4B đúng 6/21 ở `oracle` và 3/21 ở `oracle_v2` dù được cấp ngữ cảnh; các lượt khác prompt nên không gộp. Nhận định “nhận diện bãi bỏ yếu” chỉ nói về Qwen3-4B trong điều kiện này. Trên bộ cuối, khi được cấp căn cứ đúng (`oracle`) ở 23 dòng T6 không có đáp án, GPT-4o mini đúng 22/23 ở cả hai lần, Qwen3.8-27B đúng 18/23 và 17/23 (thăm dò, amendment ADR 0006 ngày 16/11). Vậy khi chỉ có căn cứ đúng, hai model này nhận ra bãi bỏ ở phần lớn dòng. Lỗi T6 của hệ thật (`proposed2` đúng 7/23) đến từ cả hai phía: lệnh bãi bỏ chỉ có trong prompt ở 12/23 dòng, và khi có thì hệ chỉ đúng 5/12 vì lệnh nằm lẫn giữa nhiều đoạn khác (§6.4.5). Chỉ nói về hai model này.
 <!-- nguồn: data/vilextime_dataset/vilextime.jsonl; runs/B2_dev/dev/oracle.jsonl; runs/B2_dev/dev/oracle_v2.jsonl; docs/plans/active/master-plan.md, X3 -->
 
 X8 phải so hai điều kiện **cấp sẵn căn cứ đúng mốc** và **cấp sẵn căn cứ hiện hành**, theo T1 (đối chứng), T2, T3, T6. Mục đích là đo sai lệch do đọc bản hiện hành, tách khỏi lỗi tìm trên toàn kho. Phải chạy dev trước, rồi bộ test cuối sau các cổng khóa. Oracle dev đã có chỉ cho biết kết quả trong điều kiện căn cứ của lượt đó; chưa phải kết quả X8 hay oracle trên test.
@@ -442,7 +453,7 @@ X8 phải so hai điều kiện **cấp sẵn căn cứ đúng mốc** và **c�
 
 | Điều kiện X8 | Kết quả |
 |---|---|
-| Dev: đúng mốc so với hiện hành, từng nhóm | [CHỜ COLAB: điểm, mẫu số và chênh lệch ghép cặp X8 dev] |
+| Dev: đúng mốc so với hiện hành, từng nhóm | GPT-4o mini, 11/11, `oracle` / `oracle_now`: all 0,947 / 0,523 (151 dòng), hiệu −0,424, KTC ghép cặp [−0,466; −0,374]; T1 0,833 / 0,889 (18); T2 0,986 / 0,500 (72); T3 0,895 / 0,263 (19); T6 0,952 / 0,524 (42) (`runs/rebuild_20261110_dev/all.score.json`) |
 | Bộ cuối: đúng mốc so với hiện hành, từng nhóm | Lần 1, `oracle` / `oracle_now`: all 0,956 / 0,456; T2 0,969 / 0,476; T3 1,000 / 0,278; T6 0,870 / 0,413 (`runs/final_g4_20261112/r1/results.md`) |
 <!-- nguồn: docs/plans/active/master-plan.md, X8 -->
 
@@ -467,7 +478,7 @@ Lọc thời gian có lợi và hai nút thắt tìm–đọc đã có tiền l�
 | F7 | P − `b7pp`, Accuracy, T6 không đáp án | +0,087 [0,000; +0,217] | +0,043 [0,000; +0,130] | không đủ bằng chứng, cả hai lần |
 <!-- nguồn: runs/final_g4_20261112/r1/confirm.json; runs/final_g4_20261112/r2/results.md; runs/final_g4_20261112/compare_runs.json -->
 
-F1–F3 đều có p Holm < 0,0002 ở cả hai lần. F3 dùng `wrong_version` của scorer. Phiếu người chấm không xác nhận cũng không bác được tỷ lệ sai phiên bản (§6.6.5). Phán quyết F3 giữ nguyên; độ lớn −0,28 là theo scorer. F4–F6 là hệ chỉ truy xuất nên không chịu dao động của generator. F7 có 23 lineage. MDE ước trước khi chạy là 0,185, nên chỉ phát hiện được hiệu rất lớn. F7 "không đủ bằng chứng" nghĩa là KTC không loại trừ 0 và không loại trừ hiệu ≥ MDE, không có nghĩa là không có hiệu ứng.
+F1–F3 đều có p Holm < 0,0002 ở cả hai lần. F3 dùng `wrong_version` của scorer. Phiếu chấm lại 33 câu (§6.6.5) thấy 9/9 dòng gắn cờ đúng là sai phiên bản, nhưng mẫu nhỏ. Phán quyết F3 giữ nguyên; độ lớn −0,28 là theo scorer. F4–F6 là hệ chỉ truy xuất nên không chịu dao động của generator. F7 có 23 lineage. MDE ước trước khi chạy là 0,185, nên chỉ phát hiện được hiệu rất lớn. F7 "không đủ bằng chứng" nghĩa là KTC không loại trừ 0 và không loại trừ hiệu ≥ MDE, không có nghĩa là không có hiệu ứng.
 
 **F5 và F6 bằng nhau.** `b7pp` và `b7plus` có cùng TV-R@1 trên tệp truy xuất F5–F6 (0,356, 295 dòng có đáp án; bảng §6.6.2 đo trên danh sách prompt sinh, 318 dòng, cũng bằng nhau ở 0,336). `b7pp` chỉ khác `b7plus` ở chỗ lan truyền khoảng hiệu lực (`temporal="propagated"`). Lan truyền này không đổi kết quả TV-R@1 ở dòng nào có đáp án; căn cứ đứng đầu chỉ đổi ở 1/295 dòng có đáp án, và ở dòng đó cả hai đều sai. Vì vậy F6 ủng hộ H0 hoàn toàn nhờ bước lọc khoảng phiên bản, đúng phần F5 đo. Không được đọc F6 là bằng chứng cho lan truyền hay cho phần duyệt đồ thị lúc truy vấn.
 
@@ -519,18 +530,28 @@ Kho phiên bản không có bộ lọc khoảng còn kém lớp lời văn gốc
 
 Kết quả:
 - Accuracy `b7plus − bvdate`: +0,245 lần 1, +0,230 lần 2.
-- `bvdate` giảm tỷ lệ trích sai phiên bản theo scorer (0,317 → 0,064 lần 1; 0,328 → 0,060 lần 2), nhưng vẫn kém lọc cứng xa. Phiếu người chấm không xác nhận được độ lớn của `wrong_version` (§6.6.5), nên đọc là chiều giảm theo scorer.
+- `bvdate` giảm tỷ lệ trích sai phiên bản theo scorer (0,317 → 0,064 lần 1; 0,328 → 0,060 lần 2), nhưng vẫn kém lọc cứng xa. Độ lớn của `wrong_version` là theo scorer; phiếu 33 câu (§6.6.5) chỉ kiểm được cờ trên mẫu nhỏ.
 
 Lọc theo khoảng trước khi xếp hạng có giá trị riêng. Trên dev cùng chiều.
 
 **Nút thắt là xếp hạng.** Khi gold đứng hạng 1, `proposed2` đúng 102/107 (95%). Nhưng gold chỉ đứng hạng 1 ở 107/295 dòng có đáp án. Trong 247 dòng có gold trong prompt, `proposed2` sai 46 (5 khi gold ở hạng 1, 41/140 khi gold ở hạng 2 trở xuống); số giống nhau ở hai lần.
+
+**Phân rã khoảng cách đến `oracle` (lần 1, phân tích 17/11).** `oracle` đúng mà `proposed2` sai ở 92 dòng. Khoảng 41 dòng có gold không nằm trong 20 đoạn đưa vào prompt; chỉ 3/48 dòng loại này có điều hay khoản cha của gold trong prompt, nên phần lớn không phải lỗi chọn sai cấp. 37 dòng có gold ở hạng 2–20 nhưng model lấy nhầm đoạn khác. 16 dòng T6 không có đáp án mà hệ vẫn trả lời. Số còn lại là dòng có gold ở hạng 1 mà vẫn sai, và dòng scorer chấm chặt hơn người (§6.6.5). Lọc phiên bản đã gần xóa lỗi chọn nhầm bản (sai phiên bản 0,008), nên phần còn lại chủ yếu là bài toán tìm đúng điều khoản trong kho lớn và nhận diện bãi bỏ. Lần 2 cho cùng hình dạng.
+<!-- nguồn: runs/gap_analysis_20261117/funnel.py, funnel_r1.json, funnel_r2.json; docs/paper/NGUYEN_NHAN_3_VAN_DE.md -->
 <!-- nguồn: runs/posthoc_g4_20261113/attribution.json; runs/posthoc_g4_20261113/test/; docs/plans/active/REFACTOR_PLAN.md, "Kết quả Nhóm 2"; docs/reports/research-audit-20261113.md §8.2 -->
 
 ### 6.6.4. Gold mù trên phần bộ cuối nó phủ
 
-Gold mù đợt 1 do người đọc nguồn: khớp thô 148/150, 119/120 sau phân xử do AI đề xuất, CMT xác nhận. Gold này chỉ phủ 24/156 lineage chính của bộ cuối (T2 19, T3 5, không có T6, T1). Tập con vẫn chấm bằng gold của đồ thị.
+Gold mù đợt 1 do người đọc nguồn: khớp thô 148/150, 119/120 sau phân xử do AI đề xuất, CMT xác nhận. Đợt 1 chỉ phủ 24/156 lineage chính của bộ cuối (T2 19, T3 5, không có T6, T1). Tập con vẫn chấm bằng gold của đồ thị.
 
 Trên 53 dòng này, F1–F6 đều ủng hộ ở cả hai lần, cùng chiều với toàn bộ cuối. Ví dụ: F4 +0,075 [+0,018; +0,154]; F5 +0,189 [+0,071; +0,315]. Đây là mô tả trên tập con nhỏ, không thay cho gold độc lập trên cả bộ.
+
+**Đợt 2 (15–16/11).** NMT đọc mù toàn bộ 81 lineage của bộ cuối mà chưa người gán nào thấy đáp án của kho (23 T6, 58 T2). Phiếu không hiện nhóm, đáp án hay ngày của kho. Cùng 24 lineage đợt 1, gold mù người phủ **105/156 lineage**, gồm cả 23 T6. Hiệu lực NMT xác định khớp kho ở 80/81 lineage; T6 23/23. Một luật sư đọc mù 30 dòng chung (12 T6, 18 T2): đồng thuận hiệu lực với NMT 29/30, κ Cohen 0,932, AC1 0,935. Dòng lệch (F019) luật sư đúng: TT 36/2026/TT-BXD bãi bỏ TT 11/2021/TT-BXD từ 01/07/2026, kho bỏ sót.
+
+Tổng cộng hai người đọc tìm ra **3 lineage kho sai** (2 bỏ sót sửa đổi, 1 bỏ sót bãi bỏ; 4 dòng). Theo ADR 0006 §7, các dòng này giữ trong bộ cuối với gold đã sửa. Với gold đã sửa, mọi phán quyết F1–F7 không đổi với cả hai generator, không ước lượng F nào dịch quá 0,004. Trên 105 lineage có gold mù (215 dòng, gold đã sửa), F1–F6 cùng chiều ở cả hai lần, ví dụ F1 +0,284 [+0,208; +0,359], F5 +0,073 [+0,032; +0,119]; F7 vẫn không đủ bằng chứng. Các số chính của chương vẫn dùng gold phát hành.
+
+Giới hạn: NMT là đồng tác giả; người ngoài nhóm chỉ đọc 30 dòng. Tập lineage được đọc là tập kho *đã thấy* có thay đổi, nên tỷ lệ 3/105 không đo được sửa đổi mà kho bỏ sót hoàn toàn (§6.7).
+<!-- nguồn: data/review/gold_final/DONG_THUAN_B_20261116.md; runs/gold_final_subset_20261115/; runs/gold_fix_20261116/NOTE.md, subset/confirm_r1.txt; docs/plans/active/PLAN_PAPER_GAP.md, A2 -->
 <!-- nguồn: runs/posthoc_g4_20261113/gold_subset/confirm_r1.txt, confirm_r2.txt -->
 
 ### 6.6.5. Người chấm 100 câu trả lời
@@ -551,17 +572,62 @@ CMT tự chấm toàn bộ 100 câu, không có AI viết nháp nhãn hay ghi ch
 Trên mẫu này, scorer chấm thấp hơn người một chút ở cả ba hệ. Mỗi hệ có dòng riêng nên đây chỉ là mô tả, không phải phép so ghép cặp. Trong phạm vi mẫu (T2/T3/T6, giữa khoảng, lần 1, một người chấm), không cần LLM giám khảo cho Accuracy.
 
 **`wrong_version` chưa đo được bằng phiếu này.** Scorer gắn cờ 9 dòng (`b4` 8, `proposed2` 1, `b1` 0). Người gán 3 sai phiên bản (đều `b4`), 5 sai nội dung, 1 đúng; 8/9 dòng gắn cờ là câu sai theo người. Một dòng sai nội dung (`proposed2`) chép một điểm của điều khác, chỉ tình cờ trùng cụm chữ với bản cũ của điều khoản hỏi: scorer chấm sai đúng, nhưng cờ sai phiên bản là nhầm. Bốn dòng sai nội dung còn lại đều chép lời văn của phiên bản khác, nhưng phiếu chỉ hiện bản tại mốc, nên người chấm khó tách sai phiên bản khỏi sai nội dung. Vì vậy mẫu này không đo được độ chính xác của `wrong_version`, và số 0 sai phiên bản của `b1` chỉ là cận dưới.
+
+**Phiếu thứ hai, hiện mọi phiên bản (17/11).** Để tách sai phiên bản khỏi sai nội dung, 33 câu của phiếu trên được chấm lại trên phiếu hiện mọi phiên bản của điều khoản và đánh dấu bản tại mốc: 9 dòng scorer gắn cờ và 24 dòng `b1` người đã chấm `sai_noi_dung` mà điều khoản có hơn một phiên bản. Người chấm là tác giả, không AI viết nháp; phiếu giấu tên hệ, cờ và nhãn cũ, nhưng người chấm đã thấy các câu này ở phiếu trước.
+- Cả **9/9** dòng gắn cờ được người chấm là sai phiên bản (Wilson 95% [0,70; 1,00]).
+- Trong 24 dòng `b1` không gắn cờ, người chấm 2 sai phiên bản, 17 sai nội dung, 5 đúng. Năm dòng `dung` lệch nhãn của phiếu trước (người chấm chấp nhận câu trả lời khái quát); không sửa số 96/100 ở trên.
+
+Mẫu nhỏ và không mù với câu hỏi. Số này cho thấy cờ không báo nhầm trong mẫu, và có thể bỏ sót một phần; không đủ để nói tỷ lệ sai phiên bản của scorer thấp hay cao hơn thực tế. Tỷ lệ sai phiên bản trong chương vẫn do scorer đếm.
+<!-- nguồn: runs/version_recheck_20261117/agreement.json; data/review/human_score_g4/recheck_versions/; scripts/review/version_recheck_score.py -->
 <!-- nguồn: runs/posthoc_g4_20261113/human_score/agreement.json; data/review/human_score_g4/phieu_cham_da_cham.xlsx; scripts/review/human_answer_sheet.py -->
 
-### 6.6.6. Còn chờ
+### 6.6.6. Bổ sung sau G4 — mô tả và thăm dò
+
+**Thước đo truy xuất quen dùng không thấy lỗi sai phiên bản** (mô tả, G4). TCS đòi đúng cả hai câu trả lời của một cặp T2 hỏi ở hai mốc.
+
+| Hệ | MRR (lần 1 = lần 2) | TCS lần 1 [KTC 95%] | TCS lần 2 |
+|---|---|---|---|
+| `b4` | 0,445 | 0,071 [0,031; 0,117] | 0,047 |
+| `b7plus` | 0,456 | 0,654 [0,570; 0,736] | 0,646 |
+| `proposed2` | 0,453 | 0,661 [0,577; 0,744] | 0,646 |
+| `oracle` | 1,000 | 0,961 | 0,969 |
+| `oracle_now` | 1,000 | 0,000 | 0,000 |
+<!-- nguồn: runs/final_g4_20261112/{r1,r2}/test/all.score.json, khóa <hệ>.giua_khoang.all.{mrr,tcs}; docs/paper/ieee/numbers.md -->
+
+MRR gần như không đổi giữa RAG lai ghép phẳng và hệ có lọc phiên bản, trong khi TCS tăng từ khoảng 0,07 lên 0,65. MRR chấp nhận mọi phiên bản của đúng điều khoản, nên không thấy lỗi lấy nhầm bản.
+
+**LightRAG thật** (thăm dò, amendment ADR 0006 ngày 15/11, sau khi đã thấy bộ cuối; số chưa qua evidence-gate riêng). Ba chỗ không ngang hàng nêu ở §2.2.3 phải đọc kèm.
+
+| Hệ | Accuracy lần 1 [KTC 95%] | Lần 2 | Sai phiên bản (lần 1 / 2) | TCS (lần 1 / 2) |
+|---|---|---|---|---|
+| `b4` | 0,324 [0,277; 0,369] | 0,296 | 0,291 / 0,294 | 0,071 / 0,047 |
+| `lightrag` | 0,346 [0,303; 0,389] | 0,355 | 0,355 / 0,351 | 0,055 / 0,055 |
+| `proposed2` | 0,667 [0,598; 0,733] | 0,664 | 0,008 / 0,008 | 0,661 / 0,646 |
+<!-- nguồn: runs/lightrag_20261113/test/{r1,r2}/lightrag_vs_b4_p.score.json -->
+
+- `lightrag − b4`: +0,022 [−0,037; +0,080] lần 1, +0,060 [+0,003; +0,117] lần 2. LightRAG xấp xỉ RAG phẳng.
+- `proposed2 − lightrag`: +0,321 [+0,249; +0,392] lần 1, +0,308 [+0,235; +0,382] lần 2. KTC loại 0 ở cả hai lần, nên theo cách đọc khai trước: hệ có lọc theo khoảng hiệu lực hơn một GraphRAG phi thời gian thật, dù hệ đó có kho nhỏ hơn và ngữ cảnh lớn hơn.
+
+**Generator mở Qwen3.8-27B** (thăm dò, amendment ADR 0006 ngày 16/11 và 16/11 (b), duyệt trước khi sinh câu trả lời trên bộ cuối; evidence-gate 16/11). Mười lăm hệ sinh, prompt bộ cuối không đổi, nhiệt độ 0, hai lần. Model chạy FP8 qua API Chutes, không ghim revision và seed; trên dev, đường này lệch vLLM BF16 cục bộ tối đa 0,02 Accuracy.
+- F1: +0,324 [+0,272; +0,376] lần 1, +0,330 lần 2 (GPT-4o mini +0,343). F2: +0,333 và +0,340. F3: −0,306 [−0,353; −0,258]. F1–F3 cùng dấu với GPT-4o mini và KTC loại 0 ở cả hai lần. F4–F6 không dùng generator nên giữ nguyên. F7: +0,087 [0; 0,217], không đủ bằng chứng.
+- Lọc cứng so với in ngày vào prompt: `b7plus − bvdate` +0,085 [+0,041; +0,132] và +0,082 [+0,041; +0,127] (GPT-4o mini +0,245). Model lớn hơn thu hẹp nhưng không xóa khoảng cách.
+- `proposed2 − lightrag`: +0,119 [+0,050; +0,187].
+- Cặp oracle: `oracle` 0,884 / 0,877, `oracle_now` 0,418 / 0,421. Trần của Qwen thấp hơn GPT-4o mini khoảng 0,07.
+
+Các phép so này đều ngoài họ Holm, không đổi phán quyết F1–F7. Kết luận được phép viết: "với hai generator đã thử".
+<!-- nguồn: runs/qwen_chutes_20261116/test/NOTE_ket_qua.md, pairs/, r1/all.score.json; docs/decisions/0006-ke-hoach-phan-tich-bo-test-cuoi.md, amendment 16/11 và 16/11 (b) -->
+
+### 6.6.7. Còn chờ
 
 | Hạng mục | Tình trạng |
 |---|---|
-| Đáp án ngắn T1 | Nháp amendment chờ duyệt |
-| Gold mù người cho T6 và 132 lineage còn lại | Chưa có người làm |
-| TVER theo người, E7 mã hóa lỗi bằng người | Chưa làm |
-| LightRAG (GraphRAG phi thời gian thật) | Đang dựng đồ thị trên Colab; chạy bộ cuối cần amendment riêng |
-| Generator thứ hai khác họ | Chưa chạy |
+| Đáp án ngắn T1 | Chưa sửa; cần amendment |
+| Gold mù người | Xong 105/156 lineage, gồm 23 T6 (§6.6.4); 51 lineage còn lại đã bị người gán A thấy đáp án, không đọc mù được |
+| Người thứ hai kiểm nhãn (A3) | Chưa làm |
+| TVER theo người, E7 mã hóa lỗi bằng người | Chờ CMT quyết làm hay ghi "không làm" |
+| LightRAG thật | Xong, thăm dò (§6.6.6) |
+| Generator thứ hai | Xong, Qwen3.8-27B, thăm dò (§6.6.6) |
+| Reranker | Không làm (CMT, 16/11); số truy xuất dev giữ ở `runs/rerank_pool_dev_20261115/` |
 
 Các lượt Colab đợt 2 cho vòng thử cũ (v1.0, test 2) không chạy nữa: kết luận đã lấy từ bộ cuối.
 

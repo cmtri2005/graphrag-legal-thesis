@@ -59,7 +59,7 @@ Scorer không chấm dễ dãi (§6.6.5). Trên mẫu người chấm, `proposed
 
 ### Độ bền của kết luận
 
-- **Gold mù do người đọc nguồn** phủ 24/156 lineage (53 dòng, không có T6 và T1). Trên phần này, chấm vẫn bằng gold đồ thị (gold mù khớp 119/120 sau phân xử do AI đề xuất, CMT xác nhận), F1–F6 cùng chiều với toàn bộ cuối ở cả hai lần. Đây là mô tả trên tập con nhỏ, không thay gold độc lập.
+- **Gold mù do người đọc nguồn** phủ 105/156 lineage (215 dòng, gồm cả 23 T6; không có T1): 24 lineage đợt 1, 81 lineage do NMT đọc; luật sư đọc lại mù 30 dòng, đồng thuận hiệu lực với NMT 29/30 (κ 0,932). Hai người đọc tìm ra 3 lineage kho sai; sửa gold theo ADR 0006 §7 không đổi phán quyết F1–F7 nào. Trên 105 lineage, F1–F6 cùng chiều với toàn bộ cuối ở cả hai lần. NMT là đồng tác giả; người ngoài nhóm chỉ đọc 30 dòng.
 - **Người chấm câu trả lời** khớp scorer 96/100 (bản đầu 95/100; một người chấm, mẫu không có T1).
 - **(Thăm dò) Xếp hạng là nút thắt lớn:** khi căn cứ đúng đứng hạng 1, `proposed2` đúng 102/107 (95%); nhưng căn cứ đúng chỉ đứng hạng 1 ở 107/295 dòng có đáp án. Trong 247 dòng có căn cứ đúng trong prompt, `proposed2` vẫn sai 46 (5 khi căn cứ đúng ở hạng 1, 41/140 khi ở hạng 2 trở xuống).
 <!-- nguồn: runs/posthoc_g4_20261113/gold_subset/; runs/posthoc_g4_20261113/human_score/agreement.json; runs/posthoc_g4_20261113/attribution.json -->
@@ -69,7 +69,7 @@ Scorer không chấm dễ dãi (§6.6.5). Trên mẫu người chấm, `proposed
 - **Tỷ lệ sai phiên bản theo người.** Phiếu người chấm 100 câu (§6.6.5) không hiện phiên bản khác. Phiếu chấm lại 33 câu có hiện mọi phiên bản đang chờ người chấm.
 - **Vế LLM của RQ1:** mới có một LLM không truy xuất.
 - **Cơ cấu dữ liệu lệch đề cương:** T2 127 lineage, T6 23, T3 6, không có T5; cột T1 chờ amendment sửa đáp án ngắn.
-- **Thước đo chưa độc lập hoàn toàn.** Gold phiên bản lấy từ cùng đồ thị mà bộ lọc dùng; gold mù chỉ phủ 24/156 lineage; TVER theo người chưa làm; M2 chưa làm được (0/100 truy vấn có gold người).
+- **Thước đo chưa độc lập hoàn toàn.** Gold phiên bản lấy từ cùng đồ thị mà bộ lọc dùng; gold mù phủ 105/156 lineage, đa phần do đồng tác giả đọc, và chỉ trên các điều khoản kho đã thấy có thay đổi; TVER theo người chưa làm. Gold mù đợt 2 (A2) đồng thời là phép đối chiếu tay M2 mà đề cương hứa.
 - **Nhãn bộ cuối** là silver-AI có CMT duyệt, chưa có người độc lập kiểm. Đồng thuận AI–AI trước hòa giải AC1 0,608, dưới ngưỡng 0,80. Ca khó do agent `legal-adjudicator` chốt, CMT ủy quyền, chưa qua luật sư.
 - **Phạm vi:** một generator (GPT-4o mini); một nguồn dữ liệu (vbpl); chưa so với GraphRAG phi thời gian thật.
 - Lan truyền chưa có bằng chứng lợi ích, còn nhóm bãi bỏ đã có ở NitiBench+; đặc thù cần kiểm là lệnh ở văn bản khác và bãi bỏ qua nút cha của nguồn Việt Nam. Các tiền lệ gần về lợi ích lọc theo mốc gồm Prior, LawInForce-eCFR và NitiBench+ [@prior2026oldfriend] [@yao2026lawinforce] [@akarajaradwong2026nitibenchplus]. Khóa luận chỉ giữ luận điểm hẹp: phép đo trên pháp luật Việt Nam, hai nấc lọc ngày văn bản và khoảng phiên bản. Chưa có bằng chứng cho thứ tự công bố hoặc ưu thế chung; các nguồn bị chặn và phần chưa đọc vẫn có thể đổi cách định vị. [CẦN: đọc đủ các phần và phiên bản còn thiếu đã nêu trong chương tổng quan].

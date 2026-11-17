@@ -121,8 +121,8 @@ Cài đặt trực tuyến lấy quan hệ bằng truy vấn SQL trên cây đi�
 Lúc truy xuất, FTS, đơn vị corpus và khoảng hiệu lực được đọc từ chỉ mục SQLite; cây tổ tiên được đọc từ `data/temporal.sqlite`. Dense dùng vector cục bộ để tính điểm. Đường thực nghiệm này không gọi Neo4j hoặc Milvus. Vai trò của đồ thị nằm ở biểu diễn ngoại tuyến và truy vấn quan hệ qua SQL, cần được phân biệt với lựa chọn phần mềm lưu đồ thị.
 <!-- nguồn: src/vilexgraph/framework/corpus.py; src/vilexgraph/framework/retrieve.py; src/vilexgraph/framework/graphx.py -->
 
-Chỉ số `proposed2` hiện có là truy xuất trên dev; chưa có câu trả lời và chưa có Accuracy của cấu hình này. [CHỜ COLAB: sinh dev cho `b7pp --hybrid`, `proposed2`, `p2a2`, `p2a3`]. [CHỜ G4: cấu hình đã khóa và kết quả bộ test cuối].
-<!-- nguồn: runs/README.md; docs/plans/active/master-plan.md -->
+Trên dev (151 dòng, GPT-4o mini, chạy lại sau khi sửa đồ thị ngày 11/11), Accuracy của `b7pp` là 0,709, `p2a2` 0,702, `p2a3` 0,728, `proposed2` 0,722 và `proposed3` 0,735 (§6.5). Cấu hình khóa ở ADR 0006 §2: generator `gpt-4o-mini-2024-07-18`, nhiệt độ 0, seed 20261109; embedding `dangvantuan/vietnamese-embedding`; mọi hệ có dense chạy lai ghép, k = 20, không reranker; P = `proposed2` theo quy tắc chọn khai trước. Trên bộ test cuối, `proposed2` đạt Accuracy 0,667 [0,598; 0,733] ở lần 1 (§6.6).
+<!-- nguồn: runs/rebuild_20261110_dev/all.score.json; docs/decisions/0006-ke-hoach-phan-tich-bo-test-cuoi.md §2; runs/final_g4_20261112/r1/results.md -->
 
 ## 5.6. Sinh câu trả lời và phân biệt từ chối với hết hiệu lực
 

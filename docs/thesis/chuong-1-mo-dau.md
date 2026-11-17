@@ -46,7 +46,7 @@ Các câu hỏi và giả thuyết dưới đây được giữ nguyên văn đ�
 > Giả thuyết nghiên cứu: Việc mô hình hóa chuỗi phiên bản và hiệu lực ở cấp cấu trúc pháp lý sẽ cải thiện khả năng truy xuất đúng phiên bản so với chỉ lọc theo ngày hiệu lực ở cấp văn bản.
 <!-- nguồn: docs/DeCuongKLTN_23521635_23521643_UIT.docx -->
 
-Để trả lời, khóa luận tách ba mức: mô tả lỗi của các hệ đã chạy; so sánh xác nhận theo kế hoạch phân tích đã khai báo; và phân tích thăm dò về các thành phần hoặc nhóm nhỏ. Các phán quyết trong vòng thử chỉ có hiệu lực trong phạm vi dữ liệu, nhãn và cấu hình tương ứng. [CHỜ G4: kết quả bộ test cuối cho các câu hỏi nghiên cứu và giả thuyết].
+Để trả lời, khóa luận tách ba mức: mô tả lỗi của các hệ đã chạy; so sánh xác nhận theo kế hoạch phân tích đã khai báo; và phân tích thăm dò về các thành phần hoặc nhóm nhỏ. Các phán quyết trong vòng thử chỉ có hiệu lực trong phạm vi dữ liệu, nhãn và cấu hình tương ứng. Trên bộ test cuối (G4, §6.6), F1–F6 được ủng hộ ở cả hai lần chạy, còn F7 (T6 không có đáp án, 23 lineage) không đủ bằng chứng. Theo quy tắc khai trước (ADR 0006 §6), H0 được ủng hộ qua F6, kèm ghi chú vòng lặp test 2 không đủ bằng chứng. F6 trùng F5 về cấu trúc, nên H0 đo bước lọc theo khoảng phiên bản, không đo lan truyền hay duyệt đồ thị lúc truy vấn.
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 <!-- nguồn: docs/plans/active/master-plan.md -->
 
@@ -58,7 +58,7 @@ Các câu hỏi và giả thuyết dưới đây được giữ nguyên văn đ�
 Ở trạng thái hiện tại, đóng góp có thể trình bày là đường ống dẫn xuất phiên bản có truy nguyên, tài nguyên đánh giá công bố nguồn nhãn, và phép so sánh giúp phân biệt các mức thông tin thời gian. Việc hoàn tất hệ theo đề cương và kiểm định trên bộ cuối còn đang chờ. Đóng góp không được định nghĩa bằng yêu cầu hệ đề xuất phải thắng; một kết quả không đủ bằng chứng vẫn trả lời được giới hạn của cách biểu diễn đã thử nếu phép đo đáng tin cậy.
 <!-- nguồn: docs/plans/active/master-plan.md -->
 
-Điều kiện X8 sẽ cấp sẵn căn cứ đúng mốc và căn cứ hiện hành cho các nhóm T1, T2, T3, T6 để đo cái giá của việc đọc sai văn bản, tách khỏi lỗi tìm. Phải làm trên dev trước rồi bộ test cuối; oracle dev hiện có không thay được hai điều kiện đó. [CHỜ COLAB: X8 đúng mốc/hiện hành; chưa có kết quả để kết luận].
+Điều kiện X8 sẽ cấp sẵn căn cứ đúng mốc và căn cứ hiện hành cho các nhóm T1, T2, T3, T6 để đo cái giá của việc đọc sai văn bản, tách khỏi lỗi tìm. Phải làm trên dev trước rồi bộ test cuối; oracle dev hiện có không thay được hai điều kiện đó. Kết quả (§6.5.1): trên bộ cuối, cùng generator đạt Accuracy 0,956 khi được cấp căn cứ đúng mốc và 0,456 khi được cấp căn cứ hiện hành (lần 1, 318 dòng); trên dev là 0,947 và 0,523 (151 dòng). Cột T1 của bộ cuối chưa dùng được do lỗi đáp án ngắn (§6.6.2).
 <!-- nguồn: docs/plans/active/master-plan.md, X8 và mục 10 -->
 
 ## 1.5. Phạm vi và giới hạn
@@ -96,7 +96,7 @@ Các lệch bổ sung so với đề cương và định nghĩa cần công bố
 | Đồ thị tri thức thời gian là thành phần truy xuất | Đồ thị đóng góp chủ yếu ở bước dựng kho phiên bản offline. So `proposed2` với `b7plus` (cùng kho, không dùng đồ thị lúc truy vấn) cho hiệu không phân biệt được với 0 (thăm dò hậu nghiệm: +0,013 [−0,009; +0,035] lần 1, +0,016 [−0,006; +0,038] lần 2; `runs/posthoc_g4_20261113/attribution.json`); không viết “GraphRAG vượt trội” |
 | Một mô hình sinh | Mọi hệ dùng GPT-4o mini (ADR 0004); độ bền theo generator khác họ chưa đo (REFACTOR_PLAN 3.7) |
 | Giao diện minh họa | `scripts/demo.py` chạy dòng lệnh trọn đường, khoảng 5 phút một câu; chưa có giao diện web |
-| Gold độc lập trên bộ test | Gold mù chỉ phủ 24/156 lineage chính của bộ cuối; F1–F6 trên phần này báo riêng, không thay cho cả bộ |
+| Gold độc lập trên bộ test | Gold mù người phủ 105/156 lineage chính của bộ cuối, gồm cả 23 T6; luật sư đọc 30 dòng (κ 0,932). 51 lineage còn lại không đọc mù được vì người gán A đã thấy đáp án. F1–F6 trên phần này báo riêng (§6.6.4) |
 | 1.100–1.300 câu hỏi kiểm thủ công | Hiện đếm nhiều cặp câu hỏi–mốc và tầng nhãn; mọi tầng có 515 lineage chưa tính T5: test v1.0 165, dev 81, test 2 101, silver 168; không phải 515 câu người kiểm đạt |
 | LLM chỉ hỗ trợ diễn đạt | Thực tế model viết nháp, Claude chọn span đáp án (tiêu chí chấm), agent kiểm phần test, và LLM lọc trước khi đưa người; có thiên lệch chọn mẫu |
 | Bốn miền tiêu biểu | Test v1.0 có 136/211 dòng `khac`, silver 243/389; đất đai ở test chỉ 5 dòng/3 lineage; kho rộng không có nghĩa đánh giá cân bằng bốn miền |
@@ -104,7 +104,7 @@ Các lệch bổ sung so với đề cương và định nghĩa cần công bố
 | L4 lọc trước truy xuất | `rel_up` lấy seed trước bộ lọc ngày để tìm lệnh tác động rồi lọc văn bản lệnh; lệch thứ tự cam kết |
 <!-- nguồn: docs/vilextime-dinh-nghia.md, mục 11; docs/DeCuongKLTN_23521635_23521643_UIT.docx; data/vilextime_dataset/vilextime.jsonl; data/vilextime/test2_release_v2.jsonl; data/vilextime_dataset/vilextime_silver.jsonl; data/vilextime_dataset/vilextime_meta.jsonl; runs/domain_e3/report.json; src/vilexgraph/framework/graphx.py; docs/vilextime-datasheet.md -->
 
-V1.0 được khai là bản xác nhận lần 1 trong ADR 0005; amendment 03/11 gọi test 2 là bản lặp lại. Ngày 05/11, sau khi đã thấy kết quả (XN1 được ủng hộ ở v1.0, không đủ bằng chứng ở test 2), kế hoạch mới đổi vai cả hai thành vòng thử và mở bộ cuối. Đây là thay đổi sau quan sát, không phải vai trò được định trước. Giữ cả ba phán quyết cạnh nhau, không gộp điểm hoặc chọn phán quyết thuận lợi. [CHỜ G3: amendment ghi lịch sử các lần nhìn và quy tắc kết luận trước bộ cuối].
+V1.0 được khai là bản xác nhận lần 1 trong ADR 0005; amendment 03/11 gọi test 2 là bản lặp lại. Ngày 05/11, sau khi đã thấy kết quả (XN1 được ủng hộ ở v1.0, không đủ bằng chứng ở test 2), kế hoạch mới đổi vai cả hai thành vòng thử và mở bộ cuối. Đây là thay đổi sau quan sát, không phải vai trò được định trước. Giữ cả ba phán quyết cạnh nhau, không gộp điểm hoặc chọn phán quyết thuận lợi. Lịch sử các lần nhìn được ghi ở ADR 0006 §8 và quy tắc kết luận ở §6; ADR này Accepted ngày 12/11/2026 (commit `ac32a89`), trước lần chạy duy nhất trên bộ cuối.
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md, §1 và amendment 03/11; runs/E3_v1/test/confirm.json; runs/E3_test2/rescore/confirm.json; docs/plans/active/master-plan.md, xử lý C3 -->
 
 Ngoài các lệch trên, trạng thái chưa hoàn tất cũng phải được công bố: M2 kiểm chứng snapshot chưa đạt; Verifier chưa cho thấy tác dụng khi bộ lọc đã loại căn cứ không hợp lệ; scorer chưa có số khớp với người chấm (phiếu 100 câu đang chờ). Bộ cuối đã chạy một lần theo ADR 0006 (G4, 12–13/11); các so sánh thêm sau đó (`b7v`, `bvnone`, `bvdate`, quy kết) là thăm dò hậu nghiệm, báo tách khỏi phép kiểm đã khai.

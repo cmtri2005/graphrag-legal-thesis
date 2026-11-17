@@ -411,6 +411,7 @@ Hoàn tác: plan này chỉ thêm file và thư mục run mới. Xóa thư mục
 - [ ] C1 Bảng phễu. C3 Bảng theo người viết. C4 Số toàn kho. C2 Lát câu hỏi người viết. C5 Nguồn độc lập.
 - [ ] D1–D5 Paper.
 - [ ] E1–E8 Khóa luận.
+- [x] 17/11 E: điền 13/14 chỗ hạn 22/11 (C1:49, C1:61, C1:107, C6:27, C2:61, C4:200, C5:124, C6:290/299, C6:412, C6:426, C6:431, C6:445; thêm C6:437 nhờ oracle Qwen). Viết mới §6.6.6 (TCS/MRR, LightRAG, Qwen), phân rã khoảng cách đến oracle ở §6.6.3, gold mù đợt 2 ở §6.6.4, phiếu 33 câu ở §6.6.5; sửa câu cũ "24/156" ở chương 1, 7. Còn C6:33, C6:570 chờ CMT quyết A4 (TVER theo người). Chưa qua evidence-gate.
 - [ ] F1–F4 Nộp.
 
 ## Decisions
