@@ -647,7 +647,7 @@ Nhãn v1.0 gồm nguồn người và agent, các cổng đồng thuận không 
 <!-- nguồn: docs/decisions/0005-ke-hoach-phan-tich.md -->
 <!-- nguồn: docs/plans/active/phase-3-kg-l0-l3.md @51f36c7 -->
 
-Kết quả chỉ dùng một generator và các cấu hình từ vựng hiện có. Sổ chạy dev ghi 553/553 đầu ra giống nhau ở các prompt trùng giữa các biến thể chạy; điều này không chứng minh mọi phần cứng và thư viện đều cho kết quả giống nhau. Chi phí Colab chưa được đối soát đầy đủ. [CẦN: cấu hình GPU, phiên bản thư viện và chi phí thực tế của từng lượt từ provenance và biên nhận; không suy từ ước tính trước chạy].
+Họ xác nhận chỉ dùng một generator (GPT-4o mini); generator thứ hai (Qwen3.8-27B, §6.6.6) chỉ ở mức thăm dò, chạy qua API không ghim revision. Sổ chạy dev ghi 553/553 đầu ra giống nhau ở các prompt trùng giữa các biến thể chạy; điều này không chứng minh mọi phần cứng và thư viện đều cho kết quả giống nhau. Chi phí Colab chưa được đối soát đầy đủ. [CẦN: cấu hình GPU, phiên bản thư viện và chi phí thực tế của từng lượt từ provenance và biên nhận; không suy từ ước tính trước chạy].
 <!-- nguồn: runs/README.md -->
 <!-- nguồn: docs/decisions/0004-framework-truy-xuat-va-sinh.md -->
 <!-- nguồn: runs/E3_v1/test/proposed.run.json -->
