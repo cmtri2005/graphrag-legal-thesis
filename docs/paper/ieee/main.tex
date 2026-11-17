@@ -163,45 +163,65 @@ The checks in \cref{tab:corpus} bound what the corpus can claim. Applied events 
 
 \begin{figure*}[t]
 \centering
-\begin{tikzpicture}[font=\footnotesize,node distance=3mm and 5mm,
-  b/.style={draw=#1!80!black,fill=#1!10,rounded corners=2.5pt,align=center,inner sep=2.5pt,minimum height=11.5mm,text width=2.85cm},
+\begin{tikzpicture}[font=\footnotesize,
+  b/.style={draw=#1!80!black,fill=#1!10,rounded corners=2.5pt,align=center,inner sep=2.5pt,minimum height=12.5mm,text width=2.9cm},
   ar/.style={-{Stealth[length=2mm]},thick,cInk},
+  bus/.style={-{Stealth[length=2.2mm]},line width=1.1pt,rounded corners=3pt},
   panel/.style={draw=cGrey!60,dashed,rounded corners=4pt,inner sep=4pt},
   ptitle/.style={font=\small\bfseries\sffamily,text=cInk,anchor=south west,inner sep=1pt},
-  flow/.style={-{Stealth[length=2.5mm]},line width=1.1pt}]
-% (a)
-\node[b=cGrey] (crawl) {vbpl.vn: documents,\\structure trees, relations};
-\node[b=cBlue,right=of crawl] (ext) {Command extractor:\\amend, supplement,\\replace, repeal};
-\node[b=cBlue,right=of ext] (app) {Event applier with\\chain invariants};
-\node[b=cBlue,right=of app] (eff) {Effective intervals\\$\mathrm{Eff}(v)$, \cref{eq:eff}};
-\node[b=cBlue,right=of eff] (store) {Version store\\A: wordings + commands\\B: version texts};
-\foreach \u/\v in {crawl/ext,ext/app,app/eff,eff/store} \draw[ar] (\u) -- (\v);
-% (b)
-\node[b=cOrange,below=17mm of crawl] (cand) {Version transitions\\$v_i\!\to\!v_{i+1}$ + diff spans};
-\node[b=cOrange,right=of cand] (q) {LLM drafts question\\and a short answer\\per version};
-\node[b=cOrange,right=of q] (lab) {AI-A, AI-B label\\blindly (Q1--Q4);\\adjudicator proposal};
-\node[b=cOrange,right=of lab] (rev) {Author reviews\\every row; final label\\(\texttt{ai\_cmt} tier)};
-\node[b=cOrange,right=of rev] (asof) {As-of dates (boundary,\\mid-interval);\\document-level split};
-\foreach \u/\v in {cand/q,q/lab,lab/rev,rev/asof} \draw[ar] (\u) -- (\v);
-% (c)
-\node[b=cGreen,below=17mm of cand] (query) {Question $x$,\\date $t$};
-\node[b=cGreen,right=of query] (ret) {BM25 + dense (RRF),\\$k{=}20$, only units with\\$t\in\mathrm{Eff}(u)$};
-\node[b=cGreen,right=of ret] (exp) {ancestor-command: commands\\on the target\\and its ancestors};
-\node[b=cGreen,right=of exp] (gen) {GPT-4o mini ($T{=}0$):\\answer + citations;\\citation check at $t$};
-\node[b=cGreen,right=of gen] (score) {Contrastive scorer:\\Acc, wrong-version,\\TV-Recall@$k$, TVER};
-\foreach \u/\v in {query/ret,ret/exp,exp/gen,gen/score} \draw[ar] (\u) -- (\v);
-\begin{scope}[on background layer]
-\node[panel,fit=(crawl)(store)] (P1) {};
-\node[panel,fit=(cand)(asof)] (P2) {};
-\node[panel,fit=(query)(score)] (P3) {};
+  gn/.style={draw=cInk,fill=white,rounded corners=1pt,inner sep=1.3pt,font=\tiny},
+  lab/.style={font=\scriptsize\itshape,align=left}]
+% ---------- (a) offline
+\node[b=cGrey] (crawl) at (1.5,0) {vbpl.vn: documents,\\structure trees,\\relations};
+\node[b=cBlue] (ext) at (4.85,0) {Command extractor:\\amend, supplement,\\replace, repeal + target};
+\node[b=cBlue,minimum height=25mm] (graph) at (8.2,0) {};
+\node[font=\scriptsize,anchor=north,align=center,text=cInk] at ([yshift=-0.5mm]graph.north) {Temporal legal graph:\\hierarchy + dated edges};
+\begin{scope}[shift={([yshift=-2.5mm]graph.center)}]
+  \node[gn] (gD) at (-0.8,0.32) {Law $D$};
+  \node[gn] (gA) at (-0.8,-0.18) {Art.\ 5};
+  \node[gn] (gC) at (-0.8,-0.68) {Cl.\ 2};
+  \node[gn,draw=cVerm] (gM) at (0.75,0.32) {Decree $D'$};
+  \draw[cGrey,thick] (gD)--(gA)--(gC);
+  \draw[-{Stealth[length=1.4mm]},cVerm,thick] (gM) |- node[pos=0.78,above,font=\tiny,text=cVerm]{amends @ $t_e$} (gC);
 \end{scope}
-\node[ptitle] at ([yshift=0.6mm]P1.north west) {(a) Offline: versioned corpus (\S\ref{sec:corpus})};
-\node[ptitle] at ([yshift=0.6mm]P2.north west) {(b) ViLexTime construction (\S\ref{sec:benchmark})};
-\node[ptitle] at ([yshift=0.6mm]P3.north west) {(c) Online: full configuration and evaluation (\S\ref{sec:systems})};
-\draw[flow,cBlue] (store.south) -- node[right,font=\scriptsize\itshape,text=cBlue,align=left]{version chains,\\intervals} (store.south |- P2.north);
-\draw[flow,cOrange!85!black] (asof.south) -- node[right,font=\scriptsize\itshape,text=cOrange!85!black,align=left]{rows $(x,t)$,\\gold, distractors} (asof.south |- P3.north);
+\node[b=cBlue] (app) at (11.55,0) {Event applier: replays\\events, keeps chain\\invariants; unclear\\targets $\to$ review};
+\node[b=cBlue] (store) at (14.9,0) {\textbf{Version store}\\{\scriptsize$v_1[s_1,s_2)\!\to\!v_2[s_2,\infty)$}\\$\mathrm{Eff}(v)$, Eq.~(1)\\{\scriptsize A: wordings + commands}\\{\scriptsize B: version texts}};
+\foreach \u/\v in {crawl/ext,ext/graph,graph/app,app/store} \draw[ar] (\u) -- (\v);
+% ---------- (b) online
+\node[b=cGreen] (query) at (1.5,-3.75) {Question $x$,\\date $t$};
+\node[b=cGreen,draw=cBlue,line width=1.3pt] (ret) at (4.85,-3.75) {BM25 + dense (RRF),\\$k{=}20$; \textbf{hard filter}\\$t\in\mathrm{Eff}(u)$ before top-$k$};
+\node[b=cGreen,dashed] (exp) at (8.2,-3.75) {Ancestor-command\\expansion: commands\\on seed + ancestors};
+\node[b=cGreen] (gen) at (11.55,-3.75) {GPT-4o mini ($T{=}0$):\\answer + citations;\\citation check at $t$};
+\node[b=cGreen] (score) at (14.9,-3.75) {Contrastive scorer:\\Acc, wrong-version,\\TV-Recall@$k$, TCS};
+\foreach \u/\v in {query/ret,ret/exp,exp/gen,gen/score} \draw[ar] (\u) -- (\v);
+% ---------- (c) benchmark
+\node[b=cOrange] (cand) at (1.5,-7.1) {Version transitions\\$v_i\!\to\!v_{i+1}$ in the\\store + diff spans};
+\node[b=cOrange] (q) at (4.85,-7.1) {LLM drafts question\\and a short answer\\per version};
+\node[b=cOrange] (lab) at (8.2,-7.1) {AI-A, AI-B label\\blindly (Q1--Q4);\\adjudicator proposal};
+\node[b=cOrange] (rev) at (11.55,-7.1) {Author reviews every\\analysis-slice row;\\final label (\texttt{ai\_cmt})};
+\node[b=cOrange] (asof) at (14.9,-7.1) {As-of dates (boundary,\\mid-interval);\\document-level split};
+\foreach \u/\v in {cand/q,q/lab,lab/rev,rev/asof} \draw[ar] (\u) -- (\v);
+% ---------- panels
+\begin{scope}[on background layer]
+\node[panel,fit=(crawl)(graph)(store)] (P1) {};
+\node[panel,fit=(query)(score)] (P2) {};
+\node[panel,fit=(cand)(asof)] (P3) {};
+\end{scope}
+\node[ptitle] at ([yshift=0.6mm]P1.north west) {(a) Offline: graph $\to$ version store (\S\ref{sec:corpus})};
+\node[ptitle] at ([yshift=0.6mm]P2.north west) {(b) Online (\S\ref{sec:systems})};
+\node[ptitle] at ([yshift=0.6mm]P3.north west) {(c) ViLexTime (\S\ref{sec:benchmark})};
+% ---------- cross-panel flows
+\def\ybus{-2.15}
+\draw[bus,cBlue] (store.south) -- (store.south |- 0,\ybus) -- (ret.north |- 0,\ybus) -- (ret.north);
+\draw[bus,cBlue] (exp.north |- 0,\ybus) -- (exp.north);
+\node[lab,text=cBlue,anchor=south] at (11.55,\ybus) {layers A/B, $\mathrm{Eff}(u)$, amend/repeal edges};
+\def\ylow{-5.05}
+\draw[bus,cOrange!85!black] (asof.north) -- (score.south);
+\draw[bus,cOrange!85!black] (asof.north |- 0,\ylow) -- (query.south |- 0,\ylow) -- (query.south);
+\node[lab,text=cOrange!85!black,anchor=south west] at (1.6,\ylow) {rows $(x,t)$};
+\node[lab,text=cOrange!85!black,anchor=west] at (15.0,-4.85) {gold, distractors};
 \end{tikzpicture}
-\caption{Overview. (a) The version store is derived offline from amendment and repeal commands; effective intervals are precomputed. (b) Benchmark rows are generated from version transitions, labelled by two blind AI agents, and reviewed by an author. (c) At query time, retrieval reads layers A/B of the store and removes candidates outside their effective interval \emph{before} ranking; graph use at query time is limited to fetching commands that target the hit or its ancestors.}
+\caption{Overview. (a)~Offline, amendment and repeal commands become dated edges on the provision hierarchy; the event applier replays them into version chains, and effective intervals (Eq.~\ref{eq:eff}) are precomputed in the version store. (b)~At query time, retrieval over layer A or B removes units outside their effective interval \emph{before} the top-$k$ cut (bold border). The full configuration then appends commands that target a seed or its ancestors (dashed: the only query-time graph use) and checks citations at $t$; baselines drop or replace these steps (\cref{tab:systems}). (c)~Benchmark rows come from version transitions in the store, are labelled by two blind AI agents and reviewed by an author, and supply $(x,t)$ to (b) and gold and distractor spans to the scorer.}
 \label{fig:overview}
 \end{figure*}
 
