@@ -34,7 +34,9 @@ Hệ đề xuất `proposed2` hơn RAG phẳng lai ghép (`b4`) và hơn mở r�
 | F3 | P − `b4`, `wrong_version` | −0,283 [−0,330; −0,237] | ủng hộ, ổn định |
 <!-- nguồn: runs/final_g4_20261112/r1/confirm.json; runs/final_g4_20261112/compare_runs.json -->
 
-Scorer không chấm dễ dãi (§6.6.5). Trên mẫu người chấm, `proposed2` vẫn hơn `b4` rõ (23/33 so với 10/33 câu đúng), cùng chiều F1; đây là mô tả, không phải phép so ghép cặp. Độ lớn của F3 là theo scorer. `b5` là mở rộng một bước tự xây, không phải GraphRAG đầy đủ; so với một GraphRAG thật (LightRAG) chưa có kết quả.
+Scorer không chấm dễ dãi (§6.6.5). Trên mẫu người chấm, `proposed2` vẫn hơn `b4` rõ (23/33 so với 10/33 câu đúng), cùng chiều F1; đây là mô tả, không phải phép so ghép cặp. Độ lớn của F3 là theo scorer. `b5` là mở rộng một bước tự xây, không phải GraphRAG đầy đủ. **(Thăm dò)** So với một GraphRAG thật (LightRAG, thêm sau khi đã thấy bộ cuối): `proposed2 − lightrag` +0,321 [+0,249; +0,392] lần 1, +0,308 [+0,235; +0,382] lần 2; LightRAG chỉ ngang RAG phẳng (`lightrag − b4` +0,022 [−0,037; +0,080] lần 1). LightRAG chạy trên kho nhỏ hơn với ngữ cảnh dài hơn, nên đây không phải so sánh ngang hàng (§6.6.6).
+<!-- nguồn: runs/lightrag_20261113/test/{r1,r2}/lightrag_vs_b4_p.score.json -->
+
 
 ### RQ3 và giả thuyết đề cương: lợi ích đến từ đâu
 
