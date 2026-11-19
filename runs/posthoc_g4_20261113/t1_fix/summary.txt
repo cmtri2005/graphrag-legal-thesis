@@ -1,0 +1,32 @@
+ADR 0006 Amendment 2026-11-19 · T1 (t1_control, giua_khoang, 43 dòng) · chấm lại sau khi đã thấy kết quả
+Accuracy T1: trước → sau sửa (r1 | r2)
+  b1          0.000 → 0.047 | 0.000 → 0.047
+  b2ctx       0.070 → 0.349 | 0.070 → 0.349
+  b3          0.047 → 0.302 | 0.047 → 0.326
+  b4          0.047 → 0.279 | 0.047 → 0.256
+  b5          0.047 → 0.279 | 0.070 → 0.279
+  b6          0.070 → 0.302 | 0.070 → 0.326
+  b7          0.093 → 0.442 | 0.093 → 0.442
+  b7plus      0.093 → 0.465 | 0.093 → 0.465
+  b7pp        0.070 → 0.465 | 0.093 → 0.442
+  oracle      0.047 → 0.860 | 0.047 → 0.860
+  oracle_now  0.047 → 0.860 | 0.047 → 0.860
+  proposed2   0.093 → 0.442 | 0.093 → 0.442
+  b2ctx − b1  0.070 → 0.302 | 0.070 → 0.302
+  b3 − b2ctx  -0.023 → -0.047 | -0.023 → -0.023
+  b4 − b3     0.000 → -0.023 | 0.000 → -0.070
+  b5 − b4     0.000 → 0.000 | 0.023 → 0.023
+  b6 − b5     0.023 → 0.023 | 0.000 → 0.047
+  b7 − b6     0.023 → 0.140 | 0.023 → 0.116
+  b7plus − b7 0.000 → 0.023 | 0.000 → 0.023
+  b7pp − b7plus -0.023 → 0.000 | 0.000 → -0.023
+  oracle − b7pp -0.023 → 0.395 | -0.047 → 0.419
+  oracle_now − oracle 0.000 → 0.000 | 0.000 → 0.000
+  proposed2 − oracle_now 0.047 → -0.419 | 0.047 → -0.419
+  r1 proposed2−b2ctx: +0.023 không chứng minh được không làm hại → +0.093 [-0.093; +0.279] không chứng minh được không làm hại
+  r1 b7−b2ctx: +0.023 không chứng minh được không làm hại → +0.093 [-0.093; +0.279] không chứng minh được không làm hại
+  r1 b7pp−b2ctx: +0.000 không chứng minh được không làm hại → +0.116 [-0.047; +0.279] không làm hại
+  r2 proposed2−b2ctx: +0.023 không chứng minh được không làm hại → +0.093 [-0.093; +0.279] không chứng minh được không làm hại
+  r2 b7−b2ctx: +0.023 không chứng minh được không làm hại → +0.093 [-0.093; +0.279] không chứng minh được không làm hại
+  r2 b7pp−b2ctx: +0.023 không chứng minh được không làm hại → +0.093 [-0.093; +0.279] không chứng minh được không làm hại
+Họ F1–F7: không đổi ở cả hai lần (so khớp estimate và phán quyết).

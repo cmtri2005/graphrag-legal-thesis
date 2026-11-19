@@ -70,7 +70,7 @@ Scorer không chấm dễ dãi (§6.6.5). Trên mẫu người chấm, `proposed
 
 - **Tỷ lệ sai phiên bản theo người.** Phiếu người chấm 100 câu (§6.6.5) không hiện phiên bản khác. Phiếu chấm lại 33 câu có hiện mọi phiên bản: 9/9 dòng scorer gắn cờ được chấm là sai phiên bản, mẫu nhỏ, người chấm là tác giả (§6.6.5).
 - **Vế LLM của RQ1:** mới có một LLM không truy xuất.
-- **Cơ cấu dữ liệu lệch đề cương:** T2 127 lineage, T6 23, T3 6, không có T5; cột T1 chờ amendment sửa đáp án ngắn.
+- **Cơ cấu dữ liệu lệch đề cương:** T2 127 lineage, T6 23, T3 6, không có T5; đáp án ngắn T1 đã sửa và chấm lại sau khi thấy kết quả (amendment 19/11), phép kiểm không làm hại trên T1 chưa kết luận được vì chỉ có 43 dòng.
 - **Thước đo chưa độc lập hoàn toàn.** Gold phiên bản lấy từ cùng đồ thị mà bộ lọc dùng; gold mù phủ 105/156 lineage, đa phần do đồng tác giả đọc, và chỉ trên các điều khoản kho đã thấy có thay đổi; TVER theo người không làm (CMT, 17/11). Gold mù đợt 2 (A2, 81 lineage) được dùng thay một phần phép đối chiếu tay M2; ít hơn 100 truy vấn đề cương nêu.
 - **Nhãn bộ cuối** là silver-AI có CMT duyệt, chưa có người độc lập kiểm. Đồng thuận AI–AI trước hòa giải AC1 0,608, dưới ngưỡng 0,80. Ca khó do agent `legal-adjudicator` chốt, CMT ủy quyền, chưa qua luật sư.
 - **Phạm vi:** họ xác nhận dùng một generator (GPT-4o mini), generator thứ hai chỉ thăm dò; một nguồn dữ liệu (vbpl); LightRAG chỉ so thăm dò, với kho nhỏ hơn và ngữ cảnh dài hơn (§6.6.6).

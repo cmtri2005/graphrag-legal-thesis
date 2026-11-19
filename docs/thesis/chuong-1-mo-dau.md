@@ -58,7 +58,7 @@ Các câu hỏi và giả thuyết dưới đây được giữ nguyên văn đ�
 Ở trạng thái hiện tại, đóng góp có thể trình bày là đường ống dẫn xuất phiên bản có truy nguyên, tài nguyên đánh giá công bố nguồn nhãn, và phép so sánh giúp phân biệt các mức thông tin thời gian. Kiểm định trên bộ cuối đã chạy (G4, §6.6). Đóng góp không được định nghĩa bằng yêu cầu hệ đề xuất phải thắng; một kết quả không đủ bằng chứng vẫn trả lời được giới hạn của cách biểu diễn đã thử nếu phép đo đáng tin cậy.
 <!-- nguồn: docs/plans/active/master-plan.md -->
 
-Điều kiện X8 sẽ cấp sẵn căn cứ đúng mốc và căn cứ hiện hành cho các nhóm T1, T2, T3, T6 để đo cái giá của việc đọc sai văn bản, tách khỏi lỗi tìm. Phải làm trên dev trước rồi bộ test cuối; oracle dev hiện có không thay được hai điều kiện đó. Kết quả (§6.5.1): trên bộ cuối, cùng generator đạt Accuracy 0,956 khi được cấp căn cứ đúng mốc và 0,456 khi được cấp căn cứ hiện hành (lần 1, 318 dòng); trên dev là 0,947 và 0,523 (151 dòng). Cột T1 của bộ cuối chưa dùng được do lỗi đáp án ngắn (§6.6.2).
+Điều kiện X8 sẽ cấp sẵn căn cứ đúng mốc và căn cứ hiện hành cho các nhóm T1, T2, T3, T6 để đo cái giá của việc đọc sai văn bản, tách khỏi lỗi tìm. Phải làm trên dev trước rồi bộ test cuối; oracle dev hiện có không thay được hai điều kiện đó. Kết quả (§6.5.1): trên bộ cuối, cùng generator đạt Accuracy 0,956 khi được cấp căn cứ đúng mốc và 0,456 khi được cấp căn cứ hiện hành (lần 1, 318 dòng); trên dev là 0,947 và 0,523 (151 dòng). Trên T1 của bộ cuối, sau khi sửa đáp án ngắn và chấm lại (amendment 19/11), cả hai điều kiện đạt 0,860, đúng như kỳ vọng vì T1 không đổi theo thời gian (§6.6.2).
 <!-- nguồn: docs/plans/active/master-plan.md, X8 và mục 10 -->
 
 ## 1.5. Phạm vi và giới hạn
@@ -87,7 +87,7 @@ Các lệch bổ sung so với đề cương và định nghĩa cần công bố
 
 | Cam kết / định nghĩa | Thực hiện và giới hạn |
 |---|---|
-| T1 250 câu | Định nghĩa giảm còn 150 cho đối chứng. Bộ cuối có 43 lineage T1, ngoài `all`; đáp án ngắn là nguyên lời văn còn ký hiệu liệt kê nên cột T1 chưa dùng được, nháp sửa ở REFACTOR_PLAN 3.2 chờ duyệt |
+| T1 250 câu | Định nghĩa giảm còn 150 cho đối chứng. Bộ cuối có 43 lineage T1, ngoài `all`; đáp án ngắn từng là nguyên lời văn còn ký hiệu liệt kê; đã sửa và chấm lại theo amendment ADR 0006 19/11 |
 | T2 400 câu | Bộ cuối 127 lineage |
 | T3 200 câu | Định nghĩa sàn 120, mục tiêu 150; thực tế nhóm đòi từ ba đáp án theo mốc, không bắt buộc truy vết A→B→C như đề cương. Bộ cuối chỉ 6 lineage: chỉ báo mô tả |
 | T4 riêng 150 câu | Đổi thành lát chồng lắp của T2, không cộng hai lần |

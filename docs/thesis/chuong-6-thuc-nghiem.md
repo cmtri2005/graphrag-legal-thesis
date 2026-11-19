@@ -503,8 +503,8 @@ F1–F3 đều có p Holm < 0,0002 ở cả hai lần. F3 dùng `wrong_version` 
 - **RQ1, vế LLM không truy xuất:** `b1` thấp là thật: người chấm thấy 2/34 câu đúng (scorer 0/34), 27/34 sai nội dung (§6.6.5). Phiếu không hiện phiên bản khác, nên chưa đo được `b1` có trả theo phiên bản cũ hay không. Mẫu nhỏ, một LLM, một người chấm.
 - **Đọc bản hiện hành thay bản đúng mốc:** Accuracy rơi từ 0,956 (`oracle`) xuống 0,456 (`oracle_now`), cùng generator. Đây là cỡ của bài toán thời gian khi căn cứ đã có sẵn.
 - **Dao động generator:** số câu trả lời đổi giữa hai lần trên `all`: `b4` 49 (12 từ đúng sang sai, 1 ngược lại), `b5` 58, `b7pp` 58, `proposed2` 39, `oracle` 12.
-- **T1:** đáp án ngắn của 43 dòng T1 là nguyên lời văn còn ký hiệu liệt kê, `oracle` chỉ đúng 2/43. Cột T1 chưa dùng được, chờ amendment (REFACTOR_PLAN 3.2).
-<!-- nguồn: runs/final_g4_20261112/compare_runs.json; runs/final_g4_20261112/r1/results.md -->
+- **T1 (chấm lại sau khi đã thấy kết quả, amendment ADR 0006 19/11):** đáp án ngắn của 43 dòng T1 là nguyên lời văn còn ký hiệu liệt kê, nên bản đầu `oracle` chỉ đúng 2/43. Sau khi bỏ ký hiệu liệt kê ở đầu mỗi đoạn (cơ học, không viết lại đáp án) và chấm lại dự đoán đã lưu: `oracle` 0,860 (37/43), `proposed2` 0,442, `b2ctx` 0,349, giống nhau ở hai lần. Phép kiểm không làm hại `proposed2 − b2ctx` +0,093 [−0,093; +0,279] ở cả hai lần: **không chứng minh được không làm hại**, vì 43 dòng cho KTC quá rộng (§4 ADR 0006 đã dự kiến). `proposed2` khẳng định sai "hết hiệu lực" ở 1/43 dòng T1, `b2ctx` 11/43.
+<!-- nguồn: runs/final_g4_20261112/compare_runs.json; runs/final_g4_20261112/r1/results.md; T1: runs/posthoc_g4_20261113/t1_fix/summary.txt, r{1,2}/confirm.json -->
 
 ### 6.6.3. Quy kết sau khi chạy (thăm dò hậu nghiệm)
 
@@ -624,7 +624,7 @@ Các phép so này đều ngoài họ Holm, không đổi phán quyết F1–F7.
 
 | Hạng mục | Tình trạng |
 |---|---|
-| Đáp án ngắn T1 | Chưa sửa; cần amendment |
+| Đáp án ngắn T1 | Đã sửa và chấm lại (amendment 19/11, §6.6.2) |
 | Gold mù người | Xong 105/156 lineage, gồm 23 T6 (§6.6.4); 51 lineage còn lại đã bị người gán A thấy đáp án, không đọc mù được |
 | Người thứ hai kiểm nhãn (A3) | Chưa làm |
 | TVER theo người | Không làm (CMT, 17/11) |

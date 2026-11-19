@@ -71,7 +71,7 @@ Nguồn: `runs/final_g4_20261112/{r1,r2}/test/all.score.json` (đọc lại hôm
 | P1-3 Bãi bỏ | Chưa | 7/23 |
 | P1-4 Câu hỏi thật | Chưa | |
 | P1-5 Vế LLM của RQ1 | Chưa | |
-| P2-6 Sửa đáp án ngắn T1 | Nháp amendment có, chờ duyệt | Oracle T1 2/43 lên 37/43 |
+| P2-6 Sửa đáp án ngắn T1 | Xong 19/11 (amendment ADR 0006) | Oracle T1 2/43 lên 37/43 |
 | W1–W6, W8 | Xong | |
 | W7, W9–W12 | Chưa | |
 

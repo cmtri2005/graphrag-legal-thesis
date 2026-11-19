@@ -327,3 +327,14 @@ Accepted 16/11/2026, CMT duyệt trong hội thoại ("chốt"), **trước** kh
 - **Không đổi:** P, F1–F7, phán quyết đã báo, scorer, gold, prompt đã khóa.
 - **Chi phí ước lượng:** khoảng 3 USD (khoảng 4.700 token đầu vào mỗi prompt đo trên dev; `lightrag` dài hơn).
 - **Đường chạy trên bộ cuối:** `runs/qwen_chutes_20261116/test/run_test.sh`.
+
+## Amendment 2026-11-19: sửa đáp án ngắn của 43 lineage T1 đối chứng, chấm lại sau khi đã thấy kết quả
+
+Accepted 19/11/2026, CMT duyệt trong hội thoại ("duyệt nhé. làm đi"), nháp từ `docs/plans/active/REFACTOR_PLAN.md` (việc 3.2, 13/11). NMT chưa có xác nhận riêng trong repo. Không sửa phần nào ở trên.
+
+- **Lỗi:** đáp án ngắn T1 là nguyên lời văn của đơn vị, mở đầu bằng ký hiệu liệt kê ("1.", "d)") và ở 4 dòng có câu dẫn của khoản cha; 41/43 dòng bắt đầu bằng ký hiệu. Phép so khớp đòi chuỗi chứa đủ các ký hiệu đó, nên câu trả lời đúng bị chấm sai (`oracle` T1: 2/43; dev T1: 0,833).
+- **Đã thấy gì:** toàn bộ kết quả G4 và hậu nghiệm, kể cả Accuracy T1 của mọi hệ và `t1_no_harm`; đã thử quy tắc dưới đây trên `oracle` T1 (2/43 → 37/43) trước khi duyệt.
+- **Sửa (cơ học, không phán đoán):** với mỗi đoạn của đáp án ngắn (tách bằng "…"), bỏ một ký hiệu liệt kê ở đầu theo biểu thức `^\s*(?:\d+(?:\.\d+)*\.|[a-zđ]\)|[a-zđ]\.\d+\))\s+`. Không đổi chữ nào khác, không bỏ câu dẫn, không viết lại đáp án. Bản cũ `data/vilextime_final/vilextime.jsonl` giữ nguyên; bản sửa ở `runs/posthoc_g4_20261113/t1_fix/release/` (script `scripts/eval/fix_t1_short_answers.py`, danh sách dòng đổi `changed.jsonl`).
+- **Chấm lại:** dự đoán G4 lần 1 và lần 2 đã lưu, không gọi model. Tính lại `t1_no_harm` (§4, δ = 0,05) và Accuracy T1 mọi hệ. Báo cả bản trước và sau sửa, ghi "chấm lại sau khi đã thấy kết quả". Đường chạy `runs/posthoc_g4_20261113/t1_fix/run.sh`.
+- **Không đổi:** họ F1–F7 (T1 ngoài `all`), scorer, các nhóm khác.
+- **Kết quả (19/11, `runs/posthoc_g4_20261113/t1_fix/summary.txt`):** `oracle` T1 0,047 → 0,860 (37/43) ở cả hai lần; `proposed2` 0,093 → 0,442; `b2ctx` 0,070 → 0,349. `t1_no_harm`, `proposed2 − b2ctx`: +0,093 [−0,093; +0,279] ở cả hai lần → "không chứng minh được không làm hại" (cận dưới ≤ −0,05; KTC rộng như §4 đã dự kiến). `b7pp − b2ctx` lần 1 +0,116 [−0,047; +0,279] → "không làm hại", lần 2 +0,093 [−0,093; +0,279] → không chứng minh được; không nêu kết luận "không làm hại" vì hai lần không cùng phán quyết. Khẳng định sai "hết hiệu lực" trên T1 (không đổi theo bản sửa): `proposed2` 1/43, `b2ctx` 11/43. Họ F1–F7 trùng khít bản gốc ở cả hai lần.
