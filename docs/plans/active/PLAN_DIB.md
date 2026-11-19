@@ -13,6 +13,10 @@ Mở 19/11/2026. CMT chốt: nộp Data in Brief (không chờ ICAIL); công b�
 ## Việc
 - [x] Dựng bản phát hành DiB: `scripts/pipeline/build_dib_release.py` → `data/vilextime_dib/`
   (722 dòng, 199 lineage, 675 có đáp án; ai_agree 183, ai_adjudicated 12, tác giả quyết 4; 105 lineage có gold mù).
+- [x] Repo dữ liệu riêng `../vilextime_uit` → github.com/cmtri2005/vilextime_uit (main, commit a5b9d52, 19/11):
+  data 3.0.0, README/SCHEMA tiếng Anh, `scripts/check_dataset.py`, CC BY 4.0 + MIT, CITATION.cff (thiếu tên tác giả).
+  Cập nhật repo này khi dữ liệu đổi: chạy `build_dib_release.py`, chép 3 file sang `vilextime_uit/data/`.
+- [ ] Đóng gói corpus truy xuất mà `accepted_evidence`/`version_id` trỏ tới (asis 771 MB, versions 834 MB): lọc theo 199 lineage hoặc đăng Zenodo.
 - [ ] Dịch hướng dẫn gán nhãn 4.0 sang tiếng Anh, thêm phần "tra cứu từng bước" cho người không học luật (GVHD yêu cầu).
 - [ ] README tiếng Anh + datasheet cho repo dữ liệu; gom nhãn thô AI-A/AI-B, prompt, nguồn đã tra vào `annotation/`.
 - [ ] Bảng thống kê tự động từ `data/vilextime_dib/`.
