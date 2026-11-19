@@ -48,6 +48,12 @@ RUNS = [  # first run holding a lineage wins; later ones are kept as superseded
 ]
 ADJUDICATION = [AI / "2026-11-07_adjudication_all/results", AI / "2026-11-08_lo2/schema_validated/adjudication.jsonl",
                 AI / "2026-11-08_lo2/open_cases_for_CMT.jsonl", AI / "2026-11-08_supp18/adjudication.jsonl", AI / "2026-11-11_t1_labels/adjudication.jsonl"]
+GOLD_COLS = {"khoa": "item_key", "cau_hoi": "question", "ngay_hoi": "as_of", "van_ban": "document",
+             "dieu_khoan": "provision", "link": "source_url", "van_ban_tac_dong_theo_cong": "acting_documents_listed_by_portal",
+             "hieu_luc": "in_force", "noi_dung": "content", "van_ban_ap_dung": "applicable_document",
+             "kg_hieu_luc": "store_in_force", "kg_noi_dung": "store_content", "kg_hieu_luc_tu": "store_valid_from",
+             "kg_hieu_luc_den": "store_valid_to", "dong_y": "agrees_with_store"}
+GOLD_VALUES = {"có": "yes", "co": "yes", "không": "no", "khong": "no"}
 GOLD_DROP = {"ly_do", "ghi_chu_mo", "phut", "ghi_chu", "stage1_sha256"}  # free notes and timing: not released
 
 # Verbatim prompts, agent definitions and guideline (initials such as CMT = the reviewing author are kept).
@@ -60,13 +66,13 @@ PROMPTS = [
     ("data/review/ai_research/codex_b_wrapper.md", "labelling/codex_b_wrapper.txt"),
     ("data/review/ai_research/2026-11-07_adjudication_all/prompts", "adjudication/silver"),
     ("data/review/ai_research/2026-11-08_lo2/adjudication/prompts", "adjudication/lo2"),
-    (".claude/agents/legal-annotator-a.md", "agents/legal-annotator-a.md"),
-    (".claude/agents/legal-annotator-b.md", "agents/legal-annotator-b.md"),
-    (".claude/agents/legal-adjudicator.md", "agents/legal-adjudicator.md"),
-    (".claude/skills/vilextime-ai-labeling/SKILL.md", "agents/skill-vilextime-ai-labeling.md"),
-    (".claude/skills/vn-legal-research/SKILL.md", "agents/skill-vn-legal-research.md"),
-    ("docs/vilextime-annotation.md", "../guidelines/guideline_v4.0_vi.md"),
-    ("docs/vilextime-dinh-nghia.md", "../guidelines/dataset_definition_vi.md"),
+    (".claude/agents/legal-annotator-a.md", "agents/legal-annotator-a.txt"),
+    (".claude/agents/legal-annotator-b.md", "agents/legal-annotator-b.txt"),
+    (".claude/agents/legal-adjudicator.md", "agents/legal-adjudicator.txt"),
+    (".claude/skills/vilextime-ai-labeling/SKILL.md", "agents/skill-vilextime-ai-labeling.txt"),
+    (".claude/skills/vn-legal-research/SKILL.md", "agents/skill-vn-legal-research.txt"),
+    ("docs/vilextime-annotation.md", "context/annotation_guideline_v4.0_vi.txt"),
+    ("docs/vilextime-dinh-nghia.md", "context/dataset_definition_vi.txt"),
 ]
 
 YES_NO = {"có": True, "co": True, "không": False, "khong": False}  # "" (not recorded) -> None
@@ -169,7 +175,7 @@ def export_annotation(final, labels):
     import shutil
     ann = OUT / "annotation"
     shutil.rmtree(ann, ignore_errors=True)
-    for sub in ("labels", "worksheets", "blind_reading", "guidelines", "prompts"):
+    for sub in ("labels", "worksheets", "blind_reading", "prompts"):
         (ann / sub).mkdir(parents=True)
     adj = [r for p in ADJUDICATION for f in ([p] if p.is_file() else sorted(p.glob("*.jsonl")))
            for r in jl(f) if r.get("lineage_id") in final]
@@ -192,7 +198,9 @@ def export_annotation(final, labels):
                             ("round2", GOLD / "gold_final", ("coauthor_reader", "lawyer"))):
         key2lid = {r["khoa"]: r["lineage_id"] for r in tsv(d / "gold_sample.tsv")}
         for side, who in zip("AB", readers):
-            rows = [{"lineage_id": key2lid[r["khoa"]], **{k: v for k, v in r.items() if k not in GOLD_DROP}}
+            rows = [{"lineage_id": key2lid[r["khoa"]],
+                     **{GOLD_COLS[k]: GOLD_VALUES.get(v.strip(), v) if k in ("hieu_luc", "kg_hieu_luc", "dong_y") else v
+                        for k, v in r.items() if k not in GOLD_DROP}}
                     for r in tsv(d / f"gold_{side}.reveal.tsv") if key2lid.get(r["khoa"]) in final]
             with open(ann / "blind_reading" / f"{rnd}_{who}.tsv", "w", encoding="utf-8", newline="") as f:
                 w = csv.DictWriter(f, fieldnames=list(rows[0]), delimiter="\t")
