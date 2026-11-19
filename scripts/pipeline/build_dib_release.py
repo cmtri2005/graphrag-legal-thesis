@@ -9,7 +9,8 @@ Changes versus data/vilextime_final (all listed in CHANGES.md of the output):
   3. meta.review rewritten per lineage from the real provenance files.
   4. meta.question_source: Codex model recorded as author-reported gpt-6.1-sol.
   5. meta.domain / domain_source dropped (69% 'khac'); issuer_code added from law_id.
-  6. meta.schema_version 3.0.0.
+  6. meta.schema_version 4.0.0.
+  8. Descriptive group names replace the thesis codes T1/T2/T3/T6 (GROUP_NAMES), also inside ids and twin_of.
   7. meta.review.labelers per run (real runtime/model), and annotation/ exported:
      raw AI labels, adjudication records, worksheets shown to the agents, blind-reading sheets.
 
@@ -74,6 +75,17 @@ PROMPTS = [
     ("docs/vilextime-annotation.md", "context/annotation_guideline_v4.0_vi.txt"),
     ("docs/vilextime-dinh-nghia.md", "context/dataset_definition_vi.txt"),
 ]
+
+# Thesis codes -> public names (CMT 19/11). T4/T5 never existed as released groups, so codes looked gapped.
+GROUP_NAMES = {"T1": "control", "T2": "two_versions", "T3": "multi_versions", "T6": "repealed"}
+SUBGROUP_NAMES = {"T1": "control", "T2": "two_versions", "T4": "near_identical", "T3": "multi_versions",
+                  "T6a": "repealed_by_name", "T6b": "repealed_via_parent"}
+
+
+def rename_id(row_id):
+    head, group, rest = row_id.split(":", 2)
+    return f"{head}:{GROUP_NAMES[group]}:{rest}"
+
 
 YES_NO = {"có": True, "co": True, "không": False, "khong": False}  # "" (not recorded) -> None
 
@@ -258,7 +270,7 @@ def main():
         sas = m.get("short_answer_source") or {}
         if "codex" in str(sas.get("by", "")).lower():
             sas["by"] = CODEX_MODEL
-        m["schema_version"] = "3.0.0"  # gold (F019) and schema changed: MAJOR per ADR 0003 §8
+        m["schema_version"] = "4.0.0"  # group names and ids changed: MAJOR per ADR 0003 §8
         m.pop("domain", None)
         m.pop("domain_source", None)
         m["issuer_code"] = issuer_code(m["target"]["law_id"])
@@ -270,6 +282,12 @@ def main():
                      repealed_by="Thông tư 36/2026/TT-BXD, khoản 2 Điều 16 (hiệu lực 01/07/2026)")
             m.setdefault("flags", []).append("gold_corrected_by_blind_gold")
 
+    for r, m in zip(rows, meta):  # after F019 (matched by the thesis id)
+        r["id"] = m["id"] = rename_id(r["id"])
+        r["group"] = GROUP_NAMES[r["group"]]
+        m["subgroup"] = SUBGROUP_NAMES[m["subgroup"]]
+        if m.get("twin_of"):
+            m["twin_of"] = rename_id(m["twin_of"])
     OUT.mkdir(exist_ok=True)
     for name, data in (("vilextime.jsonl", rows), ("vilextime_meta.jsonl", meta)):
         with open(OUT / name, "w", encoding="utf-8") as f:
