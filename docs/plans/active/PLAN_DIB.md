@@ -16,10 +16,10 @@ Mở 19/11/2026. CMT chốt: nộp Data in Brief (không chờ ICAIL); công b�
 - [x] Repo dữ liệu riêng `../vilextime_uit` → github.com/cmtri2005/vilextime_uit (main, commit a5b9d52, 19/11):
   data 3.0.0, README/SCHEMA tiếng Anh, `scripts/check_dataset.py`, CC BY 4.0 + MIT, CITATION.cff (thiếu tên tác giả).
   Cập nhật repo này khi dữ liệu đổi: chạy `build_dib_release.py`, chép 3 file sang `vilextime_uit/data/`.
-- [ ] Đóng gói corpus truy xuất mà `accepted_evidence`/`version_id` trỏ tới (asis 771 MB, versions 834 MB): lọc theo 199 lineage hoặc đăng Zenodo.
-- [ ] Dịch hướng dẫn gán nhãn 4.0 sang tiếng Anh, thêm phần "tra cứu từng bước" cho người không học luật (GVHD yêu cầu).
-- [ ] README tiếng Anh + datasheet cho repo dữ liệu; gom nhãn thô AI-A/AI-B, prompt, nguồn đã tra vào `annotation/`.
-- [ ] Bảng thống kê tự động từ `data/vilextime_dib/`.
+- [x] Corpus đầy đủ nén xz (146 MB) trong `vilextime_uit/corpus/`; 360 evidence + 338 version đều có.
+- [x] `annotation/`: hướng dẫn VI + EN (thêm mục tra cứu cho người không học luật), định nghĩa, nhãn thô 398, hòa giải 17, H7/R2 26, phiếu đọc mù, prompt + agent. Ngữ cảnh cho Claude: `vilextime_uit/CLAUDE.md`, `paper/` (PAPER_PLAN, RELATED_WORK, DIB_RULES).
+- [ ] Cập nhật đề cương/khóa luận chỗ ghi "AI-A Claude, AI-B Codex": 28 lineage có cặp cùng họ (silver01 Claude–Claude, round2_codex Codex–Codex).
+- [x] Bảng thống kê tự động: `vilextime_uit/scripts/check_dataset.py`.
 - [ ] Viết bài theo template DiB (khung trong hội thoại 19/11): Methods + kiểm chất lượng trước.
 - [ ] Evidence-gate mọi con số trước khi nộp.
 - [ ] Đăng Mendeley Data (để chế độ chưa publish trong lúc review).
