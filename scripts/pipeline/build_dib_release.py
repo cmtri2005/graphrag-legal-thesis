@@ -10,7 +10,8 @@ Changes versus data/vilextime_final (all listed in CHANGES.md of the output):
   4. meta.question_source: Codex model recorded as author-reported gpt-6.1-sol.
   5. meta.domain / domain_source dropped (69% 'khac'); issuer_code added from law_id.
   6. meta.schema_version 4.0.0.
-  8. Descriptive group names replace the thesis codes T1/T2/T3/T6 (GROUP_NAMES), also inside ids and twin_of.
+  8. Descriptive group names replace the thesis codes T1/T2/T3/T6 (GROUP_NAMES), also inside ids and twin_of;
+     date modes ranh_gioi/giua_khoang become boundary/mid_interval (DATE_MODES).
   7. meta.review.labelers per run (real runtime/model), and annotation/ exported:
      raw AI labels, adjudication records, worksheets shown to the agents, blind-reading sheets.
 
@@ -80,6 +81,9 @@ PROMPTS = [
 GROUP_NAMES = {"T1": "control", "T2": "two_versions", "T3": "multi_versions", "T6": "repealed"}
 SUBGROUP_NAMES = {"T1": "control", "T2": "two_versions", "T4": "near_identical", "T3": "multi_versions",
                   "T6a": "repealed_by_name", "T6b": "repealed_via_parent"}
+
+
+DATE_MODES = {"ranh_gioi": "boundary", "giua_khoang": "mid_interval"}
 
 
 def rename_id(row_id):
@@ -285,6 +289,7 @@ def main():
     for r, m in zip(rows, meta):  # after F019 (matched by the thesis id)
         r["id"] = m["id"] = rename_id(r["id"])
         r["group"] = GROUP_NAMES[r["group"]]
+        r["as_of_strategy"] = DATE_MODES[r["as_of_strategy"]]
         m["subgroup"] = SUBGROUP_NAMES[m["subgroup"]]
         if m.get("twin_of"):
             m["twin_of"] = rename_id(m["twin_of"])
