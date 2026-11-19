@@ -57,7 +57,7 @@ PROMPTS = [
     ("data/review/ai_research/2026-11-08_supp18/prompts", "labelling/supp18"),
     ("data/review/ai_research/2026-11-11_t1_labels/prompts", "labelling/t1"),
     ("data/review/ai_research/2026-11-19_uniform/prompts", "labelling/uniform_20261119"),
-    ("data/review/ai_research/codex_b_wrapper.md", "labelling/codex_b_wrapper.md"),
+    ("data/review/ai_research/codex_b_wrapper.md", "labelling/codex_b_wrapper.txt"),
     ("data/review/ai_research/2026-11-07_adjudication_all/prompts", "adjudication/silver"),
     ("data/review/ai_research/2026-11-08_lo2/adjudication/prompts", "adjudication/lo2"),
     (".claude/agents/legal-annotator-a.md", "agents/legal-annotator-a.md"),
@@ -65,8 +65,8 @@ PROMPTS = [
     (".claude/agents/legal-adjudicator.md", "agents/legal-adjudicator.md"),
     (".claude/skills/vilextime-ai-labeling/SKILL.md", "agents/skill-vilextime-ai-labeling.md"),
     (".claude/skills/vn-legal-research/SKILL.md", "agents/skill-vn-legal-research.md"),
-    ("docs/vilextime-annotation.md", "../guideline_v4.0_vi.md"),
-    ("docs/vilextime-dinh-nghia.md", "../dataset_definition_vi.md"),
+    ("docs/vilextime-annotation.md", "../guidelines/guideline_v4.0_vi.md"),
+    ("docs/vilextime-dinh-nghia.md", "../guidelines/dataset_definition_vi.md"),
 ]
 
 YES_NO = {"có": True, "co": True, "không": False, "khong": False}  # "" (not recorded) -> None
@@ -166,8 +166,11 @@ def raw_labels(final):
 
 
 def export_annotation(final, labels):
+    import shutil
     ann = OUT / "annotation"
-    ann.mkdir(parents=True, exist_ok=True)
+    shutil.rmtree(ann, ignore_errors=True)
+    for sub in ("labels", "worksheets", "blind_reading", "guidelines", "prompts"):
+        (ann / sub).mkdir(parents=True)
     adj = [r for p in ADJUDICATION for f in ([p] if p.is_file() else sorted(p.glob("*.jsonl")))
            for r in jl(f) if r.get("lineage_id") in final]
     ws = {}
@@ -180,8 +183,8 @@ def export_annotation(final, labels):
                     ws.setdefault(lid, {"run": run, **r})
     post = [{"step": step, **r} for step, d in (("H7", "2026-11-11_h7"), ("R2", "2026-11-11_t6_r2"))
             for f in sorted((AI / d).glob("out_batch*.jsonl")) for r in jl(f) if r["lineage_id"] in final]
-    for name, data in (("ai_labels_raw.jsonl", labels), ("adjudication.jsonl", adj), ("post_review_ai_checks.jsonl", post),
-                       ("worksheets.jsonl", list(ws.values()))):
+    for name, data in (("labels/ai_labels_raw.jsonl", labels), ("labels/adjudication.jsonl", adj),
+                       ("labels/post_review_ai_checks.jsonl", post), ("worksheets/worksheets.jsonl", list(ws.values()))):
         with open(ann / name, "w", encoding="utf-8") as f:
             for x in data:
                 f.write(json.dumps(x, ensure_ascii=False) + "\n")
@@ -191,11 +194,10 @@ def export_annotation(final, labels):
         for side, who in zip("AB", readers):
             rows = [{"lineage_id": key2lid[r["khoa"]], **{k: v for k, v in r.items() if k not in GOLD_DROP}}
                     for r in tsv(d / f"gold_{side}.reveal.tsv") if key2lid.get(r["khoa"]) in final]
-            with open(ann / f"blind_reading_{rnd}_{who}.tsv", "w", encoding="utf-8", newline="") as f:
+            with open(ann / "blind_reading" / f"{rnd}_{who}.tsv", "w", encoding="utf-8", newline="") as f:
                 w = csv.DictWriter(f, fieldnames=list(rows[0]), delimiter="\t")
                 w.writeheader()
                 w.writerows(rows)
-    import shutil
     for src, dst in PROMPTS:
         src = ROOT / src
         target = ann / "prompts" / dst
@@ -204,6 +206,9 @@ def export_annotation(final, labels):
         else:
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(src, target)
+    # Prompts are plain text sent to the agents, not Markdown documents: .txt keeps them verbatim and readable.
+    for f in [*(ann / "prompts" / "labelling").rglob("*.md"), *(ann / "prompts" / "adjudication").rglob("*.md")]:
+        f.rename(f.with_suffix(".txt"))
     return len(adj), len(ws)
 
 
