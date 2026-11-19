@@ -9,6 +9,7 @@ Changes versus data/vilextime_final (all listed in CHANGES.md of the output):
   3. meta.review rewritten per lineage from the real provenance files.
   4. meta.question_source: Codex model recorded as author-reported gpt-6.1-sol.
   5. meta.domain / domain_source dropped (69% 'khac'); issuer_code added from law_id.
+  6. meta.schema_version 3.0.0.
 
 Run: python3 scripts/pipeline/build_dib_release.py   (prints counts, writes SHA256SUMS)
 """
@@ -26,6 +27,9 @@ OUT = ROOT / "data/vilextime_dib"
 
 F019_ID = "vilextime:T2:provision:4cee6a60-eb71-11f0-ac45-154b0d915a56:2026-08-06"
 CODEX_MODEL = "gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)"
+
+
+YES_NO = {"có": True, "co": True, "không": False, "khong": False}  # "" (not recorded) -> None
 
 
 def jl(p):
@@ -60,19 +64,23 @@ def blind_gold():
     g = {}
     for rnd, d in (("round1", GOLD), ("round2", GOLD / "gold_final")):
         key2lid = {r["khoa"]: r["lineage_id"] for r in tsv(d / "gold_sample.tsv")}
-        readers = {"A": "annotator_A", "B": "annotator_B"} if rnd == "round1" else {"A": "NMT", "B": "lawyer"}
+        readers = {"A": "annotator_A", "B": "annotator_B"} if rnd == "round1" else {"A": "coauthor_reader", "B": "lawyer"}  # roles only, no names (schema rule)
         for side, who in readers.items():
             p = d / f"gold_{side}.reveal.tsv"
             for r in tsv(p):
                 lid = key2lid.get(r["khoa"])
                 if lid:
-                    g.setdefault(lid, []).append({"round": rnd, "reader": who, "agrees_with_store": r.get("dong_y", "").strip()})
+                    agree, basis = YES_NO.get(r.get("dong_y", "").strip()), "reader_judgement"
+                    if agree is None and r.get("kg_hieu_luc", "").strip():  # lawyer sheet: compare in-force status only
+                        agree, basis = r["hieu_luc"].strip() == r["kg_hieu_luc"].strip(), "in_force_status_only"
+                    g.setdefault(lid, []).append({"round": rnd, "reader": who, "agrees_with_store": agree, "basis": basis})
     return g
 
 
 def issuer_code(law_id):
     tail = law_id.split("/")[-1]
-    return tail.split("-")[-1] if "-" in tail else tail.rstrip("0123456789") or tail
+    code = tail.split("-")[-1]
+    return code.rstrip("0123456789") or code  # QH15, UBTVQH11 -> QH, UBTVQH
 
 
 def main():
@@ -100,6 +108,10 @@ def main():
         qs = m.get("question_source") or {}
         if "codex" in str(qs.get("provider", "")):
             qs["model"] = CODEX_MODEL
+        sas = m.get("short_answer_source") or {}
+        if "codex" in str(sas.get("by", "")).lower():
+            sas["by"] = CODEX_MODEL
+        m["schema_version"] = "3.0.0"  # gold (F019) and schema changed: MAJOR per ADR 0003 §8
         m.pop("domain", None)
         m.pop("domain_source", None)
         m["issuer_code"] = issuer_code(m["target"]["law_id"])
