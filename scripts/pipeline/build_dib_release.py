@@ -32,16 +32,19 @@ CODEX_MODEL = "gpt-6.1-sol (author-reported; Codex CLI logs do not record the mo
 
 
 CLAUDE_OPUS = "Claude Code / claude-opus-5-5"
-CODEX_CLI = "Codex CLI / " + CODEX_MODEL
-CODEX_NATIVE = "Codex native subagent / " + CODEX_MODEL
+CODEX_SOL = "Codex CLI / gpt-6.1-sol (CLI log)"
+CODEX_LUNA = "Codex CLI / gpt-6-luna (CLI log)"
+CODEX_UNRECORDED = "Codex / model not recorded (agent self-report: GPT-6 family)"
+CODEX_NATIVE = "Codex native subagent / model not recorded (inherited)"
 # Production label runs (same a.jsonl/b.jsonl as scripts/check/audit_g2_statistics.py, plus T1).
-RUNS = [
+RUNS = [  # first run holding a lineage wins; later ones are kept as superseded
+    ("uniform_20261119", AI / "2026-11-19_uniform", None, None),  # agents per job: UNIFORM_AGENTS
     ("silver01", AI / "2026-11-07_adjudication_all/snapshots/silver01", CLAUDE_OPUS, CLAUDE_OPUS),
     ("round2_codex", AI / "2026-11-06_silver/round2_codex", CODEX_NATIVE, CODEX_NATIVE),
-    ("round3_mixed", AI / "2026-11-06_silver/round3_mixed", CLAUDE_OPUS, CODEX_CLI),
-    ("lo2", AI / "2026-11-08_lo2/schema_validated", CLAUDE_OPUS, CODEX_CLI),
-    ("supp18", AI / "2026-11-08_supp18", CLAUDE_OPUS, CODEX_CLI),
-    ("t1", AI / "2026-11-11_t1_labels", "Claude Code / claude-sonnet-5-5", CODEX_CLI),
+    ("round3_mixed", AI / "2026-11-06_silver/round3_mixed", CLAUDE_OPUS, CODEX_SOL),
+    ("lo2", AI / "2026-11-08_lo2/schema_validated", CLAUDE_OPUS, CODEX_UNRECORDED),
+    ("supp18", AI / "2026-11-08_supp18", CLAUDE_OPUS, CODEX_LUNA),
+    ("t1", AI / "2026-11-11_t1_labels", "Claude Code / claude-sonnet-5-5", CODEX_LUNA),
 ]
 ADJUDICATION = [AI / "2026-11-07_adjudication_all/results", AI / "2026-11-08_lo2/schema_validated/adjudication.jsonl",
                 AI / "2026-11-08_lo2/open_cases_for_CMT.jsonl", AI / "2026-11-08_supp18/adjudication.jsonl", AI / "2026-11-11_t1_labels/adjudication.jsonl"]
@@ -53,6 +56,7 @@ PROMPTS = [
     ("data/review/ai_research/2026-11-08_lo2/prompts", "labelling/lo2"),
     ("data/review/ai_research/2026-11-08_supp18/prompts", "labelling/supp18"),
     ("data/review/ai_research/2026-11-11_t1_labels/prompts", "labelling/t1"),
+    ("data/review/ai_research/2026-11-19_uniform/prompts", "labelling/uniform_20261119"),
     ("data/review/ai_research/codex_b_wrapper.md", "labelling/codex_b_wrapper.md"),
     ("data/review/ai_research/2026-11-07_adjudication_all/prompts", "adjudication/silver"),
     ("data/review/ai_research/2026-11-08_lo2/adjudication/prompts", "adjudication/lo2"),
@@ -92,6 +96,13 @@ def ai_resolution():
     t1_adj = {r["lineage_id"] for r in jl(AI / "2026-11-11_t1_labels/adjudication.jsonl")}
     for lid in json.load(open(AI / "2026-11-11_t1_labels/cmt_confirmed_t1.json"))["t1_dat"]:
         res[lid] = ("t1", "ai_adjudicated" if lid in t1_adj else "ai_agree", "conversation")
+    # 19/11 relabel of same-family pairs: agreement re-measured on the new Claude+Codex pair; the 2 disputes are
+    # the same objection already settled by the earlier adjudication record of that lineage (reused, not re-run).
+    disputed = {json.loads(x)["lineage_id"] for x in open(AI / "2026-11-19_uniform/disagreements.jsonl")}
+    for x in open(AI / "2026-11-19_uniform/pairs.jsonl"):
+        lid = json.loads(x)["lineage_id"]
+        batch, _, channel = res[lid]
+        res[lid] = (batch, "ai_adjudicated" if lid in disputed else "ai_agree", channel)
     return res
 
 
@@ -124,17 +135,34 @@ def blind_gold():
     return g
 
 
+UNIFORM_AGENTS = {"r2codex": [CLAUDE_OPUS + " (new, 19/11)", CODEX_NATIVE + " (kept)"],
+                  "silver01": [CLAUDE_OPUS + " (kept)", CODEX_LUNA + " (new, 19/11)"]}
+
+
 def raw_labels(final):
     """Raw pre-adjudication AI labels of the final lineages, tagged with run and agent."""
+    uniform = {json.loads(x)["lineage_id"]: json.loads(x)["job"] for x in open(AI / "2026-11-19_uniform/pairs.jsonl")}
     out, run_of = [], {}
     for run, d, agent_a, agent_b in RUNS:
+        seen_here = set()
         for side, agent in (("a", agent_a), ("b", agent_b)):
             for r in jl(d / f"{side}.jsonl"):
-                if r["lineage_id"] in final:
-                    assert run_of.setdefault(r["lineage_id"], run) == run, r["lineage_id"]
-                    out.append({"run": run, "agent": agent, **r})
+                lid = r["lineage_id"]
+                if lid not in final:
+                    continue
+                first = run_of.setdefault(lid, run) == run
+                seen_here.add(lid)
+                status = "used" if first else f"superseded by {run_of[lid]} (same-family pair relabelled)"
+                who = agent or UNIFORM_AGENTS[uniform[lid]]["ab".index(side)]
+                out.append({"run": run, "agent": who, "status": status, **r})
     agents = {run: [a, b] for run, _, a, b in RUNS}
-    return out, {lid: agents[run] for lid, run in run_of.items()}
+    res = {}
+    for lid, run in run_of.items():
+        if run == "uniform_20261119":
+            res[lid] = [a.rsplit(" (", 1)[0] for a in UNIFORM_AGENTS[uniform[lid]]]
+        else:
+            res[lid] = agents[run]
+    return out, res
 
 
 def export_annotation(final, labels):

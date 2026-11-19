@@ -1,0 +1,23 @@
+[
+ {
+  "job": "r2codex",
+  "side": "a",
+  "chunk": "r2codex_chunk01.jsonl",
+  "rows": 10,
+  "prompt": "r2codex_chunk01_ai-a.md"
+ },
+ {
+  "job": "r2codex",
+  "side": "a",
+  "chunk": "r2codex_chunk02.jsonl",
+  "rows": 9,
+  "prompt": "r2codex_chunk02_ai-a.md"
+ },
+ {
+  "job": "silver01",
+  "side": "b",
+  "chunk": "silver01_chunk01.jsonl",
+  "rows": 9,
+  "prompt": "silver01_chunk01_ai-b.md"
+ }
+]

@@ -1,0 +1,2 @@
+{"lineage_id": "provision:e902d34e-df52-11f0-b1c8-1baca6cbd210", "job": "r2codex", "differs": ["q1", "verdict"], "a": {"q1": "dung", "q2": "co", "q3": "co", "q4": "khong", "verdict": "dat"}, "b": {"q1": "sai", "q2": "co", "q3": "co", "q4": "khong", "verdict": "khong_dat"}}
+{"lineage_id": "provision:a3183440-21ac-11f1-aefb-d18bdd5a5126", "job": "silver01", "differs": ["q1", "verdict"], "a": {"q1": "sai", "q2": "co", "q3": "co", "q4": "khong", "verdict": "khong_dat"}, "b": {"q1": "dung", "q2": "co", "q3": "co", "q4": "khong", "verdict": "dat"}}

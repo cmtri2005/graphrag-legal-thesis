@@ -1,0 +1,47 @@
+{
+  "session_id": "424f9ec6-f39a-4939-a6b7-6dfffe7ddc3d",
+  "is_error": false,
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 16,
+      "outputTokens": 15575,
+      "cacheReadInputTokens": 555642,
+      "cacheCreationInputTokens": 117205,
+      "webSearchRequests": 0,
+      "costUSD": 1.3603323999999999,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 6823,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 117205,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-haiku-5-5": {
+      "inputTokens": 50628,
+      "outputTokens": 3855,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 3,
+      "costUSD": 0.036990300000000004,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 1196,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "claude-haiku-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "num_turns": 11,
+  "total_cost_usd": 1.3973227,
+  "duration_ms": 157663,
+  "permission_denials": [],
+  "file": "r2codex_chunk01_ai-a.md",
+  "status": "completed",
+  "started_at": "2026-11-19T16:33:40.208756+00:00",
+  "returncode": 0,
+  "prompt_sha256": "da93ee0cae49e6c27f161c0485fecd9f598cb5f6f41d86cca8b480a26579c72c"
+}
