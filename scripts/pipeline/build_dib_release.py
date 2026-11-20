@@ -91,6 +91,8 @@ def rename_id(row_id):
     return f"{head}:{GROUP_NAMES[group]}:{rest}"
 
 
+BATCH_NAMES = {"silver": "round_1", "new": "round_2", "supp": "round_3", "t1": "control"}
+
 YES_NO = {"có": True, "co": True, "không": False, "khong": False}  # "" (not recorded) -> None
 
 
@@ -131,8 +133,8 @@ def ai_resolution():
 def extra_ai_checks():
     """lineage -> AI adjudicator re-checks after the author's review (legal-adjudicator agent, author-delegated)."""
     out = {}
-    for step, d, what in (("H7", "2026-11-11_h7", "re-check of lineages the author marked unsure or corrected"),
-                          ("R2", "2026-11-11_t6_r2", "relocation check of repealed content (T6)")):
+    for step, d, what in (("author_flagged_recheck", "2026-11-11_h7", "re-check of lineages the author marked unsure or corrected"),
+                          ("relocation_check", "2026-11-11_t6_r2", "for a repealed provision, check whether its content moved elsewhere")):
         for f in sorted((AI / d).glob("out_batch*.jsonl")):
             for r in jl(f):
                 out.setdefault(r["lineage_id"], []).append({"step": step, "what": what, "agent": "legal-adjudicator / " + CLAUDE_OPUS})
@@ -203,7 +205,7 @@ def export_annotation(final, labels):
                 lid = r.get("lineage_id") or r.get("record", {}).get("lineage_id")
                 if lid in final:
                     ws.setdefault(lid, {"run": run, **r})
-    post = [{"step": step, **r} for step, d in (("H7", "2026-11-11_h7"), ("R2", "2026-11-11_t6_r2"))
+    post = [{"step": step, **r} for step, d in (("author_flagged_recheck", "2026-11-11_h7"), ("relocation_check", "2026-11-11_t6_r2"))
             for f in sorted((AI / d).glob("out_batch*.jsonl")) for r in jl(f) if r["lineage_id"] in final]
     for name, data in (("labels/ai_labels_raw.jsonl", labels), ("labels/adjudication.jsonl", adj),
                        ("labels/post_review_ai_checks.jsonl", post), ("worksheets/worksheets.jsonl", list(ws.values()))):
@@ -266,7 +268,6 @@ def main():
             "author_review": f"every lineage reviewed by one author ({channel})",
             "post_review_ai_checks": extra.get(lid, []),
             "blind_gold": gold.get(lid, []),
-            "batch": batch,
         }
         qs = m.get("question_source") or {}
         if "codex" in str(qs.get("provider", "")):
@@ -278,6 +279,9 @@ def main():
         m.pop("domain", None)
         m.pop("domain_source", None)
         m["issuer_code"] = issuer_code(m["target"]["law_id"])
+        m["source_batch"] = BATCH_NAMES[m.pop("qsource")]
+        if m.get("repeal_mode") == "ancestor":
+            m["repeal_mode"] = "via_parent"
 
         if r["id"] == F019_ID:
             assert r["answerable"] is True, "F019 already corrected?"
@@ -310,7 +314,7 @@ def main():
     print("rows", len(rows), "lineages", len(lin), "answerable", sum(r["answerable"] for r in rows))
     print("ai_resolution", Counter(v["ai_resolution"] for v in lin.values()))
     print("post-review AI checks", Counter(c["step"] for v in lin.values() for c in v["post_review_ai_checks"]))
-    print("batch", Counter(v["batch"] for v in lin.values()))
+
     print("lineages with blind gold", sum(bool(v["blind_gold"]) for v in lin.values()),
           Counter(g["round"] + ":" + g["reader"] for v in lin.values() for g in v["blind_gold"]))
     print("issuer", Counter(m["issuer_code"] for m in meta).most_common(6))
