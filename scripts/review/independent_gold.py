@@ -403,7 +403,7 @@ def reveal(data: Path, who: str) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("command", choices=("build", "export", "import", "reveal"))
-    ap.add_argument("annotator", nargs="?", choices=("A", "B"))
+    ap.add_argument("annotator", nargs="?", choices=("A", "B", "C"))
     ap.add_argument("--data", type=Path, default=Path("data"))
     ap.add_argument("--review", type=Path, help="directory for this sample's sheets (default: DATA/review)")
     ap.add_argument("--only", type=Path, help="build: draw only from these rows (a release JSONL), blind per annotator")
@@ -420,7 +420,7 @@ def main() -> None:
     PER_STRATUM = args.per_stratum or PER_STRATUM
     FRESH = args.fresh
     if args.command != "build" and not args.annotator:
-        ap.error(f"{args.command} needs A or B")
+        ap.error(f"{args.command} needs A, B or C")
     if args.command == "build":
         parts = [p.split(":") for p in args.strata.split(",")] if args.strata else [[s] for s in STRATA]
         build(args.data, args.only, tuple(p[0] for p in parts), args.prefix,
