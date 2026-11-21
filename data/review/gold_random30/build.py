@@ -4,14 +4,15 @@ Why: the 105 lineages read blind so far were not a random sample of the release,
 not stand for the whole dataset. Here 30 of the 94 lineages nobody has read blind are drawn at random (fixed
 seed), one row each, drawn at random among the lineage's rows (both date modes), so the error rate is an
 unbiased estimate for those 94 rows' population; combined with the 105 it gives a whole-release estimate.
-The same 30 rows go to three readers (A, B, C) independently, which also allows an Alternative Annotator
-Test of the AI labels (Calderon et al.) and human-human agreement with three readers.
+The same 30 rows go to two readers (A, B) independently, which also gives human-human agreement. With two
+readers an Alternative Annotator Test (needs >= 3) is not possible, so AI labels are not claimed equivalent to
+human labels.
 
 Reads the release built by scripts/pipeline/build_dib_release.py. Writes, in this directory:
   release_joined.jsonl  the 30 rows, row + meta joined in the shape independent_gold.py reveal expects
   gold_sample.tsv       key -> row id (NOT for the readers)
-  gold_A.tsv, gold_B.tsv, gold_C.tsv   identical blind sheets
-then exports gold_{A,B,C}.xlsx. Refuses to overwrite a sheet that already has answers.
+  gold_A.tsv, gold_B.tsv   identical blind sheets
+then exports gold_{A,B}.xlsx. Refuses to overwrite a sheet that already has answers.
 
 Run from the repository root:  python3 data/review/gold_random30/build.py
 After a reader returns a file:  python3 scripts/review/independent_gold.py import A --review data/review/gold_random30
@@ -31,7 +32,7 @@ OUT = Path(__file__).resolve().parent
 REL = ROOT / "data/vilextime_dib"
 SEED = "20261121:random30"
 N = 30
-READERS = "ABC"
+READERS = "AB"
 
 
 def main():
