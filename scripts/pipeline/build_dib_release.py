@@ -12,6 +12,9 @@ Changes versus data/vilextime_final (all listed in CHANGES.md of the output):
   6. meta.schema_version 4.0.0.
   8. Descriptive group names replace the thesis codes T1/T2/T3/T6 (GROUP_NAMES), also inside ids and twin_of;
      date modes ranh_gioi/giua_khoang become boundary/mid_interval (DATE_MODES).
+  9. Store errors of the missed-amendment class corrected (STORE_FIXES; audit: scripts/check/audit_missed_amendments.py,
+     runs/audit_missed_amendments/NOTE.md). A version that ended earlier than the store recorded gets its true end; a
+     row dated after that end moves to the middle of its version's true interval (same answer, same labels).
   7. meta.review.labelers per run (real runtime/model), and annotation/ exported:
      raw AI labels, adjudication records, worksheets shown to the agents, blind-reading sheets.
 
@@ -21,6 +24,7 @@ import csv
 import hashlib
 import json
 from collections import Counter
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -31,6 +35,89 @@ GOLD_DOT3 = GOLD / "gold_dot3_highrisk"  # high-risk augmentation (AI-proposed, 
 OUT = ROOT / "data/vilextime_dib"
 
 F019_ID = "vilextime:T2:provision:4cee6a60-eb71-11f0-ac45-154b0d915a56:2026-08-06"
+# Missed amendments/repeals (the store kept a version beyond its real end). Source: official text cached from
+# the vbpl gateway (data/raw/<actor>.json). Fields: lineage, true end of the version the store kept too long,
+# actor, rows to move {old as_of: version ordinal}; F060 also re-dates the change itself (store had 2019-03-01,
+# a re-enactment with the same wording by TT 02/2019).
+STORE_FIXES = [
+    dict(lineage="provision:7ba9e014-eb7b-11f0-954d-af330569649d", ordinal=2, end="2017-09-25",  # F016
+         actor=("92/2017/NĐ-CP", "document:146942"), basis="khoản 9 Điều 2 NĐ 92/2017/NĐ-CP sửa Điều 20 NĐ 20/2008/NĐ-CP",
+         move={"2020-04-04": 2}),
+    dict(lineage="provision:e9f1fcba-eb70-11f0-ae55-77d3c9eccbbe#k1#%C4%91", ordinal=1, end="2012-08-10",
+         actor=("53/2012/NĐ-CP", "document:27642"), basis="khoản 4 Điều 3 NĐ 53/2012/NĐ-CP sửa Điều 7 NĐ 33/2010/NĐ-CP",
+         move={"2015-12-30": 1}),
+    dict(lineage="provision:b69cb980-2c7b-11f1-8056-01cda9906453", ordinal=2, end="2021-02-01",
+         actor=("145/2020/NĐ-CP", "document:152668"), basis="khoản 2 Điều 114 NĐ 145/2020/NĐ-CP: NĐ 05/2015/NĐ-CP hết hiệu lực",
+         move={"2022-05-12": 2}),
+    dict(lineage="provision:e23c54c0-3634-11f1-9175-9b33751e108f", ordinal=2, end="2014-02-15",
+         actor=("221/2013/NĐ-CP", "document:32938"), basis="khoản 4 Điều 42 NĐ 221/2013/NĐ-CP bãi bỏ Chương IV NĐ 135/2004/NĐ-CP",
+         move={"2017-10-20": 2}),
+]
+F060 = dict(lineage="provision:a16089ba-2d53-11f1-87d7-6598c119b283", change="2017-03-01",
+            actor=("32/2016/TT-NHNN", "document:117004", "2016-12-26"),
+            basis="khoản 2 Điều 1 TT 32/2016/TT-NHNN sửa khoản 1 Điều 4 TT 23/2014/TT-NHNN",
+            move={"2019-02-28": "2017-02-28", "2019-03-01": "2017-03-01", "2017-04-29": None})  # None: middle of v1
+FIX_FLAG = "store_corrected_missed_amendment"
+
+
+def mid(start, end):
+    a, b = date.fromisoformat(start), date.fromisoformat(end)
+    return (a + (b - a) / 2).isoformat()
+
+
+def apply_store_fixes(rows, meta):
+    """Correct rows of STORE_FIXES and F060 in place (thesis ids); return {old id: new id}."""
+    renamed = {}
+
+    def move(r, m, new):
+        old = r["id"]
+        r["as_of"] = new
+        r["id"] = m["id"] = old.rsplit(":", 1)[0] + ":" + new
+        m["derivation"]["query"] = f"as_of({r['lineage_id']}, {new})"
+        renamed[old] = r["id"]
+
+    for fx in STORE_FIXES:
+        hit = 0
+        for r, m in zip(rows, meta):
+            if r["lineage_id"] != fx["lineage"]:
+                continue
+            m.setdefault("flags", []).append(FIX_FLAG)
+            m["store_correction"] = f"version ends {fx['end']} ({fx['basis']}); store had {m['valid_to']}"
+            if r["version_id"] and r["version_id"].endswith(f":{fx['ordinal']}"):
+                m["valid_to"] = fx["end"]
+            if r["as_of"] in fx["move"]:
+                assert r["version_id"].endswith(f":{fx['move'][r['as_of']]}"), r["id"]
+                move(r, m, mid(m["valid_from"], fx["end"]))
+                hit += 1
+        assert hit == len(fx["move"]), f"{fx['lineage']}: moved {hit}"
+
+    p, (law, doc, signed) = F060["lineage"], F060["actor"]
+    tr = {"on": F060["change"], "from_version": 1, "to_version": 2, "event_id": None,
+          "actor": {"law_id": law, "document_id": doc, "effective_from": F060["change"]}, "op": "amend"}
+    hit = 0
+    for r, m in zip(rows, meta):
+        if r["lineage_id"] != p:
+            continue
+        m.setdefault("flags", []).append(FIX_FLAG)
+        m["store_correction"] = (f"change on {F060['change']} ({F060['basis']}); store had 2019-03-01, "
+                                 "a re-enactment with the same wording (TT 02/2019/TT-NHNN)")
+        m["derivation"]["transitions"] = [tr]
+        v1 = r["version_id"].endswith(":1")
+        m["valid_from"], m["valid_to"] = ("2014-10-15", F060["change"]) if v1 else (F060["change"], None)
+        if r["as_of"] in F060["move"]:
+            new = F060["move"][r["as_of"]] or mid("2014-10-15", F060["change"])
+            if m.get("pending"):
+                m["pending"].update(actor_document_id=doc, signed_on=signed, effective_from=F060["change"],
+                                    days_until_effect=(date.fromisoformat(F060["change"]) - date.fromisoformat(new)).days)
+            move(r, m, new)
+            hit += 1
+    assert hit == len(F060["move"]), f"F060: moved {hit}"
+    for m in meta:
+        if m.get("twin_of") in renamed:
+            m["twin_of"] = renamed[m["twin_of"]]
+    return renamed
+
+
 CODEX_MODEL = "gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)"
 
 
@@ -239,6 +326,9 @@ def export_annotation(final, labels):
                      **{GOLD_COLS[k]: GOLD_VALUES.get(v.strip(), v) if k in ("hieu_luc", "kg_hieu_luc", "dong_y") else v
                         for k, v in r.items() if k not in GOLD_DROP}}
                     for r in tsv(d / f"gold_{side}.reveal.tsv") if key2lid.get(r["khoa"]) in final]
+            for row in rows:  # lawyer sheet has no reader verdict: same in-force-only rule as blind_gold()
+                if not row["agrees_with_store"].strip() and row["store_in_force"].strip():
+                    row["agrees_with_store"] = "yes" if row["in_force"].strip() == row["store_in_force"].strip() else "no"
             with open(ann / "blind_reading" / f"{rnd}_{who}.tsv", "w", encoding="utf-8", newline="") as f:
                 w = csv.DictWriter(f, fieldnames=list(rows[0]), delimiter="\t")
                 w.writeheader()
@@ -299,7 +389,7 @@ def main():
         sas = m.get("short_answer_source") or {}
         if "codex" in str(sas.get("by", "")).lower():
             sas["by"] = CODEX_MODEL
-        m["schema_version"] = "4.0.0"  # group names and ids changed: MAJOR per ADR 0003 §8
+        m["schema_version"] = "5.0.0"  # 4.0.0 group names/ids; 5.0.0 store fixes re-date rows (ids) + store_correction: MAJOR per ADR 0003 §8
         m.pop("domain", None)
         m.pop("domain_source", None)
         m["issuer_code"] = issuer_code(m["target"]["law_id"])
@@ -313,6 +403,10 @@ def main():
             m.update(no_answer_reason="provision_repealed", in_force=False, repeal_mode="direct",
                      repealed_by="Thông tư 36/2026/TT-BXD, khoản 2 Điều 16 (hiệu lực 01/07/2026)")
             m.setdefault("flags", []).append("gold_corrected_by_blind_gold")
+
+    renamed = apply_store_fixes(rows, meta)
+    print("store fixes: rows re-dated", len(renamed), *sorted(renamed.items()), sep="\n  ")
+    assert len({r["id"] for r in rows}) == len(rows), "duplicate id after store fixes"
 
     for r, m in zip(rows, meta):  # after F019 (matched by the thesis id)
         r["id"] = m["id"] = rename_id(r["id"])
