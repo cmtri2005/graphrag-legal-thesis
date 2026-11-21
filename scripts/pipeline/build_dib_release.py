@@ -27,6 +27,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BASE = ROOT / "runs/posthoc_g4_20261113/t1_fix/release"
 AI = ROOT / "data/review/ai_research"
 GOLD = ROOT / "data/review"
+GOLD_DOT3 = GOLD / "gold_dot3_highrisk"  # high-risk augmentation (AI-proposed, CMT-verified; not blind)
 OUT = ROOT / "data/vilextime_dib"
 
 F019_ID = "vilextime:T2:provision:4cee6a60-eb71-11f0-ac45-154b0d915a56:2026-08-06"
@@ -189,6 +190,20 @@ def raw_labels(final):
     return out, res
 
 
+def high_risk_aug():
+    """(lineage_id, as_of) -> lawyer-verified high-risk augmentation record.
+    These 29 hardest lines (repealed / multi-version) were labelled blind by two AI
+    annotators, reconciled, then verified by the author-lawyer who saw the AI labels
+    (not blind). A verification layer, kept separate from blind_gold."""
+    p = GOLD_DOT3 / "gold_dot3_verified.jsonl"
+    if not p.exists():
+        return {}
+    return {(r["lineage_id"], r["as_of"]): {
+        "method": "ai_proposed_cmt_verified", "group": r["group"],
+        "final_label": r["final_label"], "verdict_cmt": r["duyet_CMT"], "note": r.get("cmt_ghi_chu"),
+    } for r in jl(p)}
+
+
 def export_annotation(final, labels):
     import shutil
     ann = OUT / "annotation"
@@ -212,6 +227,10 @@ def export_annotation(final, labels):
         with open(ann / name, "w", encoding="utf-8") as f:
             for x in data:
                 f.write(json.dumps(x, ensure_ascii=False) + "\n")
+    aug = GOLD_DOT3 / "gold_dot3_verified.jsonl"
+    if aug.exists():
+        import shutil as _sh
+        _sh.copy2(aug, ann / "high_risk_augmentation.jsonl")
     for rnd, d, readers in (("round1", GOLD, ("annotator_A", "annotator_B")),
                             ("round2", GOLD / "gold_final", ("coauthor_reader", "lawyer"))):
         key2lid = {r["khoa"]: r["lineage_id"] for r in tsv(d / "gold_sample.tsv")}
@@ -249,6 +268,8 @@ def main():
     meta = jl(BASE / "vilextime_meta.jsonl")
     assert len(rows) == len(meta) == 722 and all(r["id"] == m["id"] for r, m in zip(rows, meta))
     prov, gold, extra = ai_resolution(), blind_gold(), extra_ai_checks()
+    aug = high_risk_aug()
+    print("high-risk augmentation (CMT-verified) rows", len(aug))
     final = {r["lineage_id"] for r in rows}
     labels, agents = raw_labels(final)
 
@@ -269,6 +290,9 @@ def main():
             "post_review_ai_checks": extra.get(lid, []),
             "blind_gold": gold.get(lid, []),
         }
+        hr = aug.get((lid, r["as_of"]))
+        if hr:
+            m["review"]["high_risk_lawyer_check"] = hr
         qs = m.get("question_source") or {}
         if "codex" in str(qs.get("provider", "")):
             qs["model"] = CODEX_MODEL

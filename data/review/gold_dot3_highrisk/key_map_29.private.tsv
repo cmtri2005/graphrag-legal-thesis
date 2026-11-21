@@ -1,0 +1,30 @@
+key	lineage_id	group	as_of	store_answerable	store_answer	store_in_force	valid_from	valid_to	n_rows_in_lineage
+LDF0DAA	provision:b3ab65f0-2c7b-11f1-8b12-cbbbb78c251b	repealed	2020-10-08	False	(không đáp án)	False			4
+L0DAF0A	provision:f01b7674-1d8a-11f1-aebe-379b00ea2e21	repealed	2019-06-22	False	(không đáp án)	False			4
+LA17D93	provision:2fc7a1e0-25fa-11f1-ad30-25f349c1fb75	repealed	2023-01-29	False	(không đáp án)	False			4
+L7C9C1D	provision:b7dde3d0-1ecc-11f1-a3b1-d7ceb5cb0820	repealed	2026-06-21	False	(không đáp án)	False			4
+L3B2610	provision:9784e330-df49-11f0-a224-a14c6720b47d	repealed	2025-02-07	False	(không đáp án)	False			4
+LABACC8	provision:24019d6a-df3d-11f0-a92e-cd3d70f1b84b	repealed	2026-04-13	False	(không đáp án)	False			4
+L1DD329	provision:668e75b0-27a7-11f1-b175-29f953138aa1	multi_versions	2026-03-11	True	Đình chỉ hoạt động chào mua công khai, hoạt động kinh doanh, dịch vụ chứng khoán, hoạt động bảo lãnh phát hành chứng khoán, hoạt động văn phòng đại diện, hoạt động lưu ký, hoạt động bù trừ và thanh toán chứng khoán, hoạt động giao dịch chứng khoán có thời hạn từ 01 tháng đến 24 tháng	True	2026-01-09		6
+L5D8B86	provision:b7ee85a0-1ecc-11f1-8bf4-878cc9351133	repealed	2026-05-26	False	(không đáp án)	False			4
+LF2AA03	provision:545c6f32-df40-11f0-bd62-4dbf838c8125	repealed	2024-09-27	False	(không đáp án)	False			4
+LB414AC	provision:9ed890ee-df3c-11f0-9949-0d070d782e07	repealed	2018-01-02	False	(không đáp án)	False			4
+L4CC071	provision:9fdf6804-2d53-11f1-ad2a-cf0eedd8b394	multi_versions	2025-02-19	True	loại mệnh giá từ 50.000 đồng trở lên theo lệnh điều chuyển giữa kho tiền Trung ương với Sở Giao dịch, Ngân hàng Nhà nước chi nhánh và ngược lại; giữa các kho tiền Trung ương với nhau; giữa các Ngân hàng Nhà nước chi nhánh với nhau, trừ trường hợp quy định tại điểm đ khoản 2 Điều này	True	2022-01-08	2025-05-19	6
+L0B2038	provision:5b2570e0-2c8c-11f1-aecd-ed1bd25619cc	repealed	2026-06-16	False	(không đáp án)	False			4
+L036038	provision:2fcd2020-25fa-11f1-8daa-31076eb17f14	repealed	2025-07-21	False	(không đáp án)	False			4
+L2784EB	provision:285f93c0-1d69-11f1-8520-271282d4caf0	repealed	2025-10-13	False	(không đáp án)	False			4
+LC92D4E	provision:834d699a-df54-11f0-9a69-b14ee0870a7b	repealed	2020-08-30	False	(không đáp án)	False			4
+LC2A3AC	provision:46a6c1a8-e157-11f0-86e8-7f18fb7d374c#k1	multi_versions	2024-12-13	True	luật, pháp lệnh phải ghi tên loại, tên gọi của văn bản và số, ký hiệu văn bản … Trong lần viện dẫn tiếp theo, đối với luật, pháp lệnh, phải ghi tên loại và tên gọi của văn bản	True	2024-06-01	2025-04-01	6
+L7A0E1E	provision:2978e004-1efe-11f1-b84c-1d06d0499749	multi_versions	2024-01-06	True	gửi trực tiếp hoặc qua hệ thống bưu chính hoặc qua cổng dịch vụ công trực tuyến đến Cục Đăng kiểm Việt Nam hoặc Chi cục Đăng kiểm	True	2023-08-15		6
+L7AE481	provision:2353f726-e160-11f0-8c4a-d1ed3dd353c1	multi_versions	2025-02-08	True	trong thời hạn không quá 30 ngày kể từ ngày đấu giá thành và không được gia hạn thêm … Trong thời hạn 60 ngày kể từ ngày người mua được tài sản đấu giá nộp đủ tiền	True	2025-01-01	2026-07-01	6
+L86BB74	provision:4a94f2f0-df48-11f0-b29b-29bf4981bb8b	repealed	2024-09-17	False	(không đáp án)	False			4
+L1C58BA	provision:3eccae18-2d54-11f1-b6ea-f5b20b1d231d	repealed	2022-07-13	False	(không đáp án)	False			4
+L732487	provision:d88e3ee8-e161-11f0-b758-cd5fa763e536	repealed	2018-07-19	False	(không đáp án)	False			4
+L452B08	provision:5ba5ec70-2d45-11f1-9bd8-3d255859b151	repealed	2026-03-07	False	(không đáp án)	False			4
+LB60578	provision:e782e8ce-df43-11f0-9355-af2f830ee753	repealed	2025-05-01	False	(không đáp án)	False			4
+L9C4BC6	provision:2fc83e20-25fa-11f1-838d-59cd98bbee7e	repealed	2023-04-04	False	(không đáp án)	False			4
+L39B446	provision:c87f45e0-2c86-11f1-949c-d1ff91018655	repealed	2019-09-25	False	(không đáp án)	False			4
+LDD4DF9	provision:913092a4-2c88-11f1-a550-b908306d6a23	repealed	2021-08-04	False	(không đáp án)	False			4
+L973721	provision:3cf170f0-2c83-11f1-ba7f-4b4b4459862b	repealed	2026-04-22	False	(không đáp án)	False			4
+L66A90D	provision:3ec22650-2d54-11f1-a21d-01a2a81c6434	multi_versions	2026-03-24	True	được lập thành 01 bộ hồ sơ và nộp tại Bộ Tư pháp	True	2026-01-15		6
+L427861	provision:5e4f34b0-301d-11f1-a8f8-ed1a242e88f0	repealed	2026-03-27	False	(không đáp án)	False			4
