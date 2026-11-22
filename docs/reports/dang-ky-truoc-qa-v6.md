@@ -205,3 +205,11 @@ và không chấm lại cổng.
 Lời dặn của cổng giữ nguyên như lúc chạy. Lô control còn lại có 36 lineage, ở
 `data/review/qa_v6/w3/control_batch.jsonl`; chia 6 agent, mỗi agent 6 lineage.
 
+**S10. Chỉ ứng viên có thể đổi đáp án mới cần người đọc (22/11, sau lần chạy control).** Một ứng viên được đánh dấu
+`affects_rows` khi văn bản tác động có hiệu lực vào hoặc trước ngày hỏi muộn nhất của lineage, hoặc khi không rõ ngày.
+- Ứng viên có hiệu lực sau mọi dòng của lineage không đổi được đáp án nào. Nó chỉ cho thấy kho thiếu một sự kiện ở
+  phía sau, nên được ghi lại nhưng không đưa vào phiếu người xác nhận.
+- 6 lỗi đã biết đã sửa ở 5.x nên cũng không đưa vào phiếu.
+- Phiếu `data/review/qa_v6/w3/xac_nhan.xlsx` có 11 dòng. Để giữ độ mù, chỉ giao phiếu cho người đã khóa W1 lô 1.
+  Lô 1 chứa các lineage control chưa ai đọc, mà tên văn bản tác động trong phiếu gợi ý chỗ kho có thể thiếu.
+

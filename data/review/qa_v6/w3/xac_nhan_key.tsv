@@ -1,0 +1,12 @@
+khoa	batch_key	lineage_id	actor_number	candidate_kind
+X01	C02	provision:077bfdc0-ead7-11f0-b71f-bd4a6bbb39c9#k1#a	107/2014/NĐ-CP	weak_no:applied_elsewhere
+X02	C05	provision:0f2bdf54-e172-11f0-b3c1-31b5daaf5f0f#k7#%C4%91	19/2011/TT-BGTVT	weak_no:rejected:status_not_applicable
+X03	C06	provision:106c9252-eb7f-11f0-914f-af2bb564bca0#k3#c	100/2018/NĐ-CP	applied_elsewhere
+X04	C25	provision:cc9bdcc4-eb90-11f0-98ff-3bb62e358163#k7#e	19/2010/NĐ-CP	weak_no:rejected:status_not_applicable
+X05	C25	provision:cc9bdcc4-eb90-11f0-98ff-3bb62e358163#k7#e	89/2010/NĐ-CP	weak_no:rejected:status_not_applicable
+X06	C33	provision:e7411cb2-e15c-11f0-bc19-55c4617182b8#k3#b	22/2023/TT-BTNMT	actor_not_in_store
+X07	D02	provision:00e219c0-eac5-11f0-841f-d12448fc0bfb#k1	20/2014/TT-BGTVT	weak_no:rejected:status_not_applicable
+X08	D03	provision:a16089ba-2d53-11f1-87d7-6598c119b283	02/2018/TT-NHNN	no_event
+X09	D06	provision:4cee6a60-eb71-11f0-ac45-154b0d915a56	14/2023/TT-BXD	weak_no:rejected:status_not_applicable
+X10	D06	provision:4cee6a60-eb71-11f0-ac45-154b0d915a56	60/2025/TT-BXD	applied_elsewhere
+X11	D08	provision:371bdfd0-eab1-11f0-bbc3-4b18097f1858#k1#b	04/2016/TT-BVHTTDL	applied_elsewhere

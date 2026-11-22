@@ -94,6 +94,10 @@ def main(batch, *agent_files):
     assert not unknown, f"agent keys not in batch: {unknown}"
     missing = set(targets) - {a["key"] for a in actors}
     store, out = load_store(), []
+    last = {}  # latest as_of of the lineage's released rows: an actor in force only later cannot change an answer
+    for line in open(ROOT / "data/vilextime_dib/vilextime.jsonl", encoding="utf-8"):
+        r = json.loads(line)
+        last[r["lineage_id"]] = max(last.get(r["lineage_id"], ""), r["as_of"])
     for a in actors:
         weak_no = a.get("touches_target") == "no" and a.get("source_kind") == "third_party_hint"  # deviation S8
         if not a.get("actor_number") or (a.get("touches_target") == "no" and not weak_no):
@@ -105,12 +109,14 @@ def main(batch, *agent_files):
                         "actor_number": a["actor_number"], "relation": a.get("relation"),
                         "effective_on": a.get("effective_on"), "touches_target": a["touches_target"],
                         "source_kind": a.get("source_kind"), "source_url": a.get("source_url"),
-                        "quote": a.get("quote"), "candidate_kind": kind})
+                        "quote": a.get("quote"), "candidate_kind": kind,
+                        "affects_rows": not a.get("effective_on") or a["effective_on"] <= last[targets[a["key"]]["lineage_id"]]})
     dest = Path(batch).with_suffix(".candidates.jsonl")
     with open(dest, "w", encoding="utf-8") as f:
         f.writelines(json.dumps(o, ensure_ascii=False) + "\n" for o in out)
     for o in out:
-        print(o["key"], o["law_id"], o["citation"], "<-", o["actor_number"], o["relation"], o["candidate_kind"])
+        print(o["key"], o["law_id"], o["citation"], "<-", o["actor_number"], o["relation"], o["effective_on"],
+              o["candidate_kind"], "CHẠM DÒNG" if o["affects_rows"] else "sau mọi dòng")
     print(f"{len(out)} ứng viên / {len(targets)} văn bản; agent không trả lời: {sorted(missing) or 'không'} -> {dest.name}")
     return out
 
