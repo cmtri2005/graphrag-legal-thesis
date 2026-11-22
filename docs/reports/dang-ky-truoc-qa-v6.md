@@ -197,3 +197,11 @@ là 5/6, và số ứng viên giảm từ 18 xuống 11. Chi tiết ở `data/re
 nguồn thứ ba vẫn được đưa vào ứng viên. Lý do: F060 bị sót đúng theo kiểu này. Luật này áp dụng từ lần chạy toàn bộ
 và không chấm lại cổng.
 
+**S9. Lời dặn agent ở lần chạy toàn bộ được sửa theo bài học F060 (22/11).** Thêm hai ý vào lời dặn:
+- Chỉ ghi "no" khi nguồn liệt kê rõ các điều bị văn bản tác động chạm, mà điều của điều khoản đích không nằm trong đó.
+  Nếu chỉ có bản tóm tắt thì ghi "unclear".
+- Văn bản sửa đổi đầu tiên mới là văn bản cần tìm, kể cả khi sau đó có văn bản ban hành lại cùng lời văn.
+
+Lời dặn của cổng giữ nguyên như lúc chạy. Lô control còn lại có 36 lineage, ở
+`data/review/qa_v6/w3/control_batch.jsonl`; chia 6 agent, mỗi agent 6 lineage.
+
