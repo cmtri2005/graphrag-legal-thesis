@@ -33,3 +33,8 @@ Lần chạy đầu có 18 ứng viên. 7 trong số đó là văn bản thay th
 của văn bản chứ không bằng sự kiện. Luật thêm vào: nếu ngày hiệu lực của actor trùng ngày bắt đầu hoặc kết thúc một
 phiên bản của lineage hoặc của văn bản, thì không gắn ứng viên. Sau khi thêm còn 11 ứng viên. Cả 5 lỗi đã bắt vẫn
 còn, và `test_compare.py` vẫn đạt.
+
+## Sau S8
+
+Với luật `weak_no`, lô này có 19 ứng viên, trong đó 8 thuộc loại `weak_no`, và F060 được gắn. Cổng vẫn báo theo luật
+lúc chạy, tức 5/6. Con số 6/6 sau S8 là con số hậu nghiệm, không dùng để khẳng định cách làm tốt hơn.
