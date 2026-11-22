@@ -56,6 +56,7 @@ from pathlib import Path
 
 SEED = 20261011
 FRESH = False
+REQUIRE_MINUTES = False  # W1 of QA 6.x: a filled row without `phut` is refused
 REVIEW: Path | None = None   # --review: a later sample keeps its own sheets beside the first
 RELEASE: Path | None = None  # --release: the rows live outside DATA (the final test set's internal release)
 
@@ -287,7 +288,7 @@ GUIDE = [
     "4. Nếu còn: dán vào `noi_dung` đúng lời văn đang có hiệu lực tại ngày hỏi (bản gốc hoặc bản đã sửa), ghi số hiệu văn bản có lời văn đó",
     "   vào `van_ban_ap_dung`.",
     "5. Điều khoản chuyển tiếp giữ quy định cũ cho trường hợp trong câu hỏi: vẫn điền theo quy định được áp dụng, và ghi Điều chuyển tiếp vào `ghi_chu`.",
-    "6. `phut`: số phút đã dùng cho dòng này.",
+    "6. `phut`: số phút đã dùng cho dòng này (bắt buộc).",
     "",
     "Chỉ năm cột được mở để điền; các cột khác đã khóa. Xong thì báo nhóm chạy `import` rồi `reveal`.",
     "Sau `reveal`, câu trả lời bước một bị khóa bằng sha256 và không sửa nữa; bước hai mới cho xem đáp án của KG.",
@@ -369,6 +370,8 @@ def ingest(data: Path, who: str) -> None:
             errors.append(f"{r['khoa']}: hieu_luc `{x['hieu_luc']}` ngoài {sorted(FORCE)}")
         if x["hieu_luc"] == "còn" and not x["noi_dung"]:
             errors.append(f"{r['khoa']}: còn hiệu lực nhưng thiếu noi_dung")
+        if REQUIRE_MINUTES and x["hieu_luc"] and not x["phut"]:
+            errors.append(f"{r['khoa']}: thiếu phut")
         if x["phut"] and not x["phut"].replace(".", "", 1).isdigit():
             errors.append(f"{r['khoa']}: phut `{x['phut']}` không phải số")
     if errors:
@@ -412,6 +415,7 @@ def main() -> None:
     ap.add_argument("--release", type=Path, help="release JSONL holding the rows (default: DATA/derived/vilextime/release.jsonl)")
     ap.add_argument("--prefix", default="G", help="build: prefix of the row keys")
     ap.add_argument("--per-stratum", type=int, help="build with --only: lineages per stratum (default 20; 5 shared)")
+    ap.add_argument("--require-minutes", action="store_true", help="import: refuse filled rows without `phut`")
     ap.add_argument("--fresh", action="store_true", help="build with --only: annotators are new (e.g. blind AI sessions); nothing counts as seen")
     args = ap.parse_args()
     global REVIEW, RELEASE
@@ -419,6 +423,8 @@ def main() -> None:
     global PER_STRATUM, FRESH
     PER_STRATUM = args.per_stratum or PER_STRATUM
     FRESH = args.fresh
+    global REQUIRE_MINUTES
+    REQUIRE_MINUTES = args.require_minutes
     if args.command != "build" and not args.annotator:
         ap.error(f"{args.command} needs A, B or C")
     if args.command == "build":
