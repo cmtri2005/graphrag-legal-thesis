@@ -175,3 +175,16 @@ văn riêng trong kho, dùng lời văn của Điều chứa nó. Bản chạy t
 
 **S5. Cờ `seen_provision` (§0).** Lượt 1 có cột tự khai `da_gap` (có / không). Ngoài ra `pass1_key.tsv` ghi bằng máy
 vai người đã đọc mù lineage đó ở đợt trước (`read_before_by`). Bài báo cáo cả hai.
+
+**S6. Cổng tin cậy W3 chạy trên một lô trộn (§3).** Ghi trước khi xem kết quả của agent.
+- Lô `data/review/qa_v6/w3/gate_batch.jsonl` gồm 12 văn bản: 6 văn bản chứa 6 lỗi đã biết, trộn với 6 văn bản của
+  control rút bằng `random.Random("20261122:w3:gate-mix")`; thứ tự xáo bằng `random.Random("20261122:w3:gate-order")`.
+  Agent không được biết văn bản nào có lỗi đã biết. 6 văn bản control đồng thời là phần đầu của W3 cho control.
+- Agent được dặn không mở file nào trong repo và không dùng tab Lược đồ của vbpl. Đây là mù theo lời dặn; công cụ của
+  agent về kỹ thuật vẫn đọc được repo. Bài ghi rõ điều này.
+- **Đạt cổng** khi với ít nhất 5/6 lỗi đã biết, agent liệt kê đúng văn bản tác động và ghi `touches_target` là
+  `yes` hoặc `unclear`, và `compare.py` gắn văn bản đó thành ứng viên.
+- Luật gắn ứng viên của `compare.py`: kho không có sự kiện **đã áp dụng** nào từ văn bản tác động đó lên chuỗi điều
+  khoản đích (chính nó, các cấp trên đến văn bản, các cấp dưới). Phía máy đã thử: 6/6 lỗi đã biết bị gắn, một sửa
+  đổi kho đã áp dụng không bị gắn (`test_compare.py`).
+
