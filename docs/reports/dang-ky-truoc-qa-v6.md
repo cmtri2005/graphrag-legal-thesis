@@ -188,3 +188,12 @@ vai người đã đọc mù lineage đó ở đợt trước (`read_before_by`)
   khoản đích (chính nó, các cấp trên đến văn bản, các cấp dưới). Phía máy đã thử: 6/6 lỗi đã biết bị gắn, một sửa
   đổi kho đã áp dụng không bị gắn (`test_compare.py`).
 
+**S7. Luật gắn ứng viên đổi sau khi thấy kết quả cổng (22/11).** Nếu ngày hiệu lực của văn bản tác động trùng ngày
+bắt đầu hoặc kết thúc một phiên bản của lineage hoặc của văn bản đích, thì không gắn ứng viên. Lý do: văn bản thay thế
+toàn bộ được kho thể hiện bằng ngày hết hiệu lực của văn bản, không bằng sự kiện. Kết quả cổng theo cả hai luật đều
+là 5/6, và số ứng viên giảm từ 18 xuống 11. Chi tiết ở `data/review/qa_v6/w3/KET_QUA_CONG.md`.
+
+**S8. Thêm loại ứng viên `weak_no`.** Văn bản tác động mà agent ghi "không chạm điều khoản đích" nhưng chỉ dựa trên
+nguồn thứ ba vẫn được đưa vào ứng viên. Lý do: F060 bị sót đúng theo kiểu này. Luật này áp dụng từ lần chạy toàn bộ
+và không chấm lại cổng.
+

@@ -1,0 +1,96 @@
+\relax 
+\providecommand\babel@aux[2]{}
+\@nameuse{bbl@beforestart}
+\catcode `"\active 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand*\HyPL@Entry[1]{}
+\HyPL@Entry{0<</S/D>>}
+\babel@aux{vietnamese}{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Abstract}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Introduction}{1}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Bối cảnh và động lực.}{1}{section*.1}\protected@file@percent }
+\citation{robertson2009bm25}
+\citation{karpukhin2020dpr}
+\citation{cormack2009rrf}
+\citation{edge2024graphrag}
+\citation{guo2025lightrag}
+\citation{prior2026oldfriend}
+\citation{yao2026lawinforce}
+\citation{akarajaradwong2026nitibenchplus}
+\@writefile{toc}{\contentsline {paragraph}{Hiện trạng và hạn chế.}{2}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Đề xuất.}{2}{section*.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Minh họa giải pháp bằng một ví dụ trong \textsc  {ViLexTime}{}. Đồ thị pháp lý theo thời gian ghi nhận cấu trúc văn bản và sự kiện sửa đổi có ngày hiệu lực; đồ thị được biên dịch offline thành chuỗi phiên bản với khoảng hiệu lực $\mathrm  {Eff}(v)$. Khi truy vấn tại mốc $t$, phiên bản không có hiệu lực bị loại trước khi xếp hạng. Cách chấm tương phản phát hiện câu trả lời trích nội dung của phiên bản sai mốc.}}{2}{figure.1}\protected@file@percent }
+\newlabel{fig:solution}{{1}{2}{Minh họa giải pháp bằng một ví dụ trong \sv {}. Đồ thị pháp lý theo thời gian ghi nhận cấu trúc văn bản và sự kiện sửa đổi có ngày hiệu lực; đồ thị được biên dịch offline thành chuỗi phiên bản với khoảng hiệu lực $\mathrm {Eff}(v)$. Khi truy vấn tại mốc $t$, phiên bản không có hiệu lực bị loại trước khi xếp hạng. Cách chấm tương phản phát hiện câu trả lời trích nội dung của phiên bản sai mốc}{figure.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Đóng góp.}{2}{section*.4}\protected@file@percent }
+\citation{lewis2020rag}
+\citation{robertson2009bm25}
+\citation{karpukhin2020dpr}
+\citation{cormack2009rrf}
+\citation{edge2024graphrag}
+\citation{guo2025lightrag}
+\citation{louis2023finding}
+\citation{chen2021timeqa}
+\citation{dhingra2022templama}
+\citation{huwiler2025versionrag}
+\citation{demartim2025satgraph}
+\citation{prior2025consolidation}
+\citation{prior2026oldfriend}
+\citation{han2025lawshift}
+\citation{cymbler2026fiscalqa}
+\citation{yao2026lawinforce}
+\citation{akarajaradwong2026nitibenchplus}
+\citation{thanh2021alqac}
+\citation{nguyen2025vlqa}
+\citation{dong2026vietlegal}
+\citation{nguyen2026vilegalexpert}
+\citation{nguyen2026vihermes}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Related Work}{3}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Sinh câu trả lời tăng cường truy xuất và GraphRAG.}{3}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Thời gian và phiên bản trong hỏi đáp.}{3}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Hỏi đáp pháp luật tiếng Việt.}{3}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Problem Formulation \& Methodology}{3}{section.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Tổng quan phương pháp. (a)~Lệnh sửa đổi và bãi bỏ được trích xuất thành cạnh có ngày hiệu lực trên cây cấu trúc văn bản, sau đó được biên dịch offline thành kho phiên bản kèm khoảng hiệu lực. (b)~Tại thời điểm truy vấn, các đơn vị không có hiệu lực tại $t$ bị loại trước khi chọn top-$k$; cấu hình đầy đủ bổ sung các lệnh tác động lên đơn vị cấp trên và kiểm tra trích dẫn. (c)~Bộ dữ liệu \textsc  {ViLexTime}{} cung cấp câu hỏi kèm mốc thời gian, cùng đoạn đáp án đúng và đoạn đáp án của phiên bản khác cho bộ chấm tương phản.}}{3}{figure.2}\protected@file@percent }
+\newlabel{fig:overview}{{2}{3}{Tổng quan phương pháp. (a)~Lệnh sửa đổi và bãi bỏ được trích xuất thành cạnh có ngày hiệu lực trên cây cấu trúc văn bản, sau đó được biên dịch offline thành kho phiên bản kèm khoảng hiệu lực. (b)~Tại thời điểm truy vấn, các đơn vị không có hiệu lực tại $t$ bị loại trước khi chọn top-$k$; cấu hình đầy đủ bổ sung các lệnh tác động lên đơn vị cấp trên và kiểm tra trích dẫn. (c)~Bộ dữ liệu \sv {} cung cấp câu hỏi kèm mốc thời gian, cùng đoạn đáp án đúng và đoạn đáp án của phiên bản khác cho bộ chấm tương phản}{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Định nghĩa bài toán}{3}{subsection.4.1}\protected@file@percent }
+\newlabel{eq:task}{{1}{3}{Định nghĩa bài toán}{equation.4.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Biểu diễn phiên bản và khoảng hiệu lực}{4}{subsection.4.2}\protected@file@percent }
+\newlabel{eq:eff}{{2}{4}{Biểu diễn phiên bản và khoảng hiệu lực}{equation.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Xây dựng kho phiên bản}{4}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Truy xuất có ràng buộc hiệu lực và thang so sánh}{5}{subsection.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Cấu hình đầy đủ.}{5}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Điều kiện oracle.}{5}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Xây dựng bộ dữ liệu \textsc  {ViLexTime}{}}{5}{subsection.4.5}\protected@file@percent }
+\citation{guo2025lightrag}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Experimental Setup}{6}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Dữ liệu}{6}{subsection.5.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Thống kê bộ kiểm tra cuối của \textsc  {ViLexTime}{} (mốc giữa khoảng).}}{6}{table.1}\protected@file@percent }
+\newlabel{tab:data}{{1}{6}{Thống kê bộ kiểm tra cuối của \sv {} (mốc giữa khoảng)}{table.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Các hệ thống so sánh}{6}{subsection.5.2}\protected@file@percent }
+\citation{holm1979}
+\citation{dror2018hitchhiker}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Thước đo}{7}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Kiểm định thống kê}{7}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Kiểm tra bộ chấm tự động}{7}{subsection.5.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Results and Analysis}{7}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Mức độ phổ biến của lỗi trích sai phiên bản (mô tả)}{7}{subsection.6.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Kết quả mô tả trên lát \emph  {all} (318 dòng, lần chạy thứ nhất). WV: tỷ lệ trích sai phiên bản (càng thấp càng tốt, tính theo bộ chấm tự động).}}{8}{table.2}\protected@file@percent }
+\newlabel{tab:main}{{2}{8}{Kết quả mô tả trên lát \emph {all} (318 dòng, lần chạy thứ nhất). WV: tỷ lệ trích sai phiên bản (càng thấp càng tốt, tính theo bộ chấm tự động)}{table.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Kiểm định xác nhận}{8}{subsection.6.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Họ phép kiểm xác nhận (Holm, $\alpha =0{,}05$; bootstrap theo điều khoản, $B=10.000$). P: cấu hình đầy đủ. Với F1--F6, giá trị $p$ sau hiệu chỉnh nhỏ hơn 0,001 ở cả hai lần chạy.}}{8}{table.3}\protected@file@percent }
+\newlabel{tab:confirm}{{3}{8}{Họ phép kiểm xác nhận (Holm, $\alpha =0{,}05$; bootstrap theo điều khoản, $B=10.000$). P: cấu hình đầy đủ. Với F1--F6, giá trị $p$ sau hiệu chỉnh nhỏ hơn 0,001 ở cả hai lần chạy}{table.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Nguồn gốc của cải thiện (thăm dò)}{8}{subsection.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Kho phiên bản cần đi kèm bộ lọc.}{8}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Duyệt đồ thị tại thời điểm truy vấn.}{9}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Lọc trước khi xếp hạng so với ghi ngày vào prompt.}{9}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{So sánh với LightRAG và mô hình sinh thứ hai.}{9}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Phân tích lỗi (thăm dò)}{9}{subsection.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Xếp hạng trong tập căn cứ hợp lệ.}{9}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Nhận diện bãi bỏ.}{9}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Độ tin cậy của thước đo}{9}{subsection.6.5}\protected@file@percent }
+\bibstyle{plainnat}
+\bibdata{references}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion, Limitations, Ethics}{10}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Kết luận.}{10}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Hạn chế.}{10}{section*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Đạo đức nghiên cứu.}{10}{section*.18}\protected@file@percent }
+\gdef \@abspage@last{10}
