@@ -145,4 +145,33 @@ còn hiệu lực". Bộ 6.0.0 có 362 cặp. Đợt 1–3 đã phủ 135 cặp,
 
 ## 7. Sai lệch so với đăng ký
 
-Chưa có.
+Mọi mục dưới đây ghi ngày 22/11/2026, trước khi giao phiếu W2 nào.
+
+**S1. Nguồn và lĩnh vực của 30 câu mốc (§2).**
+- Chỉ lấy từ một cổng: chinhsachonline.chinhphu.vn (Cổng Giải đáp chính sách của Chính phủ). Cổng không chia theo
+  4 lĩnh vực; agent web-fetch xếp câu vào lĩnh vực theo nội dung.
+- Cổng gần như không có câu hỏi về hoạt động vận tải. Đọc 12 trang mục Xây dựng (từ 02/10 đến 22/11/2026) chỉ được 6
+  câu gắn với giao thông, đều về công trình giao thông hoặc hành lang đường bộ. Ngoài ra có M29 (chi phí gói thầu có
+  phần công trình giao thông) và M30 (cầu, kè qua công trình thủy lợi), giữ lại để đủ 30.
+- Chia lĩnh vực: đất đai 8, thuế 8, doanh nghiệp–đầu tư 7, xây dựng 1, giao thông 6 (trong đó 2 câu ranh giới).
+  Đăng ký trước không định số câu mỗi lĩnh vực.
+- Ghi chú: 199 lineage của bộ trải trên nhiều lĩnh vực hơn 4 lĩnh vực này (đếm theo tên văn bản, chỉ khoảng 24 văn bản
+  thuộc giao thông). Vì vậy câu mốc là mốc "câu người thật hỏi về pháp luật", không khớp lĩnh vực với bộ.
+- Câu đăng đúng ngày 22/11/2026 bị loại, theo chữ "trước ngày 22/11/2026".
+
+**S2. "Chỉ giữ câu hỏi chính" được làm thành một luật kiểm được bằng máy.**
+- Thư của người dân dài và có ngữ cảnh. Bản đưa vào phiếu chỉ được: (1) bỏ nguyên câu; (2) xóa số hiệu văn bản, ngày
+  tháng năm, tên người, địa danh; (3) viết hoa chữ đầu câu khi phần xóa đứng đầu câu. Không thêm hay thay chữ nào.
+- Giữ lại các câu dẫn cần để hiểu câu hỏi (tránh "trường hợp trên" không rõ là gì). Tham chiếu Điều, Khoản được giữ,
+  vì đăng ký trước chỉ yêu cầu bỏ số hiệu văn bản.
+- Nguyên văn, bản rút gọn và URL nằm trong `data/review/qa_v6/w2/moc_src.py`. Hàm `check()` kiểm luật này; đã thử âm
+  (thêm một chữ thì bị bắt).
+
+**S3. Giới hạn mới của W2: độ mù về nguồn câu yếu.** Câu mốc dài hơn và thường xưng "tôi", nên người chấm có thể
+đoán câu nào là câu của người dân. Bài phải ghi điều này khi so điểm câu mốc với câu của bộ.
+
+**S4. Lời văn ở lượt 2 của bản chạy thử.** Dùng phiên bản đầu tiên của lineage. Với lineage cấp khoản không có lời
+văn riêng trong kho, dùng lời văn của Điều chứa nó. Bản chạy thử chỉ để thử câu chữ của thang, không dùng để tính số.
+
+**S5. Cờ `seen_provision` (§0).** Lượt 1 có cột tự khai `da_gap` (có / không). Ngoài ra `pass1_key.tsv` ghi bằng máy
+vai người đã đọc mù lineage đó ở đợt trước (`read_before_by`). Bài báo cáo cả hai.

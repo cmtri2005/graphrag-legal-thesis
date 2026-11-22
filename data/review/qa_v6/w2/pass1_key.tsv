@@ -1,0 +1,230 @@
+khoa	source	id	group	question_model	read_before_by
+Q001	moc	M15	thuế		
+Q002	bo	provision:07369050-ead7-11f0-8819-7d7d55a2eca4#k1#d	control	claude-haiku-5-5	annotator_A,annotator_B
+Q003	moc	M10	thuế		
+Q004	bo	provision:c87f45e0-2c86-11f1-949c-d1ff91018655	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q005	bo	provision:5e4f34b0-301d-11f1-a8f8-ed1a242e88f0	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q006	bo	provision:d3410dac-df4b-11f0-87ec-e3c3cd12378f#k3#c	control	claude-haiku-5-5	
+Q007	bo	provision:834d699a-df54-11f0-9a69-b14ee0870a7b	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q008	bo	provision:e9f1fcba-eb70-11f0-ae55-77d3c9eccbbe#k1#%C4%91	control	claude-haiku-5-5	
+Q009	bo	provision:3cf170f0-2c83-11f1-ba7f-4b4b4459862b	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q010	bo	provision:7d1ef8b0-1ebd-11f1-894d-a10ccda9d7c4	two_versions	claude-opus-5-5	
+Q011	bo	provision:a96b6a70-2cc3-11f1-bce0-39f40187b744	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q012	moc	M02	đất đai		
+Q013	bo	provision:ddf875f6-e152-11f0-b025-af404701d747#k3#b	two_versions	claude-sonnet-5-5	coauthor_reader,lawyer
+Q014	bo	provision:cc6fc560-2e04-11f1-98d4-397cdef8af5e	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q015	bo	provision:d9b3c4e4-2c7c-11f1-bfe8-f3ff885cbaf9	two_versions	claude-opus-5-5	annotator_A
+Q016	bo	provision:5ba5ec70-2d45-11f1-9bd8-3d255859b151	repealed	claude-sonnet-5-5	coauthor_reader,lawyer
+Q017	bo	provision:68de9870-2d53-11f1-9a98-8f8c7c0b8cfd	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q018	bo	provision:10ca9a90-250a-11f1-98b4-b7c32e15b876	two_versions	deepseek-flash	
+Q019	bo	provision:34290bd0-2c7f-11f1-9ed9-2d4296b2c097	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q020	moc	M08	đất đai		
+Q021	moc	M17	doanh nghiệp – đầu tư		
+Q022	bo	provision:58b0b660-2d47-11f1-9aad-bd005c4d14c4	two_versions	claude-opus-5-5	annotator_A
+Q023	bo	provision:b02bdf60-df53-11f0-880e-eb42fef4cfd4#k1	two_versions	deepseek-flash	
+Q024	bo	provision:0f2bdf54-e172-11f0-b3c1-31b5daaf5f0f#k7#%C4%91	control	claude-haiku-5-5	
+Q025	bo	provision:2449b764-df4a-11f0-8947-77f8a3786fca#k1#d	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q026	moc	M14	thuế		
+Q027	bo	provision:3ec49750-2d54-11f1-9467-9f7cd639166d	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q028	bo	provision:fab36588-df55-11f0-a65a-358a1cdc4fec#k1#d	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q029	bo	provision:e9b9d5f4-df42-11f0-a5f2-138bc0b82b6b	two_versions	claude-opus-5-5	
+Q030	bo	provision:1c03c8ee-df43-11f0-a88a-49b808184bb1	two_versions	claude-opus-5-5	
+Q031	bo	provision:20b7b940-1f67-11f1-8521-fb4f27a5cb13	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q032	bo	provision:1bd29b3e-df57-11f0-90b9-2b5fe92f1dbd#k3#c	two_versions	claude-opus-5-5	
+Q033	bo	provision:46a5ca1e-e157-11f0-a769-0badb1c355e3#k1	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q034	bo	provision:6655078c-eb73-11f0-861a-fb21d5a562cb	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q035	bo	provision:71c5debc-eb7c-11f0-94e3-1f1d9a240bba#k1#b	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q036	moc	M09	thuế		
+Q037	bo	provision:e5f23c38-df45-11f0-82eb-87212638ce67#k1#c	control	claude-haiku-5-5	
+Q038	bo	provision:9ed890ee-df3c-11f0-9949-0d070d782e07	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q039	moc	M27	giao thông vận tải		
+Q040	bo	provision:9621b6d0-28f0-11f1-8a73-dfb3ff745c34	two_versions	deepseek-flash	annotator_A,annotator_B
+Q041	bo	provision:f01b7674-1d8a-11f1-aebe-379b00ea2e21	repealed	claude-sonnet-5-5	coauthor_reader,lawyer
+Q042	bo	provision:07d2677a-e161-11f0-a32d-5f57d4c3930b#k3#h	control	claude-haiku-5-5	annotator_A,annotator_B
+Q043	bo	provision:5dc6c8a2-eb7e-11f0-89ef-4b33eadf5c5f#k3#d	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q044	bo	provision:20a9cf80-2cad-11f1-abb7-61639469e75e	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q045	bo	provision:c45fc984-df43-11f0-b549-45a866e4a586#k2#a	two_versions	claude-opus-5-5	
+Q046	bo	provision:edc507d0-df43-11f0-955c-a3b1b5737505#k6	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q047	bo	provision:64ab9fee-df3f-11f0-af32-59d1738d0234	two_versions	deepseek-flash	
+Q048	bo	provision:f7a2d6fe-df40-11f0-b4c8-19f897fecc61	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q049	bo	provision:2353f4ec-e160-11f0-997d-7f3f9b5ed150	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q050	bo	provision:8fa591aa-2c7e-11f1-b6b4-69ce8e776c50	two_versions	claude-opus-5-5	
+Q051	bo	provision:3b990912-df39-11f0-a392-ad99396558e6	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q052	bo	provision:34588892-df45-11f0-8d2c-edf7506af297#k2#c	two_versions	claude-opus-5-5	
+Q053	bo	provision:2fc83e20-25fa-11f1-838d-59cd98bbee7e	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q054	bo	provision:2449b7fa-df4a-11f0-9607-69212f39380e#k1#m	two_versions	deepseek-flash	annotator_A,annotator_B
+Q055	moc	M01	đất đai		
+Q056	moc	M20	doanh nghiệp – đầu tư		
+Q057	bo	provision:e653e450-2ab9-11f1-8795-75a5ce3bd467	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q058	bo	provision:5a03ca10-eaea-11f0-9469-2f0642addcfe	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q059	bo	provision:28d335fc-eb7b-11f0-9733-c7a431e6c853#k2	control	claude-haiku-5-5	annotator_A,annotator_B
+Q060	bo	provision:8cb85720-eb74-11f0-a89e-5d1d6bbf545e#k2#d	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q061	bo	provision:eb08eabe-eb70-11f0-b9af-f97f0ab81722#k1#c	two_versions	claude-opus-5-5	
+Q062	bo	provision:fb088b5a-df49-11f0-ade8-1187077474c5#k1#n	two_versions	claude-opus-5-5	
+Q063	moc	M18	doanh nghiệp – đầu tư		
+Q064	bo	provision:2353f726-e160-11f0-8c4a-d1ed3dd353c1	multi_versions	deepseek-flash	annotator_B
+Q065	bo	provision:464bd2e2-df5a-11f0-9d08-03fc320c1d97#k3	control	claude-haiku-5-5	
+Q066	bo	provision:b465dcf0-e167-11f0-83e7-3d57f2b97777#k2	control	claude-haiku-5-5	
+Q067	bo	provision:4623c2d6-df49-11f0-81e6-9f44dd749564	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q068	bo	provision:0b3d2a1c-df54-11f0-9582-0d0c91275f3e	two_versions	claude-sonnet-5-5	coauthor_reader
+Q069	bo	provision:0ba724e0-2d46-11f1-8ed8-234f646704e4	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q070	bo	provision:850810ac-eb73-11f0-b95d-bb68bf51b524	two_versions	claude-opus-5-5	
+Q071	bo	provision:6816c14a-ec3c-11f0-8e6b-bf786295d0bf#k3#a	control	claude-haiku-5-5	
+Q072	bo	provision:3bd9564e-e14f-11f0-b538-5b8c9a61c03a#k8	control	claude-haiku-5-5	annotator_A,annotator_B
+Q073	bo	provision:e74e9512-df41-11f0-ba6e-ef6e1694b260#k1#d	control	claude-haiku-5-5	annotator_A,annotator_B
+Q074	bo	provision:e7411cb2-e15c-11f0-bc19-55c4617182b8#k3#b	control	claude-haiku-5-5	
+Q075	bo	provision:545c6f32-df40-11f0-bd62-4dbf838c8125	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q076	bo	provision:26e1e400-eba3-11f0-95b8-9b01d2fde032	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q077	bo	provision:b7ee85a0-1ecc-11f1-8bf4-878cc9351133	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q078	bo	provision:e99406b0-df4e-11f0-a5c9-eb4d717a0f21	two_versions	claude-sonnet-5-5	coauthor_reader
+Q079	bo	provision:3d2c08f0-2c83-11f1-b036-cd0aa68fc3b3	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q080	bo	provision:4cee6a60-eb71-11f0-ac45-154b0d915a56	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q081	bo	provision:1a5c769a-df4c-11f0-8555-8db048a8a391#k2	two_versions	claude-opus-5-5	
+Q082	moc	M16	thuế		
+Q083	bo	provision:893ab108-e181-11f0-9c94-73075fabab2e	two_versions	claude-opus-5-5	
+Q084	bo	provision:18f6fb4e-df3e-11f0-8f56-53e22baaebd9#k2#d	control	claude-haiku-5-5	
+Q085	bo	provision:3eccae18-2d54-11f1-b6ea-f5b20b1d231d	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q086	bo	provision:69cf3260-e16f-11f0-9f57-7f375c5a9290	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q087	bo	provision:f78365e0-1df6-11f1-a27b-2bd2862aefdb	two_versions	claude-opus-5-5	
+Q088	bo	provision:106c9252-eb7f-11f0-914f-af2bb564bca0#k3#c	control	claude-haiku-5-5	annotator_A,annotator_B
+Q089	bo	provision:b69cb980-2c7b-11f1-8056-01cda9906453	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q090	bo	provision:a14848ae-df48-11f0-b478-9f5030c0c1d9#k1	control	claude-haiku-5-5	
+Q091	bo	provision:0297fec0-31a0-11f1-ad11-4f6eee776099	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q092	bo	provision:913092a4-2c88-11f1-a550-b908306d6a23	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q093	bo	provision:5b2570e0-2c8c-11f1-aecd-ed1bd25619cc	repealed	claude-sonnet-5-5	coauthor_reader
+Q094	bo	provision:2fcd2020-25fa-11f1-8daa-31076eb17f14	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q095	moc	M30	giao thông vận tải		
+Q096	bo	provision:e2acf6a0-eae2-11f0-bd05-d766c03bb281#k4	two_versions	claude-opus-5-5	annotator_B
+Q097	bo	provision:e23c54c0-3634-11f1-9175-9b33751e108f	two_versions	claude-opus-5-5	annotator_A
+Q098	bo	provision:4eb2a108-eb77-11f0-a29a-4fcc88144917#k4	two_versions	deepseek-flash	annotator_B
+Q099	bo	provision:ff523980-2c84-11f1-bd91-2d6baf038262	two_versions	claude-opus-5-5	
+Q100	bo	provision:73dd9ae0-2c1e-11f1-8ac9-8b5a6fd5f4ad	two_versions	claude-opus-5-5	
+Q101	bo	provision:20548c48-e174-11f0-a493-1bb114c8b6dc#k5#b	two_versions	deepseek-flash	
+Q102	bo	provision:cf72d8e0-1dc1-11f1-985c-c3d08e2f7ea1	two_versions	deepseek-flash	
+Q103	bo	provision:a16089ba-2d53-11f1-87d7-6598c119b283	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q104	bo	provision:b7dde3d0-1ecc-11f1-a3b1-d7ceb5cb0820	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q105	moc	M13	thuế		
+Q106	bo	provision:c48b9402-e17c-11f0-b684-6f540d853c18#k1#c	control	claude-haiku-5-5	
+Q107	bo	provision:c1622450-eada-11f0-991f-bbdc27995684#k3	two_versions	claude-opus-5-5	
+Q108	moc	M12	thuế		
+Q109	moc	M04	đất đai		
+Q110	bo	provision:4a94f2f0-df48-11f0-b29b-29bf4981bb8b	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q111	bo	provision:d69e4e80-2c79-11f1-936d-7d249b0b89b3	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q112	bo	provision:66d0e400-31ba-11f1-8513-5f24d42ce133	two_versions	deepseek-flash	
+Q113	bo	provision:cc9bdcc4-eb90-11f0-98ff-3bb62e358163#k7#e	control	claude-haiku-5-5	
+Q114	moc	M29	giao thông vận tải		
+Q115	bo	provision:668e75b0-27a7-11f1-b175-29f953138aa1	multi_versions	claude-opus-5-5	annotator_A
+Q116	moc	M23	doanh nghiệp – đầu tư		
+Q117	bo	provision:3eb4b8d0-2d54-11f1-9586-c7fce1fa2bea	two_versions	deepseek-flash	annotator_A
+Q118	bo	provision:cdeb2070-3196-11f1-b366-dbea8386f201	two_versions	claude-opus-5-5	
+Q119	bo	provision:3ec22650-2d54-11f1-a21d-01a2a81c6434	multi_versions	claude-opus-5-5	annotator_B
+Q120	bo	provision:79bef342-e168-11f0-9761-c77faae6266e#k2	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q121	bo	provision:3b44ab90-2d47-11f1-98ed-33b7875cade4	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q122	moc	M03	đất đai		
+Q123	bo	provision:9395fe30-eabb-11f0-b95f-553220e945dc#k3#b	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q124	bo	provision:46a6c162-e157-11f0-b1a6-af9d1066df24#k2	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q125	bo	provision:d69ca0d0-2c79-11f1-bc4a-c34ca3920b1c	two_versions	claude-opus-5-5	
+Q126	bo	provision:b82eb770-eacd-11f0-987b-17affd5ae846#k1#%C4%91	control	claude-haiku-5-5	
+Q127	bo	provision:32e797ec-df49-11f0-843a-ed9e4d1e206f	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q128	bo	provision:abdc9b84-e15b-11f0-8e24-6d13b1bd9f6b	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q129	bo	provision:3b5778c0-df3a-11f0-ab59-ab63c1d0e8d2	two_versions	claude-opus-5-5	annotator_B
+Q130	bo	provision:27be0e60-9de3-11f1-af6e-a3b959fd029a	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q131	bo	provision:f5df0b1e-eb7d-11f0-b360-91ad124736e0#k1	control	claude-haiku-5-5	
+Q132	bo	provision:35d63f30-2d46-11f1-b904-fb3c49d69cc5	two_versions	claude-opus-5-5	
+Q133	bo	provision:c4275dbc-e176-11f0-86b1-a35d2a1c3342#k2	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q134	bo	provision:2f1dd510-2c86-11f1-816b-6917ac5a340f	two_versions	deepseek-flash	annotator_B
+Q135	bo	provision:1e531744-df43-11f0-85f8-538932349f38#k2#b	control	claude-haiku-5-5	
+Q136	bo	provision:668e2d30-df40-11f0-ae93-abd48759a5e2#k2#a	control	claude-haiku-5-5	
+Q137	bo	provision:09380144-df48-11f0-a7bd-4bcb1805356b#k21	control	claude-haiku-5-5	
+Q138	bo	provision:fbe12b82-e14b-11f0-88f6-bbb37770ebfa#k1	control	claude-haiku-5-5	
+Q139	bo	provision:e84fde30-2ce4-11f1-adad-450d16a8bb26	two_versions	claude-opus-5-5	
+Q140	bo	provision:4888ab40-2d3c-11f1-adef-5b2c798b0347	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q141	bo	provision:4d5a0168-df4f-11f0-869a-fdd3c658b14c#k5	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q142	bo	provision:28d334e4-eb7b-11f0-9ff2-43f8e9ee4ccc#k9	control	claude-haiku-5-5	annotator_A,annotator_B
+Q143	bo	provision:6b287d00-2964-11f1-adc6-dde20510376e	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q144	bo	provision:371bdfd0-eab1-11f0-bbc3-4b18097f1858#k1#b	control	claude-haiku-5-5	
+Q145	bo	provision:ee5a1d20-df52-11f0-b7c8-97e0fbc29771	two_versions	deepseek-flash	annotator_B
+Q146	bo	provision:f93793a0-eab3-11f0-960c-1f93ed7f7764#k4	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q147	bo	provision:868ec6d0-eacb-11f0-b37b-d372ff90f04b	two_versions	claude-opus-5-5	
+Q148	bo	provision:58838be0-2d47-11f1-af8a-1722069b7137	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q149	bo	provision:b8681680-2ac1-11f1-a61e-dd5381086c63	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q150	bo	provision:339c8854-df4f-11f0-b489-9966855d989e#k3#a	control	claude-haiku-5-5	annotator_A,annotator_B
+Q151	moc	M24	xây dựng		
+Q152	bo	provision:8cf2dfb0-31a8-11f1-b48c-e34a818771d6	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q153	bo	provision:6de08930-1f81-11f1-879b-6fd3887768c6	two_versions	claude-sonnet-5-5	coauthor_reader
+Q154	moc	M21	doanh nghiệp – đầu tư		
+Q155	bo	provision:9784e330-df49-11f0-a224-a14c6720b47d	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q156	bo	provision:9fdf6804-2d53-11f1-ad2a-cf0eedd8b394	multi_versions	claude-opus-5-5	annotator_A,annotator_B
+Q157	bo	provision:0bd83f26-df3f-11f0-910e-abf723745ddc#k1#b	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q158	bo	provision:488598e8-df39-11f0-a89f-1be912c8b68f#k2#a	control	claude-haiku-5-5	annotator_A,annotator_B
+Q159	moc	M26	giao thông vận tải		
+Q160	bo	provision:96a4e360-2478-11f1-95f6-55b92facf06a	two_versions	deepseek-flash	
+Q161	bo	provision:7ba9e014-eb7b-11f0-954d-af330569649d	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q162	bo	provision:c22796fe-ec3d-11f0-b7f4-fba5589e1f59#k1#b	control	claude-haiku-5-5	
+Q163	moc	M22	doanh nghiệp – đầu tư		
+Q164	bo	provision:0bd83f26-df3f-11f0-910e-abf723745ddc#k1#h	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q165	bo	provision:ec7029d0-df40-11f0-aa7a-817714411792#k4	control	claude-haiku-5-5	
+Q166	bo	provision:f0fd27ae-e180-11f0-b95d-855bc22154df	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q167	bo	provision:86d9acf0-2c7e-11f1-a35f-87076455d281	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q168	bo	provision:77e67110-483a-11f1-b5ea-1b9929f75d90	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q169	bo	provision:31a2f5c2-eb8b-11f0-b828-d5cdb76c94cc#k35	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q170	bo	provision:96a1fd30-2478-11f1-97c0-71e6d236c511	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q171	bo	provision:26f8f0b0-1dde-11f1-bb3d-7bd9a7e477b5	two_versions	deepseek-flash	annotator_A,annotator_B
+Q172	bo	provision:2353d00c-e160-11f0-a9c8-ff234593e2d4	two_versions	claude-opus-5-5	
+Q173	bo	provision:24019d6a-df3d-11f0-a92e-cd3d70f1b84b	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q174	bo	provision:077bfdc0-ead7-11f0-b71f-bd4a6bbb39c9#k1#a	control	claude-haiku-5-5	
+Q175	bo	provision:a3183440-21ac-11f1-aefb-d18bdd5a5126	two_versions	claude-opus-5-5	annotator_B
+Q176	bo	provision:dca96f94-df58-11f0-bd8d-3d519ed88762#k5#c	control	claude-haiku-5-5	annotator_A,annotator_B
+Q177	bo	provision:0bd16220-1fb1-11f1-9de8-b3ccb84b4cea	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q178	bo	provision:9edeb73c-df44-11f0-8ab4-c1404df4b3ea#k1	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q179	bo	provision:2e09f7c0-2c5a-11f1-bb00-cffa6b962218	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q180	bo	provision:a1260d6a-df44-11f0-82fe-770516202b09#k6#%C4%91	control	claude-haiku-5-5	
+Q181	moc	M06	đất đai		
+Q182	bo	provision:ea1e8fe0-2c85-11f1-90e2-cb5f8b4211e0	two_versions	claude-sonnet-5-5	coauthor_reader
+Q183	moc	M28	giao thông vận tải		
+Q184	bo	provision:ae9ea87e-df4b-11f0-b298-efb798d91fce#k3	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q185	bo	provision:d88e3ee8-e161-11f0-b758-cd5fa763e536	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q186	bo	provision:eb4c1020-2d45-11f1-aaae-d517cf429e25	two_versions	claude-opus-5-5	annotator_A
+Q187	bo	provision:c7657bf8-df4b-11f0-ba2c-c3fa3cea4b11#k1	control	claude-haiku-5-5	annotator_A,annotator_B
+Q188	bo	provision:db147952-df59-11f0-a8c7-d37402eddffb#k2	control	claude-haiku-5-5	
+Q189	bo	provision:2978e004-1efe-11f1-b84c-1d06d0499749	multi_versions	deepseek-flash	annotator_B
+Q190	moc	M11	thuế		
+Q191	bo	provision:ddfe9e80-2c85-11f1-8f15-77e114977d1d	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q192	bo	provision:285f93c0-1d69-11f1-8520-271282d4caf0	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q193	bo	provision:3b4128da-2d47-11f1-98ce-1bf21bf5f6be	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q194	bo	provision:682fe21a-eb7e-11f0-bf86-8d936130adfd	two_versions	claude-opus-5-5	
+Q195	bo	provision:d8877e5a-eb89-11f0-8e8b-8789f156ee95#k2#a	control	claude-haiku-5-5	
+Q196	bo	provision:6279b2b0-2d37-11f1-b8f1-cbdb51d8d86d	two_versions	claude-opus-5-5	annotator_B
+Q197	bo	provision:8cba797e-eb74-11f0-a479-93fcd6d98649#k4#c	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q198	bo	provision:c82f61c0-2b81-11f1-ac6e-25ba7d16d20c	two_versions	claude-opus-5-5	
+Q199	bo	provision:db6f290a-eb9e-11f0-af04-55534f034d8f#k2#c	control	claude-haiku-5-5	
+Q200	moc	M05	đất đai		
+Q201	bo	provision:00e219c0-eac5-11f0-841f-d12448fc0bfb#k1	control	claude-haiku-5-5	annotator_A,annotator_B
+Q202	moc	M25	giao thông vận tải		
+Q203	bo	provision:e902d34e-df52-11f0-b1c8-1baca6cbd210	two_versions	claude-opus-5-5	annotator_A
+Q204	bo	provision:2abf6f40-e174-11f0-b922-3f24b9c2c622#k3	control	claude-haiku-5-5	annotator_A,annotator_B
+Q205	bo	provision:328776e6-df58-11f0-911d-9fa24d767ab8#k2#%C4%91	two_versions	deepseek-flash	
+Q206	bo	provision:5870ee4a-2d47-11f1-ab57-195ab7f14413	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q207	bo	provision:7aa90f78-eb7b-11f0-a974-c76ff4f7ad2f#k3	two_versions	claude-opus-5-5	
+Q208	bo	provision:c0101442-e15a-11f0-b32f-470ad20a90a5	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q209	moc	M07	đất đai		
+Q210	bo	provision:6fb88e60-1ddd-11f1-811d-f3d006abbcce	two_versions	claude-opus-5-5	annotator_B
+Q211	bo	provision:089b0e44-39fb-11f1-a16c-4f6a99b9f514	two_versions	claude-sonnet-5-5	coauthor_reader,lawyer
+Q212	bo	provision:21ca0f0c-eb70-11f0-85ca-a10d0270e110#k1	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q213	bo	provision:297647e0-1efe-11f1-96dd-5b299f3dc981	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q214	bo	provision:46a6c1a8-e157-11f0-86e8-7f18fb7d374c#k1	multi_versions	claude-opus-5-5	annotator_A,annotator_B
+Q215	bo	provision:3b990980-df39-11f0-b90b-f7591ddcb6a0	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q216	bo	provision:d669ae16-e16d-11f0-8662-4d64858e0d0a#k2	control	claude-haiku-5-5	
+Q217	bo	provision:54310990-eb7b-11f0-b94e-6f3cc9db7370#k1#b	control	claude-haiku-5-5	
+Q218	bo	provision:2fc7a1e0-25fa-11f1-ad30-25f349c1fb75	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q219	bo	provision:192e665a-eaca-11f0-9505-3518e15a0b29#k8#b	control	claude-haiku-5-5	annotator_A,annotator_B
+Q220	bo	provision:1afd116a-e175-11f0-9c63-b5385d564b61#k5#a	control	claude-haiku-5-5	
+Q221	bo	provision:214408b0-df3d-11f0-b0cd-c715febddaca#k1#a	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q222	bo	provision:e782e8ce-df43-11f0-9355-af2f830ee753	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q223	bo	provision:b3ab65f0-2c7b-11f1-8b12-cbbbb78c251b	repealed	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
+Q224	moc	M19	doanh nghiệp – đầu tư		
+Q225	bo	provision:c5a8fde4-eb76-11f0-bd19-11fb2af4e985#k2#%C4%91	two_versions	claude-opus-5-5	
+Q226	bo	provision:50814a68-eb70-11f0-a2e2-556e765c3bc7	two_versions	claude-opus-5-5	
+Q227	bo	provision:80872132-eb6c-11f0-9ff0-b7f11cff9a29#k5#a	two_versions	claude-opus-5-5	annotator_A,annotator_B
+Q228	bo	provision:52a3b8c6-eb7f-11f0-b9b8-a100a82ba790	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader,lawyer
+Q229	bo	provision:0bd8196a-df3f-11f0-8933-5bedca54c5c8#k2	two_versions	gpt-6.1-sol (author-reported; Codex CLI logs do not record the model)	coauthor_reader
