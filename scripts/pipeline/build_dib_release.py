@@ -17,10 +17,14 @@ Changes versus data/vilextime_final (all listed in CHANGES.md of the output):
      row dated after that end moves to the middle of its version's true interval (same answer, same labels).
   7. meta.review.labelers per run (real runtime/model), and annotation/ exported:
      raw AI labels, adjudication records, worksheets shown to the agents, blind-reading sheets.
+ 10. 6.0.0: review.high_risk_lawyer_check renamed review.high_risk_ai_author_check (no lawyer took part);
+     blind_gold records name the date read (as_of_read) and include round 3 (random 30, compared by machine);
+     annotation/excluded_lineages.jsonl lists the 175 labelled-but-removed lineages with step and reason codes.
 
 Run: python3 scripts/pipeline/build_dib_release.py   (prints counts, writes SHA256SUMS)
 """
 import csv
+import re
 import hashlib
 import json
 from collections import Counter
@@ -229,21 +233,49 @@ def extra_ai_checks():
     return out
 
 
+RANDOM30 = GOLD / "gold_random30"  # round 3: random 30 of the 94 unread lineages, two readers (21–22/11/2026)
+
+
+def _norm(text):
+    import unicodedata
+    return " ".join(re.sub(r"[^\w]+", " ", unicodedata.normalize("NFC", text or "").lower()).split())
+
+
+def machine_agrees(r):
+    """Reader vs store, compared by machine (not by the reader): same in-force status and, when in force, the
+    reader's pasted wording lies inside the store's wording after normalisation."""
+    if r["hieu_luc"].strip() != r["kg_hieu_luc"].strip():
+        return False
+    return r["hieu_luc"].strip() != "còn" or (bool(_norm(r["noi_dung"])) and _norm(r["noi_dung"]) in _norm(r["kg_noi_dung"]))
+
+
 def blind_gold():
-    """lineage -> list of blind-reader records (round 1: annotators A/B; round 2: NMT + lawyer)."""
+    """lineage -> list of blind-reader records. Round 1: annotators A/B; round 2: co-author reader + lawyer;
+    round 3: random 30, annotators A/B, compared by machine. Each record names the date that was read."""
     g = {}
-    for rnd, d in (("round1", GOLD), ("round2", GOLD / "gold_final")):
-        key2lid = {r["khoa"]: r["lineage_id"] for r in tsv(d / "gold_sample.tsv")}
-        readers = {"A": "annotator_A", "B": "annotator_B"} if rnd == "round1" else {"A": "coauthor_reader", "B": "lawyer"}  # roles only, no names (schema rule)
+    rounds = (("round1", GOLD, {"A": "annotator_A", "B": "annotator_B"}),
+              ("round2", GOLD / "gold_final", {"A": "coauthor_reader", "B": "lawyer"}),
+              ("round3_random", RANDOM30, {"A": "annotator_A", "B": "annotator_B"}))  # roles only, no names (schema rule)
+    adjudicated = {(a["khoa"], a["reader"]): a for a in jl(RANDOM30 / "adjudication.jsonl")}
+    for rnd, d, readers in rounds:
+        sample = {r["khoa"]: r for r in tsv(d / "gold_sample.tsv")}
         for side, who in readers.items():
-            p = d / f"gold_{side}.reveal.tsv"
-            for r in tsv(p):
-                lid = key2lid.get(r["khoa"])
-                if lid:
+            for r in tsv(d / f"gold_{side}.reveal.tsv"):
+                s = sample.get(r["khoa"])
+                if not s:
+                    continue
+                rec = {"round": rnd, "reader": who, "as_of_read": r["ngay_hoi"]}
+                if rnd == "round3_random":
+                    rec.update(agrees_with_store=machine_agrees(r), basis="machine_compare")
+                    a = adjudicated.get((r["khoa"], side))
+                    if a:
+                        rec["adjudication"] = a["outcome"]
+                else:
                     agree, basis = YES_NO.get(r.get("dong_y", "").strip()), "reader_judgement"
                     if agree is None and r.get("kg_hieu_luc", "").strip():  # lawyer sheet: compare in-force status only
                         agree, basis = r["hieu_luc"].strip() == r["kg_hieu_luc"].strip(), "in_force_status_only"
-                    g.setdefault(lid, []).append({"round": rnd, "reader": who, "agrees_with_store": agree, "basis": basis})
+                    rec.update(agrees_with_store=agree, basis=basis)
+                g.setdefault(s["lineage_id"], []).append(rec)
     return g
 
 
@@ -278,10 +310,10 @@ def raw_labels(final):
 
 
 def high_risk_aug():
-    """(lineage_id, as_of) -> lawyer-verified high-risk augmentation record.
-    These 29 hardest lines (repealed / multi-version) were labelled blind by two AI
-    annotators, reconciled, then verified by the author-lawyer who saw the AI labels
-    (not blind). A verification layer, kept separate from blind_gold."""
+    """(lineage_id, as_of) -> high-risk augmentation record.
+    These 29 hardest rows (repealed / multi-version) were labelled blind by two AI
+    annotators, reconciled, then verified by one author who saw the AI labels
+    (not blind; no lawyer). A verification layer, kept separate from blind_gold."""
     p = GOLD_DOT3 / "gold_dot3_verified.jsonl"
     if not p.exists():
         return {}
@@ -319,13 +351,18 @@ def export_annotation(final, labels):
         import shutil as _sh
         _sh.copy2(aug, ann / "high_risk_augmentation.jsonl")
     for rnd, d, readers in (("round1", GOLD, ("annotator_A", "annotator_B")),
-                            ("round2", GOLD / "gold_final", ("coauthor_reader", "lawyer"))):
+                            ("round2", GOLD / "gold_final", ("coauthor_reader", "lawyer")),
+                            ("round3_random", RANDOM30, ("annotator_A", "annotator_B"))):
         key2lid = {r["khoa"]: r["lineage_id"] for r in tsv(d / "gold_sample.tsv")}
         for side, who in zip("AB", readers):
+            src_rows = [r for r in tsv(d / f"gold_{side}.reveal.tsv") if key2lid.get(r["khoa"]) in final]
+            if rnd == "round3_random":  # compared by machine, as in blind_gold()
+                for r in src_rows:
+                    r["dong_y"] = "có" if machine_agrees(r) else "không"
             rows = [{"lineage_id": key2lid[r["khoa"]],
                      **{GOLD_COLS[k]: GOLD_VALUES.get(v.strip(), v) if k in ("hieu_luc", "kg_hieu_luc", "dong_y") else v
                         for k, v in r.items() if k not in GOLD_DROP}}
-                    for r in tsv(d / f"gold_{side}.reveal.tsv") if key2lid.get(r["khoa"]) in final]
+                    for r in src_rows]
             for row in rows:  # lawyer sheet has no reader verdict: same in-force-only rule as blind_gold()
                 if not row["agrees_with_store"].strip() and row["store_in_force"].strip():
                     row["agrees_with_store"] = "yes" if row["in_force"].strip() == row["store_in_force"].strip() else "no"
@@ -345,6 +382,128 @@ def export_annotation(final, labels):
     for f in [*(ann / "prompts" / "labelling").rglob("*.md"), *(ann / "prompts" / "adjudication").rglob("*.md")]:
         f.rename(f.with_suffix(".txt"))
     return len(adj), len(ws)
+
+
+GOOD = {"q1": "dung", "q2": "co", "q3": "co", "q4": "khong"}
+CODES = {"cosmetic_only", "rename_only", "auto_reference_update", "single_change", "relocated", "relocation_unclear",
+         "superseded_by_other_norm", "restructuring_2025", "reference_only", "pending_event", "after_snapshot",
+         "group_mismatch", "question_ambiguous", "question_leaks", "unanswerable_as_asked", "gold_wrong",
+         "transitional_rule", "other", "not_verified"}  # closed list, docs/vilextime-dinh-nghia.md §7
+AI_LABEL = re.compile(r"Q(\d): (\w+)(?: \((\w+)\))?")
+
+
+def _reasons(labels):
+    """Reason codes of the unfavourable answers of one final label {q1: (value, reason), ...}."""
+    out = sorted({reason or "other" for q, (value, reason) in labels.items() if value and value != GOOD[q]})
+    assert set(out) <= CODES, out
+    return out
+
+
+def _apply_author_edit(labels, text):
+    """Silver sheet `cmt_sua`: the author's edits to the AI label, written as 'Q2 → khong; q2_reason = X',
+    'q2_reason: A → B', 'Q4 → co/X', 'xóa q3_reason'."""
+    for q, new in re.findall(r"q(\d)_reason: ?\w+ ?→ ?(\w+)", text):
+        labels["q" + q] = (labels["q" + q][0], new)
+    for q, value, reason in re.findall(r"Q(\d) ?→ ?(dung|sai|co|khong)(?:/(\w+))?", text):
+        labels["q" + q] = (value, reason or (labels["q" + q][1] if value != GOOD["q" + q] else ""))
+    for q, reason in re.findall(r"q(\d)_reason ?= ?(\w+)", text):
+        labels["q" + q] = (labels["q" + q][0], reason)
+    for q in re.findall(r"(?:xóa|bỏ) q(\d)_reason", text):
+        labels["q" + q] = (labels["q" + q][0], "")
+    return labels
+
+
+def _sheet(path):
+    import openpyxl
+    r = list(openpyxl.load_workbook(path, data_only=True)["Duyệt"].iter_rows(values_only=True))
+    return [dict(zip(r[0], x)) for x in r[1:] if x and x[0]]
+
+
+def excluded_lineages(final):
+    """The 175 lineages labelled for the final set but not released, with the step that removed them and the
+    reason codes of the final label (docs/vilextime-dinh-nghia.md §7). Reproduces the funnel of
+    data/review/ai_research/2026-11-11_final_count/count_final.py: silver 168 → 75, lo2 128 → 70, supp 18 → 11,
+    control 60 → 43."""
+    out = {}
+
+    def add(lid, group, batch, question, step, decided_by, reasons):
+        assert lid not in final and lid not in out, lid
+        group = {"T4": "T2"}.get(group, group)
+        out[lid] = {"lineage_id": lid, "group": GROUP_NAMES[group], "source_batch": BATCH_NAMES[batch],
+                    "question": question, "removed_at": step, "decided_by": decided_by, "reason_codes": reasons}
+
+    conf = json.load(open(AI / "2026-11-10_cmt_confirmed/cmt_confirmed.json"))
+    h7 = {r["lineage_id"]: r for f in sorted((AI / "2026-11-11_h7").glob("out_batch*.jsonl")) for r in jl(f)}
+    r2 = {r["lineage_id"]: r["ket_luan"] for f in sorted((AI / "2026-11-11_t6_r2").glob("out_batch*.jsonl")) for r in jl(f)}
+    author_drop = {"provision:e9ffd3da-eb7a-11f0-9830-4feb5d5132b5": "reference_only"}  # count_final.py CMT_DROP
+    seen = Counter()
+
+    for r in _sheet(AI / "2026-11-08_adjudication_final/duyet_CMT_final.xlsx"):  # silver
+        lid = r["lineage_id"]
+        seen["silver"] += 1
+        labels = _apply_author_edit({q: (r[q], r[q + "_reason"] or "") for q in GOOD}, r["cmt_sua"] or "")
+        verdict = conf["silver_flips"].get(lid, "->" + r["verdict"]).split("->")[1]
+        if lid in h7:  # the re-check's label is the final one; removed there only if it overturned an accept
+            h = h7[lid]
+            if h["verdict"] == "khong_dat":
+                step = "author_flagged_recheck" if verdict == "dat" else "label_review"
+                add(lid, r["group"], "silver", r["question"], step, "ai_adjudicator",
+                    _reasons({q: (h[q], h[q + "_reason"]) for q in GOOD}))
+            continue
+        if verdict == "khong_dat":
+            reasons = _reasons(labels) if any(v != GOOD[q] for q, (v, _) in labels.items()) else ["other"]
+            add(lid, r["group"], "silver", r["question"], "label_review",
+                "author" if lid in conf["silver_flips"] else r["source"], reasons)
+
+    lo2_sheet = _sheet(AI / "2026-11-08_lo2/duyet_CMT_after_adjudication.xlsx")
+    t1_sheet = _sheet(AI / "2026-11-11_t1_labels/duyet_CMT.xlsx")
+    t1_dat = set(json.load(open(AI / "2026-11-11_t1_labels/cmt_confirmed_t1.json"))["t1_dat"])
+    for batch, sheet in (("new", lo2_sheet), ("t1", t1_sheet)):
+        for r in sheet:
+            lid = r["lineage_id"]
+            seen[batch] += 1
+            if r["chot_q1"] is None:  # no final label: at least one AI said not acceptable, never reconciled
+                assert batch == "t1" and lid not in t1_dat
+                labels = [{"q" + q: (v, c or "") for q, v, c in AI_LABEL.findall(r[side] or "")} for side in ("AI_A_nhan", "AI_B_nhan")]
+                add(lid, r["group"], batch, r["question"], "label_unresolved", "ai_labels",
+                    sorted(set(_reasons(labels[0])) | set(_reasons(labels[1]))))
+                continue
+            labels = {q: (r["chot_" + q], r["chot_" + q + "_reason"] or "") for q in GOOD}
+            if any(v != GOOD[q] for q, (v, _) in labels.items()):
+                add(lid, r["group"], batch, r["question"], "label_review", "ai_labels_author_review", _reasons(labels))
+            elif lid in r2 and r2[lid] != "giu":
+                add(lid, r["group"], batch, r["question"], "relocation_check", "ai_adjudicator", [r2[lid]])
+            elif lid in author_drop:
+                add(lid, r["group"], batch, r["question"], "author_decision", "author", [author_drop[lid]])
+            elif batch == "t1":
+                assert lid in t1_dat, lid
+
+    supp_in = {x["record"]["lineage_id"]: x["record"] for f in sorted((AI / "2026-11-08_supp18/input").glob("*.jsonl"))
+               for x in jl(f)}
+    accepted = {r["lineage_id"]: r["label"] for r in jl(AI / "2026-11-08_supp18/cmt_accepted_labels.jsonl")}
+    raw = {side: {r["lineage_id"]: r for r in jl(AI / f"2026-11-08_supp18/{side}.jsonl")} for side in "ab"}
+    for lid, rec in supp_in.items():
+        seen["supp"] += 1
+        if lid in final:
+            continue
+        if lid not in accepted:
+            reasons = sorted({c for side in "ab" if lid in raw[side]
+                              for c in _reasons({q: (raw[side][lid][q], raw[side][lid][q + "_reason"]) for q in GOOD})})
+            add(lid, rec["group"], "supp", rec["question"], "label_unresolved", "ai_labels", reasons)
+            continue
+        lab = {q: (accepted[lid][q], accepted[lid][q + "_reason"]) for q in GOOD}
+        if any(v != GOOD[q] for q, (v, _) in lab.items()):
+            add(lid, rec["group"], "supp", rec["question"], "label_review", "ai_labels_author_review", _reasons(lab))
+        elif lid in r2 and r2[lid] != "giu":
+            add(lid, rec["group"], "supp", rec["question"], "relocation_check", "ai_adjudicator", [r2[lid]])
+        elif lid in author_drop:
+            add(lid, rec["group"], "supp", rec["question"], "author_decision", "author", [author_drop[lid]])
+
+    by_batch = Counter(x["source_batch"] for x in out.values())
+    assert dict(seen) == {"silver": 168, "new": 128, "t1": 60, "supp": 18}, seen
+    assert by_batch == {"round_1": 93, "round_2": 58, "round_3": 7, "control": 17}, by_batch
+    assert len(out) + len(final) == 374
+    return sorted(out.values(), key=lambda x: x["lineage_id"])
 
 
 def issuer_code(law_id):
@@ -382,14 +541,14 @@ def main():
         }
         hr = aug.get((lid, r["as_of"]))
         if hr:
-            m["review"]["high_risk_lawyer_check"] = hr
+            m["review"]["high_risk_ai_author_check"] = hr
         qs = m.get("question_source") or {}
         if "codex" in str(qs.get("provider", "")):
             qs["model"] = CODEX_MODEL
         sas = m.get("short_answer_source") or {}
         if "codex" in str(sas.get("by", "")).lower():
             sas["by"] = CODEX_MODEL
-        m["schema_version"] = "5.0.0"  # 4.0.0 group names/ids; 5.0.0 store fixes re-date rows (ids) + store_correction: MAJOR per ADR 0003 §8
+        m["schema_version"] = "6.0.0"  # 6.0.0 review.high_risk_ai_author_check (renamed), blind_gold.as_of_read; 4.0.0 group names/ids; 5.0.0 store fixes re-date rows (ids) + store_correction: MAJOR per ADR 0003 §8
         m.pop("domain", None)
         m.pop("domain_source", None)
         m["issuer_code"] = issuer_code(m["target"]["law_id"])
@@ -426,6 +585,10 @@ def main():
 
     n_adj, n_ws = export_annotation(final, labels)
     print("annotation: raw labels", len(labels), "adjudication records", n_adj, "worksheets", n_ws)
+    excluded = excluded_lineages(final)
+    with open(OUT / "annotation/excluded_lineages.jsonl", "w", encoding="utf-8") as f:
+        f.writelines(json.dumps(x, ensure_ascii=False) + "\n" for x in excluded)
+    print("excluded lineages", len(excluded), Counter((x["source_batch"], x["removed_at"]) for x in excluded))
     lin = {}
     for r, m in zip(rows, meta):
         lin[r["lineage_id"]] = m["review"]
