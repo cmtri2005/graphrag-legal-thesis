@@ -14,7 +14,14 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "w2"))
 import build as w2  # noqa: E402  (reuse the xlsx sheet writer)
 
-KNOWN = {"92/2017/NĐ-CP", "53/2012/NĐ-CP", "145/2020/NĐ-CP", "221/2013/NĐ-CP", "32/2016/TT-NHNN", "36/2026/TT-BXD"}
+KNOWN = {
+    ("D03", "32/2016/TT-NHNN"),
+    ("D04", "53/2012/NĐ-CP"),
+    ("D05", "145/2020/NĐ-CP"),
+    ("D06", "36/2026/TT-BXD"),
+    ("D09", "92/2017/NĐ-CP"),
+    ("D12", "221/2013/NĐ-CP"),
+}
 COLS = ["khoa", "van_ban", "dieu_khoan", "link", "van_ban_tac_dong", "quan_he", "ngay_hieu_luc_theo_agent",
         "nguon_agent", "trich_agent", "cham_dieu_khoan", "ngay_hieu_luc_dung", "can_cu", "phut", "ghi_chu"]
 GUIDE = [
@@ -31,7 +38,7 @@ GUIDE = [
 
 def main():
     cands = [c for f in sorted(HERE.glob("*.candidates.jsonl")) for c in map(json.loads, open(f, encoding="utf-8"))
-             if c["affects_rows"] and c["actor_number"] not in KNOWN]
+             if c["affects_rows"] and (c["key"], c["actor_number"]) not in KNOWN]
     meta = {json.loads(x)["lineage_id"]: json.loads(x) for f in HERE.glob("*_batch.jsonl") for x in open(f, encoding="utf-8")}
     rows, key = [], []
     for i, c in enumerate(cands, 1):
