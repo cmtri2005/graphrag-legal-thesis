@@ -21,6 +21,7 @@ Mở 19/11/2026. CMT chốt: nộp Data in Brief (không chờ ICAIL); công b�
 - [ ] Cập nhật đề cương/khóa luận chỗ ghi "AI-A Claude, AI-B Codex": 28 lineage có cặp cùng họ (silver01 Claude–Claude, round2_codex Codex–Codex).
 - [x] Bảng thống kê tự động: `vilextime_uit/scripts/check_dataset.py`.
 - [ ] Viết bài theo template DiB (khung trong hội thoại 19/11): Methods + kiểm chất lượng trước.
+- [ ] Nâng chất lượng trước khi nộp (đọc mù toàn bộ, chấm câu hỏi, đối chiếu nguồn ngoài vbpl): `docs/plans/active/2026-11-22-dib-qa-v6.md`.
 - [ ] Evidence-gate mọi con số trước khi nộp.
 - [ ] Đăng Mendeley Data (để chế độ chưa publish trong lúc review).
 
