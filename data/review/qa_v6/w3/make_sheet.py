@@ -13,6 +13,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "w2"))
 import build as w2  # noqa: E402  (reuse the xlsx sheet writer)
+from compare import number_key  # noqa: E402
 
 KNOWN = {
     ("D03", "32/2016/TT-NHNN"),
@@ -37,8 +38,15 @@ GUIDE = [
 
 
 def main():
-    cands = [c for f in sorted(HERE.glob("*.candidates.jsonl")) for c in map(json.loads, open(f, encoding="utf-8"))
-             if c["affects_rows"] and (c["key"], c["actor_number"]) not in KNOWN]
+    # File order (control, gate, rest, rest_v2) keeps earlier X codes stable; a (key, actor) pair listed by both the
+    # Codex list and the S13 rerun appears once, under its first code.
+    cands, seen = [], set()
+    for f in sorted(HERE.glob("*.candidates.jsonl")):
+        for c in map(json.loads, open(f, encoding="utf-8")):
+            pair = (c["key"], number_key(c["actor_number"]))
+            if c["affects_rows"] and (c["key"], c["actor_number"]) not in KNOWN and pair not in seen:
+                seen.add(pair)
+                cands.append(c)
     meta = {json.loads(x)["lineage_id"]: json.loads(x) for f in HERE.glob("*_batch.jsonl") for x in open(f, encoding="utf-8")}
     rows, key = [], []
     for i, c in enumerate(cands, 1):

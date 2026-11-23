@@ -99,3 +99,17 @@ X97	V144	provision:9784e330-df49-11f0-a224-a14c6720b47d	01/2025/TT-BYT	no_event
 X98	V148	provision:b7dde3d0-1ecc-11f1-a3b1-d7ceb5cb0820	148/2024/NĐ-CP	no_event
 X99	V149	provision:b7ee85a0-1ecc-11f1-8bf4-878cc9351133	148/2024/NĐ-CP	no_event
 X100	V150	provision:5b2570e0-2c8c-11f1-aecd-ed1bd25619cc	43/2009/NĐ-CP	no_event
+X101	V070	provision:31a2f5c2-eb8b-11f0-b828-d5cdb76c94cc#k35	05/2025/TT-BCT	no_event
+X102	V071	provision:34588892-df45-11f0-8d2c-edf7506af297#k2#c	01/2024/TT-BKHCN	no_event
+X103	V081	provision:86d9acf0-2c7e-11f1-a35f-87076455d281	46/2021/NĐ-CP	weak_no:no_event
+X104	V081	provision:86d9acf0-2c7e-11f1-a35f-87076455d281	312/2025/NĐ-CP	no_event
+X105	V084	provision:46a5ca1e-e157-11f0-a769-0badb1c355e3#k1	79/2025/NĐ-CP	no_event
+X106	V093	provision:9395fe30-eabb-11f0-b95f-553220e945dc#k3#b	27/2016/TT-BCT	weak_no:applied_elsewhere
+X107	V100	provision:297647e0-1efe-11f1-96dd-5b299f3dc981	17/2023/TT-BGTVT	no_event
+X108	V100	provision:297647e0-1efe-11f1-96dd-5b299f3dc981	59/2025/TT-BXD	applied_elsewhere
+X109	V109	provision:73dd9ae0-2c1e-11f1-8ac9-8b5a6fd5f4ad	508/CP-KSTT (Công văn 2024 đính chính NĐ 82/2024/NĐ-CP)	weak_no:actor_not_in_store
+X110	V121	provision:5870ee4a-2d47-11f1-ab57-195ab7f14413	14/2021/NĐ-CP	rejected:status_not_applicable
+X111	V141	provision:285f93c0-1d69-11f1-8520-271282d4caf0	43/2023/TT-BTC	weak_no:no_event
+X112	V148	provision:b7dde3d0-1ecc-11f1-a3b1-d7ceb5cb0820	144/2020/NĐ-CP	weak_no:no_event
+X113	V148	provision:b7dde3d0-1ecc-11f1-a3b1-d7ceb5cb0820	66.18/2026/NQ-CP	weak_no:actor_not_in_store
+X114	V149	provision:b7ee85a0-1ecc-11f1-8bf4-878cc9351133	66.18/2026/NQ-CP	actor_not_in_store
