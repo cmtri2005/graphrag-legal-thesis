@@ -213,3 +213,25 @@ Lời dặn của cổng giữ nguyên như lúc chạy. Lô control còn lại 
 - Phiếu `data/review/qa_v6/w3/xac_nhan.xlsx` có 11 dòng. Để giữ độ mù, chỉ giao phiếu cho người đã khóa W1 lô 1.
   Lô 1 chứa các lineage control chưa ai đọc, mà tên văn bản tác động trong phiếu gợi ý chỗ kho có thể thiếu.
 
+
+**S11. Cách lập danh sách của 97 lineage `V055–V151` khác với cổng (ghi 23/11, trước khi giao phiếu W3 nào).**
+Khi Claude hết hạn mức, Codex lập danh sách cho 17 lô này. Cách làm khác với agent đã qua cổng:
+- Tìm web bằng công cụ của Codex, tải trang về, dùng biểu thức chính quy lấy số hiệu văn bản nêu là sửa đổi văn bản
+  đích. Sau đó Codex tự gõ một danh sách giữ lại cho từng lô (`w3-allow.txt`). Agent không đọc đến điều khoản đích:
+  197/237 cặp ghi `unclear`, 36 `yes`, 4 `no`. Đợt `V001–V054` là 25 `unclear`, 85 `yes`, 32 `no`. Đợt này chủ yếu
+  do agent Claude làm; Codex tra lại `V023`, `V024`, `V041`, `V042` và các mã bị ngắt (28/142 cặp không có trích dẫn
+  nguyên văn trong nhật ký agent Claude).
+- Nguồn ngoài danh sách §3: 77 cặp lấy lời văn văn bản tác động từ API toàn văn của vbpl
+  (`vbpl-bientap-gateway.moj.gov.vn/api/qtdc/public/doc/<id>`); trang lược đồ và lịch sử bị lọc bỏ. 39 cặp ghi
+  `actor_text` nhưng lấy từ vanban.org, tức trang thứ ba.
+- Hệ quả: recall 5/6 của cổng chỉ áp cho cách làm của agent (gate, control, `V001–V054`). Cách làm của Codex không
+  chạy lại được trên lô cổng, vì danh sách giữ lại do Codex chọn tay và kết quả tìm kiếm không lưu lại. Bài không được
+  ngoại suy recall 5/6 cho 97 lineage này.
+- Lưu vết: mọi lệnh Codex đã gọi ở `data/review/qa_v6/w3/codex_rest_calls.jsonl` (241 lệnh, trích từ nhật ký phiên
+  Codex sha256 `a6320bf5…522e`). Script trung gian ở `/tmp/w3-*` đã mất; chỉ còn lời gọi trong tệp này.
+- Ứng viên `unclear` vẫn vào phiếu như mọi ứng viên, nên cách làm này không làm mất ứng viên đã liệt kê; rủi ro nằm ở
+  văn bản tác động không được liệt kê.
+
+**S12. Bộ lọc 6 lỗi đã biết trong `make_sheet.py` lọc theo cặp (mã lô, số văn bản) (22/11).** Bản đầu lọc theo số văn
+bản, nên loại nhầm mọi lineage khác cùng dẫn văn bản đó. Thực tế là `V084` và `V085` cùng dẫn `92/2017/NĐ-CP` với
+`D09`. Đây là sửa cho đúng chữ của S10, không đổi luật.
