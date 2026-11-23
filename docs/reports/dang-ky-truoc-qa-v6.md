@@ -235,3 +235,11 @@ Khi Claude hết hạn mức, Codex lập danh sách cho 17 lô này. Cách làm
 **S12. Bộ lọc 6 lỗi đã biết trong `make_sheet.py` lọc theo cặp (mã lô, số văn bản) (22/11).** Bản đầu lọc theo số văn
 bản, nên loại nhầm mọi lineage khác cùng dẫn văn bản đó. Thực tế là `V084` và `V085` cùng dẫn `92/2017/NĐ-CP` với
 `D09`. Đây là sửa cho đúng chữ của S10, không đổi luật.
+
+**S13. Chạy lại `V055–V151` bằng cách làm của agent (ghi 23/11, trước khi chạy).** Để recall của cổng áp được cho cả
+bộ, 97 lineage của S11 được lập danh sách lại bằng agent `vn-law-verifier`, cùng lời dặn đã dùng cho `V001–V054`
+(có hai ý của S9), 17 lô theo đúng cách chia của `rest_batch.jsonl`. Agent không thấy danh sách của Codex.
+- Kết quả ghi ở `data/review/qa_v6/w3/rest2_agent_V*.jsonl`; danh sách của Codex giữ nguyên.
+- Ứng viên = hợp của hai danh sách, so máy bằng `compare.py` như cũ. Phiếu chỉ thêm dòng mới, giữ 100 dòng đã dựng.
+- Báo thêm: số văn bản tác động chỉ một bên liệt kê, theo từng bên.
+- Nếu một lô agent không trả về, chạy lại lô đó một lần; vẫn không được thì ghi là thiếu, không bù bằng tay.
