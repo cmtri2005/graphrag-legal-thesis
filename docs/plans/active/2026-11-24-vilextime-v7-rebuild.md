@@ -75,7 +75,11 @@ Out of scope: đổi định nghĩa, thêm nhóm hay mã loại; sửa toàn kho
 - [ ] Kiểm kho trên mẫu.
 - [x] Phiếu gán Giai đoạn 1: `data/vilextime_v7/phieu/lo00–lo48` (lô thử 20 dòng, lô sau 50 dòng; 2.433 dòng), mỗi lô
   `GD1_A.xlsx`, `GD1_B.xlsx`, `key.tsv` (không giao). S2: loại 93 lineage câu lệnh sửa đổi.
-- [ ] Script nhập + khóa phiếu (làm khi lô thử về), dựng GD2 theo lô (`build.py gd2 loNN`).
+- [x] Script nhập + khóa phiếu (`build.py lock loNN A.xlsx B.xlsx` → GD1.tsv, GD1_lech.tsv, GD1.locked sha256), dựng GD2
+  theo lô (`build.py gd2 loNN`).
+- [x] Lô thử lo00 về 24/11, khóa: Hiệu lực khớp 20/20; lời văn lệch 2 dòng (00-13 phần hiệu lực 2027, 00-16 chuyển
+  tiếp NĐ 23/2026); đáp án ngắn lệch độ dài trích ở 13 dòng; A để trống đáp án 00-20. Hai file lưu bằng openpyxl,
+  không phải Excel; phút A có số lẻ 0,1–0,2: hỏi lại công cụ sinh viên dùng. GD2 lo00: 11 câu hỏi.
 - [ ] Gán (A, B).
 - [ ] Hòa giải (luật sư).
 - [ ] Dựng 7.0.

@@ -5,6 +5,7 @@ Thứ tự gán: lineage có câu hỏi qua máy (questions.jsonl), xếp xen k�
 (tính sau hòa giải) thì dừng. Lô 00 là lô thử 20 dòng; các lô sau 50 dòng.
 
   python3 data/vilextime_v7/phieu/build.py gd1            # dựng Giai đoạn 1 cho mọi lô (chưa có lời văn kho)
+  python3 data/vilextime_v7/phieu/build.py lock lo01 A.xlsx B.xlsx   # nhận phiếu GD1 đã gán, xuất GD1.tsv, khóa
   python3 data/vilextime_v7/phieu/build.py gd2 lo01       # dựng Giai đoạn 2 của một lô; cần lo01/GD1.locked
 
 Mỗi lô: lo<NN>/GD1_A.xlsx, GD1_B.xlsx (giống nhau), lo<NN>/key.tsv (khoa -> id dòng, lineage; KHÔNG giao người gán).
@@ -448,10 +449,70 @@ def build_gd2(name):
     print(f"{name}: GD2 {len(rows)} câu hỏi")
 
 
+def read_form(path, cols, key):
+    """Rows of a returned form as dicts; refuses a form whose read-only cells differ from the key's order."""
+    from openpyxl import load_workbook
+    ws = load_workbook(path)["Phiếu"]
+    rows = []
+    for r in ws.iter_rows(min_row=4, max_row=len(key) + 3, values_only=True):
+        rows.append({c[1]: ("" if v is None else str(v).strip()) for c, v in zip(cols, r)})
+    got = [r["khoa"] for r in rows]
+    if got != [k["khoa"] for k in key]:
+        raise SystemExit(f"{path}: cột Mã khác key.tsv")
+    return rows
+
+
+def lock_gd1(name, path_a, path_b):
+    """Copy the returned forms into lo<NN>/, export GD1.tsv, flag A/B differences, write GD1.locked (sha256)."""
+    import hashlib
+    import shutil
+    d = HERE / name
+    if (d / "GD1.locked").exists():
+        raise SystemExit(f"{name}: đã khóa")
+    key = list(csv.DictReader(open(d / "key.tsv", encoding="utf-8"), delimiter="\t"))
+    forms = {"A": read_form(path_a, GD1, key), "B": read_form(path_b, GD1, key)}
+    inputs = [c[1] for c in GD1 if c[3]]
+    out, issues = [], []
+    for who, rows in forms.items():
+        for k, r in zip(key, rows):
+            out.append({"who": who, **k, **{f: r[f] for f in inputs}})
+            if r["hieu_luc"] not in ("Còn", "Hết"):
+                issues.append(f"{r['khoa']} {who}: thiếu Hiệu lực")
+            if r["hieu_luc"] == "Còn" and not (r["noi_dung"] and r["dap_an_ngan"]):
+                issues.append(f"{r['khoa']} {who}: Còn nhưng thiếu lời văn/đáp án ngắn")
+            if not r["phut"]:
+                issues.append(f"{r['khoa']} {who}: thiếu phút")
+    norm = lambda s: " ".join(s.lower().split())
+    diffs = []
+    for a, b in zip(forms["A"], forms["B"]):
+        fields = [f for f in ("hieu_luc", "noi_dung", "dap_an_ngan", "van_ban_ap_dung") if norm(a[f]) != norm(b[f])]
+        if fields:
+            diffs.append({"khoa": a["khoa"], "lech": ",".join(fields)})
+    for who, p in (("A", path_a), ("B", path_b)):
+        shutil.copyfile(p, d / f"GD1_{who}.xlsx")
+    with open(d / "GD1.tsv", "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, list(out[0]), delimiter="\t", lineterminator="\n")
+        w.writeheader()
+        w.writerows(out)
+    with open(d / "GD1_lech.tsv", "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, ["khoa", "lech"], delimiter="\t", lineterminator="\n")
+        w.writeheader()
+        w.writerows(diffs)
+    sha = {f"GD1_{w}.xlsx": hashlib.sha256((d / f"GD1_{w}.xlsx").read_bytes()).hexdigest() for w in READERS}
+    (d / "GD1.locked").write_text(json.dumps({"locked": date.today().isoformat(), "sha256": sha, "issues": issues},
+                                             ensure_ascii=False, indent=1) + "\n", "utf-8")
+    hl = sum(a["hieu_luc"] == b["hieu_luc"] for a, b in zip(forms["A"], forms["B"]))
+    print(f"{name}: khóa {len(key)} dòng; Hiệu lực khớp {hl}/{len(key)}; dòng lệch {len(diffs)}; lỗi phiếu {len(issues)}")
+    for x in issues:
+        print("  ", x)
+
+
 if __name__ == "__main__":
     if sys.argv[1:2] == ["gd1"]:
         build_gd1()
     elif sys.argv[1:2] == ["gd2"] and len(sys.argv) == 3:
         build_gd2(sys.argv[2])
+    elif sys.argv[1:2] == ["lock"] and len(sys.argv) == 5:
+        lock_gd1(*sys.argv[2:])
     else:
         raise SystemExit(__doc__)
