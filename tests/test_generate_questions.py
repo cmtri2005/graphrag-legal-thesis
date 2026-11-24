@@ -172,3 +172,23 @@ def test_naming_the_act_is_framing_but_naming_the_version_is_a_leak():
                     "thì thời hạn đình chỉ là bao lâu?", framing, [old, new]) is None
     assert validate("Một tổ chức vi phạm bị tạm đình chỉ giao dịch từ 03 tháng đến 06 tháng kể từ ngày "
                     "quyết định xử phạt có hiệu lực thì áp dụng khi nào?", framing, [old, new]) == "copies_the_answer"
+
+
+def test_siblings_come_from_versions_and_near_pairs_get_the_t4_card(tmp_path):
+    import json
+    import sqlite3
+    from generate_questions import sibling_index
+    db = sqlite3.connect(tmp_path / "t.sqlite")
+    db.execute("create table provisions (id, document_id, level, title, parent_id, order_index, path)")
+    db.executemany("insert into provisions values (?, 'd', 'Clause', '', 'p', ?, '')",
+                   [("p#k1", 1), ("p#k2", 2), ("p#k3", 3)])
+    versions = tmp_path / "versions.jsonl"
+    versions.write_text("".join(json.dumps({"provision_id": pid, "ordinal": o, "text": t}, ensure_ascii=False) + "\n"
+                                for pid, o, t in [("p#k1", 1, "1. cũ"), ("p#k1", 2, "1. mới"), ("p#k3", 1, "3. ba")]),
+                        encoding="utf-8")
+    target = {"provision_id": "p#k2", "document_id": "d", "parent_id": "p"}
+    assert sibling_index(db, [target], versions) == {"p#k2": ["1. mới", "3. ba"]}   # latest version, self left out
+    assert "NHÓM T4" in system_prompt("T2", near=True) and "NHÓM T4" not in system_prompt("T2")
+    message, _, _ = user_prompt([{"target": {"document_title": TITLE, "lead_in": LEAD_IN}, "answer": ANSWER,
+                                  "lineage_id": "x"}], ["1. mới"])
+    assert "CÁC MỤC ANH EM" in message and "1. mới" in message

@@ -99,6 +99,31 @@ riêng của nó**, và hỏi mục đó quy định thế nào.
 >   xử phạt hành chính trong lĩnh vực hàng không dân dụng, hành vi đào tạo
 >   huấn luyện chuyên môn nghiệp vụ sai quy định được mô tả như thế nào?
 
+## Dùng mục CÁC MỤC ANH EM
+
+Đầu vào có thể có mục `CÁC MỤC ANH EM`: các khoản, điểm khác nằm cùng đơn vị cha với điều khoản được giao. Chúng
+**không phải đáp án**. Trước khi in câu hỏi, đọc lại từng mục anh em và tự hỏi: mục này có trả lời được câu hỏi của
+mình không? Nếu có, câu hỏi còn quá rộng — thêm chi tiết riêng của điều khoản được giao để loại các mục kia. Không
+chép nội dung của mục anh em vào câu hỏi.
+
+> CÂU DẪN : Điều 11. Nội dung thẩm định
+> ĐÁP ÁN  : 2. Đánh giá sự phù hợp của báo cáo đánh giá an toàn hệ thống với tiêu chuẩn đã chọn.
+> ANH EM  : 1. Kiểm tra tính đầy đủ của hồ sơ. / 3. Kiểm tra năng lực của tổ chức đánh giá.
+>
+> ✗ Khi thẩm định hồ sơ an toàn hệ thống, cơ quan thẩm định phải kiểm tra những nội dung nào?
+>   (khoản 1 và khoản 3 cũng trả lời được)
+> ✓ Khi thẩm định hồ sơ an toàn hệ thống, báo cáo đánh giá an toàn được đối chiếu với căn cứ nào?
+
+## Khi có nhiều phiên bản
+
+Câu hỏi được hỏi ở mọi mốc, nên **ở mọi phiên bản, lời văn phải trả lời được câu hỏi**: đáp án khác nhau giữa các
+phiên bản, nhưng câu hỏi phải có nghĩa ở từng phiên bản. Đừng hỏi vào một ý mà chỉ một phiên bản có (ví dụ hỏi về
+"ngoại lệ" khi phiên bản sau đã bỏ ngoại lệ, hay hỏi "cơ quan nào phối hợp" khi một phiên bản không nêu cơ quan phối
+hợp). Hãy hỏi vào khía cạnh chung mà mọi phiên bản đều quy định, và chỗ thay đổi nằm trong khía cạnh đó.
+
+Cũng vậy với loại câu hỏi: hỏi "khi nào" thì mọi phiên bản phải có thời điểm hay thời hạn; hỏi "ai" thì phải nêu chủ
+thể; hỏi "bao nhiêu" thì phải có con số.
+
 ## Khi không viết được
 
 Có những điều khoản không thể ghim được nếu không chép lại chính nó — thường là

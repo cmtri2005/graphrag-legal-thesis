@@ -35,6 +35,7 @@ import difflib
 import hashlib
 import json
 import re
+import sqlite3
 import sys
 import unicodedata
 from datetime import datetime, timezone
@@ -49,6 +50,11 @@ LEAK_NGRAM = 8          # a shared run this long is the answer, not a shared ter
 # ponytail: a coverage threshold, not a judgement of which words are "the answer";
 # the hand-check (D4) is what catches a question that gives away the asked part.
 LEAK_SHARE = 1 / 2      # copying half of a version is answering the question
+# Siblings shown so the model can tell its item apart (v7, 24/11: 57 of 175 excluded lineages were
+# `question_ambiguous`, mostly "also matches khoản 1 and khoản 3"). Bounded so a long Chương stays a prompt.
+SIBLINGS_MAX = 12
+SIBLING_CHARS = 300
+_PID = re.compile(r'"provision_id":\s*"([^"]+)"')
 # "Có phải X không?" with X copied is the answer read back as a question.
 _YES_NO = re.compile(r"(?i)\bcó\s+phải\b|\bkhông\s*\?\s*$")
 _NUMBER = re.compile(r"\d+(?:[.,]\d+)*")
@@ -237,15 +243,49 @@ def retry_message(message: str, written: str, reason: str) -> str | None:
             f"(kể cả DẠNG CÂU HỎI và MỞ ĐẦU đã giao). Chỉ in câu hỏi.")
 
 
-def system_prompt(group: str) -> str:
+def system_prompt(group: str, near: bool = False) -> str:
+    """base.md + the group's card. A near-identical T2 pair gets T4.md: T4 became a slice of T2 on 07/10 and
+    its card, the one that says the change may be a single phrase, had not been sent since."""
     base = (PROMPTS / "base.md").read_text(encoding="utf-8").strip()
-    per_group = PROMPTS / f"{group}.md"
+    per_group = PROMPTS / f"{'T4' if group == 'T2' and near else group}.md"
     if not per_group.exists():
         raise SystemExit(f"no prompt for {group}: expected {per_group}")
     return f"{base}\n\n---\n\n{per_group.read_text(encoding='utf-8').strip()}"
 
 
-def user_prompt(records: list[dict]) -> tuple[str, str, list[str]]:
+def sibling_index(db: sqlite3.Connection, targets: list[dict], versions: Path) -> dict[str, list[str]]:
+    """provision_id -> text of the other units under the same parent, in document order.
+
+    The tree comes from the index; the text from `versions.jsonl` (latest version of each unit), because the
+    index holds no text for units split out by subtree backfill (29% of the v7 sample's siblings).
+    """
+    order: dict[str, list[str]] = {}
+    for t in targets:
+        if t.get("parent_id"):
+            order[t["provision_id"]] = [pid for (pid,) in db.execute(
+                "select id from provisions where document_id = ? and parent_id = ? and id != ? order by order_index",
+                (t["document_id"], t["parent_id"], t["provision_id"]))]
+    need = {pid for ids in order.values() for pid in ids}
+    text: dict[str, tuple[int, str]] = {}
+    with versions.open(encoding="utf-8") as f:
+        for line in f:
+            m = _PID.search(line)   # cheap key check: json.loads only the lines we keep
+            if m and m.group(1) in need:
+                pid = m.group(1)
+                v = json.loads(line)
+                if v["ordinal"] >= text.get(pid, (0, ""))[0]:
+                    text[pid] = (v["ordinal"], v["text"])
+    out = {}
+    for tid, ids in order.items():
+        texts = [" ".join(text[pid][1].split()) for pid in ids if pid in text]
+        shown = [x if len(x) <= SIBLING_CHARS else x[:SIBLING_CHARS] + " …" for x in texts[:SIBLINGS_MAX]]
+        if len(texts) > SIBLINGS_MAX:
+            shown.append(f"(còn {len(texts) - SIBLINGS_MAX} mục khác)")
+        out[tid] = shown
+    return out
+
+
+def user_prompt(records: list[dict], sibs: list[str] = ()) -> tuple[str, str, list[str]]:
     """(message, framing the model may reuse, the versions it must not copy)."""
     target = records[0]["target"]
     title = target["document_title"] or ""
@@ -267,6 +307,10 @@ def user_prompt(records: list[dict]) -> tuple[str, str, list[str]]:
         lines += [f"  [{n}] {text}" for n, text in enumerate(seen, 1)]
         lines.append("CHỖ THAY ĐỔI (máy tính sẵn, từ phiên bản trước sang phiên bản sau):")
         lines += [f"  [{n}→{n + 1}] {changes(seen[n - 1], seen[n])}" for n in range(1, len(seen))]
+    if sibs:
+        lines.append("CÁC MỤC ANH EM (cùng đơn vị cha, KHÔNG phải đáp án; câu hỏi không được để các mục này "
+                     "cũng trả lời được):")
+        lines += [f"  - {text}" for text in sibs]
     form, opening = style_of(records[0]["lineage_id"])
     lines.append(f"DẠNG CÂU HỎI: {'tình huống' if form == 'tinh_huong' else 'tra cứu'}")
     lines.append(f"MỞ ĐẦU: {opening}")
@@ -297,6 +341,9 @@ def main() -> None:
                              "Claude Code session); judged exactly like a provider's reply, no calls")
     parser.add_argument("--revalidate", action="store_true",
                         help="re-judge every stored question with the current validate(); no calls")
+    parser.add_argument("--out", type=Path, help="questions file (default <data>/vilextime/questions.jsonl)")
+    parser.add_argument("--seed", type=int, help="sent to the provider, so a rerun can return the same text")
+    parser.add_argument("--no-siblings", action="store_true", help="prompt without CÁC MỤC ANH EM (old prompt)")
     parser.add_argument("--sample", type=Path,
                         help="only these lineages, in rank order (sample_vilextime.py writes it)")
     args = parser.parse_args()
@@ -312,7 +359,14 @@ def main() -> None:
     for records in by_lineage.values():
         records.sort(key=lambda r: r["as_of"])
 
-    out_path = args.data / "vilextime/questions.jsonl"   # committed: not rebuildable
+    out_path = args.out or args.data / "vilextime/questions.jsonl"   # committed: not rebuildable
+    sibs: dict[str, list[str]] = {}
+
+    def prompt_for(records):
+        near = any(r.get("near_identical") for r in records)
+        system_text = system_prompt(args.group, near)
+        return system_text, hashlib.sha256(system_text.encode("utf-8")).hexdigest()[:12], \
+            user_prompt(records, sibs.get(records[0]["target"]["provision_id"], []))
     done: set[str] = set()
     if out_path.exists():
         done = {json.loads(line)["lineage_id"] for line in out_path.open(encoding="utf-8")}
@@ -340,7 +394,7 @@ def main() -> None:
         return
 
     system = system_prompt(args.group)
-    prompt_sha = hashlib.sha256(system.encode("utf-8")).hexdigest()[:12]
+    prompt_sha = hashlib.sha256(system.encode("utf-8")).hexdigest()[:12]   # the group's card; T4 rows log their own
     order = sorted(by_lineage)
     if args.sample:
         ranked = [json.loads(line) for line in args.sample.open(encoding="utf-8")]
@@ -351,10 +405,15 @@ def main() -> None:
     print(f"{args.group}: {len(by_lineage):,} lineage · {len(done):,} đã có · {len(pending):,} sẽ sinh"
           f" · prompt {prompt_sha}")
 
+    if not args.no_siblings and pending:
+        db = sqlite3.connect(f"file:{args.data / 'temporal.sqlite'}?mode=ro", uri=True)
+        sibs.update(sibling_index(db, [recs[0]["target"] for _, recs in pending], args.data / "derived/versions.jsonl"))
+        db.close()
+
     if args.dry_run:
         for lid, records in pending:
-            message, _, _ = user_prompt(records)
-            print(f"\n{'=' * 70}\n{lid}\n{'-' * 70}\n{message}")
+            _, sha, (message, _, _) = prompt_for(records)
+            print(f"\n{'=' * 70}\n{lid}  (system {sha})\n{'-' * 70}\n{message}")
         print(f"\n[dry-run] không gọi provider nào. Đã cấu hình: {configured() or '(chưa có key)'}")
         return
 
@@ -379,7 +438,7 @@ def main() -> None:
     openings: collections.Counter[str] = collections.Counter()
     with out_path.open("a", encoding="utf-8") as out:
         for n, (lid, records) in enumerate(pending, 1):
-            message, context, answer = user_prompt(records)
+            system, row_sha, (message, context, answer) = prompt_for(records)
             attempts, prompt, budget = 0, message, args.max_tokens
             try:
                 while True:
@@ -389,7 +448,7 @@ def main() -> None:
                                        else complete(system, prompt, provider=provider, model=args.model,
                                                      temperature=args.temperature,
                                                      max_tokens=budget,
-                                                     effort=args.effort or None))
+                                                     effort=args.effort or None, seed=args.seed))
                     reason = validate(done_completion.text, context, answer)
                     # `--answers` has no model to ask again, and a decline is final.
                     if reason is None or args.answers or attempts > args.retries:
@@ -412,7 +471,7 @@ def main() -> None:
                         attempts += 1
                         done_completion = complete(system, prompt, provider=provider,
                                                    model=args.model, temperature=args.temperature,
-                                                   max_tokens=budget, effort=args.effort or None)
+                                                   max_tokens=budget, effort=args.effort or None, seed=args.seed)
                         reason = validate(done_completion.text, context, answer)
                     else:
                         raise error
@@ -437,7 +496,11 @@ def main() -> None:
                 "model": done_completion.model,
                 "temperature": done_completion.temperature,
                 "attempts": attempts,
-                "prompt_sha": prompt_sha,
+                "prompt_sha": row_sha,
+                "user_sha": hashlib.sha256(message.encode("utf-8")).hexdigest()[:12],
+                "seed": args.seed,
+                "served_model": done_completion.served_model,
+                "finish_reason": done_completion.finish_reason,
                 "generated_at": datetime.now(timezone.utc).date().isoformat(),
             }, ensure_ascii=False) + "\n")
             out.flush()
