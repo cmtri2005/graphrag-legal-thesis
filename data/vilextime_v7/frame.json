@@ -1,22 +1,17 @@
 {
  "pool": "data/derived/vilextime_pool.jsonl",
  "pool_sha256": "4bfcbcca2501aefd602bf67a8dda9df4583aa2e4f138b03c22119994bed61951",
- "seen_sources": [
-  "data/review",
-  "data/vilextime_dataset",
-  "data/vilextime_dataset_h6",
-  "data/vilextime_final",
-  "data/vilextime_dib",
-  "data/vilextime/test2_release.jsonl",
-  "data/vilextime/test2_release_v2.jsonl"
- ],
+ "dev": "data/vilextime_dataset_h6/vilextime.jsonl",
+ "dev_sha256": "7aada39a82f5ec6673f71a86a7ec5b1151da9242cd413b45ea1cfc6957d3d476",
+ "dev_lineages": 81,
+ "dev_documents": 73,
  "pool_lineages": 11408,
- "excluded": 2004,
+ "excluded": 609,
  "in_frame_by_group": {
-  "T1": 2193,
-  "T2": 4813,
-  "T3": 183,
-  "T5": 164,
-  "T6": 2051
+  "T1": 2452,
+  "T2": 5087,
+  "T3": 446,
+  "T5": 198,
+  "T6": 2616
  }
 }

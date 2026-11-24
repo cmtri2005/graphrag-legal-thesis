@@ -7,19 +7,19 @@ lẫn luật mới. Plan: `docs/plans/active/2026-11-24-vilextime-v7-rebuild.md`
 
 | Vai | Ai | Được làm | Không được làm |
 |---|---|---|---|
-| A, B | CMT, NMT (hai tác giả) | Gán mọi dòng | Mở đáp án kho, nhãn của người kia, hay file nào trong `data/vilextime_v7/` ngoài phiếu của mình trước khi cả hai khóa |
+| A, B | Hai sinh viên luật, không phải tác giả, chưa từng mở repo, phiếu hay bản phát hành ViLexTime (S1) | Gán mọi dòng | Mở đáp án kho, nhãn của người kia, hay file nào trong `data/vilextime_v7/` ngoài phiếu của mình trước khi cả hai khóa |
+| CMT, NMT | Hai tác giả | Phân xử ca máy móc (dán thiếu chữ, dán nhầm điểm) sau khi mở | Gán nhãn |
 | Luật sư | Luật sư cộng tác | Chốt mọi xung đột có nội dung pháp lý; xác nhận T5 | — |
 | Claude | Agent | Rút mẫu, sinh câu hỏi, dựng phiếu, so máy, gợi ý tra cứu cho luật sư sau khi khóa | Đứng tên nhãn, chấm thay người |
 
-- Chỉ rút lineage **chưa từng xuất hiện** trong `data/review/` hay bản phát hành cũ (§1), nên cả A và B đều chưa thấy
-  đáp án kho của mẫu. Trước lô đầu, A và B ký `data/vilextime_v7/attestation.md`.
-- Bài ghi: hai người gán đều là tác giả.
+- A và B chưa từng mở repo, phiếu cũ hay bản phát hành, nên mù với mọi lineage. Trước lô đầu, A và B ký
+  `data/vilextime_v7/attestation.md`.
+- Bài ghi đúng vai: hai sinh viên luật gán; tác giả chỉ phân xử ca máy móc; luật sư chốt ca pháp lý.
 
 ## 1. Khung mẫu
 
 - Kho ứng viên `data/derived/vilextime_pool.jsonl` (11.408 lineage; sha256 ghi trong `data/vilextime_v7/frame.json`).
-- Loại: mọi lineage xuất hiện trong `data/review/**` hoặc trong `data/vilextime_dataset*`, `data/vilextime_final`,
-  `data/vilextime_dib`, `data/vilextime/test2_release*.jsonl`. Danh sách `data/vilextime_v7/frame_excluded.txt`.
+- Loại: lineage thuộc văn bản của tập dev (S1). Danh sách `data/vilextime_v7/frame_excluded.txt`.
 - Giữ luật cũ của `sample_vilextime.py`: bỏ lineage có `flags`, bỏ T5 loại `correction`/`guidance_in_sync`, bỏ lineage
   có sự kiện chưa áp (R6), tối đa 2 lineage mỗi văn bản, không cắt một lineage giữa các ngày.
 - Seed `20261124`. Hệ số rút dư như cũ (T1, T2, T5, T6 ×2; T3 ×3). Quota bản phát hành theo định nghĩa §9:
@@ -78,10 +78,13 @@ Khóa giai đoạn 1 (sha256) rồi mới mở giai đoạn 2.
 
 ## 7. Giới hạn biết trước
 
-- Hai người gán là tác giả.
 - Kho chỉ áp 38,7% lệnh sửa đổi; lỗi sót sửa đổi chỉ bắt được qua tra nguồn ở giai đoạn 1.
-- T3 chỉ còn 183 lineage trong khung.
+- T3 có 446 lineage trong khung, rút được 159 (giới hạn 2 lineage mỗi văn bản); T5 rút được 23.
 
 ## 8. Sai lệch so với đăng ký
 
-Chưa có.
+**S1. Người gán và khung mẫu (24/11, trước khi sinh câu hỏi hay giao phiếu nào).** CMT đổi người gán: A, B là hai
+sinh viên luật chưa xem dữ liệu, thay cho CMT và NMT. Vì họ mù với mọi lineage, khung không còn loại lineage đã xuất
+hiện trong phiếu cũ; chỉ loại lineage thuộc 73 văn bản của tập dev (81 lineage, `data/vilextime_dataset_h6`), để không
+rò rỉ cấu hình. Loại 609/11.408. Rút lại cùng seed `20261124`. Bản rút trước (khung loại 2.004) ở commit trước
+S1; không dùng. Đồng thuận A–B giờ là giữa hai người ngoài nhóm tác giả; giới hạn "người gán là tác giả" ở §7 bỏ.

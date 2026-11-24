@@ -22,8 +22,8 @@ Sau đó chạy lại G4 trên bộ 7.0, một lần, theo ADR 0006 cộng amend
 - Hướng dẫn gán nhãn `docs/vilextime-annotation.md` (Q1–Q4).
 - Pipeline có sẵn, dùng lại: `build_question_pool.py` → `sample_vilextime.py` (`sample(..., skip=)`) →
   `generate_questions.py --sample` → `build_vilextime.py` → `sample_vilextime.py --select`.
-- Kho ứng viên `data/derived/vilextime_pool.jsonl`: 11.408 lineage. Chưa ai trong nhóm thấy đáp án (đếm 24/11):
-  T1 2.193, T2 4.813, T3 183, T5 164, T6 2.051.
+- Kho ứng viên `data/derived/vilextime_pool.jsonl`: 11.408 lineage; trong khung (bỏ văn bản dev): T1 2.452,
+  T2 5.087, T3 446, T5 198, T6 2.616.
 - Kiểm tra kho `docs/reports/kiem-tra-kho-2411.md`: kho sót sửa đổi là lỗi chính. Q4 do người gán kiểm bằng nguồn.
 
 ## Scope
@@ -58,9 +58,10 @@ Out of scope: đổi định nghĩa, thêm nhóm hay mã loại; sửa toàn kho
 
 ## Progress
 
-- [ ] Đăng ký trước, commit.
-- [ ] Khung loại, commit.
-- [ ] Rút mẫu.
+- [x] Đăng ký trước (8fb24e9), S1.
+- [x] Khung loại: 609 lineage (73 văn bản dev).
+- [x] Rút mẫu seed 20261124: T1 500, T2 550 + T4 150, T3 159 (481 dòng), T5 23, T6a 150, T6b 250 lineage. 1.504
+  lineage cần câu hỏi mới.
 - [ ] Sinh câu hỏi.
 - [ ] Kiểm kho trên mẫu.
 - [ ] Phiếu gán, gán (A, B).
@@ -73,8 +74,8 @@ Out of scope: đổi định nghĩa, thêm nhóm hay mã loại; sửa toàn kho
 
 - 2026-11-24 (CMT): dựng lại bộ test; cỡ mẫu theo đề cương/định nghĩa §9, không giới hạn theo giờ gán ("team gán được").
 - 2026-11-24 (CMT): giữ LLM sinh câu hỏi; bỏ AI gán nhãn, thay bằng hai người.
-- 2026-11-24: người gán là CMT và NMT. Cả hai mù với lineage mới vì chỉ rút lineage chưa xuất hiện trong phiếu hay bản
-  phát hành nào. Bài ghi hai người gán là tác giả.
+- 2026-11-24 (CMT, S1): người gán là hai sinh viên luật chưa xem dữ liệu; CMT, NMT chỉ phân xử ca máy móc. Khung chỉ
+  loại văn bản của tập dev (609 lineage).
 - Còn mở: nộp DiB bằng 6.x hay chờ 7.0.
 
 ## Validation
