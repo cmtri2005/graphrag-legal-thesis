@@ -98,3 +98,7 @@ runs/rebuild_20261110/before/
 # Bằng chứng nằm ở runs/lightrag_20261113/intake.json (sha256) và các file prompt, vốn chứa nguyên ngữ cảnh.
 lightrag_work-*/
 runs/lightrag_20261113/colab/contexts.jsonl
+
+# v7 question-generation call log: committed compressed (.xz)
+data/vilextime_v7/questions.calls.jsonl
+data/vilextime_v7/pilot/*.calls.jsonl

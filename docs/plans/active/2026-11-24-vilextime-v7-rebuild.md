@@ -68,7 +68,10 @@ Out of scope: đổi định nghĩa, thêm nhóm hay mã loại; sửa toàn kho
 - [x] CMT chấm vòng 1 (`pilot/pilot_cham_filled.xlsx`): Qwen + prompt v1 8/28, Opus 10/17.
 - [x] Pipeline `qg_v7.py` (thiết kế `docs/reports/thiet-ke-sinh-cau-hoi-v7.md`); kiểm chứng hiệu chuẩn 46/58;
   chế độ `--fast` 22/30 trên tập khó, ~0,004 USD/lineage (CMT: 12–15 USD cho bản đầy đủ là nhiều).
-- [ ] Sinh câu hỏi cho 1.782 lineage của mẫu.
+- [x] Sinh câu hỏi cho 1.782 lineage (`qg_v7.py --fast`, Qwen3.8-27B, 4.212 lượt gọi, 6,29 USD): 1.504 lineage có câu
+  qua máy. Theo phần (lineage đạt / dòng): T1 476/476, T2 450/900, T4 120/240, T3 78/237, T5 10/20, T6a 143/286,
+  T6b 227/454. Bị loại: 46 `no_substantive_change`, 231 `qg_failed`, 1 lỗi. `questions.jsonl` sha256 df44691341db889a…;
+  nhật ký lượt gọi `questions.calls.jsonl.xz`.
 - [ ] Kiểm kho trên mẫu.
 - [ ] Phiếu gán, gán (A, B).
 - [ ] Hòa giải (luật sư).
