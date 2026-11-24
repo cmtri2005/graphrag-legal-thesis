@@ -1,0 +1,15 @@
+{
+ "locked": "2026-11-24",
+ "sha256": {
+  "GD1_A.xlsx": "9e60d9c60495c5c9bf6cf1ff3a4b84c50f382aeecbfe21d27398bedb37fcc83d",
+  "GD1_B.xlsx": "d5c822c16d3628202db9d1e1efa576a07c909d3597986104a5627f4d39d46bc6"
+ },
+ "issues": [
+  "02-15 A: Còn nhưng thiếu lời văn/đáp án ngắn",
+  "02-17 A: Còn nhưng thiếu lời văn/đáp án ngắn",
+  "02-24 A: Còn nhưng thiếu lời văn/đáp án ngắn",
+  "02-38 A: thiếu Hiệu lực",
+  "02-17 B: Còn nhưng thiếu lời văn/đáp án ngắn",
+  "02-47 B: Còn nhưng thiếu lời văn/đáp án ngắn"
+ ]
+}
