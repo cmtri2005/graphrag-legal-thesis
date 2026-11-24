@@ -91,6 +91,9 @@ Out of scope: đổi định nghĩa, thêm nhóm hay mã loại; sửa toàn kho
   đã loại. Chờ luật sư. (00-12, T4: đáp án ngắn nằm trọn trong lời văn bản trước, nhưng scorer đã loại câu trả lời
   chứa cụm riêng của phiên bản khác (`score_vilextime.distractors`), nên không cần amendment; cần giữ cả hai ngày
   của lineage T2/T4 trong bộ test để cụm đối chứng tồn tại.)
+- [x] lo00 chốt (`build.py chot lo00 …` → `lo00/final.jsonl`, `hoa_giai.locked`): giữ 7 dòng (T1 1, T2 2, T4 2, T5 2),
+  loại 13. Luật sư chọn bản dài ở 00-15, 00-19 (giữ "trong nội dung của quy hoạch chung đô thị được phê duyệt"), khác
+  quy tắc "ngắn nhất": theo dõi Accuracy chứa-cụm trên các dòng đáp án dài.
 - [ ] Gán (A, B).
 - [ ] Hòa giải (luật sư).
 - [ ] Dựng 7.0.

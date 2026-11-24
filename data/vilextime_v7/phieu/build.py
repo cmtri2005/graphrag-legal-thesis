@@ -8,6 +8,7 @@ Thứ tự gán: lineage có câu hỏi qua máy (questions.jsonl), xếp xen k�
   python3 data/vilextime_v7/phieu/build.py lock GD1 lo01 A.xlsx B.xlsx   # nhận phiếu đã gán (GD1 hoặc GD2), xuất .tsv, khóa
   python3 data/vilextime_v7/phieu/build.py gd2 lo01       # dựng Giai đoạn 2 của một lô; cần lo01/GD1.locked
   python3 data/vilextime_v7/phieu/build.py hoa_giai lo01  # phiếu luật sư: đáp án ngắn dòng giữ, mã lý do lệch
+  python3 data/vilextime_v7/phieu/build.py chot lo01 hoa_giai.xlsx   # nhận phiếu luật sư -> final.jsonl, khóa
 
 Mỗi lô: lo<NN>/GD1_A.xlsx, GD1_B.xlsx (giống nhau), lo<NN>/key.tsv (khoa -> id dòng, lineage; KHÔNG giao người gán).
 Không ghi đè phiếu đã có chữ người gán.
@@ -643,6 +644,65 @@ def build_hoa_giai(name):
         print("  ", x)
 
 
+def chot(name, path):
+    """Take the lawyer's form back: lo<NN>/final.jsonl (every row: kept with its final short answer, or dropped with
+    its code) and hoa_giai.locked. Columns are read by header, so an older layout of the form still reads."""
+    import hashlib
+    import shutil
+    from openpyxl import load_workbook
+    d = HERE / name
+    if (d / "hoa_giai.locked").exists():
+        raise SystemExit(f"{name}: đã chốt")
+    wb = load_workbook(path)
+
+    def sheet(title):
+        if title not in wb.sheetnames:
+            return {}
+        ws = wb[title]
+        head = [c.value for c in ws[3]]
+        return {r[0]: dict(zip(head, ("" if v is None else str(v).strip() for v in r)))
+                for r in ws.iter_rows(min_row=4, values_only=True) if r[0]}
+    sa, codes = sheet("Phiếu"), sheet("Mã lý do")
+    key = list(csv.DictReader(open(d / "key.tsv", encoding="utf-8"), delimiter="\t"))
+    k2 = {r["lineage_id"]: r["khoa"] for r in csv.DictReader(open(d / "key_gd2.tsv", encoding="utf-8"), delimiter="\t")}
+    g1, g2 = collections.defaultdict(dict), collections.defaultdict(dict)
+    for st, g in (("GD1", g1), ("GD2", g2)):
+        for r in csv.DictReader(open(d / f"{st}.tsv", encoding="utf-8"), delimiter="\t"):
+            g[r["khoa"]][r["who"]] = r
+    out, missing = [], []
+    for k in key:
+        a, b = g1[k["khoa"]]["A"], g1[k["khoa"]]["B"]
+        q2 = k2[k["lineage_id"]]
+        row = {"khoa": k["khoa"], "id": k["id"], "lineage_id": k["lineage_id"], "part": k["part"], "gd2": q2}
+        if all(passes(g2[q2][w]) for w in READERS):
+            h = sa.get(k["khoa"], {})
+            pick = h.get("Chọn", "")
+            final = {"A": a["dap_an_ngan"], "B": b["dap_an_ngan"], "Đề xuất": h.get("Đề xuất theo quy tắc", ""),
+                     "Sửa": h.get("Đáp án ngắn cuối (nếu Sửa)", "")}.get(pick, "")
+            if not final:
+                missing.append(f"{k['khoa']}: chưa chọn đáp án ngắn")
+            row.update(keep=True, hieu_luc=a["hieu_luc"], answer=a["noi_dung"], short_answer=final,
+                       van_ban_ap_dung=a["van_ban_ap_dung"], chon=pick, ghi_chu_luat_su=h.get("Ghi chú", ""))
+        else:
+            ca, cb = g2[q2]["A"]["ma_ly_do"], g2[q2]["B"]["ma_ly_do"]
+            code = ca if ca == cb else codes.get(q2, {}).get("Mã lý do cuối", "")
+            if not code:
+                missing.append(f"GD2 {q2}: chưa có mã lý do")
+            row.update(keep=False, drop_code=code, ghi_chu_luat_su="" if ca == cb else codes.get(q2, {}).get("Ghi chú", ""))
+        out.append(row)
+    if missing:
+        raise SystemExit("Phiếu thiếu:\n  " + "\n  ".join(missing))
+    shutil.copyfile(path, d / "hoa_giai.xlsx")
+    with open(d / "final.jsonl", "w", encoding="utf-8") as f:
+        f.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in out)
+    sha = hashlib.sha256((d / "hoa_giai.xlsx").read_bytes()).hexdigest()
+    (d / "hoa_giai.locked").write_text(json.dumps({"locked": date.today().isoformat(), "sha256": {"hoa_giai.xlsx": sha}},
+                                                  indent=1) + "\n", "utf-8")
+    kept = [r for r in out if r["keep"]]
+    print(f"{name}: chốt {len(out)} dòng; giữ {len(kept)} ({dict(collections.Counter(r['part'] for r in kept))}); "
+          f"loại {len(out) - len(kept)} ({dict(collections.Counter(r['drop_code'] for r in out if not r['keep']))})")
+
+
 if __name__ == "__main__":
     if sys.argv[1:2] == ["gd1"]:
         build_gd1()
@@ -652,5 +712,7 @@ if __name__ == "__main__":
         lock(*sys.argv[2:])
     elif sys.argv[1:2] == ["hoa_giai"] and len(sys.argv) == 3:
         build_hoa_giai(sys.argv[2])
+    elif sys.argv[1:2] == ["chot"] and len(sys.argv) == 4:
+        chot(*sys.argv[2:])
     else:
         raise SystemExit(__doc__)
