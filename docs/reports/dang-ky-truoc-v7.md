@@ -88,3 +88,14 @@ sinh viên luật chưa xem dữ liệu, thay cho CMT và NMT. Vì họ mù vớ
 hiện trong phiếu cũ; chỉ loại lineage thuộc 73 văn bản của tập dev (81 lineage, `data/vilextime_dataset_h6`), để không
 rò rỉ cấu hình. Loại 609/11.408. Rút lại cùng seed `20261124`. Bản rút trước (khung loại 2.004) ở commit trước
 S1; không dùng. Đồng thuận A–B giờ là giữa hai người ngoài nhóm tác giả; giới hạn "người gán là tác giả" ở §7 bỏ.
+
+**S2. Loại khỏi hàng gán các lineage có lời văn là câu lệnh sửa đổi (24/11, trước khi giao phiếu nào).** Khi dựng
+phiếu thấy 93 lineage đã có câu hỏi (87 T6, 6 T1) mà điều khoản đích là câu lệnh sửa đổi văn bản khác ("4. Sửa đổi,
+bổ sung khoản 3 Điều 9 như sau: …"). Khi đã có hiệu lực, nội dung đó nằm trong văn bản được sửa, nên đáp án "không
+còn hiệu lực" ở mốc sau có thể sai. `prompts/vilextime/base.md` vốn yêu cầu từ chối loại này; bước sinh câu hỏi nhanh
+không bắt được. Lọc bằng biểu thức trong `data/vilextime_v7/phieu/build.py` (`AMENDING`), danh sách
+`phieu/excluded_amending.tsv`, mã `other` (amending_instruction), báo trong phễu. Còn đủ quota T6a, T6b.
+
+**S3. Hình thức phiếu (24/11).** Lô thử 20 dòng, các lô sau 50 dòng; hàng gán xếp xen kẽ các phần theo tỷ lệ quota
+§9, trong mỗi phần theo thứ hạng; người gán làm lần lượt và dừng khi mọi phần đủ quota sau hòa giải. Phiếu Giai đoạn
+2 chỉ dựng được khi lô đã có `GD1.locked`.

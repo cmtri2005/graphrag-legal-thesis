@@ -73,7 +73,10 @@ Out of scope: đổi định nghĩa, thêm nhóm hay mã loại; sửa toàn kho
   T6b 227/454. Bị loại: 46 `no_substantive_change`, 231 `qg_failed`, 1 lỗi. `questions.jsonl` sha256 df44691341db889a…;
   nhật ký lượt gọi `questions.calls.jsonl.xz`.
 - [ ] Kiểm kho trên mẫu.
-- [ ] Phiếu gán, gán (A, B).
+- [x] Phiếu gán Giai đoạn 1: `data/vilextime_v7/phieu/lo00–lo48` (lô thử 20 dòng, lô sau 50 dòng; 2.433 dòng), mỗi lô
+  `GD1_A.xlsx`, `GD1_B.xlsx`, `key.tsv` (không giao). S2: loại 93 lineage câu lệnh sửa đổi.
+- [ ] Script nhập + khóa phiếu (làm khi lô thử về), dựng GD2 theo lô (`build.py gd2 loNN`).
+- [ ] Gán (A, B).
 - [ ] Hòa giải (luật sư).
 - [ ] Dựng 7.0.
 - [ ] Amendment ADR 0006, G4 trên 7.0.
