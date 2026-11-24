@@ -5,7 +5,7 @@ Thứ tự gán: lineage có câu hỏi qua máy (questions.jsonl), xếp xen k�
 (tính sau hòa giải) thì dừng. Lô 00 là lô thử 20 dòng; các lô sau 50 dòng.
 
   python3 data/vilextime_v7/phieu/build.py gd1            # dựng Giai đoạn 1 cho mọi lô (chưa có lời văn kho)
-  python3 data/vilextime_v7/phieu/build.py lock lo01 A.xlsx B.xlsx   # nhận phiếu GD1 đã gán, xuất GD1.tsv, khóa
+  python3 data/vilextime_v7/phieu/build.py lock GD1 lo01 A.xlsx B.xlsx   # nhận phiếu đã gán (GD1 hoặc GD2), xuất .tsv, khóa
   python3 data/vilextime_v7/phieu/build.py gd2 lo01       # dựng Giai đoạn 2 của một lô; cần lo01/GD1.locked
 
 Mỗi lô: lo<NN>/GD1_A.xlsx, GD1_B.xlsx (giống nhau), lo<NN>/key.tsv (khoa -> id dòng, lineage; KHÔNG giao người gán).
@@ -462,47 +462,76 @@ def read_form(path, cols, key):
     return rows
 
 
-def lock_gd1(name, path_a, path_b):
-    """Copy the returned forms into lo<NN>/, export GD1.tsv, flag A/B differences, write GD1.locked (sha256)."""
+def form_issues(stage, r):
+    out = [] if r["phut"] else ["thiếu phút"]
+    if stage == "GD1":
+        if r["hieu_luc"] not in ("Còn", "Hết"):
+            out.append("thiếu Hiệu lực")
+        if r["hieu_luc"] == "Còn" and not (r["noi_dung"] and r["dap_an_ngan"]):
+            out.append("Còn nhưng thiếu lời văn/đáp án ngắn")
+    elif not passes(r) and not r["ma_ly_do"]:
+        out.append("không đạt nhưng thiếu mã lý do")
+    return out
+
+
+def passes(r):
+    """GD2 verdict: asks at the change (or single version), one answer per version, no leak."""
+    return r["hoi_vao_cho_doi"] in ("Có", "Không áp dụng") and r["tra_loi_duy_nhat"] == "Có" and r["lo_dap_an"] == "Không"
+
+
+COMPARE = {"GD1": ("hieu_luc", "noi_dung", "dap_an_ngan", "van_ban_ap_dung"),
+           "GD2": ("hoi_vao_cho_doi", "tra_loi_duy_nhat", "lo_dap_an", "ma_ly_do")}
+
+
+def lock(stage, name, path_a, path_b):
+    """Copy returned forms into lo<NN>/, export <stage>.tsv, flag A/B differences, write <stage>.locked (sha256)."""
     import hashlib
     import shutil
     d = HERE / name
-    if (d / "GD1.locked").exists():
-        raise SystemExit(f"{name}: đã khóa")
-    key = list(csv.DictReader(open(d / "key.tsv", encoding="utf-8"), delimiter="\t"))
-    forms = {"A": read_form(path_a, GD1, key), "B": read_form(path_b, GD1, key)}
-    inputs = [c[1] for c in GD1 if c[3]]
+    if (d / f"{stage}.locked").exists():
+        raise SystemExit(f"{name}: {stage} đã khóa")
+    if stage == "GD2" and not (d / "GD1.locked").exists():
+        raise SystemExit(f"{name}: GD1 chưa khóa")
+    cols = GD1 if stage == "GD1" else GD2
+    key = list(csv.DictReader(open(d / ("key.tsv" if stage == "GD1" else "key_gd2.tsv"), encoding="utf-8"),
+                              delimiter="\t"))
+    forms = {"A": read_form(path_a, cols, key), "B": read_form(path_b, cols, key)}
+    inputs = [c[1] for c in cols if c[3]]
     out, issues = [], []
     for who, rows in forms.items():
         for k, r in zip(key, rows):
             out.append({"who": who, **k, **{f: r[f] for f in inputs}})
-            if r["hieu_luc"] not in ("Còn", "Hết"):
-                issues.append(f"{r['khoa']} {who}: thiếu Hiệu lực")
-            if r["hieu_luc"] == "Còn" and not (r["noi_dung"] and r["dap_an_ngan"]):
-                issues.append(f"{r['khoa']} {who}: Còn nhưng thiếu lời văn/đáp án ngắn")
-            if not r["phut"]:
-                issues.append(f"{r['khoa']} {who}: thiếu phút")
+            issues += [f"{r['khoa']} {who}: {x}" for x in form_issues(stage, r)]
     norm = lambda s: " ".join(s.lower().split())
     diffs = []
     for a, b in zip(forms["A"], forms["B"]):
-        fields = [f for f in ("hieu_luc", "noi_dung", "dap_an_ngan", "van_ban_ap_dung") if norm(a[f]) != norm(b[f])]
+        fields = [f for f in COMPARE[stage] if norm(a[f]) != norm(b[f])]
+        if stage == "GD2" and passes(a) != passes(b):
+            fields.insert(0, "ket_luan")
         if fields:
             diffs.append({"khoa": a["khoa"], "lech": ",".join(fields)})
     for who, p in (("A", path_a), ("B", path_b)):
-        shutil.copyfile(p, d / f"GD1_{who}.xlsx")
-    with open(d / "GD1.tsv", "w", encoding="utf-8", newline="") as f:
+        shutil.copyfile(p, d / f"{stage}_{who}.xlsx")
+    with open(d / f"{stage}.tsv", "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, list(out[0]), delimiter="\t", lineterminator="\n")
         w.writeheader()
         w.writerows(out)
-    with open(d / "GD1_lech.tsv", "w", encoding="utf-8", newline="") as f:
+    with open(d / f"{stage}_lech.tsv", "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, ["khoa", "lech"], delimiter="\t", lineterminator="\n")
         w.writeheader()
         w.writerows(diffs)
-    sha = {f"GD1_{w}.xlsx": hashlib.sha256((d / f"GD1_{w}.xlsx").read_bytes()).hexdigest() for w in READERS}
-    (d / "GD1.locked").write_text(json.dumps({"locked": date.today().isoformat(), "sha256": sha, "issues": issues},
-                                             ensure_ascii=False, indent=1) + "\n", "utf-8")
-    hl = sum(a["hieu_luc"] == b["hieu_luc"] for a, b in zip(forms["A"], forms["B"]))
-    print(f"{name}: khóa {len(key)} dòng; Hiệu lực khớp {hl}/{len(key)}; dòng lệch {len(diffs)}; lỗi phiếu {len(issues)}")
+    sha = {f"{stage}_{w}.xlsx": hashlib.sha256((d / f"{stage}_{w}.xlsx").read_bytes()).hexdigest() for w in READERS}
+    (d / f"{stage}.locked").write_text(json.dumps({"locked": date.today().isoformat(), "sha256": sha,
+                                                   "issues": issues}, ensure_ascii=False, indent=1) + "\n", "utf-8")
+    n = len(key)
+    first = COMPARE[stage][0]
+    same = sum(a[first] == b[first] for a, b in zip(forms["A"], forms["B"]))
+    msg = f"{name} {stage}: khóa {n} dòng; {first} khớp {same}/{n}; dòng lệch {len(diffs)}; lỗi phiếu {len(issues)}"
+    if stage == "GD2":
+        pa, pb = ([passes(r) for r in forms[w]] for w in READERS)
+        msg += (f"; đạt A {sum(pa)}, B {sum(pb)}, cả hai {sum(x and y for x, y in zip(pa, pb))}; "
+                f"kết luận khớp {sum(x == y for x, y in zip(pa, pb))}/{n}")
+    print(msg)
     for x in issues:
         print("  ", x)
 
@@ -512,7 +541,7 @@ if __name__ == "__main__":
         build_gd1()
     elif sys.argv[1:2] == ["gd2"] and len(sys.argv) == 3:
         build_gd2(sys.argv[2])
-    elif sys.argv[1:2] == ["lock"] and len(sys.argv) == 5:
-        lock_gd1(*sys.argv[2:])
+    elif sys.argv[1:2] == ["lock"] and len(sys.argv) == 6 and sys.argv[2] in COMPARE:
+        lock(*sys.argv[2:])
     else:
         raise SystemExit(__doc__)

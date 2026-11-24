@@ -80,6 +80,9 @@ Out of scope: đổi định nghĩa, thêm nhóm hay mã loại; sửa toàn kho
 - [x] Lô thử lo00 về 24/11, khóa: Hiệu lực khớp 20/20; lời văn lệch 2 dòng (00-13 phần hiệu lực 2027, 00-16 chuyển
   tiếp NĐ 23/2026); đáp án ngắn lệch độ dài trích ở 13 dòng; A để trống đáp án 00-20. Hai file lưu bằng openpyxl,
   không phải Excel; phút A có số lẻ 0,1–0,2: hỏi lại công cụ sinh viên dùng. GD2 lo00: 11 câu hỏi.
+- [x] GD2 lo00 khóa (`build.py lock GD2 …`): kết luận đạt/không khớp 11/11, đạt 4/11 lineage = 7/20 dòng
+  (T6a 0/2, T6b 0/4, T3 0/3); Q1 lệch 2 (00-09, 00-11), mã lý do lệch 4. Lỗi kho do người gán chỉ ra: 00-05 phiên
+  bản 3 gộp phần hiệu lực 01/07/2027; 00-11 vbpl 17/01/2026 vs VBHN 01/01/2027; 00-03, 00-08 relocated.
 - [ ] Gán (A, B).
 - [ ] Hòa giải (luật sư).
 - [ ] Dựng 7.0.
