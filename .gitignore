@@ -61,6 +61,7 @@ data/*
 !data/vilextime_final/
 # Data in Brief release, built by scripts/pipeline/build_dib_release.py
 !data/vilextime_dib/
+!data/vilextime_v7/
 
 # Corpus definition at a point in time. Cheap to regenerate, but the sitemap
 # changes underneath (12 new in-domain documents appeared in 11 days), so

@@ -1,0 +1,22 @@
+{
+ "pool": "data/derived/vilextime_pool.jsonl",
+ "pool_sha256": "4bfcbcca2501aefd602bf67a8dda9df4583aa2e4f138b03c22119994bed61951",
+ "seen_sources": [
+  "data/review",
+  "data/vilextime_dataset",
+  "data/vilextime_dataset_h6",
+  "data/vilextime_final",
+  "data/vilextime_dib",
+  "data/vilextime/test2_release.jsonl",
+  "data/vilextime/test2_release_v2.jsonl"
+ ],
+ "pool_lineages": 11408,
+ "excluded": 2004,
+ "in_frame_by_group": {
+  "T1": 2193,
+  "T2": 4813,
+  "T3": 183,
+  "T5": 164,
+  "T6": 2051
+ }
+}
