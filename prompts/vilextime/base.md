@@ -95,15 +95,15 @@ riêng của nó**, và hỏi mục đó quy định thế nào.
 >
 > ✗ Những hành vi nào bị phạt tiền từ 20.000.000 đồng đến 40.000.000 đồng?
 >   (đáp án là cả danh sách, không phải mục b)
-> ✓ Trong nhóm hành vi bị phạt tiền từ 20.000.000 đồng đến 40.000.000 đồng về
->   xử phạt hành chính trong lĩnh vực hàng không dân dụng, hành vi đào tạo
->   huấn luyện chuyên môn nghiệp vụ sai quy định được mô tả như thế nào?
+> ✓ Trong nhóm hành vi hàng không dân dụng bị phạt tiền từ 20.000.000 đồng đến
+>   40.000.000 đồng, hành vi đào tạo nhân viên hàng không sai quy định được mô tả
+>   như thế nào?
 
 ## Dùng mục CÁC MỤC ANH EM
 
 Đầu vào có thể có mục `CÁC MỤC ANH EM`: các khoản, điểm khác nằm cùng đơn vị cha với điều khoản được giao. Chúng
 **không phải đáp án**. Trước khi in câu hỏi, đọc lại từng mục anh em và tự hỏi: mục này có trả lời được câu hỏi của
-mình không? Nếu có, câu hỏi còn quá rộng — thêm chi tiết riêng của điều khoản được giao để loại các mục kia. Không
+mình không? Nếu có, câu hỏi còn quá rộng — thêm một chi tiết ngắn, riêng của điều khoản được giao, để loại các mục kia. Không
 chép nội dung của mục anh em vào câu hỏi.
 
 > CÂU DẪN : Điều 11. Nội dung thẩm định
@@ -116,13 +116,29 @@ chép nội dung của mục anh em vào câu hỏi.
 
 ## Khi có nhiều phiên bản
 
-Câu hỏi được hỏi ở mọi mốc, nên **ở mọi phiên bản, lời văn phải trả lời được câu hỏi**: đáp án khác nhau giữa các
-phiên bản, nhưng câu hỏi phải có nghĩa ở từng phiên bản. Đừng hỏi vào một ý mà chỉ một phiên bản có (ví dụ hỏi về
-"ngoại lệ" khi phiên bản sau đã bỏ ngoại lệ, hay hỏi "cơ quan nào phối hợp" khi một phiên bản không nêu cơ quan phối
-hợp). Hãy hỏi vào khía cạnh chung mà mọi phiên bản đều quy định, và chỗ thay đổi nằm trong khía cạnh đó.
+Câu hỏi phải hỏi **đúng vào phần đã thay đổi** (mục `CHỖ THAY ĐỔI`), để mỗi phiên bản cho một đáp án khác. Đồng thời
+nó phải có nghĩa ở mọi phiên bản. Hai điều này cùng đúng khi bạn làm như sau:
 
-Cũng vậy với loại câu hỏi: hỏi "khi nào" thì mọi phiên bản phải có thời điểm hay thời hạn; hỏi "ai" thì phải nêu chủ
-thể; hỏi "bao nhiêu" thì phải có con số.
+- **Chi tiết dùng để khoanh vùng hay dựng tình huống chỉ được lấy từ phần GIỐNG NHAU giữa các phiên bản** (và từ
+  TÊN VĂN BẢN, CÂU DẪN). Không đưa vào câu hỏi bất kỳ cụm từ nào chỉ một phiên bản có: làm vậy là để lộ phiên bản,
+  và ở phiên bản kia câu hỏi trở nên vô nghĩa.
+- **Phần đã đổi là thứ được hỏi**, không phải thứ được kể ra. Ví dụ phiên bản sau thêm "tổ chức giám định" vào danh
+  sách đơn vị chịu kiểm tra: hỏi "những đơn vị nào chịu kiểm tra", không nêu "tổ chức giám định".
+- Đừng hỏi vào phần không đổi (mức phạt, chủ thể, thời hạn… giống nhau ở mọi phiên bản) chỉ vì nó dễ hỏi.
+- Loại câu hỏi phải hợp với mọi phiên bản: hỏi "khi nào" thì mọi phiên bản phải có thời điểm hay thời hạn; hỏi
+  "ai" thì phải nêu chủ thể; hỏi "bao nhiêu" thì phải có con số.
+
+## Một ý hỏi
+
+Một câu, một ý hỏi. Không chép lại danh sách từ CÂU DẪN hay từ ĐÁP ÁN; chỉ giữ những chi tiết đủ khoanh vùng chủ đề.
+Chép danh sách là cách dễ nhất để bê nội dung của một phiên bản vào câu hỏi.
+
+## Tự kiểm trước khi in
+
+1. Đọc từng phiên bản: câu trả lời đúng cho câu hỏi có khác nhau giữa các phiên bản không? Nếu giống nhau, bạn đã
+   hỏi chệch.
+2. Câu hỏi có cụm từ nào chỉ một phiên bản có không? Nếu có, bỏ nó.
+3. Mục anh em nào cũng trả lời được câu hỏi không? Nếu có, thêm một chi tiết ngắn của điều khoản được giao.
 
 ## Khi không viết được
 

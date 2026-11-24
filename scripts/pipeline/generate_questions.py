@@ -50,6 +50,10 @@ LEAK_NGRAM = 8          # a shared run this long is the answer, not a shared ter
 # ponytail: a coverage threshold, not a judgement of which words are "the answer";
 # the hand-check (D4) is what catches a question that gives away the asked part.
 LEAK_SHARE = 1 / 2      # copying half of a version is answering the question
+# v7 pilot (24/11): a 3-word run only one version has, holding a word the other versions never use and the framing
+# lacks. On the 58 graded pilot questions: 4 of 8 leaks caught, 2 false alarms (the looser rule without the word
+# condition caught 6 of 8 but raised 9, and rejected 10 of 30 round-2 questions). The rest is the annotator's.
+ONE_VERSION_NGRAM = 3
 # Siblings shown so the model can tell its item apart (v7, 24/11: 57 of 175 excluded lineages were
 # `question_ambiguous`, mostly "also matches khoản 1 and khoản 3"). Bounded so a long Chương stays a prompt.
 SIBLINGS_MAX = 12
@@ -122,6 +126,22 @@ def leaks(question: str, context: str, versions: list[str]) -> bool:
     return False
 
 
+def names_one_version(question: str, context: str, versions: list[str]) -> bool:
+    """Does the question carry a phrase of one version that the others replaced?"""
+    if len(versions) < 2:
+        return False
+    framing = set(words(context))
+    asked = ngrams(question, ONE_VERSION_NGRAM) - ngrams(context, ONE_VERSION_NGRAM)
+    grams = [ngrams(v, ONE_VERSION_NGRAM) for v in versions]
+    vocab = [set(words(v)) for v in versions]
+    for n, own in enumerate(grams):
+        others = set().union(*(vocab[:n] + vocab[n + 1:]))
+        for g in asked & own:
+            if not all(g in v for v in grams) and any(w not in others and w not in framing for w in g):
+                return True
+    return False
+
+
 def validate(question: str, context: str, answer: str | list[str]) -> str | None:
     """Why this question must be thrown away, or None when it may be kept.
 
@@ -156,6 +176,8 @@ def validate(question: str, context: str, answer: str | list[str]) -> str | None
     # it is the anchoring rule working, not the model copying gold.
     if leaks(question, context, versions):
         return "copies_the_answer"
+    if names_one_version(question, context, versions):
+        return "names_one_version"
     if len(words(question)) < 5:
         return "too_short"
     return None
@@ -223,6 +245,8 @@ RETRY_HINTS = {
     "copies_the_answer": "Câu hỏi đang bê nguyên một mệnh đề dài từ ĐÁP ÁN, nên nó tự trả lời chính nó. "
                          "Hãy ghim đúng mục bằng chủ đề của nó, đừng nhắc lại nội dung của nó.",
     "too_short": "Câu hỏi quá ngắn để ghim đúng một đáp án. Dựng lại khung bằng CÂU DẪN.",
+    "names_one_version": "Câu hỏi có cụm từ chỉ một phiên bản có, nên lộ phiên bản và vô nghĩa ở phiên bản kia. "
+                         "Chỉ dùng chi tiết giống nhau ở mọi phiên bản; phần đã đổi là thứ được hỏi, không kể ra.",
 }
 
 

@@ -3,7 +3,9 @@
 Ghi pilot_cham.xlsx (cho người chấm) và pilot_cham_key.tsv (khoa -> model; KHÔNG đưa người chấm).
 Tiêu chí theo hướng dẫn gán nhãn Q2, Q3 (docs/vilextime-annotation.md) và thang tự nhiên của W2.
 python3 data/vilextime_v7/pilot/sheet.py
+python3 data/vilextime_v7/pilot/sheet.py --new questions_v2.jsonl --name pilot_cham_v2 --only-new   # vòng 2
 """
+import argparse
 import collections
 import csv
 import json
@@ -31,9 +33,14 @@ GUIDE = [
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--new", default="questions.jsonl")
+    ap.add_argument("--name", default="pilot_cham")
+    ap.add_argument("--only-new", action="store_true", help="one question per lineage (round 2)")
+    args = ap.parse_args()
     pilot = [json.loads(x) for x in open(HERE / "pilot_sample.jsonl", encoding="utf-8")]
     new = {}
-    for x in open(HERE / "questions.jsonl", encoding="utf-8"):
+    for x in open(HERE / args.new, encoding="utf-8"):
         r = json.loads(x)
         new[r["lineage_id"]] = r
     old = {}
@@ -61,18 +68,20 @@ def main():
                 ("new", new[lid]["model"] if lid in new else "", (new.get(lid) or {}).get("question")
                  or f"(bị bộ lọc loại: {(new.get(lid) or {}).get('rejected_reason')})")]
         rng.shuffle(pair)
+        if args.only_new:
+            pair = [x for x in pair if x[0] == "new"]
         for j, (kind, model, q) in enumerate(pair):
             k = f"L{i:02d}{'ab'[j]}"
             rows.append({"khoa": k, "loi_van_dieu_khoan": (f"[Câu dẫn] {lead}\n\n" if lead else "") + loi_van, "cau_hoi": q})
             key.append({"khoa": k, "lineage_id": lid, "group": p["group"], "kind": kind, "model": model})
-    with open(HERE / "pilot_cham_key.tsv", "w", encoding="utf-8", newline="") as f:
+    with open(HERE / f"{args.name}_key.tsv", "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, list(key[0]), delimiter="\t", lineterminator="\n")
         w.writeheader()
         w.writerows(key)
     w2.FILL = {"hoi_vao_cho_doi", "tra_loi_duy_nhat", "lo_dap_an", "tu_nhien", "ghi_chu"}
     w2.CHOICES = {"hoi_vao_cho_doi": "có,không,không chắc", "tra_loi_duy_nhat": "có,không,không chắc",
                   "lo_dap_an": "có,không", "tu_nhien": "1,2,3,4,5"}
-    w2.workbook(HERE / "pilot_cham.xlsx", [(GUIDE, "Chấm", COLS, rows)])
+    w2.workbook(HERE / f"{args.name}.xlsx", [(GUIDE, "Chấm", COLS, rows)])
 
 
 if __name__ == "__main__":

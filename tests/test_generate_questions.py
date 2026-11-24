@@ -118,9 +118,9 @@ def test_the_examples_in_the_prompt_agree_with_the_validator():
                   "không đúng nội dung; không đủ số giờ theo quy định;")
 
     # The ✓ example for a list item, quoted from prompts/vilextime/base.md.
-    assert validate("Trong nhóm hành vi bị phạt tiền từ 20.000.000 đồng đến 40.000.000 đồng về xử phạt "
-                    "hành chính trong lĩnh vực hàng không dân dụng, hành vi đào tạo huấn luyện chuyên "
-                    "môn nghiệp vụ sai quy định được mô tả như thế nào?", air_context, air_answer) is None
+    assert validate("Trong nhóm hành vi hàng không dân dụng bị phạt tiền từ 20.000.000 đồng đến "
+                    "40.000.000 đồng, hành vi đào tạo nhân viên hàng không sai quy định được mô tả "
+                    "như thế nào?", air_context, air_answer) is None
     # The ✗ examples, each for the reason the prompt gives.
     assert validate("Theo quy định pháp luật hiện hành, hồ sơ giải thể gồm những giấy tờ gì?",
                     air_context, air_answer) == "presumes_the_present"
@@ -192,3 +192,12 @@ def test_siblings_come_from_versions_and_near_pairs_get_the_t4_card(tmp_path):
     message, _, _ = user_prompt([{"target": {"document_title": TITLE, "lead_in": LEAD_IN}, "answer": ANSWER,
                                   "lineage_id": "x"}], ["1. mới"])
     assert "CÁC MỤC ANH EM" in message and "1. mới" in message
+
+
+def test_a_phrase_only_one_version_has_goes_back():
+    """v7 pilot: the grader's leaks were mostly a version's own phrase used as the premise."""
+    v1, v2 = "a) Cơ quan kiểm dịch thực vật;", "a) Cơ quan kiểm dịch thực vật và tổ chức giám định sinh vật gây hại;"
+    assert validate("Theo quy định về kiểm dịch thực vật, những đơn vị nào chịu sự kiểm tra của Cục?",
+                    CONTEXT, [v1, v2]) is None
+    assert validate("Theo quy định về kiểm dịch thực vật, tổ chức giám định sinh vật chịu sự kiểm tra của ai?",
+                    CONTEXT, [v1, v2]) == "names_one_version"
