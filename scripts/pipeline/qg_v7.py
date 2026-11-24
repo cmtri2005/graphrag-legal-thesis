@@ -69,6 +69,23 @@ thủ mọi ràng buộc ở trên, cùng DẠNG CÂU HỎI và MỞ ĐẦU đư
 `dap_an_du_kien` có đúng một phần tử cho mỗi phiên bản, trích ngắn từ lời văn phiên bản đó. Nếu các phần tử giống
 nhau thì câu hỏi đã hỏi chệch: viết lại câu đó. Nếu không viết được câu nào, in {"ung_vien": []}."""
 
+# --fast (24/11, CMT: 12–15 USD for the full pipeline is too much): analysis and candidates in ONE call; a candidate
+# is kept when it passes validate() and its own expected answers differ across versions. Round-trip verification
+# only for the scarce groups (--verify-groups, default T3,T5), where a lost lineage cannot be replaced.
+FAST_FORMAT = """
+---
+ĐỊNH DẠNG ĐẦU RA CHO LƯỢT NÀY (thay cho quy định "đúng một dòng" ở trên). Trước hết tự phân tích, rồi viết 3 câu hỏi
+khác nhau, mỗi câu tuân thủ mọi ràng buộc ở trên, cùng DẠNG CÂU HỎI và MỞ ĐẦU được giao. Chỉ in JSON:
+{"phan_tich": {"thay_doi_thuc_chat": true, "ma_neu_khong": null,
+               "khia_canh_doi": "khía cạnh pháp lý đã đổi", "phan_chung": "phần giống nhau ở mọi phiên bản"},
+ "ung_vien": [{"cau_hoi": "...?", "dap_an_du_kien": ["đáp án ở bản 1", "đáp án ở bản 2"]}]}
+- `thay_doi_thuc_chat` = false khi mọi lần đổi chỉ là hình thức, câu chữ (`cosmetic_only`), chỉ đổi tên cơ quan do
+  sắp xếp bộ máy mà nhiệm vụ giữ nguyên (`rename_only`), hay chỉ cập nhật dẫn chiếu tự áp (`auto_reference_update`);
+  ghi mã vào `ma_neu_khong` và để `ung_vien` rỗng. Chỉ có một phiên bản thì bỏ qua phân tích (để true).
+- `dap_an_du_kien` có đúng một phần tử cho mỗi phiên bản, trích ngắn từ lời văn phiên bản đó. Các phần tử phải khác
+  nhau về nội dung; nếu giống nhau, câu hỏi đã hỏi chệch: viết lại.
+- Nếu lời văn dẫn chiếu một khoản, điều khác ("quy định tại khoản 5"), đừng nêu số: gọi đúng chủ đề."""
+
 ANSWER = """Trả lời câu hỏi CHỈ dựa vào đoạn văn được cho, không dùng hiểu biết nào khác. Trả lời ngắn, trích ý từ đoạn
 văn. Nếu đoạn văn không chứa câu trả lời cho đúng điều được hỏi, chỉ in: KHONG_TRA_LOI"""
 
@@ -243,6 +260,56 @@ def run_lineage(lid, records, sibs, args, log):
         return {**row, "rejected_reason": f"error:{type(e).__name__}", "raw": str(e)[:300]}
 
 
+def distinct_answers(cand):
+    return len({" ".join(g.words(a)) for a in cand.get("dap_an_du_kien") or [] if a})
+
+
+def run_fast(lid, records, sibs, args, log):
+    group = records[0]["group"]
+    near = any(r.get("near_identical") for r in records)
+    message, context, versions = g.user_prompt(records, sibs)
+    need = 3 if group == "T3" else 2 if len(versions) > 1 else 1
+    row = {"lineage_id": lid, "group": group, "question": None, "rejected_reason": None, "raw": None,
+           "provider": args.provider, "model": args.model, "seed": args.seed, "pipeline": "qg_v7_fast",
+           "generated_at": datetime.now(timezone.utc).date().isoformat()}
+    system = g.system_prompt(group, near) + FAST_FORMAT
+    row["system_sha"] = sha(system)
+    tried, prompt, analysis = [], message, None
+    try:
+        for rnd in range(1, ROUNDS + 1):
+            try:
+                out = parse_json(call(system, prompt, args, log, f"fast_r{rnd}", lid, 2048).text)
+            except (ValueError, json.JSONDecodeError):
+                out = {}
+            analysis = analysis or out.get("phan_tich")
+            if (rnd == 1 and len(versions) > 1 and group != "T6" and analysis
+                    and analysis.get("thay_doi_thuc_chat") is False):
+                return {**row, "rejected_reason": f"no_substantive_change:{analysis.get('ma_neu_khong')}",
+                        "analysis": analysis}
+            this = []
+            for c in (out.get("ung_vien") or [])[:3]:
+                q = (c.get("cau_hoi") or "").strip()
+                reason = g.validate(q, context, versions) or (
+                    "versions_agree" if group not in ("T1", "T6") and distinct_answers(c) < need else None)
+                if reason:
+                    this.append({"round": rnd, "cau_hoi": q, "fail": [reason]})
+                    continue
+                if group in args.verify_groups:
+                    ok, reasons, judge = verify(q, records, sibs, args, log, lid)
+                    this.append({"round": rnd, "cau_hoi": q, "fail": reasons, "judge": judge})
+                    if not ok:
+                        continue
+                else:
+                    this.append({"round": rnd, "cau_hoi": q, "fail": []})
+                return {**row, "question": q, "analysis": analysis, "candidates": tried + this, "rounds": rnd}
+            tried += this
+            prompt = message + (feedback(this) if this else "\n\n(Lượt trước không in được JSON hợp lệ. Chỉ in JSON.)")
+        return {**row, "rejected_reason": "qg_failed:" + ";".join(",".join(t["fail"]) for t in tried),
+                "raw": tried[0]["cau_hoi"] if tried else None, "analysis": analysis, "candidates": tried}
+    except (LLMError, ValueError, json.JSONDecodeError) as e:
+        return {**row, "rejected_reason": f"error:{type(e).__name__}", "raw": str(e)[:300], "candidates": tried}
+
+
 def load(sample_path):
     sample = [json.loads(x) for x in open(sample_path, encoding="utf-8")]
     want = {s["lineage_id"] for s in sample}
@@ -299,8 +366,11 @@ def main():
     ap.add_argument("--model")
     ap.add_argument("--seed", type=int, default=20261124)
     ap.add_argument("--workers", type=int, default=6)
+    ap.add_argument("--fast", action="store_true", help="one call per round; round-trip only for --verify-groups")
+    ap.add_argument("--verify-groups", default="T3,T5")
     ap.add_argument("--calibrate", type=Path, help="graded pilot sheet: run step 4 on its questions only")
     args = ap.parse_args()
+    args.verify_groups = set(args.verify_groups.split(",")) if args.verify_groups else set()
     order, recs, sibs = load(args.sample)
     with open(args.out.with_suffix(".calls.jsonl"), "a", encoding="utf-8") as log:
         if args.calibrate:
@@ -310,7 +380,7 @@ def main():
         print(f"{len(order)} lineage · {len(done)} đã có · {len(todo)} sẽ chạy")
         stats = collections.Counter()
         with open(args.out, "a", encoding="utf-8") as out, cf.ThreadPoolExecutor(args.workers) as ex:
-            futs = {ex.submit(run_lineage, lid, recs[lid], sibs.get(recs[lid][0]["target"]["provision_id"], []),
+            futs = {ex.submit(run_fast if args.fast else run_lineage, lid, recs[lid], sibs.get(recs[lid][0]["target"]["provision_id"], []),
                               args, log): lid for lid in todo}
             for n, f in enumerate(cf.as_completed(futs), 1):
                 row = f.result()

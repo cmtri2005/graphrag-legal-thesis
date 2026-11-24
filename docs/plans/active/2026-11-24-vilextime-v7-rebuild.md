@@ -65,7 +65,9 @@ Out of scope: đổi định nghĩa, thêm nhóm hay mã loại; sửa toàn kho
 - [x] Rà pipeline viết câu hỏi, sửa 4 lỗi (ab8e8bf): mục anh em, luật mọi phiên bản, T4.md, ghi ra file riêng
   `data/vilextime_v7/questions.jsonl` (viết lại toàn bộ mẫu bằng một model, một prompt).
 - [x] Chạy thử 30 lineage cũ bị loại bằng Qwen3.8-27B (Chutes, seed 20261124): 28/30 qua bộ lọc máy.
-- [ ] CMT chấm mù `pilot/pilot_cham.xlsx` (không mở `pilot_cham_key.tsv`).
+- [x] CMT chấm vòng 1 (`pilot/pilot_cham_filled.xlsx`): Qwen + prompt v1 8/28, Opus 10/17.
+- [x] Pipeline `qg_v7.py` (thiết kế `docs/reports/thiet-ke-sinh-cau-hoi-v7.md`); kiểm chứng hiệu chuẩn 46/58;
+  chế độ `--fast` 22/30 trên tập khó, ~0,004 USD/lineage (CMT: 12–15 USD cho bản đầy đủ là nhiều).
 - [ ] Sinh câu hỏi cho 1.782 lineage của mẫu.
 - [ ] Kiểm kho trên mẫu.
 - [ ] Phiếu gán, gán (A, B).

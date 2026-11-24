@@ -84,3 +84,33 @@ xếp hạng ba ứng viên.
 - Lineage bị bỏ ở bước 1 hay 4 làm bộ dữ liệu nghiêng về các thay đổi dễ hỏi. Phễu được báo theo nhóm.
 - Nguồn tài liệu: phần lớn đọc qua bản HTML trên arXiv, một số mục chỉ có bản tóm tắt (ghi trong phiên làm việc).
   Cần đọc lại bản gốc trước khi trích trong khóa luận.
+
+## 6. Bài học từ chạy thử (24/11) và cấu hình chạy thật
+
+Chạy thử trên 30 lineage đã bị loại ở 6.0.0, tức một tập khó. CMT chấm vòng 1 (58 câu).
+
+| Cấu hình | Lineage có câu được giữ | Chi phí mỗi lineage |
+|---|---:|---:|
+| Prompt cũ + Opus / DeepSeek (vòng 1, người chấm "đạt cả 3") | Opus 10/17, DeepSeek 5/13 | — |
+| Qwen + prompt v1 (vòng 1, người chấm) | 8/28 | ~0,001 USD |
+| Pipeline đầy đủ (phân tích, 3 ứng viên, kiểm chứng khứ hồi, 2 vòng) | 14/30 qua máy | ~0,008 USD |
+| **Chế độ `--fast`** (một lượt: phân tích + 3 ứng viên; kiểm chứng khứ hồi chỉ cho T3, T5) | **22/30** qua máy | **~0,004 USD** |
+
+Bài học:
+1. **Model phải thấy mục anh em.** Đây là nguồn chính của lỗi "câu hỏi mơ hồ".
+2. **Phần đã đổi là thứ được hỏi, không được kể ra.** Chi tiết dựng tình huống chỉ lấy từ phần giống nhau giữa các
+   phiên bản. Viết luật "hỏi khía cạnh chung" làm model hỏi phần không đổi: câu chữ của luật quan trọng ngang nội dung.
+3. **Độ dài không phải tiêu chí.** Chỉ giữ luật nội dung: một ý hỏi, không chép danh sách.
+4. **Bắt model ghi đáp án dự kiến ở từng phiên bản** trước khi chọn câu. Đây là cách rẻ nhất để bắt lỗi hỏi chệch.
+5. **Lọc ứng viên chỉ đổi hình thức ngay từ đầu** (`no_substantive_change`). Chạy thử loại 2–3/30, khớp nhận xét của
+   người chấm.
+6. **Kiểm chứng khứ hồi phải được hiệu chuẩn.** Bản đầu khớp người 42/58 câu và bỏ nhầm 13/23 câu tốt. Sau khi sửa
+   (T6 tính "hết hiệu lực" là một đáp án; mục anh em trả lời được một phần cũng tính; giám khảo được thấy chỗ đổi),
+   khớp 46/58, κ ≈ 0,57. Kiểm lộ đáp án vẫn yếu (1/8), phần đó để người gán. Đã chỉnh 2 lần trên cùng 58 câu, nên
+   con số có thể lạc quan.
+7. **Vòng sửa theo phản hồi** cần cấm trả danh sách rỗng, nếu không model bỏ cuộc.
+8. **Lời văn có dẫn chiếu** ("quy định tại khoản 5") làm model chép số khoản: phải dặn gọi chủ đề thay cho số.
+9. **Ví dụ thật đã được người chấm đạt** (3 ví dụ từ lineage ngoài mẫu) đưa vào `base.md`.
+
+Cấu hình chạy thật cho mẫu 7.0: `qg_v7.py --fast --verify-groups T3,T5`, Qwen3.8-27B (Chutes), seed 20261124,
+ghi `data/vilextime_v7/questions.jsonl` và nhật ký mọi lượt gọi ở `questions.calls.jsonl`.

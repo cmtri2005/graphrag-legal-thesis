@@ -140,6 +140,31 @@ Chép danh sách là cách dễ nhất để bê nội dung của một phiên b
 2. Câu hỏi có cụm từ nào chỉ một phiên bản có không? Nếu có, bỏ nó.
 3. Mục anh em nào cũng trả lời được câu hỏi không? Nếu có, thêm một chi tiết ngắn của điều khoản được giao.
 
+## Ví dụ đã được người chấm đạt (hỏi trúng chỗ đổi, trả lời duy nhất, không lộ)
+
+> CÂU DẪN : Điều 18. Trách nhiệm của Cục Bảo vệ thực vật
+> BẢN 1   : 1. Chỉ đạo, hướng dẫn, kiểm tra các cơ quan kiểm dịch thực vật thực hiện các quy định tại Thông tư này.
+> BẢN 2   : 1. Chỉ đạo, hướng dẫn, kiểm tra cơ quan kiểm dịch thực vật, tổ chức giám định sinh vật gây hại thực hiện…
+> ✓ Theo quy định về kiểm dịch thực vật, Cục Bảo vệ thực vật có trách nhiệm chỉ đạo, kiểm tra những đơn vị nào?
+>   (hỏi danh sách đơn vị — chỗ đổi; không nêu "tổ chức giám định", cụm chỉ bản 2 có)
+
+> CÂU DẪN : Điều 18. Vi phạm quy định về kiểm soát hóa chất hạn chế sản xuất, kinh doanh trong lĩnh vực công nghiệp
+> BẢN 1   : 2. Phạt tiền từ 10.000.000 đồng đến 15.000.000 đồng đối với hành vi bán hóa chất … cho tổ chức, cá nhân
+>           mua hóa chất để sử dụng nhưng không đảm bảo các quy định về sử dụng hóa chất nguy hiểm.
+> BẢN 2   : 2. Phạt tiền từ 10.000.000 đồng đến 15.000.000 đồng đối với hành vi bán hóa chất … cho tổ chức, cá nhân
+>           mua hóa chất để kinh doanh nhưng không đảm bảo đủ điều kiện kinh doanh hóa chất …
+> ✓ Trong lĩnh vực hóa chất công nghiệp, bên bán hóa chất hạn chế sản xuất, kinh doanh bị phạt tiền khi bán cho
+>   người mua thuộc trường hợp nào?
+>   (mức phạt không đổi nên không hỏi mức phạt; hỏi trường hợp người mua — chỗ đổi; không nêu "để kinh doanh")
+
+> CÂU DẪN : Điều 17. Tổ chức quản lý cảng cá
+> BẢN 1   : 8. … báo cáo Sở Nông nghiệp và Phát triển nông thôn về kết quả xác nhận nguyên liệu thủy sản khai thác …
+> BẢN 2   : 8. … báo cáo Sở Nông nghiệp và Phát triển nông thôn, Tổng cục Thủy sản về kết quả xác nhận nguyên liệu …
+> BẢN 3   : 8. … báo cáo Sở Nông nghiệp và Phát triển nông thôn để tổng hợp kết quả hoạt động của cảng cá …
+> ✓ Trong lĩnh vực quản lý cảng cá, tổ chức quản lý cảng cá phải báo cáo định kỳ hằng tháng cho cơ quan nào và về
+>   nội dung gì?
+>   (nơi nhận và nội dung báo cáo đổi qua ba bản, nên ba mốc cho ba đáp án)
+
 ## Khi không viết được
 
 Có những điều khoản không thể ghim được nếu không chép lại chính nó — thường là
