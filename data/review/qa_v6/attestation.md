@@ -8,5 +8,5 @@ Nếu đã thấy đáp án của lineage nào, tôi ghi lineage đó vào cột
 
 | Vai | Ngày giờ | Xác nhận (gõ "xác nhận") | Ngoại lệ (lineage / câu hỏi đã thấy đáp án) |
 |---|---|---|---|
-| A | | | |
-| B | | | |
+| A (Nguyễn Minh Trí) | | | |
+| B (người chưa xem dữ liệu, chưa chọn) | | | |

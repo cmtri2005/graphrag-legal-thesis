@@ -4,7 +4,9 @@ Writes, in this directory:
   pilot_key.tsv, pilot_{A,B}.xlsx   10 câu chạy thử (lineage bị loại), cả lượt 1 và lượt 2
   pass1_key.tsv                     khoa -> nguồn câu (bộ / mốc), lineage, ai đã đọc lineage đó. KHÔNG đưa người chấm
   pass1_{A,B}.xlsx                  229 câu xáo trộn, chỉ có câu hỏi
-Refuses to overwrite a workbook that already has scores. Run: python3 data/review/qa_v6/w2/build.py
+  pass2_key.tsv, pass2_{A,B}.xlsx   199 câu của bộ, kèm lời văn mọi trạng thái đáp án (S14). Phiếu có đáp án kho:
+                                    chỉ dựng bằng `build.py pass2` SAU khi A và B đã khóa mọi lô W1.
+Refuses to overwrite a workbook that already has scores. Run: python3 data/review/qa_v6/w2/build.py [pass2]
 """
 import csv
 import json
@@ -21,8 +23,10 @@ import moc_src  # noqa: E402
 
 P1 = ["khoa", "cau_hoi", "ro_nghia", "tu_nhien", "da_gap", "ghi_chu"]
 P2 = ["khoa", "cau_hoi", "ngay", "loi_van_dieu_khoan", "tra_loi_duy_nhat", "lo_dap_an", "ghi_chu"]
+P2F = ["khoa", "cau_hoi", "loi_van_dieu_khoan", "tra_loi_duy_nhat", "lo_dap_an", "hoi_vao_cho_doi", "ghi_chu"]
 CHOICES = {"ro_nghia": "1,2,3,4,5", "tu_nhien": "1,2,3,4,5", "da_gap": "có,không",
-           "tra_loi_duy_nhat": "có,không,không chắc", "lo_dap_an": "có,không"}
+           "tra_loi_duy_nhat": "có,không,không chắc", "lo_dap_an": "có,không",
+           "hoi_vao_cho_doi": "có,không,không chắc,không áp dụng"}
 FILL = {c for c in CHOICES} | {"ghi_chu"}
 GUIDE1 = [
     "W2 lượt 1 — chấm câu hỏi, chỉ đọc câu hỏi",
@@ -45,6 +49,22 @@ GUIDE2 = [
     "tra_loi_duy_nhat: có = chỉ đọc lời văn này là trả lời được câu hỏi, và chỉ có một cách trả lời đúng;",
     "   không = lời văn không trả lời được, hoặc trả lời được nhiều cách;  không chắc = không quyết được (ghi lý do).",
     "lo_dap_an: có = câu hỏi đã chứa sẵn đáp án (chép gần nguyên lời văn phần trả lời); không = không lộ.",
+]
+GUIDE2F = [
+    "Lượt 2 — câu hỏi kèm lời văn MỌI bản của điều khoản (chỉ mở SAU khi đã khóa lượt 1 và mọi lô W1)",
+    "Mỗi dòng có một câu hỏi và lời văn từng bản của điều khoản theo thứ tự thời gian, kèm khoảng ngày hiệu lực.",
+    "Dòng 'không còn hiệu lực' nghĩa là từ ngày đó điều khoản không còn áp dụng.",
+    "Chấm theo hướng dẫn gán nhãn (docs/vilextime-annotation.md, Q2–Q3). Không trao đổi với người chấm kia trước khi cả hai nộp.",
+    "",
+    "tra_loi_duy_nhat (Q3): có = ở MỖI bản, chỉ đọc lời văn bản đó là trả lời được câu hỏi, và chỉ một cách;",
+    "   không = có bản không trả lời được, hoặc trả lời được nhiều cách;  không chắc = không quyết được (ghi lý do).",
+    "   Câu hỏi để lộ số hiệu văn bản, Điều, Khoản, ngày, hoặc nêu sẵn cụm của bản cũ mà bản mới đã đổi → không.",
+    "lo_dap_an (Q3): có = câu hỏi đã chứa sẵn đáp án của một bản (chép gần nguyên lời văn phần trả lời); không = không lộ.",
+    "hoi_vao_cho_doi (Q2): câu hỏi có hỏi vào đúng phần thay đổi giữa các bản không?",
+    "   có = câu trả lời đúng cho câu hỏi khác nhau giữa các bản (với ba bản trở lên: ít nhất ba câu trả lời khác nhau);",
+    "   không = các bản trả lời câu hỏi như nhau, hoặc phần đổi chỉ là hình thức, tên cơ quan do sắp xếp bộ máy, dẫn chiếu tự áp;",
+    "   với điều khoản bị bãi bỏ: không = câu hỏi chỉ hỏi 'còn áp dụng không' mà không hỏi nội dung;",
+    "   không áp dụng = chỉ có một bản (điều khoản không đổi; Q2 của loại này kiểm ở W3);  không chắc = ghi lý do.",
 ]
 
 
@@ -157,6 +177,32 @@ def pass1():
         workbook(HERE / f"pass1_{who}.xlsx", [(GUIDE1, "Lượt 1", P1, sheet_rows)])
 
 
+def pass2():
+    rows = [json.loads(x) for x in open(REL / "vilextime.jsonl", encoding="utf-8")]
+    states = {}
+    for r in sorted(rows, key=lambda r: r["as_of"]):
+        lin = states.setdefault(r["lineage_id"], {"cau_hoi": r["question"], "group": r["group"], "v": {}})
+        lin["v"].setdefault(r["version_id"], (r["as_of"], r["answerable"], r["context"]))
+    assert len(states) == 199 and sum(len(s["v"]) for s in states.values()) == 362
+    ids = sorted(states)
+    random.Random("20261124:w2:pass2").shuffle(ids)
+    keys = [f"P{i:03d}" for i in range(1, len(ids) + 1)]
+    out = []
+    for k, lid in zip(keys, ids):
+        parts = []
+        for n, (day, ok, text) in enumerate(states[lid]["v"].values(), 1):
+            parts.append(f"[Bản {n}, có ở ngày hỏi {day}]\n{text}" if ok else f"[Từ ngày {day}: không còn hiệu lực]")
+        out.append({"khoa": k, "cau_hoi": states[lid]["cau_hoi"], "loi_van_dieu_khoan": "\n\n".join(parts)})
+    write_tsv(HERE / "pass2_key.tsv", ["khoa", "lineage_id", "group", "n_states"],
+              [{"khoa": k, "lineage_id": i, "group": states[i]["group"], "n_states": len(states[i]["v"])}
+               for k, i in zip(keys, ids)])
+    for who in "AB":
+        workbook(HERE / f"pass2_{who}.xlsx", [(GUIDE2F, "Lượt 2", P2F, out)])
+
+
 if __name__ == "__main__":
-    pilot()
-    pass1()
+    if sys.argv[1:] == ["pass2"]:
+        pass2()
+    else:
+        pilot()
+        pass1()

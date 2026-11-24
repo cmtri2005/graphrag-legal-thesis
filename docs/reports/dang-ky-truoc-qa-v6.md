@@ -243,3 +243,24 @@ bộ, 97 lineage của S11 được lập danh sách lại bằng agent `vn-law-
 - Ứng viên = hợp của hai danh sách, so máy bằng `compare.py` như cũ. Phiếu chỉ thêm dòng mới, giữ 100 dòng đã dựng.
 - Báo thêm: số văn bản tác động chỉ một bên liệt kê, theo từng bên.
 - Nếu một lô agent không trả về, chạy lại lô đó một lần; vẫn không được thì ghi là thiếu, không bù bằng tay.
+
+**S14. Nhãn Q1–Q4 chính thức chuyển từ AI sang hai người gán (CMT quyết 24/11, trước khi giao phiếu W1, W2 nào).**
+Trước đây `review.verdict` của cả 722 dòng là nhãn AI (Claude + Codex) có tác giả duyệt. Từ 6.1.0, nhãn chính thức do
+hai người gán độc lập A, B. Nhãn AI cũ giữ lại làm bước lọc trước, ghi ở trường riêng, không tính vào nhãn chính thức.
+- **Người:** A = Nguyễn Minh Trí (đồng tác giả). B = một người chưa từng xem dữ liệu, chọn trước lô W1 đầu. CMT không
+  gán vì đã thấy đáp án kho và nhãn AI của mọi dòng (§0); CMT chỉ phân xử ca máy móc, luật sư chốt ca pháp lý (§1.5).
+- **Nguồn của từng câu**, không thêm đợt đọc:
+  - Q1: W1 (đọc mù 362 trạng thái), chấm bằng máy như §1. Dòng thuộc một trạng thái nhận nhãn của trạng thái đó.
+  - Q2: cột mới `hoi_vao_cho_doi` ở W2 lượt 2. Lineage control (một bản) ghi "không áp dụng"; Q2 của control là
+    "câu hỏi không phụ thuộc thời gian", lấy từ W3 (không có văn bản tác động đã xác nhận).
+  - Q3: `tra_loi_duy_nhat` và `lo_dap_an` ở W2 lượt 2.
+  - Q4: W3, người xác nhận ứng viên. **Cả A và B** đọc toàn bộ `w3/xac_nhan.xlsx` và mẫu âm, độc lập (thay "A hoặc
+    B" ở §3).
+- **W2 lượt 2 đổi so với §2:** kèm lời văn **mọi** trạng thái đáp án của lineage, không phải một ngày; vì phiếu chứa
+  đáp án kho, chỉ dựng (`build.py pass2`, seed `20261124:w2:pass2`) sau khi A và B đã khóa mọi lô W1.
+- **Nhãn suy ra:** `dat` khi Q1 khớp kho, Q2 có (hoặc không áp dụng và W3 sạch), Q3 có và không lộ, Q4 không có quy
+  định khác, đều tính sau phân xử. Chỗ lệch giữa A và B là xung đột theo §1.5.
+- **Chỉ số thêm:** đồng thuận A–B **trước phân xử** trên từng câu Q1–Q4 và trên nhãn suy ra: tỷ lệ khớp thô, Gwet
+  AC1, Cohen κ (ghi "không xác định" khi một bên chỉ có một hạng). Báo kèm tỷ lệ người sau phân xử khác nhãn AI cũ.
+- **Hệ quả cho luật quyết định ở §2:** câu có nhãn chính thức `khong_dat` vì Q2 hoặc Q3 được gắn cờ, giữ trong bản phát
+  hành với `recommended_eval: false`, không xóa.
