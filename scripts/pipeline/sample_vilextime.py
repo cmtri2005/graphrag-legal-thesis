@@ -166,10 +166,15 @@ def main() -> None:
     # call (report decision 2), so the default is what the release already has.
     parser.add_argument("--ancestor-rows", type=int, default=T6_ANCESTOR_ROWS,
                         help=f"T6 'ancestor' rows in the release (default {T6_ANCESTOR_ROWS})")
+    # ViLexTime 7.0 (docs/reports/dang-ky-truoc-v7.md §1): a fresh ranking with its own seed, no prior, and a
+    # frame that leaves out every lineage a reviewer has already seen.
+    parser.add_argument("--ranking", type=Path, help="ranking file (default <data>/vilextime/sample.jsonl)")
+    parser.add_argument("--seed", type=int, default=SEED)
+    parser.add_argument("--exclude", type=Path, help="file of lineage ids left out of the frame")
     args = parser.parse_args()
 
     base = args.data / "derived/vilextime"
-    ranking = args.data / "vilextime/sample.jsonl"
+    ranking = args.ranking or args.data / "vilextime/sample.jsonl"
     dropfile = args.data / "vilextime/dropped.jsonl"
     dropped = ({json.loads(line)["lineage_id"] for line in dropfile.open(encoding="utf-8")}
                if dropfile.exists() else set())
@@ -217,10 +222,12 @@ def main() -> None:
     by_group = {group: [json.loads(line) for line in (base / f"{group}.jsonl").open(encoding="utf-8")]
                 for group in QUOTA}
     skip = dropped | blocked([r for rows in by_group.values() for r in rows], args.data)
+    if args.exclude:
+        skip |= set(args.exclude.read_text(encoding="utf-8").split())
     for group, quota in QUOTA.items():
         records = by_group[group]
         for part, part_records, need in parts(group, records, quota * OVERSAMPLE[group], args.ancestor_rows):
-            picked = sample(part_records, need, prior=prior[(group, part)], skip=skip)
+            picked = sample(part_records, need, seed=args.seed, prior=prior[(group, part)], skip=skip)
             rows = sum(p["rows"] for p in picked)
             short = "  << THIẾU" if rows < need else ""
             print(f"{group}{'/' + part if part else ''}: {len(picked):>4} lineage · {rows:>4} dòng (cần {need})"
