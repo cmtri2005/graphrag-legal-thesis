@@ -83,6 +83,9 @@ Out of scope: đổi định nghĩa, thêm nhóm hay mã loại; sửa toàn kho
 - [x] GD2 lo00 khóa (`build.py lock GD2 …`): kết luận đạt/không khớp 11/11, đạt 4/11 lineage = 7/20 dòng
   (T6a 0/2, T6b 0/4, T3 0/3); Q1 lệch 2 (00-09, 00-11), mã lý do lệch 4. Lỗi kho do người gán chỉ ra: 00-05 phiên
   bản 3 gộp phần hiệu lực 01/07/2027; 00-11 vbpl 17/01/2026 vs VBHN 01/01/2027; 00-03, 00-08 relocated.
+- [x] Sau lô thử (24/11): CMT xác nhận hai sinh viên điền bằng Excel. Hướng dẫn GD1 thêm mục "Cách trích đáp án ngắn"
+  (cụm bắt buộc, giữ phần có thể thay đổi, bỏ ký hiệu đầu mục, nối " … ") và quy tắc phút (số nguyên, làm tròn
+  lên); GD2 thêm quy tắc phút. Dựng lại phiếu lo01–lo48 (key.tsv không đổi); lo00 đã khóa, giữ nguyên.
 - [ ] Gán (A, B).
 - [ ] Hòa giải (luật sư).
 - [ ] Dựng 7.0.

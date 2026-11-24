@@ -99,13 +99,25 @@ GUIDE_GD1 = [
                                  "hiệu lực."),
            ("Lời văn đang áp dụng", "Dán NGUYÊN VĂN lời văn của điều khoản đang áp dụng vào ngày đó (kể cả ký hiệu "
                                     "đầu mục như \"a)\", \"2.\"). Để trống nếu Hết."),
-           ("Đáp án ngắn", "Phần trong lời văn trả lời đúng câu hỏi, trích nguyên văn, ngắn nhất có thể. Để trống "
-                           "nếu Hết."),
+           ("Đáp án ngắn", "Cụm mà một câu trả lời đúng BẮT BUỘC phải chứa. Xem mục \"Cách trích đáp án ngắn\". "
+                           "Để trống nếu Hết."),
            ("Văn bản tạo ra lời văn này", "Số hiệu văn bản đã ban hành lời văn đang áp dụng: văn bản gốc, hoặc văn "
                                           "bản sửa đổi gần nhất. Nếu Hết: số hiệu văn bản bãi bỏ, thay thế."),
            ("Nguồn đã tra", "Đường dẫn hoặc tên nguồn đã dùng (vbpl, VBHN số…, Công báo, Lawgical)."),
-           ("Thời gian (phút)", "Số phút cho dòng này. Bắt buộc."),
+           ("Thời gian (phút)", "Số phút thật cho dòng này, tính cả lúc tra văn bản. Số nguyên, làm tròn lên (dưới "
+                                "1 phút ghi 1). Bắt buộc."),
            ("Ghi chú", "Khi phân vân, khi nguồn mâu thuẫn, hoặc khi câu hỏi có vấn đề.")]),
+    ("h2", "Cách trích đáp án ngắn"),
+    ("b", "Chép nguyên văn từ lời văn, không sửa chữ, không viết lại."),
+    ("b", "Ngắn nhất nhưng đủ ý: giữ đủ con số, mức, thời hạn, chủ thể, điều kiện, phạm vi mà câu hỏi hỏi tới. "
+          "Đây thường là phần thay đổi giữa các phiên bản, bỏ đi thì không chấm được."),
+    ("b", "Bỏ ký hiệu đầu mục (\"a)\", \"2.\"), bỏ câu dẫn, bỏ phần lặp lại ý của câu hỏi."),
+    ("b", "Câu hỏi hỏi một danh sách thì trích đủ cả danh sách."),
+    ("b", "Cần hai đoạn không liền nhau thì nối bằng \" … \" (dấu ba chấm, cách hai bên)."),
+    ("t", [("Ví dụ", "Đáp án ngắn"),
+           ("Quê quán ghi thế nào? Lời văn: \"a) Quê quán: Ghi cấp xã, cấp tỉnh;\"", "cấp xã, cấp tỉnh"),
+           ("Căn cứ quản lý là gì? Lời văn: \"2. Phạm vi quy hoạch trong nội dung của quy hoạch chung đô thị được "
+            "phê duyệt là căn cứ…\"", "Phạm vi quy hoạch")]),
     ("h2", "Quy tắc"),
     ("b", "Chỉ điền các cột nền xanh nhạt. Các cột khác bị khóa."),
     ("b", "Không trao đổi với người gán kia, không mở file nào khác của dự án, cho tới khi cả hai đã nộp lô."),
@@ -126,7 +138,8 @@ GUIDE_GD2 = [
            ("Lộ đáp án?", "Có: câu hỏi chứa sẵn đáp án, hoặc nêu cụm từ chỉ một phiên bản có, hoặc nêu số hiệu, "
                           "Điều, Khoản, ngày."),
            ("Mã lý do", "Bắt buộc khi có một câu Không hoặc Lộ = Có. Chọn từ danh sách (bảng bên dưới)."),
-           ("Thời gian (phút)", "Số phút cho dòng này. Bắt buộc.")]),
+           ("Thời gian (phút)", "Số phút thật cho dòng này. Số nguyên, làm tròn lên (dưới 1 phút ghi 1). "
+                                "Bắt buộc.")]),
     ("codes", None),
 ]
 
@@ -405,6 +418,10 @@ def build_gd1():
             row["khoa"] = f"{b:02d}-{i:02d}"
         d = HERE / name
         d.mkdir(exist_ok=True)
+        plan.append({"lo": name, "rows": len(rows), "lineages": len(items),
+                     "parts": dict(collections.Counter(p for p, _, _ in items))})
+        if (d / "GD1.locked").exists():   # already returned: keep forms and key as they were
+            continue
         with open(d / "key.tsv", "w", encoding="utf-8", newline="") as f:
             w = csv.DictWriter(f, ["khoa", "id", "lineage_id", "part"], delimiter="\t", lineterminator="\n",
                                extrasaction="ignore")
@@ -414,8 +431,6 @@ def build_gd1():
             label = "Lô thử" if b == 0 else f"Lô {b:02d}"
             write(d / f"GD1_{who}.xlsx", "ViLexTime 7.0 — Hướng dẫn gán nhãn, Giai đoạn 1", GUIDE_GD1, GD1, rows,
                   f"ViLexTime 7.0  ·  Giai đoạn 1  ·  {label}  ·  Người gán {who}")
-        plan.append({"lo": name, "rows": len(rows), "lineages": len(items),
-                     "parts": dict(collections.Counter(p for p, _, _ in items))})
     (HERE / "plan.json").write_text(json.dumps({"built": date.today().isoformat(), "quota_rows": QUOTA,
                                                 "batches": plan}, ensure_ascii=False, indent=1) + "\n", "utf-8")
     print(f"{len(plan)} lô, {sum(p['rows'] for p in plan)} dòng -> {HERE.relative_to(ROOT)}/lo*/")
