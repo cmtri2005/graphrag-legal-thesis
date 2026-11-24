@@ -7,6 +7,7 @@ Thứ tự gán: lineage có câu hỏi qua máy (questions.jsonl), xếp xen k�
   python3 data/vilextime_v7/phieu/build.py gd1            # dựng Giai đoạn 1 cho mọi lô (chưa có lời văn kho)
   python3 data/vilextime_v7/phieu/build.py lock GD1 lo01 A.xlsx B.xlsx   # nhận phiếu đã gán (GD1 hoặc GD2), xuất .tsv, khóa
   python3 data/vilextime_v7/phieu/build.py gd2 lo01       # dựng Giai đoạn 2 của một lô; cần lo01/GD1.locked
+  python3 data/vilextime_v7/phieu/build.py hoa_giai lo01  # phiếu luật sư: đáp án ngắn dòng giữ, mã lý do lệch
 
 Mỗi lô: lo<NN>/GD1_A.xlsx, GD1_B.xlsx (giống nhau), lo<NN>/key.tsv (khoa -> id dòng, lineage; KHÔNG giao người gán).
 Không ghi đè phiếu đã có chữ người gán.
@@ -292,13 +293,13 @@ def guide_sheet(wb, title, guide):
     return ws
 
 
-def form_sheet(wb, cols, rows, banner):
+def form_sheet(wb, cols, rows, banner, title="Phiếu"):
     from openpyxl.formatting.rule import FormulaRule
     from openpyxl.styles import Protection
     from openpyxl.utils import get_column_letter
     from openpyxl.worksheet.datavalidation import DataValidation
     S = styles()
-    ws = wb.create_sheet("Phiếu")
+    ws = wb.create_sheet(title)
     ws.sheet_view.showGridLines = False
     ws.sheet_view.zoomScale = 110
     last = get_column_letter(len(cols))
@@ -376,6 +377,42 @@ def form_sheet(wb, cols, rows, banner):
         setattr(ws.protection, k, False)
     wb.active = 1
     return ws
+
+
+HG_SA = [
+    ("Mã", "khoa", 8, False, None),
+    ("Câu hỏi", "cau_hoi", 36, False, None),
+    ("Ngày", "ngay", 11, False, None),
+    ("Lời văn đang áp dụng (A, B và kho khớp nhau)", "noi_dung", 44, False, None),
+    ("Đáp án ngắn A", "sa_a", 26, False, None),
+    ("Đáp án ngắn B", "sa_b", 26, False, None),
+    ("Đề xuất theo quy tắc", "de_xuat", 26, False, None),
+    ("Cần lưu ý", "luu_y", 28, False, None),
+    ("Chọn", "chon", 10, True, "A,B,Đề xuất,Sửa"),
+    ("Đáp án ngắn cuối (nếu Sửa)", "sa_cuoi", 30, True, None),
+    ("Ghi chú", "ghi_chu", 24, True, None),
+]
+HG_CODE = [
+    ("Mã GD2", "khoa", 8, False, None),
+    ("Câu hỏi", "cau_hoi", 40, False, None),
+    ("A: mã lý do và ghi chú", "a", 46, False, None),
+    ("B: mã lý do và ghi chú", "b", 46, False, None),
+    ("Mã lý do cuối", "ma_cuoi", 22, True, "codes"),
+    ("Ghi chú", "ghi_chu", 24, True, None),
+]
+GUIDE_HG = [
+    ("h", "Hòa giải lô — luật sư"),
+    ("p", "Hai người gán đã nộp và khóa cả hai giai đoạn của lô. Chỉ còn các chỗ dưới đây cần một quyết định."),
+    ("h2", "Trang \"Đáp án ngắn\""),
+    ("p", "Các dòng sẽ vào bộ test. Hiệu lực và lời văn đã khớp; chỉ chốt đáp án ngắn: cụm mà một câu trả lời đúng "
+          "BẮT BUỘC phải chứa, trích nguyên văn, ngắn nhất nhưng đủ ý (giữ số, mức, thời hạn, chủ thể, điều kiện, "
+          "phạm vi), bỏ ký hiệu đầu mục và câu dẫn, hai đoạn rời nối bằng \" … \". Cột \"Đề xuất\" do máy chọn "
+          "theo quy tắc (bỏ chữ đầu mục; khi một bản nằm trọn trong bản kia thì lấy bản ngắn), chỉ để tham khảo."),
+    ("h2", "Trang \"Mã lý do\""),
+    ("p", "Câu hỏi cả hai người đều loại nhưng chọn mã lý do khác nhau. Chọn một mã; không ảnh hưởng bộ test, chỉ "
+          "ghi vào danh sách dòng bị loại."),
+    ("codes", None),
+]
 
 
 def has_answers(path, cols):
@@ -551,6 +588,67 @@ def lock(stage, name, path_a, path_b):
         print("  ", x)
 
 
+def build_hoa_giai(name):
+    """Lawyer form for a lot whose GD1 and GD2 are both locked: short answers of kept rows, drop codes in conflict."""
+    d = HERE / name
+    for st in ("GD1", "GD2"):
+        if not (d / f"{st}.locked").exists():
+            raise SystemExit(f"{name}: {st} chưa khóa")
+    key = list(csv.DictReader(open(d / "key.tsv", encoding="utf-8"), delimiter="\t"))
+    k2 = {r["lineage_id"]: r["khoa"] for r in csv.DictReader(open(d / "key_gd2.tsv", encoding="utf-8"), delimiter="\t")}
+    g1, g2 = collections.defaultdict(dict), collections.defaultdict(dict)
+    for st, g in (("GD1", g1), ("GD2", g2)):
+        for r in csv.DictReader(open(d / f"{st}.tsv", encoding="utf-8"), delimiter="\t"):
+            g[r["khoa"]][r["who"]] = r
+    q = {r["lineage_id"]: r["question"] for r in jl(V7 / "questions.jsonl")}
+    recs = records()
+    by_id = {r["id"]: r for v in recs.values() for r in v}
+    norm = lambda s: " ".join(s.lower().split())
+    mark = re.compile(r"^\s*(?:\d+(?:\.\d+)*\.|[a-zđ]\))\s+|^\s*Ghi\s+")
+    sa_rows, code_rows, problems = [], [], []
+    keep_of = {lid: all(passes(g2[k][w]) for w in READERS) for lid, k in k2.items()}
+    for k in key:
+        if not keep_of[k["lineage_id"]]:
+            continue
+        a, b = g1[k["khoa"]]["A"], g1[k["khoa"]]["B"]
+        if a["hieu_luc"] != b["hieu_luc"] or norm(a["noi_dung"]) != norm(b["noi_dung"]):
+            problems.append(f"{k['khoa']}: dòng giữ nhưng hiệu lực/lời văn lệch, cần xem tay")
+        sa = [mark.sub("", x["dap_an_ngan"]).strip() for x in (a, b)]
+        prop = sa[0] if norm(sa[0]) == norm(sa[1]) else (
+            min(sa, key=len) if norm(min(sa, key=len)) in norm(max(sa, key=len)) else "")
+        # contrast rows: the answer of this date must not sit inside another version's text (scorer checks "contains")
+        others = {r["answer"] for r in recs[k["lineage_id"]] if r["answer"] and norm(r["answer"]) != norm(a["noi_dung"])}
+        clash = prop and any(norm(prop) in norm(o) for o in others)
+        sa_rows.append({"khoa": k["khoa"], "cau_hoi": q[k["lineage_id"]], "ngay": vn_date(by_id[k["id"]]["as_of"]),
+                        "noi_dung": a["noi_dung"], "sa_a": a["dap_an_ngan"], "sa_b": b["dap_an_ngan"], "de_xuat": prop,
+                        "luu_y": "Đề xuất nằm trọn trong lời văn phiên bản khác: câu trả lời theo phiên bản sai vẫn "
+                                 "chứa cụm này. Cân nhắc Sửa." if clash else ""})
+    for lid, kk in k2.items():
+        a, b = g2[kk]["A"], g2[kk]["B"]
+        if not keep_of[lid] and not passes(a) and not passes(b) and a["ma_ly_do"] != b["ma_ly_do"]:
+            code_rows.append({"khoa": kk, "cau_hoi": q[lid], "a": f"{a['ma_ly_do']} — {a['ghi_chu']}",
+                              "b": f"{b['ma_ly_do']} — {b['ghi_chu']}"})
+        elif not keep_of[lid] and passes(a) != passes(b):
+            problems.append(f"GD2 {kk}: một người đạt, một người không — cần thêm trang kết luận")
+    sa_rows.sort(key=lambda r: r["khoa"])
+    code_rows.sort(key=lambda r: r["khoa"])
+    from openpyxl import Workbook
+    path = d / "hoa_giai.xlsx"
+    if has_answers(path, HG_SA):
+        raise SystemExit(f"{path} đã có chữ; không ghi đè")
+    wb = Workbook()
+    guide_sheet(wb, "ViLexTime 7.0 — Hòa giải", GUIDE_HG)
+    label = "Lô thử" if name == "lo00" else f"Lô {name[2:]}"
+    form_sheet(wb, HG_SA, sa_rows, f"ViLexTime 7.0  ·  Hòa giải  ·  {label}  ·  Đáp án ngắn", "Phiếu")
+    if code_rows:
+        form_sheet(wb, HG_CODE, code_rows, f"ViLexTime 7.0  ·  Hòa giải  ·  {label}  ·  Mã lý do", "Mã lý do")
+    wb.active = 1
+    wb.save(path)
+    print(f"{name}: hòa giải {len(sa_rows)} đáp án ngắn, {len(code_rows)} mã lý do -> {path.relative_to(ROOT)}")
+    for x in problems:
+        print("  ", x)
+
+
 if __name__ == "__main__":
     if sys.argv[1:2] == ["gd1"]:
         build_gd1()
@@ -558,5 +656,7 @@ if __name__ == "__main__":
         build_gd2(sys.argv[2])
     elif sys.argv[1:2] == ["lock"] and len(sys.argv) == 6 and sys.argv[2] in COMPARE:
         lock(*sys.argv[2:])
+    elif sys.argv[1:2] == ["hoa_giai"] and len(sys.argv) == 3:
+        build_hoa_giai(sys.argv[2])
     else:
         raise SystemExit(__doc__)
