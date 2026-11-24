@@ -387,7 +387,6 @@ HG_SA = [
     ("Đáp án ngắn A", "sa_a", 26, False, None),
     ("Đáp án ngắn B", "sa_b", 26, False, None),
     ("Đề xuất theo quy tắc", "de_xuat", 26, False, None),
-    ("Cần lưu ý", "luu_y", 28, False, None),
     ("Chọn", "chon", 10, True, "A,B,Đề xuất,Sửa"),
     ("Đáp án ngắn cuối (nếu Sửa)", "sa_cuoi", 30, True, None),
     ("Ghi chú", "ghi_chu", 24, True, None),
@@ -616,13 +615,8 @@ def build_hoa_giai(name):
         sa = [mark.sub("", x["dap_an_ngan"]).strip() for x in (a, b)]
         prop = sa[0] if norm(sa[0]) == norm(sa[1]) else (
             min(sa, key=len) if norm(min(sa, key=len)) in norm(max(sa, key=len)) else "")
-        # contrast rows: the answer of this date must not sit inside another version's text (scorer checks "contains")
-        others = {r["answer"] for r in recs[k["lineage_id"]] if r["answer"] and norm(r["answer"]) != norm(a["noi_dung"])}
-        clash = prop and any(norm(prop) in norm(o) for o in others)
         sa_rows.append({"khoa": k["khoa"], "cau_hoi": q[k["lineage_id"]], "ngay": vn_date(by_id[k["id"]]["as_of"]),
-                        "noi_dung": a["noi_dung"], "sa_a": a["dap_an_ngan"], "sa_b": b["dap_an_ngan"], "de_xuat": prop,
-                        "luu_y": "Đề xuất nằm trọn trong lời văn phiên bản khác: câu trả lời theo phiên bản sai vẫn "
-                                 "chứa cụm này. Cân nhắc Sửa." if clash else ""})
+                        "noi_dung": a["noi_dung"], "sa_a": a["dap_an_ngan"], "sa_b": b["dap_an_ngan"], "de_xuat": prop})
     for lid, kk in k2.items():
         a, b = g2[kk]["A"], g2[kk]["B"]
         if not keep_of[lid] and not passes(a) and not passes(b) and a["ma_ly_do"] != b["ma_ly_do"]:

@@ -88,8 +88,9 @@ Out of scope: đổi định nghĩa, thêm nhóm hay mã loại; sửa toàn kho
   lên); GD2 thêm quy tắc phút. Dựng lại phiếu lo01–lo48 (key.tsv không đổi); lo00 đã khóa, giữ nguyên.
 - [x] Phiếu hòa giải lo00 (`build.py hoa_giai lo00` → `lo00/hoa_giai.xlsx`): 7 dòng giữ, A/B/kho khớp hiệu lực và
   lời văn, chỉ chốt đáp án ngắn; 4 mã lý do lệch (câu đã loại). Mọi lệch lời văn GD1 (00-13, 00-16, 00-20) thuộc câu
-  đã loại. Vấn đề mở: 00-12 (T4) đáp án ngắn nằm trọn trong lời văn phiên bản trước, chấm "chứa cụm" không phân
-  biệt được phiên bản. Chờ luật sư.
+  đã loại. Chờ luật sư. (00-12, T4: đáp án ngắn nằm trọn trong lời văn bản trước, nhưng scorer đã loại câu trả lời
+  chứa cụm riêng của phiên bản khác (`score_vilextime.distractors`), nên không cần amendment; cần giữ cả hai ngày
+  của lineage T2/T4 trong bộ test để cụm đối chứng tồn tại.)
 - [ ] Gán (A, B).
 - [ ] Hòa giải (luật sư).
 - [ ] Dựng 7.0.
