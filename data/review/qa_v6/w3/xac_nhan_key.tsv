@@ -113,3 +113,5 @@ X111	V141	provision:285f93c0-1d69-11f1-8520-271282d4caf0	43/2023/TT-BTC	weak_no:
 X112	V148	provision:b7dde3d0-1ecc-11f1-a3b1-d7ceb5cb0820	144/2020/NĐ-CP	weak_no:no_event
 X113	V148	provision:b7dde3d0-1ecc-11f1-a3b1-d7ceb5cb0820	66.18/2026/NQ-CP	weak_no:actor_not_in_store
 X114	V149	provision:b7ee85a0-1ecc-11f1-8bf4-878cc9351133	66.18/2026/NQ-CP	actor_not_in_store
+X115	V001	provision:9fdf6804-2d53-11f1-ad2a-cf0eedd8b394	12/2023/TT-NHNN	store_rejected:structure_mismatch
+X116	V116	provision:6655078c-eb73-11f0-861a-fb21d5a562cb	71/2026/TT-BTC	store_rejected:missing_resulting_text

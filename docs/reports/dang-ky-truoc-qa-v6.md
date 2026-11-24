@@ -264,3 +264,9 @@ hai người gán độc lập A, B. Nhãn AI cũ giữ lại làm bước lọc
   AC1, Cohen κ (ghi "không xác định" khi một bên chỉ có một hạng). Báo kèm tỷ lệ người sau phân xử khác nhãn AI cũ.
 - **Hệ quả cho luật quyết định ở §2:** câu có nhãn chính thức `khong_dat` vì Q2 hoặc Q3 được gắn cờ, giữ trong bản phát
   hành với `recommended_eval: false`, không xóa.
+
+**S15. Thêm ứng viên W3 do chính kho gợi ý (24/11, trước khi giao phiếu W3).** `compare.py` chỉ xét văn bản agent
+liệt kê. Kiểm tra kho 24/11 thấy kho có lệnh nhắm đúng lineage của bộ mà kho tự từ chối, agent lại không nêu.
+`w3/store_check.py` gắn ứng viên khi lệnh bị từ chối nhắm lineage hoặc điều khoản cấp trên, hiệu lực không muộn hơn
+dòng muộn nhất (S10), và kho không có ranh giới phiên bản đúng ngày đó (S7). Kết quả: 11 lệnh, 3 ứng viên, 1 đã có
+trong phiếu; thêm `X115`, `X116`, 114 dòng cũ giữ nguyên mã và nội dung. Báo riêng nhóm này khi tính recall của W3.
