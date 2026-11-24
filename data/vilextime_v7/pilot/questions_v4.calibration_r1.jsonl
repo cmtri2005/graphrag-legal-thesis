@@ -1,0 +1,58 @@
+{"khoa": "L01a", "human_ok": false, "machine_ok": false, "reasons": ["version_unanswerable"], "human": ["không", "không", "có"]}
+{"khoa": "L01b", "human_ok": true, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "có", "không"]}
+{"khoa": "L02a", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree"], "human": ["có", "không chắc", "không"]}
+{"khoa": "L02b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "sibling_answers"], "human": ["không", "không", "có"]}
+{"khoa": "L03a", "human_ok": false, "machine_ok": true, "reasons": [], "human": ["không", "có", "không"]}
+{"khoa": "L03b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree"], "human": ["không", "có", "không"]}
+{"khoa": "L04a", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree"], "human": ["có", "không", "không"]}
+{"khoa": "L04b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree"], "human": ["có", "không", "có"]}
+{"khoa": "L05a", "human_ok": true, "machine_ok": true, "reasons": [], "human": ["có", "có", "không"]}
+{"khoa": "L06a", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree"], "human": ["không", "không", "không"]}
+{"khoa": "L06b", "human_ok": false, "machine_ok": true, "reasons": [], "human": ["không", "không", "không"]}
+{"khoa": "L07a", "human_ok": true, "machine_ok": true, "reasons": [], "human": ["có", "có", "không"]}
+{"khoa": "L07b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["không", "không", "có"]}
+{"khoa": "L08a", "human_ok": true, "machine_ok": true, "reasons": [], "human": ["có", "có", "không"]}
+{"khoa": "L08b", "human_ok": true, "machine_ok": true, "reasons": [], "human": ["có", "có", "không"]}
+{"khoa": "L09a", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "không", "không"]}
+{"khoa": "L09b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "không", "không"]}
+{"khoa": "L10a", "human_ok": true, "machine_ok": false, "reasons": ["sibling_answers"], "human": ["có", "có", "không"]}
+{"khoa": "L10b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["không", "không", "có"]}
+{"khoa": "L11a", "human_ok": true, "machine_ok": true, "reasons": [], "human": ["có", "có", "không"]}
+{"khoa": "L11b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "không", "có"]}
+{"khoa": "L12a", "human_ok": true, "machine_ok": false, "reasons": ["versions_agree"], "human": ["có", "có", "không"]}
+{"khoa": "L12b", "human_ok": true, "machine_ok": true, "reasons": [], "human": ["có", "có", "không"]}
+{"khoa": "L13a", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "không chắc", "không"]}
+{"khoa": "L13b", "human_ok": true, "machine_ok": false, "reasons": ["versions_agree"], "human": ["có", "có", "không"]}
+{"khoa": "L14a", "human_ok": true, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "có", "không"]}
+{"khoa": "L14b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree"], "human": ["không", "có", "không"]}
+{"khoa": "L15a", "human_ok": true, "machine_ok": true, "reasons": [], "human": ["có", "có", "không"]}
+{"khoa": "L15b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree"], "human": ["không", "không chắc", "không"]}
+{"khoa": "L16a", "human_ok": true, "machine_ok": true, "reasons": [], "human": ["có", "có", "không"]}
+{"khoa": "L16b", "human_ok": true, "machine_ok": true, "reasons": [], "human": ["có", "có", "không"]}
+{"khoa": "L17a", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "không", "không"]}
+{"khoa": "L17b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "không", "không"]}
+{"khoa": "L18a", "human_ok": true, "machine_ok": false, "reasons": ["versions_agree"], "human": ["có", "có", "không"]}
+{"khoa": "L18b", "human_ok": true, "machine_ok": false, "reasons": ["versions_agree"], "human": ["có", "có", "không"]}
+{"khoa": "L19a", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "không", "không"]}
+{"khoa": "L19b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "có", "có"]}
+{"khoa": "L20a", "human_ok": false, "machine_ok": false, "reasons": ["version_unanswerable"], "human": ["có", "không chắc", "không"]}
+{"khoa": "L20b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["không chắc", "không", "không"]}
+{"khoa": "L21a", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "không", "không"]}
+{"khoa": "L22a", "human_ok": false, "machine_ok": true, "reasons": [], "human": ["có", "không chắc", "không"]}
+{"khoa": "L22b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "không chắc", "không"]}
+{"khoa": "L23a", "human_ok": true, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "có", "không"]}
+{"khoa": "L23b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "không", "có"]}
+{"khoa": "L24a", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["không chắc", "không", "không"]}
+{"khoa": "L24b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "không", "không"]}
+{"khoa": "L25a", "human_ok": true, "machine_ok": true, "reasons": [], "human": ["có", "có", "không"]}
+{"khoa": "L25b", "human_ok": true, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "có", "không"]}
+{"khoa": "L26a", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree"], "human": ["không", "có", "không"]}
+{"khoa": "L26b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree"], "human": ["không", "có", "không"]}
+{"khoa": "L27a", "human_ok": true, "machine_ok": false, "reasons": ["versions_agree"], "human": ["có", "có", "không"]}
+{"khoa": "L27b", "human_ok": true, "machine_ok": false, "reasons": ["versions_agree"], "human": ["có", "có", "không"]}
+{"khoa": "L28a", "human_ok": true, "machine_ok": false, "reasons": ["versions_agree"], "human": ["có", "có", "không"]}
+{"khoa": "L28b", "human_ok": true, "machine_ok": false, "reasons": ["versions_agree"], "human": ["có", "có", "không"]}
+{"khoa": "L29a", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["không", "có", "không"]}
+{"khoa": "L29b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree"], "human": ["không", "không", "không"]}
+{"khoa": "L30a", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree", "version_unanswerable"], "human": ["có", "không", "không"]}
+{"khoa": "L30b", "human_ok": false, "machine_ok": false, "reasons": ["versions_agree"], "human": ["không", "có", "không"]}

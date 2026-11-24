@@ -57,6 +57,8 @@ def main():
     rows, key = [], []
     for i, p in enumerate(pilot, 1):
         lid = p["lineage_id"]
+        if args.only_new and not (new.get(lid) or {}).get("question"):
+            continue   # round 2+: grade what the pipeline kept; its rejections are counted, not graded
         texts = []
         for r in sorted(recs[lid], key=lambda r: r["as_of"]):
             t = r["answer"] or "(không còn hiệu lực)"
