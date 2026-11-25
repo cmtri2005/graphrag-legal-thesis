@@ -5,6 +5,7 @@ Thứ tự gán: lineage có câu hỏi qua máy (questions.jsonl), xếp xen k�
 (tính sau hòa giải) thì dừng. Lô 00 là lô thử 20 dòng; các lô sau 50 dòng.
 
   python3 data/vilextime_v7/phieu/build.py nhan           # nhận mọi phiếu đã up ở gốc repo, làm bước kế tiếp
+  python3 data/vilextime_v7/phieu/build.py goi lo03-lo12  # zip để gửi: GD1 các lô đó + mọi phiếu GD2, hòa giải đang chờ
   python3 data/vilextime_v7/phieu/build.py gd1            # dựng Giai đoạn 1 cho mọi lô (chưa có lời văn kho)
   python3 data/vilextime_v7/phieu/build.py lock GD1 lo01 A.xlsx B.xlsx   # nhận phiếu đã gán (GD1 hoặc GD2), xuất .tsv, khóa
   python3 data/vilextime_v7/phieu/build.py gd2 lo01       # dựng Giai đoạn 2 của một lô; cần lo01/GD1.locked
@@ -789,6 +790,44 @@ def chot(name, path):
           f"loại {len(out) - len(kept)} ({dict(collections.Counter(r['drop_code'] for r in out if not r['keep']))})")
 
 
+def pending():
+    """Forms built but not yet returned: (lot, stage, reader or 'L', path)."""
+    out = []
+    for d in sorted(HERE.glob("lo??")):
+        for st in ("GD2", "GD2b"):
+            if not (d / f"{st}.locked").exists():
+                out += [(d.name, st, w, d / f"{st}_{w}.xlsx") for w in READERS if (d / f"{st}_{w}.xlsx").exists()]
+        if (d / "hoa_giai.xlsx").exists() and not (d / "hoa_giai.locked").exists():
+            out.append((d.name, "hoa_giai", "L", d / "hoa_giai.xlsx"))
+    return out
+
+
+def goi(span):
+    """One zip per person in phieu/gui/: A and B get only their own forms (GD1 of the lots in span, plus every GD2
+    waiting), the lawyer gets the waiting reconciliation forms. File names carry the lot."""
+    import zipfile
+    lo, hi = (int(x[2:]) for x in span.split("-"))
+    files = collections.defaultdict(list)
+    for n in range(lo, hi + 1):
+        d = HERE / f"lo{n:02d}"
+        if d.exists() and not (d / "GD1.locked").exists():
+            files["A"] += [(d / "GD1_A.xlsx", f"GD1_A_{d.name}.xlsx")]
+            files["B"] += [(d / "GD1_B.xlsx", f"GD1_B_{d.name}.xlsx")]
+    for name, st, w, path in pending():
+        files[w].append((path, f"{path.stem}_{name}.xlsx"))
+    out = HERE / "gui"
+    out.mkdir(exist_ok=True)
+    tag = date.today().strftime("%d%m")
+    for w, label in (("A", "nguoi_gan_A"), ("B", "nguoi_gan_B"), ("L", "luat_su")):
+        if not files[w]:
+            continue
+        z = out / f"{label}_{tag}.zip"
+        with zipfile.ZipFile(z, "w", zipfile.ZIP_DEFLATED) as f:
+            for path, arc in files[w]:
+                f.write(path, arc)
+        print(f"{z.relative_to(ROOT)}: {', '.join(a for _, a in files[w])}")
+
+
 def nhan(inbox=None):
     """Take every returned form dropped at the repo root, identified by its banner (stage, lot, reader), not its file
     name. A pair A+B locks its stage and builds the next form; a lawyer form is taken by chot. The root copy is deleted
@@ -834,17 +873,16 @@ def nhan(inbox=None):
                 f.unlink()
         done.append(f"{name} {stage}")
     print("Đã xử lý:", ", ".join(done) or "không có phiếu mới")
-    for d in sorted(HERE.glob("lo??")):
-        send = [p.name for p in sorted(d.glob("GD2*_?.xlsx")) + [d / "hoa_giai.xlsx"]
-                if p.exists() and not (d / f"{p.stem.rsplit('_', 1)[0] if p.stem != 'hoa_giai' else 'hoa_giai'}.locked").exists()]
-        if send:
-            print(f"  cần gửi {d.name}: {', '.join(send)}")
+    for name, st, w, path in pending():
+        print(f"  chờ nộp {name}: {path.name}")
     kept = collections.Counter(r["part"] for f in HERE.glob("lo??/final.jsonl") for r in jl(f) if r["keep"])
     print("Dòng giữ / quota:", ", ".join(f"{p} {kept[p]}/{q}" for p, q in QUOTA.items()), f"· tổng {sum(kept.values())}")
 
 
 if __name__ == "__main__":
-    if sys.argv[1:2] == ["nhan"]:
+    if sys.argv[1:2] == ["goi"] and len(sys.argv) == 3:
+        goi(sys.argv[2])
+    elif sys.argv[1:2] == ["nhan"]:
         nhan()
     elif sys.argv[1:2] == ["gd1"]:
         build_gd1()
