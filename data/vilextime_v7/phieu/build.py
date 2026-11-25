@@ -136,7 +136,10 @@ GUIDE_GD2 = [
                                      "\"còn áp dụng không\". Không áp dụng: chỉ có một phiên bản."),
            ("Trả lời được duy nhất?", "Có: ở MỖI phiên bản, chỉ điều khoản này trả lời được, theo một cách. Không: "
                                       "khoản, điểm khác cũng trả lời được, hoặc có phiên bản không trả lời được điều "
-                                      "được hỏi."),
+                                      "được hỏi. Phiên bản ghi \"(Không còn hiệu lực)\": điều khoản đã bị bãi bỏ, đáp "
+                                      "án đúng ở các ngày đó là \"không còn quy định\"; không vì thế mà chấm Không. "
+                                      "Nội dung có chuyển sang chỗ khác hay không đã kiểm ở Giai đoạn 1, không chấm "
+                                      "ở đây."),
            ("Lộ đáp án?", "Có: câu hỏi chứa sẵn đáp án, hoặc nêu cụm từ chỉ một phiên bản có, hoặc nêu số hiệu, "
                           "Điều, Khoản, ngày."),
            ("Mã lý do", "Bắt buộc khi có một câu Không hoặc Lộ = Có. Chọn từ danh sách (bảng bên dưới)."),
@@ -385,11 +388,22 @@ HG_SA = [
     ("Câu hỏi", "cau_hoi", 36, False, None),
     ("Ngày", "ngay", 11, False, None),
     ("Lời văn đang áp dụng (A, B và kho khớp nhau)", "noi_dung", 44, False, None),
+    ("Lưu ý", "luu_y", 22, False, None),
     ("Đáp án ngắn A", "sa_a", 26, False, None),
     ("Đáp án ngắn B", "sa_b", 26, False, None),
     ("Đề xuất theo quy tắc", "de_xuat", 26, False, None),
     ("Chọn", "chon", 10, True, "A,B,Đề xuất,Sửa"),
     ("Đáp án ngắn cuối (nếu Sửa)", "sa_cuoi", 30, True, None),
+    ("Ghi chú", "ghi_chu", 24, True, None),
+]
+HG_VERDICT = [
+    ("Mã GD2", "khoa", 8, False, None),
+    ("Câu hỏi", "cau_hoi", 36, False, None),
+    ("Lời văn các phiên bản (theo thời gian)", "loi_van", 60, False, None),
+    ("A: chỗ đổi / duy nhất / lộ — mã, ghi chú", "a", 34, False, None),
+    ("B: chỗ đổi / duy nhất / lộ — mã, ghi chú", "b", 34, False, None),
+    ("Kết luận", "ket_luan", 12, True, "Đạt,Không đạt"),
+    ("Mã lý do (nếu Không đạt)", "ma_cuoi", 22, True, "codes"),
     ("Ghi chú", "ghi_chu", 24, True, None),
 ]
 HG_CODE = [
@@ -408,6 +422,10 @@ GUIDE_HG = [
           "BẮT BUỘC phải chứa, trích nguyên văn, ngắn nhất nhưng đủ ý (giữ số, mức, thời hạn, chủ thể, điều kiện, "
           "phạm vi), bỏ ký hiệu đầu mục và câu dẫn, hai đoạn rời nối bằng \" … \". Cột \"Đề xuất\" do máy chọn "
           "theo quy tắc (bỏ chữ đầu mục; khi một bản nằm trọn trong bản kia thì lấy bản ngắn), chỉ để tham khảo."),
+    ("h2", "Trang \"Kết luận\""),
+    ("p", "Câu hỏi một người chấm đạt, người kia không. Đọc lời văn các phiên bản, chọn Đạt hoặc Không đạt; Không đạt "
+          "thì chọn mã lý do. Đạt thì chốt thêm đáp án ngắn ở trang \"Đáp án ngắn\" cho các dòng có Lưu ý ghi mã câu "
+          "này; Không đạt thì bỏ trống các dòng đó."),
     ("h2", "Trang \"Mã lý do\""),
     ("p", "Câu hỏi cả hai người đều loại nhưng chọn mã lý do khác nhau. Chọn một mã; không ảnh hưởng bộ test, chỉ "
           "ghi vào danh sách dòng bị loại."),
@@ -473,6 +491,15 @@ def build_gd1():
     print(f"{len(plan)} lô, {sum(p['rows'] for p in plan)} dòng -> {HERE.relative_to(ROOT)}/lo*/")
 
 
+def gd2_text(lineage):
+    states = collections.OrderedDict()
+    for r in lineage:
+        states.setdefault(r["answer"] or "(Không còn hiệu lực)", []).append(vn_date(r["as_of"]))
+    lead = lineage[0]["target"]["lead_in"] or ""
+    return (f"[Câu dẫn] {lead}\n\n" if lead else "") + "\n\n".join(
+        f"[Phiên bản {n} — hỏi ở ngày {', '.join(days)}]\n{text}" for n, (text, days) in enumerate(states.items(), 1))
+
+
 def build_gd2(name):
     d = HERE / name
     if not (d / "GD1.locked").exists():
@@ -482,15 +509,8 @@ def build_gd2(name):
     q = {r["lineage_id"]: r["question"] for r in jl(V7 / "questions.jsonl")}
     lins = list(dict.fromkeys(k["lineage_id"] for k in key))
     random.Random(f"{SEED}:{name}:gd2").shuffle(lins)
-    rows = []
-    for i, lid in enumerate(lins, 1):
-        states = collections.OrderedDict()
-        for r in recs[lid]:
-            states.setdefault(r["answer"] or "(Không còn hiệu lực)", []).append(vn_date(r["as_of"]))
-        lead = recs[lid][0]["target"]["lead_in"] or ""
-        body = (f"[Câu dẫn] {lead}\n\n" if lead else "") + "\n\n".join(
-            f"[Phiên bản {n} — hỏi ở ngày {', '.join(days)}]\n{text}" for n, (text, days) in enumerate(states.items(), 1))
-        rows.append({"khoa": f"{name[2:]}-{i:02d}", "lineage_id": lid, "cau_hoi": q[lid], "loi_van": body})
+    rows = [{"khoa": f"{name[2:]}-{i:02d}", "lineage_id": lid, "cau_hoi": q[lid], "loi_van": gd2_text(recs[lid])}
+            for i, lid in enumerate(lins, 1)]
     with open(d / "key_gd2.tsv", "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, ["khoa", "lineage_id"], delimiter="\t", lineterminator="\n", extrasaction="ignore")
         w.writeheader()
@@ -605,28 +625,35 @@ def build_hoa_giai(name):
     by_id = {r["id"]: r for v in recs.values() for r in v}
     norm = lambda s: " ".join(s.lower().split())
     mark = re.compile(r"^\s*(?:\d+(?:\.\d+)*\.|[a-zđ]\))\s+|^\s*Ghi\s+")
-    sa_rows, code_rows, problems = [], [], []
+    sa_rows, code_rows, verdict_rows, problems = [], [], [], []
     keep_of = {lid: all(passes(g2[k][w]) for w in READERS) for lid, k in k2.items()}
+    split = {lid for lid, k in k2.items() if passes(g2[k]["A"]) != passes(g2[k]["B"])}
     for k in key:
-        if not keep_of[k["lineage_id"]]:
+        if not keep_of[k["lineage_id"]] and k["lineage_id"] not in split:
             continue
         a, b = g1[k["khoa"]]["A"], g1[k["khoa"]]["B"]
+        note = [f"Chỉ điền khi câu {k2[k['lineage_id']]} = Đạt"] if k["lineage_id"] in split else []
         if a["hieu_luc"] != b["hieu_luc"] or norm(a["noi_dung"]) != norm(b["noi_dung"]):
-            problems.append(f"{k['khoa']}: dòng giữ nhưng hiệu lực/lời văn lệch, cần xem tay")
+            note.append(f"Hiệu lực A {a['hieu_luc'] or '(trống)'}, B {b['hieu_luc'] or '(trống)'}; lời văn A/B "
+                        "khác nhau, cột Lời văn lấy bản không trống của A, rồi B")
+            problems.append(f"{k['khoa']}: hiệu lực/lời văn lệch, ghi ở cột Lưu ý")
         sa = [mark.sub("", x["dap_an_ngan"]).strip() for x in (a, b)]
         prop = sa[0] if norm(sa[0]) == norm(sa[1]) else (
             min(sa, key=len) if norm(min(sa, key=len)) in norm(max(sa, key=len)) else "")
         sa_rows.append({"khoa": k["khoa"], "cau_hoi": q[k["lineage_id"]], "ngay": vn_date(by_id[k["id"]]["as_of"]),
-                        "noi_dung": a["noi_dung"], "sa_a": a["dap_an_ngan"], "sa_b": b["dap_an_ngan"], "de_xuat": prop})
+                        "noi_dung": a["noi_dung"] or b["noi_dung"], "luu_y": "; ".join(note), "sa_a": a["dap_an_ngan"], "sa_b": b["dap_an_ngan"], "de_xuat": prop})
     for lid, kk in k2.items():
         a, b = g2[kk]["A"], g2[kk]["B"]
         if not keep_of[lid] and not passes(a) and not passes(b) and a["ma_ly_do"] != b["ma_ly_do"]:
             code_rows.append({"khoa": kk, "cau_hoi": q[lid], "a": f"{a['ma_ly_do']} — {a['ghi_chu']}",
                               "b": f"{b['ma_ly_do']} — {b['ghi_chu']}"})
-        elif not keep_of[lid] and passes(a) != passes(b):
-            problems.append(f"GD2 {kk}: một người đạt, một người không — cần thêm trang kết luận")
+        elif lid in split:
+            v = lambda x: (f"{x['hoi_vao_cho_doi']} / {x['tra_loi_duy_nhat']} / {x['lo_dap_an']} — "
+                           f"{x['ma_ly_do'] or '(đạt)'} — {x['ghi_chu']}")
+            verdict_rows.append({"khoa": kk, "cau_hoi": q[lid], "loi_van": gd2_text(recs[lid]), "a": v(a), "b": v(b)})
     sa_rows.sort(key=lambda r: r["khoa"])
     code_rows.sort(key=lambda r: r["khoa"])
+    verdict_rows.sort(key=lambda r: r["khoa"])
     from openpyxl import Workbook
     path = d / "hoa_giai.xlsx"
     if has_answers(path, HG_SA):
@@ -635,11 +662,13 @@ def build_hoa_giai(name):
     guide_sheet(wb, "ViLexTime 7.0 — Hòa giải", GUIDE_HG)
     label = "Lô thử" if name == "lo00" else f"Lô {name[2:]}"
     form_sheet(wb, HG_SA, sa_rows, f"ViLexTime 7.0  ·  Hòa giải  ·  {label}  ·  Đáp án ngắn", "Phiếu")
+    if verdict_rows:
+        form_sheet(wb, HG_VERDICT, verdict_rows, f"ViLexTime 7.0  ·  Hòa giải  ·  {label}  ·  Kết luận", "Kết luận")
     if code_rows:
         form_sheet(wb, HG_CODE, code_rows, f"ViLexTime 7.0  ·  Hòa giải  ·  {label}  ·  Mã lý do", "Mã lý do")
     wb.active = 1
     wb.save(path)
-    print(f"{name}: hòa giải {len(sa_rows)} đáp án ngắn, {len(code_rows)} mã lý do -> {path.relative_to(ROOT)}")
+    print(f"{name}: hòa giải {len(sa_rows)} đáp án ngắn, {len(verdict_rows)} kết luận, {len(code_rows)} mã lý do -> {path.relative_to(ROOT)}")
     for x in problems:
         print("  ", x)
 
@@ -662,7 +691,7 @@ def chot(name, path):
         head = [c.value for c in ws[3]]
         return {r[0]: dict(zip(head, ("" if v is None else str(v).strip() for v in r)))
                 for r in ws.iter_rows(min_row=4, values_only=True) if r[0]}
-    sa, codes = sheet("Phiếu"), sheet("Mã lý do")
+    sa, codes, verdicts = sheet("Phiếu"), sheet("Mã lý do"), sheet("Kết luận")
     key = list(csv.DictReader(open(d / "key.tsv", encoding="utf-8"), delimiter="\t"))
     k2 = {r["lineage_id"]: r["khoa"] for r in csv.DictReader(open(d / "key_gd2.tsv", encoding="utf-8"), delimiter="\t")}
     g1, g2 = collections.defaultdict(dict), collections.defaultdict(dict)
@@ -674,21 +703,27 @@ def chot(name, path):
         a, b = g1[k["khoa"]]["A"], g1[k["khoa"]]["B"]
         q2 = k2[k["lineage_id"]]
         row = {"khoa": k["khoa"], "id": k["id"], "lineage_id": k["lineage_id"], "part": k["part"], "gd2": q2}
-        if all(passes(g2[q2][w]) for w in READERS):
+        ga, gb = g2[q2]["A"], g2[q2]["B"]
+        v = verdicts.get(q2, {}) if passes(ga) != passes(gb) else {}
+        if v and v.get("Kết luận") not in ("Đạt", "Không đạt"):
+            missing.append(f"GD2 {q2}: chưa có kết luận")
+        if (passes(ga) and passes(gb)) or v.get("Kết luận") == "Đạt":
             h = sa.get(k["khoa"], {})
             pick = h.get("Chọn", "")
             final = {"A": a["dap_an_ngan"], "B": b["dap_an_ngan"], "Đề xuất": h.get("Đề xuất theo quy tắc", ""),
                      "Sửa": h.get("Đáp án ngắn cuối (nếu Sửa)", "")}.get(pick, "")
             if not final:
                 missing.append(f"{k['khoa']}: chưa chọn đáp án ngắn")
-            row.update(keep=True, hieu_luc=a["hieu_luc"], answer=a["noi_dung"], short_answer=final,
-                       van_ban_ap_dung=a["van_ban_ap_dung"], chon=pick, ghi_chu_luat_su=h.get("Ghi chú", ""))
+            row.update(keep=True, hieu_luc=a["hieu_luc"] or b["hieu_luc"], answer=a["noi_dung"] or b["noi_dung"],
+                       short_answer=final, van_ban_ap_dung=a["van_ban_ap_dung"] or b["van_ban_ap_dung"], chon=pick,
+                       ghi_chu_luat_su=h.get("Ghi chú", ""), ket_luan_luat_su=bool(v))
         else:
-            ca, cb = g2[q2]["A"]["ma_ly_do"], g2[q2]["B"]["ma_ly_do"]
-            code = ca if ca == cb else codes.get(q2, {}).get("Mã lý do cuối", "")
-            if not code:
+            ca, cb = ga["ma_ly_do"], gb["ma_ly_do"]
+            src = v or ({} if ca == cb else codes.get(q2, {}))
+            code = src.get("Mã lý do (nếu Không đạt)", src.get("Mã lý do cuối", "")) if src else ca
+            if not code and not (v and not v.get("Kết luận")):   # no verdict: already reported above
                 missing.append(f"GD2 {q2}: chưa có mã lý do")
-            row.update(keep=False, drop_code=code, ghi_chu_luat_su="" if ca == cb else codes.get(q2, {}).get("Ghi chú", ""))
+            row.update(keep=False, drop_code=code, ghi_chu_luat_su=src.get("Ghi chú", ""), ket_luan_luat_su=bool(v))
         out.append(row)
     if missing:
         raise SystemExit("Phiếu thiếu:\n  " + "\n  ".join(missing))

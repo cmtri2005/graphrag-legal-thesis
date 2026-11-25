@@ -94,6 +94,10 @@ Out of scope: đổi định nghĩa, thêm nhóm hay mã loại; sửa toàn kho
 - [x] lo00 chốt (`build.py chot lo00 …` → `lo00/final.jsonl`, `hoa_giai.locked`): giữ 7 dòng (T1 1, T2 2, T4 2, T5 2),
   loại 13. Luật sư chọn bản dài ở 00-15, 00-19 (giữ "trong nội dung của quy hoạch chung đô thị được phê duyệt"), khác
   quy tắc "ngắn nhất": theo dõi Accuracy chứa-cụm trên các dòng đáp án dài.
+- [x] lo01, lo02 GD1 khóa (hiệu lực khớp 50/50, 46/50), GD2 khóa 25/11 (kết luận khớp 21/27, 20/27). Phiếu hòa
+  giải thêm trang "Kết luận" cho câu một người đạt, một người không (luật sư chốt, theo đăng ký trước §dòng 17).
+  Lỗi hướng dẫn GD2: "có phiên bản không trả lời được" làm loại mọi câu T6 (lo01 0/16, lo02 0/14 dòng); đã sửa
+  hướng dẫn cho lô sau. Chờ CMT quyết có giao lại GD2 phần T6 của lo01, lo02 không.
 - [ ] Gán (A, B).
 - [ ] Hòa giải (luật sư).
 - [ ] Dựng 7.0.
