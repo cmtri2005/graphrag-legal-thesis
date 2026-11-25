@@ -99,3 +99,13 @@ không bắt được. Lọc bằng biểu thức trong `data/vilextime_v7/phieu
 **S3. Hình thức phiếu (24/11).** Lô thử 20 dòng, các lô sau 50 dòng; hàng gán xếp xen kẽ các phần theo tỷ lệ quota
 §9, trong mỗi phần theo thứ hạng; người gán làm lần lượt và dừng khi mọi phần đủ quota sau hòa giải. Phiếu Giai đoạn
 2 chỉ dựng được khi lô đã có `GD1.locked`.
+
+**S4. Làm lại Giai đoạn 2 cho câu T6 của lo01, lo02 (25/11, CMT duyệt).** Hướng dẫn Giai đoạn 2 viết "Không: … có
+phiên bản không trả lời được điều được hỏi". Với T6, phiên bản sau bãi bỏ có đáp án đúng là "không còn quy định"
+(hướng dẫn gán nhãn, bảng nhóm), nên câu chữ này mâu thuẫn định nghĩa. Hai người gán làm đúng theo chữ và loại mọi
+câu T6 của lo01 (8 câu, 16 dòng) và lo02 (7 câu, 14 dòng). Lô thử không bị: câu T6 ở đó bị loại vì chuyển chỗ.
+Sửa hướng dẫn (phiên bản "(Không còn hiệu lực)" không làm câu thành Không; chuyển chỗ đã kiểm ở Giai đoạn 1) cho mọi
+lô từ lo03. Với lo01, lo02: giao lại Giai đoạn 2 riêng các câu T6 (`build.py gd2b`, phiếu `GD2b_*.xlsx`), cùng mã
+câu; kết quả khóa thành `GD2b.tsv` và thay kết quả cũ của các câu đó khi hòa giải. `GD2.tsv` giữ nguyên để báo.
+Đồng thuận A–B trên các câu này báo cả hai lần. Người gán đã thấy câu trả lời lần đầu của chính mình, không thấy
+của người kia.

@@ -7,6 +7,7 @@ Thứ tự gán: lineage có câu hỏi qua máy (questions.jsonl), xếp xen k�
   python3 data/vilextime_v7/phieu/build.py gd1            # dựng Giai đoạn 1 cho mọi lô (chưa có lời văn kho)
   python3 data/vilextime_v7/phieu/build.py lock GD1 lo01 A.xlsx B.xlsx   # nhận phiếu đã gán (GD1 hoặc GD2), xuất .tsv, khóa
   python3 data/vilextime_v7/phieu/build.py gd2 lo01       # dựng Giai đoạn 2 của một lô; cần lo01/GD1.locked
+  python3 data/vilextime_v7/phieu/build.py gd2b lo01      # S4: làm lại GD2 cho câu T6 bằng hướng dẫn đã sửa
   python3 data/vilextime_v7/phieu/build.py hoa_giai lo01  # phiếu luật sư: đáp án ngắn dòng giữ, mã lý do lệch
   python3 data/vilextime_v7/phieu/build.py chot lo01 hoa_giai.xlsx   # nhận phiếu luật sư -> final.jsonl, khóa
 
@@ -392,6 +393,7 @@ HG_SA = [
     ("Đáp án ngắn A", "sa_a", 26, False, None),
     ("Đáp án ngắn B", "sa_b", 26, False, None),
     ("Đề xuất theo quy tắc", "de_xuat", 26, False, None),
+    ("Hiệu lực cuối (nếu A, B lệch)", "hl_cuoi", 12, True, "Còn,Hết"),
     ("Chọn", "chon", 10, True, "A,B,Đề xuất,Sửa"),
     ("Đáp án ngắn cuối (nếu Sửa)", "sa_cuoi", 30, True, None),
     ("Ghi chú", "ghi_chu", 24, True, None),
@@ -418,7 +420,7 @@ GUIDE_HG = [
     ("h", "Hòa giải lô — luật sư"),
     ("p", "Hai người gán đã nộp và khóa cả hai giai đoạn của lô. Chỉ còn các chỗ dưới đây cần một quyết định."),
     ("h2", "Trang \"Đáp án ngắn\""),
-    ("p", "Các dòng sẽ vào bộ test. Hiệu lực và lời văn đã khớp; chỉ chốt đáp án ngắn: cụm mà một câu trả lời đúng "
+    ("p", "Các dòng sẽ vào bộ test. Thường hiệu lực và lời văn đã khớp; dòng nào lệch có ghi ở cột Lưu ý (hiệu lực lệch thì chốt cột Hiệu lực cuối; Hết thì không cần đáp án ngắn). Chốt đáp án ngắn: cụm mà một câu trả lời đúng "
           "BẮT BUỘC phải chứa, trích nguyên văn, ngắn nhất nhưng đủ ý (giữ số, mức, thời hạn, chủ thể, điều kiện, "
           "phạm vi), bỏ ký hiệu đầu mục và câu dẫn, hai đoạn rời nối bằng \" … \". Cột \"Đề xuất\" do máy chọn "
           "theo quy tắc (bỏ chữ đầu mục; khi một bản nằm trọn trong bản kia thì lấy bản ngắn), chỉ để tham khảo."),
@@ -521,6 +523,39 @@ def build_gd2(name):
     print(f"{name}: GD2 {len(rows)} câu hỏi")
 
 
+def build_gd2b(name):
+    """S4: GD2 again, only for the lot's T6 questions, same codes, corrected guide. Locked as GD2b; its rows replace
+    those questions' GD2 rows in hoa_giai and chot (load_gd2). GD2.tsv stays as returned."""
+    d = HERE / name
+    if not (d / "GD2.locked").exists():
+        raise SystemExit(f"{name}: GD2 chưa khóa")
+    t6 = {k["lineage_id"] for k in csv.DictReader(open(d / "key.tsv", encoding="utf-8"), delimiter="\t")
+          if k["part"].startswith("T6")}
+    recs = records()
+    q = {r["lineage_id"]: r["question"] for r in jl(V7 / "questions.jsonl")}
+    rows = [{"khoa": r["khoa"], "lineage_id": r["lineage_id"], "cau_hoi": q[r["lineage_id"]],
+             "loi_van": gd2_text(recs[r["lineage_id"]])}
+            for r in csv.DictReader(open(d / "key_gd2.tsv", encoding="utf-8"), delimiter="\t") if r["lineage_id"] in t6]
+    with open(d / "key_gd2b.tsv", "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, ["khoa", "lineage_id"], delimiter="\t", lineterminator="\n", extrasaction="ignore")
+        w.writeheader()
+        w.writerows(rows)
+    for who in READERS:
+        write(d / f"GD2b_{who}.xlsx", "ViLexTime 7.0 — Hướng dẫn gán nhãn, Giai đoạn 2 (làm lại câu bãi bỏ)", GUIDE_GD2,
+              GD2, rows, f"ViLexTime 7.0  ·  Giai đoạn 2, làm lại câu bãi bỏ  ·  Lô {name[2:]}  ·  Người gán {who}")
+    print(f"{name}: GD2b {len(rows)} câu hỏi T6")
+
+
+def load_gd2(d):
+    """GD2 rows by code and reader; GD2b (S4), when locked, replaces the questions it covers."""
+    g = collections.defaultdict(dict)
+    for st in ("GD2", "GD2b"):
+        if st == "GD2" or (d / "GD2b.locked").exists():
+            for r in csv.DictReader(open(d / f"{st}.tsv", encoding="utf-8"), delimiter="\t"):
+                g[r["khoa"]][r["who"]] = r
+    return g
+
+
 def read_form(path, cols, key):
     """Rows of a returned form as dicts; refuses a form whose read-only cells differ from the key's order."""
     from openpyxl import load_workbook
@@ -553,6 +588,7 @@ def passes(r):
 
 COMPARE = {"GD1": ("hieu_luc", "noi_dung", "dap_an_ngan", "van_ban_ap_dung"),
            "GD2": ("hoi_vao_cho_doi", "tra_loi_duy_nhat", "lo_dap_an", "ma_ly_do")}
+COMPARE["GD2b"] = COMPARE["GD2"]
 
 
 def lock(stage, name, path_a, path_b):
@@ -562,11 +598,12 @@ def lock(stage, name, path_a, path_b):
     d = HERE / name
     if (d / f"{stage}.locked").exists():
         raise SystemExit(f"{name}: {stage} đã khóa")
-    if stage == "GD2" and not (d / "GD1.locked").exists():
-        raise SystemExit(f"{name}: GD1 chưa khóa")
+    prev = {"GD2": "GD1", "GD2b": "GD2"}.get(stage)
+    if prev and not (d / f"{prev}.locked").exists():
+        raise SystemExit(f"{name}: {prev} chưa khóa")
     cols = GD1 if stage == "GD1" else GD2
-    key = list(csv.DictReader(open(d / ("key.tsv" if stage == "GD1" else "key_gd2.tsv"), encoding="utf-8"),
-                              delimiter="\t"))
+    key = list(csv.DictReader(open(d / {"GD1": "key.tsv", "GD2": "key_gd2.tsv", "GD2b": "key_gd2b.tsv"}[stage],
+                                   encoding="utf-8"), delimiter="\t"))
     forms = {"A": read_form(path_a, cols, key), "B": read_form(path_b, cols, key)}
     inputs = [c[1] for c in cols if c[3]]
     out, issues = [], []
@@ -578,7 +615,7 @@ def lock(stage, name, path_a, path_b):
     diffs = []
     for a, b in zip(forms["A"], forms["B"]):
         fields = [f for f in COMPARE[stage] if norm(a[f]) != norm(b[f])]
-        if stage == "GD2" and passes(a) != passes(b):
+        if stage != "GD1" and passes(a) != passes(b):
             fields.insert(0, "ket_luan")
         if fields:
             diffs.append({"khoa": a["khoa"], "lech": ",".join(fields)})
@@ -599,7 +636,7 @@ def lock(stage, name, path_a, path_b):
     first = COMPARE[stage][0]
     same = sum(a[first] == b[first] for a, b in zip(forms["A"], forms["B"]))
     msg = f"{name} {stage}: khóa {n} dòng; {first} khớp {same}/{n}; dòng lệch {len(diffs)}; lỗi phiếu {len(issues)}"
-    if stage == "GD2":
+    if stage != "GD1":
         pa, pb = ([passes(r) for r in forms[w]] for w in READERS)
         msg += (f"; đạt A {sum(pa)}, B {sum(pb)}, cả hai {sum(x and y for x, y in zip(pa, pb))}; "
                 f"kết luận khớp {sum(x == y for x, y in zip(pa, pb))}/{n}")
@@ -614,12 +651,13 @@ def build_hoa_giai(name):
     for st in ("GD1", "GD2"):
         if not (d / f"{st}.locked").exists():
             raise SystemExit(f"{name}: {st} chưa khóa")
+    if (d / "key_gd2b.tsv").exists() and not (d / "GD2b.locked").exists():
+        raise SystemExit(f"{name}: đã giao GD2b, chưa khóa")
     key = list(csv.DictReader(open(d / "key.tsv", encoding="utf-8"), delimiter="\t"))
     k2 = {r["lineage_id"]: r["khoa"] for r in csv.DictReader(open(d / "key_gd2.tsv", encoding="utf-8"), delimiter="\t")}
-    g1, g2 = collections.defaultdict(dict), collections.defaultdict(dict)
-    for st, g in (("GD1", g1), ("GD2", g2)):
-        for r in csv.DictReader(open(d / f"{st}.tsv", encoding="utf-8"), delimiter="\t"):
-            g[r["khoa"]][r["who"]] = r
+    g1, g2 = collections.defaultdict(dict), load_gd2(d)
+    for r in csv.DictReader(open(d / "GD1.tsv", encoding="utf-8"), delimiter="\t"):
+        g1[r["khoa"]][r["who"]] = r
     q = {r["lineage_id"]: r["question"] for r in jl(V7 / "questions.jsonl")}
     recs = records()
     by_id = {r["id"]: r for v in recs.values() for r in v}
@@ -632,10 +670,14 @@ def build_hoa_giai(name):
         if not keep_of[k["lineage_id"]] and k["lineage_id"] not in split:
             continue
         a, b = g1[k["khoa"]]["A"], g1[k["khoa"]]["B"]
+        if a["hieu_luc"] == b["hieu_luc"] == "Hết":   # T6 after repeal: the answer is "no longer in force", no phrase
+            continue
         note = [f"Chỉ điền khi câu {k2[k['lineage_id']]} = Đạt"] if k["lineage_id"] in split else []
         if a["hieu_luc"] != b["hieu_luc"] or norm(a["noi_dung"]) != norm(b["noi_dung"]):
-            note.append(f"Hiệu lực A {a['hieu_luc'] or '(trống)'}, B {b['hieu_luc'] or '(trống)'}; lời văn A/B "
-                        "khác nhau, cột Lời văn lấy bản không trống của A, rồi B")
+            note.append(f"Hiệu lực A {a['hieu_luc'] or '(trống)'}, B {b['hieu_luc'] or '(trống)'}"
+                        + ("; chốt cột Hiệu lực cuối" if a["hieu_luc"] != b["hieu_luc"] else "")
+                        + ("; lời văn A/B khác nhau, cột Lời văn lấy bản không trống của A, rồi B"
+                           if norm(a["noi_dung"]) != norm(b["noi_dung"]) else ""))
             problems.append(f"{k['khoa']}: hiệu lực/lời văn lệch, ghi ở cột Lưu ý")
         sa = [mark.sub("", x["dap_an_ngan"]).strip() for x in (a, b)]
         prop = sa[0] if norm(sa[0]) == norm(sa[1]) else (
@@ -668,7 +710,7 @@ def build_hoa_giai(name):
         form_sheet(wb, HG_CODE, code_rows, f"ViLexTime 7.0  ·  Hòa giải  ·  {label}  ·  Mã lý do", "Mã lý do")
     wb.active = 1
     wb.save(path)
-    print(f"{name}: hòa giải {len(sa_rows)} đáp án ngắn, {len(verdict_rows)} kết luận, {len(code_rows)} mã lý do -> {path.relative_to(ROOT)}")
+    print(f"{name}: hòa giải {len(sa_rows)} đáp án ngắn, {len(verdict_rows)} kết luận, {len(code_rows)} mã lý do -> {path}")
     for x in problems:
         print("  ", x)
 
@@ -694,10 +736,9 @@ def chot(name, path):
     sa, codes, verdicts = sheet("Phiếu"), sheet("Mã lý do"), sheet("Kết luận")
     key = list(csv.DictReader(open(d / "key.tsv", encoding="utf-8"), delimiter="\t"))
     k2 = {r["lineage_id"]: r["khoa"] for r in csv.DictReader(open(d / "key_gd2.tsv", encoding="utf-8"), delimiter="\t")}
-    g1, g2 = collections.defaultdict(dict), collections.defaultdict(dict)
-    for st, g in (("GD1", g1), ("GD2", g2)):
-        for r in csv.DictReader(open(d / f"{st}.tsv", encoding="utf-8"), delimiter="\t"):
-            g[r["khoa"]][r["who"]] = r
+    g1, g2 = collections.defaultdict(dict), load_gd2(d)
+    for r in csv.DictReader(open(d / "GD1.tsv", encoding="utf-8"), delimiter="\t"):
+        g1[r["khoa"]][r["who"]] = r
     out, missing = [], []
     for k in key:
         a, b = g1[k["khoa"]]["A"], g1[k["khoa"]]["B"]
@@ -709,12 +750,17 @@ def chot(name, path):
             missing.append(f"GD2 {q2}: chưa có kết luận")
         if (passes(ga) and passes(gb)) or v.get("Kết luận") == "Đạt":
             h = sa.get(k["khoa"], {})
+            hl = a["hieu_luc"] if a["hieu_luc"] == b["hieu_luc"] else h.get("Hiệu lực cuối (nếu A, B lệch)", "")
+            if hl not in ("Còn", "Hết"):
+                missing.append(f"{k['khoa']}: chưa chốt hiệu lực")
             pick = h.get("Chọn", "")
             final = {"A": a["dap_an_ngan"], "B": b["dap_an_ngan"], "Đề xuất": h.get("Đề xuất theo quy tắc", ""),
                      "Sửa": h.get("Đáp án ngắn cuối (nếu Sửa)", "")}.get(pick, "")
-            if not final:
+            if hl == "Hết":
+                final = ""
+            elif not final:
                 missing.append(f"{k['khoa']}: chưa chọn đáp án ngắn")
-            row.update(keep=True, hieu_luc=a["hieu_luc"] or b["hieu_luc"], answer=a["noi_dung"] or b["noi_dung"],
+            row.update(keep=True, hieu_luc=hl, answer="" if hl == "Hết" else a["noi_dung"] or b["noi_dung"],
                        short_answer=final, van_ban_ap_dung=a["van_ban_ap_dung"] or b["van_ban_ap_dung"], chon=pick,
                        ghi_chu_luat_su=h.get("Ghi chú", ""), ket_luan_luat_su=bool(v))
         else:
@@ -745,6 +791,8 @@ if __name__ == "__main__":
         build_gd2(sys.argv[2])
     elif sys.argv[1:2] == ["lock"] and len(sys.argv) == 6 and sys.argv[2] in COMPARE:
         lock(*sys.argv[2:])
+    elif sys.argv[1:2] == ["gd2b"] and len(sys.argv) == 3:
+        build_gd2b(sys.argv[2])
     elif sys.argv[1:2] == ["hoa_giai"] and len(sys.argv) == 3:
         build_hoa_giai(sys.argv[2])
     elif sys.argv[1:2] == ["chot"] and len(sys.argv) == 4:
