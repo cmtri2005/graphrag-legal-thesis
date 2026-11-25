@@ -4,6 +4,7 @@ Thứ tự gán: lineage có câu hỏi qua máy (questions.jsonl), xếp xen k�
 (định nghĩa §9), trong mỗi phần theo thứ hạng của sample.jsonl. Người gán làm lần lượt từng lô; khi mọi phần đủ quota
 (tính sau hòa giải) thì dừng. Lô 00 là lô thử 20 dòng; các lô sau 50 dòng.
 
+  python3 data/vilextime_v7/phieu/build.py nhan           # nhận mọi phiếu đã up ở gốc repo, làm bước kế tiếp
   python3 data/vilextime_v7/phieu/build.py gd1            # dựng Giai đoạn 1 cho mọi lô (chưa có lời văn kho)
   python3 data/vilextime_v7/phieu/build.py lock GD1 lo01 A.xlsx B.xlsx   # nhận phiếu đã gán (GD1 hoặc GD2), xuất .tsv, khóa
   python3 data/vilextime_v7/phieu/build.py gd2 lo01       # dựng Giai đoạn 2 của một lô; cần lo01/GD1.locked
@@ -788,8 +789,64 @@ def chot(name, path):
           f"loại {len(out) - len(kept)} ({dict(collections.Counter(r['drop_code'] for r in out if not r['keep']))})")
 
 
+def nhan(inbox=None):
+    """Take every returned form dropped at the repo root, identified by its banner (stage, lot, reader), not its file
+    name. A pair A+B locks its stage and builds the next form; a lawyer form is taken by chot. The root copy is deleted
+    only once the lot holds an identical copy. Prints what is left to send and the kept rows per part."""
+    import filecmp
+    from openpyxl import load_workbook
+    pat = re.compile(r"Giai đoạn (1|2)(, làm lại câu bãi bỏ)?\s+·\s+(Lô thử|Lô \d\d)\s+·\s+Người gán ([AB])"
+                     r"|Hòa giải\s+·\s+(Lô thử|Lô \d\d)")
+    found = collections.defaultdict(dict)
+    for f in sorted((inbox or ROOT).glob("*.xlsx")):
+        try:
+            ws = load_workbook(f, read_only=True)["Phiếu"]
+            m = pat.search(str(next(ws.iter_rows(max_row=1, values_only=True))[0] or ""))
+        except Exception:
+            m = None
+        if not m:
+            continue
+        lot = m.group(3) or m.group(5)
+        name = "lo00" if lot == "Lô thử" else "lo" + lot[3:]
+        stage = "HG" if m.group(5) else "GD2b" if m.group(2) else f"GD{m.group(1)}"
+        found[(name, stage)][m.group(4) or "L"] = f
+    done = []
+    for (name, stage), files in sorted(found.items()):
+        try:
+            if stage == "HG":
+                chot(name, str(files["L"]))
+                copies = {"L": HERE / name / "hoa_giai.xlsx"}
+            elif set(files) == set(READERS):
+                lock(stage, name, str(files["A"]), str(files["B"]))
+                copies = {w: HERE / name / f"{stage}_{w}.xlsx" for w in READERS}
+                if stage == "GD1":
+                    build_gd2(name)
+                elif not (HERE / name / "key_gd2b.tsv").exists() or stage == "GD2b":
+                    build_hoa_giai(name)
+            else:
+                print(f"{name} {stage}: mới có phiếu {', '.join(files)}, chờ người còn lại")
+                continue
+        except SystemExit as e:
+            print(f"{name} {stage}: dừng — {e}")
+            continue
+        for w, f in files.items():
+            if filecmp.cmp(f, copies[w], shallow=False):
+                f.unlink()
+        done.append(f"{name} {stage}")
+    print("Đã xử lý:", ", ".join(done) or "không có phiếu mới")
+    for d in sorted(HERE.glob("lo??")):
+        send = [p.name for p in sorted(d.glob("GD2*_?.xlsx")) + [d / "hoa_giai.xlsx"]
+                if p.exists() and not (d / f"{p.stem.rsplit('_', 1)[0] if p.stem != 'hoa_giai' else 'hoa_giai'}.locked").exists()]
+        if send:
+            print(f"  cần gửi {d.name}: {', '.join(send)}")
+    kept = collections.Counter(r["part"] for f in HERE.glob("lo??/final.jsonl") for r in jl(f) if r["keep"])
+    print("Dòng giữ / quota:", ", ".join(f"{p} {kept[p]}/{q}" for p, q in QUOTA.items()), f"· tổng {sum(kept.values())}")
+
+
 if __name__ == "__main__":
-    if sys.argv[1:2] == ["gd1"]:
+    if sys.argv[1:2] == ["nhan"]:
+        nhan()
+    elif sys.argv[1:2] == ["gd1"]:
         build_gd1()
     elif sys.argv[1:2] == ["gd2"] and len(sys.argv) == 3:
         build_gd2(sys.argv[2])
