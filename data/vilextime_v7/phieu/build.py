@@ -114,7 +114,9 @@ GUIDE_GD1 = [
     ("b", "Chép nguyên văn từ lời văn, không sửa chữ, không viết lại."),
     ("b", "Ngắn nhất nhưng đủ ý: giữ đủ con số, mức, thời hạn, chủ thể, điều kiện, phạm vi mà câu hỏi hỏi tới. "
           "Đây thường là phần thay đổi giữa các phiên bản, bỏ đi thì không chấm được."),
-    ("b", "Bỏ ký hiệu đầu mục (\"a)\", \"2.\"), bỏ câu dẫn, bỏ phần lặp lại ý của câu hỏi."),
+    ("b", "Bỏ ký hiệu đầu mục (\"a)\", \"2.\"), bỏ phần lặp lại ý của câu hỏi. Câu dẫn của khoản là một phần của "
+          "đáp án: đáp án nằm ở câu dẫn (ví dụ \"bị tạm dừng\", mức phạt) thì trích từ câu dẫn, và chép cả câu dẫn "
+          "vào cột lời văn."),
     ("b", "Câu hỏi hỏi một danh sách thì trích đủ cả danh sách."),
     ("b", "Cần hai đoạn không liền nhau thì nối bằng \" … \" (dấu ba chấm, cách hai bên)."),
     ("t", [("Ví dụ", "Đáp án ngắn"),
@@ -683,7 +685,9 @@ def build_hoa_giai(name):
         prop = sa[0] if norm(sa[0]) == norm(sa[1]) else (
             min(sa, key=len) if norm(min(sa, key=len)) in norm(max(sa, key=len)) else "")
         sa_rows.append({"khoa": k["khoa"], "cau_hoi": q[k["lineage_id"]], "ngay": vn_date(by_id[k["id"]]["as_of"]),
-                        "noi_dung": a["noi_dung"] or b["noi_dung"], "luu_y": "; ".join(note), "sa_a": a["dap_an_ngan"], "sa_b": b["dap_an_ngan"], "de_xuat": prop})
+                        "noi_dung": (f"[Câu dẫn] {by_id[k['id']]['target']['lead_in']}\n\n"
+                                     if by_id[k["id"]]["target"]["lead_in"] else "") + (a["noi_dung"] or b["noi_dung"]),
+                        "luu_y": "; ".join(note), "sa_a": a["dap_an_ngan"], "sa_b": b["dap_an_ngan"], "de_xuat": prop})
     for lid, kk in k2.items():
         a, b = g2[kk]["A"], g2[kk]["B"]
         if not keep_of[lid] and not passes(a) and not passes(b) and a["ma_ly_do"] != b["ma_ly_do"]:
