@@ -1,0 +1,10 @@
+{
+ "locked": "2026-11-26",
+ "sha256": {
+  "GD1_A.xlsx": "4336d71a86b2d996259e179c68083cf31607f3c7264395da053dfa86af4d466b",
+  "GD1_B.xlsx": "569bec1aa6b649db6f71c7be267b1f1fbaaaac61649880bb7396ba07b5cbf895"
+ },
+ "issues": [
+  "09-39 A: thiếu Hiệu lực"
+ ]
+}

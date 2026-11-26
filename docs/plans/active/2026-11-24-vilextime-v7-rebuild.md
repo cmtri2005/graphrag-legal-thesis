@@ -100,6 +100,13 @@ Out of scope: đổi định nghĩa, thêm nhóm hay mã loại; sửa toàn kho
   hướng dẫn cho lô sau. CMT duyệt S4 (25/11): giao lại GD2 riêng câu T6 (`build.py gd2b`): lo01 8 câu, lo02 7
   câu. Hòa giải lo01, lo02 chờ GD2b khóa. Phiếu hòa giải thêm cột "Hiệu lực cuối" khi A, B lệch; dòng T6 mốc sau
   (cả hai ghi Hết) không cần đáp án ngắn.
+- [x] lo03–lo12 GD1 khóa 26/11 (506 dòng; hiệu lực A–B khớp 490/505, khớp kho A 500, B 490; 13/16 chỗ lệch là T6,
+  phần lớn B ghi Còn). GD2 lo03–lo12 đã dựng, chờ gửi. Phút KHÔNG tin được: A 252 dòng ghi 1 phút, lo11 ghi 850
+  phút/dòng; B ghi ~280 phút/lô nhưng giờ lưu file cách nhau 25–35 phút. File cả hai lưu bằng openpyxl. CMT xác
+  nhận hai bạn tự gán; giữ nguyên phút đã ghi, không sửa. Khi báo cáo phút trung vị (đăng ký trước §70) phải ghi
+  rõ giới hạn này hoặc bỏ chỉ số. Lỗi phiếu: 09-39 cột Điều khoản thiếu số điều; 03-39, 06-22, 07-02, 08-12 A ghi
+  Còn nhưng để trống đáp án (lý do ở báo cáo của A), chuyển luật sư. So `van_ban_ap_dung` đang so cả chữ "Nghị
+  định"/"Thông tư" nên báo lệch giả (cùng số hiệu 461/490).
 - [ ] Gán (A, B).
 - [ ] Hòa giải (luật sư).
 - [ ] Dựng 7.0.
